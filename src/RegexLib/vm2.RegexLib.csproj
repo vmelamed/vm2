@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <WarningsAsErrors>true</WarningsAsErrors>
+        <WarningLevel>9999</WarningLevel>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1701;1702;1716</NoWarn>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../../vm2signKey.snk</AssemblyOriginatorKeyFile>
+        <RootNamespace>vm2.RegexLib</RootNamespace>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+        <IsPackable>true</IsPackable>
+        <Title>vm2 Library of Regular Expressions</Title>
+        <Company>vm</Company>
+        <Product>vm2</Product>
+        <ProductName>Val Melamed's packages</ProductName>
+        <Authors>Val Melamed</Authors>
+        <Description>Contains a number of useful regular expressions as strings and lazily initialized System.Text.RegularExpressions.Regex objects.</Description>
+        <PackageReleaseNotes>Initial version of the vm2.RegexLib. Inherits most of the code from vm.</PackageReleaseNotes>
+        <PackageTags>C# regex regular expression </PackageTags>
+        <Copyright>Copyright © 2023-2024 vm</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
+    </PropertyGroup>
+
+    
+</Project>
