@@ -974,7 +974,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string uriKeyValueQueryRex = $@"(?<{G_URI}> {SchemeRex} : {hierarchicalPartRex} (?: \? {keyValueQueryRex} )? (?: # {fragmentRex} )? )";
+    const string uriKeyValueQueryRex = $@"(?<{G_URI}> {SchemeRex} : {hierarchicalPartRex} (?: \? {keyValueQueryRex} )? (?: \x23 {fragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with a key-value query
@@ -1000,7 +1000,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string uriGenericQueryRex = $@"(?<{G_URI}> {SchemeRex} : {hierarchicalPartRex} (?: \? {genericQueryRex} )? (?: # {fragmentRex} )? )";
+    const string uriGenericQueryRex = $@"(?<{G_URI}> {SchemeRex} : {hierarchicalPartRex} (?: \? {genericQueryRex} )? (?: \x23 {fragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with a key-value query

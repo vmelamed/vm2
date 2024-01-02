@@ -31,27 +31,18 @@ public static class Ascii
     /// The Latin characters.
     /// <para>BNF: <c>alpha = A | B | ... | Z | a | b | ... | z</c></para>
     /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    internal const string AlphaChars = $"{HighAlphaChars} {LowAlphaChars}";
+    internal const string AlphaChars = $"{HighAlphaChars}{LowAlphaChars}";
 
     /// <summary>
     /// Matches a Latin character.
     /// <para>BNF: <c>alpha = low_alpha | high_alpha</c></para>
     /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
     public const string AlphaRex = $"[{AlphaChars}]";
 
     /// <summary>
     /// The characters that can be used for string representation of a base64 encoded data without the padding.
     /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string base64Chars = $@"{AlphaChars} 0-9 / \+";
+    const string base64Chars = $@"{AlphaChars}0-9/\+";
 
     /// <summary>
     /// Matches a character of base64 encoded data.
@@ -59,33 +50,33 @@ public static class Ascii
     /// </summary>
     /// <remarks>
     /// Note that \r and \n may break-to-continue a base64 string but have no meaning when decoded and are ignored.
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public static string Base64CharRex = $"[{base64Chars}]";
 
     /// <summary>
-    /// Matches a base64 encoded string fragment possibly padded with `=`-s.
+    /// Matches a base64 encoded multiline string fragment possibly padded with `=`-s.
     /// </summary>
     /// <remarks>
     /// Requires the matching to be done with <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public static string Base64Rex = @$"(?:^ {Base64CharRex}+ \r $)* (?:^ {Base64CharRex}+ ={{0,2}} \r $)";
+    public static string Base64Rex = @$"(?: ^{Base64CharRex}+ \r?$\n? )* (?: ^{Base64CharRex}+ ={{1,2}} \r?$\n? )?";
 
     /// <summary>
-    /// Matches a base64 encoded string possibly padded with `=`-s.
+    /// Matches a base64 encoded multiline string possibly padded with `=`-s.
     /// </summary>
     /// <remarks>
     /// Requires the matching to be done with <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public static string Base64Regex = @$"\A (?:^ {Base64CharRex}+ \r $)* (?:^ {Base64CharRex}+ ={{0,2}} \r $) \z";
+    public static string Base64Regex = @$"\A {Base64Rex} \z";
 
     static readonly Lazy<Regex> rexBase64 = new(() => new Regex(Base64Regex, RegexOptions.Compiled|
                                                                              RegexOptions.CultureInvariant|
+                                                                             RegexOptions.IgnorePatternWhitespace|
                                                                              RegexOptions.Multiline|
-                                                                             RegexOptions.IgnorePatternWhitespace));
+                                                                             RegexOptions.ExplicitCapture));
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a hexadecimal number.
+    /// A <see cref="Regex"/> object that matches a base64 encoded multiline string possibly padded with `=`-s.
     /// </summary>
     public static Regex Base64 => rexBase64.Value;
 }
