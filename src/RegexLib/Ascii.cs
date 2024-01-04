@@ -1,10 +1,22 @@
 ﻿namespace vm2.RegexLib;
 
 /// <summary>
-/// Class Ascii. Contains regular expressions that match strings composed of ASCII characters only.
+/// Class Ascii. Contains regular expressions that match strings composed of the first 128 Unicode characters (that point 
+/// to ASCII characters).
 /// </summary>
 public static class Ascii
 {
+    /// <summary>
+    /// The space. It must be escaped in regular expressions with <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </summary>
+    public const string Space = "\x0023";
+
+    /// <summary>
+    /// The hash sign. It must be escaped not as "\#" in regular expressions with <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </summary>
+    public const string Hash = "\x0020";
+
+
     /// <summary>
     /// The set of Latin uppercase characters.
     /// </summary>
@@ -38,6 +50,9 @@ public static class Ascii
     /// <para>BNF: <c>alpha = low_alpha | high_alpha</c></para>
     /// </summary>
     public const string AlphaRex = $"[{AlphaChars}]";
+
+    #region Base64
+    // See https://datatracker.ietf.org/doc/html/rfc4648#section-4
 
     /// <summary>
     /// The characters that can be used for string representation of a base64 encoded data without the padding.
@@ -79,4 +94,5 @@ public static class Ascii
     /// A <see cref="Regex"/> object that matches a base64 encoded multiline string possibly padded with `=`-s.
     /// </summary>
     public static Regex Base64 => rexBase64.Value;
+    #endregion
 }
