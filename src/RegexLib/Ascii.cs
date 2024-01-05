@@ -9,12 +9,12 @@ public static class Ascii
     /// <summary>
     /// The space. It must be escaped in regular expressions with <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </summary>
-    public const string Space = "\x0023";
+    public const string Space = "\x0020";
 
     /// <summary>
     /// The hash sign. It must be escaped not as "\#" in regular expressions with <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </summary>
-    public const string Hash = "\x0020";
+    public const string Hash = "\x0023";
 
 
     /// <summary>

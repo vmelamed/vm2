@@ -20,14 +20,14 @@ public abstract class RegexTests
     /// <param name="testId">The test identifier, e.g. "03".</param>
     /// <param name="shouldMatch">The should match.</param>
     /// <param name="input">The input.</param>
-    protected virtual void RegexTest(
+    protected virtual MatchCollection RegexTest(
         Regex regex,
         string testId,
         bool shouldMatch,
         string input)
     {
-        var isMatch = regex.IsMatch(input);
         var matches = regex.Matches(input);
+        var isMatch = matches.Count > 0;
 
         matches.Should().NotBeNull();
 
@@ -48,6 +48,8 @@ public abstract class RegexTests
             m.Should().BeOfType<Match>();
             Out.WriteLine($"→{((Match)m).Value}←");
         }
+
+        return matches;
     }
 
     /// <summary>
