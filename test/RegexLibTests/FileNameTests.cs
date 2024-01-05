@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 using vm2.tests.RegexLibTests;
 
@@ -11,137 +12,122 @@ public class FileNameTests : RegexTests
 
     public FileNameTests(ITestOutputHelper output) : base(output) { }
 
-    public static TheoryData<string, bool, string> WinFilenameData
+    public static TheoryData<string, bool, string> WinFilenameData => new TheoryData<string, bool, string>
     {
-        get
-        {
-            var i = 0;
-            string testId() => i++.ToString("d2");
-
-            return new TheoryData<string, bool, string>
-            {
-                { testId(), false, "" },
-                { testId(), false, " " },
-                { testId(), false, "." },
-                { testId(), false, ".." },
-                { testId(), false, "con" },
-                { testId(), false, "con.txt" },
-                { testId(), false, "lpt1" },
-                { testId(), false, "lpt1.txt" },
-                { testId(), true,  "a" },
-                { testId(), true,  "C" },
-                { testId(), true,  "ж" },
-                { testId(), true,  "Ж" },
-                { testId(), true,  "ab" },
-                { testId(), true,  "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm" },
-                { testId(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM qwertyuiopasdfghjklzxcvbnm" },
-                { testId(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM.qwertyuiopasdfghjklzxcvbnm" },
-                { testId(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm." },
-                { testId(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm " },
-                { testId(), true,  boarderLengthName },
-                { testId(), false, overBoardLengthName },
-                { testId(), true,  "явертъуиопасдфгхйклзьцжбнмшщюч ЯВЕРТЪУИОПАСДФГХЙКЛЗЬЦЖБНМШЩЮЧ" },
-            };
-        }
-    }
+        { TestLine(), false, "" },
+        { TestLine(), false, " " },
+        { TestLine(), false, "." },
+        { TestLine(), false, ".." },
+        { TestLine(), false, "con" },
+        { TestLine(), false, "con.txt" },
+        { TestLine(), false, "lpt1" },
+        { TestLine(), false, "lpt1.txt" },
+        { TestLine(), true,  "a" },
+        { TestLine(), true,  "C" },
+        { TestLine(), true,  "ж" },
+        { TestLine(), true,  "Ж" },
+        { TestLine(), true,  "ab" },
+        { TestLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm" },
+        { TestLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM qwertyuiopasdfghjklzxcvbnm" },
+        { TestLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM.qwertyuiopasdfghjklzxcvbnm" },
+        { TestLine(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm." },
+        { TestLine(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm " },
+        { TestLine(), true,  boarderLengthName },
+        { TestLine(), false, overBoardLengthName },
+        { TestLine(), true,  "явертъуиопасдфгхйклзьцжбнмшщюч ЯВЕРТЪУИОПАСДФГХЙКЛЗЬЦЖБНМШЩЮЧ" },
+    };
 
     [Theory]
     [MemberData(nameof(WinFilenameData))]
-    public void TestWinFilename(string testId, bool shouldBe, string fileName)
-        => base.RegexTest(WindowsFileNames.DiskFilename, testId, shouldBe, fileName);
+    public void TestWinFilename(string TestLine, bool shouldBe, string fileName)
+        => base.RegexTest(WindowsFileNames.DiskFilename, TestLine, shouldBe, fileName);
 
-    public static TheoryData<string, bool, string, string, string, string> WinPathnameData
+    public static TheoryData<string, bool, string, string, string, string> WinPathnameData => new TheoryData<string, bool, string, string, string, string>
     {
-        get
-        {
-            var i = 0;
-            string testId() => i++.ToString("d2");
+        { TestLine(), false, "", "", "", "" },
+        { TestLine(), false, " ", "", "", "" },
+        { TestLine(), false, ".", "", "", "" },
+        { TestLine(), false, "..", "", "", "" },
+        { TestLine(), false, "con", "", "", "" },
+        { TestLine(), false, "con.txt", "", "", "" },
+        { TestLine(), false, "lpt1", "", "", "" },
+        { TestLine(), false, "lpt1.txt", "", "", "" },
+        { TestLine(), false, "a.", "", "", "" },
+        { TestLine(), false, "a ", "", "", "" },
+        { TestLine(), true,  "a", "", "", "" },
+        { TestLine(), true,  "C", "", "", "" },
+        { TestLine(), true,  "ж", "", "", "" },
+        { TestLine(), true,  "Ж", "", "", "" },
+        { TestLine(), true,  "ab", "", "", "" },
+        { TestLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm", "", "", "" },
+        { TestLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM qwertyuiopasdfghjklzxcvbnm", "", "", "" },
+        { TestLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM.qwertyuiopasdfghjklzxcvbnm", "", "", "" },
+        { TestLine(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm.", "", "", "" },
+        { TestLine(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm ", "", "", "" },
+        { TestLine(), true,  boarderLengthName, "", "", "" },
+        { TestLine(), false, overBoardLengthName, "", "", "" },
+        { TestLine(), true,  "явертъуиопасдфгхйклзьцжбнмшщюч ЯВЕРТЪУИОПАСДФГХЙКЛЗЬЦЖБНМШЩЮЧ", "", "", "" },
+                        //   pathname:                   filename:   path:           drive:
+        { TestLine(), false,  @"a:com1",                   "",         "",             ""  },
+        { TestLine(), false,  @"ъ:a",                      "",         "",             ""  },
+        { TestLine(), false,  @"a:"+boarderLengthName,     "a",        "",             "a" },
+        { TestLine(), false,  @"a:a.",                     "a",        "",             "a" },
+        { TestLine(), false,  @"a:a ",                     "a",        "",             "a" },
+        { TestLine(), true,   @"a:a",                      "a",        "",             "a" },
+        { TestLine(), true,   @"B:a",                      "a",        "",             "B" },
+        { TestLine(), false,  @"a:/com2",                  "",         "",             ""  },
+        { TestLine(), false,  @"a:/com2.bin",              "",         "",             ""  },
+        { TestLine(), false,  @"a:",                       "",         "",             ""  },
+        { TestLine(), true,   @"a:/a",                     "a",        @"/",           "a" },
+        { TestLine(), true,   @"a:\a",                     "a",        @"\",           "a" },
+        { TestLine(), true,   @"a:b/a",                    "a",        "b",            "a" },
+        { TestLine(), true,   @"a:./a",                    "a",        ".",            "a" },
+        { TestLine(), true,   @"a:../a",                   "a",        "..",           "a" },
+        { TestLine(), false,  @"a:lpt2/a",                 "",         "",             ""  },
+        { TestLine(), false,  @"a:lpt2.txt/a",             "",         "",             ""  },
+        { TestLine(), false,  @"a:/b/lpt2/a",              "",         "",             ""  },
+        { TestLine(), false,  @"a:/b/lpt2.txt/a",          "",         "",             ""  },
+        { TestLine(), false,  @"a:/b/c/d/lpt2",            "",         "",             ""  },
+        { TestLine(), false,  @"a:/b/c/d/lpt2.txt",        "",         "",             ""  },
+        { TestLine(), false,  @"a:/b/c./d/lp",             "",         "",             ""  },
+        { TestLine(), false,  @"a:/b/c./d/lp.txt",         "",         "",             ""  },
+        { TestLine(), false,  @"a:/b/c /d/lp",             "",         "",             ""  },
+        { TestLine(), false,  @"a:/b/c /d/lp.txt",         "",         "",             ""  },
+        { TestLine(), true,   @"a:b\a",                    "a",        @"b",           "a" },
+        { TestLine(), true,   @"a:/bb/a",                  "a",        @"/bb",         "a" },
+        { TestLine(), true,   @"a:/bb/cc/aa.aa",           "aa.aa",    @"/bb/cc",      "a" },
+        { TestLine(), true,   @"a:bb/cc/aa.aa",            "aa.aa",    @"bb/cc",       "a" },
+        { TestLine(), true,   @"bb/cc/aa.aa",              "aa.aa",    @"bb/cc",       ""  },
+        { TestLine(), true,   @"a:/./a",                   "a",        @"/.",          "a" },
+        { TestLine(), true,   @"a:../../a",                "a",        @"../..",       "a" },
+        { TestLine(), true,   @"a:..\../a",                "a",        @"..\..",       "a" },
+        { TestLine(), true,   @"a:\./a",                   "a",        @"\.",          "a" },
+        { TestLine(), true,   @"a:\bb\a",                  "a",        @"\bb",         "a" },
+        { TestLine(), true,   @"b\a",                      "a",        @"b",           ""  },
+        { TestLine(), true,   @"/bb/a",                    "a",        @"/bb",         ""  },
+        { TestLine(), true,   @"/bb/cc/aa.aa",             "aa.aa",    @"/bb/cc",      ""  },
+        { TestLine(), true,   @"/./a",                     "a",        @"/.",          ""  },
+        { TestLine(), true,   @"../../a",                  "a",        @"../..",       ""  },
+        { TestLine(), true,   @"..\../a",                  "a",        @"..\..",       ""  },
+        { TestLine(), true,   @"\./a",                     "a",        @"\.",          ""  },
+        { TestLine(), true,   @"\bb\a",                    "a",        @"\bb",         ""  },
+        { TestLine(), false, $@"a:\{boarderLengthName}\a", "",         "",             ""  },
+        { TestLine(), false, $@"\{boarderLengthName}",     "",         "",             ""  },
 
-            return new TheoryData<string, bool, string, string, string, string>
-            {
-                { testId(), false, "", "", "", "" },
-                { testId(), false, " ", "", "", "" },
-                { testId(), false, ".", "", "", "" },
-                { testId(), false, "..", "", "", "" },
-                { testId(), false, "con", "", "", "" },
-                { testId(), false, "con.txt", "", "", "" },
-                { testId(), false, "lpt1", "", "", "" },
-                { testId(), false, "lpt1.txt", "", "", "" },
-                { testId(), false, "a.", "", "", "" },
-                { testId(), false, "a ", "", "", "" },
-                { testId(), true,  "a", "", "", "" },
-                { testId(), true,  "C", "", "", "" },
-                { testId(), true,  "ж", "", "", "" },
-                { testId(), true,  "Ж", "", "", "" },
-                { testId(), true,  "ab", "", "", "" },
-                { testId(), true,  "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm", "", "", "" },
-                { testId(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM qwertyuiopasdfghjklzxcvbnm", "", "", "" },
-                { testId(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM.qwertyuiopasdfghjklzxcvbnm", "", "", "" },
-                { testId(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm.", "", "", "" },
-                { testId(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm ", "", "", "" },
-                { testId(), true,  boarderLengthName, "", "", "" },
-                { testId(), false, overBoardLengthName, "", "", "" },
-                { testId(), true,  "явертъуиопасдфгхйклзьцжбнмшщюч ЯВЕРТЪУИОПАСДФГХЙКЛЗЬЦЖБНМШЩЮЧ", "", "", "" },
-                                //   pathname:                   filename:   path:           drive:
-                { testId(), false,  @"a:com1",                   "",         "",             ""  },
-                { testId(), false,  @"ъ:a",                      "",         "",             ""  },
-                { testId(), false,  @"a:"+boarderLengthName,     "a",        "",             "a" },
-                { testId(), false,  @"a:a.",                     "a",        "",             "a" },
-                { testId(), false,  @"a:a ",                     "a",        "",             "a" },
-                { testId(), true,   @"a:a",                      "a",        "",             "a" },
-                { testId(), false,  @"a:/com2",                  "",         "",             ""  },
-                { testId(), false,  @"a:/com2.bin",              "",         "",             ""  },
-                { testId(), false,  @"a:",                       "",         "",             ""  },
-                { testId(), true,   @"a:/a",                     "a",        @"/",           "a" },
-                { testId(), true,   @"a:\a",                     "a",        @"\",           "a" },
-                { testId(), true,   @"a:b/a",                    "a",        "b",            "a" },
-                { testId(), true,   @"a:./a",                    "a",        ".",            "a" },
-                { testId(), true,   @"a:../a",                   "a",        "..",           "a" },
-                { testId(), false,  @"a:lpt2/a",                 "",         "",             ""  },
-                { testId(), false,  @"a:lpt2.txt/a",             "",         "",             ""  },
-                { testId(), false,  @"a:/b/lpt2/a",              "",         "",             ""  },
-                { testId(), false,  @"a:/b/lpt2.txt/a",          "",         "",             ""  },
-                { testId(), false,  @"a:/b/c/d/lpt2",            "",         "",             ""  },
-                { testId(), false,  @"a:/b/c/d/lpt2.txt",        "",         "",             ""  },
-                { testId(), false,  @"a:/b/c./d/lp",             "",         "",             ""  },
-                { testId(), false,  @"a:/b/c./d/lp.txt",         "",         "",             ""  },
-                { testId(), false,  @"a:/b/c /d/lp",             "",         "",             ""  },
-                { testId(), false,  @"a:/b/c /d/lp.txt",         "",         "",             ""  },
-                { testId(), true,   @"a:b\a",                    "a",        @"b",           "a" },
-                { testId(), true,   @"a:/bb/a",                  "a",        @"/bb",         "a" },
-                { testId(), true,   @"a:/bb/cc/aa.aa",           "aa.aa",    @"/bb/cc",      "a" },
-                { testId(), true,   @"a:bb/cc/aa.aa",            "aa.aa",    @"bb/cc",       "a" },
-                { testId(), true,   @"bb/cc/aa.aa",              "aa.aa",    @"bb/cc",       ""  },
-                { testId(), true,   @"a:/./a",                   "a",        @"/.",          "a" },
-                { testId(), true,   @"a:../../a",                "a",        @"../..",       "a" },
-                { testId(), true,   @"a:..\../a",                "a",        @"..\..",       "a" },
-                { testId(), true,   @"a:\./a",                   "a",        @"\.",          "a" },
-                { testId(), true,   @"a:\bb\a",                  "a",        @"\bb",         "a" },
-                { testId(), true,   @"b\a",                      "a",        @"b",           ""  },
-                { testId(), true,   @"/bb/a",                    "a",        @"/bb",         ""  },
-                { testId(), true,   @"/bb/cc/aa.aa",             "aa.aa",    @"/bb/cc",      ""  },
-                { testId(), true,   @"/./a",                     "a",        @"/.",          ""  },
-                { testId(), true,   @"../../a",                  "a",        @"../..",       ""  },
-                { testId(), true,   @"..\../a",                  "a",        @"..\..",       ""  },
-                { testId(), true,   @"\./a",                     "a",        @"\.",          ""  },
-                { testId(), true,   @"\bb\a",                    "a",        @"\bb",         ""  },
-                { testId(), false, $@"a:\{boarderLengthName}\a", "",         "",             ""  },
-                { testId(), false, $@"\{boarderLengthName}",     "",         "",             ""  },
-                { testId(), false, $@"a:\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\012345678901234567890123456789012345678901.txt",
-                                                                 "",         "",             ""  },
-                { testId(), true,  $@"a:\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\01234567890123456789012345678901234567890.txt",
-                                                                 "01234567890123456789012345678901234567890.txt",
-                                                                             @"\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm",
-                                                                                             "a" },
-            };
-        }
-    }
+        { TestLine(), false, $@"a:\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\012345678901234567890123456789012345678901.txt",
+                                                            "",         "",             ""  },
+        
+        { TestLine(), true,  $@"a:\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\01234567890123456789012345678901234567890.txt",
+                                                            "01234567890123456789012345678901234567890.txt",
+                                                                        @"\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm",
+                                                                                        "a" },
+    };
 
     [Theory]
     [MemberData(nameof(WinPathnameData))]
-    public void TestWinPathname(string testId, bool shouldBe, string pathname, string file, string path, string drive)
+    public void TestWinPathname(string TestLine, bool shouldBe, string pathname, string file, string path, string drive)
     {
-        var matches = base.RegexTest(WindowsFileNames.Pathname, testId, shouldBe, pathname);
+        var matches = base.RegexTest(WindowsFileNames.Pathname, TestLine, shouldBe, pathname);
 
         if (matches.Count == 0)
             return;

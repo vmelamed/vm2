@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,8 @@ public abstract class RegexTests
     public ITestOutputHelper Out { get; }
 
     public RegexTests(ITestOutputHelper output) => Out = output;
+
+    protected static string TestLine([CallerLineNumber] int line = 0) => $"{line:d3}";
 
     /// <summary>
     /// Data driven (theory) test for the regular expression <see cref="Regex" />

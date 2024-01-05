@@ -1,4 +1,6 @@
-﻿namespace vm2.tests.RegexLibTests;
+﻿using System.Runtime.CompilerServices;
+
+namespace vm2.tests.RegexLibTests;
 
 public class AsciiTest : RegexTests
 {
@@ -6,221 +8,176 @@ public class AsciiTest : RegexTests
     {
     }
 
-    public static TheoryData<string, bool, string> LowAlphaRexData
+    public static TheoryData<string, bool, string> LowAlphaRexData => new TheoryData<string, bool, string>
     {
-        get
-        {
-            var id = 0;
-            string testId() => id++.ToString("d2");
-
-            return new TheoryData<string, bool, string>
-            {
-                { testId(), false, ""  },
-                { testId(), true , "a" },
-                { testId(), true , "z" },
-                { testId(), false, "1" },
-                { testId(), false, "A" },
-                { testId(), false, "!" },
-                { testId(), false, "ж" },
-                { testId(), false, " " },
-            };
-        }
-    }
+        { TestLine(), false, ""  },
+        { TestLine(), true , "a" },
+        { TestLine(), true , "z" },
+        { TestLine(), false, "1" },
+        { TestLine(), false, "A" },
+        { TestLine(), false, "!" },
+        { TestLine(), false, "ж" },
+        { TestLine(), false, " " },
+    };
 
     [Theory]
     [MemberData(nameof(LowAlphaRexData))]
-    public void TestLowAlphaRex(string testId, bool shouldBe, string input)
-        => base.RegexStringTest(Ascii.LowAlphaRex, testId, shouldBe, input);
+    public void TestLowAlphaRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.LowAlphaRex, TestLine, shouldBe, input);
 
-    public static TheoryData<string, bool, string> HighAlphaRexData
+    public static TheoryData<string, bool, string> HighAlphaRexData => new TheoryData<string, bool, string>
     {
-        get
-        {
-            var id = 0;
-            string testId() => id++.ToString("d2");
-
-            return new TheoryData<string, bool, string>
-            {
-                { testId(), false, ""  },
-                { testId(), true , "A" },
-                { testId(), true , "Z" },
-                { testId(), false, "1" },
-                { testId(), false, "a" },
-                { testId(), false, "!" },
-                { testId(), false, "Ж" },
-                { testId(), false, " " },
-            };
-        }
-    }
+        { TestLine(), false, ""  },
+        { TestLine(), true , "A" },
+        { TestLine(), true , "Z" },
+        { TestLine(), false, "1" },
+        { TestLine(), false, "a" },
+        { TestLine(), false, "!" },
+        { TestLine(), false, "Ж" },
+        { TestLine(), false, " " },
+    };
 
     [Theory]
     [MemberData(nameof(HighAlphaRexData))]
-    public void TestHighAlphaRex(string testId, bool shouldBe, string input)
-        => base.RegexStringTest(Ascii.HighAlphaRex, testId, shouldBe, input);
+    public void TestHighAlphaRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.HighAlphaRex, TestLine, shouldBe, input);
     
-    public static TheoryData<string, bool, string> AlphaRexData
+    public static TheoryData<string, bool, string> AlphaRexData => new TheoryData<string, bool, string>
     {
-        get
-        {
-            var id = 0;
-            string testId() => id++.ToString("d2");
-
-            return new TheoryData<string, bool, string>
-            {
-                { testId(), false, ""  },
-                { testId(), true, "A"  },
-                { testId(), true, "Z"  },
-                { testId(), true, "a"  },
-                { testId(), true, "z"  },
-                { testId(), false, "1" },
-                { testId(), false, "!" },
-                { testId(), false, "Ж" },
-                { testId(), false, "ж" },
-                { testId(), false, " " },
-            };
-        }
-    }
+        { TestLine(), false, ""  },
+        { TestLine(), true, "A"  },
+        { TestLine(), true, "Z"  },
+        { TestLine(), true, "a"  },
+        { TestLine(), true, "z"  },
+        { TestLine(), false, "1" },
+        { TestLine(), false, "!" },
+        { TestLine(), false, "Ж" },
+        { TestLine(), false, "ж" },
+        { TestLine(), false, " " },
+    };
 
     [Theory]
     [MemberData(nameof(AlphaRexData))]
-    public void TestAlphaRex(string testId, bool shouldBe, string input)
-        => base.RegexStringTest(Ascii.AlphaRex, testId, shouldBe, input);
+    public void TestAlphaRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.AlphaRex, TestLine, shouldBe, input);
 
-    public static TheoryData<string, bool, string> Base64CharRexData
+    public static TheoryData<string, bool, string> Base64CharRexData => new TheoryData<string, bool, string>
     {
-        get
-        {
-            var id = 0;
-            string testId() => id++.ToString("d2");
-
-            return new TheoryData<string, bool, string>
-            {
-                { testId(), false, ""   },
-                { testId(), true , "A"  },
-                { testId(), true , "Z"  },
-                { testId(), true , "a"  },
-                { testId(), true , "z"  },
-                { testId(), true , "0"  },
-                { testId(), true , "9"  },
-                { testId(), true , "/"  },
-                { testId(), true , "+"  },
-                { testId(), false, "!"  },
-                { testId(), false, "Ж"  },
-                { testId(), false, "ж"  },
-                { testId(), false, " "  },
-                { testId(), false, "\r" },
-                { testId(), false, "\n" },
-            };
-        }
-    }
+        { TestLine(), false, ""   },
+        { TestLine(), true , "A"  },
+        { TestLine(), true , "Z"  },
+        { TestLine(), true , "a"  },
+        { TestLine(), true , "z"  },
+        { TestLine(), true , "0"  },
+        { TestLine(), true , "9"  },
+        { TestLine(), true , "/"  },
+        { TestLine(), true , "+"  },
+        { TestLine(), false, "!"  },
+        { TestLine(), false, "Ж"  },
+        { TestLine(), false, "ж"  },
+        { TestLine(), false, " "  },
+        { TestLine(), false, "\r" },
+        { TestLine(), false, "\n" },
+    };
 
     [Theory]
     [MemberData(nameof(Base64CharRexData))]
-    public void TestBase64CharRex(string testId, bool shouldBe, string input) 
-        => base.RegexStringTest(Ascii.Base64CharRex, testId, shouldBe, input);
+    public void TestBase64CharRex(string TestLine, bool shouldBe, string input) 
+        => base.RegexStringTest(Ascii.Base64CharRex, TestLine, shouldBe, input);
 
-    public static TheoryData<string, bool, string> Base64Data
+    public static TheoryData<string, bool, string> Base64Data => new TheoryData<string, bool, string>
     {
-        get
-        {
-            var i = 0;
-            string testNo() => i++.ToString("d2");
-            
-            return new TheoryData<string, bool, string>
-            {
-                { testNo(), true,  "" },
-                { testNo(), true,  "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu" },
-                { testNo(), false, "!" },
-                { testNo(), true,  """
-                                   IA==
-
-                                   """ },
-                { testNo(), false, """
-                                   I!A==
-
-                                   """ },
-                { testNo(), false, """
-                                   !IA==
-                 
-                                   """ },
-                { testNo(), false, """
-                                   !IA==!
-                 
-                                   """ },
-                { testNo(), true,  """
-                                   IAmg455a
-                                   12tGb7/+
-                                   
-                                   """ },
-                { testNo(), false, """
-                                   I!Amg455a
-                                   12tGb7/+
-                 
-                                   """ },
-                { testNo(), false, """
-                                   !IAmg455a
-                                   12tGb7/+
-                 
-                                   """ },
-                { testNo(), false, """
-                                   IAmg455a!
-                                   12tGb7/+
-                    
-                                   """ },
-                { testNo(), true,  """
-                                   IAmg455a
-                                   12tGb7/+
-                                   IA==
-                                   
-                                   """ },
-                { testNo(), false, """
-                                   IAmg455a
-                                   12tGb7/+
-                                   !IA==
-                          
-                                   """ },
-                { testNo(), false, """
-                                   IAmg455a
-                                   1!2tGb7/+
-                                   IA==
+        { TestLine(), true,  "" },
+        { TestLine(), true,  "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu" },
+        { TestLine(), false, "!" },
+        { TestLine(), true,  """
+                                IA==
+                            
+                                """ },
+        { TestLine(), false, """
+                                I!A==
+  
+                                """ },
+        { TestLine(), false, """
+                                !IA==
                    
-                                   """ },
-                { testNo(), false, """
-                                   IAmg455a
-                                   12tGb7/+!
-                                   IA==
-                    
-                                   """ },
-                { testNo(), false, """
-                                   IAmg455a
-                                   12tGb7/+
-                                   !IA==
-                 
-                                   """ },
-                { testNo(), false, """
-                                   IAmg455a
-                                   12tGb7/+
-                                   IA==!
-                 
-                                   """ },
-                { testNo(), false, """
-                                   IAmg455a
-                                   12tGb7/+
-                                   IA=!=
-                 
-                                   """ },
-                { testNo(), false, """
-                                   IAmg455a
-                                   12tGb7/+
-                                   I!A==
-                    
-                                   """ },
-            };
-        }
-    }
+                                """ },
+        { TestLine(), false, """
+                                !IA==!
+                                
+                                """ },
+        { TestLine(), true,  """
+                                IAmg455a
+                                12tGb7/+
+                                
+                                """ },
+        { TestLine(), false, """
+                                I!Amg455a
+                                12tGb7/+
+                                
+                                """ },
+        { TestLine(), false, """
+                                !IAmg455a
+                                12tGb7/+
+                                
+                                """ },
+        { TestLine(), false, """
+                                IAmg455a!
+                                12tGb7/+
+                                
+                                """ },
+        { TestLine(), true,  """
+                                IAmg455a
+                                12tGb7/+
+                                IA==
+                                
+                                """ },
+        { TestLine(), false, """
+                                IAmg455a
+                                12tGb7/+
+                                !IA==
+                                
+                                """ },
+        { TestLine(), false, """
+                                IAmg455a
+                                1!2tGb7/+
+                                IA==
+                                
+                                """ },
+        { TestLine(), false, """
+                                IAmg455a
+                                12tGb7/+!
+                                IA==
+                                
+                                """ },
+        { TestLine(), false, """
+                                IAmg455a
+                                12tGb7/+
+                                !IA==
+                                
+                                """ },
+        { TestLine(), false, """
+                                IAmg455a
+                                12tGb7/+
+                                IA==!
+                                
+                                """ },
+        { TestLine(), false, """
+                                IAmg455a
+                                12tGb7/+
+                                IA=!=
+                                
+                                """ },
+        { TestLine(), false, """
+                                IAmg455a
+                                12tGb7/+
+                                I!A==
+                                
+                                """ },
+    };
 
     [Theory]
     [MemberData(nameof(Base64Data))]
-    public void TestBase64(string testId, bool shouldBe, string input) 
-        => base.RegexTest(Ascii.Base64, testId, shouldBe, input);
+    public void TestBase64(string TestLine, bool shouldBe, string input) 
+        => base.RegexTest(Ascii.Base64, TestLine, shouldBe, input);
 }
