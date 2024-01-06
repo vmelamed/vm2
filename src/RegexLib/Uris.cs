@@ -1,7 +1,4 @@
-﻿
-using System.Net.Sockets;
-
-namespace vm2.RegexLib;
+﻿namespace vm2.RegexLib;
 
 /// <summary>
 /// Class Uri. Defines many regular expressions with the ultimate goal to define a regular expression for URI.
@@ -115,7 +112,7 @@ public class Uris
     /// <summary>
     /// Matches a URI scheme.
     /// <para>BNF: <c>scheme := 1*[ alpha | digit | + | - | . ]</c></para>
-    /// Named groups: <see cref="G_SCHEME"/>
+    /// <para>Named groups: <see cref="G_SCHEME"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -131,10 +128,9 @@ public class Uris
     /// </remarks>
     public const string SchemeRegex = $@"^{SchemeRex}$";
 
-    static readonly Lazy<Regex> rexSchemeRegex = new(() => new(SchemeRegex, RegexOptions.Compiled|
-                                                                            RegexOptions.CultureInvariant|
-                                                                            RegexOptions.IgnorePatternWhitespace|
-                                                                            RegexOptions.Singleline));
+    static readonly Lazy<Regex> rexSchemeRegex = new(() => new(SchemeRegex, RegexOptions.Compiled |
+                                                                            RegexOptions.CultureInvariant |
+                                                                            RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI scheme.
@@ -165,7 +161,7 @@ public class Uris
     /// <summary>
     /// Matches an IPv4 address.
     /// <para>BNF: <c>ipv4 := dec-octet.dec-octet.dec-octet.dec-octet</c></para>
-    /// Named groups: <see cref="G_IPV4"/>.
+    /// <para>Named groups: <see cref="G_IPV4"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -175,22 +171,21 @@ public class Uris
     /// <summary>
     /// Matches a string that represents an IPv4 address.
     /// <para>BNF: <c>ipv4 := dec-octet.dec-octet.dec-octet.dec-octet</c></para>
-    /// Named groups: <see cref="G_IPV4"/>.
+    /// <para>Named groups: <see cref="G_IPV4"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string Ipv4AddressRegex = $@"^{Ipv4AddressRex}$";
 
-    static readonly Lazy<Regex> ipv4AddressRegex = new(() => new(Ipv4AddressRegex, RegexOptions.Compiled|
-                                                                                   RegexOptions.CultureInvariant|
-                                                                                   RegexOptions.IgnorePatternWhitespace|
-                                                                                   RegexOptions.Singleline));
+    static readonly Lazy<Regex> ipv4AddressRegex = new(() => new(Ipv4AddressRegex, RegexOptions.Compiled |
+                                                                                   RegexOptions.CultureInvariant |
+                                                                                   RegexOptions.IgnorePatternWhitespace ));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv4 address.
     /// <para>BNF: <c>ipv4 := dec-octet.dec-octet.dec-octet.dec-octet</c></para>
-    /// Named groups: <see cref="G_IPV4"/>.
+    /// <para>Named groups: <see cref="G_IPV4"/>.</para>
     /// </summary>
     public static Regex Ipv4Address => ipv4AddressRegex.Value;
 
@@ -222,7 +217,7 @@ public class Uris
 
     /// <summary>
     /// Matches an IPv6 address.
-    /// Named groups: <see cref="G_IPV6"/>.
+    /// <para>Named groups: <see cref="G_IPV6"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -240,21 +235,20 @@ public class Uris
 
     /// <summary>
     /// Matches a string that represents an IPv6 address.
-    /// Named groups: <see cref="G_IPV6"/>.
+    /// <para>Named groups: <see cref="G_IPV6"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string Ipv6AddressRegex = $@"^{Ipv6AddressRex}$";
 
-    static readonly Lazy<Regex> ipv6AddressRegex = new(() => new(Ipv6AddressRegex, RegexOptions.Compiled|
-                                                                                   RegexOptions.CultureInvariant|
-                                                                                   RegexOptions.IgnorePatternWhitespace|
-                                                                                   RegexOptions.Singleline));
+    static readonly Lazy<Regex> ipv6AddressRegex = new(() => new(Ipv6AddressRegex, RegexOptions.Compiled |
+                                                                                   RegexOptions.CultureInvariant |
+                                                                                   RegexOptions.IgnorePatternWhitespace ));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address.
-    /// Named groups: <see cref="G_IPV6"/>.
+    /// <para>Named groups: <see cref="G_IPV6"/>.</para>
     /// </summary>
     public static Regex Ipv6Address => ipv6AddressRegex.Value;
 
@@ -265,7 +259,7 @@ public class Uris
 
     /// <summary>
     /// Matches an IPv.future address.
-    /// Named groups: <see cref="G_IPVF"/>.
+    /// <para>Named groups: <see cref="G_IPVF"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -277,21 +271,20 @@ public class Uris
     /// </summary>
     public const string IpvFutureAddressRegex = $"^{IpvFutureAddressRex}$";
 
-    static readonly Lazy<Regex> ipvFutureAddressRegex = new(() => new(IpvFutureAddressRegex, RegexOptions.Compiled|
-                                                                                             RegexOptions.CultureInvariant|
-                                                                                             RegexOptions.IgnorePatternWhitespace|
-                                                                                             RegexOptions.Singleline));
+    static readonly Lazy<Regex> ipvFutureAddressRegex = new(() => new(IpvFutureAddressRegex, RegexOptions.Compiled |
+                                                                                             RegexOptions.CultureInvariant |
+                                                                                             RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv.future address.
-    /// Named groups: <see cref="G_IPV6"/>.
+    /// <para>Named groups: <see cref="G_IPV6"/>.</para>
     /// </summary>
     public static Regex IpvFutureAddress => ipvFutureAddressRegex.Value;
 
     /// <summary>
     /// Matches a IP address.
     /// <para>BNF: <c>ip-literal-address := [ (IPv6address | IPvFuture) ]</c></para>
-    /// Named groups: <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.
+    /// <para>Named groups: <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -324,7 +317,7 @@ public class Uris
     /// <summary>
     /// Matches registered DNS name.
     /// <para>BNF: <c>registered_name = *[ domainLabel . ] topLabel</c> (RFC 1034)</para>
-    /// Named groups: <see cref="G_IP_DNS_NAME"/>
+    /// <para>Named groups: <see cref="G_IP_DNS_NAME"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -346,7 +339,7 @@ public class Uris
     /// Matches a registered name.
     /// TODO: According to the RFC 3986 registered_name should be dns_name or general_name but is this practical as the
     /// domain names are subset of the general names and are used most of the time?
-    /// Named groups: <see cref="G_IP_DNS_NAME"/>, <see cref="G_GEN_NAME"/>
+    /// <para>Named groups: <see cref="G_IP_DNS_NAME"/>, <see cref="G_GEN_NAME"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -362,7 +355,7 @@ public class Uris
     /// <summary>
     /// Matches a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
-    /// Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.
+    /// <para>Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -372,22 +365,21 @@ public class Uris
     /// <summary>
     /// Matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
-    /// Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IP_DNS_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.
+    /// <para>Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IP_DNS_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string HostRegex = $@"^[{HostRex}]$";
 
-    static readonly Lazy<Regex> hostRegex = new(() => new(HostRegex, RegexOptions.Compiled|
-                                                                     RegexOptions.CultureInvariant|
-                                                                     RegexOptions.IgnorePatternWhitespace|
-                                                                     RegexOptions.Singleline));
+    static readonly Lazy<Regex> hostRegex = new(() => new(HostRegex, RegexOptions.Compiled |
+                                                                     RegexOptions.CultureInvariant |
+                                                                     RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
-    /// Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IP_DNS_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.
+    /// <para>Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IP_DNS_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.</para>
     /// </summary>
     public static Regex Host => hostRegex.Value;
 
@@ -399,12 +391,12 @@ public class Uris
     /// <summary>
     /// Matches an IP port.
     /// <para>BNF: <c>port := decimal-num</c> in the range [0-65535]</para>
-    /// Named groups: <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_PORT"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string PortRex = 
+    public const string PortRex =
         $@"(?<{G_PORT}>" +
         "6553[0-5] |" +
         "655[0-2][0-9] |" +
@@ -417,22 +409,21 @@ public class Uris
     /// <summary>
     /// Matches a string that represents an IP port.
     /// <para>BNF: <c>port := decimal-num</c> in the range [0-65535]</para>
-    /// Named groups: <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_PORT"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string PortRegex = $@"^{PortRex}$";
 
-    static readonly Lazy<Regex> portRegex = new(() => new(PortRegex, RegexOptions.Compiled|
-                                                                     RegexOptions.CultureInvariant|
-                                                                     RegexOptions.IgnorePatternWhitespace|
-                                                                     RegexOptions.Singleline));
+    static readonly Lazy<Regex> portRegex = new(() => new(PortRegex, RegexOptions.Compiled |
+                                                                     RegexOptions.CultureInvariant |
+                                                                     RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IP port.
     /// <para>BNF: <c>port := decimal-num</c> in the range [0-65535]</para>
-    /// Named groups: <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_PORT"/>.</para>
     /// </summary>
     public static Regex Port => portRegex.Value;
 
@@ -444,7 +435,7 @@ public class Uris
     /// <summary>
     /// Matches an IP address.
     /// <para>BNF: <c>address := host [: port]</c></para>
-    /// Named groups: <see cref="G_ADDRESS"/> <see cref="G_HOST"/>, <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_ADDRESS"/> <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -454,22 +445,21 @@ public class Uris
     /// <summary>
     /// Matches a string that represents an IP address.
     /// <para>BNF: <c>address := host [: port]</c></para>
-    /// Named groups: <see cref="G_HOST"/>, <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string AddressRegex = $"^{AddressRex}$";
 
-    static readonly Lazy<Regex> addressRegex = new(() => new(AddressRegex, RegexOptions.Compiled|
-                                                                           RegexOptions.CultureInvariant|
-                                                                           RegexOptions.IgnorePatternWhitespace|
-                                                                           RegexOptions.Singleline));
+    static readonly Lazy<Regex> addressRegex = new(() => new(AddressRegex, RegexOptions.Compiled |
+                                                                           RegexOptions.CultureInvariant |
+                                                                           RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IP address.
     /// <para>BNF: <c>address := host [: port]</c></para>
-    /// Named groups: <see cref="G_HOST"/>, <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
     /// </summary>
     /// <value>The address.</value>
     public static Regex Address => addressRegex.Value;
@@ -483,29 +473,28 @@ public class Uris
     /// Matches a URI address.
     /// <para>BNF: <c>uri-address := scheme :// address </c></para>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// Named groups: <see cref="G_SCHEME"/>, <see cref="G_URI_ADDR"/>, <see cref="G_ADDRESS"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_SCHEME"/>, <see cref="G_URI_ADDR"/>, <see cref="G_ADDRESS"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
     /// </summary>
     public const string UriAddressRex = $@"(?<{G_URI_ADDR}> {SchemeRex} :// {AddressRex})";
 
     /// <summary>
     /// Matches a string that represents a URI address.
     /// <para>BNF: <c>uri-address := scheme :// address </c></para>
-    /// Named groups: <see cref="G_SCHEME"/>, <see cref="G_URI_ADDR"/>, <see cref="G_ADDRESS"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_SCHEME"/>, <see cref="G_URI_ADDR"/>, <see cref="G_ADDRESS"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public static string UriAddressRegex = $"^{UriAddressRex}$";
 
-    static readonly Lazy<Regex> uriAddressRegex = new(() => new(UriAddressRegex, RegexOptions.Compiled|
-                                                                                 RegexOptions.CultureInvariant|
-                                                                                 RegexOptions.IgnorePatternWhitespace|
-                                                                                 RegexOptions.Singleline));
+    static readonly Lazy<Regex> uriAddressRegex = new(() => new(UriAddressRegex, RegexOptions.Compiled |
+                                                                                 RegexOptions.CultureInvariant |
+                                                                                 RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an URI address.
     /// <para>BNF: <c>uri-address := scheme :// address </c></para>
-    /// Named groups: <see cref="G_SCHEME"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>
+    /// <para>Named groups: <see cref="G_SCHEME"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
     /// </summary>
     public static Regex UriAddress = uriAddressRegex.Value;
 
@@ -517,7 +506,7 @@ public class Uris
     /// <summary>
     /// Matches URI's user name.
     /// <para>BNF: <c>user := *[ unreserved | sub-delimiters | pct-encoded ]</c></para>
-    /// Named groups: <see cref="G_USER"/>
+    /// <para>Named groups: <see cref="G_USER"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -527,21 +516,20 @@ public class Uris
     /// <summary>
     /// Matches a string that represents a URI's user name.
     /// <para>BNF: <c>user := *[ unreserved | sub-delimiters | pct-encoded ]</c></para>
-    /// Named groups: <see cref="G_USER"/>
+    /// <para>Named groups: <see cref="G_USER"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string UserRegex = $@"^{UserRex}$";
 
-    static readonly Lazy<Regex> userRegex = new(() => new(UserRegex, RegexOptions.Compiled|
-                                                                     RegexOptions.CultureInvariant|
-                                                                     RegexOptions.IgnorePatternWhitespace|
-                                                                     RegexOptions.Singleline));
+    static readonly Lazy<Regex> userRegex = new(() => new(UserRegex, RegexOptions.Compiled |
+                                                                     RegexOptions.CultureInvariant |
+                                                                     RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an URI's user name.
-    /// Named groups: <see cref="G_USER"/>
+    /// <para>Named groups: <see cref="G_USER"/>.</para>
     /// </summary>
     public static Regex User => userRegex.Value;
 
@@ -553,7 +541,7 @@ public class Uris
     /// <summary>
     /// Matches URI's password.
     /// <para>BNF: <c>password := *[ unreserved | sub-delimiters | : | pct-encoded ]</c></para>
-    /// Named groups: <see cref="G_PASSWORD"/>
+    /// <para>Named groups: <see cref="G_PASSWORD"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -563,22 +551,21 @@ public class Uris
     /// <summary>
     /// Matches a string that represents a URI's password.
     /// <para>BNF: <c>password := *[ unreserved | sub-delimiters | : | pct-encoded ]</c></para>
-    /// Named groups: <see cref="G_PASSWORD"/>
+    /// <para>Named groups: <see cref="G_PASSWORD"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string PasswordRegex = $@"^{PasswordRex}$";
 
-    static readonly Lazy<Regex> passwordRegex = new(() => new(PasswordRegex, RegexOptions.Compiled|
-                                                                             RegexOptions.CultureInvariant|
-                                                                             RegexOptions.IgnorePatternWhitespace|
-                                                                             RegexOptions.Singleline));
+    static readonly Lazy<Regex> passwordRegex = new(() => new(PasswordRegex, RegexOptions.Compiled |
+                                                                             RegexOptions.CultureInvariant |
+                                                                             RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an URI's password name.
     /// <para>BNF: <c>password := *[ unreserved | sub-delimiters | : | pct-encoded ]</c></para>
-    /// Named groups: <see cref="G_PASSWORD"/>
+    /// <para>Named groups: <see cref="G_PASSWORD"/>.</para>
     /// </summary>
     public static Regex Password => passwordRegex.Value;
 
@@ -764,10 +751,9 @@ public class Uris
     /// </remarks>
     public const string PathRegex = $"^{pathRex}$";
 
-    static readonly Lazy<Regex> pathRegex = new(() => new(PathRegex, RegexOptions.Compiled|
-                                                                     RegexOptions.CultureInvariant|
-                                                                     RegexOptions.IgnorePatternWhitespace|
-                                                                     RegexOptions.Singleline));
+    static readonly Lazy<Regex> pathRegex = new(() => new(PathRegex, RegexOptions.Compiled |
+                                                                     RegexOptions.CultureInvariant |
+                                                                     RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's path.
@@ -823,10 +809,9 @@ public class Uris
     /// </remarks>
     public const string GenericQueryRegex = $@"^{genericQueryRex}$";
 
-    static readonly Lazy<Regex> genericQueryRegex = new(() => new(GenericQueryRegex, RegexOptions.Compiled|
-                                                                                     RegexOptions.CultureInvariant|
-                                                                                     RegexOptions.IgnorePatternWhitespace|
-                                                                                     RegexOptions.Singleline));
+    static readonly Lazy<Regex> genericQueryRegex = new(() => new(GenericQueryRegex, RegexOptions.Compiled |
+                                                                                     RegexOptions.CultureInvariant |
+                                                                                     RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a generic query.
@@ -906,10 +891,9 @@ public class Uris
     /// </remarks>
     public const string KeyValueQueryRegex = $"^{keyValueQueryRex}$";
 
-    static readonly Lazy<Regex> keyValueQueryRegex = new(() => new(KeyValueQueryRegex, RegexOptions.Compiled|
-                                                                                       RegexOptions.CultureInvariant|
-                                                                                       RegexOptions.IgnorePatternWhitespace|
-                                                                                       RegexOptions.Singleline));
+    static readonly Lazy<Regex> keyValueQueryRegex = new(() => new(KeyValueQueryRegex, RegexOptions.Compiled |
+                                                                                       RegexOptions.CultureInvariant |
+                                                                                       RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's key-value query
@@ -944,10 +928,9 @@ public class Uris
     /// </remarks>
     public const string FragmentRegex = $"^{fragmentRex}$";
 
-    static readonly Lazy<Regex> fragmentRegex = new(() => new(FragmentRegex, RegexOptions.Compiled|
-                                                                             RegexOptions.CultureInvariant|
-                                                                             RegexOptions.IgnorePatternWhitespace|
-                                                                             RegexOptions.Singleline));
+    static readonly Lazy<Regex> fragmentRegex = new(() => new(FragmentRegex, RegexOptions.Compiled |
+                                                                             RegexOptions.CultureInvariant |
+                                                                             RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's fragment
@@ -984,10 +967,9 @@ public class Uris
     /// </remarks>
     public const string UriKeyValueQueryRegex = $"^{uriKeyValueQueryRex}$";
 
-    static readonly Lazy<Regex> uriKeyValueQueryRegex = new(() => new(UriKeyValueQueryRegex, RegexOptions.Compiled|
-                                                                                             RegexOptions.CultureInvariant|
-                                                                                             RegexOptions.IgnorePatternWhitespace|
-                                                                                             RegexOptions.Singleline));
+    static readonly Lazy<Regex> uriKeyValueQueryRegex = new(() => new(UriKeyValueQueryRegex, RegexOptions.Compiled |
+                                                                                             RegexOptions.CultureInvariant |
+                                                                                             RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query

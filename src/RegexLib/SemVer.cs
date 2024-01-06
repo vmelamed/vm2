@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace vm2.RegexLib;
+﻿namespace vm2.RegexLib;
 
 /// <summary>
 /// Class SemVer. Contains regular expressions that match semantic version strings. See https://semver.org
@@ -40,12 +38,12 @@ public static class SemVer
     /// <summary>
     /// BNF: <c>letter-chars = A | B | ... | Z | a | b | ... | z </c>
     /// </summary>
-    const string letterChars = $@"A-Za-z"; // Ascii.AlphaChars;
+    const string letterChars = Ascii.AlphaChars;
 
     /// <summary>
     /// BNF: <c>positive-digit = 1 | 2 | ... | 9 </c>
     /// </summary>
-    const string positiveDigitChars = $@"1-9";
+    const string positiveDigitChars = Ascii.PositiveDigitChars;
 
     /// <summary>
     /// BNF: <c>positive-digit = 1 | 2 | ... | 9 </c>
@@ -55,12 +53,12 @@ public static class SemVer
     /// <summary>
     /// BNF: <c>digit = 0 | positive-digit </c>
     /// </summary>
-    const string digitChars  = $@"0-9"; // Ascii.DigitChars;
+    const string digitChars  = Ascii.DigitChars;
 
     /// <summary>
     /// BNF: <c>digit = 0 | positive-digit </c>
     /// </summary>
-    const string digit  = $@"[{digitChars}]"; // Ascii.DigitRex;
+    const string digit  = Ascii.DigitRex;
 
     /// <summary>
     /// BNF: <c>non-digit = letter | - </c>
@@ -150,7 +148,6 @@ public static class SemVer
     /// </summary>>
     public static RegexOptions SemVerOptions => RegexOptions.Compiled
                                                 | RegexOptions.CultureInvariant
-                                                | RegexOptions.Singleline
                                                 | RegexOptions.IgnorePatternWhitespace
                                                 | RegexOptions.IgnoreCase;
 
@@ -168,7 +165,7 @@ public static class SemVer
     /// </summary>
     public const string SemVerRegex = $@"^{SemVerRex}$";
 
-    readonly static Lazy<Regex> regexSemVer = new(() => new(SemVerRegex, SemVerOptions));
+    static readonly Lazy<Regex> regexSemVer = new(() => new(SemVerRegex, SemVerOptions));
 
     /// <summary>
     /// Gets a Regex object which matches the entire input string against the pattern &lt;see cref="SemVerRegex" /&gt;

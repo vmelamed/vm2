@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
-
-namespace vm2.RegexLib;
+﻿namespace vm2.RegexLib;
 
 /// <summary>
 /// Class Files. Contains regular expressions that match strings representing Linux devices, directory names, file 
@@ -38,10 +35,11 @@ public static class LinuxPathname
 
     /// <summary>
     /// Matches a path.
-    /// Named groups: <see cref="PathGr"/>.
+    /// <para>
+    /// <para>Named groups: <see cref="PathGr"/>.</para>
+    /// </para>
     /// </summary>
     /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
     /// </remarks>
     public const string PathRex = $"(?: (?: (?<{PathGr}> {pathSeparator}? {pathRootless} ) {pathSeparator} ) | (?<{PathGr}> {pathSeparator}? ) )";
 
@@ -50,10 +48,10 @@ public static class LinuxPathname
     #region Pathname
     /// <summary>
     /// Matches a Windows disk file pathname.
-    /// Named groups: <see cref="PathGr"/>, <see cref="FileGr"/>.
+    /// <para>Named groups: <see cref="PathGr"/>, <see cref="FileGr"/>.</para>
     /// </summary>
     /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
+    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string PathnameRex = $@"(?: {PathRex}? {pathFilenameRex} )";
 
@@ -62,10 +60,9 @@ public static class LinuxPathname
     /// </summary>
     public const string PathnameRegex = $@"^{PathnameRex}$";
 
-    static readonly Lazy<Regex> regexPathname = new(() => new(PathnameRegex, RegexOptions.Compiled|
-                                                                             RegexOptions.CultureInvariant|
-                                                                             RegexOptions.IgnorePatternWhitespace|
-                                                                             RegexOptions.Singleline));
+    static readonly Lazy<Regex> regexPathname = new(() => new(PathnameRegex, RegexOptions.Compiled |
+                                                                             RegexOptions.CultureInvariant |
+                                                                             RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// Gets a Regex object which matches the entire input string against the pattern &lt;see cref="PathnameRegex" /&gt;

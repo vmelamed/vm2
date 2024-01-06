@@ -52,10 +52,22 @@ public static class Ascii
     public const string AlphaRex = $"[{AlphaChars}]";
 
     /// <summary>
+    /// The non-zero digit characters.
+    /// <para>BNF: <c>digit = 1 | 2 | ... | 9</c></para>
+    /// </summary>
+    public const string PositiveDigitChars = "1-9";
+
+    /// <summary>
+    /// Matches a non-zero digit.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9</c></para>
+    /// </summary>
+    public const string PositiveDigitRex = $"[{PositiveDigitChars}]";
+
+    /// <summary>
     /// The digit characters.
     /// <para>BNF: <c>digit = 0 | 1 | ... | 9</c></para>
     /// </summary>
-    public const string DigitChars = "0-9";
+    public const string DigitChars = $@"0{PositiveDigitChars}";
 
     /// <summary>
     /// Matches a digit.
@@ -96,7 +108,7 @@ public static class Ascii
     /// Matches a base64 encoded multiline string fragment possibly padded with `=`-s.
     /// </summary>
     /// <remarks>
-    /// Requires the matching to be done with <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// Requires "(?mx)" or <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public static string Base64Rex = @$"(?: ^{Base64CharRex}+ \r?$\n? )* (?: ^{Base64CharRex}+ ={{1,2}} \r?$\n? )?";
 
@@ -104,7 +116,7 @@ public static class Ascii
     /// Matches a base64 encoded multiline string possibly padded with `=`-s.
     /// </summary>
     /// <remarks>
-    /// Requires the matching to be done with <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// Requires "(?mx)" or <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public static string Base64Regex = @$"\A {Base64Rex} \z";
 

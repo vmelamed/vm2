@@ -26,7 +26,7 @@ public static class WindowsPathname
     /// Matches file or directory name on a disk (excludes the device names).
     /// </summary>
     /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
+    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string DiskFilenameRex = $"(?: {anyFilename} (?<!{deviceNames}) )"; // any filename but not the special filenames or special name with suffix
 
@@ -34,14 +34,13 @@ public static class WindowsPathname
     /// Matches a string representing file or directory name.
     /// </summary>
     /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
+    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string DiskFilenameRegex = $"^{DiskFilenameRex}$";
 
-    const RegexOptions regexOptions = RegexOptions.Compiled|
-                                      RegexOptions.CultureInvariant|
-                                      RegexOptions.IgnorePatternWhitespace|
-                                      RegexOptions.Singleline;
+    const RegexOptions regexOptions = RegexOptions.Compiled |
+                                      RegexOptions.CultureInvariant |
+                                      RegexOptions.IgnorePatternWhitespace;
 
     static readonly Lazy<Regex> filenameRegex = new(() => new(DiskFilenameRegex, regexOptions));
 
@@ -73,10 +72,10 @@ public static class WindowsPathname
 
     /// <summary>
     /// Matches a path.
-    /// Named groups: <see cref="PathGr"/>.
+    /// <para>Named groups: <see cref="PathGr"/>.</para>
     /// </summary>
     /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
+    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string PathRex = $"(?: (?: (?<{PathGr}> {pathSeparator}? {pathRootless} ) {pathSeparator} ) | (?<{PathGr}> {pathSeparator}? ) )";
 
@@ -84,19 +83,19 @@ public static class WindowsPathname
 
     /// <summary>
     /// Matches a disk file pathname.
-    /// Named groups: <see cref="DriveGr"/>, <see cref="PathGr"/>, <see cref="FileGr"/>.
+    /// <para>Named groups: <see cref="DriveGr"/>, <see cref="PathGr"/>, <see cref="FileGr"/>.</para>
     /// </summary>
     /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
+    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string PathnameRex = $@"(?: (?: {drive}? {PathRex}? {pathFilename} ) (?<!.{{261,}}) )";
 
     /// <summary>
     /// Matches a string that represents a disk file pathname.
-    /// Named groups: <see cref="DriveGr"/>, <see cref="PathGr"/>, <see cref="FileGr"/>.
+    /// <para>Named groups: <see cref="DriveGr"/>, <see cref="PathGr"/>, <see cref="FileGr"/>.</para>
     /// </summary>
     /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
+    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string PathnameRegex = $"^{PathnameRex}$";
 
