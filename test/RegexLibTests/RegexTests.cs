@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vm2.tests.RegexLibTests;
+namespace vm2.RegexLibTests;
 
 public abstract class RegexTests
 {

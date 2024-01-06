@@ -29,20 +29,20 @@ public static class LinuxFileNames
     /// <summary>
     /// The the name of a matching group representing the path in a path name.
     /// </summary>
-    public const string G_PATH = "path";
+    public const string PathGr = "path";
 
     /// <summary>
     /// The the name of a matching group representing the file name
     /// </summary>
-    public const string G_FILE = "file";
+    public const string FileGr = "file";
 
-    const string pathRex = $"(?<{G_PATH}> {pathSeparatorRex}? {pathRootless}?)";
+    const string pathRex = $"(?<{PathGr}> {pathSeparatorRex}? {pathRootless}?)";
 
-    const string pathFilenameRex = $"(?<{G_FILE}>{FilenameRex})" ;
+    const string pathFilenameRex = $"(?<{FileGr}>{FilenameRex})" ;
 
     /// <summary>
     /// Matches a Windows disk file pathname.
-    /// Named groups: <see cref="G_PATH"/>, <see cref="G_FILE"/>.
+    /// Named groups: <see cref="PathGr"/>, <see cref="FileGr"/>.
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>

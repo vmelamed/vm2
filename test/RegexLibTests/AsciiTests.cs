@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace vm2.tests.RegexLibTests;
+namespace vm2.RegexLibTests;
 
-public class AsciiTest : RegexTests
+public class AsciiTests : RegexTests
 {
-    public AsciiTest(ITestOutputHelper output) : base(output)
+    public AsciiTests(ITestOutputHelper output) : base(output)
     {
     }
 

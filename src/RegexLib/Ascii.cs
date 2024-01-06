@@ -51,6 +51,30 @@ public static class Ascii
     /// </summary>
     public const string AlphaRex = $"[{AlphaChars}]";
 
+    /// <summary>
+    /// The digit characters.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9</c></para>
+    /// </summary>
+    public const string DigitChars = "0-9";
+
+    /// <summary>
+    /// Matches a digit.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9</c></para>
+    /// </summary>
+    public const string DigitRex = $"[{DigitChars}]";
+
+    /// <summary>
+    /// The set of alpha-numeric chars.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | A | B | ... | Z | a | b | ... | z</c></para>
+    /// </summary>
+    public const string AlphaNumericChars = $"{DigitChars}{AlphaChars}";
+
+    /// <summary>
+    /// Matches an alpha-numeric char.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | A | B | ... | Z | a | b | ... | z</c></para>
+    /// </summary>
+    public const string AlphaNumericRex = $"[{AlphaNumericChars}]";
+
     #region Base64
     // See https://datatracker.ietf.org/doc/html/rfc4648#section-4
 

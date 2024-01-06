@@ -9,6 +9,7 @@
     <ImplicitUsings>enable</ImplicitUsings>    
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
+    <RootNamespace>vm2.RegexLibTests</RootNamespace>
     <NoWarn>xUnit1026, SYSLIB1045</NoWarn>
   </PropertyGroup>
   

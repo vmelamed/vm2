@@ -130,27 +130,27 @@ public static class Numerics
     /// <summary>
     /// The name of a matching group representing the sign of a decimal number.
     /// </summary>
-    public const string G_SIGN = "sign";
+    public const string SignGr = "sign";
 
     /// <summary>
     /// The name of a matching group representing the natural number (after the sign).
     /// </summary>
-    public const string G_NATURAL = "natural";
+    public const string NaturalGr = "natural";
 
     /// <summary>
     /// Matches a possibly signed, decimal number, a.k.a. integer number (i.e. 42, -23, etc.)
     /// <para>BNF: <c>integer_number = [+|-]natural_number</c></para>
-    /// Named groups: <see cref="G_SIGN"/> and <see cref="G_NATURAL"/>.
+    /// Named groups: <see cref="SignGr"/> and <see cref="NaturalGr"/>.
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string IntegerNumberRex = $"(?<{G_SIGN}> [+-])? (?<{G_NATURAL}> {NaturalNumberRex})";
+    public const string IntegerNumberRex = $"(?<{SignGr}> [+-])? (?<{NaturalGr}> {NaturalNumberRex})";
 
     /// <summary>
     /// Matches a string representing an integer number.
     /// <para>BNF: <c>integer_number = [+|-]natural_number</c></para>
-    /// Named groups: <see cref="G_SIGN"/> and <see cref="G_NATURAL"/>
+    /// Named groups: <see cref="SignGr"/> and <see cref="NaturalGr"/>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -165,29 +165,29 @@ public static class Numerics
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing an integer number.
     /// <para>BNF: <c>integer_number = [+|-]natural_number</c></para>
-    /// Named groups: <see cref="G_SIGN"/> and <see cref="G_NATURAL"/>
+    /// Named groups: <see cref="SignGr"/> and <see cref="NaturalGr"/>
     /// </summary>
     public static Regex IntegerNumber => rexIntegerNumber.Value;
 
     /// <summary>
     /// The name of a matching group representing the whole part of a fractional number.
     /// </summary>
-    public const string G_WHOLE = "whole";
+    public const string WholeGr = "whole";
 
     /// <summary>
     /// The name of a matching group representing the fractional part of a fractional number.
     /// </summary>
-    public const string G_FRACTION = "fraction";
+    public const string FractionGr = "fraction";
 
     /// <summary>
     /// Matches a decimal fractional number with optional sign, whole, and/or fractional part, e.g. 12.34 -.45 +67. -123.456 etc. but not -123.
     /// <para>BNF: <c>fractional_point_number = [+|-]([natural_number].natural_number | natural_number.[natural_number] | natural_number.natural_number)</c></para>
-    /// Named groups: <see cref="G_WHOLE"/> and <see cref="G_FRACTION"/>
+    /// Named groups: <see cref="WholeGr"/> and <see cref="FractionGr"/>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string FractionalNumberRex = $@"(?: (?<{G_SIGN}>[+-])? (?<{G_WHOLE}>{NaturalNumberRex}*) \. (?<{G_FRACTION}>{NaturalNumberRex}*) (?<[+-]?\.) )";
+    public const string FractionalNumberRex = $@"(?: (?<{SignGr}>[+-])? (?<{WholeGr}>{NaturalNumberRex}*) \. (?<{FractionGr}>{NaturalNumberRex}*) (?<[+-]?\.) )";
 
     /// <summary>
     /// Matches a decimal fractional number with optional sign, whole, and/or fractional part, e.g. 12.34 -.45 +67. -123.456 etc.
@@ -211,23 +211,23 @@ public static class Numerics
     /// <summary>
     /// The name of a matching group representing the mantissa (a.k.a. significant) of a number in a scientific notation.
     /// </summary>
-    public const string G_MANTISSA = "mantissa";
+    public const string MantissaGr = "mantissa";
 
     /// <summary>
     /// The name of a matching group representing the exponent of a number in a scientific notation.
     /// </summary>
-    public const string G_EXPONENT = "exponent";
+    public const string ExponentGr = "exponent";
 
     /// <summary>
     /// Matches a number in a scientific notation with mantissa and an exponent, 
     /// i.e. 12.34e56 -.45e-67 +67.e12 etc. Note that it is not necessarily normalized.
     /// <para>BNF: <c>scientific_number = fractional_point (e | E) integer_number</c></para>
-    /// Named groups: <see cref="G_MANTISSA"/> (<see cref="G_SIGN"/>, <see cref="G_WHOLE"/> and <see cref="G_FRACTION"/>) and <see cref="G_EXPONENT"/> (<see cref="G_SIGN"/> and <see cref="G_NATURAL"/>)
+    /// Named groups: <see cref="MantissaGr"/> (<see cref="SignGr"/>, <see cref="WholeGr"/> and <see cref="FractionGr"/>) and <see cref="ExponentGr"/> (<see cref="SignGr"/> and <see cref="NaturalGr"/>)
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string ScientificNumberRex = $@"(?<{G_MANTISSA}>{FractionalNumberRex}) [eE] (?<{G_EXPONENT}>{IntegerNumberRex})";
+    public const string ScientificNumberRex = $@"(?<{MantissaGr}>{FractionalNumberRex}) [eE] (?<{ExponentGr}>{IntegerNumberRex})";
 
     /// <summary>
     /// Matches a string that represents a number in a scientific notation with mantissa and an exponent, 

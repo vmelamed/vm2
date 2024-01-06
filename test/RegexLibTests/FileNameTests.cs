@@ -1,16 +1,13 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-
-using vm2.tests.RegexLibTests;
-
-namespace RegexLibTests;
+﻿namespace vm2.RegexLibTests;
 
 public class FileNameTests : RegexTests
 {
     static readonly string boarderLengthName = new string('a', 260);
     static readonly string overBoardLengthName = new string('a', 261);
 
-    public FileNameTests(ITestOutputHelper output) : base(output) { }
+    public FileNameTests(ITestOutputHelper output) : base(output)
+    {
+    }
 
     public static TheoryData<string, bool, string> WinFilenameData => new TheoryData<string, bool, string>
     {
