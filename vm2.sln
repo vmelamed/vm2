@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vm2.RegexLib", "src\RegexLi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7DA8C164-08F9-412B-B1E5-A0847344F21F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegexLibTests", "test\RegexLibTests\RegexLibTests.csproj", "{2F77FB2F-02E8-4DDE-8F58-E2F8FFDF93A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vm.RegexLibTests", "test\RegexLibTests\vm.RegexLibTests.csproj", "{2F77FB2F-02E8-4DDE-8F58-E2F8FFDF93A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

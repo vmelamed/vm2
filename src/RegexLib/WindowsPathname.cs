@@ -4,7 +4,7 @@
 /// Class Files. Contains regular expressions that match strings representing Windows drives, directory names, file 
 /// names, and file paths.
 /// </summary>
-public static class WindowsFileNames
+public static class WindowsPathname
 {
     // See https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file.
 
@@ -53,40 +53,47 @@ public static class WindowsFileNames
     /// <summary>
     /// The the name of a matching group representing the drive letter in a path name.
     /// </summary>
-    public const string G_DRIVE = "drive";
+    public const string DriveGr = "drive";
 
     /// <summary>
     /// The the name of a matching group representing the path path name.
     /// </summary>
-    public const string G_PATH = "path";
+    public const string PathGr = "path";
 
     /// <summary>
     /// The the name of a matching group representing the file name.
     /// </summary>
-    public const string G_FILE = "file";
+    public const string FileGr = "file";
 
-    const string driveRex = $"(?: (?<{G_DRIVE}>{Ascii.AlphaRex}) : )";
+    const string drive = $"(?: (?<{DriveGr}>{Ascii.AlphaRex}) : )";
 
-    const string pathSegmentRex = $@"(?: \. | \.\. | {DiskFilenameRex} )";
+    const string pathSegment = $@"(?: \. | \.\. | {DiskFilenameRex} )";
 
-    const string pathRootless = $"(?: {pathSegmentRex} (?:{pathSeparator} {pathSegmentRex})* )";
-
-    const string pathRex = $"(?: (?: (?<{G_PATH}> {pathSeparator}? {pathRootless} ) {pathSeparator} ) | (?<{G_PATH}> {pathSeparator}? ) )";
-
-    const string pathFilenameRex = $"(?<{G_FILE}> {DiskFilenameRex} )";
+    const string pathRootless = $"(?: {pathSegment} (?:{pathSeparator} {pathSegment})* )";
 
     /// <summary>
-    /// Matches a disk file pathname.
-    /// Named groups: <see cref="G_DRIVE"/>, <see cref="G_PATH"/>, <see cref="G_FILE"/>.
+    /// Matches a path.
+    /// Named groups: <see cref="PathGr"/>.
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
     /// </remarks>
-    public const string PathnameRex = $@"(?: (?: {driveRex}? {pathRex}? {pathFilenameRex} ) (?<!.{{261,}}) )";
+    public const string PathRex = $"(?: (?: (?<{PathGr}> {pathSeparator}? {pathRootless} ) {pathSeparator} ) | (?<{PathGr}> {pathSeparator}? ) )";
+
+    const string pathFilename = $"(?<{FileGr}> {DiskFilenameRex} )";
+
+    /// <summary>
+    /// Matches a disk file pathname.
+    /// Named groups: <see cref="DriveGr"/>, <see cref="PathGr"/>, <see cref="FileGr"/>.
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>
+    /// </remarks>
+    public const string PathnameRex = $@"(?: (?: {drive}? {PathRex}? {pathFilename} ) (?<!.{{261,}}) )";
 
     /// <summary>
     /// Matches a string that represents a disk file pathname.
-    /// Named groups: <see cref="G_DRIVE"/>, <see cref="G_PATH"/>, <see cref="G_FILE"/>.
+    /// Named groups: <see cref="DriveGr"/>, <see cref="PathGr"/>, <see cref="FileGr"/>.
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>

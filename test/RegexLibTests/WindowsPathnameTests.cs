@@ -1,11 +1,11 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class FileNameTests : RegexTests
+public class WindowsPathnameTests : RegexTests
 {
     static readonly string boarderLengthName = new string('a', 260);
     static readonly string overBoardLengthName = new string('a', 261);
 
-    public FileNameTests(ITestOutputHelper output) : base(output)
+    public WindowsPathnameTests(ITestOutputHelper output) : base(output)
     {
     }
 
@@ -37,7 +37,7 @@ public class FileNameTests : RegexTests
     [Theory]
     [MemberData(nameof(WinFilenameData))]
     public void TestWinFilename(string TestLine, bool shouldBe, string fileName)
-        => base.RegexTest(WindowsFileNames.DiskFilename, TestLine, shouldBe, fileName);
+        => base.RegexTest(WindowsPathname.DiskFilename, TestLine, shouldBe, fileName);
 
     public static TheoryData<string, bool, string, string, string, string> WinPathnameData => new TheoryData<string, bool, string, string, string, string>
     {
@@ -124,16 +124,16 @@ public class FileNameTests : RegexTests
     [MemberData(nameof(WinPathnameData))]
     public void TestWinPathname(string TestLine, bool shouldBe, string pathname, string file, string path, string drive)
     {
-        var matches = base.RegexTest(WindowsFileNames.Pathname, TestLine, shouldBe, pathname);
+        var matches = base.RegexTest(WindowsPathname.Pathname, TestLine, shouldBe, pathname);
 
         if (matches.Count == 0)
             return;
 
         matches.Should().HaveCount(1);
 
-        var gDrive = matches.First().Groups[WindowsFileNames.G_DRIVE].Value;
-        var gPath = matches.First().Groups[WindowsFileNames.G_PATH].Value;
-        var gFile = matches.First().Groups[WindowsFileNames.G_FILE].Value;
+        var gDrive = matches.First().Groups[WindowsPathname.DriveGr].Value;
+        var gPath = matches.First().Groups[WindowsPathname.PathGr].Value;
+        var gFile = matches.First().Groups[WindowsPathname.FileGr].Value;
 
         gDrive.Should().Be(drive);
         gPath.Should().Be(path);
@@ -144,6 +144,5 @@ public class FileNameTests : RegexTests
                          Path:     →{gPath}←
                          File:     →{gFile}←
                        """);
-
     }
 }
