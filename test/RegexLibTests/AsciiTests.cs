@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace vm2.RegexLibTests;
+﻿namespace vm2.RegexLibTests;
 
 public class AsciiTests : RegexTests
 {
@@ -8,8 +6,7 @@ public class AsciiTests : RegexTests
     {
     }
 
-    public static TheoryData<string, bool, string> LowAlphaRexData => new TheoryData<string, bool, string>
-    {
+    public static TheoryData<string, bool, string> LowAlphaRexData => new() {
         { TestLine(), false, ""  },
         { TestLine(), true , "a" },
         { TestLine(), true , "z" },
@@ -25,8 +22,7 @@ public class AsciiTests : RegexTests
     public void TestLowAlphaRex(string TestLine, bool shouldBe, string input)
         => base.RegexStringTest(Ascii.LowAlphaRex, TestLine, shouldBe, input);
 
-    public static TheoryData<string, bool, string> HighAlphaRexData => new TheoryData<string, bool, string>
-    {
+    public static TheoryData<string, bool, string> HighAlphaRexData => new() {
         { TestLine(), false, ""  },
         { TestLine(), true , "A" },
         { TestLine(), true , "Z" },
@@ -41,9 +37,8 @@ public class AsciiTests : RegexTests
     [MemberData(nameof(HighAlphaRexData))]
     public void TestHighAlphaRex(string TestLine, bool shouldBe, string input)
         => base.RegexStringTest(Ascii.HighAlphaRex, TestLine, shouldBe, input);
-    
-    public static TheoryData<string, bool, string> AlphaRexData => new TheoryData<string, bool, string>
-    {
+
+    public static TheoryData<string, bool, string> AlphaRexData => new() {
         { TestLine(), false, ""  },
         { TestLine(), true, "A"  },
         { TestLine(), true, "Z"  },
@@ -61,8 +56,7 @@ public class AsciiTests : RegexTests
     public void TestAlphaRex(string TestLine, bool shouldBe, string input)
         => base.RegexStringTest(Ascii.AlphaRex, TestLine, shouldBe, input);
 
-    public static TheoryData<string, bool, string> Base64CharRexData => new TheoryData<string, bool, string>
-    {
+    public static TheoryData<string, bool, string> Base64CharRexData => new() {
         { TestLine(), false, ""   },
         { TestLine(), true , "A"  },
         { TestLine(), true , "Z"  },
@@ -82,11 +76,10 @@ public class AsciiTests : RegexTests
 
     [Theory]
     [MemberData(nameof(Base64CharRexData))]
-    public void TestBase64CharRex(string TestLine, bool shouldBe, string input) 
+    public void TestBase64CharRex(string TestLine, bool shouldBe, string input)
         => base.RegexStringTest(Ascii.Base64CharRex, TestLine, shouldBe, input);
 
-    public static TheoryData<string, bool, string> Base64Data => new TheoryData<string, bool, string>
-    {
+    public static TheoryData<string, bool, string> Base64Data => new() {
         { TestLine(), true,  "" },
         { TestLine(), true,  "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu" },
         { TestLine(), false, "!" },
@@ -178,6 +171,6 @@ public class AsciiTests : RegexTests
 
     [Theory]
     [MemberData(nameof(Base64Data))]
-    public void TestBase64(string TestLine, bool shouldBe, string input) 
+    public void TestBase64(string TestLine, bool shouldBe, string input)
         => base.RegexTest(Ascii.Base64, TestLine, shouldBe, input);
 }

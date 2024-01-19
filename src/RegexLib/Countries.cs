@@ -132,9 +132,9 @@ public static class Countries
     /// <remarks>
     /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string PhoneCodeRex = $@"(?: {Ascii.PositiveDigitRex} | "+
-                                           $@"{Ascii.PositiveDigitRex}{Ascii.DigitRex} | "+
-                                           $@"{Ascii.PositiveDigitRex}{Ascii.DigitRex}{Ascii.DigitRex} )";
+    public const string PhoneCodeRex = $@"(?: {Ascii.NonZeroDigitRex} | "+
+                                           $@"{Ascii.NonZeroDigitRex}{Ascii.DigitRex} | "+
+                                           $@"{Ascii.NonZeroDigitRex}{Ascii.DigitRex}{Ascii.DigitRex} )";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a country phone code.
@@ -177,7 +177,7 @@ public static class Countries
     /// <summary>
     /// Regular expression pattern which matches a phone number by E.164 in a string.
     /// </summary>
-    public const string PhoneNumberE164Rex = $@"\+{Ascii.PositiveDigitRex}{Ascii.DigitRex}{{2,14}}";
+    public const string PhoneNumberE164Rex = $@"\+{Ascii.NonZeroDigitRex}{Ascii.DigitRex}{{2,14}}";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a phone number by E.164.
@@ -197,7 +197,7 @@ public static class Countries
     /// Regular expression pattern which matches a phone number expressed with the accepted extra characters 
     /// like '-', '.', ' ', '+', '(', ')'.
     /// </summary>
-    public const string PhoneNumberExtraRex = $@"\+? ({phoneSeparatorRex}*{Ascii.PositiveDigitRex}) (?:{phoneSeparatorRex}*?{Ascii.DigitRex}){{2,14}} {phoneSeparatorRex}*";
+    public const string PhoneNumberExtraRex = $@"\+? ({phoneSeparatorRex}*{Ascii.NonZeroDigitRex}) (?:{phoneSeparatorRex}*?{Ascii.DigitRex}){{2,14}} {phoneSeparatorRex}*";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a phone number expressed with the accepted extra characters.

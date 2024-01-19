@@ -53,21 +53,21 @@ public static class Ascii
 
     /// <summary>
     /// The non-zero digit characters.
-    /// <para>BNF: <c>digit = 1 | 2 | ... | 9</c></para>
+    /// <para>BNF: <c>non-zero-digit = 1 | 2 | ... | 9</c></para>
     /// </summary>
-    public const string PositiveDigitChars = "1-9";
+    public const string NonZeroDigitChars = "1-9";
 
     /// <summary>
     /// Matches a non-zero digit.
-    /// <para>BNF: <c>digit = 0 | 1 | ... | 9</c></para>
+    /// <para>BNF: <c>non-zero-digit = 1 | 2 | ... | 9</c></para>
     /// </summary>
-    public const string PositiveDigitRex = $"[{PositiveDigitChars}]";
+    public const string NonZeroDigitRex = $"[{NonZeroDigitChars}]";
 
     /// <summary>
     /// The digit characters.
-    /// <para>BNF: <c>digit = 0 | 1 | ... | 9</c></para>
+    /// <para>BNF: <c>digit = 0 | non-zero-digit</c></para>
     /// </summary>
-    public const string DigitChars = $@"0{PositiveDigitChars}";
+    public const string DigitChars = $@"0-9";   // <==> $@"0{NonZeroDigitChars}";
 
     /// <summary>
     /// Matches a digit.

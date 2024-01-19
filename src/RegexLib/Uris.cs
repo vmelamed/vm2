@@ -13,7 +13,7 @@ public class Uris
     /// </summary>
     public const string EmptyRex = "(?:)";
 
-    const string alphaNumChars = $"{Ascii.AlphaChars} {Numerics.DecDigitChars}";
+    const string alphaNumChars = $"{Ascii.AlphaChars} {Ascii.DigitChars}";
 
     /// <summary>
     /// Matches an alpha numeric character.
@@ -143,10 +143,10 @@ public class Uris
     /// </summary>
     const string decimalOctetRex =
          $"(?: 25[0-5] | "+
-         $"2[0-4]{Numerics.DecDigitRex} | "+
-         $"1{Numerics.DecDigitRex}{Numerics.DecDigitRex} | "+
-         $"[1-9]{Numerics.DecDigitRex} | "+
-         $"{Numerics.DecDigitRex} )";
+         $"2[0-4]{Ascii.DigitRex} | "+
+         $"1{Ascii.DigitRex}{Ascii.DigitRex} | "+
+         $"[1-9]{Ascii.DigitRex} | "+
+         $"{Ascii.DigitRex} )";
 
     /// <summary>
     /// Matches an IPv4 address.
@@ -292,7 +292,7 @@ public class Uris
     const string ipLiteralAddressRex = $@"[ {Ipv6AddressRex} | {IpvFutureAddressRex} ]";
 
     // a-zA-Z0-9-
-    const string alphaDigitHyphenChars = $@"{Ascii.AlphaChars} {Numerics.DecDigitChars} \-";
+    const string alphaDigitHyphenChars = $@"{Ascii.AlphaChars} {Ascii.DigitChars} \-";
 
     /// <summary>
     /// Matches an alpha-digit-hyphen character from RFC1034
