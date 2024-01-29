@@ -75,7 +75,14 @@ public static class WindowsPathname
     /// <remarks>
     /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string PathRex = $"(?: (?: (?<{PathGr}> {pathSeparator}? {pathRootless} ) {pathSeparator} ) | (?<{PathGr}> {pathSeparator}? ) )";
+    public const string PathRex = $"""
+        (?:
+          (?: 
+            (?<{PathGr}> {pathSeparator}? {pathRootless} ) {pathSeparator}
+          ) 
+          | (?<{PathGr}> {pathSeparator}? )
+        )
+        """;
 
     const string pathFilename = $"(?<{FileGr}> {DiskFilenameRex} )";
 

@@ -238,11 +238,10 @@ public static class Countries
         /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
         /// </remarks>
         public const string TelephoneNumberRex = $$"""
-                                               (?:\+?1)? {{telephoneSeparatorRex}}*
-                                               (            ?<{{AreaGr}}> [2-9] (?!11) {{Ascii.DigitRex}}{2} )
-                                                         {{telephoneSeparatorRex}}* 
-                                               (?<{{NumberGr}}> [2-9]{{Ascii.DigitRex}}{2} {{telephoneSeparatorRex}}* {{Ascii.DigitRex}}{4} {{telephoneSeparatorRex}}* )
-                                               """;
+            (?:\+?1)? {{telephoneSeparatorRex}}*
+            (?<{{AreaGr}}>   [2-9] (?!11) {{Ascii.DigitRex}}{2} ) {{telephoneSeparatorRex}}* 
+            (?<{{NumberGr}}> [2-9]        {{Ascii.DigitRex}}{2}   {{telephoneSeparatorRex}}* {{Ascii.DigitRex}}{4} {{telephoneSeparatorRex}}* )
+            """;
 
         /// <summary>
         /// Regular expression pattern which matches a string that represents a US telephone number.
@@ -273,9 +272,9 @@ public static class Countries
         /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
         /// </remarks>
         public const string TelephoneNumberStrictRex = $$"""
-                                                     (?:\+?1)? {{Ascii.Space}}? \( (?<{{AreaGr}}> [2-9] (?!11) {{Ascii.DigitRex}}{2} ) \)
-                                                     {{Ascii.Space}}? (?<{{NumberGr}}> [2-9]{{Ascii.DigitRex}}{2} \- {{Ascii.DigitRex}}{4} {{telephoneSeparatorRex}}* )";
-                                                     """;
+             (?:\+?1)? {{Ascii.Space}}? \( (?<{{AreaGr}}> [2-9] (?!11) {{Ascii.DigitRex}}{2} ) \)
+             {{Ascii.Space}}? (?<{{NumberGr}}> [2-9]{{Ascii.DigitRex}}{2} \- {{Ascii.DigitRex}}{4} {{telephoneSeparatorRex}}* )";
+             """;
 
         /// <summary>
         /// Regular expression pattern which matches a string that represents a US telephone number.

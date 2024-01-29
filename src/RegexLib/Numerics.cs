@@ -179,10 +179,10 @@ public static class Numerics
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string FractionalNumberRex = $$"""
-                                                (?<{{FSignGr}}>[+-]?)
-                                                (?: (?:(?<{{WholeGr}}> {{Ascii.DigitRex}}+)      (?:\.(?<{{FractionGr}}> {{Ascii.DigitRex}}*))? )  |
-                                                (?: (?:(?<{{WholeGr}}> {{Ascii.DigitRex}}* ) \.))? (?:(?<{{FractionGr}}> {{Ascii.DigitRex}}+))  )
-                                                """;
+        (?<{{FSignGr}}>[+-]?)
+        (?: (?:(?<{{WholeGr}}> {{Ascii.DigitRex}}+)      (?:\.(?<{{FractionGr}}> {{Ascii.DigitRex}}*))? )  |
+        (?: (?:(?<{{WholeGr}}> {{Ascii.DigitRex}}* ) \.))? (?:(?<{{FractionGr}}> {{Ascii.DigitRex}}+))  )
+        """;
 
     /// <summary>
     /// Matches a decimal fractional number with optional sign, whole, and/or fractional part, e.g. 12.34 -.45 +67. -123.456 etc.
@@ -247,16 +247,17 @@ public static class Numerics
 
     #region Uuid
     const string uuidWithDashesRex = $$"""
-                                       (?<op> \(? )
-                                       (?<ob> \{? )
-                                       {{HexDigitRex}}{8}-
-                                       {{HexDigitRex}}{4}-
-                                       {{HexDigitRex}}{4}-
-                                       {{HexDigitRex}}{4}-
-                                       {{HexDigitRex}}{12}
-                                       (?<cb-ob> (?<cb> \}? ) )
-                                       (?<cp-op> (?<cp> \)? ) )
-                                       """;
+         (?<op> \(? )
+         (?<ob> \{? )
+         {{HexDigitRex}}{8}-
+         {{HexDigitRex}}{4}-
+         {{HexDigitRex}}{4}-
+         {{HexDigitRex}}{4}-
+         {{HexDigitRex}}{12}
+         (?<cb-ob> (?<cb> \}? ) )
+         (?<cp-op> (?<cp> \)? ) )
+         """;
+
     const string uuidWithNoDashesRex = $@"{HexDigitRex}{{32}}";
 
 

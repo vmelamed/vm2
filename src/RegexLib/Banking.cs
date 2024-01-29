@@ -57,11 +57,11 @@ public static class Banking
     /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string SwiftCodeRex = $$"""
-                                         (?<{{BankGr}}>     {{Ascii.HighAlphaRex}}{4}        )
-                                         (?<{{CountryGr}}>  {{Countries.CountryCode2Rex}}    )
-                                         (?<{{LocationGr}}> {{Ascii.HighAlphaNumericRex}}{2} )
-                                         (?<{{BranchGr}}>   {{Ascii.HighAlphaNumericRex}}{3} )?
-                                         """;
+        (?<{{BankGr}}>     {{Ascii.HighAlphaRex}}{4}        )
+        (?<{{CountryGr}}>  {{Countries.CountryCode2Rex}}    )
+        (?<{{LocationGr}}> {{Ascii.HighAlphaNumericRex}}{2} )
+        (?<{{BranchGr}}>   {{Ascii.HighAlphaNumericRex}}{3} )?
+        """;
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a SWIFT bank code, a.k.a. BIC.
@@ -120,12 +120,12 @@ public static class Banking
     /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string IbanRex = $$"""
-                                   (?<{{BankGr}}>      {{Countries.CountryCode2Rex}} )
-                                   (?<{{CheckGr}}>     {{Ascii.DigitRex}}{2} ) {{Ascii.Space}}? 
-                                   (?<{{BasicBanGr}}>  {{Ascii.HighAlphaNumericRex}}{4}
-                                                       (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericRex}}{4}   ){2,6} 
-                                                       (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericRex}}{1,4} )?     )
-                                   """;
+       (?<{{BankGr}}>      {{Countries.CountryCode2Rex}} )
+       (?<{{CheckGr}}>     {{Ascii.DigitRex}}{2} ) {{Ascii.Space}}? 
+       (?<{{BasicBanGr}}>  {{Ascii.HighAlphaNumericRex}}{4}
+                           (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericRex}}{4}   ){2,6} 
+                           (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericRex}}{1,4} )?     )
+       """;
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents an International Bank Account Number.
