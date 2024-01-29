@@ -143,14 +143,6 @@ public static class SemVer
     /// </summary>
     const string versionCore = $@"(?<{CoreGr}> {major}.{minor}.{patch} )";
 
-    /// <summary>
-    /// Gets the regular expression options for parsing SemVer strings.
-    /// </summary>>
-    public static RegexOptions SemVerOptions => RegexOptions.Compiled
-                                                | RegexOptions.CultureInvariant
-                                                | RegexOptions.IgnorePatternWhitespace
-                                                | RegexOptions.IgnoreCase;
-
     #region The Regex object
     /// <summary>
     /// Regular expression pattern which matches a valid SemVer in an input string.
@@ -165,7 +157,9 @@ public static class SemVer
     /// </summary>
     public const string SemVerRegex = $@"^{SemVerRex}$";
 
-    static readonly Lazy<Regex> regexSemVer = new(() => new(SemVerRegex, SemVerOptions));
+    static readonly Lazy<Regex> regexSemVer = new(() => new(SemVerRegex, RegexOptions.Compiled |
+                                                                         RegexOptions.IgnoreCase |
+                                                                         RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// Gets a Regex object which matches the entire input string against the pattern &lt;see cref="SemVerRegex" /&gt;

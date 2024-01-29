@@ -1,12 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class CountriesUsTests : RegexTests
+public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
 {
-    public CountriesUsTests(ITestOutputHelper output) : base(output)
-    {
-    }
-
-    public static TheoryData<string, bool, string> PhoneNumberData => new() {
+    public static TheoryData<string, bool, string> TelephoneNumberData => new() {
         { TestLine(), false, ""},
         { TestLine(), false, " "},
         { TestLine(), false, "  "},
@@ -28,15 +24,15 @@ public class CountriesUsTests : RegexTests
         { TestLine(), true,  "1(234)567-8901"},
         { TestLine(), false, "1(034)567-8901"},
         { TestLine(), false, "1(911)511-8901"},
-        { TestLine(), true,  "+1.234.567.8901"},
-        { TestLine(), true,  "+1+234+567+8901"},
+        { TestLine(), false, "+1.234.567.8901"},
+        { TestLine(), false, "+1+234+567+8901"},
     };
 
     [Theory]
-    [MemberData(nameof(PhoneNumberData))]
-    public void TestPhoneNumber(string TestLine, bool shouldBe, string code)
+    [MemberData(nameof(TelephoneNumberData))]
+    public void TestTelephoneNumber(string TestLine, bool shouldBe, string code)
     {
-        var matches = base.RegexTest(Countries.US.PhoneNumber, TestLine, shouldBe, code);
+        var matches = base.RegexTest(Countries.US.TelephoneNumber, TestLine, shouldBe, code);
 
         if (matches.Count == 0)
             return;
@@ -44,7 +40,7 @@ public class CountriesUsTests : RegexTests
         matches.Should().HaveCount(1);
     }
 
-    public static TheoryData<string, bool, string> PhoneNumberStrictData => new() {
+    public static TheoryData<string, bool, string> TelephoneNumberStrictData => new() {
         { TestLine(), false, ""},
         { TestLine(), false, " "},
         { TestLine(), false, "  "},
@@ -71,10 +67,10 @@ public class CountriesUsTests : RegexTests
     };
 
     [Theory]
-    [MemberData(nameof(PhoneNumberStrictData))]
-    public void TestPhoneNumberStrict(string TestLine, bool shouldBe, string code)
+    [MemberData(nameof(TelephoneNumberStrictData))]
+    public void TestTelephoneNumberStrict(string TestLine, bool shouldBe, string code)
     {
-        var matches = base.RegexTest(Countries.US.PhoneNumberStrict, TestLine, shouldBe, code);
+        var matches = base.RegexTest(Countries.US.TelephoneNumberStrict, TestLine, shouldBe, code);
 
         if (matches.Count == 0)
             return;

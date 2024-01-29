@@ -38,11 +38,9 @@ public static class WindowsPathname
     /// </remarks>
     public const string DiskFilenameRegex = $"^{DiskFilenameRex}$";
 
-    const RegexOptions regexOptions = RegexOptions.Compiled |
-                                      RegexOptions.CultureInvariant |
-                                      RegexOptions.IgnorePatternWhitespace;
-
-    static readonly Lazy<Regex> filenameRegex = new(() => new(DiskFilenameRegex, regexOptions));
+    static readonly Lazy<Regex> filenameRegex = new(() => new(DiskFilenameRegex, RegexOptions.Compiled |
+                                                                                 RegexOptions.CultureInvariant |
+                                                                                 RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing file or directory name.
@@ -99,7 +97,9 @@ public static class WindowsPathname
     /// </remarks>
     public const string PathnameRegex = $"^{PathnameRex}$";
 
-    static readonly Lazy<Regex> pathname = new(() => new Regex(PathnameRegex, regexOptions));
+    static readonly Lazy<Regex> pathname = new(() => new Regex(PathnameRegex, RegexOptions.Compiled |
+                                                                              RegexOptions.CultureInvariant |
+                                                                              RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a file path.

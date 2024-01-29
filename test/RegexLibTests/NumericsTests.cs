@@ -1,11 +1,7 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class NumericsTests : RegexTests
+public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
 {
-    public NumericsTests(ITestOutputHelper output) : base(output)
-    {
-    }
-
     public static TheoryData<string, bool, string> OctalNumberRexData => new() {
         { TestLine(), false, "" },
         { TestLine(), false, " " },

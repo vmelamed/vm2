@@ -9,12 +9,12 @@ public static class Ascii
     /// <summary>
     /// The space. It must be escaped in regular expressions with <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </summary>
-    public const string Space = "\x0020";
+    public const string Space = @"\x20";
 
     /// <summary>
     /// The hash sign. It must be escaped not as "\#" in regular expressions with <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </summary>
-    public const string Hash = "\x0023";
+    public const string Hash = @"\x23";
 
 
     /// <summary>
@@ -76,6 +76,30 @@ public static class Ascii
     public const string DigitRex = $"[{DigitChars}]";
 
     /// <summary>
+    /// The set of high-alpha-numeric chars.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | A | B | ... | Z </c></para>
+    /// </summary>
+    public const string HighAlphaNumericChars = $"{DigitChars}{HighAlphaChars}";
+
+    /// <summary>
+    /// Matches an high-alpha-numeric char.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | A | B | ... | Z </c></para>
+    /// </summary>
+    public const string HighAlphaNumericRex = $"[{HighAlphaNumericChars}]";
+
+    /// <summary>
+    /// The set of low-alpha-numeric chars.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | a | b | ... | z </c></para>
+    /// </summary>
+    public const string LowAlphaNumericChars = $"{DigitChars}{LowAlphaChars}";
+
+    /// <summary>
+    /// Matches an low-alpha-numeric char.
+    /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | a | b | ... | z </c></para>
+    /// </summary>
+    public const string LowAlphaNumericRex = $"[{LowAlphaNumericChars}]";
+
+    /// <summary>
     /// The set of alpha-numeric chars.
     /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | A | B | ... | Z | a | b | ... | z</c></para>
     /// </summary>
@@ -120,11 +144,9 @@ public static class Ascii
     /// </remarks>
     public static string Base64Regex = @$"\A {Base64Rex} \z";
 
-    static readonly Lazy<Regex> rexBase64 = new(() => new Regex(Base64Regex, RegexOptions.Compiled|
-                                                                             RegexOptions.CultureInvariant|
-                                                                             RegexOptions.IgnorePatternWhitespace|
-                                                                             RegexOptions.Multiline|
-                                                                             RegexOptions.ExplicitCapture));
+    static readonly Lazy<Regex> rexBase64 = new(() => new Regex(Base64Regex, RegexOptions.Compiled |
+                                                                             RegexOptions.IgnorePatternWhitespace |
+                                                                             RegexOptions.Multiline));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a base64 encoded multiline string possibly padded with `=`-s.

@@ -1,11 +1,7 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class AsciiTests : RegexTests
+public class AsciiTests(ITestOutputHelper output) : RegexTests(output)
 {
-    public AsciiTests(ITestOutputHelper output) : base(output)
-    {
-    }
-
     public static TheoryData<string, bool, string> LowAlphaRexData => new() {
         { TestLine(), false, ""  },
         { TestLine(), true , "a" },

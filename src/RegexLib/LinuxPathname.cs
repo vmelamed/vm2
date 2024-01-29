@@ -61,7 +61,6 @@ public static class LinuxPathname
     public const string PathnameRegex = $@"^{PathnameRex}$";
 
     static readonly Lazy<Regex> regexPathname = new(() => new(PathnameRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.CultureInvariant |
                                                                              RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>

@@ -29,8 +29,7 @@ public static class Numerics
     /// </summary>
     public const string OctalNumberRegex = $"^{OctNumberRex}$";
 
-    static readonly Lazy<Regex> rexOctalNumber = new(() => new(OctalNumberRegex, RegexOptions.Compiled |
-                                                                                 RegexOptions.CultureInvariant));
+    static readonly Lazy<Regex> rexOctalNumber = new(() => new(OctalNumberRegex, RegexOptions.Compiled));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing an octal number.
@@ -63,8 +62,7 @@ public static class Numerics
     /// </summary>
     public const string HexadecimalNumberRegex = $"^{HexNumberRex}$";
 
-    static readonly Lazy<Regex> rexHexadecimalNumber = new(() => new(HexadecimalNumberRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.CultureInvariant));
+    static readonly Lazy<Regex> rexHexadecimalNumber = new(() => new(HexadecimalNumberRegex, RegexOptions.Compiled));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a hexadecimal number.
@@ -85,8 +83,7 @@ public static class Numerics
     /// </summary>
     public const string NaturalNumberRegex = $"^{NaturalNumberRex}$";
 
-    static readonly Lazy<Regex> rexNaturalNumber = new(() => new(NaturalNumberRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.CultureInvariant));
+    static readonly Lazy<Regex> rexNaturalNumber = new(() => new(NaturalNumberRegex, RegexOptions.Compiled));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a sign-less, whole, decimal 
@@ -108,7 +105,7 @@ public static class Numerics
     /// </summary>
     public const string DecimalNumberRegex = $@"^{DecimalNumberRex}$";
 
-    static readonly Lazy<Regex> regexDecimalNumber = new(() => new(DecimalNumberRegex, RegexOptions.Compiled | RegexOptions.CultureInvariant));
+    static readonly Lazy<Regex> regexDecimalNumber = new(() => new(DecimalNumberRegex, RegexOptions.Compiled));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a zero or natural number.
@@ -148,7 +145,6 @@ public static class Numerics
     public const string IntegerNumberRegex = $"^{IntegerNumberRex}$";
 
     static readonly Lazy<Regex> rexIntegerNumber = new(() => new(IntegerNumberRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.CultureInvariant |
                                                                                      RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
@@ -182,7 +178,11 @@ public static class Numerics
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string FractionalNumberRex = $@"(?<{FSignGr}>[+-]?) (?:(?<{WholeGr}> {Ascii.DigitRex}+) (?:\. (?<{FractionGr}> {Ascii.DigitRex}*))? | (?:(?:(?<{WholeGr}> {Ascii.DigitRex}* ) \. ))? (?:(?<{FractionGr}> {Ascii.DigitRex}+)))";
+    public const string FractionalNumberRex = $$"""
+                                                (?<{{FSignGr}}>[+-]?)
+                                                (?: (?:(?<{{WholeGr}}> {{Ascii.DigitRex}}+)      (?:\.(?<{{FractionGr}}> {{Ascii.DigitRex}}*))? )  |
+                                                (?: (?:(?<{{WholeGr}}> {{Ascii.DigitRex}}* ) \.))? (?:(?<{{FractionGr}}> {{Ascii.DigitRex}}+))  )
+                                                """;
 
     /// <summary>
     /// Matches a decimal fractional number with optional sign, whole, and/or fractional part, e.g. 12.34 -.45 +67. -123.456 etc.
@@ -194,7 +194,6 @@ public static class Numerics
     public const string FractionalNumberRegex = $"^{FractionalNumberRex}$";
 
     static readonly Lazy<Regex> rexFractional = new(() => new(FractionalNumberRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.CultureInvariant |
                                                                                      RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
@@ -216,7 +215,10 @@ public static class Numerics
     /// Matches a number in a scientific notation with mantissa and an exponent, 
     /// i.e. 12.34e56 -.45e-67 +67.e12 etc. Note that it is not necessarily normalized.
     /// <para>BNF: <c>scientific_number = fractional_point (e | E) integer_number</c></para>
-    /// <para>Named groups: <see cref="MantissaGr"/> (<see cref="FSignGr"/>, <see cref="WholeGr"/> and <see cref="FractionGr"/>) and <see cref="ExponentGr"/> (<see cref="ISignGr"/> and <see cref="DecimalGr"/>).</para>
+    /// <para>
+    /// Named groups: <see cref="MantissaGr"/> (<see cref="FSignGr"/>, <see cref="WholeGr"/> and <see cref="FractionGr"/>) 
+    /// and <see cref="ExponentGr"/> (<see cref="ISignGr"/> and <see cref="DecimalGr"/>).
+    /// </para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -234,7 +236,6 @@ public static class Numerics
     public const string ScientificNumberRegex = $"^{ScientificNumberRex}$";
 
     static readonly Lazy<Regex> scientificNumber = new(() => new(ScientificNumberRegex, RegexOptions.Compiled |
-                                                                                        RegexOptions.CultureInvariant |
                                                                                         RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
@@ -245,7 +246,17 @@ public static class Numerics
     public static Regex ScientificNumber => scientificNumber.Value;
 
     #region Uuid
-    const string uuidWithDashesRex = $@"(?<op>\(?) (?<ob>\{{?) {HexDigitRex}{{8}}-{HexDigitRex}{{4}}-{HexDigitRex}{{4}}-{HexDigitRex}{{4}}-{HexDigitRex}{{12}} (?<cb-ob> (?<cb>\}}?) ) (?<cp-op> (?<cp>\)?) )";
+    const string uuidWithDashesRex = $$"""
+                                       (?<op> \(? )
+                                       (?<ob> \{? )
+                                       {{HexDigitRex}}{8}-
+                                       {{HexDigitRex}}{4}-
+                                       {{HexDigitRex}}{4}-
+                                       {{HexDigitRex}}{4}-
+                                       {{HexDigitRex}}{12}
+                                       (?<cb-ob> (?<cb> \}? ) )
+                                       (?<cp-op> (?<cp> \)? ) )
+                                       """;
     const string uuidWithNoDashesRex = $@"{HexDigitRex}{{32}}";
 
 
@@ -259,8 +270,7 @@ public static class Numerics
     /// </summary>
     public const string UuidRegex = $@"^{UuidRex}$";
 
-    static readonly Lazy<Regex> regexUuid = new(() => new(UuidRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.CultureInvariant));
+    static readonly Lazy<Regex> regexUuid = new(() => new(UuidRegex, RegexOptions.Compiled));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a UUID.

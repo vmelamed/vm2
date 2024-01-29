@@ -1,13 +1,9 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class WindowsPathnameTests : RegexTests
+public class WindowsPathnameTests(ITestOutputHelper output) : RegexTests(output)
 {
     static readonly string boarderLengthName = new('a', 260);
     static readonly string overBoardLengthName = new('a', 261);
-
-    public WindowsPathnameTests(ITestOutputHelper output) : base(output)
-    {
-    }
 
     public static TheoryData<string, bool, string> WinFilenameData => new() {
         { TestLine(), false, "" },

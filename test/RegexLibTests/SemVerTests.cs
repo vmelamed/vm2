@@ -1,13 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class SemVerTests : RegexTests
+public class SemVerTests(ITestOutputHelper output) : RegexTests(output)
 {
-    public SemVerTests(ITestOutputHelper output) : base(output) 
-    {
-    }
-
-    public static TheoryData<string, bool, string> SemVerTestData => new TheoryData<string, bool, string>
-    {
+    public static TheoryData<string, bool, string> SemVerTestData => new() {
         { TestLine(), true,  "0.0.4" },
         { TestLine(), true,  "1.2.3" },
         { TestLine(), true,  "10.20.30" },

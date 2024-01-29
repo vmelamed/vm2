@@ -1,11 +1,7 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class LinuxPathnameTests : RegexTests
+public class LinuxPathnameTests(ITestOutputHelper output) : RegexTests(output)
 {
-    public LinuxPathnameTests(ITestOutputHelper output) : base(output)
-    {
-    }
-
     static readonly string longestName = new('a', 255);
 
     public static TheoryData<string, bool, string, string, string> LinuxPathnameData => new() {

@@ -3,125 +3,90 @@
 /// <summary>
 /// Class Uri. Defines many regular expressions with the ultimate goal to define a regular expression for URI.
 /// Follows closely the definitions in
-/// RFC 3986: https://datatracker.ietf.org/doc/html/rfc3986 and
-/// RFC 1034 https://datatracker.ietf.org/doc/html/rfc1034
+/// https://datatracker.ietf.org/doc/html/rfc3986
+/// https://datatracker.ietf.org/doc/html/rfc1034
+/// https://datatracker.ietf.org/doc/html/rfc1123
+/// https://datatracker.ietf.org/doc/html/rfc952
+/// https://datatracker.ietf.org/doc/html/rfc3513
 /// </summary>
-public class Uris
+public static class Uris
 {
-    /// <summary>
-    /// Matches an empty string.
-    /// </summary>
-    public const string EmptyRex = "(?:)";
-
-    const string alphaNumChars = $"{Ascii.AlphaChars} {Ascii.DigitChars}";
-
-    /// <summary>
-    /// Matches an alpha numeric character.
-    /// <para>BNF: <c>alpha-digit := alpha | digit</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string AlphaDigitRex = $"[{alphaNumChars}]";
-
-    // :/?#[]@
-    const string genDelimiterChars = @": / # @ \? \[ \]";
-
-    /// <summary>
-    /// Matches a generic delimiter character.
-    /// <para>BNF: <c>generic-delimiter := : | / | ? | # | [ | ] | @</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string genDelimiterRex = $"[{genDelimiterChars}]";
-
-    // !$'()*+,;
-    const string subDelimiterNoEqAmpChars = @"! ' , ; \$ \( \) \* \+";
-
-    /// <summary>
-    /// Matches a sub-delimiter character.
-    /// <para>BNF: <c>sub-delimiter-not-na := ! | $ | ' | ( | ) | * | + | , | ;</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string subDelimiterNoEqAmpRex = $"[{subDelimiterNoEqAmpChars}]";
-
-    // !$'()*+,;=&
-    const string subDelimiterChars = $@"{subDelimiterNoEqAmpChars} = &";
-
-    /// <summary>
-    /// Matches a sub-delimiter character.
-    /// <para>BNF: <c>sub-delimiter := sub-delimiter-not-na | = | &amp;</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string subDelimitersRex = $"[{subDelimiterChars}]";
-
-    // :/?#[]@!$'()*+,;=&
-    const string reservedChars = $@"{genDelimiterChars} {subDelimiterChars}";
-
-    /// <summary>
-    /// Matches a reserved character.
-    /// <para>BNF: <c>reserved := generic-delimiter | sub-delimiter</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string reservedRex = $"[{reservedChars}]";
-
+    #region URI character sets
     /// <summary>
     /// Matches a percent encoded character.
     /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
     /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string pctEncodedRex = $"(?: % {Numerics.HexDigitRex} {Numerics.HexDigitRex} )";
-
-    // a-zA-Z0-9_~.-
-    const string unreservedChars = $@"{alphaNumChars} _ ~ \. \-";
+    const string pctEncodedRex = $"(?:%{Numerics.HexDigitRex}{Numerics.HexDigitRex})";
 
     /// <summary>
-    /// Matches unreserved character.
-    /// <para>BNF: <c>unreserved := alpha-digit | _ | ~ | . | -</c></para>
+    /// The URI general delimiters.
+    /// <para>BNF: <c>gen-delims  = ":" | "/" | "?" | "#" | "[" | "]" | "@"</c></para>
     /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string unreservedRex = $@"[{unreservedChars}]";
+    const string genDelimiters = @":/\?#\[\]@";
 
-    const string unreservedOrSubDelimiterChars = $"{unreservedChars} {subDelimiterChars}";
+    /// <summary>
+    /// The sub-delimiters without the equals and ampersand charecters.
+    /// <para>BNF: <c>sub-delims-no-eq-no-amp = "!" | "$" | "'" | "(" | ")" | "*" | "+" | "," | ";"</c></para>
+    /// </summary>
+    const string subDelimiterNoEqAmpChars = @"!',;\$\(\)\*\+";
+
+    /// <summary>
+    /// The sub-delimiters.
+    /// <para>BNF: <c>sub-delims-no-eq-no-amp = sub-delims-no-eq-no-amp | "=" | "&amp;"</c></para>
+    /// </summary>
+    const string subDelimiterChars = $@"{subDelimiterNoEqAmpChars}=&";
+
+    /// <summary>
+    /// The reserved chars.
+    /// <para>BNF: <c>reserved = gen-delims | sub-delims</c></para>
+    /// </summary>
+    const string reservedChars = $@"{genDelimiters}{subDelimiterChars}";
+
+    /// <summary>
+    /// The characters that are allowed in a URI but do not have a reserved purpose.
+    /// <para>BNF: <c>unreserved  = ALPHA | DIGIT | "-" | "." | "_" | "~"</c></para>
+    /// </summary>
+    const string unreservedChars = $@"\-\.{Ascii.AlphaNumericChars}_~";
+
+    /// <summary>
+    /// The unreserved or sub-delimiter chars
+    /// </summary>
+    const string unreservedOrSubDelimiterChars = $"{unreservedChars}{subDelimiterChars}";
 
     /// <summary>
     /// Matches an unreserved or sub-delimiter character.
     /// <para>BNF: <c>unreserved-or-sub-delimiter := unreserved | sub-delimiter</c></para>
     /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
     const string unreservedOrSubDelimiterRex = $"[{unreservedOrSubDelimiterChars}]";
+    #endregion
 
+    #region Scheme
     /// <summary>
     /// The name of a matching group representing the scheme of a URI.
     /// </summary>
-    public const string G_SCHEME = "scheme";
+    public const string SchemeGr = "scheme";
+
+    /// <summary>
+    /// The scheme characters
+    /// <para>BNF: <c>scheme-char = ALPHA | DIGIT | "+" | "-" | "."</c></para>
+    /// </summary>
+    const string schemeChars = $@"{Ascii.AlphaNumericChars}\.\+\-";
+
+    const string schemeRex = $@"[{schemeChars}]*";
 
     /// <summary>
     /// Matches a URI scheme.
-    /// <para>BNF: <c>scheme := 1*[ alpha | digit | + | - | . ]</c></para>
-    /// <para>Named groups: <see cref="G_SCHEME"/>.</para>
+    /// <para>BNF: <c>scheme := ALPHA *( ALPHA | DIGIT | "+" | "-" | "." )</c></para>
+    /// <para>Named groups: <see cref="SchemeGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string SchemeRex = $@"(?<{G_SCHEME}>{Ascii.AlphaRex}[{alphaNumChars} \. \+ \-]*)";
+    public const string SchemeRex = $@"(?<{SchemeGr}> {Ascii.AlphaRex} {schemeRex} )";
 
     /// <summary>
     /// Matches a string that represents a URI scheme.
-    /// <para>BNF: <c>scheme := 1*[ alpha | digit | + | - | . ]</c></para>
+    /// <para>BNF: <c>scheme := alpha 1*[ alpha | digit | + | - | . ]</c></para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -129,446 +94,16 @@ public class Uris
     public const string SchemeRegex = $@"^{SchemeRex}$";
 
     static readonly Lazy<Regex> rexSchemeRegex = new(() => new(SchemeRegex, RegexOptions.Compiled |
-                                                                            RegexOptions.CultureInvariant |
                                                                             RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI scheme.
-    /// <para>BNF: <c>scheme := 1*[ alpha | digit | + | - | . ]</c></para>
+    /// <para>BNF: <c>scheme := alpha 1*[ alpha | digit | + | - | . ]</c></para>
     /// </summary>
     public static Regex Scheme => rexSchemeRegex.Value;
+    #endregion
 
-    /// <summary>
-    /// Matches a decimal number from 0 to 255 (0x00 - 0xFF)
-    /// </summary>
-    const string decimalOctetRex =
-         $"(?: 25[0-5] | "+
-         $"2[0-4]{Ascii.DigitRex} | "+
-         $"1{Ascii.DigitRex}{Ascii.DigitRex} | "+
-         $"[1-9]{Ascii.DigitRex} | "+
-         $"{Ascii.DigitRex} )";
-
-    /// <summary>
-    /// Matches an IPv4 address.
-    /// </summary>
-    const string ipv4Rex = $@"{decimalOctetRex}(?:\.{decimalOctetRex}){{3}}";
-
-    /// <summary>
-    /// The name of a matching group representing an IPv4 address.
-    /// </summary>
-    public const string G_IPV4 = "ipv4";
-
-    /// <summary>
-    /// Matches an IPv4 address.
-    /// <para>BNF: <c>ipv4 := dec-octet.dec-octet.dec-octet.dec-octet</c></para>
-    /// <para>Named groups: <see cref="G_IPV4"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string Ipv4AddressRex = $@"(?<{G_IPV4}>{ipv4Rex})";
-
-    /// <summary>
-    /// Matches a string that represents an IPv4 address.
-    /// <para>BNF: <c>ipv4 := dec-octet.dec-octet.dec-octet.dec-octet</c></para>
-    /// <para>Named groups: <see cref="G_IPV4"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string Ipv4AddressRegex = $@"^{Ipv4AddressRex}$";
-
-    static readonly Lazy<Regex> ipv4AddressRegex = new(() => new(Ipv4AddressRegex, RegexOptions.Compiled |
-                                                                                   RegexOptions.CultureInvariant |
-                                                                                   RegexOptions.IgnorePatternWhitespace ));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv4 address.
-    /// <para>BNF: <c>ipv4 := dec-octet.dec-octet.dec-octet.dec-octet</c></para>
-    /// <para>Named groups: <see cref="G_IPV4"/>.</para>
-    /// </summary>
-    public static Regex Ipv4Address => ipv4AddressRegex.Value;
-
-    // Numeric IPv6 addresses, e.g. 1:2:3:4:5::8 or 1:2:3::4.5.6.7
-    //
-    // IPv6address =                              6( h16 ":" ) l32
-    //               |                       "::" 5( h16 ":" ) l32
-    //               | [               h16 ] "::" 4( h16 ":" ) l32
-    //               | [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) l32
-    //               | [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) l32
-    //               | [ *3( h16 ":" ) h16 ] "::"    h16 ":"   l32
-    //               | [ *4( h16 ":" ) h16 ] "::"              l32
-    //               | [ *5( h16 ":" ) h16 ] "::"              h16
-    //               | [ *6( h16 ":" ) h16 ] "::"
-    //
-    // h16         = 1*4HEXDIG
-    //               ; 16 bits of address represented in hex_digit
-    //
-    // l32        = ( h16 ":" h16 ) | IPv4address
-    //               ; least-significant 32 bits of address
-
-    const string h16 = $@"{Numerics.HexDigitRex}{{1,4}}";
-    const string l32 = $@"(? (?: {h16}:{h16} )|(?: {ipv4Rex} ) )";  // 7:8 or 10.11.12.13
-
-    /// <summary>
-    /// The name of a matching group representing an IPv6 address.
-    /// </summary>
-    public const string G_IPV6 = "ipv6";
-
-    /// <summary>
-    /// Matches an IPv6 address.
-    /// <para>Named groups: <see cref="G_IPV6"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string Ipv6AddressRex =
-        $"(?<{G_IPV6}> (?: {h16} :){{6}} {l32} |" +                         // h:h:h:h:h:h:dd.dd.dd.dd  or  h:h:h:h:h:h:h:h
-        $"::(?: {h16} :){{5}} {l32}" +                                      // ::h:h:h:h:h:dd.dd.dd.dd  or  ::h:h:h:h:h:h:h
-        $"(?: {h16} )? :: (?: {h16} :){{4}} {l32}" +                        // h::h:h:h:h:dd.dd.dd.dd   or  h::h:h:h:h:h:h
-        $"(?: (?: {h16} :){{0,1}}{h16} )? :: (?: {h16} : ){{3}} {l32}" +    // h:h::h:h:h:dd.dd.dd.dd   or  h::h:h:h:dd.dd.dd.dd  or  h:h::h:h:h:h:h      or  h::h:h:h:h:h                                                                  
-        $"(?: (?: {h16} :){{0,2}}{h16} )? :: (?: {h16} : ){{2}} {l32}" +    // h:h:h::h:h:dd.dd.dd.dd   or  h:h::h:h:dd.dd.dd.dd  or  h::h:h:dd.dd.dd.dd  or  h:h:h::h:h:h:h    or  h:h::h:h:h:h    or  h::h:h:h:h                                          
-        $"(?: (?: {h16} :){{0,3}}{h16} )? :: (?: {h16} : ) {l32}" +         // h:h:h:h::h:dd.dd.dd.dd   or  h:h:h::h:dd.dd.dd.dd  or  h:h::h:dd.dd.dd.dd  or  h::h:dd.dd.dd.dd  or  h:h:h:h::h:h:h  or  h:h:h::h:h:h     or  h:h::h:h:h    or  h::h:h:h                    
-        $"(?: (?: {h16} :){{0,4}}{h16} )? :: {l32}" +                       // h:h:h:h:h::dd.dd.dd.dd   or  h:h:h:h::dd.dd.dd.dd  or  h:h:h::dd.dd.dd.dd  or  h:h::dd.dd.dd.dd  or  h::dd.dd.dd.dd  or  h:h:h:h:h::h:h   or  h:h:h:h::h:h  or  h:h:h::h:h  or  h:h::h:h  or  h::h:h
-        $"(?: (?: {h16} :){{0,5}}{h16} )? :: {h16}" +                       // h:h:h:h:h:h::h           or  h:h:h:h:h::h          or  h:h:h:h::h          or  h:h:h::h          or  h:h::h          or  h::h
-        $"(?: (?: {h16} :){{0,6}}{h16} )? :: )";                            // h:h:h:h:h:h:h::          or  h:h:h:h:h:h::         or  h:h:h:h:h::         or  h:h:h:h::         or  h:h:h::         or  h:h::  or  h::
-
-    /// <summary>
-    /// Matches a string that represents an IPv6 address.
-    /// <para>Named groups: <see cref="G_IPV6"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string Ipv6AddressRegex = $@"^{Ipv6AddressRex}$";
-
-    static readonly Lazy<Regex> ipv6AddressRegex = new(() => new(Ipv6AddressRegex, RegexOptions.Compiled |
-                                                                                   RegexOptions.CultureInvariant |
-                                                                                   RegexOptions.IgnorePatternWhitespace ));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address.
-    /// <para>Named groups: <see cref="G_IPV6"/>.</para>
-    /// </summary>
-    public static Regex Ipv6Address => ipv6AddressRegex.Value;
-
-    /// <summary>
-    /// The name of a matching group representing an IPv.Future address.
-    /// </summary>
-    public const string G_IPVF = "ipvF";
-
-    /// <summary>
-    /// Matches an IPv.future address.
-    /// <para>Named groups: <see cref="G_IPVF"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string IpvFutureAddressRex = $@"(?<{G_IPVF}> v{Numerics.HexDigitRex}+ \. [{unreservedOrSubDelimiterChars}:]+ )";
-
-    /// <summary>
-    /// Matches a string that represents an IPv.future address
-    /// </summary>
-    public const string IpvFutureAddressRegex = $"^{IpvFutureAddressRex}$";
-
-    static readonly Lazy<Regex> ipvFutureAddressRegex = new(() => new(IpvFutureAddressRegex, RegexOptions.Compiled |
-                                                                                             RegexOptions.CultureInvariant |
-                                                                                             RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv.future address.
-    /// <para>Named groups: <see cref="G_IPV6"/>.</para>
-    /// </summary>
-    public static Regex IpvFutureAddress => ipvFutureAddressRegex.Value;
-
-    /// <summary>
-    /// Matches a IP address.
-    /// <para>BNF: <c>ip-literal-address := [ (IPv6address | IPvFuture) ]</c></para>
-    /// <para>Named groups: <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string ipLiteralAddressRex = $@"[ {Ipv6AddressRex} | {IpvFutureAddressRex} ]";
-
-    // a-zA-Z0-9-
-    const string alphaDigitHyphenChars = $@"{Ascii.AlphaChars} {Ascii.DigitChars} \-";
-
-    /// <summary>
-    /// Matches an alpha-digit-hyphen character from RFC1034
-    /// <para>BNF: <c>alpha-digit-hyphen := alpha | digit | -</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string alphaDigitHyphenRex = $@"[{alphaDigitHyphenChars}]";
-
-    /// <summary>
-    /// Matches a domain name label (e.g. google in www.google.com) from RFC 1034
-    /// <para>BNF: <c>label := alpha [ *61[ alpha-digit-hyphen ] alpha-digit ]</c></para>
-    /// </summary>
-    public const string LabelRex = $@"(?: {Ascii.AlphaRex}(?: {alphaDigitHyphenRex}{{0,61}} {AlphaDigitRex} )? )";
-
-    /// <summary>
-    /// The name of a matching group representing a name that can be looked up in DNS.
-    /// </summary>
-    public const string G_IP_DNS_NAME = "ipDnsName";
-
-    /// <summary>
-    /// Matches registered DNS name.
-    /// <para>BNF: <c>registered_name = *[ domainLabel . ] topLabel</c> (RFC 1034)</para>
-    /// <para>Named groups: <see cref="G_IP_DNS_NAME"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string DnsNameRex = $@"(?<{G_IP_DNS_NAME}> {LabelRex} (?: \. {LabelRex} ){{0,127}})";
-
-    /// <summary>
-    /// The name of a matching group representing an IP general name.
-    /// </summary>
-    public const string G_GEN_NAME = "ipGenName";
-
-    /// <summary>
-    /// Matches reg-name in RFC 3986
-    /// <para>BNF: <c>registered_name = *[ unreserved | sub-delimiters | pct-encoded ]</c> - yes, it can be empty, see the RFC</para>
-    /// </summary>
-    const string generalNameRex = $@"(?<{G_GEN_NAME}> ([{unreservedOrSubDelimiterChars}] | {pctEncodedRex})* )";
-
-    /// <summary>
-    /// Matches a registered name.
-    /// TODO: According to the RFC 3986 registered_name should be dns_name or general_name but is this practical as the
-    /// domain names are subset of the general names and are used most of the time?
-    /// <para>Named groups: <see cref="G_IP_DNS_NAME"/>, <see cref="G_GEN_NAME"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string RegisteredNameRex = $@"{DnsNameRex} | {generalNameRex}";
-    // it used to be: `const string registeredNameRex = $@"{dnsNameRex}";`
-
-    /// <summary>
-    /// The name of a matching group representing a host name.
-    /// </summary>
-    public const string G_HOST = "host";
-
-    /// <summary>
-    /// Matches a host.
-    /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
-    /// <para>Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string HostRex = $@"(?<{G_HOST}> {ipv4Rex} | {ipLiteralAddressRex} | {RegisteredNameRex} )";
-
-    /// <summary>
-    /// Matches a string that represents a host.
-    /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
-    /// <para>Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IP_DNS_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string HostRegex = $@"^[{HostRex}]$";
-
-    static readonly Lazy<Regex> hostRegex = new(() => new(HostRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.CultureInvariant |
-                                                                     RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a host.
-    /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
-    /// <para>Named groups: <see cref="G_HOST"/>, and one of: <see cref="G_GEN_NAME"/>, <see cref="G_IP_DNS_NAME"/>, <see cref="G_IPV4"/>, <see cref="G_IPV6"/> or <see cref="G_IPVF"/>.</para>
-    /// </summary>
-    public static Regex Host => hostRegex.Value;
-
-    /// <summary>
-    /// The name of a matching group representing a port.
-    /// </summary>
-    public const string G_PORT = "port";
-
-    /// <summary>
-    /// Matches an IP port.
-    /// <para>BNF: <c>port := decimal-num</c> in the range [0-65535]</para>
-    /// <para>Named groups: <see cref="G_PORT"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string PortRex =
-        $@"(?<{G_PORT}>" +
-        "6553[0-5] |" +
-        "655[0-2][0-9] |" +
-        "65[0-4][0-9]{2} |" +
-        "6[0-4][0-9]{3} |" +
-        "[1-5][0-9]{4} |" +
-        "[0-9]{1,4}" +
-        ")";
-
-    /// <summary>
-    /// Matches a string that represents an IP port.
-    /// <para>BNF: <c>port := decimal-num</c> in the range [0-65535]</para>
-    /// <para>Named groups: <see cref="G_PORT"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string PortRegex = $@"^{PortRex}$";
-
-    static readonly Lazy<Regex> portRegex = new(() => new(PortRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.CultureInvariant |
-                                                                     RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IP port.
-    /// <para>BNF: <c>port := decimal-num</c> in the range [0-65535]</para>
-    /// <para>Named groups: <see cref="G_PORT"/>.</para>
-    /// </summary>
-    public static Regex Port => portRegex.Value;
-
-    /// <summary>
-    /// The name of a matching group representing an IP address.
-    /// </summary>
-    public const string G_ADDRESS = "address";
-
-    /// <summary>
-    /// Matches an IP address.
-    /// <para>BNF: <c>address := host [: port]</c></para>
-    /// <para>Named groups: <see cref="G_ADDRESS"/> <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string AddressRex = $"(?<{G_ADDRESS}> {HostRex} (?: : {PortRex})? )";
-
-    /// <summary>
-    /// Matches a string that represents an IP address.
-    /// <para>BNF: <c>address := host [: port]</c></para>
-    /// <para>Named groups: <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string AddressRegex = $"^{AddressRex}$";
-
-    static readonly Lazy<Regex> addressRegex = new(() => new(AddressRegex, RegexOptions.Compiled |
-                                                                           RegexOptions.CultureInvariant |
-                                                                           RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IP address.
-    /// <para>BNF: <c>address := host [: port]</c></para>
-    /// <para>Named groups: <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
-    /// </summary>
-    /// <value>The address.</value>
-    public static Regex Address => addressRegex.Value;
-
-    /// <summary>
-    /// The name of a matching group representing a URI address.
-    /// </summary>
-    public const string G_URI_ADDR = "uriAddr";
-
-    /// <summary>
-    /// Matches a URI address.
-    /// <para>BNF: <c>uri-address := scheme :// address </c></para>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// <para>Named groups: <see cref="G_SCHEME"/>, <see cref="G_URI_ADDR"/>, <see cref="G_ADDRESS"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
-    /// </summary>
-    public const string UriAddressRex = $@"(?<{G_URI_ADDR}> {SchemeRex} :// {AddressRex})";
-
-    /// <summary>
-    /// Matches a string that represents a URI address.
-    /// <para>BNF: <c>uri-address := scheme :// address </c></para>
-    /// <para>Named groups: <see cref="G_SCHEME"/>, <see cref="G_URI_ADDR"/>, <see cref="G_ADDRESS"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public static string UriAddressRegex = $"^{UriAddressRex}$";
-
-    static readonly Lazy<Regex> uriAddressRegex = new(() => new(UriAddressRegex, RegexOptions.Compiled |
-                                                                                 RegexOptions.CultureInvariant |
-                                                                                 RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an URI address.
-    /// <para>BNF: <c>uri-address := scheme :// address </c></para>
-    /// <para>Named groups: <see cref="G_SCHEME"/>, <see cref="G_HOST"/>, <see cref="G_PORT"/>.</para>
-    /// </summary>
-    public static Regex UriAddress = uriAddressRegex.Value;
-
-    /// <summary>
-    /// The name of a matching group representing a user name.
-    /// </summary>
-    public const string G_USER = "user";
-
-    /// <summary>
-    /// Matches URI's user name.
-    /// <para>BNF: <c>user := *[ unreserved | sub-delimiters | pct-encoded ]</c></para>
-    /// <para>Named groups: <see cref="G_USER"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string UserRex = $@"(?<{G_USER}> (?: {unreservedOrSubDelimiterRex} | {pctEncodedRex} )* )";
-
-    /// <summary>
-    /// Matches a string that represents a URI's user name.
-    /// <para>BNF: <c>user := *[ unreserved | sub-delimiters | pct-encoded ]</c></para>
-    /// <para>Named groups: <see cref="G_USER"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string UserRegex = $@"^{UserRex}$";
-
-    static readonly Lazy<Regex> userRegex = new(() => new(UserRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.CultureInvariant |
-                                                                     RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an URI's user name.
-    /// <para>Named groups: <see cref="G_USER"/>.</para>
-    /// </summary>
-    public static Regex User => userRegex.Value;
-
-    /// <summary>
-    /// The name of a matching group representing the user's password.
-    /// </summary>
-    public const string G_PASSWORD = "password";
-
-    /// <summary>
-    /// Matches URI's password.
-    /// <para>BNF: <c>password := *[ unreserved | sub-delimiters | : | pct-encoded ]</c></para>
-    /// <para>Named groups: <see cref="G_PASSWORD"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string PasswordRex = $@"(?<{G_PASSWORD}> (?: {unreservedOrSubDelimiterRex} | : | {pctEncodedRex} )* )";
-
-    /// <summary>
-    /// Matches a string that represents a URI's password.
-    /// <para>BNF: <c>password := *[ unreserved | sub-delimiters | : | pct-encoded ]</c></para>
-    /// <para>Named groups: <see cref="G_PASSWORD"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string PasswordRegex = $@"^{PasswordRex}$";
-
-    static readonly Lazy<Regex> passwordRegex = new(() => new(PasswordRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.CultureInvariant |
-                                                                             RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an URI's password name.
-    /// <para>BNF: <c>password := *[ unreserved | sub-delimiters | : | pct-encoded ]</c></para>
-    /// <para>Named groups: <see cref="G_PASSWORD"/>.</para>
-    /// </summary>
-    public static Regex Password => passwordRegex.Value;
-
+    #region Authority
     /// <summary>
     /// Matches URI's user info (name and password).
     /// <para>
@@ -585,8 +120,10 @@ public class Uris
     /// </remarks>
     public const string UserInfoRex = $@"(?: {unreservedOrSubDelimiterRex} | {pctEncodedRex} | : )*";
 
-    //[Obsolete]
-    //public const string UserInfoRex = $@"{UserRex}(?:{PasswordRex})?";
+    /// <summary>
+    /// The name of a matching group representing the authority in a URI.
+    /// </summary>
+    public const string AuthorityGr = "authority";
 
     /// <summary>
     /// Matches the URI's authority.
@@ -595,8 +132,10 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string AuthorityRex = $"(?: {UserInfoRex} @ ) {AddressRex}";
+    public const string AuthorityRex = $"(?<{AuthorityGr}> {UserInfoRex} @ )? {Net.AddressRex}";
+    #endregion
 
+    #region Path
     /// <summary>
     /// Path characters (without the colon char).
     /// <para>BNF: <c>path-nc-chars := unreserved | sub-delimiters | @</c></para>
@@ -604,7 +143,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathNcChars = $"{unreservedOrSubDelimiterChars} @";
+    const string pathNcChars = $"{unreservedOrSubDelimiterChars}@";
 
     /// <summary>
     /// Matches a character from a path (without the colon char).
@@ -613,25 +152,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathNcRex = $"(?:[{pathNcChars}] | {pctEncodedRex})";
-
-    /// <summary>
-    /// Path characters (incl. the colon char).
-    /// <para>BNF: <c>path-nc-chars := path-nc-chars | :</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string pathChars = $"{pathNcChars} :";
-
-    /// <summary>
-    /// Matches a path character (incl. the colon char).
-    /// <para>BNF: <c>path-nc-char := path-nc-char | : | pct-encoded</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string pathCharRex = $"(?:[{pathChars}] | {pctEncodedRex})";
+    const string pathNcChar = $"(?: [{pathNcChars}] | {pctEncodedRex} )";
 
     /// <summary>
     /// Matches non-zero length path segment without colon
@@ -640,17 +161,25 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathSegmentNzNcRex = $"[{pathNcRex}]+";
+    const string pathSegmentNzNcRex = $"[{pathNcChar}]+";
 
     /// <summary>
-    /// Matches non-zero length path segment incl. colon
-    /// <para>BNF: <c>segment-nz := 1*( unreserved | sub-delimiters | @ | : | pct-encoded )</c></para>
+    /// Path characters (incl. the colon char).
+    /// <para>BNF: <c>path-nc-chars := path-nc-chars | :</c></para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathSegmentNzRex = $"[{pathCharRex}]+";
+    const string pathChars = $"{pathNcChars}:";
 
+    /// <summary>
+    /// Matches a path character (incl. the colon char).
+    /// <para>BNF: <c>path-nc-char := path-nc-char | : | pct-encoded</c></para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string pathChar = $"(?: [{pathChars}] | {pctEncodedRex} )";
 
     /// <summary>
     /// Matches path segment incl. colon (can be empty)
@@ -659,21 +188,21 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathSegmentRex = $"[{pathCharRex}]*";
+    const string pathSegmentRex = $"[{pathChar}]*";
 
     /// <summary>
-    /// Matches empty path segment.
-    /// <para>BNF: <c>segment := 0( any-char )</c></para>
+    /// Matches non-zero length path segment incl. colon
+    /// <para>BNF: <c>segment-nz := 1*( unreserved | sub-delimiters | @ | : | pct-encoded )</c></para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathEmptyRex = EmptyRex;
+    const string pathSegmentNzRex = $"[{pathChar}]+";
 
     /// <summary>
     /// The name of a matching group representing a URI path
     /// </summary>
-    public const string G_PATH = "path";
+    public const string NoRootPathGr = "noRootPath";
 
     /// <summary>
     /// Matches path without the root ('/').
@@ -682,7 +211,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathRootlessRex = $"(?<{G_PATH}> {pathSegmentNzRex} (?: / {pathSegmentRex})*)";
+    const string noRootPathRex = $"(?<{NoRootPathGr}> {pathSegmentNzRex} (?: / {pathSegmentRex})* )";
 
     /// <summary>
     /// Matches a path with no scheme.
@@ -691,7 +220,12 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathNoSchemeRex = $"(?:{pathSegmentNzNcRex} (?: / {pathSegmentRex})*)";
+    const string noSchemePathRex = $"(?:{pathSegmentNzNcRex} (?: / {pathSegmentRex}) *)";
+
+    /// <summary>
+    /// The name of a matching group representing a URI path
+    /// </summary>
+    public const string AbsPathGr = "absPath";
 
     /// <summary>
     /// Matches an absolute path starting with '/' but not '//'.
@@ -700,12 +234,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathAbsoluteRex = $"(?<{G_ABS_PATH}> / (?: {pathSegmentNzRex} (?: / {pathSegmentRex})* )? )";
-
-    /// <summary>
-    /// The name of a matching group representing a URI path
-    /// </summary>
-    public const string G_ABS_PATH = "absPath";
+    const string absolutePathRex = $"(?<{AbsPathGr}> / {noRootPathRex}? )";
 
     /// <summary>
     /// Matches an absolute or empty path.
@@ -714,12 +243,12 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathAbsoluteOrEmptyRex = $"(?<{G_ABS_PATH}> / {pathSegmentRex})*";
+    const string absoluteOrEmptyPathRex = $"(?{absolutePathRex})?";
 
     /// <summary>
     /// The name of a matching group representing the path in a URI
     /// </summary>
-    public const string G_URI_PATH = "path";
+    public const string UriPathGr = "path";
 
     /// <summary>
     /// Matches a URI path.
@@ -734,7 +263,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathRex = $"(?P<{G_URI_PATH}> {pathAbsoluteOrEmptyRex} | {pathAbsoluteRex} | {pathNoSchemeRex} | {pathRootlessRex} | {pathEmptyRex})";
+    const string pathRex = $"(?P<{UriPathGr}> {absoluteOrEmptyPathRex} | {absolutePathRex} | {noSchemePathRex} | {noRootPathRex})";
 
     /// <summary>
     /// Matches a string that represents a URI's path.
@@ -752,7 +281,6 @@ public class Uris
     public const string PathRegex = $"^{pathRex}$";
 
     static readonly Lazy<Regex> pathRegex = new(() => new(PathRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.CultureInvariant |
                                                                      RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
@@ -766,7 +294,9 @@ public class Uris
     ///        path-empty        ; zero characters (???)</code></para>
     /// </summary>
     public static Regex Path => pathRegex.Value;
+    #endregion
 
+    #region General Query
     /// <summary>
     /// The generic query chars.
     /// <para>BNF: <c>generic-query-chars := a-zA-Z0-9._~-!$'()*+,;=&amp;@:/?</c></para>
@@ -774,7 +304,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string genericQueryChars = $@"{pathChars} / \?";
+    const string genericQueryChars = $@"{pathChars}/\?";
 
     /// <summary>
     /// Matches a generic query char.
@@ -788,7 +318,7 @@ public class Uris
     /// <summary>
     /// The name of a matching group representing the query in a URI
     /// </summary>
-    public const string G_GEN_QUERY = "query";
+    public const string QueryGr = "query";
 
     /// <summary>
     /// Matches a URI query.
@@ -797,7 +327,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string genericQueryRex = $@"(?<{G_GEN_QUERY}> {genericQueryCharRex}*)";
+    const string genericQueryRex = $@"(?<{QueryGr}> {genericQueryCharRex}* )";
 
     /// <summary>
     /// Matches a string that represents a generic query.
@@ -810,21 +340,22 @@ public class Uris
     public const string GenericQueryRegex = $@"^{genericQueryRex}$";
 
     static readonly Lazy<Regex> genericQueryRegex = new(() => new(GenericQueryRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.CultureInvariant |
                                                                                      RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a generic query.
     /// </summary>
     public static Regex GenericQuery => genericQueryRegex.Value;
+    #endregion
 
+    #region Key-Value query
     /// <summary>
     /// Key-value query character set: ! ' , ; \$ \( \) \* \+
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string keyValueChars = $@"{unreservedChars} {subDelimiterNoEqAmpChars} : @ / \?";
+    const string keyValueChars = $@"{unreservedChars}{subDelimiterNoEqAmpChars}:@/\?";
 
     /// <summary>
     /// Matches a key-value query character.
@@ -837,12 +368,7 @@ public class Uris
     /// <summary>
     /// The name of a matching group representing a key from a key-value query in a URI
     /// </summary>
-    public const string G_KEY = "key";
-
-    /// <summary>
-    /// The name of a matching group representing a value from a key-value query in a URI
-    /// </summary>
-    public const string G_VALUE = "value";
+    public const string KeyGr = "key";
 
     /// <summary>
     /// Matches a key from a URI key-value query
@@ -850,7 +376,12 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string queryKeyRex   = $"(?<{G_KEY}> {keyValueCharRex}+ )";
+    const string queryKeyRex   = $"(?<{KeyGr}> {keyValueCharRex}+ )";
+
+    /// <summary>
+    /// The name of a matching group representing a value from a key-value query in a URI
+    /// </summary>
+    public const string ValueGr = "value";
 
     /// <summary>
     /// Matches a value from a URI key-value query
@@ -858,7 +389,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string queryValueRex = $"(?<{G_VALUE}> {keyValueCharRex}+ )";
+    const string queryValueRex = $"(?<{ValueGr}> {keyValueCharRex}+ )";
 
     /// <summary>
     /// Matches a URI's key-value query
@@ -872,7 +403,7 @@ public class Uris
     /// <summary>
     /// The name of a matching group representing a key-value query in a URI
     /// </summary>
-    public const string G_KV_QUERY = "kv_query";
+    public const string KvQueryGr = "kvQuery";
 
     /// <summary>
     /// Matches a URI's key-value query.
@@ -881,7 +412,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string keyValueQueryRex = $"(?<{G_KV_QUERY}> {queryKeyValueRex} (?: & {queryKeyValueRex} )* )";
+    const string keyValueQueryRex = $"(?<{KvQueryGr}> {queryKeyValueRex} (?: & {queryKeyValueRex} )* )";
 
     /// <summary>
     /// Matches a string that represents a URI's key-value query
@@ -892,33 +423,31 @@ public class Uris
     public const string KeyValueQueryRegex = $"^{keyValueQueryRex}$";
 
     static readonly Lazy<Regex> keyValueQueryRegex = new(() => new(KeyValueQueryRegex, RegexOptions.Compiled |
-                                                                                       RegexOptions.CultureInvariant |
                                                                                        RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's key-value query
     /// </summary>
     public static Regex KeyValueQuery => keyValueQueryRegex.Value;
+    #endregion
 
-    /// <summary>
-    /// Matches a URI's query.
-    /// <para>BNF: <c>query := key-value-query | generic-query</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string queryRex = $"(?:{keyValueQueryRex} | {genericQueryRex})";  // didn't work before?
+    ///// <summary>
+    ///// Matches a URI's query.
+    ///// <para>BNF: <c>query := key-value-query | generic-query</c></para>
+    ///// </summary>
+    // TODO: const string queryRex = $"(?:{keyValueQueryRex} | {genericQueryRex})";  // didn't work before?
 
-    const string fragmentChars = $@"{pathChars} / \?";
+    #region Fragment
+    const string fragmentChars = $@"{pathChars}/\?";
 
-    const string fragmentCharRex = $@"(?:[{fragmentChars}] | {pctEncodedRex})";
+    const string fragmentCharRex = $@"(?:[{fragmentChars}]|{pctEncodedRex})";
 
     /// <summary>
     /// The name of a matching group representing a URI fragment
     /// </summary>
-    public const string G_FRAGMENT = "fragment";
+    public const string FragmentGr = "fragment";
 
-    const string fragmentRex = $"(?<{G_FRAGMENT}> {fragmentCharRex}*)";
+    const string fragmentRex = $"(?<{FragmentGr}> {fragmentCharRex}*)";
 
     /// <summary>
     /// Matches a URI's fragment.
@@ -929,13 +458,13 @@ public class Uris
     public const string FragmentRegex = $"^{fragmentRex}$";
 
     static readonly Lazy<Regex> fragmentRegex = new(() => new(FragmentRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.CultureInvariant |
                                                                              RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's fragment
     /// </summary>
     public static Regex Fragment = fragmentRegex.Value;
+    #endregion
 
     /// <summary>
     /// Matches a URI's hierarchical part
@@ -944,12 +473,12 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string hierarchicalPartRex = $"//{AuthorityRex}(?: {pathAbsoluteOrEmptyRex} | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmptyRex})";
+    const string hierarchicalPartRex = $"// {AuthorityRex} (?: {absoluteOrEmptyPathRex} | {absolutePathRex} | {noRootPathRex} )";
 
     /// <summary>
     /// The name of a matching group representing a URI
     /// </summary>
-    public const string G_URI = "uri";
+    public const string UriGr = "uri";
 
     /// <summary>
     /// Matches a URI with a key-value query
@@ -957,7 +486,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string uriKeyValueQueryRex = $@"(?<{G_URI}> {SchemeRex} : {hierarchicalPartRex} (?: \? {keyValueQueryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
+    const string uriKeyValueQueryRex = $@"(?<{UriGr}> {SchemeRex} : {hierarchicalPartRex} (?: \? {keyValueQueryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with a key-value query
@@ -968,7 +497,6 @@ public class Uris
     public const string UriKeyValueQueryRegex = $"^{uriKeyValueQueryRex}$";
 
     static readonly Lazy<Regex> uriKeyValueQueryRegex = new(() => new(UriKeyValueQueryRegex, RegexOptions.Compiled |
-                                                                                             RegexOptions.CultureInvariant |
                                                                                              RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
@@ -982,7 +510,7 @@ public class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string uriGenericQueryRex = $@"(?<{G_URI}> {SchemeRex} : {hierarchicalPartRex} (?: \? {genericQueryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
+    const string uriGenericQueryRex = $@"(?<{UriGr}> {SchemeRex} : {hierarchicalPartRex} (?: \? {genericQueryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with a key-value query
@@ -992,15 +520,33 @@ public class Uris
     /// </remarks>
     public const string UriGenericQueryRegex = $"^{uriGenericQueryRex}$";
 
-    static readonly Lazy<Regex> uriGenericQueryRegex = new(() => new(UriGenericQueryRegex, RegexOptions.Compiled|
-                                                                                           RegexOptions.CultureInvariant|
-                                                                                           RegexOptions.IgnorePatternWhitespace|
-                                                                                           RegexOptions.Singleline));
+    static readonly Lazy<Regex> uriGenericQueryRegex = new(() => new(UriGenericQueryRegex, RegexOptions.Compiled |
+                                                                                           RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
     public static Regex UriGenericQuery => uriGenericQueryRegex.Value;
+
+    #region Uri
+    ///// <summary>
+    ///// Regular expression pattern which matches a URI in a string.
+    ///// <para>BNF: <c>uri = scheme ":" hierachical-part [ "?" query ] [ "#" fragment]</c></para>
+    ///// </summary>
+    //public const string UriRex = $@"(?<{UriGr}> {SchemeRex} : {hierarchicalPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
+
+    ///// <summary>
+    ///// Regular expression pattern which matches a string that represents a URI.
+    ///// </summary>
+    //public const string UriRegex = $@"^{UriRex}$";
+
+    //static readonly Lazy<Regex> regexUri = new(() => new(UriRegex, RegexOptions.Compiled | RegexOptions.CultureInvariant));
+
+    ///// <summary>
+    ///// Gets a Regex object which matches a string representing a URI.
+    ///// </summary>
+    //public static Regex Uri => regexUri.Value;
+    #endregion
 
     // TODO: relative URI-s
 }
