@@ -88,6 +88,8 @@ public abstract class RegexTests(ITestOutputHelper output)
         return matches!;
     }
 
+    public const RegexOptions RegexOpt = RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace;
+
     /// <summary>
     /// Data driven (theory) test for the regular expression string <see cref="RegexString" />
     /// </summary>
@@ -100,8 +102,7 @@ public abstract class RegexTests(ITestOutputHelper output)
         string testAt,
         bool shouldMatch,
         string input,
-        RegexOptions ro = RegexOptions.CultureInvariant |
-                          RegexOptions.IgnorePatternWhitespace,
+        RegexOptions ro = RegexOpt,
         params string[] expectedCaptures)
             => RegexTest(new Regex(regex, ro), testAt, shouldMatch, input, expectedCaptures);
 }

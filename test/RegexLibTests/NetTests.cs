@@ -35,15 +35,51 @@ public partial class NetTests(ITestOutputHelper output) : RegexTests(output)
 
     // -----
 
+    public static TheoryData<string, bool, string> DnsLabelData = new() {
+        { TestLine(), false, "" },
+        { TestLine(), false, " " },
+        { TestLine(), true,  "abc" },
+        { TestLine(), false, " abc" },
+        { TestLine(), false, "abc " },
+        { TestLine(), false, " abc " },
+        { TestLine(), false, "1abc" },
+        { TestLine(), false, "-abc" },
+        { TestLine(), false, "@abc" },
+        { TestLine(), false, "abc-" },
+        { TestLine(), false, "abc@" },
+        { TestLine(), true,  "ab12-x" },
+        { TestLine(), true,  "ab12-9" },
+        { TestLine(), false, "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789z" },
+        { TestLine(), true,  "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789" },
+    };
+
+    [Theory]
+    [MemberData(nameof(DnsLabelData))]
+    public void TestDnsLabel(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest($"^{Net.DnsLabelRex}$", TestLine, shouldBe, input);
+
+    // -----
+
     public static TheoryData<string, bool, string, string> DnsNameData = new() {
         { TestLine(), false, "", "" },
         { TestLine(), false, " ", "" },
-        { TestLine(), false, "ab12-34", "" },
-        { TestLine(), false, "ab12-34", "" },
+        { TestLine(), true,  "abc", "abc" },
+        { TestLine(), false, " abc", "" },
+        { TestLine(), false, "abc ", "" },
+        { TestLine(), false, " abc ", "" },
+        { TestLine(), false, "1abc", "" },
+        { TestLine(), false, "-abc", "" },
+        { TestLine(), false, "@abc", "" },
+        { TestLine(), false, "abc-", "" },
+        { TestLine(), false, "abc@", "" },
+        { TestLine(), true,  "ab12-x", "ab12-x" },
+        { TestLine(), true,  "ab12-9", "ab12-9" },
+        { TestLine(), false, "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789z", "" },
+        { TestLine(), true,  "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789", "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789" },
     };
 
     [Theory]
     [MemberData(nameof(DnsNameData))]
-    public void TestDnsName(string TestLine, bool shouldBe, string input, string group)
-        => base.RegexTest(Net.DnsName, TestLine, shouldBe, input, group);
+    public void TestDnsName(string TestLine, bool shouldBe, string input, string name)
+        => base.RegexTest(Net.DnsName, TestLine, shouldBe, input, name);
 }
