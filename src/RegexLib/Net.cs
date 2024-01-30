@@ -240,8 +240,8 @@ public static class Net
     /// </summary>
     public const string DnsNameRegex = $@"^{DnsNameRex}$";
 
-    static readonly Lazy<Regex> regexDnsName = new(() => new(DnsNameRegex, RegexOptions.Compiled |
-                                                                           RegexOptions.CultureInvariant));
+    static readonly Lazy<Regex> regexDnsName = new(() => new(DnsNameRegex, RegexOptions.Compiled
+                                                                           | RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a concept.
