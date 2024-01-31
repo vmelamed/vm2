@@ -264,7 +264,7 @@ public static class Net
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string PortRex = $$"""
-                                    (?<{PortGr}>
+                                    (?<{{PortGr}}>
                                         6553[0-5] |
                                         655[0-2][0-9] |
                                         65[0-4][0-9]{2} |

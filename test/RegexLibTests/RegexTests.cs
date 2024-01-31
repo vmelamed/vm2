@@ -9,8 +9,11 @@ public abstract class RegexTests(ITestOutputHelper output)
     static readonly Regex TestDir = new(@"\\test\\", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 
-    protected static string TestLine([CallerFilePath] string fileName = "", [CallerLineNumber] int line = 0)
-        => $"{fileName[(TestDir.Match(fileName).Index + 1)..]}:{line}";
+    protected static string TestLine(
+        string testDescription = "",
+        [CallerFilePath] string fileName = "",
+        [CallerLineNumber] int line = 0)
+        => $"{fileName[(TestDir.Match(fileName).Index + 1)..]}:{line}{(testDescription.Length > 0 ? " : " + testDescription : "")}";
 
     /// <summary>
     /// Data driven (theory) test for the regular expression <see cref="Regex" />
