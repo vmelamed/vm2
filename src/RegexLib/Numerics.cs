@@ -117,27 +117,27 @@ public static class Numerics
     /// <summary>
     /// The name of a matching group representing the sign of an integer number.
     /// </summary>
-    public const string ISignGr = "isign";
+    public const string IntSignGr = "isign";
 
     /// <summary>
     /// The name of a matching group representing the decimal number (after the sign).
     /// </summary>
-    public const string DecimalGr = "decimal";
+    public const string IntAbsGr = "iabs";
 
     /// <summary>
     /// Matches a possibly signed, decimal number, a.k.a. integer number (i.e. 42, -23, etc.)
     /// <para>BNF: <c>integer_number = [+|-]natural_number</c></para>
-    /// <para>Named groups: <see cref="ISignGr"/> and <see cref="DecimalGr"/>.</para>
+    /// <para>Named groups: <see cref="IntSignGr"/> and <see cref="IntAbsGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string IntegerNumberRex = $"(?<{ISignGr}> [+-])? (?<{DecimalGr}> {Ascii.DigitRex}+)";
+    public const string IntegerNumberRex = $"(?<{IntSignGr}> [+-])? (?<{IntAbsGr}> {Ascii.DigitRex}+)";
 
     /// <summary>
     /// Matches a string representing an integer number.
     /// <para>BNF: <c>integer_number = [+|-]natural_number</c></para>
-    /// <para>Named groups: <see cref="ISignGr"/> and <see cref="DecimalGr"/>.</para>
+    /// <para>Named groups: <see cref="IntSignGr"/> and <see cref="IntAbsGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -150,7 +150,7 @@ public static class Numerics
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing an integer number.
     /// <para>BNF: <c>integer_number = [+|-]natural_number</c></para>
-    /// <para>Named groups: <see cref="FSignGr"/> and <see cref="DecimalGr"/>.</para>
+    /// <para>Named groups: <see cref="FSignGr"/> and <see cref="IntAbsGr"/>.</para>
     /// </summary>
     public static Regex IntegerNumber => rexIntegerNumber.Value;
     #endregion
@@ -217,7 +217,7 @@ public static class Numerics
     /// <para>BNF: <c>scientific_number = fractional_point (e | E) integer_number</c></para>
     /// <para>
     /// Named groups: <see cref="MantissaGr"/> (<see cref="FSignGr"/>, <see cref="WholeGr"/> and <see cref="FractionGr"/>) 
-    /// and <see cref="ExponentGr"/> (<see cref="ISignGr"/> and <see cref="DecimalGr"/>).
+    /// and <see cref="ExponentGr"/> (<see cref="IntSignGr"/> and <see cref="IntAbsGr"/>).
     /// </para>
     /// </summary>
     /// <remarks>
@@ -247,15 +247,15 @@ public static class Numerics
 
     #region Uuid
     const string uuidWithDashesRex = $$"""
-         (?<op> \(? )
-         (?<ob> \{? )
+         (?<oparenth> \(? )
+         (?<obracket> \{? )
          {{HexDigitRex}}{8}-
          {{HexDigitRex}}{4}-
          {{HexDigitRex}}{4}-
          {{HexDigitRex}}{4}-
          {{HexDigitRex}}{12}
-         (?<cb-ob> (?<cb> \}? ) )
-         (?<cp-op> (?<cp> \)? ) )
+         (?<cbracket-obracket> (?<cbracket> \}? ) )
+         (?<cparenth-oparenth> (?<cparenth> \)? ) )
          """;
 
     const string uuidWithNoDashesRex = $@"{HexDigitRex}{{32}}";
@@ -278,6 +278,4 @@ public static class Numerics
     /// </summary>
     public static Regex Uuid => regexUuid.Value;
     #endregion
-
-
 }

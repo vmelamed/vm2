@@ -12,7 +12,8 @@ public static class Ascii
     public const string Space = @"\x20";
 
     /// <summary>
-    /// The hash sign. It must be escaped not as "\#" in regular expressions with <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// The hash sign. It must not be escaped as "\#" in regular expressions with 
+    /// <see cref="RegexOptions.IgnorePatternWhitespace"/> - then it marks a comment to the end of the line.
     /// </summary>
     public const string Hash = @"\x23";
 

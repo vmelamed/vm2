@@ -107,7 +107,7 @@ public static class Banking
     /// <summary>
     /// The name of a matching group representing the basic bank account number from the IBAN.
     /// </summary>
-    public const string BasicBanGr = "check";
+    public const string BasicBanGr = "accn";
 
     /// <summary>
     /// Regular expression pattern which matches an 

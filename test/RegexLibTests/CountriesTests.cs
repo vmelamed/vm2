@@ -24,14 +24,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(CountryCode2Data))]
     public void TestCountryCode2(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.CountryCode2, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.CountryCode2, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> CountryCode2IData => new() {
         { TestLine(), false, ""},
@@ -58,14 +51,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(CountryCode2IData))]
     public void TestCountryCode2I(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.CountryCode2I, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.CountryCode2I, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> CountryCode3Data => new() {
         { TestLine(), false, ""},
@@ -89,14 +75,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(CountryCode3Data))]
     public void TestCountryCode3(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.CountryCode3, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.CountryCode3, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> CountryCode3IData => new() {
         { TestLine(), false, ""},
@@ -123,15 +102,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(CountryCode3IData))]
     public void TestCountryCode3I(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.CountryCode3I, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
-
+        => base.RegexTest(Countries.CountryCode3I, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> CurrencyCodeData => new() {
         { TestLine(), false, ""},
@@ -155,14 +126,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(CurrencyCodeData))]
     public void TestCurrencyCode(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.CurrencyCode, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.CurrencyCode, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> CurrencyCodeIData => new() {
         { TestLine(), false, ""},
@@ -189,14 +153,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(CurrencyCodeIData))]
     public void TestCurrencyCodeI(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.CurrencyCodeI, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.CurrencyCodeI, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> TelephoneCodeData => new() {
         { TestLine(), false, ""},
@@ -219,14 +176,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(TelephoneCodeData))]
     public void TestTelephoneCode(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.TelephoneCode, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.TelephoneCode, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> TelephoneNumberData => new() {
         { TestLine(), false, ""},
@@ -245,14 +195,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(TelephoneNumberData))]
     public void TestTelephoneNumber(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.TelephoneNumber, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.TelephoneNumber, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> TelephoneNumberE164Data => new() {
         { TestLine(), false, ""},
@@ -276,14 +219,7 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(TelephoneNumberE164Data))]
     public void TestTelephoneNumberE164(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.TelephoneNumberE164, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.TelephoneNumberE164, TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> TelephoneNumberExtraData => new() {
         { TestLine(), false, ""},
@@ -314,12 +250,5 @@ public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(TelephoneNumberExtraData))]
     public void TestTelephoneNumberExtra(string TestLine, bool shouldBe, string code)
-    {
-        var matches = base.RegexTest(Countries.TelephoneNumberExtra, TestLine, shouldBe, code);
-
-        if (matches.Count == 0)
-            return;
-
-        matches.Should().HaveCount(1);
-    }
+        => base.RegexTest(Countries.TelephoneNumberExtra, TestLine, shouldBe, code);
 }

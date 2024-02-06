@@ -4,26 +4,26 @@ public class LinuxPathnameTests(ITestOutputHelper output) : RegexTests(output)
 {
     static readonly string longestName = new('a', 255);
 
-    public static TheoryData<string, bool, string, string, string> LinuxPathnameData => new() {
-        { TestLine(), false, "", "", "" },
-        { TestLine(), false, "/", "", "" },
-        { TestLine(), true,  "a", "", "a" },
-        { TestLine(), true,  $"{longestName}", "", $"{longestName}" },
-        { TestLine(), false, $"{longestName+'a'}", "", "" },
-        { TestLine(), true,  $"/a", "/", "a" },
-        { TestLine(), true,  $"/a/b", "/a", "b" },
-        { TestLine(), true,  $"/{longestName}", "/", $"{longestName}" },
-        { TestLine(), false, $"/{longestName+'a'}", "", "" },
-        { TestLine(), true,  $"/{longestName}/{longestName}", $"/{longestName}", $"{longestName}" },
-        { TestLine(), true,  "./some/file", "./some", "file" },
-        { TestLine(), true,  "../another/file", "../another", "file" },
-        { TestLine(), true,  "/yet/../another/file", "/yet/../another", "file" },
-        { TestLine(), true,  "/yet/../another/.file", "/yet/../another", ".file" },
-        { TestLine(), true,  "/някакъв/../друг/.файл", "/някакъв/../друг", ".файл" },
+    public static TheoryData<string, bool, string, Captures?> LinuxPathnameData => new() {
+        { TestLine(), false, "", null },
+        { TestLine(), false, "/", null },
+        { TestLine(), true,  "a", new() { ["path"] = "", ["file"] = "a" } },
+        { TestLine(), true,  $"{longestName}", new() { ["path"] = "", ["file"] = $"{longestName}" } },
+        { TestLine(), false, $"{longestName+'a'}", null },
+        { TestLine(), true,  $"/a", new() { ["path"] = "/", ["file"] = "a" } },
+        { TestLine(), true,  $"/a/b", new() { ["path"] = "/a", ["file"] = "b" } },
+        { TestLine(), true,  $"/{longestName}", new() { ["path"] = "/", ["file"] = $"{longestName}" } },
+        { TestLine(), false, $"/{longestName+'a'}", null },
+        { TestLine(), true,  $"/{longestName}/{longestName}", new() { ["path"] = $"/{longestName}", ["file"] = $"{longestName}" } },
+        { TestLine(), true,  "./some/file", new() { ["path"] = "./some", ["file"] = "file" } },
+        { TestLine(), true,  "../another/file", new() { ["path"] = "../another", ["file"] = "file" } },
+        { TestLine(), true,  "/yet/../another/file", new() { ["path"] = "/yet/../another", ["file"] = "file" } },
+        { TestLine(), true,  "/yet/../another/.file", new() { ["path"] = "/yet/../another", ["file"] = ".file" } },
+        { TestLine(), true,  "/някакъв/../друг/.файл", new() { ["path"] = "/някакъв/../друг", ["file"] = ".файл" } },
     };
 
     [Theory]
     [MemberData(nameof(LinuxPathnameData))]
-    public void TestLinuxPathname(string TestLine, bool shouldBe, string pathname, string path, string file)
-        => base.RegexTest(LinuxPathname.Pathname, TestLine, shouldBe, pathname, path, file);
+    public void TestLinuxPathname(string TestLine, bool shouldBe, string pathname, Captures? captures)
+        => base.RegexTest(LinuxPathname.Pathname, TestLine, shouldBe, pathname, captures);
 }

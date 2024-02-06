@@ -1,97 +1,72 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Web;
 
 namespace vm2.RegexLibTests;
 
-public abstract class RegexTests(ITestOutputHelper output)
+public class Captures : Dictionary<string, string>, IXunitSerializable
 {
-    public ITestOutputHelper Out { get; } = output;
+    const string countId = "countId";
 
-    static readonly Regex TestDir = new(@"\\test\\", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-
-    protected static string TestLine(
-        string testDescription = "",
-        [CallerFilePath] string fileName = "",
-        [CallerLineNumber] int line = 0)
-        => $"{fileName[(TestDir.Match(fileName).Index + 1)..]}:{line}{(testDescription.Length > 0 ? " : " + testDescription : "")}";
-
-    /// <summary>
-    /// Data driven (theory) test for the regular expression <see cref="Regex" />
-    /// </summary>
-    /// <param name="regex">The regex object.</param>
-    /// <param name="testAt">
-    /// The relative file path and line from which the function was called. Usually, where the test is in the test file,
-    /// or the <see cref="TheoryData"/> is defined.</param>
-    /// <param name="shouldMatch">The should match.</param>
-    /// <param name="input">The input.</param>
-    protected virtual MatchCollection RegexTest(
-        Regex regex,
-        string testAt,
-        bool shouldMatch,
-        string input,
-        params string[] expectedCaptures)
+    public void Deserialize(IXunitSerializationInfo info)
     {
-        var matches = regex.Matches(input);
-        var isMatch = (matches?.Count ?? 0) > 0;
+        Clear();
 
-        Out.WriteLine($"""
-                       Test ID:  {testAt}
-                         Input:   
-                           →{input}←
-                         Is match: {isMatch}
-                         Matches:  {matches?.Count}:
-                       """);
-
-        try
+        var count = info.GetValue<int>(countId);
+        for (var i = 0; i < count; i++)
         {
-            if (isMatch)
-                foreach (var m in matches!)
-                {
-                    m.Should().BeOfType<Match>();
-                    var match = ((Match)m);
-                    Out.WriteLine($"    →{match.Value}←");
-
-                    if (!expectedCaptures.Any())
-                    {
-                        foreach (var gr in match.Groups)
-                            if (gr is Group group && group.Name != "0")
-                                Out.WriteLine($"      {group.Name}: →{group.Value}←");
-                    }
-                    else
-                    {
-                        match.Groups.Count.Should().Be(expectedCaptures.Length + 1);
-
-                        var i = 0;
-                        foreach (var gr in match.Groups)
-                            if (gr is Group group && group.Name != "0")
-                            {
-                                var notInExpected = "";
-
-                                if (i < expectedCaptures.Length)
-                                    group.Value.Should().Be(expectedCaptures[i]);
-                                else
-                                    notInExpected = " - not in the expectedCaptures";
-
-                                Out.WriteLine($"      {group.Name}: →{group.Value}← {notInExpected}");
-                                i++;
-                            }
-                    }
-                }
+            var name = info.GetValue<string>($"name{i}");
+            var value = info.GetValue<string>($"value{i}");
+            Add(name, value);
         }
-        finally
-        {
-            Out.WriteLine($"  Regex:\n    →{regex}←");
-        }
-
-        matches.Should().NotBeNull();
-        isMatch.Should().Be(shouldMatch);
-        if (shouldMatch)
-            matches.Should().HaveCountGreaterThanOrEqualTo(1);
-
-        return matches!;
     }
 
-    public const RegexOptions RegexOpt = RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace;
+    public void Serialize(IXunitSerializationInfo info)
+    {
+        info.AddValue(countId, Count, typeof(int));
+        int i = 0;
+        foreach (var (name, value) in this)
+        {
+            info.AddValue($"name{i}", name, typeof(string));
+            info.AddValue($"value{i}", value, typeof(string));
+            i++;
+        }
+    }
+}
+
+public abstract class RegexTests
+{
+
+    public ITestOutputHelper Out { get; }
+
+    public RegexTests(ITestOutputHelper output)
+    {
+        Out = output;
+        FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
+    }
+
+    static readonly Regex TestDir = new(@"[/\\]test[/\\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    /// <summary>
+    /// Returns a string describing where this method was called from and an optional description.
+    /// Convenient utility to use in the second parameter of the methods <see cref="RegexTest(Regex, string, bool, string, Dictionary{string, string}?, bool)"/> or
+    /// <see cref="RegexStringTest(string, string, bool, string, RegexOptions, string[])"/>.
+    /// </summary>
+    /// <param name="testDescription">The test description.</param>
+    /// <param name="path">Name of the file.</param>
+    /// <param name="line">The line.</param>
+    /// <returns>System.String.</returns>
+    protected static string TestLine(
+        string testDescription = "",
+        [CallerFilePath] string path = "",
+        [CallerLineNumber] int line = 0)
+    {
+        var match = TestDir.Match(path);
+        var testDirIndex = match.Success ? match.Index+1 : 0;
+
+        return $"{path[testDirIndex..]}:{line:d3}{(testDescription.Length > 0 ? " : " + testDescription : "")}";
+    }
+
+    public const RegexOptions RegexOpt = RegexOptions.IgnorePatternWhitespace;
 
     /// <summary>
     /// Data driven (theory) test for the regular expression string <see cref="RegexString" />
@@ -105,7 +80,176 @@ public abstract class RegexTests(ITestOutputHelper output)
         string testAt,
         bool shouldMatch,
         string input,
+        Dictionary<string, string>? expectedCaptures = null,
         RegexOptions ro = RegexOpt,
-        params string[] expectedCaptures)
-            => RegexTest(new Regex(regex, ro), testAt, shouldMatch, input, expectedCaptures);
+        bool failIfMissingExpected = true)
+            => RegexTest(new Regex(regex, ro), testAt, shouldMatch, input, expectedCaptures, failIfMissingExpected);
+
+    /// <summary>
+    /// Data driven (theory) test for the regular expression <see cref="Regex" />
+    /// </summary>
+    /// <param name="regex">The regex object.</param>
+    /// <param name="testAt">
+    /// Information about the where the function was invoked from, e.g. file, line, and description provided by the 
+    /// method <see cref="TestLine(string, string, int)"/>.
+    /// </param>
+    /// <param name="shouldMatch">The should match.</param>
+    /// <param name="input">The input.</param>
+    /// <param name="expectedCaptures">The expected capturing groups.</param>
+    protected virtual void RegexTest(
+        Regex regex,
+        string testAt,
+        bool shouldMatch,
+        string input,
+        Dictionary<string, string>? expectedCaptures = null,
+        bool failIfMissingExpected = true)
+    {
+        var matches = regex.Matches(input);
+        var isMatch = matches?.Count is > 0;
+
+        Out.WriteLine($"""
+                       Test ID:  {testAt}
+                         Input:   
+                           →{input}←
+                         Matches:  {matches?.Count}:
+                       """);
+
+        if (!isMatch)
+        {
+            if (isMatch != shouldMatch)
+                Out.WriteLine($"  Regex:\n    →{regex}←\n");
+            isMatch.Should().Be(shouldMatch);
+            return;
+        }
+
+        foreach (var match in matches!.OfType<Match>())
+        {
+            Out.WriteLine($"    →{match.Value}←");
+            foreach (var group in match.Groups.AsReadOnly().Skip(1))
+                Out.WriteLine($"      {group.Name}: →{group.Value}←");
+        }
+
+        var actualGroups = matches!
+                            .SelectMany(m => m.Groups.AsReadOnly())
+                            .Where(gr => !string.IsNullOrEmpty(gr.Value))
+                            .Skip(1)    // by definition the first group is always ["0"] = match.Value
+                            .ToDictionary(gr => gr.Name, gr => gr.Value)
+                            ;
+
+        var (failed, messages) = CompareGroups(
+                                    expectedCaptures,
+                                    actualGroups,
+                                    failIfMissingExpected);
+
+        Out.WriteLine($"  Regex:\n    →{regex}←\n");
+
+        foreach (var message in messages)
+            Out.WriteLine(message);
+
+        failed.Should().BeFalse($":\n{string.Join("\n", messages)}");
+        isMatch.Should().Be(shouldMatch);
+    }
+
+
+    /// <summary>
+    /// Data driven (theory) test for the regular expression <see cref="Regex" />
+    /// </summary>
+    /// <param name="regex">The regex object.</param>
+    /// <param name="testAt">
+    /// Information about the where the function was invoked from, e.g. file, line, and description provided by the 
+    /// method <see cref="TestLine(string, string, int)"/>.
+    /// </param>
+    /// <param name="shouldMatch">The should match.</param>
+    /// <param name="input">The input.</param>
+    /// <param name="expectedCaptures">The expected capturing groups.</param>
+    protected virtual void RegexTestUri(
+        Regex regex,
+        string testAt,
+        bool shouldMatch,
+        string input,
+        Dictionary<string, string>? expectedCaptures = null,
+        bool failIfMissingExpected = true)
+    {
+        var succeeded = Uri.TryCreate(input,UriKind.RelativeOrAbsolute, out var uri);
+
+        if (succeeded != shouldMatch)
+            Out.WriteLine("Uri.TryCreate IS DIFFERENT FROM THE EXPECTED: ", succeeded ? $"Uri.TryCreate succeeded: →{uri}←" : "Uri.TryCreate failed →{uri}←");
+
+        RegexTest(regex, testAt, shouldMatch, input, expectedCaptures, failIfMissingExpected);
+    }
+
+    static (bool failed, IEnumerable<string> messages) CompareGroups(
+        Dictionary<string, string>? expectedCaptures,
+        Dictionary<string, string> actualCaptures,
+        bool failIfMissingExpected)
+    {
+        var failed = false;
+        var messages = new List<string>();
+
+        if (expectedCaptures is null)
+        {
+            if (actualCaptures.Count > 0)
+            {
+                OutputActual(actualCaptures, messages);
+                failed = failIfMissingExpected;
+            }
+            return (failed, messages);
+        }
+
+        foreach (var (expectedKey, expectedValue) in expectedCaptures)
+            if (!string.IsNullOrEmpty(expectedValue))
+            {
+                if (!actualCaptures.TryGetValue(expectedKey, out var actualValue))
+                {
+                    messages.Add($"The expected capturing group '{expectedKey}' was not found in the actual capturing groups.");
+                    failed = true;
+                }
+                else
+                if (actualValue != expectedValue)
+                {
+                    messages.Add($"The value of the capturing group '{expectedKey}' is '{actualValue}' but expected '{expectedValue}'");
+                    failed = true;
+                }
+            }
+
+        foreach (var (actualKey, actualValue) in actualCaptures)
+        {
+            if (!expectedCaptures.TryGetValue(actualKey, out var expectedValue))
+            {
+                messages.Add($"The capturing group '{actualKey}' with value '{actualValue}' is missing from in the expected capturing groups.");
+                failed = failIfMissingExpected;
+            }
+            else
+            if (expectedValue != actualValue)
+            {
+                messages.Add($"The value of the capturing group '{actualKey}' is '{actualValue}' but expected '{expectedValue}'");
+                failed = true;
+            }
+        }
+
+        return (failed, messages);
+    }
+
+    static void OutputActual(
+        Dictionary<string, string> actualCaptures,
+        ICollection<string> messages)
+    {
+        var wr = new StringWriter();
+
+        wr.WriteLine($$"""
+                         you can pass expected captures:
+                         ```
+                         new() {
+                         """);
+        foreach (var (name, value) in actualCaptures)
+        {
+            if (name.Contains('%') || value.Contains('%'))
+                wr.WriteLine($"            [\"{name}\"] = \"{value}\", // →{HttpUtility.UrlDecode(name)}← = →{HttpUtility.UrlDecode(value)}←");
+            else
+                wr.WriteLine($"            [\"{name}\"] = \"{value}\",");
+        }
+        wr.WriteLine("        }\n```");
+
+        messages.Add(wr.ToString());
+    }
 }

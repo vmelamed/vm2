@@ -51,13 +51,14 @@ public static class Net
 
     /// <summary>
     /// Matches an IPv4 address.
-    /// <para>BNF: <c>IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet</c></para>
+    /// <para>BNF: <c>IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet</c></para>, excluding the 
+    /// addresses provided for use in documentation only in RFC 5737
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     const string ipv4Rex = $$"""
-                             (?: # RFC 5737: provided for use in documentation only:
+                             (?:
                                (?! (?: 192\.0\.2\.{{Ascii.DigitRex}}{1,3} )    |
                                    (?: 198\.51\.100\.{{Ascii.DigitRex}}{1,3} ) |
                                    (?: 203\.0\.113\.{{Ascii.DigitRex}}{1,3} )
@@ -120,9 +121,10 @@ public static class Net
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// Must have at least one non-zero number - cannot be the "unspecified address" ::0
     /// </remarks>
     public const string Ipv6AddressRex = $$"""
-         (?=.*[1-9A-Fa-f]) # must have at least one non-zero number - cannot be the "unspecified address" ::0
+         (?=.*[1-9A-Fa-f])
          (?<{{Ipv6Gr}}>
              (?:{{h16}}:){1,7}:
            | (?:{{h16}}:){1,6}(?: :{{h16}} )

@@ -16,7 +16,7 @@ public static class Uris
     /// Matches a percent encoded character.
     /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
     /// </summary>
-    const string pctEncodedRex = $"(?:%{Numerics.HexDigitRex}{Numerics.HexDigitRex})";
+    const string pctEncodedChar = $"(?:%{Numerics.HexDigitRex}{Numerics.HexDigitRex})";
 
     /// <summary>
     /// The URI general delimiters.
@@ -32,7 +32,7 @@ public static class Uris
 
     /// <summary>
     /// The sub-delimiters.
-    /// <para>BNF: <c>sub-delims-no-eq-no-amp = sub-delims-no-eq-no-amp | "=" | "&amp;"</c></para>
+    /// <para>BNF: <c>sub-delims = sub-delims-no-eq-no-amp | "=" | "&amp;"</c></para>
     /// </summary>
     const string subDelimiterChars = $@"{subDelimiterNoEqAmpChars}=&";
 
@@ -112,11 +112,11 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string ipLiteralAddressRex = $@"(?: \[ {Net.Ipv6AddressRex} | {Net.IpvFutureAddressRex} \] )";
+    const string ipLiteralAddressRex = $@"(?: \[ (?: {Net.Ipv6AddressRex} | {Net.IpvFutureAddressRex} ) \] )";
 
     /// <summary>
     /// Matches an IP address in numeric form IPv4, IPv6, or IPvFuture.
-    /// <para>BNF: <c>ip-numeric-address := [ IPv4address | IPv6address | IPvFuture ]</c></para>
+    /// <para>BNF: <c>ip-numeric-address := IPv4address | "[" (IPv6address | IPvFuture) "]" </c></para>
     /// <para>Named groups: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6Gr"/>, or <see cref="Net.IpvfGr"/>.</para>
     /// </summary>
     /// <remarks>
@@ -133,7 +133,7 @@ public static class Uris
     /// Matches reg-name in RFC 3986
     /// <para>BNF: <c>registered_name = *[ unreserved | sub-delimiters | pct-encoded ]</c> - yes, it can be empty, see the RFC</para>
     /// </summary>
-    const string generalNameRex = $@"(?<{IpGenNameGr}> (?: [{unreservedOrSubDelimiterChars}\.] | {pctEncodedRex} )+ )";
+    const string generalNameRex = $@"(?<{IpGenNameGr}> (?: {unreservedOrSubDelimiterRex} | {pctEncodedChar} )+ )";
 
     /// <summary>
     /// Matches a registered name.
@@ -166,14 +166,14 @@ public static class Uris
     /// Matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpGenNameGr"/>, <see cref="Net.IpDnsNameGr"/>, 
-    /// <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6Gr"/> or <see cref="Net.IpvfGr"/>.
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6Gr"/>,
+    /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>
     /// </para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string HostRegex = $@"^[{HostRex}]$";
+    public const string HostRegex = $@"^{HostRex}$";
 
     static readonly Lazy<Regex> hostRegex = new(() => new(HostRegex, RegexOptions.Compiled |
                                                                      RegexOptions.IgnorePatternWhitespace));
@@ -182,8 +182,8 @@ public static class Uris
     /// A <see cref="Regex"/> object that matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>, 
-    /// <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6Gr"/> or <see cref="Net.IpvfGr"/>.
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6Gr"/>,
+    /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>
     /// </para>
     /// </summary>
     public static Regex Host => hostRegex.Value;
@@ -229,23 +229,50 @@ public static class Uris
 
     #region Authority
     /// <summary>
+    /// The name of a matching group representing the user name.
+    /// </summary>
+    public const string UserNameGr = "user";
+
+    /// <summary>
+    /// The name of a matching group representing the part of the authority that specifies scheme-specific information 
+    /// about how to gain authorization to access the resource.
+    /// </summary>
+    /// <remarks>
+    /// Use of the format "user:password" in the userinfo field is deprecated.  Applications should not render as clear 
+    /// text any data after the first colon(":") character found within a userinfo subcomponent unless the data after 
+    /// the colon is the empty string (indicating no password).  Applications may choose to ignore or reject such data 
+    /// when it is received as part of a reference and should reject the storage of such data in unencrypted form.The
+    /// passing of authentication information in clear text has proven to be a security risk in almost every case where 
+    /// it has been used.
+    /// </remarks>
+    public const string AccessGr = "access";
+
+    /// <summary>
     /// Matches URI's user info (name and password).
-    /// <para>
-    /// The use of the format 'user:password' in the 'userInfo' field is deprecated.  Applications should not render as 
-    /// clear text any data after the first colon (':') character found within a 'userInfo' subcomponent unless the 
-    /// data after the colon is the empty string (indicating no password).  Applications may choose to ignore or reject
-    /// such data when it is received as part of a reference and should reject the storage of such data in un-encrypted
-    /// form.
-    /// </para>
     /// <para>BNF: <c>user-info := *[ unreserved | sub-delimiters | : | pct-encoded ]</c></para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// <para>
+    /// Note: the use of the format 'user:password' in the 'userInfo' field is deprecated.  Applications should not 
+    /// render as clear text any data after the first colon (':') character found within a 'userInfo' subcomponent 
+    /// unless the data after the colon is the empty string (indicating no password).  Applications may choose to ignore 
+    /// or reject such data when it is received as part of a reference and should reject the storage of such data in 
+    /// un-encrypted form.
+    /// </para>
+    /// <para>
+    /// </para>
     /// </remarks>
-    public const string UserInfoRex = $@"(?: {unreservedOrSubDelimiterRex} | {pctEncodedRex} | : )*";
+    public const string UserInfoRex = $"""
+                                       (?: 
+                                         (?<{UserNameGr}> (?:{unreservedOrSubDelimiterRex} | {pctEncodedChar})+ )
+                                         :?
+                                         (?<{AccessGr}>   (?:{unreservedOrSubDelimiterRex} | {pctEncodedChar})* )
+                                       )
+                                       """;
 
     /// <summary>
-    /// The name of a matching group representing the authority in a URI.
+    /// authority in a URI.
     /// </summary>
     public const string AuthorityGr = "authority";
 
@@ -256,7 +283,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string AuthorityRex = $"(?<{AuthorityGr}> {UserInfoRex} @ )? {AddressRex}";
+    public const string AuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {AddressRex} )";
     #endregion
 
     #region Path
@@ -271,12 +298,21 @@ public static class Uris
 
     /// <summary>
     /// Matches a character from a path (without the colon char).
+    /// <para>BNF: <c>path-nc-chars := unreserved | sub-delimiters | @</c></para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string pathNcChar = $"[{unreservedOrSubDelimiterChars}@]";
+
+    /// <summary>
+    /// Matches a character from a path (without the colon char).
     /// <para>BNF: <c>path-nc-char := unreserved | sub-delimiters | @ | pct-encoded</c></para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathNcChar = $"(?: [{pathNcChars}] | {pctEncodedRex} )";
+    const string pathNcCharRex = $"(?: {pathNcChar} | {pctEncodedChar} )";
 
     /// <summary>
     /// Matches non-zero length path segment without colon
@@ -285,7 +321,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathSegmentNzNcRex = $"[{pathNcChar}]+";
+    const string pathSegmentNzNcRex = $"{pathNcCharRex}+";
 
     /// <summary>
     /// Path characters (incl. the colon char).
@@ -297,22 +333,22 @@ public static class Uris
     const string pathChars = $"{pathNcChars}:";
 
     /// <summary>
+    /// Path characters (incl. the colon char).
+    /// <para>BNF: <c>path-nc-chars := path-nc-chars | :</c></para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string pathChar = $"[{pathChars}]";
+
+    /// <summary>
     /// Matches a path character (incl. the colon char).
     /// <para>BNF: <c>path-nc-char := path-nc-char | : | pct-encoded</c></para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathChar = $"(?: [{pathChars}] | {pctEncodedRex} )";
-
-    /// <summary>
-    /// Matches path segment incl. colon (can be empty)
-    /// <para>BNF: <c>segment := *( unreserved | sub-delimiters | @ | : | pct-encoded )</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string pathSegmentRex = $"[{pathChar}]*";
+    const string pathCharRex = $"(?: {pathChar} | {pctEncodedChar} )";
 
     /// <summary>
     /// Matches non-zero length path segment incl. colon
@@ -321,12 +357,21 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathSegmentNzRex = $"[{pathChar}]+";
+    const string pathSegmentNzRex = $"{pathCharRex}+";
+
+    /// <summary>
+    /// Matches path segment incl. colon (can be empty)
+    /// <para>BNF: <c>segment := *( unreserved | sub-delimiters | @ | : | pct-encoded )</c></para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string pathSegmentRex = $"{pathCharRex}*";
 
     /// <summary>
     /// The name of a matching group representing a URI path
     /// </summary>
-    public const string NoRootPathGr = "noRootPath";
+    public const string PathRootlessGr = "pathRootless";
 
     /// <summary>
     /// Matches path without the root ('/').
@@ -335,7 +380,12 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string noRootPathRex = $"(?<{NoRootPathGr}> {pathSegmentNzRex} (?: / {pathSegmentRex})* )";
+    const string pathRootlessRex = $"(?<{PathRootlessGr}> {pathSegmentNzRex} (?: / {pathSegmentRex} )* )";
+
+    /// <summary>
+    /// The name of a matching group representing a no-scheme URI path
+    /// </summary>
+    public const string PathNoSchemeGr = "pathNoScheme";
 
     /// <summary>
     /// Matches a path with no scheme.
@@ -344,12 +394,12 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string noSchemePathRex = $"(?:{pathSegmentNzNcRex} (?: / {pathSegmentRex}) *)";
+    const string pathNoSchemeRex = $"(?<{PathNoSchemeGr}> {pathSegmentNzNcRex} (?: / {pathSegmentRex})* )";
 
     /// <summary>
     /// The name of a matching group representing a URI path
     /// </summary>
-    public const string AbsPathGr = "absPath";
+    public const string PathAbsGr = "pathAbs";
 
     /// <summary>
     /// Matches an absolute path starting with '/' but not '//'.
@@ -358,7 +408,12 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string absolutePathRex = $"(?<{AbsPathGr}> / {noRootPathRex}? )";
+    const string pathAbsoluteRex = $"(?<{PathAbsGr}> / (?: {pathSegmentNzRex} (?: / {pathSegmentRex} )* )? )";
+
+    /// <summary>
+    /// The name of a matching group representing an absolute or empty URI path
+    /// </summary>
+    public const string PathAbsEmptyGr = "pathAbsEmpty";
 
     /// <summary>
     /// Matches an absolute or empty path.
@@ -367,7 +422,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string absoluteOrEmptyPathRex = $"(?{absolutePathRex})?";
+    const string pathAbsoluteOrEmptyRex = $"(?<{PathAbsEmptyGr}> (?: / {pathSegmentRex} )* )";
 
     /// <summary>
     /// The name of a matching group representing the path in a URI
@@ -387,7 +442,15 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathRex = $"(?P<{UriPathGr}> {absoluteOrEmptyPathRex} | {absolutePathRex} | {noSchemePathRex} | {noRootPathRex})";
+    const string pathRex = $"""
+                            (?<{UriPathGr}> 
+                                {pathAbsoluteOrEmptyRex} | 
+                                (?: / {pathAbsoluteRex} ) | 
+                                (?: / {pathNoSchemeRex} ) | 
+                                (?: / {pathRootlessRex}) | 
+                                /
+                            )
+                            """;
 
     /// <summary>
     /// Matches a string that represents a URI's path.
@@ -428,7 +491,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string genericQueryChars = $@"{pathChars}/\?";
+    const string queryChars = $@"{pathChars}/\?";
 
     /// <summary>
     /// Matches a generic query char.
@@ -437,7 +500,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string genericQueryCharRex = $"(?: [{genericQueryChars}] | {pctEncodedRex} )";
+    const string queryCharRex = $"(?: [{queryChars}] | {pctEncodedChar} )";
 
     /// <summary>
     /// The name of a matching group representing the query in a URI
@@ -451,7 +514,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string genericQueryRex = $@"(?<{QueryGr}> {genericQueryCharRex}* )";
+    const string queryRex = $@"(?<{QueryGr}> {queryCharRex}* )";
 
     /// <summary>
     /// Matches a string that represents a generic query.
@@ -461,38 +524,44 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string GenericQueryRegex = $@"^{genericQueryRex}$";
+    public const string QueryRegex = $@"^{queryRex}$";
 
-    static readonly Lazy<Regex> genericQueryRegex = new(() => new(GenericQueryRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.IgnorePatternWhitespace));
+    static readonly Lazy<Regex> queryRegex = new(() => new(QueryRegex, RegexOptions.Compiled |
+                                                                       RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a generic query.
     /// </summary>
-    public static Regex GenericQuery => genericQueryRegex.Value;
+    public static Regex Query => queryRegex.Value;
     #endregion
 
     #region Key-Value query
     /// <summary>
-    /// Key-value query character set: ! ' , ; \$ \( \) \* \+
+    /// Key-value query character set
+    /// <para>
+    /// BNF: <c>key-value-chars := path-char | / | ? </c>
+    /// </para>
+    /// </summary>
+    const string kvChars = $@"{unreservedChars}{subDelimiterNoEqAmpChars}@:/\?";
+
+    /// <summary>
+    /// Key character set
+    /// <para>
+    /// BNF: <c>key-chars := key-value-chars | &amp; </c>
+    /// </para>
+    /// </summary>
+    const string keyChars = $@"{kvChars}&";
+
+    /// <summary>
+    /// Key character
+    /// <para>
+    /// BNF: <c>key-chars := key-char | pct-encoded </c>
+    /// </para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string keyValueChars = $@"{unreservedChars}{subDelimiterNoEqAmpChars}:@/\?";
-
-    /// <summary>
-    /// Matches a key-value query character.
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string keyValueCharRex = $"[{keyValueChars}]";
-
-    /// <summary>
-    /// The name of a matching group representing a key from a key-value query in a URI
-    /// </summary>
-    public const string KeyGr = "key";
+    const string keyCharRex = $@"(?: [{keyChars}] | {pctEncodedChar} )";
 
     /// <summary>
     /// Matches a key from a URI key-value query
@@ -500,12 +569,26 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string queryKeyRex   = $"(?<{KeyGr}> {keyValueCharRex}+ )";
+    const string queryKeyRex   = $"( {keyCharRex}+ )";
 
     /// <summary>
-    /// The name of a matching group representing a value from a key-value query in a URI
+    /// Value query character set
+    /// <para>
+    /// BNF: <c>value-chars := key-value-chars | = </c>
+    /// </para>
     /// </summary>
-    public const string ValueGr = "value";
+    const string valueChars = $@"{kvChars}=";
+
+    /// <summary>
+    /// Key character
+    /// <para>
+    /// BNF: <c>value-char := value-char | pct-encoded </c>
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string valueCharRex = $@"(?: [{valueChars}] | {pctEncodedChar} )";
 
     /// <summary>
     /// Matches a value from a URI key-value query
@@ -513,7 +596,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string queryValueRex = $"(?<{ValueGr}> {keyValueCharRex}+ )";
+    const string queryValueRex = $"( {valueCharRex}* )";
 
     /// <summary>
     /// Matches a URI's key-value query
@@ -522,7 +605,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string queryKeyValueRex = $"{queryKeyRex} = {queryValueRex}";
+    const string queryKvPairRex = $"{queryKeyRex} = {queryValueRex}";
 
     /// <summary>
     /// The name of a matching group representing a key-value query in a URI
@@ -535,8 +618,9 @@ public static class Uris
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// You can get up to 10 key-value pair URI parameters and they are in capturing groups 1 and 2,  3 and 4, ... 19 and 20
     /// </remarks>
-    const string keyValueQueryRex = $"(?<{KvQueryGr}> {queryKeyValueRex} (?: & {queryKeyValueRex} )* )";
+    const string queryKvRex = $"(?<{KvQueryGr}> (?: {queryKvPairRex} ) (?: & {queryKvPairRex} (?: & {queryKvPairRex} (?: & {queryKvPairRex} (?: & {queryKvPairRex} (?: & {queryKvPairRex} (?: & {queryKvPairRex} (?: & {queryKvPairRex} (?: & {queryKvPairRex} (?: & {queryKvPairRex} )? )? )? )? )? )? )? )? )? )?";
 
     /// <summary>
     /// Matches a string that represents a URI's key-value query
@@ -544,27 +628,21 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string KeyValueQueryRegex = $"^{keyValueQueryRex}$";
+    public const string KeyValueQueryRegex = $"^{queryKvRex}$";
 
-    static readonly Lazy<Regex> keyValueQueryRegex = new(() => new(KeyValueQueryRegex, RegexOptions.Compiled |
-                                                                                       RegexOptions.IgnorePatternWhitespace));
+    static readonly Lazy<Regex> kvQueryRegex = new(() => new(KeyValueQueryRegex, RegexOptions.Compiled |
+                                                                                 RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's key-value query
     /// </summary>
-    public static Regex KeyValueQuery => keyValueQueryRegex.Value;
+    public static Regex KvQuery => kvQueryRegex.Value;
     #endregion
-
-    ///// <summary>
-    ///// Matches a URI's query.
-    ///// <para>BNF: <c>query := key-value-query | generic-query</c></para>
-    ///// </summary>
-    // TODO: const string queryRex = $"(?:{keyValueQueryRex} | {genericQueryRex})";  // didn't work before?
 
     #region Fragment
     const string fragmentChars = $@"{pathChars}/\?";
 
-    const string fragmentCharRex = $@"(?:[{fragmentChars}]|{pctEncodedRex})";
+    const string fragmentCharRex = $@"(?: [{fragmentChars}] | {pctEncodedChar} )";
 
     /// <summary>
     /// The name of a matching group representing a URI fragment
@@ -572,105 +650,155 @@ public static class Uris
     public const string FragmentGr = "fragment";
 
     const string fragmentRex = $"(?<{FragmentGr}> {fragmentCharRex}*)";
-
-    /// <summary>
-    /// Matches a URI's fragment.
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string FragmentRegex = $"^{fragmentRex}$";
-
-    static readonly Lazy<Regex> fragmentRegex = new(() => new(FragmentRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI's fragment
-    /// </summary>
-    public static Regex Fragment = fragmentRegex.Value;
     #endregion
 
+    #region Relative URI
     /// <summary>
-    /// Matches a URI's hierarchical part
-    /// <para>BNF: <c>hierarchical-part = '//' authority path-ab-empty | path-absolute | path-rootless | path-empty</c></para>
+    /// Matches the URI relative part
+    /// <para>
+    /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-noscheme | path-empty</c>
+    /// </para>
+    /// </summary>
+    const string relativeUriPartRex = $"/ (?: (?: / {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
+
+    #region RelativeUriKvQueryRef
+    /// <summary>
+    /// The name of a matching group representing a relative URI with optional general query
+    /// </summary>
+    public const string RelativeUriKvGr = "relUriKv";
+
+    /// <summary>
+    /// Matches the URI relative reference with an optional key-value query in a string
+    /// <para>
+    /// BNF: <c>relative-ref = relative-part [ "?" query-kv ] [ "#" fragment ]</c>
+    /// </para>
+    /// </summary>
+    const string relativeUriKvQueryRefRex = $@"(?<{RelativeUriKvGr}> {relativeUriPartRex} (?: \? {queryKvRex} )? (?: {Ascii.Hash} {fragmentRex} {fragmentRex} )?";
+
+    /// <summary>
+    /// Regular expression pattern which matches a string that represents a relative URI with key-value pairs query.
+    /// </summary>
+    public const string RelativeUriKvQueryRefRegex = $@"^{relativeUriKvQueryRefRex}$";
+
+    static readonly Lazy<Regex> regexRelativeUriKvQueryRef = new(() => new(RelativeUriKvQueryRefRegex, RegexOptions.Compiled |
+                                                                                                       RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
+    /// </summary>
+    public static Regex RelativeUriKvQueryRef => regexRelativeUriKvQueryRef.Value;
+    #endregion
+
+    #region RelativeUriRef
+    /// <summary>
+    /// The name of a matching group representing a relative URI with optional general query
+    /// </summary>
+    public const string RelativeUriGr = "relUri";
+
+    /// <summary>
+    /// Matches the URI relative reference  in a string
+    /// <para>
+    /// BNF: <c>relative-ref = relative-part [ "?" query-gen ] [ "#" fragment ]</c>
+    /// </para>
+    /// </summary>
+    const string relativeUriRefRex = $@"(?<{RelativeUriGr}> {relativeUriPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {fragmentRex} )?";
+
+    /// <summary>
+    /// Regular expression pattern which matches a string that represents a relative URI with general query.
+    /// </summary>
+    public const string RelativeUriRefRegex = $@"^{relativeUriRefRex}$";
+
+    static readonly Lazy<Regex> regexRelativeUriRef = new(() => new(RelativeUriRefRegex, RegexOptions.Compiled |
+                                                                                         RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// Gets a Regex object which matches a string representing a concept.
+    /// </summary>
+    public static Regex RelativeUriRef => regexRelativeUriRef.Value;
+    #endregion
+    #endregion
+
+    #region Absolute URI
+    /// <summary>
+    /// Matches the hierarchical part  in a string
+    /// <para>
+    /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-rootless | path-empty</c>
+    /// </para>
+    /// </summary>
+    const string uriHierarchicalPartRex = $"/ (?: (?: / {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} )?";
+
+    #region UriKeyValueQuery
+    /// <summary>
+    /// The name of a matching group representing an absolute URI
+    /// </summary>
+    public const string UriKvQueryGr = "uriKvQuery";
+
+    /// <summary>
+    /// Matches a URI with an optional key-value query
+    /// <para>
+    /// BNF: <c>URI = scheme : hier-part [ ? kv-query ] [ # fragment ]</c>
+    /// </para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string hierarchicalPartRex = $"// {AuthorityRex} (?: {absoluteOrEmptyPathRex} | {absolutePathRex} | {noRootPathRex} )";
+    const string uriKvQueryRex = $@"(?<{UriKvQueryGr}> {SchemeRex} : {uriHierarchicalPartRex} (?: \? {queryKvRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
 
     /// <summary>
-    /// The name of a matching group representing a URI
-    /// </summary>
-    public const string UriGr = "uri";
-
-    /// <summary>
-    /// Matches a URI with a key-value query
+    /// Matches a string that represents a URI with an optional key-value query
+    /// <para>
+    /// BNF: <c>URI = scheme : hier-part [ ? kv-query ] [ # fragment ]</c>
+    /// </para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string uriKeyValueQueryRex = $@"(?<{UriGr}> {SchemeRex} : {hierarchicalPartRex} (?: \? {keyValueQueryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
+    public const string UriKvQueryRegex = $"^{uriKvQueryRex}$";
 
-    /// <summary>
-    /// Matches a string that represents a URI with a key-value query
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string UriKeyValueQueryRegex = $"^{uriKeyValueQueryRex}$";
-
-    static readonly Lazy<Regex> uriKeyValueQueryRegex = new(() => new(UriKeyValueQueryRegex, RegexOptions.Compiled |
-                                                                                             RegexOptions.IgnorePatternWhitespace));
+    static readonly Lazy<Regex> uriKeyValueQueryRegex = new(() => new(UriKvQueryRegex, RegexOptions.Compiled |
+                                                                                       RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
     public static Regex UriKeyValueQuery => uriKeyValueQueryRegex.Value;
-
-    /// <summary>
-    /// Matches a URI with a key-value query
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string uriGenericQueryRex = $@"(?<{UriGr}> {SchemeRex} : {hierarchicalPartRex} (?: \? {genericQueryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
-
-    /// <summary>
-    /// Matches a string that represents a URI with a key-value query
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    public const string UriGenericQueryRegex = $"^{uriGenericQueryRex}$";
-
-    static readonly Lazy<Regex> uriGenericQueryRegex = new(() => new(UriGenericQueryRegex, RegexOptions.Compiled |
-                                                                                           RegexOptions.IgnorePatternWhitespace));
-
-    /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
-    /// </summary>
-    public static Regex UriGenericQuery => uriGenericQueryRegex.Value;
-
-    #region Uri
-    ///// <summary>
-    ///// Regular expression pattern which matches a URI in a string.
-    ///// <para>BNF: <c>uri = scheme ":" hierachical-part [ "?" query ] [ "#" fragment]</c></para>
-    ///// </summary>
-    //public const string UriRex = $@"(?<{UriGr}> {SchemeRex} : {hierarchicalPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
-
-    ///// <summary>
-    ///// Regular expression pattern which matches a string that represents a URI.
-    ///// </summary>
-    //public const string UriRegex = $@"^{UriRex}$";
-
-    //static readonly Lazy<Regex> regexUri = new(() => new(UriRegex, RegexOptions.Compiled | RegexOptions.CultureInvariant));
-
-    ///// <summary>
-    ///// Gets a Regex object which matches a string representing a URI.
-    ///// </summary>
-    //public static Regex Uri => regexUri.Value;
     #endregion
 
-    // TODO: relative URI-s
+    #region Uri
+    /// <summary>
+    /// The name of a matching group representing an absolute URI with an optional general query
+    /// </summary>
+    public const string UriGr = "uri";
+
+    /// <summary>
+    /// Matches a URI with an optional general query.
+    /// <para>
+    /// BNF: <c>URI = scheme : hier-part [ ? query ] [ # fragment ]</c>
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string uriRex = $@"(?<{UriGr}> {SchemeRex} : {uriHierarchicalPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
+
+    /// <summary>
+    /// Matches a string that represents a URI with an optional general query
+    /// <para>
+    /// BNF: <c>URI = scheme : hier-part [ ? query ] [ # fragment ]</c>
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string UriRegex = $"^{uriRex}$";
+
+    static readonly Lazy<Regex> uriRegex = new(() => new(UriRegex, RegexOptions.Compiled |
+                                                                   RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
+    /// </summary>
+    public static Regex Uri => uriRegex.Value;
+    #endregion
+    #endregion
 }
