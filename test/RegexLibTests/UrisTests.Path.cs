@@ -85,26 +85,26 @@ public partial class UrisTests
         { TestLine(), true, "", null },
         { TestLine(), false, " ", null },
         { TestLine(), true, "aaa", new() {
-                                        ["gQuery"] = "aaa",
+                                        ["query"] = "aaa",
                                     } },
         { TestLine(), true, "a:a", new() {
-                                        ["gQuery"] = "a:a",
+                                        ["query"] = "a:a",
                                     } },
         { TestLine(), false, "\\aaa", null },
         { TestLine(), true, "?aaa", new() {
-                                        ["gQuery"] = "?aaa",
+                                        ["query"] = "?aaa",
                                     } },
         { TestLine(), true, ":aaa", new() {
-                                        ["gQuery"] = ":aaa",
+                                        ["query"] = ":aaa",
                                     } },
         { TestLine(), true, "123", new() {
-                                        ["gQuery"] = "123",
+                                        ["query"] = "123",
                                     } },
         { TestLine(), true, "%D0%B4%D0%B8%D1%80", new() {
-                                        ["gQuery"] = "%D0%B4%D0%B8%D1%80",
+                                        ["query"] = "%D0%B4%D0%B8%D1%80",
                                     } },
         { TestLine(), true, "/", new() {
-                                        ["gQuery"] = "/",
+                                        ["query"] = "/",
                                     } },
     };
 

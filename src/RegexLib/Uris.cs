@@ -801,4 +801,46 @@ public static class Uris
     public static Regex Uri => uriRegex.Value;
     #endregion
     #endregion
+
+    #region HTTP URL
+    /// <summary>
+    /// The name of a matching group representing an HTTP URL scheme
+    /// </summary>
+    public const string HttpUrlScheme = $@"(?<{SchemeGr}> https? )";
+
+    /// <summary>
+    /// The name of a matching group representing an absolute URI with an optional general query
+    /// </summary>
+    public const string HttpUrlGr = "httpUrl";
+
+    /// <summary>
+    /// Matches a URI with an optional general query.
+    /// <para>
+    /// BNF: <c>URI = scheme : hier-part [ ? query ] [ # fragment ]</c>
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string httpUrlRex = $@"(?<{HttpUrlGr}> {HttpUrlScheme} ) : {uriHierarchicalPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
+
+    /// <summary>
+    /// Matches a string that represents a URI with an optional general query
+    /// <para>
+    /// BNF: <c>URI = scheme : hier-part [ ? query ] [ # fragment ]</c>
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string HttpUrlRegex = $"^{httpUrlRex}$";
+
+    static readonly Lazy<Regex> httpUrlRegex = new(() => new(HttpUrlRegex, RegexOptions.Compiled |
+                                                                           RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
+    /// </summary>
+    public static Regex HttpUrl => httpUrlRegex.Value;
+    #endregion
 }

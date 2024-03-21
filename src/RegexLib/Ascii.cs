@@ -118,7 +118,7 @@ public static class Ascii
     /// <summary>
     /// The characters that can be used for string representation of a base64 encoded data without the padding.
     /// </summary>
-    const string base64Chars = $@"{AlphaChars}0-9/\+";
+    const string base64Chars = $@"{AlphaNumericChars}/\+";
 
     /// <summary>
     /// Matches a character of base64 encoded data.
