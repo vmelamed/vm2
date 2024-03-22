@@ -359,6 +359,15 @@ public static class Uris
     const string pathSegmentRex = $"{pathCharRex}*";
 
     /// <summary>
+    /// Matches an empty path.
+    /// <para>BNF: <c>path-abs-empty := *( / segment )</c></para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string pathEmpty = "(?: .{0} )";
+
+    /// <summary>
     /// The name of a matching group representing a URI path
     /// </summary>
     public const string PathRootlessGr = "pathRootless";
@@ -384,7 +393,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathNoSchemeRex = $"(?<{PathNoSchemeGr}> {pathSegmentNzNcRex} (?: / {pathSegmentRex})* )";
+    const string pathNoSchemeRex = $"(?<{PathNoSchemeGr}> {pathSegmentNzNcRex} (?: / {pathSegmentRex} )* )";
 
     /// <summary>
     /// The name of a matching group representing a URI path
@@ -415,15 +424,6 @@ public static class Uris
     const string pathAbsoluteOrEmptyRex = $"(?<{PathAbsEmptyGr}> (?: / {pathSegmentRex} )* )";
 
     /// <summary>
-    /// Matches an empty path.
-    /// <para>BNF: <c>path-abs-empty := *( / segment )</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string pathEmpty = "(?: .{0} )";
-
-    /// <summary>
     /// The name of a matching group representing the path in a URI
     /// </summary>
     public const string UriPathGr = "path";
@@ -445,9 +445,9 @@ public static class Uris
                             (?<{UriPathGr}> 
                                 {pathAbsoluteOrEmptyRex} | 
                                 {pathAbsoluteRex} | 
+                                {pathNoSchemeRex} |
                                 {pathRootlessRex} |
-                                {pathEmpty}
-                            )
+                            )?
                             """;
 
     /// <summary>
@@ -657,7 +657,7 @@ public static class Uris
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-noscheme | path-empty</c>
     /// </para>
     /// </summary>
-    const string relativeUriPartRex = $"(?: (?: // {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmpty} )";
+    const string relativeUriPartRex = $"(?: (?: // {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
 
     #region RelativeUriKvQueryRef
     /// <summary>
@@ -723,7 +723,7 @@ public static class Uris
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-rootless | path-empty</c>
     /// </para>
     /// </summary>
-    const string uriHierarchicalPartRex = $"(?: (?: // {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmpty} )";
+    const string uriHierarchicalPartRex = $"(?: (?: // {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
 
     #region UriKeyValueQuery
     /// <summary>
@@ -807,7 +807,7 @@ public static class Uris
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-noscheme | path-empty</c>
     /// </para>
     /// </summary>
-    const string netRelativeUriPartRex = $"(?: (?: // {NetAuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmpty} )";
+    const string netRelativeUriPartRex = $"(?: (?: // {NetAuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
 
     #region RelativeUriKvQueryRef with network address
 
@@ -864,7 +864,7 @@ public static class Uris
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-rootless | path-empty</c>
     /// </para>
     /// </summary>
-    const string netUriHierarchicalPartRex = $"(?: (?: // {NetAuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmpty} )";
+    const string netUriHierarchicalPartRex = $"(?: (?: // {NetAuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
 
     #region UriKeyValueQuery with network address
     /// <summary>

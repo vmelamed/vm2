@@ -7,7 +7,7 @@ public partial class UrisTests
         { TestLine(), false, " ", null },
         { TestLine(), true, "aaa", new() {
             ["path"] = "aaa",
-            ["pathRootless"] = "aaa",
+            ["pathNoScheme"] = "aaa",
         } },
         { TestLine(), true, "a:a", new() {
             ["path"] = "a:a",
@@ -21,15 +21,15 @@ public partial class UrisTests
         } },
         { TestLine(), true, "123", new() {
             ["path"] = "123",
-            ["pathRootless"] = "123",
+            ["pathNoScheme"] = "123",
         } },
         { TestLine(), true, "123", new() {
             ["path"] = "123",
-            ["pathRootless"] = "123",
+            ["pathNoScheme"] = "123",
         } },
         { TestLine(), true, "%D0%B4%D0%B8%D1%80", new() {
             ["path"] = "%D0%B4%D0%B8%D1%80", // →path← = →дир←
-            ["pathRootless"] = "%D0%B4%D0%B8%D1%80", // →pathRootless← = →дир←
+            ["pathNoScheme"] = "%D0%B4%D0%B8%D1%80", // →pathNoScheme← = →дир←
         } },
         { TestLine(), true, "/", new() {
             ["path"] = "/",

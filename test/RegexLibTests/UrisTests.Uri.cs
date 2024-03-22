@@ -42,7 +42,7 @@ public partial class UrisTests
         { TestLine(), true, "file:UNChost/path", new() {
             ["uri"] = "file:UNChost/path",
             ["scheme"] = "file",
-            ["pathRootless"] = "UNChost/path",
+            ["pathNoScheme"] = "UNChost/path",
         } },
         { TestLine(), false, "c:\\foo\\bar", null },
         { TestLine(), false, "C|/foo/bar", null },
@@ -51,11 +51,7 @@ public partial class UrisTests
         { TestLine(), false, "//server/file", null },
         { TestLine(), false, "\\\\server\\file", null },
         { TestLine(), false, "/\\server/file", null },
-        { TestLine(), true, "file:c:foo/bar.html", new() {
-            ["uri"] = "file:c:foo/bar.html",
-            ["scheme"] = "file",
-            ["pathRootless"] = "c:foo/bar.html",
-        } },
+        { TestLine(), false, "file:c:foo/bar.html", null },
         { TestLine(), false, "file:/\\/\\C:\\\\//foo\\bar.html", null },
         { TestLine(), false, "file:///foo/bar.txt", null },
         { TestLine(), false, "FILE:/\\/\\7:\\\\//foo\\bar.html", null },
@@ -103,7 +99,7 @@ public partial class UrisTests
         { TestLine(), true, "file:UNChost/path", new() {
             ["uri"] = "file:UNChost/path",
             ["scheme"] = "file",
-            ["pathRootless"] = "UNChost/path",
+            ["pathNoScheme"] = "UNChost/path",
         } },
         { TestLine(), false, "c:\\foo\\bar", null },
         { TestLine(), false, "C|/foo/bar", null },
@@ -112,11 +108,7 @@ public partial class UrisTests
         { TestLine(), false, "//server/file", null },
         { TestLine(), false, "\\\\server\\file", null },
         { TestLine(), false, "/\\server/file", null },
-        { TestLine(), true, "file:c:foo/bar.html", new() {
-            ["uri"] = "file:c:foo/bar.html",
-            ["scheme"] = "file",
-            ["pathRootless"] = "c:foo/bar.html",
-        } },
+        { TestLine(), false, "file:c:foo/bar.html", null },
         { TestLine(), false, "file:/\\/\\C:\\\\//foo\\bar.html", null },
         { TestLine(), false, "file:///foo/bar.txt", null },
         { TestLine(), false, "FILE:/\\/\\7:\\\\//foo\\bar.html", null },
@@ -979,36 +971,36 @@ public partial class UrisTests
         { TestLine(), true, "mailto:addr1", new() {
             ["uri"] = "mailto:addr1",
             ["scheme"] = "mailto",
-            ["pathRootless"] = "addr1",
+            ["pathNoScheme"] = "addr1",
         } },
         { TestLine(), true, "mailto:addr1@foo.com", new() {
             ["uri"] = "mailto:addr1@foo.com",
             ["scheme"] = "mailto",
-            ["pathRootless"] = "addr1@foo.com",
+            ["pathNoScheme"] = "addr1@foo.com",
         } },
         { TestLine(), false, "mailto:addr1 \t", null },
         { TestLine(), true, "mailto:addr1?to=jon", new() {
             ["uri"] = "mailto:addr1?to=jon",
             ["scheme"] = "mailto",
-            ["pathRootless"] = "addr1",
+            ["pathNoScheme"] = "addr1",
             ["query"] = "to=jon",
         } },
         { TestLine(), true, "mailto:addr1,addr2", new() {
             ["uri"] = "mailto:addr1,addr2",
             ["scheme"] = "mailto",
-            ["pathRootless"] = "addr1,addr2",
+            ["pathNoScheme"] = "addr1,addr2",
         } },
         { TestLine(), false, "mailto:addr1, addr2", null },
         { TestLine(), true, "mailto:addr1%2caddr2", new() {
             ["uri"] = "mailto:addr1%2caddr2", // →uri← = →mailto:addr1,addr2←
             ["scheme"] = "mailto",
-            ["pathRootless"] = "addr1%2caddr2", // →pathRootless← = →addr1,addr2←
+            ["pathNoScheme"] = "addr1%2caddr2", // →pathRootless← = →addr1,addr2←
         } },
         { TestLine(), false, "mailto:\uD800\uDF00", null },
         { TestLine(), true, "mailto:addr1?", new() {
             ["uri"] = "mailto:addr1?",
             ["scheme"] = "mailto",
-            ["pathRootless"] = "addr1",
+            ["pathNoScheme"] = "addr1",
         } },
         { TestLine(), true, "javascript:", new() {
             ["uri"] = "javascript:",
@@ -1017,7 +1009,7 @@ public partial class UrisTests
         { TestLine(), true, "JavaScript:Foo", new() {
             ["uri"] = "JavaScript:Foo",
             ["scheme"] = "JavaScript",
-            ["pathRootless"] = "Foo",
+            ["pathNoScheme"] = "Foo",
         } },
         { TestLine(), true, "http://www.example.com/././foo", new() {
                 ["uri"] = "http://www.example.com/././foo",
@@ -1379,12 +1371,12 @@ public partial class UrisTests
         { TestLine(), true, "http:path", new() {
             ["uri"] = "http:path",
             ["scheme"] = "http",
-            ["pathRootless"] = "path",
+            ["pathNoScheme"] = "path",
         } },
         { TestLine(), true, "http:path", new() {
             ["uri"] = "http:path",
             ["scheme"] = "http",
-            ["pathRootless"] = "path",
+            ["pathNoScheme"] = "path",
         } },
         { TestLine(), true,  "http:/path", new() {
             ["uri"] = "http:/path",
@@ -1399,7 +1391,7 @@ public partial class UrisTests
         { TestLine(), true, "https:host2", new() {
             ["uri"] = "https:host2",
             ["scheme"] = "https",
-            ["pathRootless"] = "host2",
+            ["pathNoScheme"] = "host2",
         } },
         { TestLine(), true,  "htto:/host2", new() {
             ["uri"] = "htto:/host2",
@@ -1431,7 +1423,7 @@ public partial class UrisTests
         { TestLine(), true, "data:baz", new() {
             ["uri"] = "data:baz",
             ["scheme"] = "data",
-            ["pathRootless"] = "baz",
+            ["pathNoScheme"] = "baz",
         } },
         { TestLine(), true,  "data:/base", new() {
             ["uri"] = "data:/base",
@@ -1450,7 +1442,7 @@ public partial class UrisTests
         { TestLine(), true, "http:host", new() {
             ["uri"] = "http:host",
             ["scheme"] = "http",
-            ["pathRootless"] = "host",
+            ["pathNoScheme"] = "host",
         } },
         { TestLine(), false, "./asd:fgh", null },
         { TestLine(), false, ":foo", null },
@@ -1499,7 +1491,7 @@ public partial class UrisTests
         { TestLine(), true, "http:foo.com", new() {
             ["uri"] = "http:foo.com",
             ["scheme"] = "http",
-            ["pathRootless"] = "foo.com",
+            ["pathNoScheme"] = "foo.com",
         } },
         { TestLine(), false, "\u0009   :foo.com   \u000A", null },
         { TestLine(), false, " foo.com", null },
@@ -1557,11 +1549,7 @@ public partial class UrisTests
                 ["port"] = "29",
                 ["pathAbsEmpty"] = "/d",
             } },
-        { TestLine(), true, "http::@c:29", new() {
-            ["uri"] = "http::@c:29",
-            ["scheme"] = "http",
-            ["pathRootless"] = ":@c:29",
-        } },
+        { TestLine(), false, "http::@c:29", null },
         { TestLine(), false, "http://&amp;a:foo(b]c@d:2/", null },
         { TestLine(), false,  "http://::@c@d:2", null },
         { TestLine(), true,  "http://foo.com:b@d/", new() {
@@ -1661,7 +1649,7 @@ public partial class UrisTests
         { TestLine(), true, "http:foo.com", new() {
             ["uri"] = "http:foo.com",
             ["scheme"] = "http",
-            ["pathRootless"] = "foo.com",
+            ["pathNoScheme"] = "foo.com",
         } },
         { TestLine(), false, "\u0009   :foo.com   \u000A", null },
         { TestLine(), false, " foo.com", null },
@@ -1719,11 +1707,7 @@ public partial class UrisTests
                 ["port"] = "29",
                 ["pathAbsEmpty"] = "/d",
             } },
-        { TestLine(), true, "http::@c:29", new() {
-            ["uri"] = "http::@c:29",
-            ["scheme"] = "http",
-            ["pathRootless"] = ":@c:29",
-        } },
+        { TestLine(), false, "http::@c:29", null },
         { TestLine(), false, "http://&amp;a:foo(b]c@d:2/", null },
         { TestLine(), false,  "http://::@c@d:2", null },
         { TestLine(), true,  "http://foo.com:b@d/", new() {
