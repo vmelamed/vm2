@@ -103,6 +103,43 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
 
     // -----
 
+    public static UriTheoryData NetHostData = new() {
+        { TestLine(), false, "", null },
+        { TestLine(), false, " ", null },
+        { TestLine("DnsName"), true, "maria.vtmelamed.com", new()
+                                                        {
+                                                            ["host"] = "maria.vtmelamed.com",
+                                                            ["ipDnsName"] = "maria.vtmelamed.com",
+                                                        } },
+        { TestLine("Incomplete IPv4"), false, "1.2.3", null },
+        { TestLine("Complete IPv4"), true, "1.2.3.4", new()
+                                                        {
+                                                            ["host"] = "1.2.3.4",
+                                                            ["ipv4"] = "1.2.3.4",
+                                                        } },
+        { TestLine("Complete unbracketed IPv6"), false, "1:2:3::4", null },
+        { TestLine("Complete IPv6"), true, "[1:2:3::4]", new()
+                                                        {
+                                                            ["host"] = "[1:2:3::4]",
+                                                            ["ipv6"] = "1:2:3::4",
+                                                        } },
+        { TestLine("Complete IPvF"), true, "[v1a.skiledh.srethg.23546.]", new()
+                                                        {
+                                                            ["host"] = "[v1a.skiledh.srethg.23546.]",
+                                                            ["ipvF"] = "v1a.skiledh.srethg.23546.",
+                                                        } },
+        { TestLine("Complete unbracketed IPvF"), false, "v1a.skiledh.srethg.23546.", null },
+        { TestLine("General name in Unicode"), false, "дир.бг", null },
+        { TestLine("General name in percent URL encoded"), false, "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3", null },
+    };
+
+    [Theory]
+    [MemberData(nameof(NetHostData))]
+    public void TestNetHost(string TestLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.Host, TestLine, shouldBe, input, captures);
+
+    // -----
+
     [Theory]
     [MemberData(nameof(AddressData))]
     public void TestAddress(string TestLine, bool shouldBe, string input, Captures? captures)
@@ -111,9 +148,23 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
     // -----
 
     [Theory]
+    [MemberData(nameof(NetAddressData))]
+    public void TestNetAddress(string TestLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.Address, TestLine, shouldBe, input, captures);
+
+    // -----
+
+    [Theory]
     [MemberData(nameof(AuthorityData))]
     public void TestAuthority(string TestLine, bool shouldBe, string input, Captures? captures)
         => base.RegexStringTest($"^{Uris.AuthorityRex}$", TestLine, shouldBe, input, captures);
+
+    // -----
+
+    [Theory]
+    [MemberData(nameof(NetAuthorityData))]
+    public void TestNetAuthority(string TestLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexStringTest($"^{Uris.NetAuthorityRex}$", TestLine, shouldBe, input, captures);
 
     // -----
 
@@ -142,4 +193,11 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
     [MemberData(nameof(UriData))]
     public void TestUriData(string TestLine, bool shouldBe, string input, Captures? captures)
         => base.RegexTestUri(Uris.Uri, TestLine, shouldBe, input, captures);
+
+    // -----
+
+    [Theory]
+    [MemberData(nameof(NetUriData))]
+    public void TestNetUriData(string TestLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTestUri(Uris.NetUri, TestLine, shouldBe, input, captures);
 }

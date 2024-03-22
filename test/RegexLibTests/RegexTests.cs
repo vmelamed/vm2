@@ -63,7 +63,7 @@ public abstract class RegexTests
         var match = TestDir.Match(path);
         var testDirIndex = match.Success ? match.Index+1 : 0;
 
-        return $"{path[testDirIndex..]}:{line:d3}{(testDescription.Length > 0 ? " : " + testDescription : "")}";
+        return $"{path[testDirIndex..]}:{line:d4}{(testDescription.Length > 0 ? " : " + testDescription : "")}";
     }
 
     public const RegexOptions RegexOpt = RegexOptions.IgnorePatternWhitespace;
@@ -226,6 +226,9 @@ public abstract class RegexTests
                 failed = true;
             }
         }
+
+        if (failed)
+            OutputActual(actualCaptures, messages);
 
         return (failed, messages);
     }

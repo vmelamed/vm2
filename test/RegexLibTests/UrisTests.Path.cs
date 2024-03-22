@@ -5,14 +5,32 @@ public partial class UrisTests
     public static UriTheoryData PathAbsData = new () {
         { TestLine(), true, "", null },
         { TestLine(), false, " ", null },
-        { TestLine(), false, "aaa", null },
-        { TestLine(), false, "a:a", null },
+        { TestLine(), true, "aaa", new() {
+            ["path"] = "aaa",
+            ["pathRootless"] = "aaa",
+        } },
+        { TestLine(), true, "a:a", new() {
+            ["path"] = "a:a",
+            ["pathRootless"] = "a:a",
+        } },
         { TestLine(), false, "\\aaa", null },
         { TestLine(), false, "?aaa", null },
-        { TestLine(), false, ":aaa", null },
-        { TestLine(), false, "123", null },
-        { TestLine(), false, "123", null },
-        { TestLine(), false, "%D0%B4%D0%B8%D1%80", null },
+        { TestLine(), true, ":aaa", new() {
+            ["path"] = ":aaa",
+            ["pathRootless"] = ":aaa",
+        } },
+        { TestLine(), true, "123", new() {
+            ["path"] = "123",
+            ["pathRootless"] = "123",
+        } },
+        { TestLine(), true, "123", new() {
+            ["path"] = "123",
+            ["pathRootless"] = "123",
+        } },
+        { TestLine(), true, "%D0%B4%D0%B8%D1%80", new() {
+            ["path"] = "%D0%B4%D0%B8%D1%80", // →path← = →дир←
+            ["pathRootless"] = "%D0%B4%D0%B8%D1%80", // →pathRootless← = →дир←
+        } },
         { TestLine(), true, "/", new() {
             ["path"] = "/",
             ["pathAbsEmpty"] = "/",

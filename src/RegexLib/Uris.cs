@@ -4,6 +4,7 @@
 /// Class Uri. Defines many regular expressions with the ultimate goal to define a regular expression for URI.
 /// Follows closely the definitions in
 /// https://datatracker.ietf.org/doc/html/rfc3986
+/// https://datatracker.ietf.org/doc/html/rfc1738
 /// https://datatracker.ietf.org/doc/html/rfc1034
 /// https://datatracker.ietf.org/doc/html/rfc1123
 /// https://datatracker.ietf.org/doc/html/rfc952
@@ -105,26 +106,6 @@ public static class Uris
 
     #region Host
     /// <summary>
-    /// Matches a IP address.
-    /// <para>BNF: <c>ip-literal-address := [ (IPv6address | IPvFuture) ]</c></para>
-    /// <para>Named groups: <see cref="Net.Ipv6Gr"/> or <see cref="Net.IpvfGr"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string ipLiteralAddressRex = $@"(?: \[ (?: {Net.Ipv6AddressRex} | {Net.IpvFutureAddressRex} ) \] )";
-
-    /// <summary>
-    /// Matches an IP address in numeric form IPv4, IPv6, or IPvFuture.
-    /// <para>BNF: <c>ip-numeric-address := IPv4address | "[" (IPv6address | IPvFuture) "]" </c></para>
-    /// <para>Named groups: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6Gr"/>, or <see cref="Net.IpvfGr"/>.</para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string ipNumericAddressRex = $@"{Net.Ipv4AddressRex} | {ipLiteralAddressRex}";
-
-    /// <summary>
     /// The name of a matching group representing an IP general name.
     /// </summary>
     public const string IpGenNameGr = "ipGenName";
@@ -147,10 +128,10 @@ public static class Uris
     /// <summary>
     /// The name of a matching group representing a host name.
     /// </summary>
-    public const string HostGr = "host";
+    public const string HostGr = Net.HostGr;
 
     /// <summary>
-    /// Matches a host.
+    /// Matches a host in a string.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
     /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpGenNameGr"/>, <see cref="Net.Ipv4Gr"/>, 
@@ -160,7 +141,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string HostRex = $@"(?<{HostGr}> {ipNumericAddressRex} | {registeredNameRex} )";
+    public const string HostRex = $@"(?<{HostGr}> {Net.IpNumericAddressRex} | {registeredNameRex} )";
 
     /// <summary>
     /// Matches a string that represents a host.
@@ -284,6 +265,15 @@ public static class Uris
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string AuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {AddressRex} )";
+
+    /// <summary>
+    /// Matches the URI's authority with network address.
+    /// <para>BNF: <c>authority := [ user-info @ ] host [ : port ]</c></para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string NetAuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {Net.AddressRex} )";
     #endregion
 
     #region Path
@@ -425,6 +415,15 @@ public static class Uris
     const string pathAbsoluteOrEmptyRex = $"(?<{PathAbsEmptyGr}> (?: / {pathSegmentRex} )* )";
 
     /// <summary>
+    /// Matches an empty path.
+    /// <para>BNF: <c>path-abs-empty := *( / segment )</c></para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string pathEmpty = "(?: .{0} )";
+
+    /// <summary>
     /// The name of a matching group representing the path in a URI
     /// </summary>
     public const string UriPathGr = "path";
@@ -445,10 +444,9 @@ public static class Uris
     const string pathRex = $"""
                             (?<{UriPathGr}> 
                                 {pathAbsoluteOrEmptyRex} | 
-                                (?: / {pathAbsoluteRex} ) | 
-                                (?: / {pathNoSchemeRex} ) | 
-                                (?: / {pathRootlessRex}) | 
-                                /
+                                {pathAbsoluteRex} | 
+                                {pathRootlessRex} |
+                                {pathEmpty}
                             )
                             """;
 
@@ -659,7 +657,7 @@ public static class Uris
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-noscheme | path-empty</c>
     /// </para>
     /// </summary>
-    const string relativeUriPartRex = $"/ (?: (?: / {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
+    const string relativeUriPartRex = $"(?: (?: // {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmpty} )";
 
     #region RelativeUriKvQueryRef
     /// <summary>
@@ -725,7 +723,7 @@ public static class Uris
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-rootless | path-empty</c>
     /// </para>
     /// </summary>
-    const string uriHierarchicalPartRex = $"/ (?: (?: / {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} )?";
+    const string uriHierarchicalPartRex = $"(?: (?: // {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmpty} )";
 
     #region UriKeyValueQuery
     /// <summary>
@@ -762,6 +760,7 @@ public static class Uris
     /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
     public static Regex UriKeyValueQuery => uriKeyValueQueryRegex.Value;
+    #endregion
     #endregion
 
     #region Uri
@@ -800,18 +799,107 @@ public static class Uris
     /// </summary>
     public static Regex Uri => uriRegex.Value;
     #endregion
+
+    #region Relative URI with network address
+    /// <summary>
+    /// Matches the URI (net) relative part
+    /// <para>
+    /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-noscheme | path-empty</c>
+    /// </para>
+    /// </summary>
+    const string netRelativeUriPartRex = $"(?: (?: // {NetAuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmpty} )";
+
+    #region RelativeUriKvQueryRef with network address
+
+    /// <summary>
+    /// Matches the URI relative reference with an optional key-value query in a string
+    /// <para>
+    /// BNF: <c>relative-ref = relative-part [ "?" query-kv ] [ "#" fragment ]</c>
+    /// </para>
+    /// </summary>
+    const string netRelativeUriKvQueryRefRex = $@"(?<{RelativeUriKvGr}> {netRelativeUriPartRex} (?: \? {queryKvRex} )? (?: {Ascii.Hash} {fragmentRex} {fragmentRex} )?";
+
+    /// <summary>
+    /// Regular expression pattern which matches a string that represents a relative URI with key-value pairs query.
+    /// </summary>
+    public const string NetRelativeUriKvQueryRefRegex = $@"^{netRelativeUriKvQueryRefRex}$";
+
+    static readonly Lazy<Regex> regexNetRelativeUriKvQueryRef = new(() => new(NetRelativeUriKvQueryRefRegex, RegexOptions.Compiled |
+                                                                                                             RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
+    /// </summary>
+    public static Regex NetRelativeUriKvQueryRef => regexNetRelativeUriKvQueryRef.Value;
     #endregion
 
-    #region HTTP URL
+    #region RelativeUriRef with network address
     /// <summary>
-    /// The name of a matching group representing an HTTP URL scheme
+    /// Matches the URI relative reference  in a string
+    /// <para>
+    /// BNF: <c>relative-ref = relative-part [ "?" query-gen ] [ "#" fragment ]</c>
+    /// </para>
     /// </summary>
-    public const string HttpUrlScheme = $@"(?<{SchemeGr}> https? )";
+    const string netRelativeUriRefRex = $@"(?<{RelativeUriGr}> {netRelativeUriPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {fragmentRex} )?";
 
     /// <summary>
-    /// The name of a matching group representing an absolute URI with an optional general query
+    /// Regular expression pattern which matches a string that represents a relative URI with general query.
     /// </summary>
-    public const string HttpUrlGr = "httpUrl";
+    public const string NetRelativeUriRefRegex = $@"^{netRelativeUriRefRex}$";
+
+    static readonly Lazy<Regex> netRegexRelativeUriRef = new(() => new(NetRelativeUriRefRegex, RegexOptions.Compiled |
+                                                                                         RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// Gets a Regex object which matches a string representing a concept.
+    /// </summary>
+    public static Regex NetRelativeUriRef => netRegexRelativeUriRef.Value;
+    #endregion
+    #endregion
+
+    #region Absolute URI with network address
+    /// <summary>
+    /// Matches the hierarchical part  in a string
+    /// <para>
+    /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-rootless | path-empty</c>
+    /// </para>
+    /// </summary>
+    const string netUriHierarchicalPartRex = $"(?: (?: // {NetAuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathRootlessRex} | {pathEmpty} )";
+
+    #region UriKeyValueQuery with network address
+    /// <summary>
+    /// Matches a URI with an optional key-value query
+    /// <para>
+    /// BNF: <c>URI = scheme : hier-part [ ? kv-query ] [ # fragment ]</c>
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string netUriKvQueryRex = $@"(?<{UriKvQueryGr}> {SchemeRex} : {netUriHierarchicalPartRex} (?: \? {queryKvRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
+
+    /// <summary>
+    /// Matches a string that represents a URI with an optional key-value query
+    /// <para>
+    /// BNF: <c>URI = scheme : hier-part [ ? kv-query ] [ # fragment ]</c>
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string NetUriKvQueryRegex = $"^{netUriKvQueryRex}$";
+
+    static readonly Lazy<Regex> netUriKeyValueQueryRegex = new(() => new(NetUriKvQueryRegex, RegexOptions.Compiled |
+                                                                                             RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
+    /// </summary>
+    public static Regex NetUriKeyValueQuery => netUriKeyValueQueryRegex.Value;
+    #endregion
+    #endregion
+
+    #region Uri with network address
 
     /// <summary>
     /// Matches a URI with an optional general query.
@@ -822,7 +910,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string httpUrlRex = $@"(?<{HttpUrlGr}> {HttpUrlScheme} ) : {uriHierarchicalPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
+    const string netUriRex = $@"(?<{UriGr}> {SchemeRex} : {netUriHierarchicalPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {fragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with an optional general query
@@ -833,14 +921,14 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string HttpUrlRegex = $"^{httpUrlRex}$";
+    public const string NetUriRegex = $"^{netUriRex}$";
 
-    static readonly Lazy<Regex> httpUrlRegex = new(() => new(HttpUrlRegex, RegexOptions.Compiled |
-                                                                           RegexOptions.IgnorePatternWhitespace));
+    static readonly Lazy<Regex> netUriRegex = new(() => new(NetUriRegex, RegexOptions.Compiled |
+                                                                         RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
     /// </summary>
-    public static Regex HttpUrl => httpUrlRegex.Value;
+    public static Regex NetUri => netUriRegex.Value;
     #endregion
 }

@@ -242,13 +242,113 @@ public static class Net
     /// </summary>
     public const string DnsNameRegex = $@"^{DnsNameRex}$";
 
-    static readonly Lazy<Regex> regexDnsName = new(() => new(DnsNameRegex, RegexOptions.Compiled
-                                                                           | RegexOptions.IgnorePatternWhitespace));
+    static readonly Lazy<Regex> regexDnsName = new(() => new(DnsNameRegex, RegexOptions.Compiled |
+                                                                           RegexOptions.IgnorePatternWhitespace));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a concept.
     /// </summary>
     public static Regex DnsName => regexDnsName.Value;
+    #endregion
+
+    /// <summary>
+    /// Matches a IP address.
+    /// <para>BNF: <c>ip-literal-address := [ (IPv6address | IPvFuture) ]</c></para>
+    /// <para>Named groups: <see cref="Ipv6Gr"/> or <see cref="IpvfGr"/>.</para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    const string ipLiteralAddressRex = $@"(?: \[ (?: {Ipv6AddressRex} | {IpvFutureAddressRex} ) \] )";
+
+    /// <summary>
+    /// Matches an IP address in numeric form IPv4, IPv6, or IPvFuture.
+    /// <para>BNF: <c>ip-numeric-address := IPv4address | "[" (IPv6address | IPvFuture) "]" </c></para>
+    /// <para>Named groups: <see cref="Ipv4Gr"/>, <see cref="Ipv6Gr"/>, or <see cref="IpvfGr"/>.</para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    internal const string IpNumericAddressRex = $@"{Ipv4AddressRex} | {ipLiteralAddressRex}";
+
+    /// <summary>
+    /// The name of a matching group representing a host name.
+    /// </summary>
+    public const string HostGr = "host";
+
+    #region Host
+    /// <summary>
+    /// Matches a host in a string.
+    /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
+    /// <para>
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpDnsNameGr"/>, <see cref="Ipv4Gr"/>, 
+    /// <see cref="Ipv6Gr"/> or <see cref="IpvfGr"/>.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string HostRex = $@"(?<{HostGr}> {IpNumericAddressRex} | {DnsNameRex} )";
+
+    /// <summary>
+    /// Matches a string that represents a host.
+    /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
+    /// <para>
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpDnsNameGr"/>, <see cref="Ipv4Gr"/>, 
+    /// <see cref="Ipv6Gr"/> or <see cref="IpvfGr"/>.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string HostRegex = $@"^{HostRex}$";
+
+    static readonly Lazy<Regex> regexHost = new(() => new(HostRegex, RegexOptions.Compiled |
+                                                                     RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// Gets a Regex object which matches a string representing a host.
+    /// </summary>
+    public static Regex Host => regexHost.Value;
+    #endregion
+
+
+    #region Address (Host:Port)
+    /// <summary>
+    /// The name of a matching group representing an IP address.
+    /// </summary>
+    public const string AddressGr = "address";
+
+    /// <summary>
+    /// Matches an IP address.
+    /// <para>BNF: <c>address := host [: port]</c></para>
+    /// <para>Named groups: <see cref="AddressGr"/> <see cref="HostGr"/>, <see cref="PortGr"/>.</para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string AddressRex = $"(?<{AddressGr}> {HostRex} (?: : {PortRex})? )";
+
+    /// <summary>
+    /// Matches a string that represents an IP address.
+    /// <para>BNF: <c>address := host [: port]</c></para>
+    /// <para>Named groups: <see cref="HostGr"/>, <see cref="PortGr"/>.</para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string AddressRegex = $"^{AddressRex}$";
+
+    static readonly Lazy<Regex> addressRegex = new(() => new(AddressRegex, RegexOptions.Compiled |
+                                                                           RegexOptions.IgnorePatternWhitespace));
+
+    /// <summary>
+    /// A <see cref="Regex"/> object that matches a string that represents an IP address.
+    /// <para>BNF: <c>address := host [: port]</c></para>
+    /// <para>Named groups: <see cref="HostGr"/>, <see cref="PortGr"/>.</para>
+    /// </summary>
+    /// <value>The address.</value>
+    public static Regex Address => addressRegex.Value;
     #endregion
 
     #region Port
