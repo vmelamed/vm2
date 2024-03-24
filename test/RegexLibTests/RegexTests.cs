@@ -33,7 +33,7 @@ public class Captures : Dictionary<string, string>, IXunitSerializable
     }
 }
 
-public abstract class RegexTests
+public abstract partial class RegexTests
 {
 
     public ITestOutputHelper Out { get; }
@@ -44,7 +44,8 @@ public abstract class RegexTests
         FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
     }
 
-    static readonly Regex TestDir = new(@"[/\\]test[/\\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    [GeneratedRegex(@"[/\\]test[/\\]", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
+    private static partial Regex TestDir(); // = new(@"[/\\]test[/\\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     /// <summary>
     /// Returns a string describing where this method was called from and an optional description.
@@ -60,7 +61,7 @@ public abstract class RegexTests
         [CallerFilePath] string path = "",
         [CallerLineNumber] int line = 0)
     {
-        var match = TestDir.Match(path);
+        var match = TestDir().Match(path);
         var testDirIndex = match.Success ? match.Index+1 : 0;
 
         return $"{path[testDirIndex..]}:{line:d4}{(testDescription.Length > 0 ? " : " + testDescription : "")}";
@@ -150,7 +151,6 @@ public abstract class RegexTests
         isMatch.Should().Be(shouldMatch);
     }
 
-
     /// <summary>
     /// Data driven (theory) test for the regular expression <see cref="Regex" />
     /// </summary>
@@ -235,7 +235,7 @@ public abstract class RegexTests
 
     static void OutputActual(
         Dictionary<string, string> actualCaptures,
-        ICollection<string> messages)
+        List<string> messages)
     {
         var wr = new StringWriter();
 

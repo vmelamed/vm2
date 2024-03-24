@@ -312,7 +312,6 @@ public static class Net
     public static Regex Host => regexHost.Value;
     #endregion
 
-
     #region Address (Host:Port)
     /// <summary>
     /// The name of a matching group representing an IP address.

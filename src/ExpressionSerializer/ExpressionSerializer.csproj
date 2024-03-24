@@ -7,26 +7,26 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <WarningsAsErrors>true</WarningsAsErrors>
     <WarningLevel>9999</WarningLevel>
+    <NoWarn></NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1701;1702;1716</NoWarn>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../vm2signKey.snk</AssemblyOriginatorKeyFile>
-    <RootNamespace>vm2.RegexLib</RootNamespace>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <RootNamespace>vm2.ExpressionSerializer</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
     <IsPackable>true</IsPackable>
-    <Title>vm2 Library of Regular Expressions</Title>
+    <Title>vm2 Linq Expressions Serializer</Title>
     <Company>vm</Company>
     <Product>vm2</Product>
     <ProductName>Val Melamed's packages</ProductName>
     <Authors>Val Melamed</Authors>
-    <Description>Contains a number of useful regular expressions as strings and lazily initialized System.Text.RegularExpressions.Regex objects.</Description>
-    <PackageReleaseNotes>Initial version of the vm2.RegexLib. Inherits most of the code from vm.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/vmelamed/vm2/tree/main/src/RegexLib</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/vmelamed/vm2/blob/main/src/RegexLib/vm2.RegexLib.csproj</RepositoryUrl>
-    <PackageTags>C# regex regular expression </PackageTags>
+    <Description>This package serializes and deserializes LINQ Expressions to and from XML, JSON, and other file format.</Description>
+    <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer. Inherits some code from vm.</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/vmelamed/vm2/tree/main/src/ExpressionSerializer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerializer/ExpressionSerializer.csproj</RepositoryUrl>
+    <PackageTags>C# LINQ expression serialize deserialize XML JSON</PackageTags>
     <Copyright>Copyright © 2023-2024 vm</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>      

@@ -212,7 +212,6 @@ public partial class NetTests
         { TestLine(), false, ":::5555", null },
         { TestLine(), false, ":::", null },
 
-
         // Additional test cases
         // from http://rt.cpan.org/Public/Bug/Display.html?id=50693
 
@@ -404,7 +403,6 @@ public partial class NetTests
         { TestLine(), false, "1111:2222:3333:4444::6666:7777::", null },
 
         { TestLine(), false, "1111:2222:3333:4444:5555::7777::", null },
-
 
         // Too many components"
         { TestLine(), false, "1111:2222:3333:4444:5555:6666:7777:8888:1.2.3.4", null },

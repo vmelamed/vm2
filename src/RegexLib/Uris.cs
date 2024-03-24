@@ -41,7 +41,9 @@ public static class Uris
     /// The reserved chars.
     /// <para>BNF: <c>reserved = gen-delims | sub-delims</c></para>
     /// </summary>
+#pragma warning disable IDE0051 // Remove unused private members
     const string reservedChars = $@"{genDelimiters}{subDelimiterChars}";
+#pragma warning restore IDE0051 // Remove unused private members
 
     /// <summary>
     /// The characters that are allowed in a URI but do not have a reserved purpose.
@@ -357,15 +359,6 @@ public static class Uris
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     const string pathSegmentRex = $"{pathCharRex}*";
-
-    /// <summary>
-    /// Matches an empty path.
-    /// <para>BNF: <c>path-abs-empty := *( / segment )</c></para>
-    /// </summary>
-    /// <remarks>
-    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
-    /// </remarks>
-    const string pathEmpty = "(?: .{0} )";
 
     /// <summary>
     /// The name of a matching group representing a URI path

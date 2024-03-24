@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>    
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
+    <WarningLevel>9999</WarningLevel>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <NoWarn>CA2211</NoWarn>
     <RootNamespace>vm2.RegexLibTests</RootNamespace>
-    <NoWarn>xUnit1026, SYSLIB1045</NoWarn>
   </PropertyGroup>
   
   <ItemGroup>
@@ -28,7 +30,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\src\RegexLib\vm2.RegexLib.csproj" />
+    <ProjectReference Include="..\..\src\RegexLib\RegexLib.csproj" />
   </ItemGroup>
 
 </Project>

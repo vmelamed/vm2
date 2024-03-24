@@ -34,67 +34,54 @@ public partial class UrisTests
         { TestLine(), true, "/", new() {
             ["path"] = "/",
             ["pathAbsEmpty"] = "/",
-            ["pathAbsEmpty"] = "/",
         } },
         { TestLine(), true, "/aaa", new() {
             ["path"] = "/aaa",
             ["pathAbsEmpty"] = "/aaa",
-            ["pathAbsEmpty"] = "/aaa",
         } },
         { TestLine(), true, "/12a.a@tyty", new() {
             ["path"] = "/12a.a@tyty",
-            ["pathAbsEmpty"] = "/12a.a@tyty",
             ["pathAbsEmpty"] = "/12a.a@tyty",
         } },
         { TestLine(), false, "/12aa#tyty", null },
         { TestLine(), true, "/12a/a@tyty", new() {
             ["path"] = "/12a/a@tyty",
             ["pathAbsEmpty"] = "/12a/a@tyty",
-            ["pathAbsEmpty"] = "/12a/a@tyty",
         } },
         { TestLine(), true, "/12a/a:tyty", new() {
             ["path"] = "/12a/a:tyty",
-            ["pathAbsEmpty"] = "/12a/a:tyty",
             ["pathAbsEmpty"] = "/12a/a:tyty",
         } },
         { TestLine(), true, "/12a/a@tyty", new() {
             ["path"] = "/12a/a@tyty",
             ["pathAbsEmpty"] = "/12a/a@tyty",
-            ["pathAbsEmpty"] = "/12a/a@tyty",
         } },
         { TestLine(), true, "/c:/12a/a@tyty", new() {
             ["path"] = "/c:/12a/a@tyty",
-            ["pathAbsEmpty"] = "/c:/12a/a@tyty",
             ["pathAbsEmpty"] = "/c:/12a/a@tyty",
         } },
         { TestLine(), true, "/12a/a@tyty/%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3", new() {
             ["path"] = "/12a/a@tyty/%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
             ["pathAbsEmpty"] = "/12a/a@tyty/%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
-            ["pathAbsEmpty"] = "/12a/a@tyty/%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
         } },
         { TestLine(), true, "/12a/a@tyty/%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3/123", new() {
             ["path"] = "/12a/a@tyty/%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3/123",
-            ["pathAbsEmpty"] = "/12a/a@tyty/%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3/123",
             ["pathAbsEmpty"] = "/12a/a@tyty/%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3/123",
         } },
         { TestLine(), true, "//aaa", new() {
             ["path"] = "//aaa",
             ["pathAbsEmpty"] = "//aaa",
-            ["pathAbsEmpty"] = "//aaa",
         } },
         { TestLine(), true, "////aaa", new() {
             ["path"] = "////aaa",
-            ["pathAbsEmpty"] = "////aaa",
             ["pathAbsEmpty"] = "////aaa",
         } },
         { TestLine(), true, "/", new() {
             ["path"] = "/",
             ["pathAbsEmpty"] = "/",
-            ["pathAbsEmpty"] = "/",
         } },
         { TestLine(), true, "/bbb///aaa", new() {
             ["path"] = "/bbb///aaa",
-            ["pathAbsEmpty"] = "/bbb///aaa",
             ["pathAbsEmpty"] = "/bbb///aaa",
         } },
     };

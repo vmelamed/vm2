@@ -10,7 +10,7 @@ namespace vm2.RegexLibTests;
 /// <seealso cref="IValueFormatter" />
 public class FluentAssertionsExceptionFormatter : IValueFormatter
 {
-    static readonly FluentAssertionsExceptionFormatter _formatter = new();
+    static readonly FluentAssertionsExceptionFormatter formatter = new();
 
     /// <summary>
     /// Indicates
@@ -48,5 +48,5 @@ public class FluentAssertionsExceptionFormatter : IValueFormatter
     //
     // Summary:
     //     Enables the display of inner exceptions when call.Should().NotThrow() fails
-    public static void EnableDisplayOfInnerExceptions() => Formatter.AddFormatter(_formatter);
+    public static void EnableDisplayOfInnerExceptions() => FluentAssertions.Formatting.Formatter.AddFormatter(formatter);
 }

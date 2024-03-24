@@ -40,7 +40,6 @@ public static class Banking
     /// </summary>
     public const string LocationGr = "location";
 
-
     /// <summary>
     /// The name of a matching group representing an optional branch code in a SWIFT code.
     /// </summary>

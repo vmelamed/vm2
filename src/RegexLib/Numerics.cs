@@ -260,7 +260,6 @@ public static class Numerics
 
     const string uuidWithNoDashesRex = $@"{HexDigitRex}{{32}}";
 
-
     /// <summary>
     /// Regular expression pattern which matches a UUID in a string.
     /// </summary>

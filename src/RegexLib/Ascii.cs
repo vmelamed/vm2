@@ -17,7 +17,6 @@ public static class Ascii
     /// </summary>
     public const string Hash = @"\x23";
 
-
     /// <summary>
     /// The set of Latin uppercase characters.
     /// </summary>
