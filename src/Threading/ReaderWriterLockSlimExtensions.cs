@@ -3,7 +3,7 @@
 /// <summary>
 /// Class ReaderWriterLockSlimExtensions. Utility class for better management of the lifetime of the scope of <see cref="ReaderWriterLockSlim"/>
 /// </summary>
-static class ReaderWriterLockSlimExtensions
+public static class ReaderWriterLockSlimExtensions
 {
     /// <summary>
     /// Gets the upgradable reader slim sync. Merely a shortcut to <c>new UpgradeableReaderSlimLock(readerWriterLock)</c>.

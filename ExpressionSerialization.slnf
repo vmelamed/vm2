@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "vm2.sln",
+    "projects": [
+      "src\\ExpressionSerialization\\ExpressionSerialization.csproj",
+      "src\\Threading\\Threading.csproj",
+      "test\\ExpressionSerialization\\ExpressionSerializationTests.csproj",
+      "test\\TestUtilities\\TestUtilities.csproj"
+    ]
+  }
+}

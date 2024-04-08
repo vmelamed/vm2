@@ -20,8 +20,9 @@
 /// ]]>
 /// </code>
 /// </example>
-/// <seealso cref="ReaderSlimSync"/>, <seealso cref="WriterSlimSync"/>
-sealed class WriterSlimSync : IDisposable
+/// <seealso cref="ReaderSlimSync"/>,
+/// <seealso cref="ReaderWriterLockSlimExtensions.WriterLock(ReaderWriterLockSlim)"/>
+public sealed class WriterSlimSync : IDisposable
 {
     readonly ReaderWriterLockSlim _readerWriterLock;
 
@@ -47,16 +48,11 @@ sealed class WriterSlimSync : IDisposable
     int _disposed;
 
     /// <summary>
-    /// Returns <see langword="true"/> if the object has already been disposed, otherwise <see langword="false"/>.
-    /// </summary>
-    public bool IsDisposed => Interlocked.CompareExchange(ref _disposed, 1, 1) == 1;
-
-    /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     public void Dispose()
     {
-        if (Interlocked.Exchange(ref _disposed, 1) == 0)
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) == 0)
             _readerWriterLock.ExitWriteLock();
     }
     #endregion

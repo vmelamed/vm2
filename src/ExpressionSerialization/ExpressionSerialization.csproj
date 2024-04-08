@@ -1,31 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <WarningsAsErrors>true</WarningsAsErrors>
     <WarningLevel>9999</WarningLevel>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <NoWarn></NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../vm2signKey.snk</AssemblyOriginatorKeyFile>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <RootNamespace>vm2.ExpressionSerializer</RootNamespace>
+    <RootNamespace>vm2.ExpressionSerialization</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
     <IsPackable>true</IsPackable>
-    <Title>vm2 Linq Expressions Serializer</Title>
+    <Title>vm2 Linq Expressions Serialization</Title>
     <Company>vm</Company>
     <Product>vm2</Product>
     <ProductName>Val Melamed's packages</ProductName>
     <Authors>Val Melamed</Authors>
-    <Description>This package serializes and deserializes LINQ Expressions to and from XML, JSON, and other file format.</Description>
-    <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer. Inherits some code from vm.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/vmelamed/vm2/tree/main/src/ExpressionSerializer</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerializer/ExpressionSerializer.csproj</RepositoryUrl>
+    <Description>Serialization/deserialization of LINQ Expressions to and from XML and JSON formats.</Description>
+    <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerialization/ExpressionSerialization.csproj</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
     <PackageTags>C# LINQ expression serialize deserialize XML JSON</PackageTags>
     <Copyright>Copyright © 2023-2024 vm</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -41,6 +40,17 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Threading\Threading.csproj" />
   </ItemGroup>
     
 </Project>

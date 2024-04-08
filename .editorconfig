@@ -139,7 +139,7 @@ csharp_style_unused_value_assignment_preference = discard_variable:silent
 csharp_style_unused_value_expression_statement_preference = discard_variable:none
 
 # 'using' directive preferences
-csharp_using_directive_placement = outside_namespace:silent
+csharp_using_directive_placement = inside_namespace:silent
 
 # New line preferences
 csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true:suggestion
@@ -235,7 +235,7 @@ dotnet_naming_rule.public_static_readonly_field_should_be_pascal_case.severity =
 dotnet_naming_rule.public_static_readonly_field_should_be_pascal_case.symbols = public_static_readonly_field
 dotnet_naming_rule.public_static_readonly_field_should_be_pascal_case.style = pascal_case
 
-dotnet_naming_rule.non_public_static_readonly_fields_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.non_public_static_readonly_fields_should_be_camel_case.severity = none
 dotnet_naming_rule.non_public_static_readonly_fields_should_be_camel_case.symbols = non_public_static_readonly_fields
 dotnet_naming_rule.non_public_static_readonly_fields_should_be_camel_case.style = camel_case
 
@@ -373,7 +373,7 @@ dotnet_style_null_propagation = true:suggestion
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
 dotnet_style_prefer_auto_properties = true:suggestion
 dotnet_style_object_initializer = true:suggestion
-dotnet_style_prefer_collection_expression = true:suggestion
+dotnet_style_prefer_collection_expression = when_types_exactly_match:suggestion
 dotnet_style_collection_initializer = true:suggestion
 dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 dotnet_style_prefer_conditional_expression_over_assignment = true:silent
