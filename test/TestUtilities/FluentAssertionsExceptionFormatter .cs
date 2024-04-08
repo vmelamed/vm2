@@ -1,6 +1,6 @@
 ﻿using FluentAssertions.Formatting;
 
-namespace vm2.RegexLibTests;
+namespace TestUtilities;
 
 /// <summary>
 /// Class FluentAssertionsExceptionFormatter enables the display of inner exceptions
@@ -48,5 +48,5 @@ public class FluentAssertionsExceptionFormatter : IValueFormatter
     //
     // Summary:
     //     Enables the display of inner exceptions when call.Should().NotThrow() fails
-    public static void EnableDisplayOfInnerExceptions() => FluentAssertions.Formatting.Formatter.AddFormatter(formatter);
+    public static void EnableDisplayOfInnerExceptions() => Formatter.AddFormatter(formatter);
 }

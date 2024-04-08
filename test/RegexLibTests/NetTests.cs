@@ -4,167 +4,167 @@ public partial class NetTests(ITestOutputHelper output) : RegexTests(output)
 {
     [Theory]
     [MemberData(nameof(Ipv4AddressData))]
-    public void TestIpv4Address(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Ipv4Address, TestLine, shouldBe, input, captures);
+    public void TestIpv4Address(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.Ipv4Address, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(Ipv6AddressData))]
-    public void TestIpv6Address(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Ipv6Address, TestLine, shouldBe, input, captures);
+    public void TestIpv6Address(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.Ipv6Address, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     public static TheoryData<string, bool, string, Captures?> IpvFutureAddressData = new() {
-        { TestLine(), false, "", null },
-        { TestLine(), false, " ", null },
-        { TestLine(), false, "1.1.1.1", null },
-        { TestLine(), false, "2001:0000:1234:0000:0000:C1C0:ABCD:0876", null },
-        { TestLine(), false, "vg.1.1.ab.hex", null },
-        { TestLine(), false, "a.1.1.ab.hex", null },
-        { TestLine(), false, "va.1.1.a b.hex", null },
-        { TestLine(), true, "v3.1.1.ab.hex", new() { ["ipvF"] = "v3.1.1.ab.hex" }  },
-        { TestLine(), true, "va.1.1.a-b.hex", new() { ["ipvF"] = "va.1.1.a-b.hex" }  },
-        { TestLine(), false, "va.1.1.a-#b.hex", null },
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine(), false, "1.1.1.1", null },
+        { TestFileLine(), false, "2001:0000:1234:0000:0000:C1C0:ABCD:0876", null },
+        { TestFileLine(), false, "vg.1.1.ab.hex", null },
+        { TestFileLine(), false, "a.1.1.ab.hex", null },
+        { TestFileLine(), false, "va.1.1.a b.hex", null },
+        { TestFileLine(), true, "v3.1.1.ab.hex", new() { ["ipvF"] = "v3.1.1.ab.hex" }  },
+        { TestFileLine(), true, "va.1.1.a-b.hex", new() { ["ipvF"] = "va.1.1.a-b.hex" }  },
+        { TestFileLine(), false, "va.1.1.a-#b.hex", null },
     };
 
     [Theory]
     [MemberData(nameof(IpvFutureAddressData))]
-    public void TestIpvFutureAddress(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.IpvFutureAddress, TestLine, shouldBe, input, captures);
+    public void TestIpvFutureAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.IpvFutureAddress, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     public static TheoryData<string, bool, string> DnsLabelData = new() {
-        { TestLine(), false, "" },
-        { TestLine(), false, " " },
-        { TestLine(), true,  "abc" },
-        { TestLine(), false, " abc" },
-        { TestLine(), false, "abc " },
-        { TestLine(), false, " abc " },
-        { TestLine(), false, "1abc" },
-        { TestLine(), false, "-abc" },
-        { TestLine(), false, "@abc" },
-        { TestLine(), false, "abc-" },
-        { TestLine(), false, "abc@" },
-        { TestLine(), true,  "ab12-x" },
-        { TestLine(), true,  "ab12-9" },
-        { TestLine(), false, "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789z" },
-        { TestLine(), true,  "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789" },
+        { TestFileLine(), false, "" },
+        { TestFileLine(), false, " " },
+        { TestFileLine(), true,  "abc" },
+        { TestFileLine(), false, " abc" },
+        { TestFileLine(), false, "abc " },
+        { TestFileLine(), false, " abc " },
+        { TestFileLine(), false, "1abc" },
+        { TestFileLine(), false, "-abc" },
+        { TestFileLine(), false, "@abc" },
+        { TestFileLine(), false, "abc-" },
+        { TestFileLine(), false, "abc@" },
+        { TestFileLine(), true,  "ab12-x" },
+        { TestFileLine(), true,  "ab12-9" },
+        { TestFileLine(), false, "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789z" },
+        { TestFileLine(), true,  "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789" },
     };
 
     [Theory]
     [MemberData(nameof(DnsLabelData))]
-    public void TestDnsLabel(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest($"^{Net.DnsLabelRex}$", TestLine, shouldBe, input);
+    public void TestDnsLabel(string TestFileLine, bool shouldBe, string input)
+        => base.RegexStringTest($"^{Net.DnsLabelRex}$", TestFileLine, shouldBe, input);
 
     // -----
 
     public static TheoryData<string, bool, string, Captures?> DnsNameData = new() {
-        { TestLine("empty"),
+        { TestFileLine("empty"),
                       false, "", null },
-        { TestLine("one or more spaces"),
+        { TestFileLine("one or more spaces"),
                       false, " ", null },
-        { TestLine("good short one"),
+        { TestFileLine("good short one"),
                       true,  "abc", new() { ["ipDnsName"] = "abc" } },
-        { TestLine("one or more spaces"),
+        { TestFileLine("one or more spaces"),
                       false, " abc", null },
-        { TestLine("one or more spaces"),
+        { TestFileLine("one or more spaces"),
                       false, "abc ", null },
-        { TestLine("one or more spaces"),
+        { TestFileLine("one or more spaces"),
                       false, " abc ", null },
-        { TestLine("cannot start with a digit"),
+        { TestFileLine("cannot start with a digit"),
                       false, "1abc", null },
-        { TestLine("cannot start with a dash"),
+        { TestFileLine("cannot start with a dash"),
                       false, "-abc", null },
-        { TestLine("not allowed character - @"),
+        { TestFileLine("not allowed character - @"),
                       false, "@abc", null },
-        { TestLine("cannot end with a dash"),
+        { TestFileLine("cannot end with a dash"),
                       false, "abc-", null },
-        { TestLine("not allowed character - @"),
+        { TestFileLine("not allowed character - @"),
                       false, "abc@", null },
-        { TestLine("good short single label"),
+        { TestFileLine("good short single label"),
                       true,  "ab12-x", new() { ["ipDnsName"] = "ab12-x" } },
-        { TestLine("good short single label"),
+        { TestFileLine("good short single label"),
                       true,  "ab12-9", new() { ["ipDnsName"] = "ab12-9" } },
-        { TestLine("too long"),
+        { TestFileLine("too long"),
                       false, "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789z", null },
-        { TestLine("not allowed character - $"),
+        { TestFileLine("not allowed character - $"),
                       false, "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJK$LZXCVBNM012345678", null },
-        { TestLine("good single label, max label length"),
+        { TestFileLine("good single label, max label length"),
                       true,  "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789", new() { ["ipDnsName"] = "qwertyuiopasdfghjklzxcvbnm-QWERTYUIOPASDFGHJKLZXCVBNM0123456789" } },
-        { TestLine("good short multiple labels"),
+        { TestFileLine("good short multiple labels"),
                       true,  "test.vm.com", new() { ["ipDnsName"] = "test.vm.com" } },
-        { TestLine("good max number of labels"),
+        { TestFileLine("good max number of labels"),
           true,
           "a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a",
           new() { ["ipDnsName"] = "a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a" }
         },
-        { TestLine("max number of labels + 1"),
+        { TestFileLine("max number of labels + 1"),
           false,
           "a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a",
           null
         },
-        { TestLine(), true,  "dir.bg", new() { ["ipDnsName"] = "dir.bg" } },
-        { TestLine("not good - unicode letters"),
+        { TestFileLine(), true,  "dir.bg", new() { ["ipDnsName"] = "dir.bg" } },
+        { TestFileLine("not good - unicode letters"),
                       false, "дир.бг", null },
-        { TestLine("not good - percent URL-like coded"),
+        { TestFileLine("not good - percent URL-like coded"),
                       false, "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3", null },
     };
 
     [Theory]
     [MemberData(nameof(DnsNameData))]
-    public void TestDnsName(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.DnsName, TestLine, shouldBe, input, captures);
+    public void TestDnsName(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.DnsName, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     public static TheoryData<string, bool, string, Captures?> PortData = new() {
-        { TestLine("empty"),
+        { TestFileLine("empty"),
                       false, "", null },
-        { TestLine("space"),
+        { TestFileLine("space"),
                       false, " ", null },
-        { TestLine("spaces"),
+        { TestFileLine("spaces"),
                       false, "  ", null },
-        { TestLine("has space(s)"),
+        { TestFileLine("has space(s)"),
                       false, "55 ", null },
-        { TestLine("has space(s)"),
+        { TestFileLine("has space(s)"),
                       false, " 55", null },
-        { TestLine("has space(s)"),
+        { TestFileLine("has space(s)"),
                       false, " 55 ", null },
-        { TestLine("has space(s)"),
+        { TestFileLine("has space(s)"),
                       false, " 5 5 ", null },
-        { TestLine("has letters"),
+        { TestFileLine("has letters"),
                       false, " 5 5 ", null },
-        { TestLine("negative"),
+        { TestFileLine("negative"),
                       false, "-1", null },
-        { TestLine("zero"),
+        { TestFileLine("zero"),
                       true, "0", new() { ["port"] = "0" }  },
-        { TestLine("ftp"),
+        { TestFileLine("ftp"),
                       true, "21", new() { ["port"] = "21" }  },
-        { TestLine("http"),
+        { TestFileLine("http"),
                       true, "80", new() { ["port"] = "80" }  },
-        { TestLine("https"),
+        { TestFileLine("https"),
                       true, "443", new() { ["port"] = "443" }  },
-        { TestLine("65535"),
+        { TestFileLine("65535"),
                       true, "65535", new() { ["port"] = "65535" }  },
-        { TestLine("65536"),
+        { TestFileLine("65536"),
                       false, "65536", null },
-        { TestLine("65540"),
+        { TestFileLine("65540"),
                       false, "65540", null },
-        { TestLine("65600"),
+        { TestFileLine("65600"),
                       false, "65600", null },
-        { TestLine("66600"),
+        { TestFileLine("66600"),
                       false, "66600", null },
-        { TestLine("76600"),
+        { TestFileLine("76600"),
                       false, "76600", null },
-        { TestLine("99999999"),
+        { TestFileLine("99999999"),
                       false, "99999999", null },
     };
 
     [Theory]
     [MemberData(nameof(PortData))]
-    public void TestPort(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Port, TestLine, shouldBe, input, captures);
+    public void TestPort(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.Port, TestFileLine, shouldBe, input, captures);
 }

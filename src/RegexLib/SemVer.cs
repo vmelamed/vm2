@@ -159,7 +159,7 @@ public static class SemVer
 
     static readonly Lazy<Regex> regexSemVer = new(() => new(SemVerRegex, RegexOptions.Compiled |
                                                                          RegexOptions.IgnoreCase |
-                                                                         RegexOptions.IgnorePatternWhitespace));
+                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches the entire input string against the pattern &lt;see cref="SemVerRegex" /&gt;

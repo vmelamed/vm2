@@ -61,7 +61,7 @@ public static class LinuxPathname
     public const string PathnameRegex = $@"^{PathnameRex}$";
 
     static readonly Lazy<Regex> regexPathname = new(() => new(PathnameRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.IgnorePatternWhitespace));
+                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches the entire input string against the pattern &lt;see cref="PathnameRegex" /&gt;

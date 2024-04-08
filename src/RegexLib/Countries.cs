@@ -26,7 +26,7 @@ public static class Countries
     /// </remarks>
     public const string CountryCode2Regex = $@"^{CountryCode2Rex}$";
 
-    static readonly Lazy<Regex> regexCountryCode2 = new(() => new(CountryCode2Regex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> regexCountryCode2 = new(() => new(CountryCode2Regex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a 
@@ -35,7 +35,7 @@ public static class Countries
     public static Regex CountryCode2 => regexCountryCode2.Value;
 
     static readonly Lazy<Regex> regexCountryCode2I = new(() => new(CountryCode2Regex, RegexOptions.Compiled |
-                                                                                      RegexOptions.IgnoreCase));
+                                                                                      RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches <b>case-insensitively</b> a string representing a 
@@ -65,7 +65,7 @@ public static class Countries
     /// </remarks>
     public const string CountryCode3Regex = $@"^{CountryCode3Rex}$";
 
-    static readonly Lazy<Regex> regexCountryCode3 = new(() => new(CountryCode3Regex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> regexCountryCode3 = new(() => new(CountryCode3Regex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a 3-letter country code
@@ -74,7 +74,7 @@ public static class Countries
     public static Regex CountryCode3 => regexCountryCode3.Value;
 
     static readonly Lazy<Regex> regexCountryCode3I = new(() => new(CountryCode3Regex, RegexOptions.Compiled |
-                                                                                      RegexOptions.IgnoreCase));
+                                                                                      RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches <b>case-insensitively</b> a string representing a 3-letter country code
@@ -102,7 +102,7 @@ public static class Countries
     /// </remarks>
     public const string CurrencyCodeRegex = $@"^{CurrencyCodeRex}$";
 
-    static readonly Lazy<Regex> regexCurrencyCode = new(() => new(CurrencyCodeRegex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> regexCurrencyCode = new(() => new(CurrencyCodeRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a currency code.
@@ -110,7 +110,7 @@ public static class Countries
     public static Regex CurrencyCode => regexCurrencyCode.Value;
 
     static readonly Lazy<Regex> regexCurrencyCodeI = new(() => new(CurrencyCodeRegex, RegexOptions.Compiled |
-                                                                                      RegexOptions.IgnoreCase));
+                                                                                      RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a currency code.
@@ -140,7 +140,7 @@ public static class Countries
     public const string TelephoneCodeRegex = $@"^{TelephoneCodeRex}$";
 
     static readonly Lazy<Regex> regexTelephoneCode = new(() => new(TelephoneCodeRegex, RegexOptions.Compiled |
-                                                                                       RegexOptions.IgnorePatternWhitespace));
+                                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a country telephone code.
@@ -159,7 +159,7 @@ public static class Countries
     /// </summary>
     public const string TelephoneNumberRegex = $@"^{TelephoneNumberRex}$";
 
-    static readonly Lazy<Regex> regexTelephoneNumber = new(() => new(TelephoneNumberRegex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> regexTelephoneNumber = new(() => new(TelephoneNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a telephone number.
@@ -178,7 +178,7 @@ public static class Countries
     /// </summary>
     public const string TelephoneNumberE164Regex = $@"^{TelephoneNumberE164Rex}$";
 
-    static readonly Lazy<Regex> regexTelephoneNumberE164 = new(() => new(TelephoneNumberE164Regex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> regexTelephoneNumberE164 = new(() => new(TelephoneNumberE164Regex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a telephone number by E.164.
@@ -205,7 +205,7 @@ public static class Countries
     public const string TelephoneNumberExtraRegex = $@"^{TelephoneNumberExtraRex}$";
 
     static readonly Lazy<Regex> regexTelephoneNumberExtra = new(() => new(TelephoneNumberExtraRegex, RegexOptions.Compiled |
-                                                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a telephone number expressed with the accepted extra characters:
@@ -255,7 +255,7 @@ public static class Countries
         public const string TelephoneNumberRegex = $@"^{TelephoneNumberRex}$";
 
         static readonly Lazy<Regex> regexTelephoneNumber = new(() => new(TelephoneNumberRegex, RegexOptions.Compiled |
-                                                                                               RegexOptions.IgnorePatternWhitespace));
+                                                                                               RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a US telephone number.
@@ -288,7 +288,7 @@ public static class Countries
         public const string TelephoneNumberStrictRegex = $@"^{TelephoneNumberStrictRex}$";
 
         static readonly Lazy<Regex> regexTelephoneNumberStrict = new(() => new(TelephoneNumberStrictRegex, RegexOptions.Compiled |
-                                                                                                           RegexOptions.IgnorePatternWhitespace));
+                                                                                                           RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a US telephone number.
@@ -307,14 +307,14 @@ public static class Countries
         /// </summary>
         public const string StateCodeRegex = $@"^{StateCodeRex}$";
 
-        static readonly Lazy<Regex> regexStateCode = new(() => new(StateCodeRegex, RegexOptions.Compiled));
+        static readonly Lazy<Regex> regexStateCode = new(() => new(StateCodeRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a state code.
         /// </summary>
         public static Regex StateCode => regexStateCode.Value;
 
-        static readonly Lazy<Regex> regexStateCodeI = new(() => new(StateCodeRegex, RegexOptions.Compiled));
+        static readonly Lazy<Regex> regexStateCodeI = new(() => new(StateCodeRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a state code.
@@ -351,7 +351,7 @@ public static class Countries
         public const string ZipCode5Regex = $@"^(?<{ZipGr}> {ZipCode5Rex} )$";
 
         static readonly Lazy<Regex> regexZipCode5 = new(() => new(ZipCode5Regex, RegexOptions.Compiled |
-                                                                                 RegexOptions.IgnorePatternWhitespace));
+                                                                                 RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a US postal code (ZIP code).
@@ -375,7 +375,7 @@ public static class Countries
         public const string ZipCode5x4Regex = $@"^{ZipCode5x4Rex}$";
 
         static readonly Lazy<Regex> regexZipCode5x4 = new(() => new(ZipCode5x4Regex, RegexOptions.Compiled |
-                                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a 5+4 US postal code (ZIP code).
@@ -401,7 +401,7 @@ public static class Countries
         public const string ZipCode5o4Regex = $@"^{ZipCode5o4Rex}$";
 
         static readonly Lazy<Regex> regexZipCode5o4 = new(() => new(ZipCode5o4Regex, RegexOptions.Compiled |
-                                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a 5 (+4 optional) US postal code (ZIP code).
@@ -422,7 +422,7 @@ public static class Countries
         public const string SocialSecurityNumberRegex = $@"^{SocialSecurityNumberRex}$";
 
         static readonly Lazy<Regex> regexSocialSecurityNumber = new(() => new(SocialSecurityNumberRegex, RegexOptions.Compiled |
-                                                                                                         RegexOptions.IgnorePatternWhitespace));
+                                                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a social security number.
@@ -442,7 +442,7 @@ public static class Countries
         public const string ItinRegex = $@"^{ItinRex}$";
 
         static readonly Lazy<Regex> regexItin = new(() => new(ItinRegex, RegexOptions.Compiled |
-                                                                         RegexOptions.IgnorePatternWhitespace));
+                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
         /// <summary>
         /// Gets a Regex object which matches a string representing a Individual Taxpayer Identification Number.

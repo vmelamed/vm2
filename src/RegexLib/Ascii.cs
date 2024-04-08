@@ -146,7 +146,7 @@ public static class Ascii
 
     static readonly Lazy<Regex> rexBase64 = new(() => new Regex(Base64Regex, RegexOptions.Compiled |
                                                                              RegexOptions.IgnorePatternWhitespace |
-                                                                             RegexOptions.Multiline));
+                                                                             RegexOptions.Multiline, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a base64 encoded multiline string possibly padded with `=`-s.

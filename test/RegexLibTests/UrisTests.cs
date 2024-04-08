@@ -7,89 +7,89 @@ public class UriTheoryData : TheoryData<string, bool, string, Captures?>
 public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
 {
     public static UriTheoryData SchemeData = new() {
-        { TestLine(), false, "", null },
-        { TestLine(), false, " ", null },
-        { TestLine(), false, "1", null },
-        { TestLine(), false, "1", null },
-        { TestLine(), false, "1a", null },
-        { TestLine(), false, ".", null },
-        { TestLine(), false, "+", null },
-        { TestLine(), false, "-", null },
-        { TestLine(), false, ".a", null },
-        { TestLine(), false, "+a", null },
-        { TestLine(), false, "-a", null },
-        { TestLine(), false, ".1", null },
-        { TestLine(), false, "+2", null },
-        { TestLine(), false, "-3", null },
-        { TestLine(), false, "ж", null },
-        { TestLine(), false, "%41%42", null },
-        { TestLine(), true, "a", new() { ["scheme"] = "a" } },
-        { TestLine(), true, "abc", new() { ["scheme"] = "abc" } },
-        { TestLine(), true, "a1", new() { ["scheme"] = "a1" } },
-        { TestLine(), true, "abc123", new() { ["scheme"] = "abc123" } },
-        { TestLine(), true, "a1b2c3", new() { ["scheme"] = "a1b2c3" } },
-        { TestLine(), true, "a1.b2+c3-", new() { ["scheme"] = "a1.b2+c3-" } },
-        { TestLine(), true, Uri.UriSchemeFile, new() { ["scheme"] = Uri.UriSchemeFile } },
-        { TestLine(), true, Uri.UriSchemeFtp, new() { ["scheme"] = Uri.UriSchemeFtp } },
-        { TestLine(), true, Uri.UriSchemeFtps, new() { ["scheme"] = Uri.UriSchemeFtps } },
-        { TestLine(), true, Uri.UriSchemeGopher, new() { ["scheme"] = Uri.UriSchemeGopher } },
-        { TestLine(), true, Uri.UriSchemeHttp, new() { ["scheme"] = Uri.UriSchemeHttp } },
-        { TestLine(), true, Uri.UriSchemeHttps, new() { ["scheme"] = Uri.UriSchemeHttps } },
-        { TestLine(), true, Uri.UriSchemeMailto, new() { ["scheme"] = Uri.UriSchemeMailto } },
-        { TestLine(), true, Uri.UriSchemeNetPipe, new() { ["scheme"] = Uri.UriSchemeNetPipe } },
-        { TestLine(), true, Uri.UriSchemeNetTcp, new() { ["scheme"] = Uri.UriSchemeNetTcp } },
-        { TestLine(), true, Uri.UriSchemeNews, new() { ["scheme"] = Uri.UriSchemeNews } },
-        { TestLine(), true, Uri.UriSchemeNntp, new() { ["scheme"] = Uri.UriSchemeNntp } },
-        { TestLine(), true, Uri.UriSchemeSftp, new() { ["scheme"] = Uri.UriSchemeSftp } },
-        { TestLine(), true, Uri.UriSchemeSsh, new() { ["scheme"] = Uri.UriSchemeSsh } },
-        { TestLine(), true, Uri.UriSchemeTelnet, new() { ["scheme"] = Uri.UriSchemeTelnet } },
-        { TestLine(), true, Uri.UriSchemeWs, new() { ["scheme"] = Uri.UriSchemeWs } },
-        { TestLine(), true, Uri.UriSchemeWss, new() { ["scheme"] = Uri.UriSchemeWss } },
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine(), false, "1", null },
+        { TestFileLine(), false, "1", null },
+        { TestFileLine(), false, "1a", null },
+        { TestFileLine(), false, ".", null },
+        { TestFileLine(), false, "+", null },
+        { TestFileLine(), false, "-", null },
+        { TestFileLine(), false, ".a", null },
+        { TestFileLine(), false, "+a", null },
+        { TestFileLine(), false, "-a", null },
+        { TestFileLine(), false, ".1", null },
+        { TestFileLine(), false, "+2", null },
+        { TestFileLine(), false, "-3", null },
+        { TestFileLine(), false, "ж", null },
+        { TestFileLine(), false, "%41%42", null },
+        { TestFileLine(), true, "a", new() { ["scheme"] = "a" } },
+        { TestFileLine(), true, "abc", new() { ["scheme"] = "abc" } },
+        { TestFileLine(), true, "a1", new() { ["scheme"] = "a1" } },
+        { TestFileLine(), true, "abc123", new() { ["scheme"] = "abc123" } },
+        { TestFileLine(), true, "a1b2c3", new() { ["scheme"] = "a1b2c3" } },
+        { TestFileLine(), true, "a1.b2+c3-", new() { ["scheme"] = "a1.b2+c3-" } },
+        { TestFileLine(), true, Uri.UriSchemeFile, new() { ["scheme"] = Uri.UriSchemeFile } },
+        { TestFileLine(), true, Uri.UriSchemeFtp, new() { ["scheme"] = Uri.UriSchemeFtp } },
+        { TestFileLine(), true, Uri.UriSchemeFtps, new() { ["scheme"] = Uri.UriSchemeFtps } },
+        { TestFileLine(), true, Uri.UriSchemeGopher, new() { ["scheme"] = Uri.UriSchemeGopher } },
+        { TestFileLine(), true, Uri.UriSchemeHttp, new() { ["scheme"] = Uri.UriSchemeHttp } },
+        { TestFileLine(), true, Uri.UriSchemeHttps, new() { ["scheme"] = Uri.UriSchemeHttps } },
+        { TestFileLine(), true, Uri.UriSchemeMailto, new() { ["scheme"] = Uri.UriSchemeMailto } },
+        { TestFileLine(), true, Uri.UriSchemeNetPipe, new() { ["scheme"] = Uri.UriSchemeNetPipe } },
+        { TestFileLine(), true, Uri.UriSchemeNetTcp, new() { ["scheme"] = Uri.UriSchemeNetTcp } },
+        { TestFileLine(), true, Uri.UriSchemeNews, new() { ["scheme"] = Uri.UriSchemeNews } },
+        { TestFileLine(), true, Uri.UriSchemeNntp, new() { ["scheme"] = Uri.UriSchemeNntp } },
+        { TestFileLine(), true, Uri.UriSchemeSftp, new() { ["scheme"] = Uri.UriSchemeSftp } },
+        { TestFileLine(), true, Uri.UriSchemeSsh, new() { ["scheme"] = Uri.UriSchemeSsh } },
+        { TestFileLine(), true, Uri.UriSchemeTelnet, new() { ["scheme"] = Uri.UriSchemeTelnet } },
+        { TestFileLine(), true, Uri.UriSchemeWs, new() { ["scheme"] = Uri.UriSchemeWs } },
+        { TestFileLine(), true, Uri.UriSchemeWss, new() { ["scheme"] = Uri.UriSchemeWss } },
     };
 
     [Theory]
     [MemberData(nameof(SchemeData))]
-    public void TestScheme(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Scheme, TestLine, shouldBe, input, captures);
+    public void TestScheme(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Uris.Scheme, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     public static UriTheoryData HostData = new() {
-        { TestLine(), false, "", null },
-        { TestLine(), false, " ", null },
-        { TestLine("DnsName"), true, "maria.vtmelamed.com", new()
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine("DnsName"), true, "maria.vtmelamed.com", new()
                                                         {
                                                             ["host"] = "maria.vtmelamed.com",
                                                             ["ipDnsName"] = "maria.vtmelamed.com",
                                                         } },
-        { TestLine("Incomplete IPv4"), true, "1.2.3", new()
+        { TestFileLine("Incomplete IPv4"), true, "1.2.3", new()
                                                         {
                                                             ["host"] = "1.2.3",
                                                             ["ipGenName"] = "1.2.3",
                                                         } },
-        { TestLine("Complete IPv4"), true, "1.2.3.4", new()
+        { TestFileLine("Complete IPv4"), true, "1.2.3.4", new()
                                                         {
                                                             ["host"] = "1.2.3.4",
                                                             ["ipv4"] = "1.2.3.4",
                                                         } },
-        { TestLine("Complete unbracketed IPv6"), false, "1:2:3::4", null },
-        { TestLine("Complete IPv6"), true, "[1:2:3::4]", new()
+        { TestFileLine("Complete unbracketed IPv6"), false, "1:2:3::4", null },
+        { TestFileLine("Complete IPv6"), true, "[1:2:3::4]", new()
                                                         {
                                                             ["host"] = "[1:2:3::4]",
                                                             ["ipv6"] = "1:2:3::4",
                                                         } },
-        { TestLine("Complete IPvF"), true, "[v1a.skiledh.srethg.23546.]", new()
+        { TestFileLine("Complete IPvF"), true, "[v1a.skiledh.srethg.23546.]", new()
                                                         {
                                                             ["host"] = "[v1a.skiledh.srethg.23546.]",
                                                             ["ipvF"] = "v1a.skiledh.srethg.23546.",
                                                         } },
-        { TestLine("Complete unbracketed IPvF"), true, "v1a.skiledh.srethg.23546.", new()
+        { TestFileLine("Complete unbracketed IPvF"), true, "v1a.skiledh.srethg.23546.", new()
                                                         {
                                                             ["host"] = "v1a.skiledh.srethg.23546.",
                                                             ["ipGenName"] = "v1a.skiledh.srethg.23546.",
                                                         } },
-        { TestLine("General name in Unicode"), false, "дир.бг", null },
-        { TestLine("General name in percent URL encoded"), true, "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3", new()
+        { TestFileLine("General name in Unicode"), false, "дир.бг", null },
+        { TestFileLine("General name in percent URL encoded"), true, "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3", new()
                                                         {
                                                             ["host"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
                                                             ["ipGenName"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
@@ -98,106 +98,106 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
 
     [Theory]
     [MemberData(nameof(HostData))]
-    public void TestHost(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Host, TestLine, shouldBe, input, captures);
+    public void TestHost(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Uris.Host, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     public static UriTheoryData NetHostData = new() {
-        { TestLine(), false, "", null },
-        { TestLine(), false, " ", null },
-        { TestLine("DnsName"), true, "maria.vtmelamed.com", new()
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine("DnsName"), true, "maria.vtmelamed.com", new()
                                                         {
                                                             ["host"] = "maria.vtmelamed.com",
                                                             ["ipDnsName"] = "maria.vtmelamed.com",
                                                         } },
-        { TestLine("Incomplete IPv4"), false, "1.2.3", null },
-        { TestLine("Complete IPv4"), true, "1.2.3.4", new()
+        { TestFileLine("Incomplete IPv4"), false, "1.2.3", null },
+        { TestFileLine("Complete IPv4"), true, "1.2.3.4", new()
                                                         {
                                                             ["host"] = "1.2.3.4",
                                                             ["ipv4"] = "1.2.3.4",
                                                         } },
-        { TestLine("Complete unbracketed IPv6"), false, "1:2:3::4", null },
-        { TestLine("Complete IPv6"), true, "[1:2:3::4]", new()
+        { TestFileLine("Complete unbracketed IPv6"), false, "1:2:3::4", null },
+        { TestFileLine("Complete IPv6"), true, "[1:2:3::4]", new()
                                                         {
                                                             ["host"] = "[1:2:3::4]",
                                                             ["ipv6"] = "1:2:3::4",
                                                         } },
-        { TestLine("Complete IPvF"), true, "[v1a.skiledh.srethg.23546.]", new()
+        { TestFileLine("Complete IPvF"), true, "[v1a.skiledh.srethg.23546.]", new()
                                                         {
                                                             ["host"] = "[v1a.skiledh.srethg.23546.]",
                                                             ["ipvF"] = "v1a.skiledh.srethg.23546.",
                                                         } },
-        { TestLine("Complete unbracketed IPvF"), false, "v1a.skiledh.srethg.23546.", null },
-        { TestLine("General name in Unicode"), false, "дир.бг", null },
-        { TestLine("General name in percent URL encoded"), false, "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3", null },
+        { TestFileLine("Complete unbracketed IPvF"), false, "v1a.skiledh.srethg.23546.", null },
+        { TestFileLine("General name in Unicode"), false, "дир.бг", null },
+        { TestFileLine("General name in percent URL encoded"), false, "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3", null },
     };
 
     [Theory]
     [MemberData(nameof(NetHostData))]
-    public void TestNetHost(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Host, TestLine, shouldBe, input, captures);
+    public void TestNetHost(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.Host, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(AddressData))]
-    public void TestAddress(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Address, TestLine, shouldBe, input, captures);
+    public void TestAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Uris.Address, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(NetAddressData))]
-    public void TestNetAddress(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Address, TestLine, shouldBe, input, captures);
+    public void TestNetAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Net.Address, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(AuthorityData))]
-    public void TestAuthority(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexStringTest($"^{Uris.AuthorityRex}$", TestLine, shouldBe, input, captures);
+    public void TestAuthority(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexStringTest($"^{Uris.AuthorityRex}$", TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(NetAuthorityData))]
-    public void TestNetAuthority(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexStringTest($"^{Uris.NetAuthorityRex}$", TestLine, shouldBe, input, captures);
+    public void TestNetAuthority(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexStringTest($"^{Uris.NetAuthorityRex}$", TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(PathAbsData))]
-    public void TestPathAbsData(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Path, TestLine, shouldBe, input, captures);
+    public void TestPathAbsData(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Uris.Path, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(GeneralQueryData))]
-    public void TestGeneralQueryData(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Query, TestLine, shouldBe, input, captures);
+    public void TestGeneralQueryData(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Uris.Query, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(KeyValueQueryData))]
-    public void TestKeyValueQueryData(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.KvQuery, TestLine, shouldBe, input, captures);
+    public void TestKeyValueQueryData(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTest(Uris.KvQuery, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(UriData))]
-    public void TestUriData(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTestUri(Uris.Uri, TestLine, shouldBe, input, captures);
+    public void TestUriData(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTestUri(Uris.Uri, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(NetUriData))]
-    public void TestNetUriData(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTestUri(Uris.NetUri, TestLine, shouldBe, input, captures);
+    public void TestNetUriData(string TestFileLine, bool shouldBe, string input, Captures? captures)
+        => base.RegexTestUri(Uris.NetUri, TestFileLine, shouldBe, input, captures);
 }

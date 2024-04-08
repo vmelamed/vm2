@@ -3,14 +3,14 @@
 public class AsciiTests(ITestOutputHelper output) : RegexTests(output)
 {
     public static TheoryData<string, bool, string> LowAlphaRexData => new() {
-        { TestLine(), false, ""  },
-        { TestLine(), true , "a" },
-        { TestLine(), true , "z" },
-        { TestLine(), false, "1" },
-        { TestLine(), false, "A" },
-        { TestLine(), false, "!" },
-        { TestLine(), false, "ж" },
-        { TestLine(), false, " " },
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), true , "a" },
+        { TestFileLine(), true , "z" },
+        { TestFileLine(), false, "1" },
+        { TestFileLine(), false, "A" },
+        { TestFileLine(), false, "!" },
+        { TestFileLine(), false, "ж" },
+        { TestFileLine(), false, " " },
     };
 
     [Theory]
@@ -19,14 +19,14 @@ public class AsciiTests(ITestOutputHelper output) : RegexTests(output)
         => base.RegexStringTest(Ascii.LowAlphaRex, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> HighAlphaRexData => new() {
-        { TestLine(), false, ""  },
-        { TestLine(), true , "A" },
-        { TestLine(), true , "Z" },
-        { TestLine(), false, "1" },
-        { TestLine(), false, "a" },
-        { TestLine(), false, "!" },
-        { TestLine(), false, "Ж" },
-        { TestLine(), false, " " },
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), true , "A" },
+        { TestFileLine(), true , "Z" },
+        { TestFileLine(), false, "1" },
+        { TestFileLine(), false, "a" },
+        { TestFileLine(), false, "!" },
+        { TestFileLine(), false, "Ж" },
+        { TestFileLine(), false, " " },
     };
 
     [Theory]
@@ -35,16 +35,16 @@ public class AsciiTests(ITestOutputHelper output) : RegexTests(output)
         => base.RegexStringTest(Ascii.HighAlphaRex, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> AlphaRexData => new() {
-        { TestLine(), false, ""  },
-        { TestLine(), true, "A"  },
-        { TestLine(), true, "Z"  },
-        { TestLine(), true, "a"  },
-        { TestLine(), true, "z"  },
-        { TestLine(), false, "1" },
-        { TestLine(), false, "!" },
-        { TestLine(), false, "Ж" },
-        { TestLine(), false, "ж" },
-        { TestLine(), false, " " },
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), true, "A"  },
+        { TestFileLine(), true, "Z"  },
+        { TestFileLine(), true, "a"  },
+        { TestFileLine(), true, "z"  },
+        { TestFileLine(), false, "1" },
+        { TestFileLine(), false, "!" },
+        { TestFileLine(), false, "Ж" },
+        { TestFileLine(), false, "ж" },
+        { TestFileLine(), false, " " },
     };
 
     [Theory]
@@ -53,21 +53,21 @@ public class AsciiTests(ITestOutputHelper output) : RegexTests(output)
         => base.RegexStringTest(Ascii.AlphaRex, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> Base64CharRexData => new() {
-        { TestLine(), false, ""   },
-        { TestLine(), true , "A"  },
-        { TestLine(), true , "Z"  },
-        { TestLine(), true , "a"  },
-        { TestLine(), true , "z"  },
-        { TestLine(), true , "0"  },
-        { TestLine(), true , "9"  },
-        { TestLine(), true , "/"  },
-        { TestLine(), true , "+"  },
-        { TestLine(), false, "!"  },
-        { TestLine(), false, "Ж"  },
-        { TestLine(), false, "ж"  },
-        { TestLine(), false, " "  },
-        { TestLine(), false, "\r" },
-        { TestLine(), false, "\n" },
+        { TestFileLine(), false, ""   },
+        { TestFileLine(), true , "A"  },
+        { TestFileLine(), true , "Z"  },
+        { TestFileLine(), true , "a"  },
+        { TestFileLine(), true , "z"  },
+        { TestFileLine(), true , "0"  },
+        { TestFileLine(), true , "9"  },
+        { TestFileLine(), true , "/"  },
+        { TestFileLine(), true , "+"  },
+        { TestFileLine(), false, "!"  },
+        { TestFileLine(), false, "Ж"  },
+        { TestFileLine(), false, "ж"  },
+        { TestFileLine(), false, " "  },
+        { TestFileLine(), false, "\r" },
+        { TestFileLine(), false, "\n" },
     };
 
     [Theory]
@@ -76,88 +76,88 @@ public class AsciiTests(ITestOutputHelper output) : RegexTests(output)
         => base.RegexStringTest(Ascii.Base64CharRex, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> Base64Data => new() {
-        { TestLine(), true,  "" },
-        { TestLine(), true,  "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu" },
-        { TestLine(), false, "!" },
-        { TestLine(), true,  """
+        { TestFileLine(), true,  "" },
+        { TestFileLine(), true,  "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu" },
+        { TestFileLine(), false, "!" },
+        { TestFileLine(), true,  """
                                 IA==
                             
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 I!A==
   
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 !IA==
                    
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 !IA==!
                                 
                                 """ },
-        { TestLine(), true,  """
+        { TestFileLine(), true,  """
                                 IAmg455a
                                 12tGb7/+
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 I!Amg455a
                                 12tGb7/+
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 !IAmg455a
                                 12tGb7/+
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 IAmg455a!
                                 12tGb7/+
                                 
                                 """ },
-        { TestLine(), true,  """
+        { TestFileLine(), true,  """
                                 IAmg455a
                                 12tGb7/+
                                 IA==
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 !IA==
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 IAmg455a
                                 1!2tGb7/+
                                 IA==
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+!
                                 IA==
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 !IA==
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 IA==!
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 IA=!=
                                 
                                 """ },
-        { TestLine(), false, """
+        { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 I!A==

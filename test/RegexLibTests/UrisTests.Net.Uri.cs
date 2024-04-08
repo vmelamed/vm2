@@ -3,9 +3,9 @@
 public partial class UrisTests
 {
     public static UriTheoryData NetUriData = new () {
-        { TestLine(), false, "", null },
-        { TestLine(), false, " ", null },
-        { TestLine(), false, "http://www.example.com/#hello, world", new() {
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine(), false, "http://www.example.com/#hello, world", new() {
                 ["uri"] = "http://www.example.com/#hello,%20world", // →uri← = →http://www.example.com/#hello, world←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -15,7 +15,7 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/",
                 ["fragment"] = "hello,%20world", // →fragment← = →hello, world←
             } },
-        { TestLine(), true, "http://www.example.com/#%c2%a9", new() {
+        { TestFileLine(), true, "http://www.example.com/#%c2%a9", new() {
                 ["uri"] = "http://www.example.com/#%c2%a9", // →uri← = →http://www.example.com/#©←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -25,46 +25,46 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/",
                 ["fragment"] = "%c2%a9", // →fragment← = →©←
             } },
-        { TestLine(), false, "http://www.example.com/#\ud800\udf00ss", null },
-        { TestLine(), false, "http://www.example.com/#%41%a", null },
-        { TestLine(), false, "http://www.example.com/#\\ud800\\u597d", null },
-        { TestLine(), false, "http://www.example.com/#a\\uFDD0", null },
-        { TestLine(), false, "http://www.example.com/#asdf#qwer", null },
-        { TestLine(), false, "http://www.example.com/##asdf", null },
-        { TestLine(), false, "http://www.example.com/#a\u000Ab\u000Dc\u0009d", null },
-        { TestLine(), false, "file:c:\\foo\\bar.html", null },
-        { TestLine(), false, "File:c|////foo\\bar.html", null },
-        { TestLine(), false, "  File:c|////foo\\bar.html", null },
-        { TestLine(), true, "file:", new() {
+        { TestFileLine(), false, "http://www.example.com/#\ud800\udf00ss", null },
+        { TestFileLine(), false, "http://www.example.com/#%41%a", null },
+        { TestFileLine(), false, "http://www.example.com/#\\ud800\\u597d", null },
+        { TestFileLine(), false, "http://www.example.com/#a\\uFDD0", null },
+        { TestFileLine(), false, "http://www.example.com/#asdf#qwer", null },
+        { TestFileLine(), false, "http://www.example.com/##asdf", null },
+        { TestFileLine(), false, "http://www.example.com/#a\u000Ab\u000Dc\u0009d", null },
+        { TestFileLine(), false, "file:c:\\foo\\bar.html", null },
+        { TestFileLine(), false, "File:c|////foo\\bar.html", null },
+        { TestFileLine(), false, "  File:c|////foo\\bar.html", null },
+        { TestFileLine(), true, "file:", new() {
             ["uri"] = "file:",
             ["scheme"] = "file",
         } },
-        { TestLine(), true, "file:UNChost/path", new() {
+        { TestFileLine(), true, "file:UNChost/path", new() {
             ["uri"] = "file:UNChost/path",
             ["scheme"] = "file",
             ["pathNoScheme"] = "UNChost/path",
         } },
-        { TestLine(), false, "c:\\foo\\bar", null },
-        { TestLine(), false, "C|/foo/bar", null },
-        { TestLine(), false, "/C|\\foo\\bar", null },
-        { TestLine(), false, "//C|/foo/bar", null },
-        { TestLine(), false, "//server/file", null },
-        { TestLine(), false, "\\\\server\\file", null },
-        { TestLine(), false, "/\\server/file", null },
-        { TestLine(), false, "file:c:foo/bar.html", null },
-        { TestLine(), false, "file:/\\/\\C:\\\\//foo\\bar.html", null },
-        { TestLine(), false, "file:///foo/bar.txt", null },
-        { TestLine(), false, "FILE:/\\/\\7:\\\\//foo\\bar.html", null },
-        { TestLine(), false, "file:filer/home\\me", null },
-        { TestLine(), false, "file:///C:/foo/../../../bar.html", null },
-        { TestLine(), false, "file:///C:/asdf#\\%c2", null },
-        { TestLine(), false, "file:///home/me", null },
-        { TestLine(), false, "file:c:\\foo\\bar.html", null },
-        { TestLine(), false, "file:c|//foo\\bar.html", null },
-        { TestLine(), false, "//", null },
-        { TestLine(), false, "///", null },
-        { TestLine(), false, "///test", null },
-        { TestLine(), true, "file://test", new() {
+        { TestFileLine(), false, "c:\\foo\\bar", null },
+        { TestFileLine(), false, "C|/foo/bar", null },
+        { TestFileLine(), false, "/C|\\foo\\bar", null },
+        { TestFileLine(), false, "//C|/foo/bar", null },
+        { TestFileLine(), false, "//server/file", null },
+        { TestFileLine(), false, "\\\\server\\file", null },
+        { TestFileLine(), false, "/\\server/file", null },
+        { TestFileLine(), false, "file:c:foo/bar.html", null },
+        { TestFileLine(), false, "file:/\\/\\C:\\\\//foo\\bar.html", null },
+        { TestFileLine(), false, "file:///foo/bar.txt", null },
+        { TestFileLine(), false, "FILE:/\\/\\7:\\\\//foo\\bar.html", null },
+        { TestFileLine(), false, "file:filer/home\\me", null },
+        { TestFileLine(), false, "file:///C:/foo/../../../bar.html", null },
+        { TestFileLine(), false, "file:///C:/asdf#\\%c2", null },
+        { TestFileLine(), false, "file:///home/me", null },
+        { TestFileLine(), false, "file:c:\\foo\\bar.html", null },
+        { TestFileLine(), false, "file:c|//foo\\bar.html", null },
+        { TestFileLine(), false, "//", null },
+        { TestFileLine(), false, "///", null },
+        { TestFileLine(), false, "///test", null },
+        { TestFileLine(), true, "file://test", new() {
                 ["uri"] = "file://test",
                 ["scheme"] = "file",
                 ["authority"] = "test",
@@ -72,7 +72,7 @@ public partial class UrisTests
                 ["host"] = "test",
                 ["ipDnsName"] = "test",
             } },
-        { TestLine(), true, "file://localhost/", new() {
+        { TestFileLine(), true, "file://localhost/", new() {
                 ["uri"] = "file://localhost/",
                 ["scheme"] = "file",
                 ["authority"] = "localhost",
@@ -81,7 +81,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "localhost",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true, "file://localhost/test", new() {
+        { TestFileLine(), true, "file://localhost/test", new() {
                 ["uri"] = "file://localhost/test",
                 ["scheme"] = "file",
                 ["authority"] = "localhost",
@@ -90,38 +90,38 @@ public partial class UrisTests
                 ["ipDnsName"] = "localhost",
                 ["pathAbsEmpty"] = "/test",
             } },
-        { TestLine(), false, "file:c:\\foo\\bar.html", null },
-        { TestLine(), false, "  File:c|////foo\\bar.html", null },
-        { TestLine(), true, "file:", new() {
+        { TestFileLine(), false, "file:c:\\foo\\bar.html", null },
+        { TestFileLine(), false, "  File:c|////foo\\bar.html", null },
+        { TestFileLine(), true, "file:", new() {
             ["uri"] = "file:",
             ["scheme"] = "file",
         } },
-        { TestLine(), true, "file:UNChost/path", new() {
+        { TestFileLine(), true, "file:UNChost/path", new() {
             ["uri"] = "file:UNChost/path",
             ["scheme"] = "file",
             ["pathNoScheme"] = "UNChost/path",
         } },
-        { TestLine(), false, "c:\\foo\\bar", null },
-        { TestLine(), false, "C|/foo/bar", null },
-        { TestLine(), false, "/C|\\foo\\bar", null },
-        { TestLine(), false, "//C|/foo/bar", null },
-        { TestLine(), false, "//server/file", null },
-        { TestLine(), false, "\\\\server\\file", null },
-        { TestLine(), false, "/\\server/file", null },
-        { TestLine(), false, "file:c:foo/bar.html", null },
-        { TestLine(), false, "file:/\\/\\C:\\\\//foo\\bar.html", null },
-        { TestLine(), false, "file:///foo/bar.txt", null },
-        { TestLine(), false, "FILE:/\\/\\7:\\\\//foo\\bar.html", null },
-        { TestLine(), false, "file:filer/home\\me", null },
-        { TestLine(), false, "file:///C:/foo/../../../bar.html", null },
-        { TestLine(), false, "file:///C:/asdf#\\%c2", null },
-        { TestLine(), false, "file:///home/me", null },
-        { TestLine(), false, "file:c:\\foo\\bar.html", null },
-        { TestLine(), false, "file:c|//foo\\bar.html", null },
-        { TestLine(), false, "//", null },
-        { TestLine(), false, "///", null },
-        { TestLine(), false, "///test", null },
-        { TestLine(), true, "file://test", new() {
+        { TestFileLine(), false, "c:\\foo\\bar", null },
+        { TestFileLine(), false, "C|/foo/bar", null },
+        { TestFileLine(), false, "/C|\\foo\\bar", null },
+        { TestFileLine(), false, "//C|/foo/bar", null },
+        { TestFileLine(), false, "//server/file", null },
+        { TestFileLine(), false, "\\\\server\\file", null },
+        { TestFileLine(), false, "/\\server/file", null },
+        { TestFileLine(), false, "file:c:foo/bar.html", null },
+        { TestFileLine(), false, "file:/\\/\\C:\\\\//foo\\bar.html", null },
+        { TestFileLine(), false, "file:///foo/bar.txt", null },
+        { TestFileLine(), false, "FILE:/\\/\\7:\\\\//foo\\bar.html", null },
+        { TestFileLine(), false, "file:filer/home\\me", null },
+        { TestFileLine(), false, "file:///C:/foo/../../../bar.html", null },
+        { TestFileLine(), false, "file:///C:/asdf#\\%c2", null },
+        { TestFileLine(), false, "file:///home/me", null },
+        { TestFileLine(), false, "file:c:\\foo\\bar.html", null },
+        { TestFileLine(), false, "file:c|//foo\\bar.html", null },
+        { TestFileLine(), false, "//", null },
+        { TestFileLine(), false, "///", null },
+        { TestFileLine(), false, "///test", null },
+        { TestFileLine(), true, "file://test", new() {
                 ["uri"] = "file://test",
                 ["scheme"] = "file",
                 ["authority"] = "test",
@@ -129,7 +129,7 @@ public partial class UrisTests
                 ["host"] = "test",
                 ["ipDnsName"] = "test",
             } },
-        { TestLine(), true, "file://localhost/", new() {
+        { TestFileLine(), true, "file://localhost/", new() {
                 ["uri"] = "file://localhost/",
                 ["scheme"] = "file",
                 ["authority"] = "localhost",
@@ -138,7 +138,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "localhost",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true, "file://localhost/test", new() {
+        { TestFileLine(), true, "file://localhost/test", new() {
                 ["uri"] = "file://localhost/test",
                 ["scheme"] = "file",
                 ["authority"] = "localhost",
@@ -147,7 +147,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "localhost",
                 ["pathAbsEmpty"] = "/test",
             } },
-        { TestLine(), true, "http://GoOgLe.CoM", new() {
+        { TestFileLine(), true, "http://GoOgLe.CoM", new() {
                 ["uri"] = "http://GoOgLe.CoM",
                 ["scheme"] = "http",
                 ["authority"] = "GoOgLe.CoM",
@@ -155,12 +155,12 @@ public partial class UrisTests
                 ["host"] = "GoOgLe.CoM",
                 ["ipDnsName"] = "GoOgLe.CoM",
             } },
-        { TestLine(), false, "http://Goo%20 goo%7C|.com", null },
-        { TestLine(), false, "http://GOO\u00a0\u3000goo.com", null },
-        { TestLine(), false, "http://GOO\u200b\u2060\ufeffgoo.com", null },
-        { TestLine(), false, "http://www.foo\u3002bar.com", null },
-        { TestLine(), false, "http://\ufdd0zyx.com", null },
-        { TestLine(), false,  "http://%ef%b7%90zyx.com", new() {
+        { TestFileLine(), false, "http://Goo%20 goo%7C|.com", null },
+        { TestFileLine(), false, "http://GOO\u00a0\u3000goo.com", null },
+        { TestFileLine(), false, "http://GOO\u200b\u2060\ufeffgoo.com", null },
+        { TestFileLine(), false, "http://www.foo\u3002bar.com", null },
+        { TestFileLine(), false, "http://\ufdd0zyx.com", null },
+        { TestFileLine(), false,  "http://%ef%b7%90zyx.com", new() {
                 ["uri"] = "http://%ef%b7%90zyx.com", // →uri← = →http://﷐zyx.com←
                 ["scheme"] = "http",
                 ["authority"] = "%ef%b7%90zyx.com", // →authority← = →﷐zyx.com←
@@ -168,26 +168,26 @@ public partial class UrisTests
                 ["host"] = "%ef%b7%90zyx.com", // →host← = →﷐zyx.com←
                 ["ipGenName"] = "%ef%b7%90zyx.com", // →ipGenName← = →﷐zyx.com←
             } },
-        { TestLine(), false, "http://\uff27\uff4f.com", null },
-        { TestLine(), false, "http://\uff05\uff14\uff11.com", null },
-        { TestLine(), false,  "http://%ef%bc%85%ef%bc%94%ef%bc%91.com", null },
-        { TestLine(), false, "http://\uff05\uff10\uff10.com", null },
-        { TestLine(), false,  "http://%ef%bc%85%ef%bc%90%ef%bc%90.com", null },
-        { TestLine(), false, "http://\u4f60\u597d\u4f60\u597d", null },
-        { TestLine(), false, "http://%E4%BD%A0%E5%A5%BD\u4f60\u597d", null },
-        { TestLine(), false, "http://%zz%66%a", null },
-        { TestLine(), false,  "http://%25", null },
-        { TestLine(), false,  "http://hello%00", null },
-        { TestLine(), false,  "http://%30%78%63%30%2e%30%32%35%30.01", null },
-        { TestLine(), false,  "http://%30%78%63%30%2e%30%32%35%30.01%2e", null },
-        { TestLine(), false, "http://%3g%78%63%30%2e%30%32%35%30%2E.01", null },
-        { TestLine(), false, "http://192.168.0.1 hello", null },
-        { TestLine(), false, "http://\uff10\uff38\uff43\uff10\uff0e\uff10\uff12\uff15\uff10\uff0e\uff10\uff11", null },
-        { TestLine(), false,  "http://192.168.0.257", null },
-        { TestLine(), false, "http://[google.com]", null },
-        { TestLine(), false, "http://\u0442(", null },
-        { TestLine(), false, "http://go\\@ogle.com", null },
-        { TestLine(), true,  "http://go/@ogle.com", new() {
+        { TestFileLine(), false, "http://\uff27\uff4f.com", null },
+        { TestFileLine(), false, "http://\uff05\uff14\uff11.com", null },
+        { TestFileLine(), false,  "http://%ef%bc%85%ef%bc%94%ef%bc%91.com", null },
+        { TestFileLine(), false, "http://\uff05\uff10\uff10.com", null },
+        { TestFileLine(), false,  "http://%ef%bc%85%ef%bc%90%ef%bc%90.com", null },
+        { TestFileLine(), false, "http://\u4f60\u597d\u4f60\u597d", null },
+        { TestFileLine(), false, "http://%E4%BD%A0%E5%A5%BD\u4f60\u597d", null },
+        { TestFileLine(), false, "http://%zz%66%a", null },
+        { TestFileLine(), false,  "http://%25", null },
+        { TestFileLine(), false,  "http://hello%00", null },
+        { TestFileLine(), false,  "http://%30%78%63%30%2e%30%32%35%30.01", null },
+        { TestFileLine(), false,  "http://%30%78%63%30%2e%30%32%35%30.01%2e", null },
+        { TestFileLine(), false, "http://%3g%78%63%30%2e%30%32%35%30%2E.01", null },
+        { TestFileLine(), false, "http://192.168.0.1 hello", null },
+        { TestFileLine(), false, "http://\uff10\uff38\uff43\uff10\uff0e\uff10\uff12\uff15\uff10\uff0e\uff10\uff11", null },
+        { TestFileLine(), false,  "http://192.168.0.257", null },
+        { TestFileLine(), false, "http://[google.com]", null },
+        { TestFileLine(), false, "http://\u0442(", null },
+        { TestFileLine(), false, "http://go\\@ogle.com", null },
+        { TestFileLine(), true,  "http://go/@ogle.com", new() {
                 ["uri"] = "http://go/@ogle.com",
                 ["scheme"] = "http",
                 ["authority"] = "go",
@@ -196,63 +196,63 @@ public partial class UrisTests
                 ["ipDnsName"] = "go",
                 ["pathAbsEmpty"] = "/@ogle.com",
             } },
-        { TestLine(), false,  "http://www.lookout.net::==80::==443::", null },
-        { TestLine(), false,  "http://www.lookout.net::80::443", null },
-        { TestLine(), false, "http://\\", null },
-        { TestLine(), false, "http://\\/", null },
-        { TestLine(), false, "http://\\./", null },
-        { TestLine(), false, "http:////:@/", null },
-        { TestLine(), false, "http://\\google.com/foo", null },
-        { TestLine(), false, "http://\\google.com/foo", null },
-        { TestLine(), false, "http:////asdf@/", null },
-        { TestLine(), false, "http:////:81", null },
-        { TestLine(), false,  "http://://", null },
-        { TestLine(), false,  "http://c:", null },
-        { TestLine(), false,  "http://xxxx:", null },
-        { TestLine(), false,  "http://.:.", null },
-        { TestLine(), false, "http://////@google.com/", null },
-        { TestLine(), false,  "http://@google.com", null },
-        { TestLine(), false, "http://fa\u00DF.de", null },
-        { TestLine(), false, "http://\u03B2\u03CC\u03BB\u03BF\u03C2.com", null },
-        { TestLine(), false, "http://\u0DC1\u0DCA\u200D\u0DBB\u0DD3.com", null },
-        { TestLine(), false, "http://\u0646\u0627\u0645\u0647\u200C\u0627\u06CC.com", null },
-        { TestLine(), false, "http://www.loo\u0138out.net", null },
-        { TestLine(), false, "http://\u15EF\u15EF\u15EF.lookout.net", null },
-        { TestLine(), false, "http://www.lookout.\u0441\u043E\u043C", null },
-        { TestLine(), false, "http://www.lookout.net\uFF1A80", null },
-        { TestLine(), false, "http://www\u2025lookout.net", null },
-        { TestLine(), false, "http://www.lookout\u2027net", null },
-        { TestLine(), false, "http://www.loo\u0138out.net", null },
-        { TestLine(), false, "http://www.lookout.net\u2A7480", null },
-        { TestLine(), false, "http://www\u00A0.lookout.net", null },
-        { TestLine(), false, "http://\u1680lookout.net", null },
-        { TestLine(), false, "http://\u001Flookout.net", null },
-        { TestLine(), false, "http://look\u06DDout.net", null },
-        { TestLine(), false, "http://look\u180Eout.net", null },
-        { TestLine(), false, "http://look\u2060out.net", null },
-        { TestLine(), false, "http://look\uFEFFout.net", null },
-        { TestLine(), false, "http://look\uD83F\uDFFEout.net", null },
-        { TestLine(), false, "http://look\uDEADout.net", null },
-        { TestLine(), false, "http://look\uFFFAout.net", null },
-        { TestLine(), false, "http://look\u2FF0out.net", null },
-        { TestLine(), false, "http://look\u0341out.net", null },
-        { TestLine(), false, "http://look\u202Eout.net", null },
-        { TestLine(), false, "http://look\u206Bout.net", null },
-        { TestLine(), false, "http://look\uDB40\uDC01out.net", null },
-        { TestLine(), false, "http://look\uDB40\uDC20out.net", null },
-        { TestLine(), false, "http://look\u05BEout.net", null },
-        { TestLine(), false, "http://B\u00FCcher.de", null },
-        { TestLine(), false, "http://fa\u00DF.de", null },
-        { TestLine(), false, "http://\u03B2\u03CC\u03BB\u03BF\u03C2.com", null },
-        { TestLine(), false, "http://\u0DC1\u0DCA\u200D\u0DBB\u0DD3.com", null },
-        { TestLine(), false, "http://\u0646\u0627\u0645\u0647\u200C\u0627\u06CC.com", null },
-        { TestLine(), false, "http://\u2665.net", null },
-        { TestLine(), false, "http://\u0378.net", null },
-        { TestLine(), false, "http://\u04C0.com", null },
-        { TestLine(), false, "http://\uD87E\uDC68.com", null },
-        { TestLine(), false, "http://\u2183.com", null },
-        { TestLine(), false, "http://look\u034Fout.net", null },
-        { TestLine(), true,  "http://gOoGle.com", new() {
+        { TestFileLine(), false,  "http://www.lookout.net::==80::==443::", null },
+        { TestFileLine(), false,  "http://www.lookout.net::80::443", null },
+        { TestFileLine(), false, "http://\\", null },
+        { TestFileLine(), false, "http://\\/", null },
+        { TestFileLine(), false, "http://\\./", null },
+        { TestFileLine(), false, "http:////:@/", null },
+        { TestFileLine(), false, "http://\\google.com/foo", null },
+        { TestFileLine(), false, "http://\\google.com/foo", null },
+        { TestFileLine(), false, "http:////asdf@/", null },
+        { TestFileLine(), false, "http:////:81", null },
+        { TestFileLine(), false,  "http://://", null },
+        { TestFileLine(), false,  "http://c:", null },
+        { TestFileLine(), false,  "http://xxxx:", null },
+        { TestFileLine(), false,  "http://.:.", null },
+        { TestFileLine(), false, "http://////@google.com/", null },
+        { TestFileLine(), false,  "http://@google.com", null },
+        { TestFileLine(), false, "http://fa\u00DF.de", null },
+        { TestFileLine(), false, "http://\u03B2\u03CC\u03BB\u03BF\u03C2.com", null },
+        { TestFileLine(), false, "http://\u0DC1\u0DCA\u200D\u0DBB\u0DD3.com", null },
+        { TestFileLine(), false, "http://\u0646\u0627\u0645\u0647\u200C\u0627\u06CC.com", null },
+        { TestFileLine(), false, "http://www.loo\u0138out.net", null },
+        { TestFileLine(), false, "http://\u15EF\u15EF\u15EF.lookout.net", null },
+        { TestFileLine(), false, "http://www.lookout.\u0441\u043E\u043C", null },
+        { TestFileLine(), false, "http://www.lookout.net\uFF1A80", null },
+        { TestFileLine(), false, "http://www\u2025lookout.net", null },
+        { TestFileLine(), false, "http://www.lookout\u2027net", null },
+        { TestFileLine(), false, "http://www.loo\u0138out.net", null },
+        { TestFileLine(), false, "http://www.lookout.net\u2A7480", null },
+        { TestFileLine(), false, "http://www\u00A0.lookout.net", null },
+        { TestFileLine(), false, "http://\u1680lookout.net", null },
+        { TestFileLine(), false, "http://\u001Flookout.net", null },
+        { TestFileLine(), false, "http://look\u06DDout.net", null },
+        { TestFileLine(), false, "http://look\u180Eout.net", null },
+        { TestFileLine(), false, "http://look\u2060out.net", null },
+        { TestFileLine(), false, "http://look\uFEFFout.net", null },
+        { TestFileLine(), false, "http://look\uD83F\uDFFEout.net", null },
+        { TestFileLine(), false, "http://look\uDEADout.net", null },
+        { TestFileLine(), false, "http://look\uFFFAout.net", null },
+        { TestFileLine(), false, "http://look\u2FF0out.net", null },
+        { TestFileLine(), false, "http://look\u0341out.net", null },
+        { TestFileLine(), false, "http://look\u202Eout.net", null },
+        { TestFileLine(), false, "http://look\u206Bout.net", null },
+        { TestFileLine(), false, "http://look\uDB40\uDC01out.net", null },
+        { TestFileLine(), false, "http://look\uDB40\uDC20out.net", null },
+        { TestFileLine(), false, "http://look\u05BEout.net", null },
+        { TestFileLine(), false, "http://B\u00FCcher.de", null },
+        { TestFileLine(), false, "http://fa\u00DF.de", null },
+        { TestFileLine(), false, "http://\u03B2\u03CC\u03BB\u03BF\u03C2.com", null },
+        { TestFileLine(), false, "http://\u0DC1\u0DCA\u200D\u0DBB\u0DD3.com", null },
+        { TestFileLine(), false, "http://\u0646\u0627\u0645\u0647\u200C\u0627\u06CC.com", null },
+        { TestFileLine(), false, "http://\u2665.net", null },
+        { TestFileLine(), false, "http://\u0378.net", null },
+        { TestFileLine(), false, "http://\u04C0.com", null },
+        { TestFileLine(), false, "http://\uD87E\uDC68.com", null },
+        { TestFileLine(), false, "http://\u2183.com", null },
+        { TestFileLine(), false, "http://look\u034Fout.net", null },
+        { TestFileLine(), true,  "http://gOoGle.com", new() {
                 ["uri"] = "http://gOoGle.com",
                 ["scheme"] = "http",
                 ["authority"] = "gOoGle.com",
@@ -260,12 +260,12 @@ public partial class UrisTests
                 ["host"] = "gOoGle.com",
                 ["ipDnsName"] = "gOoGle.com",
             } },
-        { TestLine(), false, "http://\u09dc.com", null },
-        { TestLine(), false, "http://\u1E9E.com", null },
-        { TestLine(), false, "http://\u1E9E.foo.com", null },
-        { TestLine(), false,  "http://-foo.bar.com", null },
-        { TestLine(), false,  "http://foo-.bar.com", null },
-        { TestLine(), true, "http://ab--cd.com", new() {
+        { TestFileLine(), false, "http://\u09dc.com", null },
+        { TestFileLine(), false, "http://\u1E9E.com", null },
+        { TestFileLine(), false, "http://\u1E9E.foo.com", null },
+        { TestFileLine(), false,  "http://-foo.bar.com", null },
+        { TestFileLine(), false,  "http://foo-.bar.com", null },
+        { TestFileLine(), true, "http://ab--cd.com", new() {
                 ["uri"] = "http://ab--cd.com",
                 ["scheme"] = "http",
                 ["authority"] = "ab--cd.com",
@@ -273,7 +273,7 @@ public partial class UrisTests
                 ["host"] = "ab--cd.com",
                 ["ipDnsName"] = "ab--cd.com",
             } },
-        { TestLine(), true,  "http://xn--0.com", new() {
+        { TestFileLine(), true,  "http://xn--0.com", new() {
                 ["uri"] = "http://xn--0.com",
                 ["scheme"] = "http",
                 ["authority"] = "xn--0.com",
@@ -281,9 +281,9 @@ public partial class UrisTests
                 ["host"] = "xn--0.com",
                 ["ipDnsName"] = "xn--0.com",
             } },
-        { TestLine(), false, "http://foo\u0300.bar.com", null },
-        { TestLine(), false,  "http://.", null },
-        { TestLine(), true,  "http://192.168.0.1", new() {
+        { TestFileLine(), false, "http://foo\u0300.bar.com", null },
+        { TestFileLine(), false,  "http://.", null },
+        { TestFileLine(), true,  "http://192.168.0.1", new() {
             ["uri"] = "http://192.168.0.1",
             ["scheme"] = "http",
             ["authority"] = "192.168.0.1",
@@ -291,69 +291,69 @@ public partial class UrisTests
             ["host"] = "192.168.0.1",
             ["ipv4"] = "192.168.0.1",
         } },
-        { TestLine(), false,  "http://0300.0250.00.01", null },
-        { TestLine(), false,  "http://0xC0.0Xa8.0x0.0x1", null },
-        { TestLine(), false,  "http://192.168.9.com", null },
-        { TestLine(), false,  "http://19a.168.0.1", null },
-        { TestLine(), false,  "http://0308.0250.00.01", null },
-        { TestLine(), false,  "http://0xCG.0xA8.0x0.0x1", null },
-        { TestLine(), false,  "http://192", null },
-        { TestLine(), false,  "http://0xC0a80001", null },
-        { TestLine(), false,  "http://030052000001", null },
-        { TestLine(), false,  "http://000030052000001", null },
-        { TestLine(), false,  "http://192.168", null },
-        { TestLine(), false,  "http://192.0x00A80001", null },
-        { TestLine(), false,  "http://0xc0.052000001", null },
-        { TestLine(), false,  "http://192.168.1", null },
-        { TestLine(), false,  "http://192.168.0.0.1", null },
-        { TestLine(), false,  "http://192.168.0.1.", null },
-        { TestLine(), false, "http://192.168.0.1. hello", null },
-        { TestLine(), false,  "http://192.168.0.1..", null },
-        { TestLine(), false, "http://192.168..1", null },
-        { TestLine(), false,  "http://0x100.0", null },
-        { TestLine(), false,  "http://0x100.0.0", null },
-        { TestLine(), false,  "http://0x100.0.0.0", null },
-        { TestLine(), false,  "http://0.0x100.0.0", null },
-        { TestLine(), false, "http://0.0.0x100.0", null },
-        { TestLine(), false,  "http://0.0.0.0x100", null },
-        { TestLine(), false,  "http://0.0.0x10000", null },
-        { TestLine(), false,  "http://0.0x1000000", null },
-        { TestLine(), false,  "http://0x100000000", null },
-        { TestLine(), false,  "http://0xFF.0", null },
-        { TestLine(), false,  "http://0xFF.0.0", null },
-        { TestLine(), false,  "http://0xFF.0.0.0", null },
-        { TestLine(), false,  "http://0.0xFF.0.0", null },
-        { TestLine(), false,  "http://0.0.0xFF.0", null },
-        { TestLine(), false,  "http://0.0.0.0xFF", null },
-        { TestLine(), false,  "http://0.0.0xFFFF", null },
-        { TestLine(), false,  "http://0.0xFFFFFF", null },
-        { TestLine(), false,  "http://0xFFFFFFFF", null },
-        { TestLine(), false,  "http://276.256.0xf1a2.077777", null },
-        { TestLine(), false,  "http://192.168.0.257", null },
-        { TestLine(), false,  "http://192.168.0xa20001", null },
-        { TestLine(), false,  "http://192.015052000001", null },
-        { TestLine(), false,  "http://0X12C0a80001", null },
-        { TestLine(), false,  "http://276.1.2", null },
-        { TestLine(), false, "http://192.168.0.1 hello", null },
-        { TestLine(), false,  "http://192.168.0.1%20hello", null },
-        { TestLine(), false,  "http://0000000000000300.0x00000000000000fF.00000000000000001", null },
-        { TestLine(), false,  "http://0000000000000300.0xffffffffFFFFFFFF.3022415481470977", null },
-        { TestLine(), false,  "http://00000000000000000001", null },
-        { TestLine(), false,  "http://0000000000000000100000000000000001", null },
-        { TestLine(), false,  "http://0.0.0.000000000000000000z", null },
-        { TestLine(), false,  "http://0.0.0.100000000000000000z", null },
-        { TestLine(), false,  "http://0.00.0x.0x0", null },
-        { TestLine(), false, "http://[", null },
-        { TestLine(), false, "http://[:", null },
-        { TestLine(), false, "http://]", null },
-        { TestLine(), false, "http://:]", null },
-        { TestLine(), false, "http://[]", null },
-        { TestLine(), false, "http://[:]", null },
-        { TestLine(), false,  "http://2001:db8::1", null },
-        { TestLine(), false, "http://[2001:db8::1", null },
-        { TestLine(), false, "http://2001:db8::1]", null },
-        { TestLine(), false, "http://[::]", null },
-        { TestLine(), true,  "http://[::1]", new() {
+        { TestFileLine(), false,  "http://0300.0250.00.01", null },
+        { TestFileLine(), false,  "http://0xC0.0Xa8.0x0.0x1", null },
+        { TestFileLine(), false,  "http://192.168.9.com", null },
+        { TestFileLine(), false,  "http://19a.168.0.1", null },
+        { TestFileLine(), false,  "http://0308.0250.00.01", null },
+        { TestFileLine(), false,  "http://0xCG.0xA8.0x0.0x1", null },
+        { TestFileLine(), false,  "http://192", null },
+        { TestFileLine(), false,  "http://0xC0a80001", null },
+        { TestFileLine(), false,  "http://030052000001", null },
+        { TestFileLine(), false,  "http://000030052000001", null },
+        { TestFileLine(), false,  "http://192.168", null },
+        { TestFileLine(), false,  "http://192.0x00A80001", null },
+        { TestFileLine(), false,  "http://0xc0.052000001", null },
+        { TestFileLine(), false,  "http://192.168.1", null },
+        { TestFileLine(), false,  "http://192.168.0.0.1", null },
+        { TestFileLine(), false,  "http://192.168.0.1.", null },
+        { TestFileLine(), false, "http://192.168.0.1. hello", null },
+        { TestFileLine(), false,  "http://192.168.0.1..", null },
+        { TestFileLine(), false, "http://192.168..1", null },
+        { TestFileLine(), false,  "http://0x100.0", null },
+        { TestFileLine(), false,  "http://0x100.0.0", null },
+        { TestFileLine(), false,  "http://0x100.0.0.0", null },
+        { TestFileLine(), false,  "http://0.0x100.0.0", null },
+        { TestFileLine(), false, "http://0.0.0x100.0", null },
+        { TestFileLine(), false,  "http://0.0.0.0x100", null },
+        { TestFileLine(), false,  "http://0.0.0x10000", null },
+        { TestFileLine(), false,  "http://0.0x1000000", null },
+        { TestFileLine(), false,  "http://0x100000000", null },
+        { TestFileLine(), false,  "http://0xFF.0", null },
+        { TestFileLine(), false,  "http://0xFF.0.0", null },
+        { TestFileLine(), false,  "http://0xFF.0.0.0", null },
+        { TestFileLine(), false,  "http://0.0xFF.0.0", null },
+        { TestFileLine(), false,  "http://0.0.0xFF.0", null },
+        { TestFileLine(), false,  "http://0.0.0.0xFF", null },
+        { TestFileLine(), false,  "http://0.0.0xFFFF", null },
+        { TestFileLine(), false,  "http://0.0xFFFFFF", null },
+        { TestFileLine(), false,  "http://0xFFFFFFFF", null },
+        { TestFileLine(), false,  "http://276.256.0xf1a2.077777", null },
+        { TestFileLine(), false,  "http://192.168.0.257", null },
+        { TestFileLine(), false,  "http://192.168.0xa20001", null },
+        { TestFileLine(), false,  "http://192.015052000001", null },
+        { TestFileLine(), false,  "http://0X12C0a80001", null },
+        { TestFileLine(), false,  "http://276.1.2", null },
+        { TestFileLine(), false, "http://192.168.0.1 hello", null },
+        { TestFileLine(), false,  "http://192.168.0.1%20hello", null },
+        { TestFileLine(), false,  "http://0000000000000300.0x00000000000000fF.00000000000000001", null },
+        { TestFileLine(), false,  "http://0000000000000300.0xffffffffFFFFFFFF.3022415481470977", null },
+        { TestFileLine(), false,  "http://00000000000000000001", null },
+        { TestFileLine(), false,  "http://0000000000000000100000000000000001", null },
+        { TestFileLine(), false,  "http://0.0.0.000000000000000000z", null },
+        { TestFileLine(), false,  "http://0.0.0.100000000000000000z", null },
+        { TestFileLine(), false,  "http://0.00.0x.0x0", null },
+        { TestFileLine(), false, "http://[", null },
+        { TestFileLine(), false, "http://[:", null },
+        { TestFileLine(), false, "http://]", null },
+        { TestFileLine(), false, "http://:]", null },
+        { TestFileLine(), false, "http://[]", null },
+        { TestFileLine(), false, "http://[:]", null },
+        { TestFileLine(), false,  "http://2001:db8::1", null },
+        { TestFileLine(), false, "http://[2001:db8::1", null },
+        { TestFileLine(), false, "http://2001:db8::1]", null },
+        { TestFileLine(), false, "http://[::]", null },
+        { TestFileLine(), true,  "http://[::1]", new() {
                 ["uri"] = "http://[::1]",
                 ["scheme"] = "http",
                 ["authority"] = "[::1]",
@@ -361,7 +361,7 @@ public partial class UrisTests
                 ["host"] = "[::1]",
                 ["ipv6"] = "::1",
             } },
-        { TestLine(), true,  "http://[1::]", new() {
+        { TestFileLine(), true,  "http://[1::]", new() {
                 ["uri"] = "http://[1::]",
                 ["scheme"] = "http",
                 ["authority"] = "[1::]",
@@ -369,7 +369,7 @@ public partial class UrisTests
                 ["host"] = "[1::]",
                 ["ipv6"] = "1::",
             } },
-        { TestLine(), true,  "http://[::192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[::192.168.0.1]", new() {
                 ["uri"] = "http://[::192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[::192.168.0.1]",
@@ -377,7 +377,7 @@ public partial class UrisTests
                 ["host"] = "[::192.168.0.1]",
                 ["ipv6"] = "::192.168.0.1",
             } },
-        { TestLine(), true,  "http://[::ffff:192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[::ffff:192.168.0.1]", new() {
                 ["uri"] = "http://[::ffff:192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[::ffff:192.168.0.1]",
@@ -385,7 +385,7 @@ public partial class UrisTests
                 ["host"] = "[::ffff:192.168.0.1]",
                 ["ipv6"] = "::ffff:192.168.0.1",
             } },
-        { TestLine(), true,  "http://[000:01:02:003:004:5:6:007]", new() {
+        { TestFileLine(), true,  "http://[000:01:02:003:004:5:6:007]", new() {
                 ["uri"] = "http://[000:01:02:003:004:5:6:007]",
                 ["scheme"] = "http",
                 ["authority"] = "[000:01:02:003:004:5:6:007]",
@@ -393,7 +393,7 @@ public partial class UrisTests
                 ["host"] = "[000:01:02:003:004:5:6:007]",
                 ["ipv6"] = "000:01:02:003:004:5:6:007",
             } },
-        { TestLine(), true,  "http://[A:b:c:DE:fF:0:1:aC]", new() {
+        { TestFileLine(), true,  "http://[A:b:c:DE:fF:0:1:aC]", new() {
                 ["uri"] = "http://[A:b:c:DE:fF:0:1:aC]",
                 ["scheme"] = "http",
                 ["authority"] = "[A:b:c:DE:fF:0:1:aC]",
@@ -401,7 +401,7 @@ public partial class UrisTests
                 ["host"] = "[A:b:c:DE:fF:0:1:aC]",
                 ["ipv6"] = "A:b:c:DE:fF:0:1:aC",
             } },
-        { TestLine(), true,  "http://[1:0:0:2::3:0]", new() {
+        { TestFileLine(), true,  "http://[1:0:0:2::3:0]", new() {
                 ["uri"] = "http://[1:0:0:2::3:0]",
                 ["scheme"] = "http",
                 ["authority"] = "[1:0:0:2::3:0]",
@@ -409,7 +409,7 @@ public partial class UrisTests
                 ["host"] = "[1:0:0:2::3:0]",
                 ["ipv6"] = "1:0:0:2::3:0",
             } },
-        { TestLine(), true,  "http://[1::2:0:0:3:0]", new() {
+        { TestFileLine(), true,  "http://[1::2:0:0:3:0]", new() {
                 ["uri"] = "http://[1::2:0:0:3:0]",
                 ["scheme"] = "http",
                 ["authority"] = "[1::2:0:0:3:0]",
@@ -417,12 +417,12 @@ public partial class UrisTests
                 ["host"] = "[1::2:0:0:3:0]",
                 ["ipv6"] = "1::2:0:0:3:0",
             } },
-        { TestLine(), false, "http://[::eeee:192.168.0.1]", null },
-        { TestLine(), false, "http://[2001::192.168.0.1]", null },
-        { TestLine(), false, "http://[1:2:192.168.0.1:5:6]", null },
-        { TestLine(), false, "http://[::ffff:192.1.2]", null },
-        { TestLine(), false, "http://[::ffff:0xC0.0Xa8.0x0.0x1]", null },
-        { TestLine(), true,  "http://[0:0::0:0:8]", new() {
+        { TestFileLine(), false, "http://[::eeee:192.168.0.1]", null },
+        { TestFileLine(), false, "http://[2001::192.168.0.1]", null },
+        { TestFileLine(), false, "http://[1:2:192.168.0.1:5:6]", null },
+        { TestFileLine(), false, "http://[::ffff:192.1.2]", null },
+        { TestFileLine(), false, "http://[::ffff:0xC0.0Xa8.0x0.0x1]", null },
+        { TestFileLine(), true,  "http://[0:0::0:0:8]", new() {
                 ["uri"] = "http://[0:0::0:0:8]",
                 ["scheme"] = "http",
                 ["authority"] = "[0:0::0:0:8]",
@@ -430,7 +430,7 @@ public partial class UrisTests
                 ["host"] = "[0:0::0:0:8]",
                 ["ipv6"] = "0:0::0:0:8",
             } },
-        { TestLine(), true,  "http://[2001:db8::1]", new() {
+        { TestFileLine(), true,  "http://[2001:db8::1]", new() {
                 ["uri"] = "http://[2001:db8::1]",
                 ["scheme"] = "http",
                 ["authority"] = "[2001:db8::1]",
@@ -438,16 +438,16 @@ public partial class UrisTests
                 ["host"] = "[2001:db8::1]",
                 ["ipv6"] = "2001:db8::1",
             } },
-        { TestLine(), false, "http://[2001::db8::1]", null },
-        { TestLine(), false, "http://[2001:db8:::1]", null },
-        { TestLine(), false, "http://[:::]", null },
-        { TestLine(), false, "http://[2001::.com]", null },
-        { TestLine(), false, "http://[::192.168.0.0.1]", null },
-        { TestLine(), false, "http://[::ffff:192.168.0.0.1]", null },
-        { TestLine(), false, "http://[1:2:3:4:5:6:7:8:9]", null },
-        { TestLine(), false, "http://[0:0:0:0:0:0:0:192.168.0.1]", null },
-        { TestLine(), false, "http://[1:2:3:4:5:6::192.168.0.1]", null },
-        { TestLine(), true,  "http://[::192.168.0.1]", new() {
+        { TestFileLine(), false, "http://[2001::db8::1]", null },
+        { TestFileLine(), false, "http://[2001:db8:::1]", null },
+        { TestFileLine(), false, "http://[:::]", null },
+        { TestFileLine(), false, "http://[2001::.com]", null },
+        { TestFileLine(), false, "http://[::192.168.0.0.1]", null },
+        { TestFileLine(), false, "http://[::ffff:192.168.0.0.1]", null },
+        { TestFileLine(), false, "http://[1:2:3:4:5:6:7:8:9]", null },
+        { TestFileLine(), false, "http://[0:0:0:0:0:0:0:192.168.0.1]", null },
+        { TestFileLine(), false, "http://[1:2:3:4:5:6::192.168.0.1]", null },
+        { TestFileLine(), true,  "http://[::192.168.0.1]", new() {
                 ["uri"] = "http://[::192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[::192.168.0.1]",
@@ -455,7 +455,7 @@ public partial class UrisTests
                 ["host"] = "[::192.168.0.1]",
                 ["ipv6"] = "::192.168.0.1",
             } },
-        { TestLine(), true,  "http://[0::192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[0::192.168.0.1]", new() {
                 ["uri"] = "http://[0::192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[0::192.168.0.1]",
@@ -463,7 +463,7 @@ public partial class UrisTests
                 ["host"] = "[0::192.168.0.1]",
                 ["ipv6"] = "0::192.168.0.1",
             } },
-        { TestLine(), true,  "http://[0:0::192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[0:0::192.168.0.1]", new() {
                 ["uri"] = "http://[0:0::192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[0:0::192.168.0.1]",
@@ -471,7 +471,7 @@ public partial class UrisTests
                 ["host"] = "[0:0::192.168.0.1]",
                 ["ipv6"] = "0:0::192.168.0.1",
             } },
-        { TestLine(), true,  "http://[::0:192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[::0:192.168.0.1]", new() {
                 ["uri"] = "http://[::0:192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[::0:192.168.0.1]",
@@ -479,7 +479,7 @@ public partial class UrisTests
                 ["host"] = "[::0:192.168.0.1]",
                 ["ipv6"] = "::0:192.168.0.1",
             } },
-        { TestLine(), true,  "http://[0:0::192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[0:0::192.168.0.1]", new() {
                 ["uri"] = "http://[0:0::192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[0:0::192.168.0.1]",
@@ -487,7 +487,7 @@ public partial class UrisTests
                 ["host"] = "[0:0::192.168.0.1]",
                 ["ipv6"] = "0:0::192.168.0.1",
             } },
-        { TestLine(), true,  "http://[0:0:0::192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[0:0:0::192.168.0.1]", new() {
                 ["uri"] = "http://[0:0:0::192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[0:0:0::192.168.0.1]",
@@ -495,7 +495,7 @@ public partial class UrisTests
                 ["host"] = "[0:0:0::192.168.0.1]",
                 ["ipv6"] = "0:0:0::192.168.0.1",
             } },
-        { TestLine(), true,  "http://[::ffff:192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[::ffff:192.168.0.1]", new() {
                 ["uri"] = "http://[::ffff:192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[::ffff:192.168.0.1]",
@@ -503,7 +503,7 @@ public partial class UrisTests
                 ["host"] = "[::ffff:192.168.0.1]",
                 ["ipv6"] = "::ffff:192.168.0.1",
             } },
-        { TestLine(), true,  "http://[0::ffff:192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[0::ffff:192.168.0.1]", new() {
                 ["uri"] = "http://[0::ffff:192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[0::ffff:192.168.0.1]",
@@ -511,7 +511,7 @@ public partial class UrisTests
                 ["host"] = "[0::ffff:192.168.0.1]",
                 ["ipv6"] = "0::ffff:192.168.0.1",
             } },
-        { TestLine(), true,  "http://[0:0::ffff:192.168.0.1]", new() {
+        { TestFileLine(), true,  "http://[0:0::ffff:192.168.0.1]", new() {
                 ["uri"] = "http://[0:0::ffff:192.168.0.1]",
                 ["scheme"] = "http",
                 ["authority"] = "[0:0::ffff:192.168.0.1]",
@@ -519,7 +519,7 @@ public partial class UrisTests
                 ["host"] = "[0:0::ffff:192.168.0.1]",
                 ["ipv6"] = "0:0::ffff:192.168.0.1",
             } },
-        { TestLine(), true,  "http://[1:2:3:4:5:6::8]", new() {
+        { TestFileLine(), true,  "http://[1:2:3:4:5:6::8]", new() {
                 ["uri"] = "http://[1:2:3:4:5:6::8]",
                 ["scheme"] = "http",
                 ["authority"] = "[1:2:3:4:5:6::8]",
@@ -527,63 +527,63 @@ public partial class UrisTests
                 ["host"] = "[1:2:3:4:5:6::8]",
                 ["ipv6"] = "1:2:3:4:5:6::8",
             } },
-        { TestLine(), false, "http://[1:2:3:4:5:6:7:8:]", null },
-        { TestLine(), false, "http://[1:2:3:4:5:6:192.168.0.1:]", null },
-        { TestLine(), false, "http://[-1:2:3:4:5:6:7:8]", null },
-        { TestLine(), false, "http://[1::%1]", null },
-        { TestLine(), false, "http://[1::%eth0]", null },
-        { TestLine(), false, "http://[1::%]", null },
-        { TestLine(), false, "http://[%]", null },
-        { TestLine(), false, "http://[::%:]", null },
-        { TestLine(), false, "http://[:0:0::0:0:8]", null },
-        { TestLine(), false, "http://[0:0::0:0:8:]", null },
-        { TestLine(), false, "http://[:0:0::0:0:8:]", null },
-        { TestLine(), false, "http://[::192.168..1]", null },
-        { TestLine(), false, "http://[::1 hello]", null },
-        { TestLine(), true, "mailto:addr1", new() {
+        { TestFileLine(), false, "http://[1:2:3:4:5:6:7:8:]", null },
+        { TestFileLine(), false, "http://[1:2:3:4:5:6:192.168.0.1:]", null },
+        { TestFileLine(), false, "http://[-1:2:3:4:5:6:7:8]", null },
+        { TestFileLine(), false, "http://[1::%1]", null },
+        { TestFileLine(), false, "http://[1::%eth0]", null },
+        { TestFileLine(), false, "http://[1::%]", null },
+        { TestFileLine(), false, "http://[%]", null },
+        { TestFileLine(), false, "http://[::%:]", null },
+        { TestFileLine(), false, "http://[:0:0::0:0:8]", null },
+        { TestFileLine(), false, "http://[0:0::0:0:8:]", null },
+        { TestFileLine(), false, "http://[:0:0::0:0:8:]", null },
+        { TestFileLine(), false, "http://[::192.168..1]", null },
+        { TestFileLine(), false, "http://[::1 hello]", null },
+        { TestFileLine(), true, "mailto:addr1", new() {
             ["uri"] = "mailto:addr1",
             ["scheme"] = "mailto",
             ["pathNoScheme"] = "addr1",
         } },
-        { TestLine(), true, "mailto:addr1@foo.com", new() {
+        { TestFileLine(), true, "mailto:addr1@foo.com", new() {
             ["uri"] = "mailto:addr1@foo.com",
             ["scheme"] = "mailto",
             ["pathNoScheme"] = "addr1@foo.com",
         } },
-        { TestLine(), false, "mailto:addr1 \t", null },
-        { TestLine(), true, "mailto:addr1?to=jon", new() {
+        { TestFileLine(), false, "mailto:addr1 \t", null },
+        { TestFileLine(), true, "mailto:addr1?to=jon", new() {
             ["uri"] = "mailto:addr1?to=jon",
             ["scheme"] = "mailto",
             ["pathNoScheme"] = "addr1",
             ["query"] = "to=jon",
         } },
-        { TestLine(), true, "mailto:addr1,addr2", new() {
+        { TestFileLine(), true, "mailto:addr1,addr2", new() {
             ["uri"] = "mailto:addr1,addr2",
             ["scheme"] = "mailto",
             ["pathNoScheme"] = "addr1,addr2",
         } },
-        { TestLine(), false, "mailto:addr1, addr2", null },
-        { TestLine(), true, "mailto:addr1%2caddr2", new() {
+        { TestFileLine(), false, "mailto:addr1, addr2", null },
+        { TestFileLine(), true, "mailto:addr1%2caddr2", new() {
             ["uri"] = "mailto:addr1%2caddr2", // →uri← = →mailto:addr1,addr2←
             ["scheme"] = "mailto",
             ["pathNoScheme"] = "addr1%2caddr2", // →pathNoScheme← = →addr1,addr2←
         } },
-        { TestLine(), false, "mailto:\uD800\uDF00", null },
-        { TestLine(), true, "mailto:addr1?", new() {
+        { TestFileLine(), false, "mailto:\uD800\uDF00", null },
+        { TestFileLine(), true, "mailto:addr1?", new() {
             ["uri"] = "mailto:addr1?",
             ["scheme"] = "mailto",
             ["pathNoScheme"] = "addr1",
         } },
-        { TestLine(), true, "javascript:", new() {
+        { TestFileLine(), true, "javascript:", new() {
             ["uri"] = "javascript:",
             ["scheme"] = "javascript",
         } },
-        { TestLine(), true, "JavaScript:Foo", new() {
+        { TestFileLine(), true, "JavaScript:Foo", new() {
             ["uri"] = "JavaScript:Foo",
             ["scheme"] = "JavaScript",
             ["pathNoScheme"] = "Foo",
         } },
-        { TestLine(), true, "http://www.example.com/././foo", new() {
+        { TestFileLine(), true, "http://www.example.com/././foo", new() {
                 ["uri"] = "http://www.example.com/././foo",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -592,7 +592,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/././foo",
             } },
-        { TestLine(), true,  "http://www.example.com/./.foo", new() {
+        { TestFileLine(), true,  "http://www.example.com/./.foo", new() {
                 ["uri"] = "http://www.example.com/./.foo",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -601,7 +601,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/./.foo",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/.", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/.", new() {
                 ["uri"] = "http://www.example.com/foo/.",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -610,7 +610,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/.",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/./", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/./", new() {
                 ["uri"] = "http://www.example.com/foo/./",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -619,7 +619,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/./",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/bar/..", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/bar/..", new() {
             ["uri"] = "http://www.example.com/foo/bar/..",
             ["scheme"] = "http",
             ["authority"] = "www.example.com",
@@ -628,7 +628,7 @@ public partial class UrisTests
             ["ipDnsName"] = "www.example.com",
             ["pathAbsEmpty"] = "/foo/bar/..",
         } },
-        { TestLine(), true,  "http://www.example.com/foo/bar/../", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/bar/../", new() {
                 ["uri"] = "http://www.example.com/foo/bar/../",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -637,7 +637,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/bar/../",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/..bar", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/..bar", new() {
                 ["uri"] = "http://www.example.com/foo/..bar",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -646,7 +646,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/..bar",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/bar/../ton", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/bar/../ton", new() {
                 ["uri"] = "http://www.example.com/foo/bar/../ton",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -655,7 +655,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/bar/../ton",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/bar/../ton/../../a", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/bar/../ton/../../a", new() {
                 ["uri"] = "http://www.example.com/foo/bar/../ton/../../a",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -664,7 +664,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/bar/../ton/../../a",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/../../..", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/../../..", new() {
                 ["uri"] = "http://www.example.com/foo/../../..",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -673,7 +673,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/../../..",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/../../../ton", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/../../../ton", new() {
                 ["uri"] = "http://www.example.com/foo/../../../ton",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -682,7 +682,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/../../../ton",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/%2e", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/%2e", new() {
                 ["uri"] = "http://www.example.com/foo/%2e", // →uri← = →http://www.example.com/foo/.←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -691,8 +691,8 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/%2e", // →pathAbsEmpty← = →/foo/.←
             } },
-        { TestLine(), false, "http://www.example.com/foo/%2e%2", null },
-        { TestLine(), true,  "http://www.example.com/foo/%2e./%2e%2e/.%2e/%2e.bar", new() {
+        { TestFileLine(), false, "http://www.example.com/foo/%2e%2", null },
+        { TestFileLine(), true,  "http://www.example.com/foo/%2e./%2e%2e/.%2e/%2e.bar", new() {
                 ["uri"] = "http://www.example.com/foo/%2e./%2e%2e/.%2e/%2e.bar", // →uri← = →http://www.example.com/foo/../../../..bar←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -701,7 +701,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/%2e./%2e%2e/.%2e/%2e.bar", // →pathAbsEmpty← = →/foo/../../../..bar←
             } },
-        { TestLine(), true,  "http://www.example.com////../..", new() {
+        { TestFileLine(), true,  "http://www.example.com////../..", new() {
                 ["uri"] = "http://www.example.com////../..",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -710,7 +710,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "////../..",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/bar//../..", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/bar//../..", new() {
                 ["uri"] = "http://www.example.com/foo/bar//../..",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -719,7 +719,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/bar//../..",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/bar//..", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/bar//..", new() {
                 ["uri"] = "http://www.example.com/foo/bar//..",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -728,7 +728,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/bar//..",
             } },
-        { TestLine(), true,  "http://www.example.com/foo/bar/..", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo/bar/..", new() {
                 ["uri"] = "http://www.example.com/foo/bar/..",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -737,7 +737,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo/bar/..",
             } },
-        { TestLine(), true,  "http://www.example.com/foo", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo", new() {
                 ["uri"] = "http://www.example.com/foo",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -746,7 +746,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo",
             } },
-        { TestLine(), true,  "http://www.example.com/%20foo", new() {
+        { TestFileLine(), true,  "http://www.example.com/%20foo", new() {
                 ["uri"] = "http://www.example.com/%20foo", // →uri← = →http://www.example.com/ foo←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -755,11 +755,11 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/%20foo", // →pathAbsEmpty← = →/ foo←
             } },
-        { TestLine(), false, "http://www.example.com/foo%", null },
-        { TestLine(), false, "http://www.example.com/foo%2", null },
-        { TestLine(), false, "http://www.example.com/foo%2zbar", null },
-        { TestLine(), false, "http://www.example.com/foo%2\u00c2\u00a9zbar", null },
-        { TestLine(), true,  "http://www.example.com/foo%41%7a", new() {
+        { TestFileLine(), false, "http://www.example.com/foo%", null },
+        { TestFileLine(), false, "http://www.example.com/foo%2", null },
+        { TestFileLine(), false, "http://www.example.com/foo%2zbar", null },
+        { TestFileLine(), false, "http://www.example.com/foo%2\u00c2\u00a9zbar", null },
+        { TestFileLine(), true,  "http://www.example.com/foo%41%7a", new() {
                 ["uri"] = "http://www.example.com/foo%41%7a", // →uri← = →http://www.example.com/fooAz←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -768,8 +768,8 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo%41%7a", // →pathAbsEmpty← = →/fooAz←
             } },
-        { TestLine(), false, "http://www.example.com/foo\u0009\u0091%91", null },
-        { TestLine(), true,  "http://www.example.com/foo%00%51", new() {
+        { TestFileLine(), false, "http://www.example.com/foo\u0009\u0091%91", null },
+        { TestFileLine(), true,  "http://www.example.com/foo%00%51", new() {
                 ["uri"] = "http://www.example.com/foo%00%51", // →uri← = →http://www.example.com/foo%00Q
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -778,7 +778,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo%00%51", // →pathAbsEmpty← = →/foo%00Q
             } },
-        { TestLine(), true,  "http://www.example.com/(%28:%3A%29)", new() {
+        { TestFileLine(), true,  "http://www.example.com/(%28:%3A%29)", new() {
                 ["uri"] = "http://www.example.com/(%28:%3A%29)", // →uri← = →http://www.example.com/((::))←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -787,7 +787,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/(%28:%3A%29)", // →pathAbsEmpty← = →/((::))←
             } },
-        { TestLine(), true,  "http://www.example.com/%3A%3a%3C%3c", new() {
+        { TestFileLine(), true,  "http://www.example.com/%3A%3a%3C%3c", new() {
                 ["uri"] = "http://www.example.com/%3A%3a%3C%3c", // →uri← = →http://www.example.com/::<<←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -796,9 +796,9 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/%3A%3a%3C%3c", // →pathAbsEmpty← = →/::<<←
             } },
-        { TestLine(), false, "http://www.example.com/foo\tbar", null },
-        { TestLine(), false, "http://www.example.com\\foo\\bar", null },
-        { TestLine(), true,  "http://www.example.com/%7Ffp3%3Eju%3Dduvgw%3Dd", new() {
+        { TestFileLine(), false, "http://www.example.com/foo\tbar", null },
+        { TestFileLine(), false, "http://www.example.com\\foo\\bar", null },
+        { TestFileLine(), true,  "http://www.example.com/%7Ffp3%3Eju%3Dduvgw%3Dd", new() {
                 ["uri"] = "http://www.example.com/%7Ffp3%3Eju%3Dduvgw%3Dd", // →uri← = →http://www.example.com/fp3>ju=duvgw=d←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -807,7 +807,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/%7Ffp3%3Eju%3Dduvgw%3Dd", // →pathAbsEmpty← = →/fp3>ju=duvgw=d←
             } },
-        { TestLine(), true,  "http://www.example.com/@asdf%40", new() {
+        { TestFileLine(), true,  "http://www.example.com/@asdf%40", new() {
                 ["uri"] = "http://www.example.com/@asdf%40", // →uri← = →http://www.example.com/@asdf@←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -816,16 +816,16 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/@asdf%40", // →pathAbsEmpty← = →/@asdf@←
             } },
-        { TestLine(), false, "http://www.example.com/\u4f60\u597d\u4f60\u597d", null },
-        { TestLine(), false, "http://www.example.com/\ufdd0zyx", null },
-        { TestLine(), false, "http://www.example.com/\u2025/foo", null },
-        { TestLine(), false, "http://www.example.com/\uDEAD/foo", null },
-        { TestLine(), false, "http://www.example.com/\uFEFF/foo", null },
-        { TestLine(), false, "http://www.example.com/\u202E/foo/\u202D/bar", null },
-        { TestLine(), false, "http://www.example.com\uFF0Ffoo/", null },
-        { TestLine(), false, "http://www.example.com:as df", null },
-        { TestLine(), false,  "http://www.example.com:-2", null },
-        { TestLine(), true,  "http://www.example.com:80", new() {
+        { TestFileLine(), false, "http://www.example.com/\u4f60\u597d\u4f60\u597d", null },
+        { TestFileLine(), false, "http://www.example.com/\ufdd0zyx", null },
+        { TestFileLine(), false, "http://www.example.com/\u2025/foo", null },
+        { TestFileLine(), false, "http://www.example.com/\uDEAD/foo", null },
+        { TestFileLine(), false, "http://www.example.com/\uFEFF/foo", null },
+        { TestFileLine(), false, "http://www.example.com/\u202E/foo/\u202D/bar", null },
+        { TestFileLine(), false, "http://www.example.com\uFF0Ffoo/", null },
+        { TestFileLine(), false, "http://www.example.com:as df", null },
+        { TestFileLine(), false,  "http://www.example.com:-2", null },
+        { TestFileLine(), true,  "http://www.example.com:80", new() {
                 ["uri"] = "http://www.example.com:80",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com:80",
@@ -834,7 +834,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["port"] = "80",
             } },
-        { TestLine(), true,  "http://www.example.com:8080", new() {
+        { TestFileLine(), true,  "http://www.example.com:8080", new() {
                 ["uri"] = "http://www.example.com:8080",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com:8080",
@@ -843,10 +843,10 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["port"] = "8080",
             } },
-        { TestLine(), false,  "http://www.example.com:", null },
-        { TestLine(), false, "http://www.example.com:\u1369", null },
-        { TestLine(), false, "http://www.example.com:\uD835\uDFD6", null },
-        { TestLine(), true,  "http://www.example.com/?foo=bar", new() {
+        { TestFileLine(), false,  "http://www.example.com:", null },
+        { TestFileLine(), false, "http://www.example.com:\u1369", null },
+        { TestFileLine(), false, "http://www.example.com:\uD835\uDFD6", null },
+        { TestFileLine(), true,  "http://www.example.com/?foo=bar", new() {
                 ["uri"] = "http://www.example.com/?foo=bar",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -856,7 +856,7 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/",
                 ["query"] = "foo=bar",
             } },
-        { TestLine(), true,  "http://www.example.com/?as?df", new() {
+        { TestFileLine(), true,  "http://www.example.com/?as?df", new() {
                 ["uri"] = "http://www.example.com/?as?df",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -866,8 +866,8 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/",
                 ["query"] = "as?df",
             } },
-        { TestLine(), false, "http://www.example.com/?\\%02hello%7f bye", null },
-        { TestLine(), true,  "http://www.example.com/?%40%41123", new() {
+        { TestFileLine(), false, "http://www.example.com/?\\%02hello%7f bye", null },
+        { TestFileLine(), true,  "http://www.example.com/?%40%41123", new() {
                 ["uri"] = "http://www.example.com/?%40%41123", // →uri← = →http://www.example.com/?@A123←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -877,9 +877,9 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/",
                 ["query"] = "%40%41123", // →query← = →@A123←
             } },
-        { TestLine(), false, "http://www.example.com/?q=\u4F60\u597D", null },
-        { TestLine(), false, "http://www.example.com/?q=\\ud800\\ud800", null },
-        { TestLine(), true,  "http://www.example.com/?q=&lt;asdf&gt;", new() {
+        { TestFileLine(), false, "http://www.example.com/?q=\u4F60\u597D", null },
+        { TestFileLine(), false, "http://www.example.com/?q=\\ud800\\ud800", null },
+        { TestFileLine(), true,  "http://www.example.com/?q=&lt;asdf&gt;", new() {
                 ["uri"] = "http://www.example.com/?q=&lt;asdf&gt;",
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -889,11 +889,11 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/",
                 ["query"] = "q=&lt;asdf&gt;",
             } },
-        { TestLine(), false, "http://www.example.com/?q=\"asdf\"", null },
-        { TestLine(), false, "\\\\Another\\path", null },
-        { TestLine(), false, "/c:\\foo", null },
-        { TestLine(), false, "//c:\\foo", null },
-        { TestLine(), true,  "http://host/", new() {
+        { TestFileLine(), false, "http://www.example.com/?q=\"asdf\"", null },
+        { TestFileLine(), false, "\\\\Another\\path", null },
+        { TestFileLine(), false, "/c:\\foo", null },
+        { TestFileLine(), false, "//c:\\foo", null },
+        { TestFileLine(), true,  "http://host/", new() {
                 ["uri"] = "http://host/",
                 ["scheme"] = "http",
                 ["authority"] = "host",
@@ -902,29 +902,29 @@ public partial class UrisTests
                 ["ipDnsName"] = "host",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), false, "bar", null },
-        { TestLine(), false, "../../../bar.html", null },
-        { TestLine(), false, "/../bar.html", null },
-        { TestLine(), false, "\\\\another\\path", null },
-        { TestLine(), false, "//c:/foo", null },
-        { TestLine(), false, "//localhost/c:/foo", null },
-        { TestLine(), true, "c:", new() {
+        { TestFileLine(), false, "bar", null },
+        { TestFileLine(), false, "../../../bar.html", null },
+        { TestFileLine(), false, "/../bar.html", null },
+        { TestFileLine(), false, "\\\\another\\path", null },
+        { TestFileLine(), false, "//c:/foo", null },
+        { TestFileLine(), false, "//localhost/c:/foo", null },
+        { TestFileLine(), true, "c:", new() {
             ["uri"] = "c:",
             ["scheme"] = "c",
         } },
-        { TestLine(), true,  "c:/foo", new() {
+        { TestFileLine(), true,  "c:/foo", new() {
             ["uri"] = "c:/foo",
             ["scheme"] = "c",
             ["pathAbs"] = "/foo",
         } },
-        { TestLine(), false, "c:\\foo", null },
-        { TestLine(), false, "/z:/bar", null },
-        { TestLine(), false, "/bar", null },
-        { TestLine(), false, "/bar", null },
-        { TestLine(), false, "/bar", null },
-        { TestLine(), false, "//somehost/path", null },
-        { TestLine(), false, "/\\//somehost/path", null },
-        { TestLine(), true,  "http://another/", new() {
+        { TestFileLine(), false, "c:\\foo", null },
+        { TestFileLine(), false, "/z:/bar", null },
+        { TestFileLine(), false, "/bar", null },
+        { TestFileLine(), false, "/bar", null },
+        { TestFileLine(), false, "/bar", null },
+        { TestFileLine(), false, "//somehost/path", null },
+        { TestFileLine(), false, "/\\//somehost/path", null },
+        { TestFileLine(), true,  "http://another/", new() {
                 ["uri"] = "http://another/",
                 ["scheme"] = "http",
                 ["authority"] = "another",
@@ -933,76 +933,76 @@ public partial class UrisTests
                 ["ipDnsName"] = "another",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), false, "http:////another/", null },
-        { TestLine(), false, "", null },
-        { TestLine(), false, "", null },
-        { TestLine(), false, "", null },
-        { TestLine(), false, "  another", null },
-        { TestLine(), false, "  .", null },
-        { TestLine(), false, " \t", null },
-        { TestLine(), true, "http:path", new() {
+        { TestFileLine(), false, "http:////another/", null },
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, "  another", null },
+        { TestFileLine(), false, "  .", null },
+        { TestFileLine(), false, " \t", null },
+        { TestFileLine(), true, "http:path", new() {
             ["uri"] = "http:path",
             ["scheme"] = "http",
             ["pathNoScheme"] = "path",
         } },
-        { TestLine(), true, "http:path", new() {
+        { TestFileLine(), true, "http:path", new() {
             ["uri"] = "http:path",
             ["scheme"] = "http",
             ["pathNoScheme"] = "path",
         } },
-        { TestLine(), true,  "http:/path", new() {
+        { TestFileLine(), true,  "http:/path", new() {
             ["uri"] = "http:/path",
             ["scheme"] = "http",
             ["pathAbs"] = "/path",
         } },
-        { TestLine(), true,  "HTTP:/path", new() {
+        { TestFileLine(), true,  "HTTP:/path", new() {
             ["uri"] = "HTTP:/path",
             ["scheme"] = "HTTP",
             ["pathAbs"] = "/path",
         } },
-        { TestLine(), true, "https:host2", new() {
+        { TestFileLine(), true, "https:host2", new() {
             ["uri"] = "https:host2",
             ["scheme"] = "https",
             ["pathNoScheme"] = "host2",
         } },
-        { TestLine(), true,  "htto:/host2", new() {
+        { TestFileLine(), true,  "htto:/host2", new() {
             ["uri"] = "htto:/host2",
             ["scheme"] = "htto",
             ["pathAbs"] = "/host2",
         } },
-        { TestLine(), false, "/b/c/d", null },
-        { TestLine(), false, "\\b\\c\\d", null },
-        { TestLine(), false, "/b/../c", null },
-        { TestLine(), false, "/b/../c", null },
-        { TestLine(), false, "\\b/../c?x#y", null },
-        { TestLine(), false, "/b/../c?x#y", null },
-        { TestLine(), false, "b", null },
-        { TestLine(), false, "bc/de", null },
-        { TestLine(), false, "bc/de?query#ref", null },
-        { TestLine(), false, ".", null },
-        { TestLine(), false, "..", null },
-        { TestLine(), false, "./..", null },
-        { TestLine(), false, "../.", null },
-        { TestLine(), false, "././.", null },
-        { TestLine(), false, "../../../foo", null },
-        { TestLine(), false, "?foo=bar", null },
-        { TestLine(), false, "?", null },
-        { TestLine(), false, "?foo=bar#com", null },
-        { TestLine(), false, "#ref", null },
-        { TestLine(), false, "#", null },
-        { TestLine(), false, "#bye", null },
-        { TestLine(), false, "baz.html", null },
-        { TestLine(), true, "data:baz", new() {
+        { TestFileLine(), false, "/b/c/d", null },
+        { TestFileLine(), false, "\\b\\c\\d", null },
+        { TestFileLine(), false, "/b/../c", null },
+        { TestFileLine(), false, "/b/../c", null },
+        { TestFileLine(), false, "\\b/../c?x#y", null },
+        { TestFileLine(), false, "/b/../c?x#y", null },
+        { TestFileLine(), false, "b", null },
+        { TestFileLine(), false, "bc/de", null },
+        { TestFileLine(), false, "bc/de?query#ref", null },
+        { TestFileLine(), false, ".", null },
+        { TestFileLine(), false, "..", null },
+        { TestFileLine(), false, "./..", null },
+        { TestFileLine(), false, "../.", null },
+        { TestFileLine(), false, "././.", null },
+        { TestFileLine(), false, "../../../foo", null },
+        { TestFileLine(), false, "?foo=bar", null },
+        { TestFileLine(), false, "?", null },
+        { TestFileLine(), false, "?foo=bar#com", null },
+        { TestFileLine(), false, "#ref", null },
+        { TestFileLine(), false, "#", null },
+        { TestFileLine(), false, "#bye", null },
+        { TestFileLine(), false, "baz.html", null },
+        { TestFileLine(), true, "data:baz", new() {
             ["uri"] = "data:baz",
             ["scheme"] = "data",
             ["pathNoScheme"] = "baz",
         } },
-        { TestLine(), true,  "data:/base", new() {
+        { TestFileLine(), true,  "data:/base", new() {
             ["uri"] = "data:/base",
             ["scheme"] = "data",
             ["pathAbs"] = "/base",
         } },
-        { TestLine(), true,  "http://host/", new() {
+        { TestFileLine(), true,  "http://host/", new() {
                 ["uri"] = "http://host/",
                 ["scheme"] = "http",
                 ["authority"] = "host",
@@ -1011,26 +1011,26 @@ public partial class UrisTests
                 ["ipDnsName"] = "host",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true, "http:host", new() {
+        { TestFileLine(), true, "http:host", new() {
             ["uri"] = "http:host",
             ["scheme"] = "http",
             ["pathNoScheme"] = "host",
         } },
-        { TestLine(), false, "./asd:fgh", null },
-        { TestLine(), false, ":foo", null },
-        { TestLine(), false, " hello world", null },
-        { TestLine(), false, ":foo", null },
-        { TestLine(), false, "; foo", null },
-        { TestLine(), false, ";foo", null },
-        { TestLine(), false, ";/../bar", null },
-        { TestLine(), false, "//another", null },
-        { TestLine(), false, "//another/path?query#ref", null },
-        { TestLine(), false, "///another/path", null },
-        { TestLine(), false, "//Another\\path", null },
-        { TestLine(), false, "//", null },
-        { TestLine(), false, "\\/another/path", null },
-        { TestLine(), false, "/\\Another\\path", null },
-        { TestLine(), true,  "http://iris.test.ing", new() {
+        { TestFileLine(), false, "./asd:fgh", null },
+        { TestFileLine(), false, ":foo", null },
+        { TestFileLine(), false, " hello world", null },
+        { TestFileLine(), false, ":foo", null },
+        { TestFileLine(), false, "; foo", null },
+        { TestFileLine(), false, ";foo", null },
+        { TestFileLine(), false, ";/../bar", null },
+        { TestFileLine(), false, "//another", null },
+        { TestFileLine(), false, "//another/path?query#ref", null },
+        { TestFileLine(), false, "///another/path", null },
+        { TestFileLine(), false, "//Another\\path", null },
+        { TestFileLine(), false, "//", null },
+        { TestFileLine(), false, "\\/another/path", null },
+        { TestFileLine(), false, "/\\Another\\path", null },
+        { TestFileLine(), true,  "http://iris.test.ing", new() {
                 ["uri"] = "http://iris.test.ing",
                 ["scheme"] = "http",
                 ["authority"] = "iris.test.ing",
@@ -1038,7 +1038,7 @@ public partial class UrisTests
                 ["host"] = "iris.test.ing",
                 ["ipDnsName"] = "iris.test.ing",
             } },
-        { TestLine(), true,  "HTTP://iris.test.ing", new() {
+        { TestFileLine(), true,  "HTTP://iris.test.ing", new() {
                 ["uri"] = "HTTP://iris.test.ing",
                 ["scheme"] = "HTTP",
                 ["authority"] = "iris.test.ing",
@@ -1046,7 +1046,7 @@ public partial class UrisTests
                 ["host"] = "iris.test.ing",
                 ["ipDnsName"] = "iris.test.ing",
             } },
-        { TestLine(), true,  "http://user:pass@foo:21/bar;par?b#c", new() {
+        { TestFileLine(), true,  "http://user:pass@foo:21/bar;par?b#c", new() {
                 ["uri"] = "http://user:pass@foo:21/bar;par?b#c",
                 ["scheme"] = "http",
                 ["authority"] = "user:pass@foo:21",
@@ -1060,17 +1060,17 @@ public partial class UrisTests
                 ["query"] = "b",
                 ["fragment"] = "c",
             } },
-        { TestLine(), true, "http:foo.com", new() {
+        { TestFileLine(), true, "http:foo.com", new() {
             ["uri"] = "http:foo.com",
             ["scheme"] = "http",
             ["pathNoScheme"] = "foo.com",
         } },
-        { TestLine(), false, "\u0009   :foo.com   \u000A", null },
-        { TestLine(), false, " foo.com", null },
-        { TestLine(), false, "a:\u0009 foo.com", null },
-        { TestLine(), false, "http://f:21/ b ? d # e ", null },
-        { TestLine(), false,  "http://f:/c", null },
-        { TestLine(), true,  "http://f:0/c", new() {
+        { TestFileLine(), false, "\u0009   :foo.com   \u000A", null },
+        { TestFileLine(), false, " foo.com", null },
+        { TestFileLine(), false, "a:\u0009 foo.com", null },
+        { TestFileLine(), false, "http://f:21/ b ? d # e ", null },
+        { TestFileLine(), false,  "http://f:/c", null },
+        { TestFileLine(), true,  "http://f:0/c", new() {
                 ["uri"] = "http://f:0/c",
                 ["scheme"] = "http",
                 ["authority"] = "f:0",
@@ -1080,36 +1080,36 @@ public partial class UrisTests
                 ["port"] = "0",
                 ["pathAbsEmpty"] = "/c",
             } },
-        { TestLine(), false,  "http://f:00000000000000/c", null },
-        { TestLine(), false,  "http://f:00000000000000000000080/c", null },
-        { TestLine(), false,  "http://f:b/c", null },
-        { TestLine(), false, "http://f: /c", null },
-        { TestLine(), false, "http://f:\u000A/c", null },
-        { TestLine(), false,  "http://f:fifty-two/c", null },
-        { TestLine(), false,  "http://f:999999/c", null },
-        { TestLine(), false, "http://f: 21 / b ? d # e ", null },
-        { TestLine(), false, "", null },
-        { TestLine(), false, "  \u0009", null },
-        { TestLine(), false, ":foo.com/", null },
-        { TestLine(), false, ":foo.com\\", null },
-        { TestLine(), false, ":", null },
-        { TestLine(), false, ":a", null },
-        { TestLine(), false, ":/", null },
-        { TestLine(), false, ":\\", null },
-        { TestLine(), false, ":#", null },
-        { TestLine(), false, "#", null },
-        { TestLine(), false, "#/", null },
-        { TestLine(), false, "#\\", null },
-        { TestLine(), false, "#;?", null },
-        { TestLine(), false, "?", null },
-        { TestLine(), false, "/", null },
-        { TestLine(), false, ":23", null },
-        { TestLine(), false, "/:23", null },
-        { TestLine(), false, "//", null },
-        { TestLine(), false, "::", null },
-        { TestLine(), false, "::23", null },
-        { TestLine(), false,  "foo://", null },
-        { TestLine(), true,  "http://a:b@c:29/d", new() {
+        { TestFileLine(), false,  "http://f:00000000000000/c", null },
+        { TestFileLine(), false,  "http://f:00000000000000000000080/c", null },
+        { TestFileLine(), false,  "http://f:b/c", null },
+        { TestFileLine(), false, "http://f: /c", null },
+        { TestFileLine(), false, "http://f:\u000A/c", null },
+        { TestFileLine(), false,  "http://f:fifty-two/c", null },
+        { TestFileLine(), false,  "http://f:999999/c", null },
+        { TestFileLine(), false, "http://f: 21 / b ? d # e ", null },
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, "  \u0009", null },
+        { TestFileLine(), false, ":foo.com/", null },
+        { TestFileLine(), false, ":foo.com\\", null },
+        { TestFileLine(), false, ":", null },
+        { TestFileLine(), false, ":a", null },
+        { TestFileLine(), false, ":/", null },
+        { TestFileLine(), false, ":\\", null },
+        { TestFileLine(), false, ":#", null },
+        { TestFileLine(), false, "#", null },
+        { TestFileLine(), false, "#/", null },
+        { TestFileLine(), false, "#\\", null },
+        { TestFileLine(), false, "#;?", null },
+        { TestFileLine(), false, "?", null },
+        { TestFileLine(), false, "/", null },
+        { TestFileLine(), false, ":23", null },
+        { TestFileLine(), false, "/:23", null },
+        { TestFileLine(), false, "//", null },
+        { TestFileLine(), false, "::", null },
+        { TestFileLine(), false, "::23", null },
+        { TestFileLine(), false,  "foo://", null },
+        { TestFileLine(), true,  "http://a:b@c:29/d", new() {
                 ["uri"] = "http://a:b@c:29/d",
                 ["scheme"] = "http",
                 ["authority"] = "a:b@c:29",
@@ -1121,10 +1121,10 @@ public partial class UrisTests
                 ["port"] = "29",
                 ["pathAbsEmpty"] = "/d",
             } },
-        { TestLine(), false, "http::@c:29", null },
-        { TestLine(), false, "http://&amp;a:foo(b]c@d:2/", null },
-        { TestLine(), false,  "http://::@c@d:2", null },
-        { TestLine(), true,  "http://foo.com:b@d/", new() {
+        { TestFileLine(), false, "http::@c:29", null },
+        { TestFileLine(), false, "http://&amp;a:foo(b]c@d:2/", null },
+        { TestFileLine(), false,  "http://::@c@d:2", null },
+        { TestFileLine(), true,  "http://foo.com:b@d/", new() {
                 ["uri"] = "http://foo.com:b@d/",
                 ["scheme"] = "http",
                 ["authority"] = "foo.com:b@d",
@@ -1135,30 +1135,30 @@ public partial class UrisTests
                 ["ipDnsName"] = "d",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), false, "http://foo.com/\\", null },
-        { TestLine(), false, "http:\\\\foo.com\\", null },
-        { TestLine(), false, "http:\\\\a\\b:c\\d @foo.com\\", null },
-        { TestLine(), true,  "foo:/", new() {
+        { TestFileLine(), false, "http://foo.com/\\", null },
+        { TestFileLine(), false, "http:\\\\foo.com\\", null },
+        { TestFileLine(), false, "http:\\\\a\\b:c\\d @foo.com\\", null },
+        { TestFileLine(), true,  "foo:/", new() {
             ["uri"] = "foo:/",
             ["scheme"] = "foo",
             ["pathAbs"] = "/",
         } },
-        { TestLine(), true,  "foo:/bar.com/", new() {
+        { TestFileLine(), true,  "foo:/bar.com/", new() {
             ["uri"] = "foo:/bar.com/",
             ["scheme"] = "foo",
             ["pathAbs"] = "/bar.com/",
         } },
-        { TestLine(), false, "foo://///////", null },
-        { TestLine(), false, "foo://///////bar.com/", null },
-        { TestLine(), false, "foo:////://///", null },
-        { TestLine(), true,  "c:/foo", new() {
+        { TestFileLine(), false, "foo://///////", null },
+        { TestFileLine(), false, "foo://///////bar.com/", null },
+        { TestFileLine(), false, "foo:////://///", null },
+        { TestFileLine(), true,  "c:/foo", new() {
             ["uri"] = "c:/foo",
             ["scheme"] = "c",
             ["pathAbs"] = "/foo",
         } },
-        { TestLine(), false, "    //foo/bar", null },
-        { TestLine(), false, "http://foo/path;a??e#f#g", null },
-        { TestLine(), true,  "http://foo/abcd?efgh?ijkl", new() {
+        { TestFileLine(), false, "    //foo/bar", null },
+        { TestFileLine(), false, "http://foo/path;a??e#f#g", null },
+        { TestFileLine(), true,  "http://foo/abcd?efgh?ijkl", new() {
                 ["uri"] = "http://foo/abcd?efgh?ijkl",
                 ["scheme"] = "http",
                 ["authority"] = "foo",
@@ -1168,7 +1168,7 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/abcd",
                 ["query"] = "efgh?ijkl",
             } },
-        { TestLine(), true,  "http://foo/abcd#foo?bar", new() {
+        { TestFileLine(), true,  "http://foo/abcd#foo?bar", new() {
             ["uri"] = "http://foo/abcd#foo?bar",
             ["scheme"] = "http",
             ["authority"] = "foo",
@@ -1178,15 +1178,15 @@ public partial class UrisTests
             ["pathAbsEmpty"] = "/abcd",
             ["fragment"] = "foo?bar",
         } },
-        { TestLine(), false, "[61:24:74]:98", null },
-        { TestLine(), false, "http://[61:27]:98", null },
-        { TestLine(), false, "http:[61:27]/:foo", null },
-        { TestLine(), false, "http://[1::2]:3:4", null },
-        { TestLine(), false,  "http://2001::1", null },
-        { TestLine(), false, "http://[2001::1", null },
-        { TestLine(), false, "http://2001::1]", null },
-        { TestLine(), false, "http://2001::1]:80", null },
-        { TestLine(), true,  "http://[2001::1]", new() {
+        { TestFileLine(), false, "[61:24:74]:98", null },
+        { TestFileLine(), false, "http://[61:27]:98", null },
+        { TestFileLine(), false, "http:[61:27]/:foo", null },
+        { TestFileLine(), false, "http://[1::2]:3:4", null },
+        { TestFileLine(), false,  "http://2001::1", null },
+        { TestFileLine(), false, "http://[2001::1", null },
+        { TestFileLine(), false, "http://2001::1]", null },
+        { TestFileLine(), false, "http://2001::1]:80", null },
+        { TestFileLine(), true,  "http://[2001::1]", new() {
                 ["uri"] = "http://[2001::1]",
                 ["scheme"] = "http",
                 ["authority"] = "[2001::1]",
@@ -1194,7 +1194,7 @@ public partial class UrisTests
                 ["host"] = "[2001::1]",
                 ["ipv6"] = "2001::1",
             } },
-        { TestLine(), true,  "http://[2001::1]:80", new() {
+        { TestFileLine(), true,  "http://[2001::1]:80", new() {
                 ["uri"] = "http://[2001::1]:80",
                 ["scheme"] = "http",
                 ["authority"] = "[2001::1]:80",
@@ -1203,8 +1203,8 @@ public partial class UrisTests
                 ["ipv6"] = "2001::1",
                 ["port"] = "80",
             } },
-        { TestLine(), false, "http://[[::]]", null },
-        { TestLine(), true,  "http://user:pass@foo:21/bar;par?b#c", new() {
+        { TestFileLine(), false, "http://[[::]]", null },
+        { TestFileLine(), true,  "http://user:pass@foo:21/bar;par?b#c", new() {
                 ["uri"] = "http://user:pass@foo:21/bar;par?b#c",
                 ["scheme"] = "http",
                 ["authority"] = "user:pass@foo:21",
@@ -1218,17 +1218,17 @@ public partial class UrisTests
                 ["query"] = "b",
                 ["fragment"] = "c",
             } },
-        { TestLine(), true, "http:foo.com", new() {
+        { TestFileLine(), true, "http:foo.com", new() {
             ["uri"] = "http:foo.com",
             ["scheme"] = "http",
             ["pathNoScheme"] = "foo.com",
         } },
-        { TestLine(), false, "\u0009   :foo.com   \u000A", null },
-        { TestLine(), false, " foo.com", null },
-        { TestLine(), false, "a:\u0009 foo.com", null },
-        { TestLine(), false, "http://f:21/ b ? d # e ", null },
-        { TestLine(), false,  "http://f:/c", null },
-        { TestLine(), true,  "http://f:0/c", new() {
+        { TestFileLine(), false, "\u0009   :foo.com   \u000A", null },
+        { TestFileLine(), false, " foo.com", null },
+        { TestFileLine(), false, "a:\u0009 foo.com", null },
+        { TestFileLine(), false, "http://f:21/ b ? d # e ", null },
+        { TestFileLine(), false,  "http://f:/c", null },
+        { TestFileLine(), true,  "http://f:0/c", new() {
                 ["uri"] = "http://f:0/c",
                 ["scheme"] = "http",
                 ["authority"] = "f:0",
@@ -1238,36 +1238,36 @@ public partial class UrisTests
                 ["port"] = "0",
                 ["pathAbsEmpty"] = "/c",
             } },
-        { TestLine(), false,  "http://f:00000000000000/c", null },
-        { TestLine(), false,  "http://f:00000000000000000000080/c", null },
-        { TestLine(), false,  "http://f:b/c", null },
-        { TestLine(), false, "http://f: /c", null },
-        { TestLine(), false, "http://f:\u000A/c", null },
-        { TestLine(), false,  "http://f:fifty-two/c", null },
-        { TestLine(), false,  "http://f:999999/c", null },
-        { TestLine(), false, "http://f: 21 / b ? d # e ", null },
-        { TestLine(), false, "", null },
-        { TestLine(), false, "  \u0009", null },
-        { TestLine(), false, ":foo.com/", null },
-        { TestLine(), false, ":foo.com\\", null },
-        { TestLine(), false, ":", null },
-        { TestLine(), false, ":a", null },
-        { TestLine(), false, ":/", null },
-        { TestLine(), false, ":\\", null },
-        { TestLine(), false, ":#", null },
-        { TestLine(), false, "#", null },
-        { TestLine(), false, "#/", null },
-        { TestLine(), false, "#\\", null },
-        { TestLine(), false, "#;?", null },
-        { TestLine(), false, "?", null },
-        { TestLine(), false, "/", null },
-        { TestLine(), false, ":23", null },
-        { TestLine(), false, "/:23", null },
-        { TestLine(), false, "//", null },
-        { TestLine(), false, "::", null },
-        { TestLine(), false, "::23", null },
-        { TestLine(), false,  "foo://", null },
-        { TestLine(), true,  "http://a:b@c:29/d", new() {
+        { TestFileLine(), false,  "http://f:00000000000000/c", null },
+        { TestFileLine(), false,  "http://f:00000000000000000000080/c", null },
+        { TestFileLine(), false,  "http://f:b/c", null },
+        { TestFileLine(), false, "http://f: /c", null },
+        { TestFileLine(), false, "http://f:\u000A/c", null },
+        { TestFileLine(), false,  "http://f:fifty-two/c", null },
+        { TestFileLine(), false,  "http://f:999999/c", null },
+        { TestFileLine(), false, "http://f: 21 / b ? d # e ", null },
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, "  \u0009", null },
+        { TestFileLine(), false, ":foo.com/", null },
+        { TestFileLine(), false, ":foo.com\\", null },
+        { TestFileLine(), false, ":", null },
+        { TestFileLine(), false, ":a", null },
+        { TestFileLine(), false, ":/", null },
+        { TestFileLine(), false, ":\\", null },
+        { TestFileLine(), false, ":#", null },
+        { TestFileLine(), false, "#", null },
+        { TestFileLine(), false, "#/", null },
+        { TestFileLine(), false, "#\\", null },
+        { TestFileLine(), false, "#;?", null },
+        { TestFileLine(), false, "?", null },
+        { TestFileLine(), false, "/", null },
+        { TestFileLine(), false, ":23", null },
+        { TestFileLine(), false, "/:23", null },
+        { TestFileLine(), false, "//", null },
+        { TestFileLine(), false, "::", null },
+        { TestFileLine(), false, "::23", null },
+        { TestFileLine(), false,  "foo://", null },
+        { TestFileLine(), true,  "http://a:b@c:29/d", new() {
                 ["uri"] = "http://a:b@c:29/d",
                 ["scheme"] = "http",
                 ["authority"] = "a:b@c:29",
@@ -1279,10 +1279,10 @@ public partial class UrisTests
                 ["port"] = "29",
                 ["pathAbsEmpty"] = "/d",
             } },
-        { TestLine(), false, "http::@c:29", null },
-        { TestLine(), false, "http://&amp;a:foo(b]c@d:2/", null },
-        { TestLine(), false,  "http://::@c@d:2", null },
-        { TestLine(), true,  "http://foo.com:b@d/", new() {
+        { TestFileLine(), false, "http::@c:29", null },
+        { TestFileLine(), false, "http://&amp;a:foo(b]c@d:2/", null },
+        { TestFileLine(), false,  "http://::@c@d:2", null },
+        { TestFileLine(), true,  "http://foo.com:b@d/", new() {
                 ["uri"] = "http://foo.com:b@d/",
                 ["scheme"] = "http",
                 ["authority"] = "foo.com:b@d",
@@ -1293,30 +1293,30 @@ public partial class UrisTests
                 ["ipDnsName"] = "d",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), false, "http://foo.com/\\", null },
-        { TestLine(), false, "http:\\\\foo.com\\", null },
-        { TestLine(), false, "http:\\\\a\\b:c\\d @foo.com\\", null },
-        { TestLine(), true,  "foo:/", new() {
+        { TestFileLine(), false, "http://foo.com/\\", null },
+        { TestFileLine(), false, "http:\\\\foo.com\\", null },
+        { TestFileLine(), false, "http:\\\\a\\b:c\\d @foo.com\\", null },
+        { TestFileLine(), true,  "foo:/", new() {
             ["uri"] = "foo:/",
             ["scheme"] = "foo",
             ["pathAbs"] = "/",
         } },
-        { TestLine(), true,  "foo:/bar.com/", new() {
+        { TestFileLine(), true,  "foo:/bar.com/", new() {
             ["uri"] = "foo:/bar.com/",
             ["scheme"] = "foo",
             ["pathAbs"] = "/bar.com/",
         } },
-        { TestLine(), false, "foo://///////", null },
-        { TestLine(), false, "foo://///////bar.com/", null },
-        { TestLine(), false, "foo:////://///", null },
-        { TestLine(), true,  "c:/foo", new() {
+        { TestFileLine(), false, "foo://///////", null },
+        { TestFileLine(), false, "foo://///////bar.com/", null },
+        { TestFileLine(), false, "foo:////://///", null },
+        { TestFileLine(), true,  "c:/foo", new() {
             ["uri"] = "c:/foo",
             ["scheme"] = "c",
             ["pathAbs"] = "/foo",
         } },
-        { TestLine(), false, "    //foo/bar", null },
-        { TestLine(), false, "http://foo/path;a??e#f#g", null },
-        { TestLine(), true,  "http://foo/abcd?efgh?ijkl", new() {
+        { TestFileLine(), false, "    //foo/bar", null },
+        { TestFileLine(), false, "http://foo/path;a??e#f#g", null },
+        { TestFileLine(), true,  "http://foo/abcd?efgh?ijkl", new() {
                 ["uri"] = "http://foo/abcd?efgh?ijkl",
                 ["scheme"] = "http",
                 ["authority"] = "foo",
@@ -1326,7 +1326,7 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/abcd",
                 ["query"] = "efgh?ijkl",
             } },
-        { TestLine(), true,  "http://foo/abcd#foo?bar", new() {
+        { TestFileLine(), true,  "http://foo/abcd#foo?bar", new() {
                 ["uri"] = "http://foo/abcd#foo?bar",
                 ["scheme"] = "http",
                 ["authority"] = "foo",
@@ -1336,15 +1336,15 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/abcd",
                 ["fragment"] = "foo?bar",
             } },
-        { TestLine(), false, "[61:24:74]:98", null },
-        { TestLine(), false, "http://[61:27]:98", null },
-        { TestLine(), false, "http:[61:27]/:foo", null },
-        { TestLine(), false, "http://[1::2]:3:4", null },
-        { TestLine(), false,  "http://2001::1", null },
-        { TestLine(), false, "http://[2001::1", null },
-        { TestLine(), false, "http://2001::1]", null },
-        { TestLine(), false, "http://2001::1]:80", null },
-        { TestLine(), true,  "http://[2001::1]", new() {
+        { TestFileLine(), false, "[61:24:74]:98", null },
+        { TestFileLine(), false, "http://[61:27]:98", null },
+        { TestFileLine(), false, "http:[61:27]/:foo", null },
+        { TestFileLine(), false, "http://[1::2]:3:4", null },
+        { TestFileLine(), false,  "http://2001::1", null },
+        { TestFileLine(), false, "http://[2001::1", null },
+        { TestFileLine(), false, "http://2001::1]", null },
+        { TestFileLine(), false, "http://2001::1]:80", null },
+        { TestFileLine(), true,  "http://[2001::1]", new() {
                 ["uri"] = "http://[2001::1]",
                 ["scheme"] = "http",
                 ["authority"] = "[2001::1]",
@@ -1352,7 +1352,7 @@ public partial class UrisTests
                 ["host"] = "[2001::1]",
                 ["ipv6"] = "2001::1",
             } },
-        { TestLine(), true,  "http://[2001::1]:80", new() {
+        { TestFileLine(), true,  "http://[2001::1]:80", new() {
                 ["uri"] = "http://[2001::1]:80",
                 ["scheme"] = "http",
                 ["authority"] = "[2001::1]:80",
@@ -1361,8 +1361,8 @@ public partial class UrisTests
                 ["ipv6"] = "2001::1",
                 ["port"] = "80",
             } },
-        { TestLine(), false, "http://[[::]]", null },
-        { TestLine(), true,  "http://www.google.com/foo?bar=baz#", new() {
+        { TestFileLine(), false, "http://[[::]]", null },
+        { TestFileLine(), true,  "http://www.google.com/foo?bar=baz#", new() {
                 ["uri"] = "http://www.google.com/foo?bar=baz#",
                 ["scheme"] = "http",
                 ["authority"] = "www.google.com",
@@ -1372,10 +1372,10 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/foo",
                 ["query"] = "bar=baz",
             } },
-        { TestLine(), false, "http://[www.google.com]/", null },
-        { TestLine(), false, "http:////////user:@google.com:99?foo", null },
-        { TestLine(), false,  "http://192.0x00A80001", null },
-        { TestLine(), true,  "http://www/foo%2Ehtml", new() {
+        { TestFileLine(), false, "http://[www.google.com]/", null },
+        { TestFileLine(), false, "http:////////user:@google.com:99?foo", null },
+        { TestFileLine(), false,  "http://192.0x00A80001", null },
+        { TestFileLine(), true,  "http://www/foo%2Ehtml", new() {
             ["uri"] = "http://www/foo%2Ehtml", // →uri← = →http://www/foo.html←
             ["scheme"] = "http",
             ["authority"] = "www",
@@ -1384,8 +1384,8 @@ public partial class UrisTests
             ["ipDnsName"] = "www",
             ["pathAbsEmpty"] = "/foo%2Ehtml", // →pathAbsEmpty← = →/foo.html←
         } },
-        { TestLine(), false,  "http://user:pass@/", null },
-        { TestLine(), true,  "http://%25DOMAIN:foobar@foodomain.com/", new() {
+        { TestFileLine(), false,  "http://user:pass@/", null },
+        { TestFileLine(), true,  "http://%25DOMAIN:foobar@foodomain.com/", new() {
                 ["uri"] = "http://%25DOMAIN:foobar@foodomain.com/", // →uri← = →http://%DOMAIN:foobar@foodomain.com/←
                 ["scheme"] = "http",
                 ["authority"] = "%25DOMAIN:foobar@foodomain.com", // →authority← = →%DOMAIN:foobar@foodomain.com←
@@ -1396,9 +1396,9 @@ public partial class UrisTests
                 ["ipDnsName"] = "foodomain.com",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), false, "http:\\\\www.google.com\\foo", null },
-        { TestLine(), false, "http://www.google.com/asdf#\\ud800", null },
-        { TestLine(), true,  "http://foo:80/", new() {
+        { TestFileLine(), false, "http:\\\\www.google.com\\foo", null },
+        { TestFileLine(), false, "http://www.google.com/asdf#\\ud800", null },
+        { TestFileLine(), true,  "http://foo:80/", new() {
                 ["uri"] = "http://foo:80/",
                 ["scheme"] = "http",
                 ["authority"] = "foo:80",
@@ -1408,7 +1408,7 @@ public partial class UrisTests
                 ["port"] = "80",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "http://foo:81/", new() {
+        { TestFileLine(), true,  "http://foo:81/", new() {
                 ["uri"] = "http://foo:81/",
                 ["scheme"] = "http",
                 ["authority"] = "foo:81",
@@ -1418,7 +1418,7 @@ public partial class UrisTests
                 ["port"] = "81",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "httpa://foo:80/", new() {
+        { TestFileLine(), true,  "httpa://foo:80/", new() {
                 ["uri"] = "httpa://foo:80/",
                 ["scheme"] = "httpa",
                 ["authority"] = "foo:80",
@@ -1428,8 +1428,8 @@ public partial class UrisTests
                 ["port"] = "80",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), false,  "http://foo:-80/", null },
-        { TestLine(), true,  "https://foo:443/", new() {
+        { TestFileLine(), false,  "http://foo:-80/", null },
+        { TestFileLine(), true,  "https://foo:443/", new() {
                 ["uri"] = "https://foo:443/",
                 ["scheme"] = "https",
                 ["authority"] = "foo:443",
@@ -1439,7 +1439,7 @@ public partial class UrisTests
                 ["port"] = "443",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "https://foo:80/", new() {
+        { TestFileLine(), true,  "https://foo:80/", new() {
                 ["uri"] = "https://foo:80/",
                 ["scheme"] = "https",
                 ["authority"] = "foo:80",
@@ -1449,7 +1449,7 @@ public partial class UrisTests
                 ["port"] = "80",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "ftp://foo:21/", new() {
+        { TestFileLine(), true,  "ftp://foo:21/", new() {
                 ["uri"] = "ftp://foo:21/",
                 ["scheme"] = "ftp",
                 ["authority"] = "foo:21",
@@ -1459,7 +1459,7 @@ public partial class UrisTests
                 ["port"] = "21",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "ftp://foo:80/", new() {
+        { TestFileLine(), true,  "ftp://foo:80/", new() {
                 ["uri"] = "ftp://foo:80/",
                 ["scheme"] = "ftp",
                 ["authority"] = "foo:80",
@@ -1469,7 +1469,7 @@ public partial class UrisTests
                 ["port"] = "80",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "gopher://foo:70/", new() {
+        { TestFileLine(), true,  "gopher://foo:70/", new() {
                 ["uri"] = "gopher://foo:70/",
                 ["scheme"] = "gopher",
                 ["authority"] = "foo:70",
@@ -1479,7 +1479,7 @@ public partial class UrisTests
                 ["port"] = "70",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "gopher://foo:443/", new() {
+        { TestFileLine(), true,  "gopher://foo:443/", new() {
                 ["uri"] = "gopher://foo:443/",
                 ["scheme"] = "gopher",
                 ["authority"] = "foo:443",
@@ -1489,7 +1489,7 @@ public partial class UrisTests
                 ["port"] = "443",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "ws://foo:80/", new() {
+        { TestFileLine(), true,  "ws://foo:80/", new() {
                 ["uri"] = "ws://foo:80/",
                 ["scheme"] = "ws",
                 ["authority"] = "foo:80",
@@ -1499,7 +1499,7 @@ public partial class UrisTests
                 ["port"] = "80",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "ws://foo:81/", new() {
+        { TestFileLine(), true,  "ws://foo:81/", new() {
                 ["uri"] = "ws://foo:81/",
                 ["scheme"] = "ws",
                 ["authority"] = "foo:81",
@@ -1509,7 +1509,7 @@ public partial class UrisTests
                 ["port"] = "81",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "ws://foo:443/", new() {
+        { TestFileLine(), true,  "ws://foo:443/", new() {
                 ["uri"] = "ws://foo:443/",
                 ["scheme"] = "ws",
                 ["authority"] = "foo:443",
@@ -1519,7 +1519,7 @@ public partial class UrisTests
                 ["port"] = "443",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "ws://foo:815/", new() {
+        { TestFileLine(), true,  "ws://foo:815/", new() {
                 ["uri"] = "ws://foo:815/",
                 ["scheme"] = "ws",
                 ["authority"] = "foo:815",
@@ -1529,7 +1529,7 @@ public partial class UrisTests
                 ["port"] = "815",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "wss://foo:80/", new() {
+        { TestFileLine(), true,  "wss://foo:80/", new() {
                 ["uri"] = "wss://foo:80/",
                 ["scheme"] = "wss",
                 ["authority"] = "foo:80",
@@ -1539,7 +1539,7 @@ public partial class UrisTests
                 ["port"] = "80",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "wss://foo:81/", new() {
+        { TestFileLine(), true,  "wss://foo:81/", new() {
                 ["uri"] = "wss://foo:81/",
                 ["scheme"] = "wss",
                 ["authority"] = "foo:81",
@@ -1549,7 +1549,7 @@ public partial class UrisTests
                 ["port"] = "81",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "wss://foo:443/", new() {
+        { TestFileLine(), true,  "wss://foo:443/", new() {
                 ["uri"] = "wss://foo:443/",
                 ["scheme"] = "wss",
                 ["authority"] = "foo:443",
@@ -1559,7 +1559,7 @@ public partial class UrisTests
                 ["port"] = "443",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "wss://foo:815/", new() {
+        { TestFileLine(), true,  "wss://foo:815/", new() {
                 ["uri"] = "wss://foo:815/",
                 ["scheme"] = "wss",
                 ["authority"] = "foo:815",
@@ -1569,7 +1569,7 @@ public partial class UrisTests
                 ["port"] = "815",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "http://example.com/", new() {
+        { TestFileLine(), true,  "http://example.com/", new() {
                 ["uri"] = "http://example.com/",
                 ["scheme"] = "http",
                 ["authority"] = "example.com",
@@ -1578,7 +1578,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "example.com",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), true,  "http://example.com/", new() {
+        { TestFileLine(), true,  "http://example.com/", new() {
                 ["uri"] = "http://example.com/",
                 ["scheme"] = "http",
                 ["authority"] = "example.com",
@@ -1587,21 +1587,21 @@ public partial class UrisTests
                 ["ipDnsName"] = "example.com",
                 ["pathAbsEmpty"] = "/",
             } },
-        { TestLine(), false, "/", null },
-        { TestLine(), false, "http://iris.test.ing/re&#x301;sume&#x301;/re&#x301;sume&#x301;.html", null },
-        { TestLine(), false, "http://iris.test.ing/r&#xE9;sum&#xE9;.html", null },
-        { TestLine(), false, "http://iris.test.ing/Vi&#xEA;&#x323;tNam.html", null },
-        { TestLine(), false, "http://iris.test.ing/\uFB01?\uFB01#\uFB01", null },
-        { TestLine(), false, "http://iris.test.ing/?re&#x301;sume&#x301;#re&#x301;sume&#x301;", null },
-        { TestLine(), false, "http://iris.test.ing/2\u2075?2\u2075#2\u2075", null },
-        { TestLine(), false, "http://iris.test.ing/?Vi&#xEA;&#x323;tNam#Vi&#xEA;&#x323;tNam", null },
-        { TestLine(), false, "http://iris.test.ing/foo?q=\u2665", null },
-        { TestLine(), false, "http://iris.test.ing/\u1E9B\u0323/?\u1E9B\u0323#\u1E9B\u0323", null },
-        { TestLine(), false, "http://iris.test.ing/\u212B/?\u212B#\u212B", null },
-        { TestLine(), false, "http://iris.test.ing/\u1E9B\u0323/?\u1E9B\u0323#\u1E9B\u0323", null },
-        { TestLine(), false, "http://iris.test.ing/\u1E0B\u0323/?\u1E0B\u0323#\u1E0B\u0323", null },
-        { TestLine(), false, "http://www.example.com/foo    bar/?   foo   =   bar     #    foohttp://www.example.com/foo    bar/?   foo   =   bar     #    foo", null },
-        { TestLine(), true,  "http://www.example.com/foo%3fbar", new() {
+        { TestFileLine(), false, "/", null },
+        { TestFileLine(), false, "http://iris.test.ing/re&#x301;sume&#x301;/re&#x301;sume&#x301;.html", null },
+        { TestFileLine(), false, "http://iris.test.ing/r&#xE9;sum&#xE9;.html", null },
+        { TestFileLine(), false, "http://iris.test.ing/Vi&#xEA;&#x323;tNam.html", null },
+        { TestFileLine(), false, "http://iris.test.ing/\uFB01?\uFB01#\uFB01", null },
+        { TestFileLine(), false, "http://iris.test.ing/?re&#x301;sume&#x301;#re&#x301;sume&#x301;", null },
+        { TestFileLine(), false, "http://iris.test.ing/2\u2075?2\u2075#2\u2075", null },
+        { TestFileLine(), false, "http://iris.test.ing/?Vi&#xEA;&#x323;tNam#Vi&#xEA;&#x323;tNam", null },
+        { TestFileLine(), false, "http://iris.test.ing/foo?q=\u2665", null },
+        { TestFileLine(), false, "http://iris.test.ing/\u1E9B\u0323/?\u1E9B\u0323#\u1E9B\u0323", null },
+        { TestFileLine(), false, "http://iris.test.ing/\u212B/?\u212B#\u212B", null },
+        { TestFileLine(), false, "http://iris.test.ing/\u1E9B\u0323/?\u1E9B\u0323#\u1E9B\u0323", null },
+        { TestFileLine(), false, "http://iris.test.ing/\u1E0B\u0323/?\u1E0B\u0323#\u1E0B\u0323", null },
+        { TestFileLine(), false, "http://www.example.com/foo    bar/?   foo   =   bar     #    foohttp://www.example.com/foo    bar/?   foo   =   bar     #    foo", null },
+        { TestFileLine(), true,  "http://www.example.com/foo%3fbar", new() {
                 ["uri"] = "http://www.example.com/foo%3fbar", // →uri← = →http://www.example.com/foo?bar←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -1610,7 +1610,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo%3fbar", // →pathAbsEmpty← = →/foo?bar←
             } },
-        { TestLine(), true,  "http://www.example.com/foo%2fbar", new() {
+        { TestFileLine(), true,  "http://www.example.com/foo%2fbar", new() {
                 ["uri"] = "http://www.example.com/foo%2fbar", // →uri← = →http://www.example.com/foo/bar←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -1619,11 +1619,11 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/foo%2fbar", // →pathAbsEmpty← = →/foo/bar←
             } },
-        { TestLine(), false, "%68%74%74%70%3a%2f%2f%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%2f", null },
-        { TestLine(), false, "http%3a%2f%2f%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%2f", null },
-        { TestLine(), false,  "http://%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%3a%38%30", null },
-        { TestLine(), false,  "http://%A1%C1.com", null },
-        { TestLine(), true,  "http://www.example.com/%A1%C1/?foo=%EF%BD%81", new() {
+        { TestFileLine(), false, "%68%74%74%70%3a%2f%2f%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%2f", null },
+        { TestFileLine(), false, "http%3a%2f%2f%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%2f", null },
+        { TestFileLine(), false,  "http://%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%3a%38%30", null },
+        { TestFileLine(), false,  "http://%A1%C1.com", null },
+        { TestFileLine(), true,  "http://www.example.com/%A1%C1/?foo=%EF%BD%81", new() {
                 ["uri"] = "http://www.example.com/%A1%C1/?foo=%EF%BD%81", // →uri← = →http://www.example.com/��/?foo=ａ←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -1633,7 +1633,7 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/%A1%C1/", // →pathAbsEmpty← = →/��/←
                 ["query"] = "foo=%EF%BD%81", // →query← = →foo=ａ←
             } },
-        { TestLine(), true,  "http://www.example.com/%EF%BD%81/?foo=%A1%C1", new() {
+        { TestFileLine(), true,  "http://www.example.com/%EF%BD%81/?foo=%A1%C1", new() {
                 ["uri"] = "http://www.example.com/%EF%BD%81/?foo=%A1%C1", // →uri← = →http://www.example.com/ａ/?foo=��←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -1643,10 +1643,10 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/%EF%BD%81/", // →pathAbsEmpty← = →/ａ/←
                 ["query"] = "foo=%A1%C1", // →query← = →foo=��←
             } },
-        { TestLine(), false, "http://www.example.com/ＦＯＯ/?foo=%A1%C1", null },
-        { TestLine(), false, "http://www.example.com/%A1%C1/?foo=ＦＯＯ", null },
-        { TestLine(), false, "http://www.example.com/ＦＯＯ/?foo=%A1%C1", null },
-        { TestLine(), true,  "http://www.example.com/D%FCrst", new() {
+        { TestFileLine(), false, "http://www.example.com/ＦＯＯ/?foo=%A1%C1", null },
+        { TestFileLine(), false, "http://www.example.com/%A1%C1/?foo=ＦＯＯ", null },
+        { TestFileLine(), false, "http://www.example.com/ＦＯＯ/?foo=%A1%C1", null },
+        { TestFileLine(), true,  "http://www.example.com/D%FCrst", new() {
                 ["uri"] = "http://www.example.com/D%FCrst", // →uri← = →http://www.example.com/D�rst←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -1655,7 +1655,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/D%FCrst", // →pathAbsEmpty← = →/D�rst←
             } },
-        { TestLine(), true,  "http://www.example.com/D%C3%BCrst", new() {
+        { TestFileLine(), true,  "http://www.example.com/D%C3%BCrst", new() {
                 ["uri"] = "http://www.example.com/D%C3%BCrst", // →uri← = →http://www.example.com/Dürst←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -1664,7 +1664,7 @@ public partial class UrisTests
                 ["ipDnsName"] = "www.example.com",
                 ["pathAbsEmpty"] = "/D%C3%BCrst", // →pathAbsEmpty← = →/Dürst←
             } },
-        { TestLine(), true,  "http://www.example.com/?D%FCrst", new() {
+        { TestFileLine(), true,  "http://www.example.com/?D%FCrst", new() {
                 ["uri"] = "http://www.example.com/?D%FCrst", // →uri← = →http://www.example.com/?D�rst←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -1674,7 +1674,7 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/",
                 ["query"] = "D%FCrst", // →query← = →D�rst←
             } },
-        { TestLine(), true,  "http://www.example.com/?D%C3%BCrst", new() {
+        { TestFileLine(), true,  "http://www.example.com/?D%C3%BCrst", new() {
                 ["uri"] = "http://www.example.com/?D%C3%BCrst", // →uri← = →http://www.example.com/?Dürst←
                 ["scheme"] = "http",
                 ["authority"] = "www.example.com",
@@ -1684,9 +1684,9 @@ public partial class UrisTests
                 ["pathAbsEmpty"] = "/",
                 ["query"] = "D%C3%BCrst", // →query← = →Dürst←
             } },
-        { TestLine(), false,  "http://user%40example.com", null },
-        { TestLine(), false,  "http://user%3Ainfo%40example.com", null },
-        { TestLine(), true,  "http://user@example.com", new() {
+        { TestFileLine(), false,  "http://user%40example.com", null },
+        { TestFileLine(), false,  "http://user%3Ainfo%40example.com", null },
+        { TestFileLine(), true,  "http://user@example.com", new() {
             ["uri"] = "http://user@example.com",
             ["scheme"] = "http",
             ["authority"] = "user@example.com",
@@ -1695,7 +1695,7 @@ public partial class UrisTests
             ["host"] = "example.com",
             ["ipDnsName"] = "example.com",
         } },
-        { TestLine(), true,  "http://user:info@example.com", new() {
+        { TestFileLine(), true,  "http://user:info@example.com", new() {
                 ["uri"] = "http://user:info@example.com",
                 ["scheme"] = "http",
                 ["authority"] = "user:info@example.com",
@@ -1705,13 +1705,13 @@ public partial class UrisTests
                 ["host"] = "example.com",
                 ["ipDnsName"] = "example.com",
             } },
-        { TestLine(), false, "http://iris.test.ing/\ufdd0foo", null },
-        { TestLine(), false, "http://iris.test.ing/\ufdd0foo/bar", null },
-        { TestLine(), false, "$://iris.test.ing", null },
-        { TestLine(), false, "a$://iris.test.ing", null },
-        { TestLine(), false, "http://www.example.com/foo    bar/?   foo   =   bar     #    foo", null },
-        { TestLine(), false, "", null },
-        { TestLine(), false, "        htt\u0070://www.example.com/", null },
-        { TestLine(), false, "      \u0066\u006f\u006fbar\u002ffoo\u003fbar", null },
+        { TestFileLine(), false, "http://iris.test.ing/\ufdd0foo", null },
+        { TestFileLine(), false, "http://iris.test.ing/\ufdd0foo/bar", null },
+        { TestFileLine(), false, "$://iris.test.ing", null },
+        { TestFileLine(), false, "a$://iris.test.ing", null },
+        { TestFileLine(), false, "http://www.example.com/foo    bar/?   foo   =   bar     #    foo", null },
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, "        htt\u0070://www.example.com/", null },
+        { TestFileLine(), false, "      \u0066\u006f\u006fbar\u002ffoo\u003fbar", null },
     };
 }

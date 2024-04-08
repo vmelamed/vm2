@@ -40,7 +40,7 @@ public static class WindowsPathname
 
     static readonly Lazy<Regex> filenameRegex = new(() => new(DiskFilenameRegex, RegexOptions.Compiled |
                                                                                  RegexOptions.CultureInvariant |
-                                                                                 RegexOptions.IgnorePatternWhitespace));
+                                                                                 RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing file or directory name.
@@ -106,7 +106,7 @@ public static class WindowsPathname
 
     static readonly Lazy<Regex> pathname = new(() => new Regex(PathnameRegex, RegexOptions.Compiled |
                                                                               RegexOptions.CultureInvariant |
-                                                                              RegexOptions.IgnorePatternWhitespace));
+                                                                              RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a file path.

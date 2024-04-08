@@ -97,7 +97,7 @@ public static class Uris
     public const string SchemeRegex = $@"^{SchemeRex}$";
 
     static readonly Lazy<Regex> rexSchemeRegex = new(() => new(SchemeRegex, RegexOptions.Compiled |
-                                                                            RegexOptions.IgnorePatternWhitespace));
+                                                                            RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI scheme.
@@ -159,7 +159,7 @@ public static class Uris
     public const string HostRegex = $@"^{HostRex}$";
 
     static readonly Lazy<Regex> hostRegex = new(() => new(HostRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a host.
@@ -199,7 +199,7 @@ public static class Uris
     public const string AddressRegex = $"^{AddressRex}$";
 
     static readonly Lazy<Regex> addressRegex = new(() => new(AddressRegex, RegexOptions.Compiled |
-                                                                           RegexOptions.IgnorePatternWhitespace));
+                                                                           RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IP address.
@@ -459,7 +459,7 @@ public static class Uris
     public const string PathRegex = $"^{pathRex}$";
 
     static readonly Lazy<Regex> pathRegex = new(() => new(PathRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's path.
@@ -518,7 +518,7 @@ public static class Uris
     public const string QueryRegex = $@"^{queryRex}$";
 
     static readonly Lazy<Regex> queryRegex = new(() => new(QueryRegex, RegexOptions.Compiled |
-                                                                       RegexOptions.IgnorePatternWhitespace));
+                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a generic query.
@@ -622,7 +622,7 @@ public static class Uris
     public const string KeyValueQueryRegex = $"^{queryKvRex}$";
 
     static readonly Lazy<Regex> kvQueryRegex = new(() => new(KeyValueQueryRegex, RegexOptions.Compiled |
-                                                                                 RegexOptions.IgnorePatternWhitespace));
+                                                                                 RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's key-value query
@@ -672,7 +672,7 @@ public static class Uris
     public const string RelativeUriKvQueryRefRegex = $@"^{relativeUriKvQueryRefRex}$";
 
     static readonly Lazy<Regex> regexRelativeUriKvQueryRef = new(() => new(RelativeUriKvQueryRefRegex, RegexOptions.Compiled |
-                                                                                                       RegexOptions.IgnorePatternWhitespace));
+                                                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
@@ -700,7 +700,7 @@ public static class Uris
     public const string RelativeUriRefRegex = $@"^{relativeUriRefRex}$";
 
     static readonly Lazy<Regex> regexRelativeUriRef = new(() => new(RelativeUriRefRegex, RegexOptions.Compiled |
-                                                                                         RegexOptions.IgnorePatternWhitespace));
+                                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a concept.
@@ -747,7 +747,7 @@ public static class Uris
     public const string UriKvQueryRegex = $"^{uriKvQueryRex}$";
 
     static readonly Lazy<Regex> uriKeyValueQueryRegex = new(() => new(UriKvQueryRegex, RegexOptions.Compiled |
-                                                                                       RegexOptions.IgnorePatternWhitespace));
+                                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
@@ -785,7 +785,7 @@ public static class Uris
     public const string UriRegex = $"^{uriRex}$";
 
     static readonly Lazy<Regex> uriRegex = new(() => new(UriRegex, RegexOptions.Compiled |
-                                                                   RegexOptions.IgnorePatternWhitespace));
+                                                                   RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
@@ -818,7 +818,7 @@ public static class Uris
     public const string NetRelativeUriKvQueryRefRegex = $@"^{netRelativeUriKvQueryRefRex}$";
 
     static readonly Lazy<Regex> regexNetRelativeUriKvQueryRef = new(() => new(NetRelativeUriKvQueryRefRegex, RegexOptions.Compiled |
-                                                                                                             RegexOptions.IgnorePatternWhitespace));
+                                                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
@@ -841,7 +841,7 @@ public static class Uris
     public const string NetRelativeUriRefRegex = $@"^{netRelativeUriRefRex}$";
 
     static readonly Lazy<Regex> netRegexRelativeUriRef = new(() => new(NetRelativeUriRefRegex, RegexOptions.Compiled |
-                                                                                         RegexOptions.IgnorePatternWhitespace));
+                                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a concept.
@@ -883,7 +883,7 @@ public static class Uris
     public const string NetUriKvQueryRegex = $"^{netUriKvQueryRex}$";
 
     static readonly Lazy<Regex> netUriKeyValueQueryRegex = new(() => new(NetUriKvQueryRegex, RegexOptions.Compiled |
-                                                                                             RegexOptions.IgnorePatternWhitespace));
+                                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
@@ -917,7 +917,7 @@ public static class Uris
     public const string NetUriRegex = $"^{netUriRex}$";
 
     static readonly Lazy<Regex> netUriRegex = new(() => new(NetUriRegex, RegexOptions.Compiled |
-                                                                         RegexOptions.IgnorePatternWhitespace));
+                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query

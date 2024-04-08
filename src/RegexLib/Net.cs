@@ -93,7 +93,7 @@ public static class Net
     public const string Ipv4AddressRegex = $@"^{Ipv4AddressRex}$";
 
     static readonly Lazy<Regex> ipv4AddressRegex = new(() => new(Ipv4AddressRegex, RegexOptions.Compiled |
-                                                                                   RegexOptions.IgnorePatternWhitespace ));
+                                                                                   RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv4 address.
@@ -159,7 +159,7 @@ public static class Net
     public const string Ipv6AddressRegex = $@"^{Ipv6AddressRex}$";
 
     static readonly Lazy<Regex> ipv6AddressRegex = new(() => new(Ipv6AddressRegex, RegexOptions.Compiled |
-                                                                                   RegexOptions.IgnorePatternWhitespace ));
+                                                                                   RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address.
@@ -197,7 +197,7 @@ public static class Net
     public const string IpvFutureAddressRegex = $"^{IpvFutureAddressRex}$";
 
     static readonly Lazy<Regex> ipvFutureAddressRegex = new(() => new(IpvFutureAddressRegex, RegexOptions.Compiled |
-                                                                                             RegexOptions.IgnorePatternWhitespace));
+                                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv.future address.
@@ -243,7 +243,7 @@ public static class Net
     public const string DnsNameRegex = $@"^{DnsNameRex}$";
 
     static readonly Lazy<Regex> regexDnsName = new(() => new(DnsNameRegex, RegexOptions.Compiled |
-                                                                           RegexOptions.IgnorePatternWhitespace));
+                                                                           RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a concept.
@@ -304,7 +304,7 @@ public static class Net
     public const string HostRegex = $@"^{HostRex}$";
 
     static readonly Lazy<Regex> regexHost = new(() => new(HostRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a host.
@@ -339,7 +339,7 @@ public static class Net
     public const string AddressRegex = $"^{AddressRex}$";
 
     static readonly Lazy<Regex> addressRegex = new(() => new(AddressRegex, RegexOptions.Compiled |
-                                                                           RegexOptions.IgnorePatternWhitespace));
+                                                                           RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IP address.
@@ -386,7 +386,7 @@ public static class Net
     public const string PortRegex = $@"^{PortRex}$";
 
     static readonly Lazy<Regex> portRegex = new(() => new(PortRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IP port.

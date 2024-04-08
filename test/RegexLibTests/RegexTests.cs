@@ -1,5 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using System.Web;
+﻿using System.Web;
+
+using TestUtilities;
 
 namespace vm2.RegexLibTests;
 
@@ -42,29 +43,6 @@ public abstract partial class RegexTests
     {
         Out = output;
         FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
-    }
-
-    [GeneratedRegex(@"[/\\]test[/\\]", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
-    private static partial Regex TestDir(); // = new(@"[/\\]test[/\\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-    /// <summary>
-    /// Returns a string describing where this method was called from and an optional description.
-    /// Convenient utility to use in the second parameter of the methods <see cref="RegexTest(Regex, string, bool, string, Dictionary{string, string}?, bool)"/> or
-    /// <see cref="RegexStringTest(string, string, bool, string, RegexOptions, string[])"/>.
-    /// </summary>
-    /// <param name="testDescription">The test description.</param>
-    /// <param name="path">Name of the file.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>System.String.</returns>
-    protected static string TestLine(
-        string testDescription = "",
-        [CallerFilePath] string path = "",
-        [CallerLineNumber] int line = 0)
-    {
-        var match = TestDir().Match(path);
-        var testDirIndex = match.Success ? match.Index+1 : 0;
-
-        return $"{path[testDirIndex..]}:{line:d4}{(testDescription.Length > 0 ? " : " + testDescription : "")}";
     }
 
     public const RegexOptions RegexOpt = RegexOptions.IgnorePatternWhitespace;

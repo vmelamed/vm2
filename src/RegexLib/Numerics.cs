@@ -29,7 +29,7 @@ public static class Numerics
     /// </summary>
     public const string OctalNumberRegex = $"^{OctNumberRex}$";
 
-    static readonly Lazy<Regex> rexOctalNumber = new(() => new(OctalNumberRegex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> rexOctalNumber = new(() => new(OctalNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing an octal number.
@@ -62,7 +62,7 @@ public static class Numerics
     /// </summary>
     public const string HexadecimalNumberRegex = $"^{HexNumberRex}$";
 
-    static readonly Lazy<Regex> rexHexadecimalNumber = new(() => new(HexadecimalNumberRegex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> rexHexadecimalNumber = new(() => new(HexadecimalNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a hexadecimal number.
@@ -83,7 +83,7 @@ public static class Numerics
     /// </summary>
     public const string NaturalNumberRegex = $"^{NaturalNumberRex}$";
 
-    static readonly Lazy<Regex> rexNaturalNumber = new(() => new(NaturalNumberRegex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> rexNaturalNumber = new(() => new(NaturalNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a sign-less, whole, decimal 
@@ -105,7 +105,7 @@ public static class Numerics
     /// </summary>
     public const string DecimalNumberRegex = $@"^{DecimalNumberRex}$";
 
-    static readonly Lazy<Regex> regexDecimalNumber = new(() => new(DecimalNumberRegex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> regexDecimalNumber = new(() => new(DecimalNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a zero or natural number.
@@ -145,7 +145,7 @@ public static class Numerics
     public const string IntegerNumberRegex = $"^{IntegerNumberRex}$";
 
     static readonly Lazy<Regex> rexIntegerNumber = new(() => new(IntegerNumberRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing an integer number.
@@ -194,7 +194,7 @@ public static class Numerics
     public const string FractionalNumberRegex = $"^{FractionalNumberRex}$";
 
     static readonly Lazy<Regex> rexFractional = new(() => new(FractionalNumberRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing a decimal fractional number.
@@ -236,7 +236,7 @@ public static class Numerics
     public const string ScientificNumberRegex = $"^{ScientificNumberRex}$";
 
     static readonly Lazy<Regex> scientificNumber = new(() => new(ScientificNumberRegex, RegexOptions.Compiled |
-                                                                                        RegexOptions.IgnorePatternWhitespace));
+                                                                                        RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a number in a scientific notation with 
@@ -270,7 +270,7 @@ public static class Numerics
     /// </summary>
     public const string UuidRegex = $@"^{UuidRex}$";
 
-    static readonly Lazy<Regex> regexUuid = new(() => new(UuidRegex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> regexUuid = new(() => new(UuidRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a UUID.

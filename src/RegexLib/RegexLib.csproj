@@ -25,7 +25,7 @@
     <PackageReleaseNotes>Initial version of the vm2.RegexLib. Inherits most of the code from vm.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/vmelamed/vm2/tree/main/src/RegexLib</PackageProjectUrl>
     <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
-    <PackageTags>C# regex regular expression </PackageTags>
+    <PackageTags>C# regex regular expression</PackageTags>
     <Copyright>Copyright © 2023-2024 vm</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>      

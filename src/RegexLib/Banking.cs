@@ -16,7 +16,7 @@ public static class Banking
     /// </summary>
     public const string AbaRoutingNumberRegex = $@"^{AbaRoutingNumberRex}$";
 
-    static readonly Lazy<Regex> regexAbaRoutingNumber = new(() => new(AbaRoutingNumberRegex, RegexOptions.Compiled));
+    static readonly Lazy<Regex> regexAbaRoutingNumber = new(() => new(AbaRoutingNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a US ABA routing number.
@@ -74,7 +74,7 @@ public static class Banking
     public const string SwiftCodeRegex = $@"^{SwiftCodeRex}$";
 
     static readonly Lazy<Regex> regexSwiftCode = new(() => new(SwiftCodeRegex, RegexOptions.Compiled |
-                                                                               RegexOptions.IgnorePatternWhitespace));
+                                                                               RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing a SWIFT bank code, a.k.a. BIC.
@@ -86,7 +86,7 @@ public static class Banking
 
     static readonly Lazy<Regex> regexSwiftCodeI = new(() => new(SwiftCodeRegex, RegexOptions.Compiled |
                                                                                 RegexOptions.IgnorePatternWhitespace |
-                                                                                RegexOptions.IgnoreCase));
+                                                                                RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches <b>case-insensitevely</b> a string representing a SWIFT bank code, a.k.a. BIC.
@@ -132,7 +132,7 @@ public static class Banking
     public const string IbanRegex = $@"^{IbanRex}$";
 
     static readonly Lazy<Regex> regexIban = new(() => new(IbanRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace));
+                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches a string representing an International Bank Account Number.
@@ -142,7 +142,7 @@ public static class Banking
 
     static readonly Lazy<Regex> regexIbanI = new(() => new(IbanRegex, RegexOptions.Compiled |
                                                                       RegexOptions.IgnorePatternWhitespace |
-                                                                      RegexOptions.IgnoreCase));
+                                                                      RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
     /// Gets a Regex object which matches <b>case insensitevely</b> a string representing an International Bank Account Number.
