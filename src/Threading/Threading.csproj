@@ -5,14 +5,13 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <WarningsAsErrors>true</WarningsAsErrors>
     <WarningLevel>9999</WarningLevel>
-    <NoWarn>1701;1702;1716</NoWarn>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <NoWarn></NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../vm2signKey.snk</AssemblyOriginatorKeyFile>
     <RootNamespace>vm2.Threading</RootNamespace>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
@@ -22,10 +21,10 @@
     <Product>vm2</Product>
     <ProductName>Val Melamed's packages</ProductName>
     <Authors>Val Melamed</Authors>
-    <Description>Contains multi-threading facilities and synchronization object.</Description>
+    <Description>Contains multi-threading facilities and synchronization objects.</Description>
     <PackageReleaseNotes>Initial version of the vm2.RegexLib. Inherits most of the code from vm.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/vmelamed/vm2/tree/main/src/RegexLib</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/vmelamed/vm2/blob/main/src/RegexLib/vm2.RegexLib.csproj</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/initial/src/Threading/Threading.csproj</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
     <PackageTags>C# threading lock</PackageTags>
     <Copyright>Copyright © 2023-2024 vm</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
