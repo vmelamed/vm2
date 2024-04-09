@@ -132,14 +132,6 @@ public static class TypeExtensions
            type.GetGenericTypeDefinition() == typeof(Span<>) ||
            type.GetGenericTypeDefinition() == typeof(ReadOnlySpan<>);
 
-    static Type[] _serializableAttributesCollection = [
-            typeof(SerializableAttribute),
-            typeof(DataContractAttribute),
-            typeof(MessageContractAttribute),
-            typeof(CollectionDataContractAttribute),
-        ];
-    static readonly FrozenSet<Type> s_serializableAttributes = _serializableAttributesCollection.ToFrozenSet();
-
     static Type[] _xmlSerializableAttributesCollection = [
             typeof(XmlRootAttribute),
             typeof(XmlTypeAttribute),

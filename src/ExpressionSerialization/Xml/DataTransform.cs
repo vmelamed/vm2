@@ -7,16 +7,9 @@ using ConstantTransform = Action<ConstantExpression, XElement>;
 /// <summary>
 /// Class DataTransform.
 /// </summary>
-public class DataTransform
+public class DataTransform(TransformOptions? options = default)
 {
-    TransformOptions _options;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DataTransform"/> class.
-    /// </summary>
-    /// <param name="options">The options.</param>
-    public DataTransform(TransformOptions? options = default)
-        => _options = options ?? new TransformOptions();
+    TransformOptions _options = options ?? new TransformOptions();
 
     #region constant serializers
     /// <summary>
@@ -126,7 +119,7 @@ public class DataTransform
         var nullableElement = new XElement(
                                     XmlElement.Nullable,
                                     new XAttribute(XmlAttribute.IsNull, isNull),
-                                    isNull ? null : new XAttribute(XmlAttribute.Type, TypeNameTransformer.GetTypeName(underlyingType)));
+                                    isNull ? null : new XAttribute(XmlAttribute.Type, TypeNameTransform.GetTypeName(underlyingType)));
 
         parent.Add(nullableElement);
 
@@ -143,7 +136,7 @@ public class DataTransform
         // construct custom type element
         nullableElement.Add(new XElement(
                                     XmlElement.Custom,
-                                    new XAttribute(XmlAttribute.Type, TypeNameTransformer.GetTypeName(underlyingType)),
+                                    new XAttribute(XmlAttribute.Type, TypeNameTransform.GetTypeName(underlyingType)),
                                     nullable));
     }
     #endregion
@@ -200,7 +193,7 @@ public class DataTransform
     {
         var custom = new XElement(
                                 XmlElement.Custom,
-                                new XAttribute(XmlAttribute.Type, TypeNameTransformer.GetTypeName(node.Type)));
+                                new XAttribute(XmlAttribute.Type, TypeNameTransform.GetTypeName(node.Type)));
         parent.Add(custom);
 
         if (node.Value is null)

@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.Xml;
 
-static class TypeNameTransformer
+static class TypeNameTransform
 {
     #region Maps of types and type names
     static readonly ReaderWriterLockSlim _typesToNamesLock = new(LockRecursionPolicy.SupportsRecursion);

@@ -1,5 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.Abstractions;
 
+using vm2.ExpressionSerialization.Xml;
+
 /// <summary>
 /// Class ExpressionSerializingVisitor.
 /// Implements <see cref="ExpressionVisitor" /> that recursively transforms the visited expression nodes into document 
@@ -8,8 +10,13 @@
 /// <typeparam name="TElement">The type of the document nodes that represent expression nodes, 
 /// e.g. <see cref="XElement"/> or <see cref="JObject"/>.</typeparam>
 /// <seealso cref="ExpressionVisitor" />
-public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
+public abstract class ExpressionTransformVisitor<TElement>(TransformOptions? options = null) : ExpressionVisitor
 {
+    /// <summary>
+    /// The transform options.
+    /// </summary>
+    protected TransformOptions _options = options ?? new();
+
     /// <summary>
     /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements) into a parent element, 
     /// representing an expression node's operation.
@@ -50,13 +57,6 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
             return _elements.Pop();
         }
     }
-
-#if DEBUG
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ExpressionTransformVisitor{TNode}"/> class.
-    /// </summary>
-    public ExpressionTransformVisitor() => Debug.IndentSize = 2;
-#endif
 
 #if DEBUG
     /// <summary>
@@ -106,24 +106,6 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
         _elements.Push(element);
 
         return node;
-    }
-
-    /// <summary>
-    /// Transforms a name to camel case string.
-    /// </summary>
-    /// <param name="name">The name to be transformed.</param>
-    /// <returns>System.String.</returns>
-    public static string CamelCase(string name)
-    {
-        if (name.Length == 0 || char.IsLower(name[0]))
-            return name;
-
-        var nm = name.AsSpan();
-        Span<char> ccName = stackalloc char[nm.Length];
-
-        ccName[0] = char.ToLowerInvariant(nm[0]);
-        nm[1..].CopyTo(ccName[1..]);
-        return ccName.ToString();
     }
 
     /// <summary>
