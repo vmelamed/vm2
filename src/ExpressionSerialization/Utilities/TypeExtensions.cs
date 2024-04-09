@@ -145,19 +145,6 @@ public static class TypeExtensions
         ];
     static FrozenSet<Type> _xmlSerializableAttributes = _xmlSerializableAttributesCollection.ToFrozenSet();
 
-    static Type[] _jsonSerializableAttributesCollection = [
-            typeof(XmlRootAttribute),
-            typeof(XmlTypeAttribute),
-            typeof(XmlElementAttribute),
-            typeof(XmlArrayAttribute),
-            typeof(XmlArrayItemAttribute),
-            typeof(SerializableAttribute),
-            typeof(DataContractAttribute),
-            typeof(MessageContractAttribute),
-            typeof(CollectionDataContractAttribute),
-        ];
-    static readonly FrozenSet<Type> s_jsonSerializableAttributes = _jsonSerializableAttributesCollection.ToFrozenSet();
-
     /// <summary>
     /// Determines whether a value of type <paramref name="type"/> can be serialized.
     /// </summary>
