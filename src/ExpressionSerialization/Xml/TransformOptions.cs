@@ -1,11 +1,12 @@
 ﻿namespace vm2.ExpressionSerialization.Xml;
 
 using System.Collections.Frozen;
+using System.Text.RegularExpressions;
 
 /// <summary>
-/// Enum IdentifierTransformConvention specify how to transform C# identifiers to XML names.
+/// Enum Identifiers specify how to transform C# identifiers to XML names.
 /// </summary>
-public enum IdentifierTransformConvention
+public enum Identifiers
 {
     /// <summary>
     /// Transform identifiers to camel-case convention: ThisIsName -> ThisIsName
@@ -38,10 +39,10 @@ public enum IdentifierTransformConvention
 }
 
 /// <summary>
-/// Enum TypeNameTransformConvention specify how to transform the type names.
+/// Enum TypeNames specify how to transform the type names.
 /// Note: no casing transformation.
 /// </summary>
-public enum TypeNameTransformConvention
+public enum TypeNames
 {
     /// <summary>
     /// The full name of the type, c.e. `namespace.name`, e.g. "vm.Aspects.Linq.Expressions.Serialization.Tests.EnumTest"
@@ -60,19 +61,19 @@ public enum TypeNameTransformConvention
 /// <summary>
 /// Class TransformOptions transforms C# identifiers to XML names.
 /// </summary>
-public class TransformOptions
+public partial class TransformOptions
 {
     /// <summary>
     /// Gets the identifiers transformation convention.
     /// </summary>
     /// <value>The identifiers case convention.</value>
-    public IdentifierTransformConvention IdentifiersConvention { get; set; } = IdentifierTransformConvention.Preserve;
+    public Identifiers Identifiers { get; set; } = Identifiers.Preserve;
 
     /// <summary>
     /// Gets the type transform convention.
     /// </summary>
     /// <value>The type transform convention.</value>
-    public TypeNameTransformConvention TypeNamesConvention { get; set; } = TypeNameTransformConvention.FullName;
+    public TypeNames TypeNames { get; set; } = TypeNames.FullName;
 
     /// <summary>
     /// Gets or sets the size of the document's tab indention.
@@ -87,16 +88,25 @@ public class TransformOptions
     public int IndentSize { get; set; } = 2;
 
     /// <summary>
-    /// Transforms the type c a string according c the <see cref="TypeNamesConvention"/>.
+    /// Transforms the type c a string according c the <see cref="TypeNames"/>.
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>System.String.</returns>
-    public string TransformType(Type type)
-        => TypeNamesConvention switch {
-            TypeNameTransformConvention.FullName => type.FullName ?? type.Name,
-            TypeNameTransformConvention.Name => type.Name,
-            TypeNameTransformConvention.AssemblyQualifiedName => type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
-            _ => throw new InternalTransformErrorException("Invalid TypeNameTransformConvention value.")
+    public string TransformTypeName(Type type)
+        => DoTransformTypeName(type, TypeNames);
+
+    /// <summary>
+    /// Transforms the type c a string according c the <see cref="TypeNames" />.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <param name="convention">The convention.</param>
+    /// <returns>System.String.</returns>
+    internal static string DoTransformTypeName(Type type, TypeNames convention)
+        => convention switch {
+            TypeNames.FullName => type.FullName ?? type.Name,
+            TypeNames.Name => type.Name,
+            TypeNames.AssemblyQualifiedName => type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
+            _ => throw new InternalTransformErrorException("Invalid TypeNames value.")
         };
 
     static readonly UnicodeCategory[] s_beginIdentifierArr =
@@ -143,7 +153,7 @@ public class TransformOptions
     static readonly FrozenSet<UnicodeCategory> s_restWordIdentifier = s_restWordIdentifierArr.ToFrozenSet();
 
     /// <summary>
-    /// Transforms the identifier according c the <see cref="IdentifiersConvention"/>.
+    /// Transforms the identifier according c the <see cref="Identifiers"/>.
     /// </summary>
     /// <param name="identifier">The identifier.</param>
     /// <returns>string.</returns>
@@ -151,10 +161,13 @@ public class TransformOptions
     /// <exception cref="InternalTransformErrorException">$"Invalid identifier: '{identifier}'.</exception>
     /// <exception cref="InternalTransformErrorException">Invalid identifier transform convention.</exception>
     public string TransformIdentifier(string identifier)
-        => DoTransformIdentifier(identifier, IdentifiersConvention);
+        => DoTransformIdentifier(identifier, Identifiers);
+
+    [GeneratedRegex(@"^@?([\p{L}_])([\p{Ll}\p{Nd}\p{Pc}]*)(([\p{Lu}_])([\p{Ll}\p{Nd}\p{Pc}]*))*$", RegexOptions.Compiled, 500)]
+    private static partial Regex CSharpIdentifier();
 
     /// <summary>
-    /// Transforms the identifier according c the <see cref="IdentifiersConvention" />.
+    /// Transforms the identifier according c the <see cref="Identifiers" />.
     /// </summary>
     /// <param name="identifier">The identifier.</param>
     /// <param name="convention">The convention.</param>
@@ -162,12 +175,12 @@ public class TransformOptions
     /// <exception cref="InternalTransformErrorException">Invalid identifier.</exception>
     /// <exception cref="InternalTransformErrorException">$"Invalid identifier: '{identifier}'.</exception>
     /// <exception cref="InternalTransformErrorException">Invalid identifier transform convention.</exception>
-    internal static string DoTransformIdentifier(string identifier, IdentifierTransformConvention convention)
+    internal static string DoTransformIdentifier(string identifier, Identifiers convention)
     {
-        if (string.IsNullOrWhiteSpace(identifier))
+        if (!CSharpIdentifier().IsMatch(identifier))
             throw new InternalTransformErrorException("Invalid identifier.");
 
-        if (convention == IdentifierTransformConvention.Preserve)
+        if (convention == Identifiers.Preserve)
             return identifier;
 
         // the characters of the identifier
@@ -176,11 +189,6 @@ public class TransformOptions
         var c = chars[0] == '@' ? 1 : 0;
         // the length of the identifier
         var len = identifier.Length;
-
-        // starts with a valid character for identifier
-        if (!s_beginIdentifier.Contains(char.GetUnicodeCategory(chars[c])) && chars[c] != '_')
-            throw new InternalTransformErrorException($"Invalid identifier: '{identifier}'.");
-
         // here we copy the transformed chars
         var xChars = len*2 < 1024 ? stackalloc char[len*2] : new char[len*2];
         // up to here
@@ -195,10 +203,6 @@ public class TransformOptions
             if (c >= len)
                 break;
 
-            // still a valid character?
-            if (!s_beginWordIdentifier.Contains(char.GetUnicodeCategory(chars[c])))
-                throw new InternalTransformErrorException($"Invalid identifier: '{identifier}'.");
-
             var wordStart = c++;
 
             // get the rest of the chars of the word (cannot be upper case)
@@ -212,17 +216,17 @@ public class TransformOptions
 
             switch (convention)
             {
-                case IdentifierTransformConvention.Camel:
+                case Identifiers.Camel:
                     word.CopyTo(xWord);
                     xWord[x] = to == 0 ? char.ToLower(xWord[x]) : char.ToUpper(xWord[x]);
                     break;
 
-                case IdentifierTransformConvention.Pascal:
+                case Identifiers.Pascal:
                     word.CopyTo(xWord);
                     xWord[x] = char.ToUpper(xWord[x]);
                     break;
 
-                case IdentifierTransformConvention.SnakeLower:
+                case Identifiers.SnakeLower:
                     if (to > 0)
                     {
                         to++;
@@ -232,7 +236,7 @@ public class TransformOptions
                         xWord[x++] = char.ToLower(word[w]);
                     break;
 
-                case IdentifierTransformConvention.SnakeUpper:
+                case Identifiers.SnakeUpper:
                     if (to > 0)
                     {
                         to++;
@@ -242,7 +246,7 @@ public class TransformOptions
                         xWord[x++] = char.ToUpper(word[w]);
                     break;
 
-                case IdentifierTransformConvention.KebabLower:
+                case Identifiers.KebabLower:
                     if (to > 0)
                     {
                         to++;
@@ -252,7 +256,7 @@ public class TransformOptions
                         xWord[x++] = char.ToLower(word[w]);
                     break;
 
-                case IdentifierTransformConvention.KebabUpper:
+                case Identifiers.KebabUpper:
                     if (to > 0)
                     {
                         to++;
@@ -261,9 +265,6 @@ public class TransformOptions
                     for (var w = 0; w < word.Length; w++)
                         xWord[x++] = char.ToUpper(word[w]);
                     break;
-
-                default:
-                    throw new InternalTransformErrorException("Invalid identifier transform convention.");
             }
             to += word.Length;
         }

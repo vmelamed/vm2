@@ -91,7 +91,7 @@ public class DataTransform(TransformOptions? options = default)
         parent.Add(
                 new XElement(
                         XmlElement.Enum,
-                        new XAttribute(XmlAttribute.Type, _options.TransformType(node.Type)),
+                        new XAttribute(XmlAttribute.Type, _options.TransformTypeName(node.Type)),
                         new XAttribute(XmlAttribute.Value, value?.ToString() ?? ""),
                         node.Value?.ToString()));
     }

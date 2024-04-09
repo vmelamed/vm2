@@ -3,7 +3,7 @@
 partial class ToXmlTransformVisitor(TransformOptions? options = null) : ExpressionTransformVisitor<XNode>(options)
 {
     protected override XNode GetEmptyNode(ExpressionType nodeType)
-        => new XElement(XmlNamespace.Xxp + TransformOptions.DoTransformIdentifier(nodeType.ToString(), IdentifierTransformConvention.Camel));
+        => new XElement(XmlNamespace.Xxp + TransformOptions.DoTransformIdentifier(nodeType.ToString(), Identifiers.Camel));
 
     DataTransform _dataTransform = new(options);
 
