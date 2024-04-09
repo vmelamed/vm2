@@ -88,6 +88,50 @@ public partial class TransformOptions
     public int IndentSize { get; set; } = 2;
 
     /// <summary>
+    /// Gets or sets a value indicating whether to add comments to the resultant node.
+    /// </summary>
+    /// <value><c>true</c> if comments are to be added; otherwise, <c>false</c>.</value>
+    public bool AddComments { get; set; } = false;
+
+    /// <summary>
+    /// Builds an XML comment object with the specified comment text.
+    /// </summary>
+    /// <param name="comment">The comment.</param>
+    /// <returns>System.Nullable&lt;XComment&gt;.</returns>
+    public XComment? Comment(string comment)
+        => AddComments ? new XComment(comment) : null;
+
+    /// <summary>
+    /// Builds an XML comment object with the specified comment text.
+    /// </summary>
+    /// <param name="expression">The expression.</param>
+    /// <returns>System.Nullable&lt;XComment&gt;.</returns>
+    public XComment? Comment(Expression expression)
+        => AddComments ? Comment($" {expression} ") : null;
+
+    /// <summary>
+    /// Adds the comment.
+    /// </summary>
+    /// <param name="parent">The parent.</param>
+    /// <param name="expression">The expression.</param>
+    public void AddComment(XContainer parent, Expression expression)
+    {
+        if (AddComments)
+            parent.Add(new XComment($" {expression} "));
+    }
+
+    /// <summary>
+    /// Adds the comment.
+    /// </summary>
+    /// <param name="parent">The parent.</param>
+    /// <param name="comment">The comment.</param>
+    public void AddComment(XContainer parent, string comment)
+    {
+        if (AddComments)
+            parent.Add(new XComment($" {comment} "));
+    }
+
+    /// <summary>
     /// Transforms the type c a string according c the <see cref="TypeNames"/>.
     /// </summary>
     /// <param name="type">The type.</param>
@@ -158,8 +202,6 @@ public partial class TransformOptions
     /// <param name="identifier">The identifier.</param>
     /// <returns>string.</returns>
     /// <exception cref="InternalTransformErrorException">Invalid identifier.</exception>
-    /// <exception cref="InternalTransformErrorException">$"Invalid identifier: '{identifier}'.</exception>
-    /// <exception cref="InternalTransformErrorException">Invalid identifier transform convention.</exception>
     public string TransformIdentifier(string identifier)
         => DoTransformIdentifier(identifier, Identifiers);
 
@@ -173,8 +215,6 @@ public partial class TransformOptions
     /// <param name="convention">The convention.</param>
     /// <returns>string.</returns>
     /// <exception cref="InternalTransformErrorException">Invalid identifier.</exception>
-    /// <exception cref="InternalTransformErrorException">$"Invalid identifier: '{identifier}'.</exception>
-    /// <exception cref="InternalTransformErrorException">Invalid identifier transform convention.</exception>
     internal static string DoTransformIdentifier(string identifier, Identifiers convention)
     {
         if (!CSharpIdentifier().IsMatch(identifier))

@@ -23,9 +23,9 @@ static class XmlNamespace
     public static readonly XNamespace Dcs = XNamespace.Get("http://schemas.datacontract.org/2004/07/System");
 
     /// <summary>
-    /// The XML namespace object representing the namespace of the Aspects' expression serialization - urn:schemas-vm-com:Aspects.Linq.Expressions.Serialization
+    /// The XML namespace object representing the namespace of the expression serialization - urn:schemas-vm-com:Linq.Expressions.Serialization
     /// </summary>
-    public static readonly XNamespace Xxp = XNamespace.Get("urn:schemas-vm-com:Aspects.Linq.Expressions.Serialization");
+    public static readonly XNamespace Xxp = XNamespace.Get("urn:schemas-vm-com:Linq.Expressions.Serialization");
 }
 
 static class XmlElement

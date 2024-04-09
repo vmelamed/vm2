@@ -1,4 +1,6 @@
-﻿global using FluentAssertions;
+﻿global using System.Linq.Expressions;
+
+global using FluentAssertions;
 
 global using TestUtilities;
 
