@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- 5 -->
-<expression xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
     <constant>
-        <nullable isNull="false">
+        <nullable
+            p3:nil="false"
+            type="System.Int32"
+            xmlns:p3="http://www.w3.org/2001/XMLSchema-instance">
             <int>5</int>
         </nullable>
     </constant>

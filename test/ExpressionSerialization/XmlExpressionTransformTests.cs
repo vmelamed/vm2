@@ -1,11 +1,10 @@
-﻿namespace ExpressionSerializationTests;
+﻿namespace vm2.ExpressionSerialization.ExpressionSerializationTests;
 
 public partial class XmlExpressionTransformTests
 {
     public ITestOutputHelper Out { get; }
-#pragma warning disable IDE0052 // Remove unread private members
+
     XmlSerializationTestsFixture _fixture;
-#pragma warning restore IDE0052 // Remove unread private members
 
     public XmlExpressionTransformTests(
         ITestOutputHelper output,
@@ -18,9 +17,23 @@ public partial class XmlExpressionTransformTests
 
     [Theory]
     [MemberData(nameof(ExpressionsData))]
-    public async Task ConstantTestIntAsync(string _, Expression expression, string fileName)
+    public async Task ConstantTestAsync(string _, object value, string fileName)
     {
+        Expression expression = Expression.Constant(value);
         var (expectedDoc, expectedStr) = await GetExpectedAsync($"../../../TestData/Constants/{fileName}", Out);
+
+        Out.WriteLine("EXPECTED:\n{0}\n", expectedStr);
+
+        TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        await TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task ConstantTestNullableIntAsync()
+    {
+        int? value = 5;
+        Expression expression = Expression.Constant(value, typeof(int?));
+        var (expectedDoc, expectedStr) = await GetExpectedAsync($"../../../TestData/Constants/NullableInt.xml", Out);
 
         Out.WriteLine("EXPECTED:\n{0}\n", expectedStr);
 

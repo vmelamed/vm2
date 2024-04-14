@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- null -->
-<expression xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
     <constant>
-        <nullable isNull="true"
-                  type="long" />
+        <nullable
+            isNull="true"
+            type="long" />
     </constant>
 </expression>

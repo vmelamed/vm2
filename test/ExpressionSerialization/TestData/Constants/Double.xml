@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- 5.51234509871111E-123 -->
-<expression xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+<!-- 5.123456789123457E-123 -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
     <constant>
-        <double>5.5123450987111111E-123</double>
+        <double>5.123456789123457E-123</double>
     </constant>
 </expression>

@@ -1,4 +1,4 @@
-﻿namespace ExpressionSerializationTests;
+﻿namespace vm2.ExpressionSerialization.ExpressionSerializationTests;
 
 public class XmlSerializationTestsFixture : IDisposable
 {

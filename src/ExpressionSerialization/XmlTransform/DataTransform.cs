@@ -1,5 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using System.Collections.ObjectModel;
+
 using vm2.ExpressionSerialization.Conventions;
 using vm2.ExpressionSerialization.Utilities;
 
@@ -18,27 +20,31 @@ public class DataTransform(Options? options = default)
     /// </summary>
     static Dictionary<Type, ConstantTransform> _constantTransforms = new()
     {
-        { typeof(bool),     (n, x) => x.Add(new XElement(XmlElement.Boolean,       XmlConvert.ToString((bool)n.Value!))) },
-        { typeof(byte),     (n, x) => x.Add(new XElement(XmlElement.UnsignedByte,  XmlConvert.ToString((byte)n.Value!))) },
-        { typeof(sbyte),    (n, x) => x.Add(new XElement(XmlElement.Byte,          XmlConvert.ToString((sbyte)n.Value!))) },
-        { typeof(short),    (n, x) => x.Add(new XElement(XmlElement.Short,         XmlConvert.ToString((short)n.Value!))) },
-        { typeof(ushort),   (n, x) => x.Add(new XElement(XmlElement.UnsignedShort, XmlConvert.ToString((ushort)n.Value!))) },
-        { typeof(int),      (n, x) => x.Add(new XElement(XmlElement.Int,           XmlConvert.ToString((int)n.Value!))) },
-        { typeof(uint),     (n, x) => x.Add(new XElement(XmlElement.UnsignedInt,   XmlConvert.ToString((uint)n.Value!))) },
-        { typeof(long),     (n, x) => x.Add(new XElement(XmlElement.Long,          XmlConvert.ToString((long)n.Value!))) },
-        { typeof(ulong),    (n, x) => x.Add(new XElement(XmlElement.UnsignedLong,  XmlConvert.ToString((ulong)n.Value!))) },
-        { typeof(Half),     (n, x) => x.Add(new XElement(XmlElement.Half,          n.Value!.ToString())) },
-        { typeof(float),    (n, x) => x.Add(new XElement(XmlElement.Float,         XmlConvert.ToString((float)n.Value!))) },
-        { typeof(double),   (n, x) => x.Add(new XElement(XmlElement.Double,        XmlConvert.ToString((double)n.Value!))) },
-        { typeof(decimal),  (n, x) => x.Add(new XElement(XmlElement.Decimal,       XmlConvert.ToString((decimal)n.Value!))) },
-        { typeof(string),   (n, x) => x.Add(new XElement(XmlElement.String,        n.Value!))},
-        { typeof(char),     (n, x) => x.Add(new XElement(XmlElement.Char,          XmlConvert.ToChar(new string((char)n.Value!, 1)))) },
-        { typeof(Guid),     (n, x) => x.Add(new XElement(XmlElement.Guid,          XmlConvert.ToString((Guid)n.Value!))) },
-        { typeof(DateTime), (n, x) => x.Add(new XElement(XmlElement.DateTime,      XmlConvert.ToString((DateTime)n.Value!, XmlDateTimeSerializationMode.RoundtripKind))) },
-        { typeof(TimeSpan), (n, x) => x.Add(new XElement(XmlElement.Duration,      XmlConvert.ToString((TimeSpan)n.Value!))) },
-        { typeof(Uri),      (n, x) => x.Add(new XElement(XmlElement.AnyURI,        ((Uri)n.Value!).ToString())) },
-        { typeof(DBNull),   (n, x) => x.Add(new XElement(XmlElement.DBNull))       },
+        { typeof(bool),     (n, x) => x.Add(new XElement(XmlElement.Boolean,        XmlConvert.ToString((bool)n.Value!))) },
+        { typeof(byte),     (n, x) => x.Add(new XElement(XmlElement.UnsignedByte,   XmlConvert.ToString((byte)n.Value!))) },
+        { typeof(sbyte),    (n, x) => x.Add(new XElement(XmlElement.Byte,           XmlConvert.ToString((sbyte)n.Value!))) },
+        { typeof(short),    (n, x) => x.Add(new XElement(XmlElement.Short,          XmlConvert.ToString((short)n.Value!))) },
+        { typeof(ushort),   (n, x) => x.Add(new XElement(XmlElement.UnsignedShort,  XmlConvert.ToString((ushort)n.Value!))) },
+        { typeof(int),      (n, x) => x.Add(new XElement(XmlElement.Int,            XmlConvert.ToString((int)n.Value!))) },
+        { typeof(uint),     (n, x) => x.Add(new XElement(XmlElement.UnsignedInt,    XmlConvert.ToString((uint)n.Value!))) },
+        { typeof(long),     (n, x) => x.Add(new XElement(XmlElement.Long,           XmlConvert.ToString((long)n.Value!))) },
+        { typeof(ulong),    (n, x) => x.Add(new XElement(XmlElement.UnsignedLong,   XmlConvert.ToString((ulong)n.Value!))) },
+        { typeof(Half),     (n, x) => x.Add(new XElement(XmlElement.Half,           n.Value!.ToString())) },
+        { typeof(float),    (n, x) => x.Add(new XElement(XmlElement.Float,          XmlConvert.ToString((float)n.Value!))) },
+        { typeof(double),   (n, x) => x.Add(new XElement(XmlElement.Double,         XmlConvert.ToString((double)n.Value!))) },
+        { typeof(decimal),  (n, x) => x.Add(new XElement(XmlElement.Decimal,        XmlConvert.ToString((decimal)n.Value!))) },
+        { typeof(string),   (n, x) => x.Add(new XElement(XmlElement.String,         n.Value!))},
+        { typeof(char),     (n, x) => x.Add(new XElement(XmlElement.Char,           XmlConvert.ToChar(new string((char)n.Value!, 1)))) },
+        { typeof(Guid),     (n, x) => x.Add(new XElement(XmlElement.Guid,           XmlConvert.ToString((Guid)n.Value!))) },
+        { typeof(DateTime), (n, x) => x.Add(new XElement(XmlElement.DateTime,       XmlConvert.ToString((DateTime)n.Value!, XmlDateTimeSerializationMode.RoundtripKind))) },
+        { typeof(TimeSpan), (n, x) => x.Add(new XElement(XmlElement.Duration,       XmlConvert.ToString((TimeSpan)n.Value!))) },
+        { typeof(Uri),      (n, x) => x.Add(new XElement(XmlElement.AnyURI,         ((Uri)n.Value!).ToString())) },
+        { typeof(DBNull),   (n, x) => x.Add(new XElement(XmlElement.DBNull))        },
+        { typeof(IntPtr),   (n, x) => x.Add(new XElement(XmlElement.IntPtr,         XmlConvert.ToString((IntPtr)n.Value!))) },
+        { typeof(UIntPtr),  (n, x) => x.Add(new XElement(XmlElement.UnsignedIntPtr, XmlConvert.ToString((UIntPtr)n.Value!))) },
     };
+
+    static ReadOnlyDictionary<Type, ConstantTransform> _constantTransforms2 = new (_constantTransforms);
     #endregion
 
     /// <summary>

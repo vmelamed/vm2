@@ -1,33 +1,4 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
-
-static class XmlNamespace
-{
-    /// <summary>
-    /// The XML namespace of the W3C schema definition - http://www.w3.org/2001/XMLSchema
-    /// </summary>
-    public static readonly XNamespace Xsd  = XNamespace.Get("http://www.w3.org/2001/XMLSchema");
-
-    /// <summary>
-    /// The XML namespace of the W3C instance schema definition - http://www.w3.org/2001/XMLSchema-instance
-    /// </summary>
-    public static readonly XNamespace Xsi  = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-
-    /// <summary>
-    /// The XML namespace of the Microsoft serialization schema definition - http://schemas.microsoft.com/2003/10/Serialization/
-    /// </summary>
-    public static readonly XNamespace Ser  = XNamespace.Get("http://schemas.microsoft.com/2003/10/Serialization/");
-
-    /// <summary>
-    /// The XML namespace object representing the namespace of the data contracts - http://schemas.datacontract.org/2004/07/System
-    /// </summary>
-    public static readonly XNamespace Dcs = XNamespace.Get("http://schemas.datacontract.org/2004/07/System");
-
-    /// <summary>
-    /// The XML namespace object representing the namespace of the expression serialization - urn:schemas-vm-com:Linq.Expressions.Serialization
-    /// </summary>
-    public static readonly XNamespace Xxp = XNamespace.Get("urn:schemas-vm-com:Linq.Expressions.Serialization");
-}
-
 static class XmlElement
 {
     public static readonly XName Expression             = XmlNamespace.Xxp + "expression";
@@ -52,6 +23,8 @@ static class XmlElement
     public static readonly XName Char                   = XmlNamespace.Xxp + "char";
     public static readonly XName DateTime               = XmlNamespace.Xxp + "dateTime";
     public static readonly XName DBNull                 = XmlNamespace.Xxp + "dbNull";
+    public static readonly XName IntPtr                 = XmlNamespace.Xxp + "intPtr";
+    public static readonly XName UnsignedIntPtr         = XmlNamespace.Xxp + "unsignedIntPtr";
 
     public static readonly XName Nullable               = XmlNamespace.Xxp + "nullable";
     public static readonly XName Enum                   = XmlNamespace.Xxp + "enum";
@@ -178,27 +151,3 @@ static class XmlElement
     public static readonly XName MemberMemberBinding    = XmlNamespace.Xxp + "memberMemberBinding";
     public static readonly XName ListBinding            = XmlNamespace.Xxp + "listBinding";
 }
-
-static class XmlAttribute
-{
-    public static readonly XName Assembly               = "assembly";
-    public static readonly XName DelegateType           = "delegateType";
-    public static readonly XName Family                 = "family";
-    public static readonly XName FamilyAndAssembly      = "familyAndAssembly";
-    public static readonly XName FamilyOrAssembly       = "familyOrAssembly";
-    public static readonly XName IsByRef                = "isByRef";
-    public static readonly XName IsLiftedToNull         = "isLiftedToNull";
-    public static readonly XName IsNull                 = XmlNamespace.Xsi + "nil";
-    public static readonly XName IsOut                  = "isOut";
-    public static readonly XName Kind                   = "kind";
-    public static readonly XName Name                   = "name";
-    public static readonly XName Private                = "private";
-    public static readonly XName Property               = "property";
-    public static readonly XName Static                 = "static";
-    public static readonly XName TailCall               = "tailCall";
-    public static readonly XName Type                   = "type";
-    public static readonly XName Uid                    = "uid";
-    public static readonly XName UidRef                 = "uidRef";
-    public static readonly XName Value                  = "value";
-    public static readonly XName Visibility             = "visibility";
-};

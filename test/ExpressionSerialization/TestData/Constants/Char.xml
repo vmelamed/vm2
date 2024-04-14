@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- V -->
-<expression xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
     <constant>
-        <char>86</char>
+        <char>V</char>
     </constant>
 </expression>

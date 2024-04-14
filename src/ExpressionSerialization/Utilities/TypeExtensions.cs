@@ -14,8 +14,6 @@ public static class TypeExtensions
             typeof(Uri).GUID,
             typeof(DateTime).GUID,
             typeof(TimeSpan).GUID,
-            typeof(IntPtr).GUID,
-            typeof(UIntPtr).GUID,
             typeof(DBNull).GUID,
             typeof(Half).GUID,
         ];

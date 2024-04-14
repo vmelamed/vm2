@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- 5 -->
-<expression xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
     <constant>
         <unsignedShort>5</unsignedShort>
     </constant>

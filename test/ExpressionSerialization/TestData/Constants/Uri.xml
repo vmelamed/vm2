@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- http://www.yahoo.com/ -->
-<expression xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+<!-- http://www.delinea.com/ -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
     <constant>
-        <anyURI>http://www.yahoo.com/</anyURI>
+        <anyURI>http://www.delinea.com/</anyURI>
     </constant>
 </expression>
