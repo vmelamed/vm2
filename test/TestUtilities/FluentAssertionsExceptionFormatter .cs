@@ -1,6 +1,4 @@
-﻿using FluentAssertions.Formatting;
-
-namespace TestUtilities;
+﻿namespace TestUtilities;
 
 /// <summary>
 /// Class FluentAssertionsExceptionFormatter enables the display of inner exceptions

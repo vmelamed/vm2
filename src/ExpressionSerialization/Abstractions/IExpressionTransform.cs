@@ -8,7 +8,7 @@
 public interface IExpressionTransform<out TNode>
 {
     /// <summary>
-    /// Transforms the specified expression to a document model node type `TNode`.
+    /// Transform the specified expression to a document model node type `TNode`.
     /// </summary>
     /// <param name="expression">The expression to be transformed.</param>
     /// <returns>The resultant top level document model node `TNode`.</returns>

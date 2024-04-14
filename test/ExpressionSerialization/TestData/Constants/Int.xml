@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 5 -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+    <constant>
+        <int>5</int>
+    </constant>
+</expression>

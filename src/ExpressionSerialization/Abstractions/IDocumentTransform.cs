@@ -9,7 +9,7 @@
 public interface IDocumentTransform<in TNode>
 {
     /// <summary>
-    /// Transforms the specified document model node of type `TNode` to a LINQ expression.
+    /// Transform the specified document model node of type `TNode` to a LINQ expression.
     /// </summary>
     /// <param name="node">The document node to be transformed.</param>
     /// <returns>The resultant expression.</returns>

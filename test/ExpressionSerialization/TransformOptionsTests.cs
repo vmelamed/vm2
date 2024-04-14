@@ -12,9 +12,9 @@ public partial class TransformOptionsTests
 
     [Theory]
     [MemberData(nameof(TransformIdentifiersData))]
-    public void TransformIdentifiersTest(string _, string input, string expected, Identifiers convention, bool throws)
+    public void TransformIdentifiersTest(string _, string input, string expected, IdentifierConventions convention, bool throws)
     {
-        var call = () => TransformOptions.DoTransformIdentifier(input, convention);
+        var call = () => Transform.Identifier(input, convention);
         if (throws)
         {
             call.Should().Throw<InternalTransformErrorException>();
@@ -26,9 +26,9 @@ public partial class TransformOptionsTests
 
     [Theory]
     [MemberData(nameof(TransformTypeNamesData))]
-    public void TransformTypeNamesTest(string _, Type input, string expected, TypeNames convention, bool throws)
+    public void TransformTypeNamesTest(string _, Type input, string expected, TypeNameConventions convention, bool throws)
     {
-        var call = () => TransformOptions.DoTransformTypeName(input, convention);
+        var call = () => Transform.TypeName(input, convention);
         if (throws)
         {
             call.Should().Throw<InternalTransformErrorException>();
@@ -40,7 +40,7 @@ public partial class TransformOptionsTests
 
     [Theory]
     [MemberData(nameof(TransformTypeNamesLocalData))]
-    public void TransformTypeNamesAnonymousTest(string _, string expected, TypeNames convention, bool throws)
+    public void TransformTypeNamesAnonymousTest(string _, string expected, TypeNameConventions convention, bool throws)
     {
         var test = new
         {
@@ -49,7 +49,7 @@ public partial class TransformOptionsTests
         };
         var input = test.GetType();
 
-        var call = () => TransformOptions.DoTransformTypeName(input, convention);
+        var call = () => Transform.TypeName(input, convention);
         if (throws)
         {
             call.Should().Throw<InternalTransformErrorException>();
