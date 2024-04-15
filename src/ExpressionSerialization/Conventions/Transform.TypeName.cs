@@ -3,11 +3,29 @@
 static partial class Transform
 {
     #region Maps of types and type names
-    static readonly ReaderWriterLockSlim _typesToNamesLock = new(LockRecursionPolicy.SupportsRecursion);
+    static readonly ReaderWriterLockSlim _typesNamesLock = new(LockRecursionPolicy.SupportsRecursion);
+
     /// <summary>
     /// The map of base type to type names
     /// </summary>
-    static Dictionary<Type, string> _typesToNames = new()
+    static Dictionary<Type, string> _typesToNames;
+
+    /// <summary>
+    /// The map of type names to base type
+    /// </summary>
+    static Dictionary<string, Type> _namesToTypes;
+
+    /// <summary>
+    /// Resets the translation tables typesToNames and namesToTypes.
+    /// </summary>
+    /// <remarks>
+    /// NOTE: this method is meant to be used only in unit tests, where the conventions change and the other methods 
+    /// may throw <see cref="InternalTransformErrorException"/>.
+    /// </remarks>
+    internal static void ResetTypesNames()
+    {
+        using var _ = _typesNamesLock.WriterLock();
+        _typesToNames = new()
         {
             { typeof(void),         "void"              },
             { typeof(char),         "char"              },
@@ -27,7 +45,7 @@ static partial class Transform
             { typeof(double),       "double"            },
             { typeof(decimal),      "decimal"           },
             { typeof(Guid),         "guid"              },
-            { typeof(Uri),          "anyURI"            },
+            { typeof(Uri),          "uri"               },
             { typeof(string),       "string"            },
             { typeof(TimeSpan),     "duration"          },
             { typeof(DateTime),     "dateTime"          },
@@ -37,10 +55,7 @@ static partial class Transform
             { typeof(Enum),         "enum"              },
         };
 
-    /// <summary>
-    /// The map of type names to base type
-    /// </summary>
-    static Dictionary<string, Type> _namesToTypes = new()
+        _namesToTypes = new()
         {
             { "void",               typeof(void)        },
             { "char",               typeof(char)        },
@@ -60,7 +75,7 @@ static partial class Transform
             { "double",             typeof(double)      },
             { "decimal",            typeof(decimal)     },
             { "guid",               typeof(Guid)        },
-            { "anyURI",             typeof(Uri)         },
+            { "uri",                typeof(Uri)         },
             { "string",             typeof(string)      },
             { "duration",           typeof(TimeSpan)    },
             { "dateTime",           typeof(DateTime)    },
@@ -69,7 +84,12 @@ static partial class Transform
             { "custom",             typeof(object)      },
             { "enum",               typeof(Enum)        },
         };
+    }
     #endregion
+
+#pragma warning disable CS8618
+    static Transform() => ResetTypesNames();
+#pragma warning restore CS8618
 
     /// <summary>
     /// Gets the type corresponding to a type name written in an xml string.
@@ -81,23 +101,26 @@ static partial class Transform
         if (string.IsNullOrWhiteSpace(typeName))
             return null;
 
-        Type? type = null;
+        using (_typesNamesLock.UpgradableReaderLock())
+        {
+            if (_namesToTypes.TryGetValue(typeName, out var type))
+                return type;
 
-        using (_typesToNamesLock.UpgradableReaderLock())
-            if (!_namesToTypes.TryGetValue(typeName, out type))
+            type = Type.GetType(typeName, false, false);
+
+            if (type is null)
+                return null;
+
+            using (_typesNamesLock.WriterLock())
             {
-                type = Type.GetType(typeName);
+                if (_typesToNames.TryGetValue(type, out var nm))
+                    throw new InternalTransformErrorException($"Cannot map name '{typeName}' to type '{type.AssemblyQualifiedName}'. The type is already mapped to '{nm}'. Did you serialize with different conventions for type names?");
 
-                if (type is not null)
-                    using (_typesToNamesLock.WriterLock())
-                    {
-                        Debug.Assert(!_typesToNames.ContainsKey(type));
-                        _namesToTypes[typeName] = type;
-                        _typesToNames[type] = typeName;
-                    }
+                _namesToTypes[typeName] = type;
+                _typesToNames[type] = typeName;
             }
-
-        return type;
+            return type;
+        }
     }
 
     /// <summary>
@@ -107,10 +130,29 @@ static partial class Transform
     /// <param name="convention">The convention.</param>
     /// <returns>System.String.</returns>
     public static string TypeName(Type type, TypeNameConventions convention)
-        => convention switch {
-            TypeNameConventions.AssemblyQualifiedName => type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
-            TypeNameConventions.FullName => type.FullName ?? type.Name,
-            TypeNameConventions.Name => type.Name,
-            _ => throw new InternalTransformErrorException("Invalid TypeNameConventions value.")
-        };
+    {
+        using (_typesNamesLock.UpgradableReaderLock())
+        {
+            if (_typesToNames.TryGetValue(type, out var typeName))
+                return typeName;
+
+            typeName = convention switch {
+                TypeNameConventions.AssemblyQualifiedName => type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
+                TypeNameConventions.FullName => type.FullName ?? type.Name,
+                TypeNameConventions.Name => type.Name,
+                _ => throw new InternalTransformErrorException("Invalid TypeNameConventions value.")
+            };
+
+            using (_typesNamesLock.WriterLock())
+            {
+                if (_namesToTypes.TryGetValue(typeName, out var tp))
+                    throw new InternalTransformErrorException($"Cannot map type '{type.AssemblyQualifiedName}' to name '{typeName}'. The name is already mapped to '{tp.AssemblyQualifiedName}'.");
+
+                _namesToTypes[typeName] = type;
+                _typesToNames[type] = typeName;
+            }
+
+            return typeName;
+        }
+    }
 }

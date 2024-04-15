@@ -1,43 +1,88 @@
 ﻿namespace vm2.ExpressionSerialization.ExpressionSerializationTests;
 
-public partial class XmlExpressionTransformTests
+//[Collection("XmlSerialization")]
+public partial class XmlExpressionTransformTests : IClassFixture<XmlSerializationTestsFixture>
 {
     public ITestOutputHelper Out { get; }
 
     XmlSerializationTestsFixture _fixture;
 
     public XmlExpressionTransformTests(
-        ITestOutputHelper output,
-        XmlSerializationTestsFixture fixture)
+        XmlSerializationTestsFixture fixture,
+        ITestOutputHelper output)
     {
-        Out = output;
         FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
         _fixture = fixture;
+        Out = output;
+    }
+
+#pragma warning disable xUnit1045
+    [Theory]
+    [MemberData(nameof(ConstantExpressionData))]
+    public async Task ConstantTestAsync(string _, object value, string fileName)
+    {
+        var expression = Expression.Constant(value);
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync($"../../../TestData/Constants/{fileName}", Out);
+
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
+    }
+#pragma warning restore xUnit1045
+
+    [Theory]
+    [InlineData(5, "../../../TestData/Constants/NullableInt.xml")]
+    [InlineData(null, "../../../TestData/Constants/NullNullableInt.xml")]
+    public async Task ConstantTestNullableIntAsync(int? value, string fileName)
+    {
+        Expression expression = Expression.Constant(value, typeof(int?));
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
+
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
     }
 
     [Theory]
-    [MemberData(nameof(ExpressionsData))]
-    public async Task ConstantTestAsync(string _, object value, string fileName)
+    [InlineData(5L, "../../../TestData/Constants/NullableLong.xml")]
+    [InlineData(null, "../../../TestData/Constants/NullNullableLong.xml")]
+    public async Task ConstantTestNullableLongAsync(long? value, string fileName)
     {
-        Expression expression = Expression.Constant(value);
-        var (expectedDoc, expectedStr) = await GetExpectedAsync($"../../../TestData/Constants/{fileName}", Out);
+        Expression expression = Expression.Constant(value, typeof(long?));
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
 
-        Out.WriteLine("EXPECTED:\n{0}\n", expectedStr);
-
-        TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
-        await TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
     }
 
     [Fact]
-    public async Task ConstantTestNullableIntAsync()
+    public async Task ConstantTestAnonymousAsync()
     {
-        int? value = 5;
-        Expression expression = Expression.Constant(value, typeof(int?));
-        var (expectedDoc, expectedStr) = await GetExpectedAsync($"../../../TestData/Constants/NullableInt.xml", Out);
+        var fileName = "../../../TestData/Constants/Anonymous.xml";
+        Expression expression = DataUtils.GetAnonymous();
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
 
-        Out.WriteLine("EXPECTED:\n{0}\n", expectedStr);
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
+    }
 
-        TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
-        await TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
+    [Fact]
+    public async Task ConstantTestObject1Async()
+    {
+        var fileName = "../../../TestData/Constants/Object1.xml";
+        Expression expression = Expression.Constant(new Object1());
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
+
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task ConstantTestObject1NullAsync()
+    {
+        var fileName = "../../../TestData/Constants/Object1Null.xml";
+        Expression expression = Expression.Constant(null, typeof(Object1));
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
+
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
     }
 }

@@ -32,9 +32,13 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         _visitor.Visit(expression);
         return new XElement(
                         XmlElement.Expression,
+                        new XAttribute( // we need this here only so that XDocument.DeepEquals to return true in the tests.
+                            "xmlns", XmlNamespace.Exs),
+                        //new XAttribute(
+                        //    XNamespace.Xmlns + "xs", XmlNamespace.Xsd),
                         new XAttribute(
-                            "xmlns", XmlNamespace.Xxp),
-                            _visitor.Result);
+                            XNamespace.Xmlns + "i", XmlNamespace.Xsi),
+                        _visitor.Result);
     }
 
     /// <summary>
@@ -64,7 +68,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
             Encoding = encoding,
             Indent = _options.Indent,
             IndentChars = new(' ', _options.IndentSize),
-            NamespaceHandling = NamespaceHandling.OmitDuplicates,
+            //NamespaceHandling = NamespaceHandling.OmitDuplicates,
             NewLineOnAttributes = _options.AttributesOnNewLine,
             OmitXmlDeclaration = !_options.AddDocumentDeclaration,
             WriteEndDocumentOnClose = true,
@@ -99,7 +103,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
             Encoding = encoding,
             Indent = _options.Indent,
             IndentChars = new(' ', _options.IndentSize),
-            NamespaceHandling = NamespaceHandling.OmitDuplicates,
+            //NamespaceHandling = NamespaceHandling.OmitDuplicates,
             NewLineOnAttributes = _options.AttributesOnNewLine,
             OmitXmlDeclaration = !_options.AddDocumentDeclaration,
             WriteEndDocumentOnClose = true,

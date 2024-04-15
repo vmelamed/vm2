@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- null -->
+<!-- 5 -->
 <expression
-    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <nullable
-            isNull="true"
-            type="long" />
+        <nullable>
+            <long>5</long>
+        </nullable>
     </constant>
 </expression>

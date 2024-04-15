@@ -130,10 +130,12 @@ public partial class TransformOptionsTests
         { TestLine(), "@__camel_with_5_cases__",  "CAMEL-WITH-5-CASES",  IdentifierConventions.KebabUpper, false },
     };
 
+    class TestTypeNameConvention { }
+
     public static TheoryData<string, Type, string, TypeNameConventions, bool> TransformTypeNamesData => new() {
-        { TestLine(), typeof(Uri), "System.Uri, System.Private.Uri, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", TypeNameConventions.AssemblyQualifiedName, false},
-        { TestLine(), typeof(Uri), "System.Uri", TypeNameConventions.FullName, false},
-        { TestLine(), typeof(Uri), "Uri", TypeNameConventions.Name, false},
+        { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.ExpressionSerializationTests.TransformOptionsTests+TestTypeNameConvention, ExpressionSerializationTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.ExpressionSerializationTests.TransformOptionsTests+TestTypeNameConvention", TypeNameConventions.FullName, false},
+        { TestLine(), typeof(TestTypeNameConvention), "TestTypeNameConvention", TypeNameConventions.Name, false},
     };
 
     public static TheoryData<string, string, TypeNameConventions, bool> TransformTypeNamesLocalData => new() {

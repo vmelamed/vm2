@@ -13,6 +13,7 @@ public static class TypeExtensions
             typeof(decimal).GUID,
             typeof(Uri).GUID,
             typeof(DateTime).GUID,
+            typeof(DateTimeOffset).GUID,
             typeof(TimeSpan).GUID,
             typeof(DBNull).GUID,
             typeof(Half).GUID,
@@ -184,8 +185,8 @@ public static class TypeExtensions
     public static bool CanXmlTransform(this Type type)
     {
         if (type.IsBasicType() ||
-            type is ISerializable ||
-            type is IXmlSerializable ||
+            type.GetInterfaces().Contains(typeof(ISerializable)) ||
+            type.GetInterfaces().Contains(typeof(IXmlSerializable)) ||
             type.GetCustomAttributes(true).Any(a => _xmlSerializableAttributes.Contains(a.GetType())))
             return true;
 

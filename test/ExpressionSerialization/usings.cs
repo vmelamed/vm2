@@ -12,9 +12,9 @@ global using TestUtilities;
 
 global using vm2.ExpressionSerialization.Conventions;
 global using vm2.ExpressionSerialization.Exceptions;
+global using vm2.ExpressionSerialization.ExpressionSerializationTests;
 global using vm2.ExpressionSerialization.XmlTransform;
 
 global using Xunit.Abstractions;
 
 global using static TestUtilities.Utilities;
-global using static vm2.ExpressionSerialization.ExpressionSerializationTests.XmlSerializationTestsFixture;

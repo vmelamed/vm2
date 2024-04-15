@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using vm2.ExpressionSerialization.Conventions;
 using vm2.ExpressionSerialization.Utilities;
 
-using ConstantTransform = Action<ConstantExpression, XElement>;
+using ConstantTransform = Action<ConstantExpression, XContainer>;
 
 /// <summary>
 /// Class DataTransform.
@@ -18,33 +18,32 @@ public class DataTransform(Options? options = default)
     /// <summary>
     /// The map of base type constants serializers
     /// </summary>
-    static Dictionary<Type, ConstantTransform> _constantTransforms = new()
+    static ReadOnlyDictionary<Type, ConstantTransform> _constantTransforms = new (new Dictionary<Type, ConstantTransform>()
     {
-        { typeof(bool),     (n, x) => x.Add(new XElement(XmlElement.Boolean,        XmlConvert.ToString((bool)n.Value!))) },
-        { typeof(byte),     (n, x) => x.Add(new XElement(XmlElement.UnsignedByte,   XmlConvert.ToString((byte)n.Value!))) },
-        { typeof(sbyte),    (n, x) => x.Add(new XElement(XmlElement.Byte,           XmlConvert.ToString((sbyte)n.Value!))) },
-        { typeof(short),    (n, x) => x.Add(new XElement(XmlElement.Short,          XmlConvert.ToString((short)n.Value!))) },
-        { typeof(ushort),   (n, x) => x.Add(new XElement(XmlElement.UnsignedShort,  XmlConvert.ToString((ushort)n.Value!))) },
-        { typeof(int),      (n, x) => x.Add(new XElement(XmlElement.Int,            XmlConvert.ToString((int)n.Value!))) },
-        { typeof(uint),     (n, x) => x.Add(new XElement(XmlElement.UnsignedInt,    XmlConvert.ToString((uint)n.Value!))) },
-        { typeof(long),     (n, x) => x.Add(new XElement(XmlElement.Long,           XmlConvert.ToString((long)n.Value!))) },
-        { typeof(ulong),    (n, x) => x.Add(new XElement(XmlElement.UnsignedLong,   XmlConvert.ToString((ulong)n.Value!))) },
-        { typeof(Half),     (n, x) => x.Add(new XElement(XmlElement.Half,           n.Value!.ToString())) },
-        { typeof(float),    (n, x) => x.Add(new XElement(XmlElement.Float,          XmlConvert.ToString((float)n.Value!))) },
-        { typeof(double),   (n, x) => x.Add(new XElement(XmlElement.Double,         XmlConvert.ToString((double)n.Value!))) },
-        { typeof(decimal),  (n, x) => x.Add(new XElement(XmlElement.Decimal,        XmlConvert.ToString((decimal)n.Value!))) },
-        { typeof(string),   (n, x) => x.Add(new XElement(XmlElement.String,         n.Value!))},
-        { typeof(char),     (n, x) => x.Add(new XElement(XmlElement.Char,           XmlConvert.ToChar(new string((char)n.Value!, 1)))) },
-        { typeof(Guid),     (n, x) => x.Add(new XElement(XmlElement.Guid,           XmlConvert.ToString((Guid)n.Value!))) },
-        { typeof(DateTime), (n, x) => x.Add(new XElement(XmlElement.DateTime,       XmlConvert.ToString((DateTime)n.Value!, XmlDateTimeSerializationMode.RoundtripKind))) },
-        { typeof(TimeSpan), (n, x) => x.Add(new XElement(XmlElement.Duration,       XmlConvert.ToString((TimeSpan)n.Value!))) },
-        { typeof(Uri),      (n, x) => x.Add(new XElement(XmlElement.AnyURI,         ((Uri)n.Value!).ToString())) },
-        { typeof(DBNull),   (n, x) => x.Add(new XElement(XmlElement.DBNull))        },
-        { typeof(IntPtr),   (n, x) => x.Add(new XElement(XmlElement.IntPtr,         XmlConvert.ToString((IntPtr)n.Value!))) },
-        { typeof(UIntPtr),  (n, x) => x.Add(new XElement(XmlElement.UnsignedIntPtr, XmlConvert.ToString((UIntPtr)n.Value!))) },
-    };
-
-    static ReadOnlyDictionary<Type, ConstantTransform> _constantTransforms2 = new (_constantTransforms);
+        { typeof(bool),             (n, x) => x.Add(new XElement(XmlElement.Boolean,        XmlConvert.ToString((bool)n.Value!))) },
+        { typeof(byte),             (n, x) => x.Add(new XElement(XmlElement.UnsignedByte,   XmlConvert.ToString((byte)n.Value!))) },
+        { typeof(sbyte),            (n, x) => x.Add(new XElement(XmlElement.Byte,           XmlConvert.ToString((sbyte)n.Value!))) },
+        { typeof(short),            (n, x) => x.Add(new XElement(XmlElement.Short,          XmlConvert.ToString((short)n.Value!))) },
+        { typeof(ushort),           (n, x) => x.Add(new XElement(XmlElement.UnsignedShort,  XmlConvert.ToString((ushort)n.Value!))) },
+        { typeof(int),              (n, x) => x.Add(new XElement(XmlElement.Int,            XmlConvert.ToString((int)n.Value!))) },
+        { typeof(uint),             (n, x) => x.Add(new XElement(XmlElement.UnsignedInt,    XmlConvert.ToString((uint)n.Value!))) },
+        { typeof(long),             (n, x) => x.Add(new XElement(XmlElement.Long,           XmlConvert.ToString((long)n.Value!))) },
+        { typeof(ulong),            (n, x) => x.Add(new XElement(XmlElement.UnsignedLong,   XmlConvert.ToString((ulong)n.Value!))) },
+        { typeof(Half),             (n, x) => x.Add(new XElement(XmlElement.Half,           n.Value!.ToString())) },
+        { typeof(float),            (n, x) => x.Add(new XElement(XmlElement.Float,          XmlConvert.ToString((float)n.Value!))) },
+        { typeof(double),           (n, x) => x.Add(new XElement(XmlElement.Double,         XmlConvert.ToString((double)n.Value!))) },
+        { typeof(decimal),          (n, x) => x.Add(new XElement(XmlElement.Decimal,        XmlConvert.ToString((decimal)n.Value!))) },
+        { typeof(string),           (n, x) => x.Add(new XElement(XmlElement.String,         n.Value!))},
+        { typeof(char),             (n, x) => x.Add(new XElement(XmlElement.Char,           XmlConvert.ToChar(new string((char)n.Value!, 1)))) },
+        { typeof(Guid),             (n, x) => x.Add(new XElement(XmlElement.Guid,           XmlConvert.ToString((Guid)n.Value!))) },
+        { typeof(DateTime),         (n, x) => x.Add(new XElement(XmlElement.DateTime,       XmlConvert.ToString((DateTime)n.Value!, XmlDateTimeSerializationMode.RoundtripKind))) },
+        { typeof(DateTimeOffset),   (n, x) => x.Add(new XElement(XmlElement.DateTimeOffset, XmlConvert.ToString((DateTimeOffset)n.Value!, "O"))) },
+        { typeof(TimeSpan),         (n, x) => x.Add(new XElement(XmlElement.Duration,       XmlConvert.ToString((TimeSpan)n.Value!))) },
+        { typeof(Uri),              (n, x) => x.Add(new XElement(XmlElement.AnyURI,         ((Uri)n.Value!).ToString())) },
+        { typeof(DBNull),           (n, x) => x.Add(new XElement(XmlElement.DBNull))        },
+        { typeof(IntPtr),           (n, x) => x.Add(new XElement(XmlElement.IntPtr,         XmlConvert.ToString((IntPtr)n.Value!))) },
+        { typeof(UIntPtr),          (n, x) => x.Add(new XElement(XmlElement.UnsignedIntPtr, XmlConvert.ToString((UIntPtr)n.Value!))) },
+    });
     #endregion
 
     /// <summary>
@@ -91,16 +90,18 @@ public class DataTransform(Options? options = default)
     /// <exception cref="System.NotImplementedException"></exception>
     void EnumTransform(
         ConstantExpression node,
-        XElement parent)
+        XContainer parent)
     {
         var value = Convert.ChangeType(node.Value, Enum.GetUnderlyingType(node.Type));
+        var baseType = node.Type.GetEnumUnderlyingType();
 
         parent.Add(
                 new XElement(
                         XmlElement.Enum,
                         new XAttribute(XmlAttribute.Type, Transform.TypeName(node.Type, _options.TypeNames)),
-                        new XAttribute(XmlAttribute.Value, value?.ToString() ?? ""),
-                        node.Value?.ToString()));
+                        baseType != typeof(int) ? new XAttribute(XmlAttribute.BaseType, Transform.TypeName(baseType, _options.TypeNames)) : null,
+                        new XAttribute(XmlAttribute.BaseValue, value!.ToString()!),
+                        node.Value!.ToString()));
     }
     #endregion
 
@@ -112,7 +113,7 @@ public class DataTransform(Options? options = default)
     /// <param name="parent">The parent element where to add the serialized.</param>
     void NullableTransform(
         ConstantExpression node,
-        XElement parent)
+        XContainer parent)
     {
         Debug.Assert(node.Type.IsGenericType);
 
@@ -125,8 +126,8 @@ public class DataTransform(Options? options = default)
         var isNull          = nullable is null;
         var nullableElement = new XElement(
                                     XmlElement.Nullable,
-                                    new XAttribute(XmlAttribute.IsNull, isNull),
-                                    isNull ? null : new XAttribute(XmlAttribute.Type, Transform.TypeName(underlyingType, _options.TypeNames)));
+                                    isNull ? new XAttribute(XmlAttribute.Type, Transform.TypeName(underlyingType, _options.TypeNames)) : null,
+                                    isNull ? new XAttribute(XmlAttribute.Nil, isNull) : null);
 
         parent.Add(nullableElement);
 
@@ -136,7 +137,7 @@ public class DataTransform(Options? options = default)
         // get the transformer for the type argument from the table or
         if (_constantTransforms.TryGetValue(underlyingType, out var transform))
         {
-            transform(System.Linq.Expressions.Expression.Constant(nullable, underlyingType), nullableElement);
+            transform(Expression.Constant(nullable, underlyingType), nullableElement);
             return;
         }
 
@@ -156,12 +157,11 @@ public class DataTransform(Options? options = default)
     /// <param name="parent">The parent element where to serialize the anonymous object to.</param>
     void AnonymousTransformer(
         ConstantExpression node,
-        XElement parent)
+        XContainer parent)
     {
-
         var anonymousElement = new XElement(
                                     XmlElement.Anonymous,
-                                    new XAttribute(XmlAttribute.Type, node.Type.AssemblyQualifiedName ?? ""));
+                                    new XAttribute(XmlAttribute.Type, Transform.TypeName(node.Type, _options.TypeNames)));
         parent.Add(anonymousElement);
 
         var props = node.Type.GetProperties();
@@ -172,18 +172,13 @@ public class DataTransform(Options? options = default)
                                     XmlElement.Property,
                                     new XAttribute(XmlAttribute.Name, props[i].Name));
 
-            var propValue = props[i].GetValue(anonymousElement, null);
+            var propValue = props[i].GetValue(node.Value, null);
 
-            if (propValue is not null)
-            {
-                var transform = Get(props[i].PropertyType);
+            Get(props[i].PropertyType)(
+                Expression.Constant(propValue, props[i].PropertyType),
+                curElement);
 
-                transform(
-                    System.Linq.Expressions.Expression.Constant(propValue, props[i].PropertyType),
-                    curElement);
-
-                anonymousElement.Add(curElement);
-            }
+            anonymousElement.Add(curElement);
         }
     }
     #endregion
@@ -196,7 +191,7 @@ public class DataTransform(Options? options = default)
     /// <param name="parent">The parent element where to serialize the object to.</param>
     void CustomTransform(
         ConstantExpression node,
-        XElement parent)
+        XContainer parent)
     {
         var custom = new XElement(
                                 XmlElement.Custom,

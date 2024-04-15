@@ -25,5 +25,5 @@ static class XmlNamespace
     /// <summary>
     /// The XML namespace object representing the namespace of the expression serialization - urn:schemas-vm-com:Linq.Expressions.Serialization
     /// </summary>
-    public static readonly XNamespace Xxp = XNamespace.Get("urn:schemas-vm-com:Linq.Expressions.Serialization");
+    public static readonly XNamespace Exs = XNamespace.Get("urn:schemas-vm-com:Linq.Expressions.Serialization");
 }

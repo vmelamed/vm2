@@ -4,19 +4,14 @@ using vm2.ExpressionSerialization.XmlTransform;
 
 /// <summary>
 /// Class ExpressionSerializingVisitor.
-/// Implements <see cref="System.Linq.Expressions.ExpressionVisitor" /> that recursively transforms the visited expression nodes into document 
+/// Implements <see cref="ExpressionVisitor" /> that recursively transforms the visited expression nodes into document 
 /// elements.
 /// </summary>
 /// <typeparam name="TElement">The type of the document nodes that represent expression nodes, 
 /// e.g. <see cref="XElement"/> or <see cref="JObject"/>.</typeparam>
-/// <seealso cref="System.Linq.Expressions.ExpressionVisitor" />
-public abstract class ExpressionTransformVisitor<TElement>(Options? options = null) : System.Linq.Expressions.ExpressionVisitor
+/// <seealso cref="ExpressionVisitor" />
+public abstract class ExpressionTransformVisitor<TElement> : System.Linq.Expressions.ExpressionVisitor
 {
-    /// <summary>
-    /// The transform options.
-    /// </summary>
-    protected Options _options = options ?? new();
-
     /// <summary>
     /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements) into a parent element, 
     /// representing an expression node's operation.
@@ -64,7 +59,7 @@ public abstract class ExpressionTransformVisitor<TElement>(Options? options = nu
     /// </summary>
     /// <param name="node">The expression to visit.</param>
     /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-    public override System.Linq.Expressions.Expression? Visit(System.Linq.Expressions.Expression? node)
+    public override Expression? Visit(Expression? node)
     {
         if (node is null)
             return null;
@@ -90,10 +85,10 @@ public abstract class ExpressionTransformVisitor<TElement>(Options? options = nu
     /// </param>
     /// <param name="thisVisit">Delegate to the XML serializing method.</param>
     /// <returns>The possibly reduced expression.</returns>
-    protected virtual System.Linq.Expressions.Expression GenericVisit<TExpression>(
+    protected virtual Expression GenericVisit<TExpression>(
         TExpression node,
-        Func<TExpression, System.Linq.Expressions.Expression> baseVisit,
-        Action<TExpression, TElement> thisVisit) where TExpression : System.Linq.Expressions.Expression
+        Func<TExpression, Expression> baseVisit,
+        Action<TExpression, TElement> thisVisit) where TExpression : Expression
     {
         var reducedNode = baseVisit(node);
 
@@ -109,7 +104,7 @@ public abstract class ExpressionTransformVisitor<TElement>(Options? options = nu
     }
 
     /// <summary>
-    /// Gets a properly named document node corresponding to the current expression node.
+    /// Gets a properly named node corresponding to the current expression node.
     /// </summary>
     /// <param name="nodeType">Type of the node.</param>
     /// <returns>TNode.</returns>

@@ -1,16 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- 4/13/2024 11:18:26 PM -05:00 -->
 <expression
-    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization">
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <custom
-            type="System.DateTimeOffset">
-            <DateTimeOffset
-                xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns="http://schemas.datacontract.org/2004/07/System">
-                <DateTime>2024-04-14T04:18:26.234Z</DateTime>
-                <OffsetMinutes>-300</OffsetMinutes>
-            </DateTimeOffset>
-        </custom>
+        <dateTimeOffset>2024-04-13T23:18:26.2340000-05:00</dateTimeOffset>
     </constant>
 </expression>

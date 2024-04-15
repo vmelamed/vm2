@@ -28,6 +28,8 @@ public partial class TransformOptionsTests
     [MemberData(nameof(TransformTypeNamesData))]
     public void TransformTypeNamesTest(string _, Type input, string expected, TypeNameConventions convention, bool throws)
     {
+        Transform.ResetTypesNames();
+
         var call = () => Transform.TypeName(input, convention);
         if (throws)
         {
@@ -42,6 +44,8 @@ public partial class TransformOptionsTests
     [MemberData(nameof(TransformTypeNamesLocalData))]
     public void TransformTypeNamesAnonymousTest(string _, string expected, TypeNameConventions convention, bool throws)
     {
+        Transform.ResetTypesNames();
+
         var test = new
         {
             Abc = 123,
