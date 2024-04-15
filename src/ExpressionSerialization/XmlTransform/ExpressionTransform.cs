@@ -31,13 +31,13 @@ public class ExpressionTransform : IExpressionTransform<XNode>
     {
         _visitor.Visit(expression);
         return new XElement(
-                        XmlElement.Expression,
+                        ElementNames.Expression,
                         new XAttribute( // we need this here only so that XDocument.DeepEquals to return true in the tests.
-                            "xmlns", XmlNamespace.Exs),
+                            "xmlns", Namespaces.Exs),
                         //new XAttribute(
-                        //    XNamespace.Xmlns + "xs", XmlNamespace.Xsd),
+                        //    XNamespace.Xmlns + "xs", Namespaces.Xsd),
                         new XAttribute(
-                            XNamespace.Xmlns + "i", XmlNamespace.Xsi),
+                            XNamespace.Xmlns + "i", Namespaces.Xsi),
                         _visitor.Result);
     }
 

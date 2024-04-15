@@ -20,7 +20,7 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
     /// <param name="nodeType">Type of the node.</param>
     /// <returns>TNode.</returns>
     protected override XContainer GetEmptyNode(ExpressionType nodeType)
-        => new XElement(XmlNamespace.Exs + Transform.Identifier(nodeType.ToString(), IdentifierConventions.Camel));
+        => new XElement(Namespaces.Exs + Transform.Identifier(nodeType.ToString(), IdentifierConventions.Camel));
 
     DataTransform _dataTransform = new(options);
 

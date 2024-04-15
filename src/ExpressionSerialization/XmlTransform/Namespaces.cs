@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-static class XmlNamespace
+static class Namespaces
 {
     /// <summary>
     /// The XML namespace of the W3C schema definition - http://www.w3.org/2001/XMLSchema

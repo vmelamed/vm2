@@ -44,21 +44,6 @@ public partial class Options
     public bool BigEndian { get; set; } = false;
 
     /// <summary>
-    /// Gets the encoding.
-    /// </summary>
-    /// <value>The encoding.</value>
-    internal Encoding GetEncoding()
-        => CharacterEncoding switch {
-            "ascii" => Encoding.ASCII,
-            "utf-8" => new UTF8Encoding(ByteOrderMark, true),
-            "utf-16" => new UnicodeEncoding(BigEndian, ByteOrderMark, true),
-            "utf-32" => new UTF32Encoding(BigEndian, ByteOrderMark, true),
-            "iso-8859-1" => Encoding.Latin1,
-            _ => throw new NotSupportedException($@"The encoding ""{CharacterEncoding}"" is not supported. " +
-                                    @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
-        };
-
-    /// <summary>
     /// Gets or sets a value indicating whether to add an XML document declaration.
     /// </summary>
     /// <value><c>true</c> if XML document declaration should be added; otherwise, <c>false</c>.</value>
@@ -101,17 +86,32 @@ public partial class Options
     public bool AddComments { get; set; } = false;
 
     /// <summary>
+    /// Gets the encoding.
+    /// </summary>
+    /// <value>The encoding.</value>
+    internal Encoding GetEncoding()
+        => CharacterEncoding switch {
+            "ascii" => Encoding.ASCII,
+            "utf-8" => new UTF8Encoding(ByteOrderMark, true),
+            "utf-16" => new UnicodeEncoding(BigEndian, ByteOrderMark, true),
+            "utf-32" => new UTF32Encoding(BigEndian, ByteOrderMark, true),
+            "iso-8859-1" => Encoding.Latin1,
+            _ => throw new NotSupportedException($@"The encoding ""{CharacterEncoding}"" is not supported. " +
+                                    @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
+        };
+
+    /// <summary>
     /// Gets the document declaration from the current options.
     /// </summary>
     /// <value>The document declaration.</value>
-    public XDeclaration? DocumentDeclaration => AddDocumentDeclaration ? new XDeclaration("1.0", CharacterEncoding, null) : null;
+    internal XDeclaration? DocumentDeclaration => AddDocumentDeclaration ? new XDeclaration("1.0", CharacterEncoding, null) : null;
 
     /// <summary>
     /// Builds an XML comment object with the specified comment text.
     /// </summary>
     /// <param name="comment">The comment.</param>
     /// <returns>System.Nullable&lt;XComment&gt;.</returns>
-    public XComment? Comment(string comment)
+    internal XComment? Comment(string comment)
         => AddComments ? new XComment(comment) : null;
 
     /// <summary>
@@ -119,7 +119,7 @@ public partial class Options
     /// </summary>
     /// <param name="expression">The expression.</param>
     /// <returns>System.Nullable&lt;XComment&gt;.</returns>
-    public XComment? Comment(System.Linq.Expressions.Expression expression)
+    internal XComment? Comment(Expression expression)
         => AddComments ? Comment($" {expression} ") : null;
 
     /// <summary>
@@ -127,7 +127,7 @@ public partial class Options
     /// </summary>
     /// <param name="parent">The parent.</param>
     /// <param name="expression">The expression.</param>
-    public void AddComment(XContainer parent, System.Linq.Expressions.Expression expression)
+    internal void AddComment(XContainer parent, Expression expression)
     {
         if (AddComments)
             parent.Add(new XComment($" {expression} "));
@@ -138,7 +138,7 @@ public partial class Options
     /// </summary>
     /// <param name="parent">The parent.</param>
     /// <param name="comment">The comment.</param>
-    public void AddComment(XContainer parent, string comment)
+    internal void AddComment(XContainer parent, string comment)
     {
         if (AddComments)
             parent.Add(new XComment($" {comment} "));
@@ -149,7 +149,7 @@ public partial class Options
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>System.String.</returns>
-    public string TransformTypeName(Type type)
+    internal string TransformTypeName(Type type)
         => Transform.TypeName(type, TypeNames);
 
     /// <summary>
@@ -158,6 +158,6 @@ public partial class Options
     /// <param name="identifier">The identifier.</param>
     /// <returns>string.</returns>
     /// <exception cref="InternalTransformErrorException">Invalid identifier.</exception>
-    public string TransformIdentifier(string identifier)
+    internal string TransformIdentifier(string identifier)
         => Transform.Identifier(identifier, Identifiers);
 }

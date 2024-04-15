@@ -1,8 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-static class XmlAttribute
+static class AttributeNames
 {
-    public static readonly XName Nil                    = XmlNamespace.Xsi+"nil";
+    public static readonly XName Nil                    = Namespaces.Xsi+"nil";
     public static readonly XName Assembly               = "assembly";
     public static readonly XName DelegateType           = "delegateType";
     public static readonly XName Family                 = "family";

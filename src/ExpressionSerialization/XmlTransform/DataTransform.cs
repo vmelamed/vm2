@@ -20,29 +20,29 @@ public class DataTransform(Options? options = default)
     /// </summary>
     static ReadOnlyDictionary<Type, ConstantTransform> _constantTransforms = new (new Dictionary<Type, ConstantTransform>()
     {
-        { typeof(bool),             (n, x) => x.Add(new XElement(XmlElement.Boolean,        XmlConvert.ToString((bool)n.Value!))) },
-        { typeof(byte),             (n, x) => x.Add(new XElement(XmlElement.UnsignedByte,   XmlConvert.ToString((byte)n.Value!))) },
-        { typeof(sbyte),            (n, x) => x.Add(new XElement(XmlElement.Byte,           XmlConvert.ToString((sbyte)n.Value!))) },
-        { typeof(short),            (n, x) => x.Add(new XElement(XmlElement.Short,          XmlConvert.ToString((short)n.Value!))) },
-        { typeof(ushort),           (n, x) => x.Add(new XElement(XmlElement.UnsignedShort,  XmlConvert.ToString((ushort)n.Value!))) },
-        { typeof(int),              (n, x) => x.Add(new XElement(XmlElement.Int,            XmlConvert.ToString((int)n.Value!))) },
-        { typeof(uint),             (n, x) => x.Add(new XElement(XmlElement.UnsignedInt,    XmlConvert.ToString((uint)n.Value!))) },
-        { typeof(long),             (n, x) => x.Add(new XElement(XmlElement.Long,           XmlConvert.ToString((long)n.Value!))) },
-        { typeof(ulong),            (n, x) => x.Add(new XElement(XmlElement.UnsignedLong,   XmlConvert.ToString((ulong)n.Value!))) },
-        { typeof(Half),             (n, x) => x.Add(new XElement(XmlElement.Half,           n.Value!.ToString())) },
-        { typeof(float),            (n, x) => x.Add(new XElement(XmlElement.Float,          XmlConvert.ToString((float)n.Value!))) },
-        { typeof(double),           (n, x) => x.Add(new XElement(XmlElement.Double,         XmlConvert.ToString((double)n.Value!))) },
-        { typeof(decimal),          (n, x) => x.Add(new XElement(XmlElement.Decimal,        XmlConvert.ToString((decimal)n.Value!))) },
-        { typeof(string),           (n, x) => x.Add(new XElement(XmlElement.String,         n.Value!))},
-        { typeof(char),             (n, x) => x.Add(new XElement(XmlElement.Char,           XmlConvert.ToChar(new string((char)n.Value!, 1)))) },
-        { typeof(Guid),             (n, x) => x.Add(new XElement(XmlElement.Guid,           XmlConvert.ToString((Guid)n.Value!))) },
-        { typeof(DateTime),         (n, x) => x.Add(new XElement(XmlElement.DateTime,       XmlConvert.ToString((DateTime)n.Value!, XmlDateTimeSerializationMode.RoundtripKind))) },
-        { typeof(DateTimeOffset),   (n, x) => x.Add(new XElement(XmlElement.DateTimeOffset, XmlConvert.ToString((DateTimeOffset)n.Value!, "O"))) },
-        { typeof(TimeSpan),         (n, x) => x.Add(new XElement(XmlElement.Duration,       XmlConvert.ToString((TimeSpan)n.Value!))) },
-        { typeof(Uri),              (n, x) => x.Add(new XElement(XmlElement.AnyURI,         ((Uri)n.Value!).ToString())) },
-        { typeof(DBNull),           (n, x) => x.Add(new XElement(XmlElement.DBNull))        },
-        { typeof(IntPtr),           (n, x) => x.Add(new XElement(XmlElement.IntPtr,         XmlConvert.ToString((IntPtr)n.Value!))) },
-        { typeof(UIntPtr),          (n, x) => x.Add(new XElement(XmlElement.UnsignedIntPtr, XmlConvert.ToString((UIntPtr)n.Value!))) },
+        { typeof(bool),             (n, x) => x.Add(new XElement(ElementNames.Boolean,        XmlConvert.ToString((bool)n.Value!))) },
+        { typeof(byte),             (n, x) => x.Add(new XElement(ElementNames.UnsignedByte,   XmlConvert.ToString((byte)n.Value!))) },
+        { typeof(sbyte),            (n, x) => x.Add(new XElement(ElementNames.Byte,           XmlConvert.ToString((sbyte)n.Value!))) },
+        { typeof(short),            (n, x) => x.Add(new XElement(ElementNames.Short,          XmlConvert.ToString((short)n.Value!))) },
+        { typeof(ushort),           (n, x) => x.Add(new XElement(ElementNames.UnsignedShort,  XmlConvert.ToString((ushort)n.Value!))) },
+        { typeof(int),              (n, x) => x.Add(new XElement(ElementNames.Int,            XmlConvert.ToString((int)n.Value!))) },
+        { typeof(uint),             (n, x) => x.Add(new XElement(ElementNames.UnsignedInt,    XmlConvert.ToString((uint)n.Value!))) },
+        { typeof(long),             (n, x) => x.Add(new XElement(ElementNames.Long,           XmlConvert.ToString((long)n.Value!))) },
+        { typeof(ulong),            (n, x) => x.Add(new XElement(ElementNames.UnsignedLong,   XmlConvert.ToString((ulong)n.Value!))) },
+        { typeof(Half),             (n, x) => x.Add(new XElement(ElementNames.Half,           n.Value!.ToString())) },
+        { typeof(float),            (n, x) => x.Add(new XElement(ElementNames.Float,          XmlConvert.ToString((float)n.Value!))) },
+        { typeof(double),           (n, x) => x.Add(new XElement(ElementNames.Double,         XmlConvert.ToString((double)n.Value!))) },
+        { typeof(decimal),          (n, x) => x.Add(new XElement(ElementNames.Decimal,        XmlConvert.ToString((decimal)n.Value!))) },
+        { typeof(string),           (n, x) => x.Add(new XElement(ElementNames.String,         n.Value!))},
+        { typeof(char),             (n, x) => x.Add(new XElement(ElementNames.Char,           XmlConvert.ToChar(new string((char)n.Value!, 1)))) },
+        { typeof(Guid),             (n, x) => x.Add(new XElement(ElementNames.Guid,           XmlConvert.ToString((Guid)n.Value!))) },
+        { typeof(DateTime),         (n, x) => x.Add(new XElement(ElementNames.DateTime,       XmlConvert.ToString((DateTime)n.Value!, XmlDateTimeSerializationMode.RoundtripKind))) },
+        { typeof(DateTimeOffset),   (n, x) => x.Add(new XElement(ElementNames.DateTimeOffset, XmlConvert.ToString((DateTimeOffset)n.Value!, "O"))) },
+        { typeof(TimeSpan),         (n, x) => x.Add(new XElement(ElementNames.Duration,       XmlConvert.ToString((TimeSpan)n.Value!))) },
+        { typeof(Uri),              (n, x) => x.Add(new XElement(ElementNames.AnyURI,         ((Uri)n.Value!).ToString())) },
+        { typeof(DBNull),           (n, x) => x.Add(new XElement(ElementNames.DBNull))        },
+        { typeof(IntPtr),           (n, x) => x.Add(new XElement(ElementNames.IntPtr,         XmlConvert.ToString((IntPtr)n.Value!))) },
+        { typeof(UIntPtr),          (n, x) => x.Add(new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString((UIntPtr)n.Value!))) },
     });
     #endregion
 
@@ -97,10 +97,10 @@ public class DataTransform(Options? options = default)
 
         parent.Add(
                 new XElement(
-                        XmlElement.Enum,
-                        new XAttribute(XmlAttribute.Type, Transform.TypeName(node.Type, _options.TypeNames)),
-                        baseType != typeof(int) ? new XAttribute(XmlAttribute.BaseType, Transform.TypeName(baseType, _options.TypeNames)) : null,
-                        new XAttribute(XmlAttribute.BaseValue, value!.ToString()!),
+                        ElementNames.Enum,
+                        new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type, _options.TypeNames)),
+                        baseType != typeof(int) ? new XAttribute(AttributeNames.BaseType, Transform.TypeName(baseType, _options.TypeNames)) : null,
+                        new XAttribute(AttributeNames.BaseValue, value!.ToString()!),
                         node.Value!.ToString()));
     }
     #endregion
@@ -125,9 +125,9 @@ public class DataTransform(Options? options = default)
         var nullable        = node.Value;
         var isNull          = nullable is null;
         var nullableElement = new XElement(
-                                    XmlElement.Nullable,
-                                    isNull ? new XAttribute(XmlAttribute.Type, Transform.TypeName(underlyingType, _options.TypeNames)) : null,
-                                    isNull ? new XAttribute(XmlAttribute.Nil, isNull) : null);
+                                    ElementNames.Nullable,
+                                    isNull ? new XAttribute(AttributeNames.Type, Transform.TypeName(underlyingType, _options.TypeNames)) : null,
+                                    isNull ? new XAttribute(AttributeNames.Nil, isNull) : null);
 
         parent.Add(nullableElement);
 
@@ -143,8 +143,8 @@ public class DataTransform(Options? options = default)
 
         // construct custom type element
         nullableElement.Add(new XElement(
-                                    XmlElement.Custom,
-                                    new XAttribute(XmlAttribute.Type, Transform.TypeName(underlyingType, _options.TypeNames)),
+                                    ElementNames.Custom,
+                                    new XAttribute(AttributeNames.Type, Transform.TypeName(underlyingType, _options.TypeNames)),
                                     nullable));
     }
     #endregion
@@ -160,8 +160,8 @@ public class DataTransform(Options? options = default)
         XContainer parent)
     {
         var anonymousElement = new XElement(
-                                    XmlElement.Anonymous,
-                                    new XAttribute(XmlAttribute.Type, Transform.TypeName(node.Type, _options.TypeNames)));
+                                    ElementNames.Anonymous,
+                                    new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type, _options.TypeNames)));
         parent.Add(anonymousElement);
 
         var props = node.Type.GetProperties();
@@ -169,8 +169,8 @@ public class DataTransform(Options? options = default)
         for (var i = 0; i < props.Length; i++)
         {
             var curElement = new XElement(
-                                    XmlElement.Property,
-                                    new XAttribute(XmlAttribute.Name, props[i].Name));
+                                    ElementNames.Property,
+                                    new XAttribute(AttributeNames.Name, props[i].Name));
 
             var propValue = props[i].GetValue(node.Value, null);
 
@@ -194,8 +194,8 @@ public class DataTransform(Options? options = default)
         XContainer parent)
     {
         var custom = new XElement(
-                                XmlElement.Custom,
-                                new XAttribute(XmlAttribute.Type, Transform.TypeName(node.Type, _options.TypeNames)));
+                                ElementNames.Custom,
+                                new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type, _options.TypeNames)));
         parent.Add(custom);
 
         if (node.Value is null)
