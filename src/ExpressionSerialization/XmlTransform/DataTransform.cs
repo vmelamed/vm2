@@ -1,9 +1,9 @@
-﻿namespace vm2.ExpressionSerialization.XmlTransform;
+﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
 
 using System.Collections.ObjectModel;
 
-using vm2.ExpressionSerialization.Conventions;
-using vm2.ExpressionSerialization.Utilities;
+using vm2.XmlExpressionSerialization.Conventions;
+using vm2.XmlExpressionSerialization.Utilities;
 
 using ConstantTransform = Action<ConstantExpression, XContainer>;
 
@@ -68,13 +68,11 @@ public class DataTransform(Options? options = default)
             return EnumTransform;
 
         // if it is a nullable - get nullable transformer or
-        if (type.IsGenericType &&
-            type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        if (type.IsNullable())
             return NullableTransform;
 
         // if it is an anonymous - get anonymous transformer or
-        if (type.IsGenericType &&
-            type.IsAnonymous())
+        if (type.IsAnonymous())
             return AnonymousTransformer;
 
         // get general object transformer

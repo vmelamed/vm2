@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.XmlTransform;
+﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
 
 static class AttributeNames
 {

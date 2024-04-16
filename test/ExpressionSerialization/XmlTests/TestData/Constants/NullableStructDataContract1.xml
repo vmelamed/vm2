@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- this.DumpString() -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <constant>
+        <nullable>
+            <StructDataContract1
+                xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.ExpressionSerializationTests">
+                <IntProperty>7</IntProperty>
+                <StringProperty>vm</StringProperty>
+            </StructDataContract1>
+        </nullable>
+    </constant>
+</expression>

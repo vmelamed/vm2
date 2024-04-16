@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.ExpressionSerializationTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests;
 
 using System.Runtime.Serialization;
 
@@ -149,7 +149,7 @@ public struct StructDataContract1
     [DataMember]
     public string StringProperty { get; set; } = "";
 
-    public override string ToString() => "this.DumpString()";
+    public override readonly string ToString() => "this.DumpString()";
 }
 
 [DataContract]
@@ -203,28 +203,4 @@ class TestMembersInitialized
 
 public static class DataUtils
 {
-    public static ConstantExpression GetAnonymous() => Expression.Constant(new
-    {
-        ObjectProperty = (object?)null,
-        NullIntProperty = (int?)null,
-        NullLongProperty = (long?)1L,
-        BoolProperty = true,
-        CharProperty = 'A',
-        ByteProperty = (byte)1,
-        SByteProperty = (sbyte)1,
-        ShortProperty = (short)1,
-        IntProperty = 1,
-        LongProperty = (long)1,
-        UShortProperty = (ushort)1,
-        UIntProperty = (uint)1,
-        ULongProperty = (ulong)1,
-        DoubleProperty = 1.0,
-        FloatProperty = (float)1.0,
-        DecimalProperty = 1M,
-        GuidProperty = Guid.Empty,
-        UriProperty = new Uri("http://localhost"),
-        DateTimeProperty = new DateTime(2013, 1, 13),
-        TimeSpanProperty = new TimeSpan(123L),
-        DateTimeOffsetProperty = new DateTimeOffset(new DateTime(2013, 1, 13)),
-    });
 }

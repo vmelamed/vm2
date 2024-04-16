@@ -14,6 +14,6 @@ global using System.Xml.Serialization;
 
 global using Newtonsoft.Json.Linq;
 
-global using vm2.ExpressionSerialization.Abstractions;
-global using vm2.ExpressionSerialization.Exceptions;
+global using vm2.XmlExpressionSerialization.Abstractions;
+global using vm2.XmlExpressionSerialization.Exceptions;
 global using vm2.Threading;

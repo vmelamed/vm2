@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Conventions;
+﻿namespace vm2.XmlExpressionSerialization.Conventions;
 
 static partial class Transform
 {

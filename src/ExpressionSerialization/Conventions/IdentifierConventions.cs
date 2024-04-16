@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Conventions;
+﻿namespace vm2.XmlExpressionSerialization.Conventions;
 
 /// <summary>
 /// Enum IdentifierConventions specify how to transform C# identifiers to XML names.

@@ -10,10 +10,10 @@ global using FluentAssertions;
 
 global using TestUtilities;
 
-global using vm2.ExpressionSerialization.Conventions;
-global using vm2.ExpressionSerialization.Exceptions;
-global using vm2.ExpressionSerialization.ExpressionSerializationTests;
-global using vm2.ExpressionSerialization.XmlTransform;
+global using vm2.XmlExpressionSerialization.Conventions;
+global using vm2.XmlExpressionSerialization.Exceptions;
+global using vm2.ExpressionSerialization.XmlTests;
+global using vm2.XmlExpressionSerialization.XmlTransform;
 
 global using Xunit.Abstractions;
 

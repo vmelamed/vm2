@@ -1,8 +1,8 @@
-﻿namespace vm2.ExpressionSerialization.ExpressionSerializationTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public class XmlSerializationTestsFixture : IDisposable
+public class SerializationTestsFixture : IDisposable
 {
-    const string schemasPath = "../../../../../src/ExpressionSerialization/Schemas/";
+    const string schemasPath = "../../../../../src/XmlExpressionSerialization/Schemas/";
 
     readonly XmlSchemaSet _schemas = new();
 
@@ -16,6 +16,7 @@ public class XmlSerializationTestsFixture : IDisposable
     {
         ByteOrderMark = true,
         AddDocumentDeclaration = true,
+        OmitDuplicateNamespaces = false, // otherwise DeepEquals will fail
         Indent = true,
         IndentSize = 4,
         AttributesOnNewLine = true,
@@ -24,7 +25,7 @@ public class XmlSerializationTestsFixture : IDisposable
 
     const LoadOptions loadOptions = LoadOptions.None; // LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
 
-    public XmlSerializationTestsFixture()
+    public SerializationTestsFixture()
     {
         var readerSettings = new XmlReaderSettings() {
             DtdProcessing = DtdProcessing.Parse

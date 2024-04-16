@@ -1,6 +1,6 @@
-﻿namespace vm2.ExpressionSerialization.Abstractions;
+﻿namespace vm2.XmlExpressionSerialization.Abstractions;
 
-using vm2.ExpressionSerialization.XmlTransform;
+using vm2.XmlExpressionSerialization.XmlTransform;
 
 /// <summary>
 /// Class ExpressionSerializingVisitor.

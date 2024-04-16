@@ -1,4 +1,5 @@
-﻿namespace vm2.ExpressionSerialization.ExpressionSerializationTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests;
+using vm2.XmlExpressionSerialization.Conventions;
 
 public partial class TransformOptionsTests
 {
@@ -41,7 +42,7 @@ public partial class TransformOptionsTests
     }
 
     [Theory]
-    [MemberData(nameof(TransformTypeNamesLocalData))]
+    [MemberData(nameof(TransformAnonymousTypeNamesLocalData))]
     public void TransformTypeNamesAnonymousTest(string _, string expected, TypeNameConventions convention, bool throws)
     {
         Transform.ResetTypesNames();
@@ -52,6 +53,24 @@ public partial class TransformOptionsTests
             Xyz = "xyz",
         };
         var input = test.GetType();
+
+        var call = () => Transform.TypeName(input, convention);
+        if (throws)
+        {
+            call.Should().Throw<InternalTransformErrorException>();
+            return;
+        }
+
+        call().Should().Be(expected);
+    }
+
+    [Theory]
+    [MemberData(nameof(TransformGenericTypeNamesLocalData))]
+    public void TransformTypeNamesDictionaryTest(string _, string expected, TypeNameConventions convention, bool throws)
+    {
+        Transform.ResetTypesNames();
+
+        var input = typeof(Dictionary<int, string>);
 
         var call = () => Transform.TypeName(input, convention);
         if (throws)

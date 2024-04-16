@@ -1,5 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Conventions;
-
+﻿namespace vm2.XmlExpressionSerialization.Conventions;
 static partial class Transform
 {
     #region Maps of types and type names
@@ -136,12 +135,16 @@ static partial class Transform
             if (_typesToNames.TryGetValue(type, out var typeName))
                 return typeName;
 
-            typeName = convention switch {
-                TypeNameConventions.AssemblyQualifiedName => type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
-                TypeNameConventions.FullName => type.FullName ?? type.Name,
-                TypeNameConventions.Name => type.Name,
-                _ => throw new InternalTransformErrorException("Invalid TypeNameConventions value.")
-            };
+            typeName = type.IsGenericType &&
+                       !type.IsGenericTypeDefinition &&
+                       convention != TypeNameConventions.AssemblyQualifiedName
+                            ? $"{TypeName(type.GetGenericTypeDefinition(), convention).Split('`')[0]}<{string.Join(", ", type.GetGenericArguments().Select(t => TypeName(t, convention)))}>"
+                            : convention switch {
+                                TypeNameConventions.AssemblyQualifiedName => type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
+                                TypeNameConventions.FullName => type.FullName ?? type.Name,
+                                TypeNameConventions.Name => type.Name,
+                                _ => throw new InternalTransformErrorException("Invalid TypeNameConventions value.")
+                            };
 
             using (_typesNamesLock.WriterLock())
             {

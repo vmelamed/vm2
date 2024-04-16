@@ -1,14 +1,13 @@
-﻿namespace vm2.ExpressionSerialization.ExpressionSerializationTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-//[Collection("XmlSerialization")]
-public partial class XmlExpressionTransformTests : IClassFixture<XmlSerializationTestsFixture>
+public partial class ExpressionTransformTests : IClassFixture<SerializationTestsFixture>
 {
     public ITestOutputHelper Out { get; }
 
-    XmlSerializationTestsFixture _fixture;
+    SerializationTestsFixture _fixture;
 
-    public XmlExpressionTransformTests(
-        XmlSerializationTestsFixture fixture,
+    public ExpressionTransformTests(
+        SerializationTestsFixture fixture,
         ITestOutputHelper output)
     {
         FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
@@ -19,7 +18,7 @@ public partial class XmlExpressionTransformTests : IClassFixture<XmlSerializatio
 #pragma warning disable xUnit1045
     [Theory]
     [MemberData(nameof(ConstantExpressionData))]
-    public async Task ConstantTestAsync(string _, object value, string fileName)
+    public async Task TestConstantAsync(string _, object value, string fileName)
     {
         var expression = Expression.Constant(value);
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync($"../../../TestData/Constants/{fileName}", Out);
@@ -32,9 +31,9 @@ public partial class XmlExpressionTransformTests : IClassFixture<XmlSerializatio
     [Theory]
     [InlineData(5, "../../../TestData/Constants/NullableInt.xml")]
     [InlineData(null, "../../../TestData/Constants/NullNullableInt.xml")]
-    public async Task ConstantTestNullableIntAsync(int? value, string fileName)
+    public async Task TestConstantNullableIntAsync(int? value, string fileName)
     {
-        Expression expression = Expression.Constant(value, typeof(int?));
+        var expression = Expression.Constant(value, typeof(int?));
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
 
         _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
@@ -44,9 +43,9 @@ public partial class XmlExpressionTransformTests : IClassFixture<XmlSerializatio
     [Theory]
     [InlineData(5L, "../../../TestData/Constants/NullableLong.xml")]
     [InlineData(null, "../../../TestData/Constants/NullNullableLong.xml")]
-    public async Task ConstantTestNullableLongAsync(long? value, string fileName)
+    public async Task TestConstantNullableLongAsync(long? value, string fileName)
     {
-        Expression expression = Expression.Constant(value, typeof(long?));
+        var expression = Expression.Constant(value, typeof(long?));
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
 
         _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
@@ -54,32 +53,44 @@ public partial class XmlExpressionTransformTests : IClassFixture<XmlSerializatio
     }
 
     [Fact]
-    public async Task ConstantTestAnonymousAsync()
-    {
-        var fileName = "../../../TestData/Constants/Anonymous.xml";
-        Expression expression = DataUtils.GetAnonymous();
-        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
-
-        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
-        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
-    }
-
-    [Fact]
-    public async Task ConstantTestObject1Async()
-    {
-        var fileName = "../../../TestData/Constants/Object1.xml";
-        Expression expression = Expression.Constant(new Object1());
-        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
-
-        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
-        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
-    }
-
-    [Fact]
-    public async Task ConstantTestObject1NullAsync()
+    public async Task TestConstantObject1NullAsync()
     {
         var fileName = "../../../TestData/Constants/Object1Null.xml";
-        Expression expression = Expression.Constant(null, typeof(Object1));
+        var expression = Expression.Constant(null, typeof(Object1));
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
+
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task TestConstantExpressionClassNonSerializableAsync(bool callAsync)
+    {
+        var fileName = "../../../TestData/Constants/ClassSerializable1.xml";
+        var expression = Expression.Constant(new ClassNonSerializable());
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
+        var testCall = () => _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);
+        var testAsyncCall = async () => await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, Out, CancellationToken.None);
+
+        if (!callAsync)
+            testCall.Should().Throw<ObjectNotSerializableException>();
+        else
+            await testAsyncCall.Should().ThrowAsync<ObjectNotSerializableException>();
+    }
+
+    [Theory]
+    [InlineData(false, "../../../TestData/Constants/NullableStructDataContract1.xml")]
+    [InlineData(true, "../../../TestData/Constants/NullNullableStructDataContract1.xml")]
+    public async Task TestConstantNullableStructDataContractAsync(bool isNull, string fileName)
+    {
+        StructDataContract1? structDc = isNull ? null : new StructDataContract1()
+        {
+            IntProperty = 7,
+            StringProperty = "vm",
+        };
+        var expression = Expression.Constant(structDc, typeof(StructDataContract1?));
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
 
         _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, Out);

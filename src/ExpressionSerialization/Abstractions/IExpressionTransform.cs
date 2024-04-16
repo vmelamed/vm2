@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Abstractions;
+﻿namespace vm2.XmlExpressionSerialization.Abstractions;
 
 /// <summary>
 /// Interface IExpressionTransform represents a transform of a LINQ expression to some document model.

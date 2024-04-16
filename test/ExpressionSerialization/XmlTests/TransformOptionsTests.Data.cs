@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.ExpressionSerializationTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests;
 
 public partial class TransformOptionsTests
 {
@@ -133,14 +133,20 @@ public partial class TransformOptionsTests
     class TestTypeNameConvention { }
 
     public static TheoryData<string, Type, string, TypeNameConventions, bool> TransformTypeNamesData => new() {
-        { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.ExpressionSerializationTests.TransformOptionsTests+TestTypeNameConvention, ExpressionSerializationTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b", TypeNameConventions.AssemblyQualifiedName, false},
-        { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.ExpressionSerializationTests.TransformOptionsTests+TestTypeNameConvention", TypeNameConventions.FullName, false},
+        { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.XmlTests.TransformOptionsTests+TestTypeNameConvention, ExpressionSerializationTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.XmlTests.TransformOptionsTests+TestTypeNameConvention", TypeNameConventions.FullName, false},
         { TestLine(), typeof(TestTypeNameConvention), "TestTypeNameConvention", TypeNameConventions.Name, false},
     };
 
-    public static TheoryData<string, string, TypeNameConventions, bool> TransformTypeNamesLocalData => new() {
+    public static TheoryData<string, string, TypeNameConventions, bool> TransformAnonymousTypeNamesLocalData => new() {
         { TestLine(), "<>f__AnonymousType0`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], ExpressionSerializationTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b", TypeNameConventions.AssemblyQualifiedName, false},
-        { TestLine(), "<>f__AnonymousType0`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]", TypeNameConventions.FullName, false},
-        { TestLine(), "<>f__AnonymousType0`2", TypeNameConventions.Name, false},
+        { TestLine(), "<>f__AnonymousType0<int, string>", TypeNameConventions.FullName, false},
+        { TestLine(), "<>f__AnonymousType0<int, string>", TypeNameConventions.Name, false},
+    };
+
+    public static TheoryData<string, string, TypeNameConventions, bool> TransformGenericTypeNamesLocalData => new() {
+        { TestLine(), "System.Collections.Generic.Dictionary`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), "System.Collections.Generic.Dictionary<int, string>", TypeNameConventions.FullName, false},
+        { TestLine(), "Dictionary<int, string>", TypeNameConventions.Name, false},
     };
 }

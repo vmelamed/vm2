@@ -1,12 +1,11 @@
-﻿namespace vm2.ExpressionSerialization.Exceptions;
+﻿namespace vm2.XmlExpressionSerialization.Exceptions;
 
 /// <summary>
 /// Class NoAvailableResultException is thrown when there are no available results to be returned from a transform.
 /// Implements the <see cref="Exception" />
 /// </summary>
 /// <seealso cref="Exception" />
-public class NoAvailableResultException(
-    string message = "There are no available transform results.",
-    Exception? innerException = null) : Exception(message, innerException)
+public class NoAvailableResultException(string? message = null, Exception? innerException = null) : Exception(message ?? defaultMessage, innerException)
 {
+    const string defaultMessage = "There are no available transform results.";
 }

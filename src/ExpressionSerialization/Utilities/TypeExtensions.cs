@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Utilities;
+﻿namespace vm2.XmlExpressionSerialization.Utilities;
 
 using System.Collections.Frozen;
 
@@ -7,17 +7,18 @@ using System.Collections.Frozen;
 /// </summary>
 public static class TypeExtensions
 {
-    static Guid[] _nonPrimitiveBasicTypesCollection = [
-            typeof(string).GUID,
-            typeof(Guid).GUID,
-            typeof(decimal).GUID,
-            typeof(Uri).GUID,
-            typeof(DateTime).GUID,
-            typeof(DateTimeOffset).GUID,
-            typeof(TimeSpan).GUID,
-            typeof(DBNull).GUID,
-            typeof(Half).GUID,
-        ];
+    static Guid[] _nonPrimitiveBasicTypesCollection =
+    [
+        typeof(string).GUID,
+        typeof(Guid).GUID,
+        typeof(decimal).GUID,
+        typeof(Uri).GUID,
+        typeof(DateTime).GUID,
+        typeof(DateTimeOffset).GUID,
+        typeof(TimeSpan).GUID,
+        typeof(DBNull).GUID,
+        typeof(Half).GUID,
+    ];
     static FrozenSet<Guid> _nonPrimitiveBasicTypes = _nonPrimitiveBasicTypesCollection.ToFrozenSet();
 
     /// <summary>
@@ -39,16 +40,16 @@ public static class TypeExtensions
     /// <param name="type">The type.</param>
     /// <returns>bool.</returns>
     public static bool IsAnonymous(this Type type)
-        => type.Name.StartsWith(anonymousTypePrefix, StringComparison.Ordinal);
+        => type.IsGenericType && type.Name.StartsWith(anonymousTypePrefix, StringComparison.Ordinal);
 
-    const string collectionNamespacePrefix = "System.Collections";
+    const string collectionNamespacePrefix = "System.Collections.Generic";
 
     /// <summary>
     /// Determines whether the specified type is a generic collection.
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>bool.</returns>
-    public static bool IsCollection(this Type type)
+    public static bool IsSystemCollectionsGeneric(this Type type)
         => type.IsGenericType &&
            type.Namespace?.StartsWith(collectionNamespacePrefix, StringComparison.Ordinal) is true;
 
@@ -195,7 +196,7 @@ public static class TypeExtensions
             return type.GetElementType()!.CanXmlTransform();
 
         // if the type is collection - continue the test for the element type
-        if (type.IsCollection() &&
+        if (type.IsSystemCollectionsGeneric() &&
             type.GetInterfaces()
                 .FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(IEnumerable<>))?
                 .GetGenericArguments()

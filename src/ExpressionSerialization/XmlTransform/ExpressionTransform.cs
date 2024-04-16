@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.XmlTransform;
+﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
 
 using System.Xml.Linq;
 
@@ -68,7 +68,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
             Encoding = encoding,
             Indent = _options.Indent,
             IndentChars = new(' ', _options.IndentSize),
-            //NamespaceHandling = NamespaceHandling.OmitDuplicates,
+            NamespaceHandling = _options.OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
             NewLineOnAttributes = _options.AttributesOnNewLine,
             OmitXmlDeclaration = !_options.AddDocumentDeclaration,
             WriteEndDocumentOnClose = true,
@@ -103,7 +103,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
             Encoding = encoding,
             Indent = _options.Indent,
             IndentChars = new(' ', _options.IndentSize),
-            //NamespaceHandling = NamespaceHandling.OmitDuplicates,
+            NamespaceHandling = _options.OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
             NewLineOnAttributes = _options.AttributesOnNewLine,
             OmitXmlDeclaration = !_options.AddDocumentDeclaration,
             WriteEndDocumentOnClose = true,

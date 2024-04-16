@@ -1,6 +1,6 @@
-﻿namespace vm2.ExpressionSerialization.XmlTransform;
+﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
 
-using vm2.ExpressionSerialization.Conventions;
+using vm2.XmlExpressionSerialization.Conventions;
 
 /// <summary>
 /// Class ExpressionVisitor.
@@ -30,8 +30,17 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
     /// <param name="node">The expression to visit.</param>
     /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
     protected override Expression VisitConstant(ConstantExpression node)
-        => GenericVisit(
-                node,
-                base.VisitConstant,
-                (node, element) => _dataTransform.Get(node.Type)(node, element));
+    {
+        try
+        {
+            return GenericVisit(
+                     node,
+                     base.VisitConstant,
+                     (node, element) => _dataTransform.Get(node.Type)(node, element));
+        }
+        catch (InvalidOperationException x)
+        {
+            throw new ObjectNotSerializableException(node.Type, x);
+        }
+    }
 }

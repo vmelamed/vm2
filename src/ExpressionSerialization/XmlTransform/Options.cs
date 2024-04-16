@@ -1,6 +1,6 @@
-﻿namespace vm2.ExpressionSerialization.XmlTransform;
+﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
 
-using vm2.ExpressionSerialization.Conventions;
+using vm2.XmlExpressionSerialization.Conventions;
 
 /// <summary>
 /// Class Options transforms C# identifiers to XML names.
@@ -47,7 +47,13 @@ public partial class Options
     /// Gets or sets a value indicating whether to add an XML document declaration.
     /// </summary>
     /// <value><c>true</c> if XML document declaration should be added; otherwise, <c>false</c>.</value>
-    public bool AddDocumentDeclaration { get; set; } = false;
+    public bool AddDocumentDeclaration { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to eliminate duplicate namespaces.
+    /// </summary>
+    /// <value><c>true</c> if duplicate namespaces are to be omitted; otherwise, <c>false</c>.</value>
+    public bool OmitDuplicateNamespaces { get; set; } = true;
 
     /// <summary>
     /// Gets the identifiers transformation convention.
@@ -85,6 +91,7 @@ public partial class Options
     /// <value><c>true</c> if comments are to be added; otherwise, <c>false</c>.</value>
     public bool AddComments { get; set; } = false;
 
+    #region Internal interface
     /// <summary>
     /// Gets the encoding.
     /// </summary>
@@ -160,4 +167,5 @@ public partial class Options
     /// <exception cref="InternalTransformErrorException">Invalid identifier.</exception>
     internal string TransformIdentifier(string identifier)
         => Transform.Identifier(identifier, Identifiers);
+    #endregion
 }

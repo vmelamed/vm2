@@ -5,7 +5,7 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <custom
-            type="System.Collections.Generic.List`1[[System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]">
+            type="System.Collections.Generic.List&lt;nullable&lt;int&gt;&gt;">
             <ArrayOfNullableOfint
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns="http://schemas.datacontract.org/2004/07/System">
