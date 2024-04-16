@@ -1,6 +1,7 @@
 ﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
 
 using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 using vm2.XmlExpressionSerialization.Conventions;
 using vm2.XmlExpressionSerialization.Utilities;
@@ -94,12 +95,13 @@ public class DataTransform(Options? options = default)
         var baseType = node.Type.GetEnumUnderlyingType();
 
         parent.Add(
-                new XElement(
-                        ElementNames.Enum,
-                        new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type, _options.TypeNames)),
-                        baseType != typeof(int) ? new XAttribute(AttributeNames.BaseType, Transform.TypeName(baseType, _options.TypeNames)) : null,
-                        new XAttribute(AttributeNames.BaseValue, value!.ToString()!),
-                        node.Value!.ToString()));
+            _options.TypeComment(node.Type),
+            new XElement(
+                    ElementNames.Enum,
+                    new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)),
+                    baseType != typeof(int) ? new XAttribute(AttributeNames.BaseType, Transform.TypeName(baseType)) : null,
+                    new XAttribute(AttributeNames.BaseValue, value!.ToString()!),
+                    node.Value!.ToString()));
     }
     #endregion
 
@@ -126,10 +128,12 @@ public class DataTransform(Options? options = default)
 
         var nullableElement = new XElement(
                                     ElementNames.Nullable,
-                                    isNull ? new XAttribute(AttributeNames.Type, Transform.TypeName(underlyingType, _options.TypeNames)) : null,
+                                    isNull ? new XAttribute(AttributeNames.Type, Transform.TypeName(underlyingType)) : null,
                                     isNull ? new XAttribute(AttributeNames.Nil, isNull) : null);
 
-        parent.Add(nullableElement);
+        parent.Add(
+            _options.TypeComment(node.Type),
+            nullableElement);
 
         if (isNull)
             return;
@@ -154,8 +158,11 @@ public class DataTransform(Options? options = default)
     {
         var anonymousElement = new XElement(
                                     ElementNames.Anonymous,
-                                    new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type, _options.TypeNames)));
-        parent.Add(anonymousElement);
+                                    new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)));
+
+        parent.Add(
+            _options.TypeComment(node.Type),
+            anonymousElement);
 
         var props = node.Type.GetProperties();
 
@@ -188,8 +195,11 @@ public class DataTransform(Options? options = default)
     {
         var custom = new XElement(
                                 ElementNames.Custom,
-                                new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type, _options.TypeNames)));
-        parent.Add(custom);
+                                new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)));
+
+        parent.Add(
+            _options.TypeComment(node.Type),
+            custom);
 
         if (node.Value is null)
             return;

@@ -1,19 +1,21 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
+using System.IO;
+using System.Text;
+
 public class SerializationTestsFixture : IDisposable
 {
     const string schemasPath = @"..\..\..\..\..\..\src\ExpressionSerialization\Schemas\";
 
     readonly XmlSchemaSet _schemas = new();
 
-    static readonly FileStreamOptions _fileStreamOptions = new() {
-        Mode   = FileMode.Open,
+    internal static FileStreamOptions FileStreamOptions => new() {
+        Mode = FileMode.Open,
         Access = FileAccess.Read,
-        Share  = FileShare.Read,
+        Share = FileShare.Read,
     };
 
-    static readonly Options _options = new()
-    {
+    internal static Options Options => new() {
         ByteOrderMark = true,
         AddDocumentDeclaration = true,
         OmitDuplicateNamespaces = false, // otherwise DeepEquals will fail
@@ -23,21 +25,21 @@ public class SerializationTestsFixture : IDisposable
         AddComments = true,
     };
 
-    const LoadOptions loadOptions = LoadOptions.None; // LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
+    internal const LoadOptions XmlLoadOptions = LoadOptions.None; // LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
 
     public SerializationTestsFixture()
     {
         var readerSettings = new XmlReaderSettings() { DtdProcessing = DtdProcessing.Parse };
 
-        using (var stream = new FileStream($"{schemasPath}Microsoft.Serialization.xsd", _fileStreamOptions))
+        using (var stream = new FileStream($"{schemasPath}Microsoft.Serialization.xsd", FileStreamOptions))
         using (var reader = XmlReader.Create(stream, readerSettings))
             _schemas.Add("http://schemas.microsoft.com/2003/10/Serialization/", reader);
 
-        using (var stream = new FileStream($"{schemasPath}DataContract.xsd", _fileStreamOptions))
+        using (var stream = new FileStream($"{schemasPath}DataContract.xsd", FileStreamOptions))
         using (var reader = XmlReader.Create(stream, readerSettings))
             _schemas.Add("http://schemas.datacontract.org/2004/07/System", reader);
 
-        using (var stream = new FileStream($"{schemasPath}Expression.xsd", _fileStreamOptions))
+        using (var stream = new FileStream($"{schemasPath}Expression.xsd", FileStreamOptions))
         using (var reader = XmlReader.Create(stream, readerSettings))
             _schemas.Add("urn:schemas-vm-com:Linq.Expressions.Serialization", reader);
     }
@@ -63,73 +65,113 @@ public class SerializationTestsFixture : IDisposable
         return valid;
     }
 
-    public async Task<(XDocument, string)> GetExpectedAsync(string pathName, ITestOutputHelper? output = null)
+    public async Task<(XDocument?, string)> GetExpectedAsync(string pathName, ITestOutputHelper? output = null)
     {
-        // ARRANGE - get the expected string and XDocument from a file:
-        using var streamExpected = new FileStream(pathName, _fileStreamOptions);
-        var length = (int)streamExpected.Length;
-        Memory<byte> buf = new byte[length];
-        var read = await streamExpected.ReadAsync(buf, CancellationToken.None);
-        read.Should().Be(length, "should be able to read the whole file");
-        var expectedStr = Encoding.UTF8.GetString(buf.Span);
+        try
+        {
+            // ARRANGE - get the expected string and XDocument from a file:
+            pathName = Path.GetFullPath(pathName);
+            using var streamExpected = new FileStream(pathName, FileStreamOptions);
+            var length = (int)streamExpected.Length;
+            Memory<byte> buf = new byte[length];
+            var read = await streamExpected.ReadAsync(buf, CancellationToken.None);
+            read.Should().Be(length, "should be able to read the whole file");
+            var expectedStr = Encoding.UTF8.GetString(buf.Span);
 
-        output?.WriteLine("EXPECTED:\n{0}\n", expectedStr);
+            output?.WriteLine("EXPECTED:\n{0}\n", expectedStr);
 
-        streamExpected.Seek(0, SeekOrigin.Begin);
+            streamExpected.Seek(0, SeekOrigin.Begin);
 
-        var expectedDoc = await XDocument.LoadAsync(streamExpected, loadOptions, CancellationToken.None);
+            var expectedDoc = await XDocument.LoadAsync(streamExpected, XmlLoadOptions, CancellationToken.None);
 
-        Validate(expectedDoc, output).Should().BeTrue("the actual document should be valid according to the schema");
+            Validate(expectedDoc, output).Should().BeTrue("the actual document should be valid according to the schema");
 
-        return (expectedDoc, expectedStr);
+            return (expectedDoc, expectedStr);
+        }
+        catch (IOException x)
+        {
+            output?.WriteLine($"Error getting the expected document from `{pathName}`:\n{x}\nProceeding with creating the file from the actual document...");
+        }
+        catch (Exception x)
+        {
+            Xunit.Assert.Fail($"Error getting the expected document from `{pathName}`:\n{x}");
+        }
+        return (null, "");
     }
 
     public void TestSerializeExpression(
         Expression expression,
-        XDocument expectedDoc,
+        XDocument? expectedDoc,
         string expectedStr,
+        string? fileName,
         ITestOutputHelper? output = null)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionTransform(_options);
+        var transform = new ExpressionTransform(Options);
         var actualDoc = transform.ToDocument(expression);
         using var streamActual = new MemoryStream();
         transform.Serialize(expression, streamActual);
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        Assert(expectedDoc, expectedStr, actualDoc, actualStr, output);
+        Assert(expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
     public async Task TestSerializeExpressionAsync(
         Expression expression,
-        XDocument expectedDoc,
+        XDocument? expectedDoc,
         string expectedStr,
+        string? fileName,
         ITestOutputHelper? output = null,
         CancellationToken cancellationToken = default)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionTransform(_options);
+        var transform = new ExpressionTransform(Options);
         var actualDoc = transform.ToDocument(expression);
         using var streamActual = new MemoryStream();
         await transform.SerializeAsync(expression, streamActual, cancellationToken);
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        Assert(expectedDoc, expectedStr, actualDoc, actualStr, output);
+        Assert(expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
     void Assert(
-        XDocument expectedDoc,
+        XDocument? expectedDoc,
         string expectedStr,
         XDocument actualDoc,
         string actualStr,
+        string? fileName,
         ITestOutputHelper? output = null)
     {
         output?.WriteLine("ACTUAL:\n{0}\n", actualStr);
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
         Validate(actualDoc, output).Should().BeTrue("the actual document should be valid according to the schema");
+
+        if (expectedDoc is null)
+        {
+            fileName = string.IsNullOrEmpty(fileName)
+                            ? Path.GetFullPath($"{TransformTests.TestConstantsFilesPath}{DateTime.Now:yyyy-MM-dd hh-mm-ss.fff.xml}")
+                            : Path.GetFullPath(fileName);
+
+            var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+            var settings = new XmlWriterSettings() {
+                Encoding = Options.GetEncoding(),
+                Indent = Options.Indent,
+                IndentChars = new(' ', Options.IndentSize),
+                NamespaceHandling = Options.OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
+                NewLineOnAttributes = Options.AttributesOnNewLine,
+                OmitXmlDeclaration = !Options.AddDocumentDeclaration,
+                WriteEndDocumentOnClose = true,
+            };
+            using var writer = new StreamWriter(stream, Options.GetEncoding());
+            using var xmlWriter = XmlWriter.Create(writer, settings);
+
+            actualDoc.WriteTo(xmlWriter);
+
+            Xunit.Assert.Fail($"The expected XML does not appear to exist. Saved the actual XML in the file `{fileName}`.");
+        }
 
         actualStr.Should().Be(expectedStr, "the expected and the actual XML texts should be the same");
         XNode.DeepEquals(actualDoc, expectedDoc).Should().BeTrue("the expected and the actual XDocument objects should be deep-equal");

@@ -4,8 +4,10 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
+        <!-- this.DumpString() -->
+        <!-- vm2.ExpressionSerialization.XmlTests.ClassSerializable1 -->
         <custom
-            type="vm2.ExpressionSerialization.XmlTests.ClassSerializable1">
+            type="vm2.ExpressionSerialization.XmlTests.ClassSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
             <ClassSerializable1
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">

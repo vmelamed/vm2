@@ -4,6 +4,8 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
+        <!-- null -->
+        <!-- nullable<int> -->
         <nullable
             type="int"
             i:nil="true" />

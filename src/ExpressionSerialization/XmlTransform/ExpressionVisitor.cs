@@ -36,7 +36,11 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
             return GenericVisit(
                      node,
                      base.VisitConstant,
-                     (node, element) => _dataTransform.Get(node.Type)(node, element));
+                     (node, element) =>
+                     {
+                         _options.AddComment(element, node);
+                         _dataTransform.Get(node.Type)(node, element);
+                     });
         }
         catch (InvalidOperationException x)
         {

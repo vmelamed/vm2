@@ -32,12 +32,9 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         _visitor.Visit(expression);
         return new XElement(
                         ElementNames.Expression,
-                        new XAttribute( // we need this here only so that XDocument.DeepEquals to return true in the tests.
-                            "xmlns", Namespaces.Exs),
-                        //new XAttribute(
-                        //    XNamespace.Xmlns + "xs", Namespaces.Xsd),
-                        new XAttribute(
-                            XNamespace.Xmlns + "i", Namespaces.Xsi),
+                        new XAttribute("xmlns", Namespaces.Exs),
+                        //new XAttribute(XNamespace.Xmlns + "xs", Namespaces.Xsd),
+                        new XAttribute(XNamespace.Xmlns + "i", Namespaces.Xsi),
                         _visitor.Result);
     }
 
@@ -63,9 +60,8 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         Stream stream)
     {
         var doc = ToDocument(expression);
-        var encoding = _options.GetEncoding();
         var settings = new XmlWriterSettings() {
-            Encoding = encoding,
+            Encoding = _options.GetEncoding(),
             Indent = _options.Indent,
             IndentChars = new(' ', _options.IndentSize),
             NamespaceHandling = _options.OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
@@ -73,7 +69,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
             OmitXmlDeclaration = !_options.AddDocumentDeclaration,
             WriteEndDocumentOnClose = true,
         };
-        using var writer = new StreamWriter(stream, encoding);
+        using var writer = new StreamWriter(stream, _options.GetEncoding());
         using var xmlWriter = XmlWriter.Create(writer, settings);
 
         doc.WriteTo(xmlWriter);

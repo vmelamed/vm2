@@ -2,29 +2,10 @@
 static partial class Transform
 {
     #region Maps of types and type names
-    static readonly ReaderWriterLockSlim _typesNamesLock = new(LockRecursionPolicy.SupportsRecursion);
-
     /// <summary>
     /// The map of base type to type names
     /// </summary>
-    static Dictionary<Type, string> _typesToNames;
-
-    /// <summary>
-    /// The map of type names to base type
-    /// </summary>
-    static Dictionary<string, Type> _namesToTypes;
-
-    /// <summary>
-    /// Resets the translation tables typesToNames and namesToTypes.
-    /// </summary>
-    /// <remarks>
-    /// NOTE: this method is meant to be used only in unit tests, where the conventions change and the other methods 
-    /// may throw <see cref="InternalTransformErrorException"/>.
-    /// </remarks>
-    internal static void ResetTypesNames()
-    {
-        using var _ = _typesNamesLock.WriterLock();
-        _typesToNames = new()
+    static Dictionary<Type, string> _typesToNames = new()
         {
             { typeof(void),         "void"              },
             { typeof(char),         "char"              },
@@ -54,9 +35,13 @@ static partial class Transform
             { typeof(Enum),         "enum"              },
         };
 
-        _namesToTypes = new()
+    /// <summary>
+    /// The map of type names to base type
+    /// </summary>
+    static Dictionary<string, Type> _namesToTypes = new ()
         {
-            { "void",               typeof(void)        },
+            { "void",               typeof(void)
+},
             { "char",               typeof(char)        },
             { "boolean",            typeof(bool)        },
             { "unsignedByte",       typeof(byte)        },
@@ -83,12 +68,7 @@ static partial class Transform
             { "custom",             typeof(object)      },
             { "enum",               typeof(Enum)        },
         };
-    }
     #endregion
-
-#pragma warning disable CS8618
-    static Transform() => ResetTypesNames();
-#pragma warning restore CS8618
 
     /// <summary>
     /// Gets the type corresponding to a type name written in an xml string.
@@ -100,62 +80,50 @@ static partial class Transform
         if (string.IsNullOrWhiteSpace(typeName))
             return null;
 
-        using (_typesNamesLock.UpgradableReaderLock())
-        {
-            if (_namesToTypes.TryGetValue(typeName, out var type))
-                return type;
-
-            type = Type.GetType(typeName, false, false);
-
-            if (type is null)
-                return null;
-
-            using (_typesNamesLock.WriterLock())
-            {
-                if (_typesToNames.TryGetValue(type, out var nm))
-                    throw new InternalTransformErrorException($"Cannot map name '{typeName}' to type '{type.AssemblyQualifiedName}'. The type is already mapped to '{nm}'. Did you serialize with different conventions for type names?");
-
-                _namesToTypes[typeName] = type;
-                _typesToNames[type] = typeName;
-            }
+        if (_namesToTypes.TryGetValue(typeName, out var type))
             return type;
-        }
+
+        return Type.GetType(typeName, true, false);
     }
 
     /// <summary>
-    /// Transform the name of the type <paramref name="type"/> to string according to <paramref name="convention"/>.
+    /// Transform the name of the type <paramref name="type"/> to a possibly ugly string.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns>System.String.</returns>
+    public static string TypeName(Type type)
+    {
+        if (_typesToNames.TryGetValue(type, out var typeName))
+            return typeName;
+
+        return type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
+    }
+
+    /// <summary>
+    /// Transform the name of the type <paramref name="type"/> to a human readable string according to 
+    /// <paramref name="convention"/>.
     /// </summary>
     /// <param name="type">The type.</param>
     /// <param name="convention">The convention.</param>
     /// <returns>System.String.</returns>
     public static string TypeName(Type type, TypeNameConventions convention)
     {
-        using (_typesNamesLock.UpgradableReaderLock())
-        {
-            if (_typesToNames.TryGetValue(type, out var typeName))
-                return typeName;
-
-            typeName = type.IsGenericType &&
-                       !type.IsGenericTypeDefinition &&
-                       convention != TypeNameConventions.AssemblyQualifiedName
-                            ? $"{TypeName(type.GetGenericTypeDefinition(), convention).Split('`')[0]}<{string.Join(", ", type.GetGenericArguments().Select(t => TypeName(t, convention)))}>"
-                            : convention switch {
-                                TypeNameConventions.AssemblyQualifiedName => type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
-                                TypeNameConventions.FullName => type.FullName ?? type.Name,
-                                TypeNameConventions.Name => type.Name,
-                                _ => throw new InternalTransformErrorException("Invalid TypeNameConventions value.")
-                            };
-
-            using (_typesNamesLock.WriterLock())
-            {
-                if (_namesToTypes.TryGetValue(typeName, out var tp))
-                    throw new InternalTransformErrorException($"Cannot map type '{type.AssemblyQualifiedName}' to name '{typeName}'. The name is already mapped to '{tp.AssemblyQualifiedName}'.");
-
-                _namesToTypes[typeName] = type;
-                _typesToNames[type] = typeName;
-            }
-
+        if (_typesToNames.TryGetValue(type, out var typeName))
             return typeName;
+
+        if (type.IsGenericType && !type.IsGenericTypeDefinition && convention != TypeNameConventions.AssemblyQualifiedName)
+        {
+            var genericName = TypeName(type.GetGenericTypeDefinition(), convention).Split('`')[0];
+            var parameters  = string.Join(", ", type.GetGenericArguments().Select(t => TypeName(t, convention)));
+
+            return $"{genericName}<{parameters}>";
         }
+
+        return convention switch {
+            TypeNameConventions.AssemblyQualifiedName => type.AssemblyQualifiedName ?? type.FullName ?? type.Name,
+            TypeNameConventions.FullName => type.FullName ?? type.Name,
+            TypeNameConventions.Name => type.Name,
+            _ => throw new InternalTransformErrorException("Invalid TypeNameConventions value.")
+        };
     }
 }

@@ -5,9 +5,9 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <!-- null -->
-        <!-- nullable<long> -->
+        <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructSerializable1> -->
         <nullable
-            type="long"
+            type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
             i:nil="true" />
     </constant>
 </expression>

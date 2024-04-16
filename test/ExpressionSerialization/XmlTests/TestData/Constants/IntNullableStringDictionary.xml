@@ -21,7 +21,13 @@
                 </KeyValueOfintstring>
                 <KeyValueOfintstring>
                     <Key>3</Key>
-                    <Value>three</Value>
+                    <Value
+                        i:nil="true" />
+                </KeyValueOfintstring>
+                <KeyValueOfintstring>
+                    <Key>4</Key>
+                    <Value
+                        i:nil="true" />
                 </KeyValueOfintstring>
             </ArrayOfKeyValueOfintstring>
         </custom>

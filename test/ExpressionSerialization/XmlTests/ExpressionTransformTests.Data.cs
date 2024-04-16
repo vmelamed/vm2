@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class ExpressionTransformTests
+public partial class TransformTests
 {
     public static readonly TheoryData<string, object, string> ConstantExpressionData = new ()
     {
@@ -67,6 +67,9 @@ public partial class ExpressionTransformTests
         { TestLine(), new List<int>{ 1, 2, 3, 4 }, "ListOfInt.xml" },
         { TestLine(), new List<int?>{ 1, 2, null, null }, "ListOfNullableInt.xml" },
 
+        { TestLine(), new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", }, "IntStringDictionary.xml" },
+        { TestLine(), new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }, "IntNullableStringDictionary.xml" },
+
         { TestLine(), new ClassDataContract1(), "ClassDataContract1.xml" },
         { TestLine(), new ClassDataContract1[] { new(0, "vm"), new(1, "vm2 vm"), }, "ArrayOfClassDataContract1.xml" },
 
@@ -97,5 +100,31 @@ public partial class ExpressionTransformTests
                             },
                             null
                         }, "ArrayOfNullableStructDataContract1.xml" },
+
+        { TestLine(), new StructSerializable1(), "StructSerializable1.xml" },
+        { TestLine(), new StructSerializable1[]
+                        {
+                            new () {
+                                IntProperty = 0,
+                                StringProperty = "vm",
+                            },
+                            new() {
+                                IntProperty = 1,
+                                StringProperty = "vm vm",
+                            },
+                        }, "ArrayOfStructSerializable1.xml" },
+        { TestLine(), new StructSerializable1?[]
+                        {
+                            new() {
+                                IntProperty = 0,
+                                StringProperty = "vm",
+                            },
+                            null,
+                            new() {
+                                IntProperty = 1,
+                                StringProperty = "vm vm",
+                            },
+                            null
+                        }, "ArrayOfNullableStructSerializable1.xml" },
     };
 }

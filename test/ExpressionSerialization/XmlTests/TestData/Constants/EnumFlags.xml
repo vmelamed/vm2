@@ -4,8 +4,10 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
+        <!-- One, Three -->
+        <!-- vm2.ExpressionSerialization.XmlTests.EnumFlagsTest -->
         <enum
-            type="vm2.ExpressionSerialization.XmlTests.EnumFlagsTest"
+            type="vm2.ExpressionSerialization.XmlTests.EnumFlagsTest, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
             baseValue="5">One, Three</enum>
     </constant>
 </expression>

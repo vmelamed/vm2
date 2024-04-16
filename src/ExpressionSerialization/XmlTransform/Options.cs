@@ -1,6 +1,9 @@
 ﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
 
+using System.Linq.Expressions;
+
 using vm2.XmlExpressionSerialization.Conventions;
+using vm2.XmlExpressionSerialization.Utilities;
 
 /// <summary>
 /// Class Options transforms C# identifiers to XML names.
@@ -150,6 +153,17 @@ public partial class Options
         if (AddComments)
             parent.Add(new XComment($" {comment} "));
     }
+
+    /// <summary>
+    /// Creates an <see cref="XComment"/> with the human readable name of the <paramref name="type"/> as a comment. 
+    /// The type must be non-basic type.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    internal XComment? TypeComment(Type type)
+        => TypeNames != TypeNameConventions.AssemblyQualifiedName &&
+           (!type.IsBasicType() || type.IsEnum)
+                ? Comment($" {Transform.TypeName(type, TypeNames)} ")
+                : null;
 
     /// <summary>
     /// Transform the type c a string according c the <see cref="TypeNames"/>.
