@@ -2,7 +2,7 @@
 
 public class SerializationTestsFixture : IDisposable
 {
-    const string schemasPath = "../../../../../src/XmlExpressionSerialization/Schemas/";
+    const string schemasPath = @"..\..\..\..\..\..\src\ExpressionSerialization\Schemas\";
 
     readonly XmlSchemaSet _schemas = new();
 
@@ -27,9 +27,8 @@ public class SerializationTestsFixture : IDisposable
 
     public SerializationTestsFixture()
     {
-        var readerSettings = new XmlReaderSettings() {
-            DtdProcessing = DtdProcessing.Parse
-        };
+        var readerSettings = new XmlReaderSettings() { DtdProcessing = DtdProcessing.Parse };
+
         using (var stream = new FileStream($"{schemasPath}Microsoft.Serialization.xsd", _fileStreamOptions))
         using (var reader = XmlReader.Create(stream, readerSettings))
             _schemas.Add("http://schemas.microsoft.com/2003/10/Serialization/", reader);
@@ -93,7 +92,7 @@ public class SerializationTestsFixture : IDisposable
     {
         // ACT - get the actual string and XDocument by transforming the expression:
         var transform = new ExpressionTransform(_options);
-        var actualDoc = transform.TransformToDocument(expression);
+        var actualDoc = transform.ToDocument(expression);
         using var streamActual = new MemoryStream();
         transform.Serialize(expression, streamActual);
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
@@ -111,7 +110,7 @@ public class SerializationTestsFixture : IDisposable
     {
         // ACT - get the actual string and XDocument by transforming the expression:
         var transform = new ExpressionTransform(_options);
-        var actualDoc = transform.TransformToDocument(expression);
+        var actualDoc = transform.ToDocument(expression);
         using var streamActual = new MemoryStream();
         await transform.SerializeAsync(expression, streamActual, cancellationToken);
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());

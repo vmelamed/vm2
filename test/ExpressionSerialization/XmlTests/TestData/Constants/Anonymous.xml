@@ -5,7 +5,7 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <anonymous
-            type="&lt;&gt;f__AnonymousType1&lt;custom, nullable&lt;int&gt;, nullable&lt;long&gt;, boolean, char, unsignedByte, byte, short, int, long, unsignedShort, unsignedInt, unsignedLong, double, float, decimal, guid, uri, dateTime, duration, System.DateTimeOffset&gt;">
+            type="&lt;&gt;f__AnonymousType0&lt;custom, nullable&lt;int&gt;, nullable&lt;long&gt;, boolean, char, unsignedByte, byte, short, int, long, unsignedShort, unsignedInt, unsignedLong, double, float, decimal, guid, uri, dateTime, duration, System.DateTimeOffset&gt;">
             <property
                 name="ObjectProperty">
                 <custom

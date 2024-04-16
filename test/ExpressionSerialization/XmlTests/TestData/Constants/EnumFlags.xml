@@ -5,7 +5,7 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <enum
-            type="vm2.ExpressionSerialization.ExpressionSerializationTests.EnumFlagsTest"
+            type="vm2.ExpressionSerialization.XmlTests.EnumFlagsTest"
             baseValue="5">One, Three</enum>
     </constant>
 </expression>

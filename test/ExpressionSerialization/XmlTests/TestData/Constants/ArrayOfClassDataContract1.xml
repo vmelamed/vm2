@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- value(vm2.ExpressionSerialization.ExpressionSerializationTests.ClassDataContract1[]) -->
+<!-- value(vm2.ExpressionSerialization.XmlTests.ClassDataContract1[]) -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <custom
-            type="vm2.ExpressionSerialization.ExpressionSerializationTests.ClassDataContract1[]">
+            type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1[]">
             <ArrayOfClassDataContract1
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.ExpressionSerializationTests">
+                xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">
                 <ClassDataContract1>
                     <IntProperty>0</IntProperty>
                     <StringProperty>vm</StringProperty>

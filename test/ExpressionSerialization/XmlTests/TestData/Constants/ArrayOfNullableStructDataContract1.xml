@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- value(System.Nullable`1[vm2.ExpressionSerialization.ExpressionSerializationTests.StructDataContract1][]) -->
+<!-- value(System.Nullable`1[vm2.ExpressionSerialization.XmlTests.StructDataContract1][]) -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <custom
-            type="System.Nullable`1[[vm2.ExpressionSerialization.ExpressionSerializationTests.StructDataContract1, ExpressionSerializationTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][]">
-            <ArrayOfNullableOfStructDataContract1_PSXRm1dc
+            type="System.Nullable`1[[vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][]">
+            <ArrayOfNullableOfStructDataContract14b21ZJK3
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:d1p1="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.ExpressionSerializationTests"
+                xmlns:d1p1="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests"
                 xmlns="http://schemas.datacontract.org/2004/07/System">
                 <StructDataContract1>
                     <d1p1:IntProperty>0</d1p1:IntProperty>
@@ -22,7 +22,7 @@
                 </StructDataContract1>
                 <StructDataContract1
                     i:nil="true" />
-            </ArrayOfNullableOfStructDataContract1_PSXRm1dc>
+            </ArrayOfNullableOfStructDataContract14b21ZJK3>
         </custom>
     </constant>
 </expression>

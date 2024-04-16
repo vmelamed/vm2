@@ -133,15 +133,15 @@ public partial class TransformOptionsTests
     class TestTypeNameConvention { }
 
     public static TheoryData<string, Type, string, TypeNameConventions, bool> TransformTypeNamesData => new() {
-        { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.XmlTests.TransformOptionsTests+TestTypeNameConvention, ExpressionSerializationTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.XmlTests.TransformOptionsTests+TestTypeNameConvention, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b", TypeNameConventions.AssemblyQualifiedName, false},
         { TestLine(), typeof(TestTypeNameConvention), "vm2.ExpressionSerialization.XmlTests.TransformOptionsTests+TestTypeNameConvention", TypeNameConventions.FullName, false},
         { TestLine(), typeof(TestTypeNameConvention), "TestTypeNameConvention", TypeNameConventions.Name, false},
     };
 
     public static TheoryData<string, string, TypeNameConventions, bool> TransformAnonymousTypeNamesLocalData => new() {
-        { TestLine(), "<>f__AnonymousType0`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], ExpressionSerializationTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b", TypeNameConventions.AssemblyQualifiedName, false},
-        { TestLine(), "<>f__AnonymousType0<int, string>", TypeNameConventions.FullName, false},
-        { TestLine(), "<>f__AnonymousType0<int, string>", TypeNameConventions.Name, false},
+        { TestLine(), "<>f__AnonymousType1`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), "<>f__AnonymousType1<int, string>", TypeNameConventions.FullName, false},
+        { TestLine(), "<>f__AnonymousType1<int, string>", TypeNameConventions.Name, false},
     };
 
     public static TheoryData<string, string, TypeNameConventions, bool> TransformGenericTypeNamesLocalData => new() {

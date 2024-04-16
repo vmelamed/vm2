@@ -5,10 +5,10 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <custom
-            type="vm2.ExpressionSerialization.ExpressionSerializationTests.ClassDataContract1">
+            type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1">
             <ClassDataContract1
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.ExpressionSerializationTests">
+                xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">
                 <IntProperty>7</IntProperty>
                 <StringProperty>vm</StringProperty>
             </ClassDataContract1>

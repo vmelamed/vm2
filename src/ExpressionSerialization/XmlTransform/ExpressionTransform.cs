@@ -46,7 +46,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
     /// </summary>
     /// <param name="expression">The expression to be transformed.</param>
     /// <returns>The resultant top level document model node `XNode`.</returns>
-    public XDocument TransformToDocument(Expression expression)
+    public XDocument ToDocument(Expression expression)
         => new(
             _options.DocumentDeclaration,
             _options.Comment(expression),
@@ -62,7 +62,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         Expression expression,
         Stream stream)
     {
-        var doc = TransformToDocument(expression);
+        var doc = ToDocument(expression);
         var encoding = _options.GetEncoding();
         var settings = new XmlWriterSettings() {
             Encoding = encoding,
@@ -96,7 +96,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         Stream stream,
         CancellationToken cancellationToken = default)
     {
-        var doc = TransformToDocument(expression);
+        var doc = ToDocument(expression);
         var encoding = _options.GetEncoding();
         var settings = new XmlWriterSettings() {
             Async = true,

@@ -119,9 +119,11 @@ public class DataTransform(Options? options = default)
 
         Debug.Assert(type.GetGenericTypeDefinition() == typeof(Nullable<>));
 
-        var underlyingType  = node.Type.GetGenericArguments()[0];
+        var nullableType    = node.Type;
+        var underlyingType  = nullableType.GetGenericArguments()[0];
         var nullable        = node.Value;
-        var isNull          = nullable is null;
+        var isNull          = nullable is null || nullableType.GetProperty("HasValue")?.GetValue(nullable) is false;
+
         var nullableElement = new XElement(
                                     ElementNames.Nullable,
                                     isNull ? new XAttribute(AttributeNames.Type, Transform.TypeName(underlyingType, _options.TypeNames)) : null,
@@ -132,18 +134,11 @@ public class DataTransform(Options? options = default)
         if (isNull)
             return;
 
-        // get the transformer for the type argument from the table or
-        if (_constantTransforms.TryGetValue(underlyingType, out var transform))
-        {
-            transform(Expression.Constant(nullable, underlyingType), nullableElement);
-            return;
-        }
+        var value = nullableType.GetProperty("Value")?.GetValue(nullable);
 
-        // construct custom type element
-        nullableElement.Add(new XElement(
-                                    ElementNames.Custom,
-                                    new XAttribute(AttributeNames.Type, Transform.TypeName(underlyingType, _options.TypeNames)),
-                                    nullable));
+        Debug.Assert(value is not null);
+
+        Get(underlyingType)(Expression.Constant(value, underlyingType), nullableElement);
     }
     #endregion
 

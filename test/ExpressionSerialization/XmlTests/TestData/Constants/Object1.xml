@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- value(vm2.ExpressionSerialization.ExpressionSerializationTests.Object1) -->
+<!-- value(vm2.ExpressionSerialization.XmlTests.Object1) -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <custom
-            type="vm2.ExpressionSerialization.ExpressionSerializationTests.Object1">
+            type="vm2.ExpressionSerialization.XmlTests.Object1">
             <Object1
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
                 z:Id="i1"
