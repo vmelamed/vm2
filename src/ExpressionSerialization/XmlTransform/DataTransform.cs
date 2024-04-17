@@ -73,8 +73,8 @@ public class DataTransform(Options? options = default)
         if (type.IsByteSequence())
             return ByteSequenceTransform;
 
-        if (type.IsArray)
-            return ArrayTransform;
+        if (type.IsSequence())
+            return SequenceTransform;
 
         // get general object transformer
         return CustomTransform;
@@ -188,93 +188,85 @@ public class DataTransform(Options? options = default)
         ConstantExpression node,
         XContainer parent)
     {
-        XElement? sequence;
+        var nodeType = node.Type;
+        var nodeValue = node.Value;
+        var sequence = new XElement(
+                            ElementNames.ByteSequence,
+                            new XAttribute(AttributeNames.Type, _options.TransformTypeName(nodeType)),
+                            nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
+                        );
+        ReadOnlySpan<byte> bytes;
 
-        if (node.Type == typeof(byte[]))
+        if (nodeType == typeof(byte[]))
         {
-            var seqObject = (byte[]?)node.Value;
+            if (nodeValue is null)
+            {
+                parent.Add(sequence);
+                return;
+            }
 
-            sequence = new XElement(
-                                ElementNames.ByteArray,
-                                seqObject is null ? null : new XAttribute(AttributeNames.Length, seqObject.Length),
-                                seqObject is null ? new XAttribute(AttributeNames.Nil, true) : null,
-                                seqObject is null ? null : Convert.ToBase64String(seqObject)
-                            );
+            bytes = ((byte[])nodeValue).AsSpan();
         }
         else
         {
-            if (node.Value is null)
+            if (nodeValue is null)
                 throw new InternalTransformErrorException();
 
-            if (node.Type == typeof(Memory<byte>))
-            {
-                var seqObject = (Memory<byte>)node.Value;
-
-                sequence = new XElement(
-                                    ElementNames.MemoryByte,
-                                    new XAttribute(AttributeNames.Length, seqObject.Length),
-                                    Convert.ToBase64String(seqObject.Span)
-                                );
-            }
+            if (nodeType == typeof(Memory<byte>))
+                bytes = ((Memory<byte>)nodeValue).Span;
             else
-            if (node.Type == typeof(ReadOnlyMemory<byte>))
-            {
-                var seqObject = (ReadOnlyMemory<byte>)node.Value;
-
-                sequence = new XElement(
-                                    ElementNames.ReadOnlyMemoryByte,
-                                    new XAttribute(AttributeNames.Length, seqObject.Length),
-                                    Convert.ToBase64String(seqObject.Span)
-                                );
-            }
+            if (nodeType == typeof(ReadOnlyMemory<byte>))
+                bytes = ((ReadOnlyMemory<byte>)nodeValue).Span;
             else
-            if (node.Type == typeof(ArraySegment<byte>))
-            {
-                var seqObject = (ArraySegment<byte>)node.Value;
-
-                sequence = new XElement(
-                                    ElementNames.ByteArraySegment,
-                                    new XAttribute(AttributeNames.Length, seqObject.Count),
-                                    Convert.ToBase64String(seqObject.AsSpan())
-                                );
-            }
+            if (nodeType == typeof(ArraySegment<byte>))
+                bytes = ((ArraySegment<byte>)nodeValue).AsSpan();
             else
                 throw new InternalTransformErrorException();
         }
 
+        sequence.Add(
+            new XAttribute(AttributeNames.Length, bytes.Length),
+            Convert.ToBase64String(bytes));
         parent.Add(
-            _options.TypeComment(node.Type),
+            _options.TypeComment(nodeType),
             sequence);
     }
 
-    void ArrayTransform(
+    void SequenceTransform(
         ConstantExpression node,
         XContainer parent)
     {
-        var elementType = node.Type.GetElementType() ?? throw new InternalTransformErrorException();
-        var length = node.Value is null ? null : (int?)node.Type.GetProperty("Length")?.GetValue(node.Value);
-        var array = new XElement(
-                            ElementNames.Array,
+        var nodeType = node.Type;
+        var nodeValue = node.Value;
+        var piCount = nodeType.GetProperty("Count") ?? nodeType.GetProperty("Length") ?? throw new InternalTransformErrorException();
+        var length = (int?)piCount.GetValue(nodeValue);
+        var elementType = (nodeType.IsGenericType
+                                ? nodeType.GetGenericArguments()[0]
+                                : nodeType.GetElementType()) ?? throw new InternalTransformErrorException();
+
+        var collection = new XElement(
+                            ElementNames.Collection,
+                            new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                             new XAttribute(AttributeNames.ElementType, Transform.TypeName(elementType)),
                             length.HasValue ? new XAttribute(AttributeNames.Length, length.Value) : null,
-                            node.Value is null ? new XAttribute(AttributeNames.Nil, true) : null
+                            nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
                         );
 
         parent.Add(
-            _options.TypeComment(node.Type),
-            array);
+            _options.TypeComment(nodeType),
+            collection);
 
-        if (node.Value is null)
+        if (nodeValue is null)
             return;
 
-        foreach (var element in (IEnumerable)node.Value)
-        {
-        }
+        foreach (var element in (IEnumerable)nodeValue)
+            Get(elementType)(Expression.Constant(element, elementType), collection);
     }
 
     #region Custom types (classes and structs) transformation
     /// <summary>
-    /// Serializes an object using <see cref="DataContractSerializer" />.
+    /// Serializes an object using <see cref="DataContractSerializer" /> which works with classes marked with 
+    /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
     /// <param name="node">The node.</param>
     /// <param name="parent">The parent element where to serialize the object to.</param>
@@ -283,8 +275,9 @@ public class DataTransform(Options? options = default)
         XContainer parent)
     {
         var custom = new XElement(
-                                ElementNames.Custom,
-                                new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)));
+                            ElementNames.Custom,
+                            new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)),
+                            node.Value is null ? new XAttribute(AttributeNames.Nil, true) : null);
 
         parent.Add(
             _options.TypeComment(node.Type),
@@ -293,10 +286,11 @@ public class DataTransform(Options? options = default)
         if (node.Value is null)
             return;
 
-        // create a data contract serializer (works with [Serializable] types too)
         var dcSerializer = new DataContractSerializer(node.Value.GetType(), Type.EmptyTypes);
 
         using var writer = custom.CreateWriter();
+
+        // XML serialize into the element
         dcSerializer.WriteObject(writer, node.Value);
     }
     #endregion

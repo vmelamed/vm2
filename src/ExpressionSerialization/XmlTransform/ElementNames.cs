@@ -31,13 +31,10 @@ static class ElementNames
     public static readonly XName Enum                   = Namespaces.Exs + "enum";
     public static readonly XName Custom                 = Namespaces.Exs + "custom";
     public static readonly XName Anonymous              = Namespaces.Exs + "anonymous";
-    public static readonly XName ByteArray              = Namespaces.Exs + "byteArray";
-    public static readonly XName ByteArraySegment       = Namespaces.Exs + "byteArraySegment";
-    public static readonly XName MemoryByte             = Namespaces.Exs + "memoryByte";
-    public static readonly XName ReadOnlyMemoryByte     = Namespaces.Exs + "readOnlyMemoryByte";
 
-    public static readonly XName Array                  = Namespaces.Exs + "array";
-    public static readonly XName Element                = Namespaces.Exs + "element";
+    public static readonly XName ByteSequence           = Namespaces.Exs + "byteSequence";
+
+    public static readonly XName Collection             = Namespaces.Exs + "collection";
 
     public static readonly XName Body                   = Namespaces.Exs + "body";
     public static readonly XName Indexes                = Namespaces.Exs + "indexes";

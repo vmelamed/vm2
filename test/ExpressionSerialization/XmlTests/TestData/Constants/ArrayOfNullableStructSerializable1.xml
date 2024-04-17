@@ -6,25 +6,44 @@
     <constant>
         <!-- value(System.Nullable`1[vm2.ExpressionSerialization.XmlTests.StructSerializable1][]) -->
         <!-- System.Nullable`1[[vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][] -->
-        <custom
-            type="System.Nullable`1[[vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
-            <ArrayOfNullableOfStructSerializable14b21ZJK3
-                xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:d1p1="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests"
-                xmlns="http://schemas.datacontract.org/2004/07/System">
-                <StructSerializable1>
-                    <d1p1:_x003C_IntProperty_x003E_k__BackingField>0</d1p1:_x003C_IntProperty_x003E_k__BackingField>
-                    <d1p1:_x003C_StringProperty_x003E_k__BackingField>vm</d1p1:_x003C_StringProperty_x003E_k__BackingField>
-                </StructSerializable1>
-                <StructSerializable1
-                    i:nil="true" />
-                <StructSerializable1>
-                    <d1p1:_x003C_IntProperty_x003E_k__BackingField>1</d1p1:_x003C_IntProperty_x003E_k__BackingField>
-                    <d1p1:_x003C_StringProperty_x003E_k__BackingField>vm vm</d1p1:_x003C_StringProperty_x003E_k__BackingField>
-                </StructSerializable1>
-                <StructSerializable1
-                    i:nil="true" />
-            </ArrayOfNullableOfStructSerializable14b21ZJK3>
-        </custom>
+        <collection
+            type="System.Nullable`1[[vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+            elementType="System.Nullable`1[[vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+            length="4">
+            <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructSerializable1> -->
+            <nullable>
+                <!-- vm2.ExpressionSerialization.XmlTests.StructSerializable1 -->
+                <custom
+                    type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                    <StructSerializable1
+                        xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">
+                        <_x003C_IntProperty_x003E_k__BackingField>0</_x003C_IntProperty_x003E_k__BackingField>
+                        <_x003C_StringProperty_x003E_k__BackingField>vm</_x003C_StringProperty_x003E_k__BackingField>
+                    </StructSerializable1>
+                </custom>
+            </nullable>
+            <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructSerializable1> -->
+            <nullable
+                type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                i:nil="true" />
+            <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructSerializable1> -->
+            <nullable>
+                <!-- vm2.ExpressionSerialization.XmlTests.StructSerializable1 -->
+                <custom
+                    type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                    <StructSerializable1
+                        xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">
+                        <_x003C_IntProperty_x003E_k__BackingField>1</_x003C_IntProperty_x003E_k__BackingField>
+                        <_x003C_StringProperty_x003E_k__BackingField>vm vm</_x003C_StringProperty_x003E_k__BackingField>
+                    </StructSerializable1>
+                </custom>
+            </nullable>
+            <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructSerializable1> -->
+            <nullable
+                type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                i:nil="true" />
+        </collection>
     </constant>
 </expression>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- System.Memory<Byte>[10] -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <constant>
+        <!-- System.Memory<Byte>[10] -->
+        <!-- System.Memory<unsignedByte> -->
+        <byteSequence
+            type="System.Memory&lt;unsignedByte&gt;"
+            length="10">AQIDAQIDAQIDCg==</byteSequence>
+    </constant>
+</expression>

@@ -6,16 +6,14 @@
     <constant>
         <!-- value(System.Int32[]) -->
         <!-- System.Int32[] -->
-        <custom
-            type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
-            <ArrayOfint
-                xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
-                <int>1</int>
-                <int>2</int>
-                <int>3</int>
-                <int>4</int>
-            </ArrayOfint>
-        </custom>
+        <collection
+            type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+            elementType="int"
+            length="4">
+            <int>1</int>
+            <int>2</int>
+            <int>3</int>
+            <int>4</int>
+        </collection>
     </constant>
 </expression>

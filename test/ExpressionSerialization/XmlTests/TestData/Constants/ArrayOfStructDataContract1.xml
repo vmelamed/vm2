@@ -6,20 +6,30 @@
     <constant>
         <!-- value(vm2.ExpressionSerialization.XmlTests.StructDataContract1[]) -->
         <!-- vm2.ExpressionSerialization.XmlTests.StructDataContract1[] -->
-        <custom
-            type="vm2.ExpressionSerialization.XmlTests.StructDataContract1[], XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-            <ArrayOfStructDataContract1
-                xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">
-                <StructDataContract1>
+        <collection
+            type="vm2.ExpressionSerialization.XmlTests.StructDataContract1[], XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+            elementType="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+            length="2">
+            <!-- vm2.ExpressionSerialization.XmlTests.StructDataContract1 -->
+            <custom
+                type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                <StructDataContract1
+                    xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">
                     <IntProperty>0</IntProperty>
                     <StringProperty>vm</StringProperty>
                 </StructDataContract1>
-                <StructDataContract1>
+            </custom>
+            <!-- vm2.ExpressionSerialization.XmlTests.StructDataContract1 -->
+            <custom
+                type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                <StructDataContract1
+                    xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">
                     <IntProperty>1</IntProperty>
                     <StringProperty>vm vm</StringProperty>
                 </StructDataContract1>
-            </ArrayOfStructDataContract1>
-        </custom>
+            </custom>
+        </collection>
     </constant>
 </expression>

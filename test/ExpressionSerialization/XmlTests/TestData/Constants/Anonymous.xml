@@ -12,7 +12,8 @@
                 name="ObjectProperty">
                 <!-- custom -->
                 <custom
-                    type="custom" />
+                    type="custom"
+                    i:nil="true" />
             </property>
             <property
                 name="NullIntProperty">

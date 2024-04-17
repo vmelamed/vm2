@@ -1,6 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.Utilities;
 
+using System.Collections.Concurrent;
 using System.Collections.Frozen;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 /// <summary>
 /// Class TypeExtensions contains extension methods of <see cref="Type"/>.
@@ -119,14 +122,13 @@ internal static class TypeExtensions
         => type.IsGenericType &&
            type.GetGenericTypeDefinition() == typeof(ArraySegment<>);
 
-    static Type[] _byteSequencesCollection =
+    static Guid[] _byteSequencesCollection =
     [
-        typeof(byte[]),
-        typeof(Memory<byte>),
-        typeof(ReadOnlyMemory<byte>),
-        typeof(ArraySegment<byte>),
+        typeof(Memory<byte>).GUID,
+        typeof(ReadOnlyMemory<byte>).GUID,
+        typeof(ArraySegment<byte>).GUID,
     ];
-    static FrozenSet<Type> _byteSequences = _byteSequencesCollection.ToFrozenSet();
+    static FrozenSet<Guid> _byteSequences = _byteSequencesCollection.ToFrozenSet();
 
     /// <summary>
     /// Determines whether the specified type is a byte sequence: <c>byte[], Span&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;,
@@ -135,7 +137,46 @@ internal static class TypeExtensions
     /// <param name="type">The type.</param>
     /// <returns>bool.</returns>
     public static bool IsByteSequence(this Type type)
-        => _byteSequences.Contains(type);
+        => type.IsArray && type.GetElementType() == typeof(byte) || _byteSequences.Contains(type.GUID);
+
+    static Guid[] _sequencesCollection =
+    [
+        typeof(ArraySegment<>).GUID,
+        typeof(Memory<>).GUID,
+        typeof(ReadOnlyMemory<>).GUID,
+        typeof(Queue).GUID,
+        typeof(Stack).GUID,
+        typeof(FrozenSet<>).GUID,
+        typeof(ImmutableArray<>).GUID,
+        typeof(ImmutableHashSet<>).GUID,
+        typeof(ImmutableList<>).GUID,
+        typeof(ImmutableQueue<>).GUID,
+        typeof(ImmutableSortedSet<>).GUID,
+        typeof(ImmutableStack<>).GUID,
+        typeof(BlockingCollection<>).GUID,
+        typeof(ConcurrentBag<>).GUID,
+        typeof(ConcurrentQueue<>).GUID,
+        typeof(ConcurrentStack<>).GUID,
+        typeof(Collection<>).GUID,
+        typeof(ReadOnlyCollection<>).GUID,
+        typeof(HashSet<>).GUID,
+        typeof(LinkedList<>).GUID,
+        typeof(List<>).GUID,
+        typeof(Queue<>).GUID,
+        typeof(SortedSet<>).GUID,
+        typeof(Stack<>).GUID,
+    ];
+    static FrozenSet<Guid> _sequences = _sequencesCollection.ToFrozenSet();
+
+    /// <summary>
+    /// Determines whether the specified type is a sequence of objects: array, list, set, etc..
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns>bool.</returns>
+    public static bool IsSequence(this Type type)
+        => type.IsArray ||
+           type.IsGenericType && _sequences.Contains(type.GetGenericTypeDefinition().GUID) ||
+           _sequences.Contains(type.GUID);
 
     /// <summary>
     /// Determines whether the specified type is a span or memory{}.

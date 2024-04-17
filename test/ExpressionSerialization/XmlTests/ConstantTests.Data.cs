@@ -1,5 +1,10 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
+using System.Collections.Concurrent;
+using System.Collections.Frozen;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+
 public partial class ConstantTests
 {
     public static readonly TheoryData<string, object, string> ConstantExpressionData = new ()
@@ -64,8 +69,31 @@ public partial class ConstantTests
         { TestLine(), new int[]{ 1, 2, 3, 4 }, "ArrayOfInt.xml" },
         { TestLine(), new int?[]{ 1, 2, null, null }, "ArrayOfNullableInt.xml" },
 
-        { TestLine(), new List<int>{ 1, 2, 3, 4 }, "ListOfInt.xml" },
+        { TestLine(), new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2), "IntArraySegment.xml" },
+        { TestLine(), new Memory<int>([ 1, 2, 3, 4 ]), "IntMemory.xml" },
+        { TestLine(), new ReadOnlyMemory<int>([ 1, 2, 3, 4 ]), "IntReadOnlyMemory.xml" },
+        { TestLine(), new Queue<int>([ 1, 2, 3, 4 ]), "IntQueue.xml" },
+        { TestLine(), (new int[]{ 1, 2, 3, 4 }).ToFrozenSet(), "IntFrozenSet.xml" },
+        { TestLine(), new Queue<int>([ 1, 2, 3, 4 ]), "IntQueue.xml" },
+        { TestLine(), new Stack<int>([ 1, 2, 3, 4 ]), "IntStack.xml" },
+        { TestLine(), ImmutableArray.Create(1, 2, 3, 4 ), "IntImmutableArray.xml" },
+        { TestLine(), ImmutableHashSet.Create(1, 2, 3, 4 ), "IntImmutableHashSet.xml" },
+        { TestLine(), ImmutableList.Create(1, 2, 3, 4 ), "IntImmutableList.xml" },
+        { TestLine(), ImmutableQueue.Create(1, 2, 3, 4 ), "IntImmutableQueue.xml" },
+        { TestLine(), ImmutableSortedSet.Create(1, 2, 3, 4 ), "IntImmutableSortedSet.xml" },
+        { TestLine(), ImmutableStack.Create(1, 2, 3, 4 ), "IntImmutableStack.xml" },
+        { TestLine(), new ConcurrentBag<int>([1, 2, 3, 4]), "IntConcurrentBag.xml" },
+        { TestLine(), new ConcurrentQueue<int>([1, 2, 3, 4]), "IntConcurrentQueue.xml" },
+        { TestLine(), new ConcurrentStack<int>([1, 2, 3, 4]), "IntConcurrentStack.xml" },
+        { TestLine(), new Collection<int>([1, 2, 3, 4]), "IntCollection.xml" },
+        { TestLine(), new ReadOnlyCollection<int>([1, 2, 3, 4]), "IntReadOnlyCollection.xml" },
+        { TestLine(), new HashSet<int>([1, 2, 3, 4]), "IntHashSet.xml" },
+        { TestLine(), new LinkedList<int>([1, 2, 3, 4]), "IntLinkedList.xml" },
+        { TestLine(), new List<int>([1, 2, 3, 4]), "IntList.xml" },
         { TestLine(), new List<int?>{ 1, 2, null, null }, "ListOfNullableInt.xml" },
+        { TestLine(), new Queue<int>([1, 2, 3, 4]), "IntQueue.xml" },
+        { TestLine(), new SortedSet<int>([1, 2, 3, 4]), "IntSortedSet.xml" },
+        { TestLine(), new Stack<int>([1, 2, 3, 4]), "IntStack.xml" },
 
         { TestLine(), new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", }, "IntStringDictionary.xml" },
         { TestLine(), new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }, "IntNullableStringDictionary.xml" },
@@ -126,5 +154,10 @@ public partial class ConstantTests
                             },
                             null
                         }, "ArrayOfNullableStructSerializable1.xml" },
+
+        { TestLine(), new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }, "ByteArray.xml" },
+        { TestLine(), new ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8), "ByteArraySegment.xml" },
+        { TestLine(), new Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ]), "ByteMemory.xml" },
+        { TestLine(), new ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ]), "ByteReadOnlyMemory.xml" },
     };
 }

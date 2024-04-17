@@ -6,18 +6,26 @@
     <constant>
         <!-- value(System.Nullable`1[System.Int32][]) -->
         <!-- System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]][] -->
-        <custom
-            type="System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
-            <ArrayOfNullableOfint
-                xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns="http://schemas.datacontract.org/2004/07/System">
+        <collection
+            type="System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+            elementType="System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+            length="4">
+            <!-- nullable<int> -->
+            <nullable>
                 <int>1</int>
+            </nullable>
+            <!-- nullable<int> -->
+            <nullable>
                 <int>2</int>
-                <int
-                    i:nil="true" />
-                <int
-                    i:nil="true" />
-            </ArrayOfNullableOfint>
-        </custom>
+            </nullable>
+            <!-- nullable<int> -->
+            <nullable
+                type="int"
+                i:nil="true" />
+            <!-- nullable<int> -->
+            <nullable
+                type="int"
+                i:nil="true" />
+        </collection>
     </constant>
 </expression>
