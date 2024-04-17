@@ -7,7 +7,7 @@
     "4f9ec91ef3d2b77f5089fde0cdc948342ef7721641511696d7b00c327293d6d6a3a0cf95de6054" +
     "e37c6fbf")]
 
-namespace vm2.XmlExpressionSerialization;
+namespace vm2.ExpressionSerialization;
 
 /// <summary>
 /// Class RuntimeHook.

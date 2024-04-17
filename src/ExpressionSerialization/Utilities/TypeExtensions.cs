@@ -1,11 +1,11 @@
-﻿namespace vm2.XmlExpressionSerialization.Utilities;
+﻿namespace vm2.ExpressionSerialization.Utilities;
 
 using System.Collections.Frozen;
 
 /// <summary>
 /// Class TypeExtensions contains extension methods of <see cref="Type"/>.
 /// </summary>
-public static class TypeExtensions
+internal static class TypeExtensions
 {
     static Guid[] _nonPrimitiveBasicTypesCollection =
     [
@@ -118,6 +118,24 @@ public static class TypeExtensions
     public static bool IsSlice(this Type type)
         => type.IsGenericType &&
            type.GetGenericTypeDefinition() == typeof(ArraySegment<>);
+
+    static Type[] _byteSequencesCollection =
+    [
+        typeof(byte[]),
+        typeof(Memory<byte>),
+        typeof(ReadOnlyMemory<byte>),
+        typeof(ArraySegment<byte>),
+    ];
+    static FrozenSet<Type> _byteSequences = _byteSequencesCollection.ToFrozenSet();
+
+    /// <summary>
+    /// Determines whether the specified type is a byte sequence: <c>byte[], Span&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;,
+    /// Memory&lt;byte&gt;, ReadOnlyMemory&lt;byte&gt;, ArraySegment&lt;byte&gt;</c>.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns>bool.</returns>
+    public static bool IsByteSequence(this Type type)
+        => _byteSequences.Contains(type);
 
     /// <summary>
     /// Determines whether the specified type is a span or memory{}.

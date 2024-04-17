@@ -1,4 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.Exceptions;
+﻿namespace vm2.ExpressionSerialization.Exceptions;
 
 /// <summary>
 /// Class ObjectNotSerializableException.

@@ -1,16 +1,16 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class TransformTests : IClassFixture<SerializationTestsFixture>
+public partial class ConstantTests : IClassFixture<TestsFixture>
 {
     internal const string TestFilesPath = "../../../TestData/";
     internal const string TestConstantsFilesPath = TestFilesPath+"Constants/";
 
     public ITestOutputHelper Out { get; }
 
-    SerializationTestsFixture _fixture;
+    TestsFixture _fixture;
 
-    public TransformTests(
-        SerializationTestsFixture fixture,
+    public ConstantTests(
+        TestsFixture fixture,
         ITestOutputHelper output)
     {
         FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();

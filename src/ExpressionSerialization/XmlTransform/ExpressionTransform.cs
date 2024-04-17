@@ -1,4 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
+﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
 using System.Xml.Linq;
 

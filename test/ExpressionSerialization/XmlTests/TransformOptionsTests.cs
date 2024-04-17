@@ -1,5 +1,4 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
-using vm2.XmlExpressionSerialization.Conventions;
 
 public partial class TransformOptionsTests
 {

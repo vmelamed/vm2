@@ -1,4 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.Conventions;
+﻿namespace vm2.ExpressionSerialization.Conventions;
 static partial class Transform
 {
     #region Maps of types and type names

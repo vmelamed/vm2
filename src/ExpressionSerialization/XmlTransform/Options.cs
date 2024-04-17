@@ -1,9 +1,6 @@
-﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
+﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
 using System.Linq.Expressions;
-
-using vm2.XmlExpressionSerialization.Conventions;
-using vm2.XmlExpressionSerialization.Utilities;
 
 /// <summary>
 /// Class Options transforms C# identifiers to XML names.

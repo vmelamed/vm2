@@ -1,4 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.Exceptions;
+﻿namespace vm2.ExpressionSerialization.Exceptions;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="InternalTransformErrorException"/> class.

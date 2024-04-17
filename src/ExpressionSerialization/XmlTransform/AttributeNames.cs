@@ -1,4 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
+﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
 static class AttributeNames
 {
@@ -24,4 +24,6 @@ static class AttributeNames
     public static readonly XName Value                  = "value";
     public static readonly XName BaseValue              = "baseValue";
     public static readonly XName Visibility             = "visibility";
+    public static readonly XName Length                 = "length";
+    public static readonly XName ElementType            = "elementType";
 };

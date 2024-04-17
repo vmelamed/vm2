@@ -1,6 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
-
-using vm2.XmlExpressionSerialization.Conventions;
+﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
 /// <summary>
 /// Class ExpressionVisitor.

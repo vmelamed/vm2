@@ -1,6 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.Abstractions;
-
-using vm2.XmlExpressionSerialization.XmlTransform;
+﻿namespace vm2.ExpressionSerialization.Abstractions;
 
 /// <summary>
 /// Class ExpressionSerializingVisitor.
@@ -10,7 +8,7 @@ using vm2.XmlExpressionSerialization.XmlTransform;
 /// <typeparam name="TElement">The type of the document nodes that represent expression nodes, 
 /// e.g. <see cref="XElement"/> or <see cref="JObject"/>.</typeparam>
 /// <seealso cref="ExpressionVisitor" />
-public abstract class ExpressionTransformVisitor<TElement> : System.Linq.Expressions.ExpressionVisitor
+public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
 {
     /// <summary>
     /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements) into a parent element, 

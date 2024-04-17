@@ -1,10 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.XmlTransform;
-
-using System.Collections.ObjectModel;
-using System.Xml.Linq;
-
-using vm2.XmlExpressionSerialization.Conventions;
-using vm2.XmlExpressionSerialization.Utilities;
+﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
 using ConstantTransform = Action<ConstantExpression, XContainer>;
 
@@ -75,6 +69,12 @@ public class DataTransform(Options? options = default)
         // if it is an anonymous - get anonymous transformer or
         if (type.IsAnonymous())
             return AnonymousTransformer;
+
+        if (type.IsByteSequence())
+            return ByteSequenceTransform;
+
+        if (type.IsArray)
+            return ArrayTransform;
 
         // get general object transformer
         return CustomTransform;
@@ -173,8 +173,9 @@ public class DataTransform(Options? options = default)
                                     new XAttribute(AttributeNames.Name, props[i].Name));
 
             var propValue = props[i].GetValue(node.Value, null);
+            var transform = Get(props[i].PropertyType);
 
-            Get(props[i].PropertyType)(
+            transform(
                 Expression.Constant(propValue, props[i].PropertyType),
                 curElement);
 
@@ -182,6 +183,94 @@ public class DataTransform(Options? options = default)
         }
     }
     #endregion
+
+    void ByteSequenceTransform(
+        ConstantExpression node,
+        XContainer parent)
+    {
+        XElement? sequence;
+
+        if (node.Type == typeof(byte[]))
+        {
+            var seqObject = (byte[]?)node.Value;
+
+            sequence = new XElement(
+                                ElementNames.ByteArray,
+                                seqObject is null ? null : new XAttribute(AttributeNames.Length, seqObject.Length),
+                                seqObject is null ? new XAttribute(AttributeNames.Nil, true) : null,
+                                seqObject is null ? null : Convert.ToBase64String(seqObject)
+                            );
+        }
+        else
+        {
+            if (node.Value is null)
+                throw new InternalTransformErrorException();
+
+            if (node.Type == typeof(Memory<byte>))
+            {
+                var seqObject = (Memory<byte>)node.Value;
+
+                sequence = new XElement(
+                                    ElementNames.MemoryByte,
+                                    new XAttribute(AttributeNames.Length, seqObject.Length),
+                                    Convert.ToBase64String(seqObject.Span)
+                                );
+            }
+            else
+            if (node.Type == typeof(ReadOnlyMemory<byte>))
+            {
+                var seqObject = (ReadOnlyMemory<byte>)node.Value;
+
+                sequence = new XElement(
+                                    ElementNames.ReadOnlyMemoryByte,
+                                    new XAttribute(AttributeNames.Length, seqObject.Length),
+                                    Convert.ToBase64String(seqObject.Span)
+                                );
+            }
+            else
+            if (node.Type == typeof(ArraySegment<byte>))
+            {
+                var seqObject = (ArraySegment<byte>)node.Value;
+
+                sequence = new XElement(
+                                    ElementNames.ByteArraySegment,
+                                    new XAttribute(AttributeNames.Length, seqObject.Count),
+                                    Convert.ToBase64String(seqObject.AsSpan())
+                                );
+            }
+            else
+                throw new InternalTransformErrorException();
+        }
+
+        parent.Add(
+            _options.TypeComment(node.Type),
+            sequence);
+    }
+
+    void ArrayTransform(
+        ConstantExpression node,
+        XContainer parent)
+    {
+        var elementType = node.Type.GetElementType() ?? throw new InternalTransformErrorException();
+        var length = node.Value is null ? null : (int?)node.Type.GetProperty("Length")?.GetValue(node.Value);
+        var array = new XElement(
+                            ElementNames.Array,
+                            new XAttribute(AttributeNames.ElementType, Transform.TypeName(elementType)),
+                            length.HasValue ? new XAttribute(AttributeNames.Length, length.Value) : null,
+                            node.Value is null ? new XAttribute(AttributeNames.Nil, true) : null
+                        );
+
+        parent.Add(
+            _options.TypeComment(node.Type),
+            array);
+
+        if (node.Value is null)
+            return;
+
+        foreach (var element in (IEnumerable)node.Value)
+        {
+        }
+    }
 
     #region Custom types (classes and structs) transformation
     /// <summary>

@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class TransformTests
+public partial class ConstantTests
 {
     public static readonly TheoryData<string, object, string> ConstantExpressionData = new ()
     {

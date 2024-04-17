@@ -1,4 +1,4 @@
-﻿namespace vm2.XmlExpressionSerialization.Conventions;
+﻿namespace vm2.ExpressionSerialization.Conventions;
 /// <summary>
 /// Enum TypeNameConventions specify how to transform the type names.
 /// Note: no casing transformation.

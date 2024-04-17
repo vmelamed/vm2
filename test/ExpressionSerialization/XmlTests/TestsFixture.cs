@@ -1,9 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-using System.IO;
-using System.Text;
-
-public class SerializationTestsFixture : IDisposable
+public class TestsFixture : IDisposable
 {
     const string schemasPath = @"..\..\..\..\..\..\src\ExpressionSerialization\Schemas\";
 
@@ -27,7 +24,7 @@ public class SerializationTestsFixture : IDisposable
 
     internal const LoadOptions XmlLoadOptions = LoadOptions.None; // LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
 
-    public SerializationTestsFixture()
+    public TestsFixture()
     {
         var readerSettings = new XmlReaderSettings() { DtdProcessing = DtdProcessing.Parse };
 
@@ -152,7 +149,7 @@ public class SerializationTestsFixture : IDisposable
         if (expectedDoc is null)
         {
             fileName = string.IsNullOrEmpty(fileName)
-                            ? Path.GetFullPath($"{TransformTests.TestConstantsFilesPath}{DateTime.Now:yyyy-MM-dd hh-mm-ss.fff.xml}")
+                            ? Path.GetFullPath($"{ConstantTests.TestConstantsFilesPath}{DateTime.Now:yyyy-MM-dd hh-mm-ss.fff.xml}")
                             : Path.GetFullPath(fileName);
 
             var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
