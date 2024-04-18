@@ -1,5 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
+using System.Collections.Frozen;
+
 public partial class ConstantTests : IClassFixture<TestsFixture>
 {
     internal const string TestFilesPath = "../../../TestData/";
@@ -67,6 +69,17 @@ public partial class ConstantTests : IClassFixture<TestsFixture>
         await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, fileName, Out, CancellationToken.None);
     }
 
+    [Fact]
+    public async Task TestIntFrozenSetAsync()
+    {
+        var fileName = TestConstantsFilesPath+"IntFrozenSet.xml";
+        var expression = Expression.Constant((new int[]{ 1, 2, 3, 4 }).ToFrozenSet(), typeof(FrozenSet<int>));
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
+
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, fileName, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, fileName, Out, CancellationToken.None);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -79,9 +92,9 @@ public partial class ConstantTests : IClassFixture<TestsFixture>
         var testAsyncCall = async () => await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, fileName, Out, CancellationToken.None);
 
         if (!callAsync)
-            testCall.Should().Throw<ObjectNotSerializableException>();
+            testCall.Should().Throw<NonSerializableObjectException>();
         else
-            await testAsyncCall.Should().ThrowAsync<ObjectNotSerializableException>();
+            await testAsyncCall.Should().ThrowAsync<NonSerializableObjectException>();
     }
 
     [Theory]

@@ -37,12 +37,14 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                      (node, element) =>
                      {
                          _options.AddComment(element, node);
-                         _dataTransform.Get(node.Type)(node, element);
+                         element.Add(
+                            _options.TypeComment(node.Type),
+                            _dataTransform.TransformNode(node));
                      });
         }
         catch (InvalidOperationException x)
         {
-            throw new ObjectNotSerializableException(node.Type, x);
+            throw new NonSerializableObjectException(node.Type, x);
         }
     }
 }

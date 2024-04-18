@@ -15,7 +15,7 @@
     <xs:element name="expressions">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                A list of serialized expressions.
+                Specifies a list of serialized expressions.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -31,7 +31,7 @@
                 type="expressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Single serialized expression element.
+                Specifies a single serialized expression element.
             </xs:documentation>
         </xs:annotation>
 
@@ -58,7 +58,7 @@
     <xs:complexType name ="expressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents a single expression of a base type (C# Expression&lt;BaseType&gt;).
+                Defines the single expression base type (C# Expression&lt;BaseType&gt;).
             </xs:documentation>
         </xs:annotation>
         <xs:group ref="expressionBaseGroup"/>
@@ -273,7 +273,7 @@
                         type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a boolean value in a constant expression.
+                        Specifies a boolean value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -282,7 +282,7 @@
                         type="xs:byte">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents an signed byte value in a constant expression.
+                        Specifies an signed byte value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -291,7 +291,7 @@
                         type="xs:dateTime">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a date and time value in a constant expression.
+                        Specifies a date and time value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -300,7 +300,7 @@
                         type="xs:dateTime">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a date, time, and UTC offset in minutes in a constant expression.
+                        Specifies a date, time, and UTC offset in minutes in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -309,7 +309,7 @@
                         type="xs:decimal">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a decimal value in a constant expression.
+                        Specifies a decimal value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -318,7 +318,7 @@
                         type="xs:double">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a double precision floating point value in a constant expression.
+                        Specifies a double precision floating point value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -327,7 +327,7 @@
                         type="xs:float">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a single precision floating point value in a constant expression.
+                        Specifies a single precision floating point value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -336,7 +336,7 @@
                         type="xs:float">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a half precision floating point value in a constant expression.
+                        Specifies a half precision floating point value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -345,7 +345,7 @@
                         type="xs:int">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents an integer (32bit) value in a constant expression.
+                        Specifies an integer (32bit) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -354,7 +354,7 @@
                         type="xs:long">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a long integer (64bit) value in a constant expression.
+                        Specifies a long integer (64bit) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -363,7 +363,7 @@
                         type="xs:short">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a short integer (16bit) value in a constant expression.
+                        Specifies a short integer (16bit) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -372,7 +372,7 @@
                         type="xs:unsignedByte">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a unsigned byte value in a constant expression.
+                        Specifies a unsigned byte value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -381,7 +381,7 @@
                         type="xs:unsignedInt">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a unsigned integer (32bit) value in a constant expression.
+                        Specifies a unsigned integer (32bit) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -390,7 +390,7 @@
                         type="xs:unsignedInt">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a .NET UIntPtr (32bit) value in a constant expression.
+                        Specifies a .NET UIntPtr (32bit) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -399,7 +399,7 @@
                         type="xs:int">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a .NET IntPtr (32bit) value in a constant expression.
+                        Specifies a .NET IntPtr (32bit) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -408,7 +408,7 @@
                         type="xs:unsignedLong">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a unsigned long integer (64bit) value in a constant expression.
+                        Specifies a unsigned long integer (64bit) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -417,7 +417,7 @@
                         type="xs:unsignedShort">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a unsigned short integer (16bit) value in a constant expression.
+                        Specifies a unsigned short integer (16bit) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -428,7 +428,7 @@
                         maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a char value in a constant expression.
+                        Specifies a char value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -436,7 +436,7 @@
             <xs:element name="dbNull">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a data base NULL (C# DBNull) value in a constant expression.
+                        Specifies a data base NULL (C# DBNull) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType/>
@@ -445,7 +445,7 @@
             <xs:element name="guid">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a GUID value in a constant expression.
+                        Specifies a GUID value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
@@ -459,7 +459,7 @@
                         type="xs:duration">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a time duration (C# TimeSpan) value in a constant expression.
+                        Specifies a time duration (C# TimeSpan) value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -467,7 +467,7 @@
             <xs:element name="enum">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents an enumeration value (C# enum) in a constant expression.
+                        Specifies an enumeration value (C# enum) in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -509,7 +509,7 @@
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Specifies a nullable value (C# Nullable&lt;&gt;) of the base type in a constant expression.
+                        Specifies a nullable value (C# Nullable&lt;&gt;) in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -518,7 +518,7 @@
                               maxOccurs="1">
                         <xs:annotation>
                             <xs:documentation>
-                                Specifies the underlying value of the constant.  The element is optional if i:nil=$quot;true$quot;
+                                Specifies the underlying value of the constant. The element is optional if i:nil=$quot;true$quot;
                             </xs:documentation>
                         </xs:annotation>
                     </xs:group>
@@ -527,7 +527,7 @@
                                   use="optional">
                         <xs:annotation>
                             <xs:documentation xml:lang="en-us">
-                                Specifies the base type of the underlying value of the constant. The attribute is mandatory if i:nil=$quot;true$quot;
+                                Specifies the type of the underlying value of the constant. The attribute is mandatory if i:nil=$quot;true$quot;
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
@@ -539,7 +539,7 @@
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a string value in a constant expression.
+                        Specifies a string value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -549,7 +549,7 @@
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a URI value in a constant expression.
+                        Specifies a URI value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -557,14 +557,14 @@
             <xs:element name="anonymous">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents an anonymous type (C#) in a constant expression.
+                        Specifies an anonymous type (C#) of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
                         <xs:annotation>
                             <xs:documentation xml:lang="en-us">
-                                Defines an element that represents a property of a value of ananonymous type in a constant expression.
+                                Specifies a property of ananonymous type in a constant expression.
                             </xs:documentation>
                         </xs:annotation>
                         <xs:element name="property"
@@ -576,7 +576,13 @@
                                 </xs:sequence>
                                 <xs:attribute name="name"
                                               type="xs:token"
-                                              use="required"/>
+                                              use="required">
+                                    <xs:annotation>
+                                        <xs:documentation xml:lang="en-us">
+                                            Specifies the name of the property of the ananonymous type in a constant expression.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
@@ -587,16 +593,17 @@
                 </xs:complexType>
             </xs:element>
 
-            <xs:element name="custom" nillable="true">
+            <xs:element name="custom"
+                        nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a custom type of value (C# user defined class or struct) in a constant expression.
+                        Specifies a custom type of value (C# user defined class or struct) in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:annotation>
                         <xs:documentation>
-                            The content if present (i:nil=true), can be pretty much any well-formed XML but this implementation uses data contract serialization or XML serialization.
+                            The content, if present (i:nil=true), can be pretty much any well-formed XML but this implementation uses data contract serialization or XML serialization.
                             so the contents is valid accordsing to the schemas http://schemas.microsoft.com/2003/10/Serialization/, http://schemas.datacontract.org/2004/07/System.
                         </xs:documentation>
                     </xs:annotation>
@@ -620,7 +627,8 @@
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents an array of bytes (C# byte[]) in a constant expression. The bytes are Base64 encoded in the element's contents.
+                        Specifies an array of bytes (C# byte[]) in a constant expression.
+                        The bytes are Base64 encoded in the element's contents.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -653,7 +661,7 @@
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a collectio of items in a constant expression.
+                        Specifies a collectio of items in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -691,46 +699,59 @@
                 </xs:complexType>
             </xs:element>
 
-            <xs:element name="set"
+            <xs:element name ="tuple"
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Defines an element that represents a list (C# List&lt;&gt;) in a constant expression.
+                        Specifies a tuple value (C# ValueNullable&lt;&gt; or Nullable&lt;&gt;) in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
-                    <xs:sequence  minOccurs="0"
-                                  maxOccurs="unbounded">
-                        <xs:group ref="constantBaseGroup" />
+                    <xs:sequence>                      
+                        <xs:element name="item"
+                                    minOccurs="0"
+                                    maxOccurs="unbounded"
+                                    nillable="true">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en-us">
+                                    Specifies an item from a tuple in a constant expression.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:group ref="constantBaseGroup"/>                                
+                                </xs:sequence>
+                                <xs:attribute name="name"
+                                              type="xs:token"
+                                              use="required">
+                                    <xs:annotation>
+                                        <xs:documentation xml:lang="en-us">
+                                            Specifies the name of an item from a tuple in a constant expression.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:complexType>                        
+                        </xs:element>
                     </xs:sequence>
-                    <xs:attribute name="elementType"
+                    <xs:attribute name="type"
                                   type="xs:token"
                                   use="required">
                         <xs:annotation>
                             <xs:documentation xml:lang="en-us">
-                                Specifies the type of the elements in the list.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="length"
-                                  type="xs:int"
-                                  use="optional">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies the length of the array.
+                                Specifies an type of the tuple in a constant expression.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
                 </xs:complexType>
             </xs:element>
-
+            
         </xs:choice>
     </xs:group>
 
     <xs:complexType name="constantExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents a constant value in an expression.
+                Specifies a constant value in an expression.
             </xs:documentation>
         </xs:annotation>
         <xs:group ref="constantBaseGroup"/>
@@ -771,7 +792,7 @@
     <xs:complexType name="lambdaExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents a lambda expression.
+                Specifies a lambda expression.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -825,7 +846,7 @@
     <xs:complexType name="unaryExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents a unary expression:
+                Specifies a unary expression:
                 ArrayLength, Convert, ConvertChecked, Negate,
                 NegateChecked, Not, Quote, TypeAs, UnaryPlus
             </xs:documentation>
@@ -862,7 +883,7 @@
     <xs:complexType name="binaryExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents a binary expression:
+                Specifies a binary expression:
                 Arithmetic: Add (+), AddChecked (+), Divide (/), Modulo (%), Multiply (*), MultiplyChecked (*), Power (VB ^), Subtract (-), SubtractChecked (-)
                 Bitwise: And (&amp;), Or (|), ExclusiveOr (^), OnesComplement (~)
                 Shift: LeftShift (&lt;&lt;), RightShift (&gt;&gt;)
@@ -945,7 +966,7 @@
     <xs:complexType name="memberAccessExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents accessing either a field or a property. E.g. obj.Name
+                Specifies accessing either a field or a property. E.g. obj.Name
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -1001,7 +1022,7 @@
     <xs:complexType name="callExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents a static or instance method call.
+                Specifies a static or instance method call.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -1030,7 +1051,7 @@
     <xs:complexType name="conditionalExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents a terniary expression as b ? a : x.
+                Specifies a terniary expression as b ? a : x.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -1064,7 +1085,7 @@
     <xs:complexType name="changeByOneExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents increment, decrement, pre-increment, pre-decrement, post-increment, post-decrement.
+                Specifies increment, decrement, pre-increment, pre-decrement, post-increment, post-decrement.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -1084,7 +1105,7 @@
     <xs:complexType name="defaultExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents the default type, e.g. default(int).
+                Specifies the default type, e.g. default(int).
             </xs:documentation>
         </xs:annotation>
         <xs:attribute name="type"
@@ -1095,7 +1116,7 @@
     <xs:complexType name="newExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents allocating memory for and calling a constructor of the specified type.
+                Specifies allocating memory for and calling a constructor of the specified type.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -1793,7 +1814,7 @@
     <xs:complexType name="memberInitExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines an element that represents an expression that creates a new object and initializes a property of the object.
+                Specifies an expression that creates a new object and initializes a property of the object.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>

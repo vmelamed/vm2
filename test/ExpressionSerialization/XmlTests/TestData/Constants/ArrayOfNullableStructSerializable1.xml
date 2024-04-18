@@ -23,11 +23,9 @@
                     </StructSerializable1>
                 </custom>
             </nullable>
-            <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructSerializable1> -->
             <nullable
                 type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                 i:nil="true" />
-            <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructSerializable1> -->
             <nullable>
                 <!-- vm2.ExpressionSerialization.XmlTests.StructSerializable1 -->
                 <custom
@@ -40,7 +38,6 @@
                     </StructSerializable1>
                 </custom>
             </nullable>
-            <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructSerializable1> -->
             <nullable
                 type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                 i:nil="true" />

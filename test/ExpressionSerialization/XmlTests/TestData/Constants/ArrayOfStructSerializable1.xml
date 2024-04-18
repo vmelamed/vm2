@@ -20,7 +20,6 @@
                     <_x003C_StringProperty_x003E_k__BackingField>vm</_x003C_StringProperty_x003E_k__BackingField>
                 </StructSerializable1>
             </custom>
-            <!-- vm2.ExpressionSerialization.XmlTests.StructSerializable1 -->
             <custom
                 type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                 <StructSerializable1

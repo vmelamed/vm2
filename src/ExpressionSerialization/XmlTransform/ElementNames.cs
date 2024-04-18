@@ -29,12 +29,12 @@ static class ElementNames
 
     public static readonly XName Nullable               = Namespaces.Exs + "nullable";
     public static readonly XName Enum                   = Namespaces.Exs + "enum";
-    public static readonly XName Custom                 = Namespaces.Exs + "custom";
     public static readonly XName Anonymous              = Namespaces.Exs + "anonymous";
-
     public static readonly XName ByteSequence           = Namespaces.Exs + "byteSequence";
-
     public static readonly XName Collection             = Namespaces.Exs + "collection";
+    public static readonly XName Tuple                  = Namespaces.Exs + "tuple";
+    public static readonly XName TupleItem              = Namespaces.Exs + "item";
+    public static readonly XName Custom                 = Namespaces.Exs + "custom";
 
     public static readonly XName Body                   = Namespaces.Exs + "body";
     public static readonly XName Indexes                = Namespaces.Exs + "indexes";

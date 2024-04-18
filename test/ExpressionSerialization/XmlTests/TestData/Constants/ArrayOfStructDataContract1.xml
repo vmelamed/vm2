@@ -20,7 +20,6 @@
                     <StringProperty>vm</StringProperty>
                 </StructDataContract1>
             </custom>
-            <!-- vm2.ExpressionSerialization.XmlTests.StructDataContract1 -->
             <custom
                 type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                 <StructDataContract1

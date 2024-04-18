@@ -4,25 +4,26 @@ using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 /// <summary>
 /// Class TypeExtensions contains extension methods of <see cref="Type"/>.
 /// </summary>
 internal static class TypeExtensions
 {
-    static Guid[] _nonPrimitiveBasicTypesCollection =
+    static Type[] _nonPrimitiveBasicTypesCollection =
     [
-        typeof(string).GUID,
-        typeof(Guid).GUID,
-        typeof(decimal).GUID,
-        typeof(Uri).GUID,
-        typeof(DateTime).GUID,
-        typeof(DateTimeOffset).GUID,
-        typeof(TimeSpan).GUID,
-        typeof(DBNull).GUID,
-        typeof(Half).GUID,
+        typeof(string),
+        typeof(Guid),
+        typeof(decimal),
+        typeof(Uri),
+        typeof(DateTime),
+        typeof(DateTimeOffset),
+        typeof(TimeSpan),
+        typeof(DBNull),
+        typeof(Half),
     ];
-    static FrozenSet<Guid> _nonPrimitiveBasicTypes = _nonPrimitiveBasicTypesCollection.ToFrozenSet();
+    static FrozenSet<Type> _nonPrimitiveBasicTypes = _nonPrimitiveBasicTypesCollection.ToFrozenSet();
 
     /// <summary>
     /// Determines whether the specified type is a basic type: primitive, enum, decimal, string, Guid, Uri, DateTime, 
@@ -33,7 +34,9 @@ internal static class TypeExtensions
     ///   <see langword="true"/> if the specified type is one of the basic types; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool IsBasicType(this Type type)
-        => type.IsPrimitive || type.IsEnum || _nonPrimitiveBasicTypes.Contains(type.GUID);
+        => type.IsPrimitive ||
+           type.IsEnum ||
+           _nonPrimitiveBasicTypes.Contains(type);
 
     const string anonymousTypePrefix = "<>f__AnonymousType";
 
@@ -43,7 +46,8 @@ internal static class TypeExtensions
     /// <param name="type">The type.</param>
     /// <returns>bool.</returns>
     public static bool IsAnonymous(this Type type)
-        => type.IsGenericType && type.Name.StartsWith(anonymousTypePrefix, StringComparison.Ordinal);
+        => type.IsGenericType &&
+           type.Name.StartsWith(anonymousTypePrefix, StringComparison.Ordinal);
 
     const string collectionNamespacePrefix = "System.Collections.Generic";
 
@@ -71,8 +75,7 @@ internal static class TypeExtensions
     /// <param name="type">The type.</param>
     /// <returns>bool.</returns>
     public static bool IsTupleClass(this Type type)
-        => type.IsGenericType &&
-           type.GetGenericTypeDefinition() == typeof(Tuple<>);
+        => type.ImplementsInterface(typeof(ITuple)) && type.IsClass;
 
     /// <summary>
     /// Determines whether the specified type is a generic tuple struct.
@@ -80,8 +83,7 @@ internal static class TypeExtensions
     /// <param name="type">The type.</param>
     /// <returns>bool.</returns>
     public static bool IsTupleValue(this Type type)
-        => type.IsGenericType &&
-           type.GetGenericTypeDefinition() == typeof(ValueTuple<>);
+        => type.ImplementsInterface(typeof(ITuple)) && type.IsValueType;
 
     /// <summary>
     /// Determines whether the specified type is a tuple.
@@ -89,9 +91,7 @@ internal static class TypeExtensions
     /// <param name="type">The type.</param>
     /// <returns>bool.</returns>
     public static bool IsTuple(this Type type)
-        => type.IsGenericType &&
-           (type.GetGenericTypeDefinition() == typeof(ValueTuple<>) ||
-            type.GetGenericTypeDefinition() == typeof(Tuple<>));
+        => type.IsTupleValue() || type.IsTupleClass();
 
     /// <summary>
     /// Determines whether the specified type is a span.
@@ -122,13 +122,19 @@ internal static class TypeExtensions
         => type.IsGenericType &&
            type.GetGenericTypeDefinition() == typeof(ArraySegment<>);
 
-    static Guid[] _byteSequencesCollection =
+    public static bool ImplementsInterface(this Type type, Type interfaceType)
+        => type.GetInterface(interfaceType.Name) is not null;
+
+    public static bool ImplementsInterface(this Type type, string interfaceName)
+        => type.GetInterface(interfaceName) is not null;
+
+    static Type[] _byteSequencesCollection =
     [
-        typeof(Memory<byte>).GUID,
-        typeof(ReadOnlyMemory<byte>).GUID,
-        typeof(ArraySegment<byte>).GUID,
+        typeof(Memory<byte>),
+        typeof(ReadOnlyMemory<byte>),
+        typeof(ArraySegment<byte>),
     ];
-    static FrozenSet<Guid> _byteSequences = _byteSequencesCollection.ToFrozenSet();
+    static FrozenSet<Type> _byteSequences = _byteSequencesCollection.ToFrozenSet();
 
     /// <summary>
     /// Determines whether the specified type is a byte sequence: <c>byte[], Span&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;,
@@ -137,36 +143,36 @@ internal static class TypeExtensions
     /// <param name="type">The type.</param>
     /// <returns>bool.</returns>
     public static bool IsByteSequence(this Type type)
-        => type.IsArray && type.GetElementType() == typeof(byte) || _byteSequences.Contains(type.GUID);
+        => type.IsArray && type.GetElementType() == typeof(byte) || _byteSequences.Contains(type);
 
-    static Guid[] _sequencesCollection =
+    static Type[] _sequencesCollection =
     [
-        typeof(ArraySegment<>).GUID,
-        typeof(Memory<>).GUID,
-        typeof(ReadOnlyMemory<>).GUID,
-        typeof(Queue).GUID,
-        typeof(Stack).GUID,
-        typeof(FrozenSet<>).GUID,
-        typeof(ImmutableArray<>).GUID,
-        typeof(ImmutableHashSet<>).GUID,
-        typeof(ImmutableList<>).GUID,
-        typeof(ImmutableQueue<>).GUID,
-        typeof(ImmutableSortedSet<>).GUID,
-        typeof(ImmutableStack<>).GUID,
-        typeof(BlockingCollection<>).GUID,
-        typeof(ConcurrentBag<>).GUID,
-        typeof(ConcurrentQueue<>).GUID,
-        typeof(ConcurrentStack<>).GUID,
-        typeof(Collection<>).GUID,
-        typeof(ReadOnlyCollection<>).GUID,
-        typeof(HashSet<>).GUID,
-        typeof(LinkedList<>).GUID,
-        typeof(List<>).GUID,
-        typeof(Queue<>).GUID,
-        typeof(SortedSet<>).GUID,
-        typeof(Stack<>).GUID,
+        typeof(ArraySegment<>),
+        typeof(Memory<>),
+        typeof(ReadOnlyMemory<>),
+        typeof(FrozenSet<>),
+        typeof(Queue),
+        typeof(Stack),
+        typeof(ImmutableArray<>),
+        typeof(ImmutableHashSet<>),
+        typeof(ImmutableList<>),
+        typeof(ImmutableQueue<>),
+        typeof(ImmutableSortedSet<>),
+        typeof(ImmutableStack<>),
+        typeof(BlockingCollection<>),
+        typeof(ConcurrentBag<>),
+        typeof(ConcurrentQueue<>),
+        typeof(ConcurrentStack<>),
+        typeof(Collection<>),
+        typeof(ReadOnlyCollection<>),
+        typeof(HashSet<>),
+        typeof(LinkedList<>),
+        typeof(List<>),
+        typeof(Queue<>),
+        typeof(SortedSet<>),
+        typeof(Stack<>),
     ];
-    static FrozenSet<Guid> _sequences = _sequencesCollection.ToFrozenSet();
+    static FrozenSet<Type> _sequences = _sequencesCollection.ToFrozenSet();
 
     /// <summary>
     /// Determines whether the specified type is a sequence of objects: array, list, set, etc..
@@ -175,8 +181,8 @@ internal static class TypeExtensions
     /// <returns>bool.</returns>
     public static bool IsSequence(this Type type)
         => type.IsArray ||
-           type.IsGenericType && _sequences.Contains(type.GetGenericTypeDefinition().GUID) ||
-           _sequences.Contains(type.GUID);
+           type.IsGenericType && _sequences.Contains(type.GetGenericTypeDefinition()) ||
+           _sequences.Contains(type);
 
     /// <summary>
     /// Determines whether the specified type is a span or memory{}.

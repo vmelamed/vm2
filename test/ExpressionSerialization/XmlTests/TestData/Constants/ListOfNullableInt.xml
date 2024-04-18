@@ -14,15 +14,12 @@
             <nullable>
                 <int>1</int>
             </nullable>
-            <!-- nullable<int> -->
             <nullable>
                 <int>2</int>
             </nullable>
-            <!-- nullable<int> -->
             <nullable
                 type="int"
                 i:nil="true" />
-            <!-- nullable<int> -->
             <nullable
                 type="int"
                 i:nil="true" />
