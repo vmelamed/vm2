@@ -121,6 +121,12 @@ public class ClassSerializable1
 
 public class ClassNonSerializable
 {
+    public ClassNonSerializable(int intProperty, string strProperty)
+    {
+        IntProperty = intProperty;
+        StringProperty = strProperty;
+    }
+
     public int IntProperty { get; set; }
 
     public string StringProperty { get; set; } = "";

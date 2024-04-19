@@ -269,16 +269,25 @@
 
     <xs:group name="constantBaseGroup">
         <xs:choice>
-            <xs:element name="boolean"
-                        type="xs:boolean">
+            <xs:element name="object"
+                        nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Specifies a boolean value of a constant expression.
+                        Specifies an object of .NET type "System.Object" thaty can only be null or not null value of a constant expression.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="byte"
+            <xs:element name="boolean"
+                            type="xs:boolean">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Specifies a boolean value of a constant expression.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="byte"
                         type="xs:byte">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
@@ -707,7 +716,7 @@
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
-                    <xs:sequence>                      
+                    <xs:sequence>
                         <xs:element name="item"
                                     minOccurs="0"
                                     maxOccurs="unbounded"
@@ -719,7 +728,7 @@
                             </xs:annotation>
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:group ref="constantBaseGroup"/>                                
+                                    <xs:group ref="constantBaseGroup"/>
                                 </xs:sequence>
                                 <xs:attribute name="name"
                                               type="xs:token"
@@ -730,7 +739,7 @@
                                         </xs:documentation>
                                     </xs:annotation>
                                 </xs:attribute>
-                            </xs:complexType>                        
+                            </xs:complexType>
                         </xs:element>
                     </xs:sequence>
                     <xs:attribute name="type"
@@ -744,7 +753,66 @@
                     </xs:attribute>
                 </xs:complexType>
             </xs:element>
-            
+
+            <xs:element name ="dictionary"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a dictionary value (collection of key-value pairs) in a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="key-value"
+                                    minOccurs="0"
+                                    maxOccurs="unbounded"
+                                    nillable="true">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en-us">
+                                    Specifies an item from a tuple in a constant expression.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:group ref="constantBaseGroup">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en-us">
+                                                Specifies the current pair's key.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:group>
+                                    <xs:group ref="constantBaseGroup">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en-us">
+                                                Specifies the current pair's value.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:group>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="type"
+                                  type="xs:token"
+                                  use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies an type of the dictionary in a constant expression.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="length"
+                                  type="xs:int"
+                                  use="optional">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the length of the dictionary in a constant expression.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+
         </xs:choice>
     </xs:group>
 

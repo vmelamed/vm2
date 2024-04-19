@@ -1,5 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using System;
 using System.Runtime.CompilerServices;
 
 using TransformConstant = Func<object?, Type, XElement>;
@@ -15,8 +16,9 @@ internal class DataTransform(Options? options = default)
     /// <summary>
     /// The map of base type constants serializers
     /// </summary>
-    static ReadOnlyDictionary<Type, TransformConstant> _constantTransforms = new (new Dictionary<Type, TransformConstant>()
+    static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
     {
+        { typeof(object),           (v, t) => new XElement(ElementNames.Object,         new XAttribute(AttributeNames.Nil, v is null)) },
         { typeof(bool),             (v, t) => new XElement(ElementNames.Boolean,        XmlConvert.ToString((bool)v!)) },
         { typeof(byte),             (v, t) => new XElement(ElementNames.UnsignedByte,   XmlConvert.ToString((byte)v!)) },
         { typeof(sbyte),            (v, t) => new XElement(ElementNames.Byte,           XmlConvert.ToString((sbyte)v!)) },
@@ -41,6 +43,7 @@ internal class DataTransform(Options? options = default)
         { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         XmlConvert.ToString((IntPtr)v!)) },
         { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString((UIntPtr)v!)) },
     });
+    static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
     #endregion
 
     public XNode TransformNode(ConstantExpression node) => GetTransform(node.Type)(node.Value, node.Type);
@@ -55,9 +58,6 @@ internal class DataTransform(Options? options = default)
     /// <exception cref="System.Runtime.Serialization.SerializationException"></exception>
     public TransformConstant GetTransform(Type type)
     {
-        if (!type.CanXmlTransform())
-            throw new SerializationException($"Don't know how to transform type '{type.AssemblyQualifiedName}'.");
-
         // get the transform from the table, or
         if (_constantTransforms.TryGetValue(type, out var transform))
             return transform;
@@ -77,6 +77,9 @@ internal class DataTransform(Options? options = default)
         if (type.IsByteSequence())
             return ByteSequenceTransform;
 
+        if (type.IsDictionary())
+            return DictionaryTransform;
+
         if (type.IsSequence())
             return SequenceTransform;
 
@@ -90,9 +93,24 @@ internal class DataTransform(Options? options = default)
         return CustomTransform;
     }
 
-    #region Enum transformation
+    #region Transforms
     /// <summary>
-    /// Transform enum values.
+    /// Transforms enum values.
+    /// </summary>
+    /// <param name="nodeValue">The node value.</param>
+    /// <param name="nodeType">Type of the node value.</param>
+    XElement EnumObject(
+        object? nodeValue,
+        Type nodeType)
+    {
+        return new XElement(
+                        ElementNames.Object,
+                        nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
+                    );
+    }
+
+    /// <summary>
+    /// Transforms enum values.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
@@ -111,11 +129,9 @@ internal class DataTransform(Options? options = default)
                         nodeValue!.ToString()
                     );
     }
-    #endregion
 
-    #region transforms
     /// <summary>
-    /// Serializes a nullable nullable.
+    /// Transforms a nullable nullable.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
@@ -149,7 +165,7 @@ internal class DataTransform(Options? options = default)
     }
 
     /// <summary>
-    /// Serializes an anonymous object.
+    /// Transforms an anonymous object.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
@@ -178,7 +194,7 @@ internal class DataTransform(Options? options = default)
     }
 
     /// <summary>
-    /// Bytes the sequenceElement transform.
+    /// Transforms sequences of bytes.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
@@ -226,7 +242,7 @@ internal class DataTransform(Options? options = default)
     }
 
     /// <summary>
-    /// Sequences the transform.
+    /// Transforms sequences of objects.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
@@ -277,7 +293,7 @@ internal class DataTransform(Options? options = default)
     }
 
     /// <summary>
-    /// Values the tuple transform.
+    /// Transforms value tuples.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
@@ -300,19 +316,20 @@ internal class DataTransform(Options? options = default)
         {
             var item = tuple[i];
             var type = types[i];
-            var itemElement = new XElement(
-                                ElementNames.TupleItem,
-                                new XAttribute(AttributeNames.Name, $"Item{i+1}"),
-                                item is null ? new XAttribute(AttributeNames.Nil, true) : null,
-                                _options.TypeComment(type),
-                                GetTransform(type)(item, type));
-            tupleElement.Add(itemElement);
+
+            tupleElement.Add(
+                new XElement(
+                        ElementNames.TupleItem,
+                        new XAttribute(AttributeNames.Name, $"Item{i + 1}"),
+                        item is null ? new XAttribute(AttributeNames.Nil, true) : null,
+                        _options.TypeComment(type),
+                        GetTransform(type)(item, type)));
         }
         return tupleElement;
     }
 
     /// <summary>
-    /// Values the tuple transform.
+    /// Transforms class tuples.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
@@ -337,21 +354,61 @@ internal class DataTransform(Options? options = default)
         {
             var type = types[i];
             var item = tuple[i];
-            var itemElement = new XElement(
-                                    ElementNames.TupleItem,
-                                    new XAttribute(AttributeNames.Name, $"Item{i+1}"),
-                                    item is null ? new XAttribute(AttributeNames.Nil, true) : null,
-                                    _options.TypeComment(type),
-                                    GetTransform(type)(item, type));
-            tupleElement.Add(itemElement);
+
+            tupleElement.Add(
+                new XElement(
+                        ElementNames.TupleItem,
+                        new XAttribute(AttributeNames.Name, $"Item{i + 1}"),
+                        item is null ? new XAttribute(AttributeNames.Nil, true) : null,
+                        _options.TypeComment(type),
+                        GetTransform(type)(item, type)));
         }
 
         return tupleElement;
     }
 
-    #region Custom types (classes and structs) transformation
     /// <summary>
-    /// Serializes an object using <see cref="DataContractSerializer" /> which works with classes marked with 
+    /// Transforms dictionaries.
+    /// </summary>
+    /// <param name="nodeValue">The node value.</param>
+    /// <param name="nodeType">Type of the node value.</param>
+    XElement DictionaryTransform(
+        object? nodeValue,
+        Type nodeType)
+    {
+        var dict = nodeValue as IDictionary;
+        var length = dict?.Count;
+        var dictElement = new XElement(
+                                ElementNames.Dictionary,
+                                new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
+                                length.HasValue ? new XAttribute(AttributeNames.Length, length.Value) : null,
+                                nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
+
+        if (nodeValue is null)
+            return dictElement;
+        if (dict is null)
+            throw new InternalTransformErrorException("The value of type 'Dictionary' doesn't implement IDictionary.");
+
+        var kvTypes   = nodeType.GetGenericArguments();
+        var keyType   = kvTypes?.Length is 2 ? kvTypes?[0] : null;
+        var valueType = kvTypes?.Length is 2 ? kvTypes?[1] : null;
+
+        foreach (DictionaryEntry kv in dict)
+        {
+            var kType = keyType ?? kv.Key.GetType();
+            var vType = valueType ?? kv.Value?.GetType() ?? typeof(object);
+            dictElement.Add(
+                new XElement(
+                    ElementNames.KeyValuePair,
+                    GetTransform(kType)(kv.Key, kType),
+                    GetTransform(vType)(kv.Value, vType)));
+        }
+
+        return dictElement;
+    }
+
+    /// <summary>
+    /// Transforms objects using <see cref="DataContractSerializer" /> which also works with classes marked with 
     /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
@@ -360,24 +417,30 @@ internal class DataTransform(Options? options = default)
         object? nodeValue,
         Type nodeType)
     {
-        var customElement = new XElement(
+        try
+        {
+            var customElement = new XElement(
                                     ElementNames.Custom,
                                     new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                                     nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
                                 );
 
-        if (nodeValue is null)
+            if (nodeValue is null)
+                return customElement;
+
+            var dcSerializer = new DataContractSerializer(nodeValue.GetType(), Type.EmptyTypes);
+
+            using var writer = customElement.CreateWriter();
+
+            // XML serialize into the element
+            dcSerializer.WriteObject(writer, nodeValue);
+
             return customElement;
-
-        var dcSerializer = new DataContractSerializer(nodeValue.GetType(), Type.EmptyTypes);
-
-        using var writer = customElement.CreateWriter();
-
-        // XML serialize into the element
-        dcSerializer.WriteObject(writer, nodeValue);
-
-        return customElement;
+        }
+        catch (InvalidDataContractException x)
+        {
+            throw new NonSerializableObjectException(null, x);
+        }
     }
-    #endregion
     #endregion
 }

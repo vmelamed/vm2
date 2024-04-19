@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- null -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <constant>
+        <!-- null -->
+        <!-- object -->
+        <object
+            i:nil="true" />
+    </constant>
+</expression>

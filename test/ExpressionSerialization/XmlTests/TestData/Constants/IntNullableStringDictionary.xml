@@ -6,30 +6,25 @@
     <constant>
         <!-- value(System.Collections.Generic.Dictionary`2[System.Int32,System.String]) -->
         <!-- System.Collections.Generic.Dictionary<int, string> -->
-        <custom
-            type="System.Collections.Generic.Dictionary`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
-            <ArrayOfKeyValueOfintstring
-                xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
-                <KeyValueOfintstring>
-                    <Key>1</Key>
-                    <Value>one</Value>
-                </KeyValueOfintstring>
-                <KeyValueOfintstring>
-                    <Key>2</Key>
-                    <Value>two</Value>
-                </KeyValueOfintstring>
-                <KeyValueOfintstring>
-                    <Key>3</Key>
-                    <Value
-                        i:nil="true" />
-                </KeyValueOfintstring>
-                <KeyValueOfintstring>
-                    <Key>4</Key>
-                    <Value
-                        i:nil="true" />
-                </KeyValueOfintstring>
-            </ArrayOfKeyValueOfintstring>
-        </custom>
+        <dictionary
+            type="System.Collections.Generic.Dictionary`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+            length="4">
+            <key-value>
+                <int>1</int>
+                <string>one</string>
+            </key-value>
+            <key-value>
+                <int>2</int>
+                <string>two</string>
+            </key-value>
+            <key-value>
+                <int>3</int>
+                <string />
+            </key-value>
+            <key-value>
+                <int>4</int>
+                <string />
+            </key-value>
+        </dictionary>
     </constant>
 </expression>

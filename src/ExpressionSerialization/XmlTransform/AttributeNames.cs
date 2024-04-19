@@ -26,4 +26,5 @@ static class AttributeNames
     public static readonly XName Visibility             = "visibility";
     public static readonly XName Length                 = "length";
     public static readonly XName ElementType            = "elementType";
+    public static readonly XName KeyValuePair           = "key-value";
 };

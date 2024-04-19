@@ -23,7 +23,7 @@ public partial class ConstantTests : IClassFixture<TestsFixture>
 #pragma warning disable xUnit1045
     [Theory]
     [MemberData(nameof(ConstantExpressionData))]
-    public async Task TestConstantAsync(string _, object value, string fileName)
+    public async Task TestConstantAsync(string _, object? value, string fileName)
     {
         fileName = TestConstantsFilesPath + fileName;
         var expression = Expression.Constant(value);
@@ -86,7 +86,7 @@ public partial class ConstantTests : IClassFixture<TestsFixture>
     public async Task TestConstantExpressionClassNonSerializableAsync(bool callAsync)
     {
         var fileName = TestConstantsFilesPath+"ClassSerializable1.xml";
-        var expression = Expression.Constant(new ClassNonSerializable());
+        var expression = Expression.Constant(new ClassNonSerializable(1, "One"));
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(fileName, Out);
         var testCall = () => _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, fileName, Out);
         var testAsyncCall = async () => await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, fileName, Out, CancellationToken.None);
