@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- (s, d) => True -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda>
+        <parameters>
+            <parameter
+                type="string"
+                name="s" />
+            <parameter
+                type="dateTime"
+                name="d" />
+        </parameters>
+        <body>
+            <constant>
+                <!-- True -->
+                <boolean>true</boolean>
+            </constant>
+        </body>
+    </lambda>
+</expression>

@@ -136,7 +136,7 @@ internal static partial class TypeExtensions
 
             if (_sequences.Contains(genType) ||
                 _arrayLikes.Contains(genType) ||
-                genType.Name.EndsWith("FrozenSet`1"))
+                genType.Name.EndsWith("FrozenSet`1")) // TODO: this is pretty wonky but I don't know how to fix it for the internal "SmallValueTypeComparableFrozenSet`1" or "SmallFrozenSet`1" 
                 return true;
         }
 

@@ -79,6 +79,7 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
             (n, e) => e.Add(
                         _options.TypeComment(n.Type),
                         new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)),
+                        new XAttribute(AttributeNames.Name, node.Name ?? "_"),
                         n.IsByRef ? new XAttribute(AttributeNames.IsByRef, n.IsByRef) : null));
 
     /// <summary>

@@ -2,7 +2,9 @@
 
 public class TestsFixture : IDisposable
 {
-    const string schemasPath = @"..\..\..\..\..\..\src\ExpressionSerialization\Schemas\";
+    internal const string TestFilesPath = "../../../TestData/";
+
+    const string schemasPath = "../../../../../../src/ExpressionSerialization/Schemas/";
 
     readonly XmlSchemaSet _schemas = new();
 
@@ -45,21 +47,24 @@ public class TestsFixture : IDisposable
 
     public bool Validate(XDocument doc, ITestOutputHelper? output = null)
     {
+        List<XmlSchemaException> exceptions = [];
         var valid = true;
 
         doc.Validate(
                 _schemas,
                 (_, e) =>
                 {
-                    output?.WriteLine(
-                        $"""
-                        {e.Severity}: {e.Message}
-                        {e.Exception}
-                        """);
+                    exceptions.Add(e.Exception);
                     valid = false;
                 });
 
-        return valid;
+        if (valid)
+            return true;
+
+        throw new AggregateException(
+                    "Error(s) validating the XML document against the schema urn:schemas-vm-com:Linq.Expressions.Serialization:\n  " +
+                    string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber},{x.LinePosition}) : {x.Message}")),
+                    exceptions);
     }
 
     public async Task<(XDocument?, string)> GetExpectedAsync(string pathName, ITestOutputHelper? output = null)
@@ -80,9 +85,9 @@ public class TestsFixture : IDisposable
             streamExpected.Seek(0, SeekOrigin.Begin);
 
             var expectedDoc = await XDocument.LoadAsync(streamExpected, XmlLoadOptions, CancellationToken.None);
+            var validate = () => Validate(expectedDoc, output);
 
-            Validate(expectedDoc, output).Should().BeTrue("the actual document should be valid according to the schema");
-
+            validate.Should().NotThrow("the EXPECTED document should be valid according to the schema");
             return (expectedDoc, expectedStr);
         }
         catch (IOException x)
@@ -144,12 +149,14 @@ public class TestsFixture : IDisposable
         output?.WriteLine("ACTUAL:\n{0}\n", actualStr);
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        Validate(actualDoc, output).Should().BeTrue("the actual document should be valid according to the schema");
+        var validate = () => Validate(actualDoc, output);
+
+        validate.Should().NotThrow("the ACTUAL document should be valid according to the schema");
 
         if (expectedDoc is null)
         {
             fileName = string.IsNullOrEmpty(fileName)
-                            ? Path.GetFullPath($"{ConstantTests.TestConstantsFilesPath}{DateTime.Now:yyyy-MM-dd hh-mm-ss.fff.xml}")
+                            ? Path.GetFullPath($"{ConstantExpressionTests.TestConstantsFilesPath}{DateTime.Now:yyyy-MM-dd hh-mm-ss.fff.xml}")
                             : Path.GetFullPath(fileName);
 
             var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);

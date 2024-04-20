@@ -629,6 +629,15 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
+                    <xs:attribute name="concreteType"
+                                  type="xs:token"
+                                  use="optional">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the concrete type of the custom type as a .NET fully qualified name. Required if different (e.g. derived) from @type.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
                 </xs:complexType>
             </xs:element>
 

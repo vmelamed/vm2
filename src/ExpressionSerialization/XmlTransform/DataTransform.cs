@@ -17,7 +17,6 @@ internal class DataTransform(Options? options = default)
     /// </summary>
     static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
     {
-        { typeof(object),           (v, t) => new XElement(ElementNames.Object,         new XAttribute(AttributeNames.Nil, v is null)) },
         { typeof(bool),             (v, t) => new XElement(ElementNames.Boolean,        XmlConvert.ToString((bool)v!)) },
         { typeof(byte),             (v, t) => new XElement(ElementNames.UnsignedByte,   XmlConvert.ToString((byte)v!)) },
         { typeof(sbyte),            (v, t) => new XElement(ElementNames.Byte,           XmlConvert.ToString((sbyte)v!)) },
@@ -54,7 +53,7 @@ internal class DataTransform(Options? options = default)
     /// <returns>
     /// A delegate that can serialize a nullable of the specified <paramref name="type"/> into an XML element (<see cref="XElement"/>).
     /// </returns>
-    /// <exception cref="System.Runtime.Serialization.SerializationException"></exception>
+    /// <exception cref="SerializationException"></exception>
     public TransformConstant GetTransform(Type type)
     {
         // get the transform from the table, or
@@ -399,9 +398,21 @@ internal class DataTransform(Options? options = default)
         object? nodeValue,
         Type nodeType)
     {
+        if (nodeValue is null || nodeValue.GetType() == typeof(object))
+            return new XElement(
+                            ElementNames.Object,
+                            new XAttribute(AttributeNames.Nil, nodeValue is null));
+
+        var actualTransform = GetTransform(nodeValue.GetType());
+
+        if (actualTransform != CustomTransform)
+            return actualTransform(nodeValue, nodeValue.GetType());
+
+        var concreteType = nodeValue.GetType();
         var customElement = new XElement(
                                     ElementNames.Custom,
                                     new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
+                                    nodeType != concreteType ? new XAttribute(AttributeNames.ConcreteType, Transform.TypeName(concreteType)) : null,
                                     nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
                                 );
 

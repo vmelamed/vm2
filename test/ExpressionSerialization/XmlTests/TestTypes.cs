@@ -2,7 +2,7 @@
 
 using System.Runtime.Serialization;
 
-public enum EnumTest
+enum EnumTest
 {
     One,
     Two,
@@ -10,7 +10,7 @@ public enum EnumTest
 };
 
 [Flags]
-public enum EnumFlagsTest
+enum EnumFlagsTest
 {
     One = 1,
     Two = 2,
@@ -18,7 +18,7 @@ public enum EnumFlagsTest
 }
 
 [DataContract(Namespace = "urn:vm.Test.Diagnostics", IsReference = true)]
-public class Object1
+class Object1
 {
     [DataMember]
     public object? ObjectProperty { get; set; }
@@ -90,7 +90,7 @@ public class Object1
 }
 
 [DataContract]
-public class ClassDataContract1
+class ClassDataContract1
 {
     public ClassDataContract1() { }
 
@@ -109,8 +109,25 @@ public class ClassDataContract1
     public override string ToString() => "this.DumpString()";
 }
 
+[DataContract]
+class ClassDataContract2 : ClassDataContract1
+{
+    public ClassDataContract2()
+    {
+    }
+
+    public ClassDataContract2(int i, string s, decimal d) :
+        base(i, s)
+    {
+        DecimalProperty = d;
+    }
+
+    [DataMember]
+    public decimal DecimalProperty { get; set; } = 17M;
+}
+
 [Serializable]
-public class ClassSerializable1
+class ClassSerializable1
 {
     public int IntProperty { get; set; }
 
@@ -119,7 +136,7 @@ public class ClassSerializable1
     public override string ToString() => "this.DumpString()";
 }
 
-public class ClassNonSerializable(int intProperty, string strProperty)
+class ClassNonSerializable(int intProperty, string strProperty)
 {
     public int IntProperty { get; set; } = intProperty;
 
@@ -129,7 +146,7 @@ public class ClassNonSerializable(int intProperty, string strProperty)
 }
 
 [Serializable]
-public struct StructSerializable1
+struct StructSerializable1
 {
     public StructSerializable1() { }
 
@@ -139,7 +156,7 @@ public struct StructSerializable1
 }
 
 [DataContract]
-public struct StructDataContract1
+struct StructDataContract1
 {
     public StructDataContract1() { }
 
@@ -153,7 +170,7 @@ public struct StructDataContract1
 }
 
 [DataContract]
-public class A
+class A
 {
     [DataMember]
     public int _a;
@@ -199,8 +216,4 @@ class TestMembersInitialized
     public Inner InnerProperty { get; set; } = new();
 
     public IEnumerable<string> MyProperty { get; set; } = ["1", "2", "3"];
-}
-
-public static class DataUtils
-{
 }

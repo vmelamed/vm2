@@ -10,7 +10,6 @@ using System.Collections.Immutable;
 /// </summary>
 internal static partial class TypeExtensions
 {
-
     static readonly Type[] _nonPrimitiveBasicTypesCollection =
     [
         typeof(string),
