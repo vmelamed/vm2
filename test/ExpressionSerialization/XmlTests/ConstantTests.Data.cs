@@ -4,7 +4,6 @@ public partial class ConstantTests
 {
     public static readonly TheoryData<string, object?, string> ConstantExpressionData = new ()
     {
-        { TestLine(), new object(), "Object.xml" },
         { TestLine(), null, "NullObject.xml" },
         { TestLine(), true, "Bool.xml" },
         { TestLine(), 'V', "Char.xml" },
@@ -18,25 +17,32 @@ public partial class ConstantTests
         { TestLine(), 5L, "Long.xml" },
         { TestLine(), (ulong)5, "ULong.xml" },
 
-        { TestLine(), (Half)3.14, "Half.xml" },
         { TestLine(), 5.5123453E-34F, "Float.xml" },
         { TestLine(), 5.1234567891234567E-123, "Double.xml" },
         { TestLine(), 5.5M, "Decimal.xml" },
-
-        { TestLine(), (IntPtr)5, "IntPtr.xml" },
-        { TestLine(), (UIntPtr)5, "UIntPtr.xml" },
 
         { TestLine(), EnumTest.Three, "Enum.xml" },
         { TestLine(), EnumFlagsTest.One | EnumFlagsTest.Three, "EnumFlags.xml" },
 
         { TestLine(), "abrah-cadabrah", "String.xml" },
-        { TestLine(), Guid.Empty, "Guid.xml" },
-        { TestLine(), new Uri("http://www.delinea.com"), "Uri.xml" },
         { TestLine(), new DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local), "DateTime.xml" },
         { TestLine(), new TimeSpan(3, 4, 15, 32, 123), "TimeSpan.xml" },
         { TestLine(), new DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0)), "DateTimeOffset.xml" },
-        { TestLine(), DBNull.Value, "DBNull.xml" },
+        { TestLine(), new int[]{ 1, 2, 3, 4 }, "ArrayOfInt.xml" },
+        { TestLine(), new int?[]{ 1, 2, null, null }, "ArrayOfNullableInt.xml" },
+        { TestLine(), new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }, "ByteArray.xml" },
+    };
 
+    // xUnit cannot serialize this test data
+    public static readonly TheoryData<string, object?, string> ConstantExpressionNsData = new ()
+    {
+        { TestLine(), new object(), "Object.xml" },
+        { TestLine(), (Half)3.14, "Half.xml" },
+        { TestLine(), (IntPtr)5, "IntPtr.xml" },
+        { TestLine(), (UIntPtr)5, "UIntPtr.xml" },
+        { TestLine(), new Guid("00112233-4455-6677-8899-aabbccddeeff"), "Guid.xml" },
+        { TestLine(), new Uri("http://www.delinea.com"), "Uri.xml" },
+        { TestLine(), DBNull.Value, "DBNull.xml" },
         { TestLine(), new
                         {
                             ObjectProperty = (object?)null,
@@ -63,11 +69,7 @@ public partial class ConstantTests
                         }, "Anonymous.xml" },
         { TestLine(), new Object1(), "Object1.xml" },
 
-        { TestLine(), new int[]{ 1, 2, 3, 4 }, "ArrayOfInt.xml" },
-        { TestLine(), new int?[]{ 1, 2, null, null }, "ArrayOfNullableInt.xml" },
-
         { TestLine(), new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2), "IntArraySegment.xml" },
-        { TestLine(), new Queue<int>([ 1, 2, 3, 4 ]), "IntQueue.xml" },
         { TestLine(), (new decimal[]{ 1, 2, 3, 4 }).ToFrozenSet(), "DecimalFrozenSet.xml" },
         { TestLine(), new Queue<int>([ 1, 2, 3, 4 ]), "IntQueue.xml" },
         { TestLine(), new Stack<int>([ 1, 2, 3, 4 ]), "IntStack.xml" },
@@ -164,7 +166,6 @@ public partial class ConstantTests
                             null
                         }, "ArrayOfNullableStructSerializable1.xml" },
 
-        { TestLine(), new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }, "ByteArray.xml" },
         { TestLine(), new ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8), "ByteArraySegment.xml" },
         { TestLine(), new Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ]), "ByteMemory.xml" },
         { TestLine(), new ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ]), "ByteReadOnlyMemory.xml" },

@@ -1,6 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using System;
 using System.Runtime.CompilerServices;
 
 using TransformConstant = Func<object?, Type, XElement>;
@@ -99,21 +98,6 @@ internal class DataTransform(Options? options = default)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
-    XElement EnumObject(
-        object? nodeValue,
-        Type nodeType)
-    {
-        return new XElement(
-                        ElementNames.Object,
-                        nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
-                    );
-    }
-
-    /// <summary>
-    /// Transforms enum values.
-    /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
     XElement EnumTransform(
         object? nodeValue,
         Type nodeType)
@@ -152,10 +136,8 @@ internal class DataTransform(Options? options = default)
         if (isNull)
             return nullableElement;
 
-        var value = nullableType.GetProperty("Value")?.GetValue(nullable);
-
-        if (value is null)
-            throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but the value is null.");
+        var value = nullableType.GetProperty("Value")?.GetValue(nullable)
+                        ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but the value is null.");
 
         nullableElement.Add(
             _options.TypeComment(underlyingType),
@@ -417,30 +399,23 @@ internal class DataTransform(Options? options = default)
         object? nodeValue,
         Type nodeType)
     {
-        try
-        {
-            var customElement = new XElement(
+        var customElement = new XElement(
                                     ElementNames.Custom,
                                     new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                                     nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
                                 );
 
-            if (nodeValue is null)
-                return customElement;
-
-            var dcSerializer = new DataContractSerializer(nodeValue.GetType(), Type.EmptyTypes);
-
-            using var writer = customElement.CreateWriter();
-
-            // XML serialize into the element
-            dcSerializer.WriteObject(writer, nodeValue);
-
+        if (nodeValue is null)
             return customElement;
-        }
-        catch (InvalidDataContractException x)
-        {
-            throw new NonSerializableObjectException(null, x);
-        }
+
+        var dcSerializer = new DataContractSerializer(nodeValue.GetType(), Type.EmptyTypes);
+
+        using var writer = customElement.CreateWriter();
+
+        // XML serialize into the element
+        dcSerializer.WriteObject(writer, nodeValue);
+
+        return customElement;
     }
     #endregion
 }

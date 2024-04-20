@@ -30,6 +30,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
     public XNode Transform(Expression expression)
     {
         _visitor.Visit(expression);
+
         return new XElement(
                         ElementNames.Expression,
                         new XAttribute("xmlns", Namespaces.Exs),
@@ -60,7 +61,8 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         Stream stream)
     {
         var doc = ToDocument(expression);
-        var settings = new XmlWriterSettings() {
+        using var writer = new StreamWriter(stream, _options.GetEncoding());
+        using var xmlWriter = XmlWriter.Create(writer, new() {
             Encoding = _options.GetEncoding(),
             Indent = _options.Indent,
             IndentChars = new(' ', _options.IndentSize),
@@ -68,9 +70,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
             NewLineOnAttributes = _options.AttributesOnNewLine,
             OmitXmlDeclaration = !_options.AddDocumentDeclaration,
             WriteEndDocumentOnClose = true,
-        };
-        using var writer = new StreamWriter(stream, _options.GetEncoding());
-        using var xmlWriter = XmlWriter.Create(writer, settings);
+        });
 
         doc.WriteTo(xmlWriter);
         xmlWriter.Flush();

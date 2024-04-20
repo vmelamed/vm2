@@ -119,17 +119,11 @@ public class ClassSerializable1
     public override string ToString() => "this.DumpString()";
 }
 
-public class ClassNonSerializable
+public class ClassNonSerializable(int intProperty, string strProperty)
 {
-    public ClassNonSerializable(int intProperty, string strProperty)
-    {
-        IntProperty = intProperty;
-        StringProperty = strProperty;
-    }
+    public int IntProperty { get; set; } = intProperty;
 
-    public int IntProperty { get; set; }
-
-    public string StringProperty { get; set; } = "";
+    public string StringProperty { get; set; } = strProperty;
 
     public override string ToString() => "this.DumpString()";
 }

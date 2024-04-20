@@ -3,6 +3,7 @@
     "path": "vm2.sln",
     "projects": [
       "src\\ExpressionSerialization\\ExpressionSerialization.csproj",
+      "src\\Threading\\Threading.csproj",
       "test\\ExpressionSerialization\\XmlTests\\XmlTests.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"
     ]

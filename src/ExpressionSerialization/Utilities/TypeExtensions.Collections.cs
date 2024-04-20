@@ -68,30 +68,4 @@ internal static partial class TypeExtensions
         typeof(Stack<>),
     ];
     static readonly FrozenSet<Type> _sequences = _sequencesCollection.ToFrozenSet();
-
-    static readonly Type[] _dictionariesCollection =
-    [
-        typeof(Hashtable),
-        typeof(Dictionary<,>),
-        typeof(SortedDictionary<,>),
-        typeof(ReadOnlyDictionary<,>),
-        typeof(FrozenDictionary<,>),
-        typeof(ConcurrentDictionary<,>),
-        typeof(ImmutableDictionary<,>),
-        typeof(ImmutableSortedDictionary<,>),
-    ];
-    static readonly FrozenSet<Type> _dictionaries = _dictionariesCollection.ToFrozenSet();
-
-    static readonly Type[] _xmlSerializableAttributesCollection = [
-            typeof(XmlRootAttribute),
-            typeof(XmlTypeAttribute),
-            typeof(XmlElementAttribute),
-            typeof(XmlArrayAttribute),
-            typeof(XmlArrayItemAttribute),
-            typeof(SerializableAttribute),
-            typeof(DataContractAttribute),
-            typeof(MessageContractAttribute),
-            typeof(CollectionDataContractAttribute),
-        ];
-    static readonly FrozenSet<Type> _xmlSerializableAttributes = _xmlSerializableAttributesCollection.ToFrozenSet();
 }

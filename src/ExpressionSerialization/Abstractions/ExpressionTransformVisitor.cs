@@ -78,9 +78,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// </summary>
     /// <typeparam name="TExpression">The type of the visited expression node.</typeparam>
     /// <param name="node">The expression node to be serialized.</param>
-    /// <param name="baseVisit">
-    /// Delegates to the base class's visiting method that will reduce the node to a simpler node (if possible).
-    /// </param>
+    /// <param name="baseVisit">The base visit.</param>
     /// <param name="thisVisit">Delegate to the XML serializing method.</param>
     /// <returns>The possibly reduced expression.</returns>
     protected virtual Expression GenericVisit<TExpression>(

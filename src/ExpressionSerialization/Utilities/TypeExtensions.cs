@@ -30,8 +30,6 @@ internal static partial class TypeExtensions
     public static bool IsAnonymous(this Type type)
         => type.IsGenericType && type.Name.StartsWith(anonymousTypePrefix, StringComparison.Ordinal);
 
-    const string collectionNamespacePrefix = "System.Collections.Generic";
-
     /// <summary>
     /// Determines whether the specified type is a generic nullable.
     /// </summary>

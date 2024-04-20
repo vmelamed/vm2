@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <NoWarn>xUnit1041</NoWarn>
+    <NoWarn>$(NoWarn);CA1861;xUnit1041</NoWarn>
     <RootNamespace>vm2.ExpressionSerialization.XmlTests</RootNamespace>
 
     <IsPackable>false</IsPackable>
