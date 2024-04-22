@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- (a, b) => (a AndAlso b) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda>
+        <parameters>
+            <parameter
+                type="boolean"
+                name="a" />
+            <parameter
+                type="boolean"
+                name="b" />
+        </parameters>
+        <body>
+            <andAlso>
+                <parameter
+                    type="boolean"
+                    name="a" />
+                <parameter
+                    type="boolean"
+                    name="b" />
+            </andAlso>
+        </body>
+    </lambda>
+</expression>

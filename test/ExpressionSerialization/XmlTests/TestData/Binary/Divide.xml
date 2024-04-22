@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- (a, b) => (a / b) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda>
+        <parameters>
+            <parameter
+                type="int"
+                name="a" />
+            <parameter
+                type="int"
+                name="b" />
+        </parameters>
+        <body>
+            <divide>
+                <parameter
+                    type="int"
+                    name="a" />
+                <parameter
+                    type="int"
+                    name="b" />
+            </divide>
+        </body>
+    </lambda>
+</expression>
