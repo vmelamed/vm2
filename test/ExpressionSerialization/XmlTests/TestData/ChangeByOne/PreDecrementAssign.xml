@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- a => Decrement(a) -->
+<!-- a => - -a -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
@@ -10,11 +10,11 @@
                 name="a" />
         </parameters>
         <body>
-            <decrement>
+            <preDecrementAssign>
                 <parameter
                     type="int"
                     name="a" />
-            </decrement>
+            </preDecrementAssign>
         </body>
     </lambda>
 </expression>

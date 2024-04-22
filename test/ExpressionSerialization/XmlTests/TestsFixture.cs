@@ -178,6 +178,17 @@ public class TestsFixture : IDisposable
         }
 
         actualStr.Should().Be(expectedStr, "the expected and the actual XML texts should be the same");
-        XNode.DeepEquals(actualDoc, expectedDoc).Should().BeTrue("the expected and the actual XDocument objects should be deep-equal");
+
+        var myEquals = XNodeDeepEquals.AreEqual(actualDoc, expectedDoc);
+
+        if (!myEquals)
+            output?.WriteLine(XNodeDeepEquals.LastResult);
+
+        var deepEquals = XNode.DeepEquals(actualDoc, expectedDoc);
+
+        if (!deepEquals)
+            output?.WriteLine("XNode.DeepEquals returned false!");
+
+        (myEquals || deepEquals).Should().BeTrue("the expected and the actual XDocument objects should be deep-equal");
     }
 }
