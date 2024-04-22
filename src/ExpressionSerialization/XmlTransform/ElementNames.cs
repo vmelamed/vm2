@@ -37,7 +37,6 @@ static class ElementNames
     public static readonly XName KeyValuePair           = Namespaces.Exs + "key-value";
     public static readonly XName Tuple                  = Namespaces.Exs + "tuple";
     public static readonly XName TupleItem              = Namespaces.Exs + "item";
-    public static readonly XName Custom                 = Namespaces.Exs + "custom";
 
     public static readonly XName Body                   = Namespaces.Exs + "body";
     public static readonly XName Indexes                = Namespaces.Exs + "indexes";

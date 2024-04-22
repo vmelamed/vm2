@@ -14,6 +14,7 @@ static class AttributeNames
     public static readonly XName Kind                   = "kind";
     public static readonly XName Name                   = "name";
     public static readonly XName Private                = "private";
+    public static readonly XName Public                 = "public";
     public static readonly XName Property               = "property";
     public static readonly XName Static                 = "static";
     public static readonly XName TailCall               = "tailCall";

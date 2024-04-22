@@ -6,7 +6,7 @@
     <constant>
         <!-- this.DumpString() -->
         <!-- vm2.ExpressionSerialization.XmlTests.ClassDataContract1 -->
-        <custom
+        <object
             type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
             concreteType="vm2.ExpressionSerialization.XmlTests.ClassDataContract2, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
             <ClassDataContract2
@@ -16,6 +16,6 @@
                 <StringProperty>two</StringProperty>
                 <DecimalProperty>3</DecimalProperty>
             </ClassDataContract2>
-        </custom>
+        </object>
     </constant>
 </expression>

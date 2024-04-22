@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- a => () => a -->
+<!-- a => -a -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
@@ -10,16 +10,11 @@
                 name="a" />
         </parameters>
         <body>
-            <quote>
-                <lambda>
-                    <parameters />
-                    <body>
-                        <parameter
-                            type="int"
-                            name="a" />
-                    </body>
-                </lambda>
-            </quote>
+            <negateChecked>
+                <parameter
+                    type="int"
+                    name="a" />
+            </negateChecked>
         </body>
     </lambda>
 </expression>

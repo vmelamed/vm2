@@ -71,7 +71,7 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
     /// Visits a <see cref="ParameterExpression"/> n.
     /// </summary>
     /// <param name="node">The n.</param>
-    /// <returns>System.Linq.Expressions.Expression.</returns>
+    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
     protected override Expression VisitParameter(ParameterExpression node)
         => GenericVisit(
             node,
@@ -83,11 +83,11 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                         n.IsByRef ? new XAttribute(AttributeNames.IsByRef, n.IsByRef) : null));
 
     /// <summary>
-    /// Visits the children of a lambda expression - <see cref="Expression{TDelegate}"/>.
+    /// Visits a lambda expression - <see cref="Expression{TDelegate}"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="node">The n.</param>
-    /// <returns>System.Linq.Expressions.Expression.</returns>
+    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
     protected override Expression VisitLambda<T>(Expression<T> node)
         => GenericVisit(
             node,
@@ -98,4 +98,42 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                         n.ReturnType == n.Body.Type ? null : new XAttribute(AttributeNames.DelegateType, n.ReturnType),
                         new XElement(ElementNames.Parameters, PopElements(n.Parameters.Count)),
                         new XElement(ElementNames.Body, _elements.Pop())));
+
+    /// <summary>
+    /// Visits a <see cref="UnaryExpression"/>.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    protected override Expression VisitUnary(UnaryExpression node)
+        => GenericVisit(
+            node,
+            base.VisitUnary,
+            (n, e) => e.Add(
+                        node.NodeType is ExpressionType.TypeAs or ExpressionType.Convert
+                            ? new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)) : null,
+                        node.NodeType is ExpressionType.TypeAs or ExpressionType.Convert
+                            ? _options.TypeComment(n.Type) : null,
+                        _elements.Pop(),
+                        VisitMethodInfo(n)));
+
+    /// <summary>
+    /// Visits a <see cref="BinaryExpression"/>.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    protected override Expression VisitBinary(BinaryExpression node)
+        => GenericVisit(
+            node,
+            base.VisitBinary,
+            (n, e) =>
+            {
+                var right = _elements.Pop();
+                var left = _elements.Pop();
+
+                e.Add(
+                    n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
+                    left,
+                    right,
+                    VisitMethodInfo(n));
+            });
 }

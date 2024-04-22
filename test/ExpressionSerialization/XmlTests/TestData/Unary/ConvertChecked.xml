@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- a => ConvertChecked(a, Int32) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda>
+        <parameters>
+            <parameter
+                type="double"
+                name="a" />
+        </parameters>
+        <body>
+            <convertChecked>
+                <parameter
+                    type="double"
+                    name="a" />
+            </convertChecked>
+        </body>
+    </lambda>
+</expression>

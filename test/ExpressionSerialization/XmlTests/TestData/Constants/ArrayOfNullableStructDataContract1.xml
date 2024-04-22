@@ -13,7 +13,7 @@
             <!-- nullable<vm2.ExpressionSerialization.XmlTests.StructDataContract1> -->
             <nullable>
                 <!-- vm2.ExpressionSerialization.XmlTests.StructDataContract1 -->
-                <custom
+                <object
                     type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                     <StructDataContract1
                         xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
@@ -21,14 +21,14 @@
                         <IntProperty>0</IntProperty>
                         <StringProperty>vm</StringProperty>
                     </StructDataContract1>
-                </custom>
+                </object>
             </nullable>
             <nullable
                 type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                 i:nil="true" />
             <nullable>
                 <!-- vm2.ExpressionSerialization.XmlTests.StructDataContract1 -->
-                <custom
+                <object
                     type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                     <StructDataContract1
                         xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
@@ -36,7 +36,7 @@
                         <IntProperty>1</IntProperty>
                         <StringProperty>vm vm</StringProperty>
                     </StructDataContract1>
-                </custom>
+                </object>
             </nullable>
             <nullable
                 type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"

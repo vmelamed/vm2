@@ -269,15 +269,6 @@
 
     <xs:group name="constantBaseGroup">
         <xs:choice>
-            <xs:element name="object"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies an object of .NET type "System.Object" thaty can only be null or not null value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
             <xs:element name="boolean"
                             type="xs:boolean">
                     <xs:annotation>
@@ -602,11 +593,11 @@
                 </xs:complexType>
             </xs:element>
 
-            <xs:element name="custom"
+            <xs:element name="object"
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Specifies a custom type of value (C# user defined class or struct) in a constant expression.
+                        Specifies an object of custom type of value (C# user defined class or struct) in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -625,7 +616,7 @@
                                   use="required">
                         <xs:annotation>
                             <xs:documentation xml:lang="en-us">
-                                Specifies the type of the custom type as a .NET fully qualified name.
+                                Specifies the type of the object type as a .NET fully qualified name.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
@@ -634,7 +625,7 @@
                                   use="optional">
                         <xs:annotation>
                             <xs:documentation xml:lang="en-us">
-                                Specifies the concrete type of the custom type as a .NET fully qualified name. Required if different (e.g. derived) from @type.
+                                Specifies the concrete type of the object type as a .NET fully qualified name. Required if different (e.g. derived) from @type.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
@@ -923,9 +914,8 @@
     <xs:complexType name="unaryExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Specifies a unary expression:
-                ArrayLength, Convert, ConvertChecked, Negate,
-                NegateChecked, Not, Quote, TypeAs, UnaryPlus
+                Specifies a unary expression: Negate, NegateChecked, Not,
+                ArrayLength, Convert, ConvertChecked, Quote, TypeAs, UnaryPlus
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -948,10 +938,10 @@
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="required">
+                      use="optional">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
-                    Used if a type conversion of the result to the specified type needs to take place.
+                    Required if a type conversion of the result to the specified type needs to take place.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

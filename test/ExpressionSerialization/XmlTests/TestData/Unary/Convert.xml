@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- a => Convert(a, Int32) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda>
+        <parameters>
+            <parameter
+                type="double"
+                name="a" />
+        </parameters>
+        <body>
+            <convert
+                type="int">
+                <parameter
+                    type="double"
+                    name="a" />
+            </convert>
+        </body>
+    </lambda>
+</expression>

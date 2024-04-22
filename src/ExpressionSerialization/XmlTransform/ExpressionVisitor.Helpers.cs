@@ -1,5 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using System.Reflection;
+using System.Xml.Linq;
+
 /// <summary>
 /// Class ExpressionVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
@@ -96,5 +99,74 @@ public partial class ExpressionVisitor : ExpressionTransformVisitor<XElement>
         }
 
         return body;
+    }
+
+    static XAttribute? VisitAsType(UnaryExpression node)
+    {
+        if (node.NodeType == ExpressionType.TypeAs ||
+            node.NodeType == ExpressionType.Convert)
+            return new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type));
+
+        return null;
+
+    }
+
+    static XElement? VisitMethodInfo(BinaryExpression node)
+        => node.Method is MemberInfo mi ? VisitMemberInfo(mi) : null;
+
+    static XElement? VisitMethodInfo(UnaryExpression node)
+        => node.Method is MemberInfo mi ? VisitMemberInfo(mi) : null;
+
+    static XElement VisitMemberInfo(MemberInfo member)
+    {
+        XAttribute? visibility = member is MethodInfo method && !method.IsPublic
+                                    ? (method.Attributes & MethodAttributes.MemberAccessMask) switch {
+                                        MethodAttributes.Private => new XAttribute(AttributeNames.Visibility, AttributeNames.Private),
+                                        MethodAttributes.Assembly => new XAttribute(AttributeNames.Visibility, AttributeNames.Assembly),
+                                        MethodAttributes.Family => new XAttribute(AttributeNames.Visibility, AttributeNames.Family),
+                                        MethodAttributes.FamANDAssem => new XAttribute(AttributeNames.Visibility, AttributeNames.FamilyAndAssembly),
+                                        MethodAttributes.FamORAssem => new XAttribute(AttributeNames.Visibility, AttributeNames.FamilyOrAssembly),
+                                        _ => null
+                                    }
+                                    : null;
+
+        return member switch {
+            ConstructorInfo ci => new XElement(
+                                        ElementNames.Constructor,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(ci.DeclaringType ?? throw new InternalTransformErrorException("ConstructorInfo's DeclaringType is null."))),
+                                        visibility,
+                                        ci.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
+                                        new XElement(
+                                                ElementNames.Parameters,
+                                                VisitParameters(ci.GetParameters()))),
+            PropertyInfo pi => new XElement(
+                                    ElementNames.Property,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(pi.DeclaringType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null."))),
+                                        visibility,
+                                        new XAttribute(AttributeNames.Name, pi.Name),
+                                        VisitParameters(pi.GetIndexParameters())),
+
+            MethodInfo mi => new XElement(
+                                     ElementNames.Method,
+                                         new XAttribute(AttributeNames.Type, Transform.TypeName(mi.DeclaringType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null."))),
+                                         visibility,
+                                         mi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
+                                         new XAttribute(AttributeNames.Name, mi.Name),
+                                         new XElement(ElementNames.Parameters, VisitParameters(mi.GetParameters()))),
+
+            EventInfo ei => new XElement(
+                                    ElementNames.Property,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(ei.DeclaringType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null."))),
+                                        new XAttribute(AttributeNames.Name, ei.Name)),
+
+            FieldInfo fi => new XElement(
+                                    ElementNames.Field,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(fi.DeclaringType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null."))),
+                                        visibility,
+                                        fi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
+                                        new XAttribute(AttributeNames.Name, fi.Name)),
+
+            _ => throw new InternalTransformErrorException("Unknown MemberInfo.")
+        };
     }
 }

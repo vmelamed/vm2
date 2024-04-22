@@ -88,7 +88,7 @@ internal class DataTransform(Options? options = default)
             return ClassTupleTransform;
 
         // get general object transform
-        return CustomTransform;
+        return ObjectTransform;
     }
 
     #region Transforms
@@ -394,39 +394,40 @@ internal class DataTransform(Options? options = default)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">Type of the node value.</param>
-    XElement CustomTransform(
+    XElement ObjectTransform(
         object? nodeValue,
         Type nodeType)
     {
-        if (nodeValue is null || nodeValue.GetType() == typeof(object))
+        if (nodeValue is null)
             return new XElement(
                             ElementNames.Object,
+                            new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                             new XAttribute(AttributeNames.Nil, nodeValue is null));
 
         var actualTransform = GetTransform(nodeValue.GetType());
 
-        if (actualTransform != CustomTransform)
+        if (actualTransform != ObjectTransform)
             return actualTransform(nodeValue, nodeValue.GetType());
 
         var concreteType = nodeValue.GetType();
-        var customElement = new XElement(
-                                    ElementNames.Custom,
+        var objectElement = new XElement(
+                                    ElementNames.Object,
                                     new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                                     nodeType != concreteType ? new XAttribute(AttributeNames.ConcreteType, Transform.TypeName(concreteType)) : null,
                                     nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
                                 );
 
         if (nodeValue is null)
-            return customElement;
+            return objectElement;
 
         var dcSerializer = new DataContractSerializer(nodeValue.GetType(), Type.EmptyTypes);
 
-        using var writer = customElement.CreateWriter();
+        using var writer = objectElement.CreateWriter();
 
         // XML serialize into the element
         dcSerializer.WriteObject(writer, nodeValue);
 
-        return customElement;
+        return objectElement;
     }
     #endregion
 }

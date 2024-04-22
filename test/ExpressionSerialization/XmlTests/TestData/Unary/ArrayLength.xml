@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- a => ArrayLength(a) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda>
+        <parameters>
+            <parameter
+                type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                name="a">
+                <!-- System.Int32[] -->
+            </parameter>
+        </parameters>
+        <body>
+            <arrayLength>
+                <parameter
+                    type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                    name="a">
+                    <!-- System.Int32[] -->
+                </parameter>
+            </arrayLength>
+        </body>
+    </lambda>
+</expression>

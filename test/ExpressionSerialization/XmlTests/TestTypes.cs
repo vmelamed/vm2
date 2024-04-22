@@ -189,6 +189,13 @@ class B
     public static B operator !(B x) => new() { _b = !x._b };
 }
 
+[DataContract]
+class C : A
+{
+    [DataMember]
+    public double _c;
+}
+
 class TestMethods
 {
     readonly int _a = 3;

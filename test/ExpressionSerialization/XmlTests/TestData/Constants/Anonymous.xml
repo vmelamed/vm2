@@ -12,6 +12,7 @@
                 name="ObjectProperty">
                 <!-- object -->
                 <object
+                    type="object"
                     i:nil="true" />
             </property>
             <property

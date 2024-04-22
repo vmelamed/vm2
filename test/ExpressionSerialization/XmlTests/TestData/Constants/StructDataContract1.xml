@@ -6,7 +6,7 @@
     <constant>
         <!-- this.DumpString() -->
         <!-- vm2.ExpressionSerialization.XmlTests.StructDataContract1 -->
-        <custom
+        <object
             type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
             <StructDataContract1
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
@@ -14,6 +14,6 @@
                 <IntProperty>0</IntProperty>
                 <StringProperty></StringProperty>
             </StructDataContract1>
-        </custom>
+        </object>
     </constant>
 </expression>

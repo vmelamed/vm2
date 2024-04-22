@@ -6,7 +6,7 @@
     <constant>
         <!-- value(vm2.ExpressionSerialization.XmlTests.StructSerializable1) -->
         <!-- vm2.ExpressionSerialization.XmlTests.StructSerializable1 -->
-        <custom
+        <object
             type="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
             <StructSerializable1
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
@@ -14,6 +14,6 @@
                 <_x003C_IntProperty_x003E_k__BackingField>0</_x003C_IntProperty_x003E_k__BackingField>
                 <_x003C_StringProperty_x003E_k__BackingField></_x003C_StringProperty_x003E_k__BackingField>
             </StructSerializable1>
-        </custom>
+        </object>
     </constant>
 </expression>

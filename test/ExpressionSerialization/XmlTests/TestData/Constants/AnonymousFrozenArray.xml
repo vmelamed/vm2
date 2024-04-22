@@ -17,6 +17,7 @@
                     name="ObjectProperty">
                     <!-- object -->
                     <object
+                        type="object"
                         i:nil="true" />
                 </property>
                 <property
@@ -112,6 +113,7 @@
                     name="ObjectProperty">
                     <!-- object -->
                     <object
+                        type="object"
                         i:nil="true" />
                 </property>
                 <property
@@ -202,6 +204,7 @@
                 </property>
             </anonymous>
             <object
+                type="object"
                 i:nil="true" />
         </collection>
     </constant>

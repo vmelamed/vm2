@@ -11,7 +11,7 @@
             elementType="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
             length="3">
             <!-- vm2.ExpressionSerialization.XmlTests.ClassDataContract1 -->
-            <custom
+            <object
                 type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                 <ClassDataContract1
                     xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
@@ -19,8 +19,8 @@
                     <IntProperty>7</IntProperty>
                     <StringProperty>vm</StringProperty>
                 </ClassDataContract1>
-            </custom>
-            <custom
+            </object>
+            <object
                 type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                 concreteType="vm2.ExpressionSerialization.XmlTests.ClassDataContract2, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                 <ClassDataContract2
@@ -30,8 +30,9 @@
                     <StringProperty>vm</StringProperty>
                     <DecimalProperty>17</DecimalProperty>
                 </ClassDataContract2>
-            </custom>
+            </object>
             <object
+                type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                 i:nil="true" />
         </collection>
     </constant>

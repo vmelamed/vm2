@@ -6,7 +6,7 @@
     <constant>
         <!-- value(vm2.ExpressionSerialization.XmlTests.Object1) -->
         <!-- vm2.ExpressionSerialization.XmlTests.Object1 -->
-        <custom
+        <object
             type="vm2.ExpressionSerialization.XmlTests.Object1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
             <Object1
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
@@ -43,6 +43,6 @@
                 <UShortProperty>1</UShortProperty>
                 <UriProperty>http://localhost/</UriProperty>
             </Object1>
-        </custom>
+        </object>
     </constant>
 </expression>
