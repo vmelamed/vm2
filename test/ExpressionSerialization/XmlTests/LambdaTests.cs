@@ -11,6 +11,7 @@ public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output)
 
     public static readonly TheoryData<string, string, string> LambdaData = new ()
     {
+        { TestLine(), "b => b ? 1 : 3",         "Conditional.xml" },
         { TestLine(), "i => true",              "Param2BoolConstant.xml" },
         { TestLine(), "(s,d) => true",          "2ParamsToConstant.xml" },
         { TestLine(), "a => a._a",              "MemberField.xml" },
@@ -25,6 +26,7 @@ public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output)
 
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {
+        ["b => b ? 1 : 3"]                      = () => (bool b) => b ? 1 : 3,
         ["(s,d) => true"]                       = () => (string s, DateTime d) => true,
         ["i => true"]                           = () => (int i) => true,
         ["a => a._a"]                           = () => (TestMethods a) => a._a,

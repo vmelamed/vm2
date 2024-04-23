@@ -251,16 +251,16 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     // IN PROCESS:
     /////////////////////////////////////////////////////////////////
 
-    /////////////////////////////////////////////////////////////////
-    // TODO:
-    /////////////////////////////////////////////////////////////////
-
     /// <inheritdoc/>
     protected override Expression VisitConditional(ConditionalExpression node)
         => GenericVisit(
             node,
             base.VisitConditional,
-            (n, e) => { });
+            (n, e) => e.Add(PopExpressions(3)));
+
+    /////////////////////////////////////////////////////////////////
+    // TODO:
+    /////////////////////////////////////////////////////////////////
 
     /// <inheritdoc/>
     protected override Expression VisitGoto(GotoExpression node)

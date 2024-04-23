@@ -1146,7 +1146,7 @@
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="required"/>
+                      use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="changeByOneExpressionType">
