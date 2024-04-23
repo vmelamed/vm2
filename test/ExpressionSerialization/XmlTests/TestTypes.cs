@@ -196,9 +196,13 @@ class C : A
     public double _c;
 }
 
+[DataContract]
 class TestMethods
 {
-    readonly int _a = 3;
+    [DataMember]
+    public readonly int _a = 3;
+
+    public int A { get => _a; }
 
     public static int Method1() => 1;
 

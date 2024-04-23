@@ -4,11 +4,11 @@ using System.Reflection;
 using System.Xml.Linq;
 
 /// <summary>
-/// Class ExpressionVisitor.
+/// Class XmlTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
 /// </summary>
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
-public partial class ExpressionVisitor : ExpressionTransformVisitor<XElement>
+public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement>
 {
     Stack<XElement> PopElements(int numberOfExpressions)
     {
@@ -44,72 +44,19 @@ public partial class ExpressionVisitor : ExpressionTransformVisitor<XElement>
                                 param.IsOut || param.ParameterType.IsByRef ? new XAttribute(AttributeNames.IsByRef, true) : null);
     }
 
-    static XElement ReplaceParametersWithReferences(XElement parameters, XElement body)
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
+    IEnumerable<XElement> PopExpressions(int numberOfExpressions)
     {
-        if (parameters == null)
-            return body;
+        var stack = new Stack<XElement>();
 
-        var varRefs = from p in parameters.Elements(ElementNames.Parameter)
-                      from a in body.Descendants(ElementNames.Parameter)
-                      let pName = p.Attribute(AttributeNames.Name)?.Value ?? GetName()
-                      let aa = a.Attribute(AttributeNames.Name)
-                      let aName = aa?.Value ?? GetName()
-                      where aName == pName
-                      select a;
+        // pop the expressions:
+        for (var i = 0; i < numberOfExpressions; i++)
+            stack.Push(
+                _elements.Pop());
 
-        // ... with references to parameters (parameter-s without Type attribute)
-        foreach (var a in varRefs)
-        {
-            a.AddAfterSelf(
-                new XElement(
-                    ElementNames.Parameter,
-                    new XAttribute(AttributeNames.Name, a.Attribute(AttributeNames.Name)?.Value ?? GetName())));
-            a.Remove();
-        }
-
-        return body;
+        return stack;
     }
-
-    static XElement ReplaceParameterWithReference(XElement parameter, XElement body)
-    {
-        if (parameter != null && body == null)
-            throw new ArgumentNullException(nameof(body));
-
-        if (parameter == null)
-            return body;
-
-        var pName = parameter.Attribute(AttributeNames.Name)?.Value ?? GetName();
-
-        // replace all parameters in the body...
-        var varRefs = from a in body.Descendants(ElementNames.Parameter)
-                      let aa = a.Attribute(AttributeNames.Name)
-                      let aName = aa?.Value ?? GetName()
-                      where aName == pName
-                      select a;
-
-        // ... with references to the parameter (parameter without Type attribute)
-        foreach (var a in varRefs)
-        {
-            a.AddAfterSelf(new XElement(
-                                    ElementNames.Parameter,
-                                    new XAttribute(
-                                            AttributeNames.Name,
-                                            pName)));
-            a.Remove();
-        }
-
-        return body;
-    }
-
-    static XAttribute? VisitAsType(UnaryExpression node)
-    {
-        if (node.NodeType == ExpressionType.TypeAs ||
-            node.NodeType == ExpressionType.Convert)
-            return new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type));
-
-        return null;
-
-    }
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
 
     static XElement? VisitMethodInfo(BinaryExpression node)
         => node.Method is MemberInfo mi ? VisitMemberInfo(mi) : null;
@@ -121,12 +68,12 @@ public partial class ExpressionVisitor : ExpressionTransformVisitor<XElement>
     {
         XAttribute? visibility = member is MethodInfo method && !method.IsPublic
                                     ? (method.Attributes & MethodAttributes.MemberAccessMask) switch {
-                                        MethodAttributes.Private => new XAttribute(AttributeNames.Visibility, AttributeNames.Private),
-                                        MethodAttributes.Assembly => new XAttribute(AttributeNames.Visibility, AttributeNames.Assembly),
-                                        MethodAttributes.Family => new XAttribute(AttributeNames.Visibility, AttributeNames.Family),
+                                        MethodAttributes.Private     => new XAttribute(AttributeNames.Visibility, AttributeNames.Private),
+                                        MethodAttributes.Assembly    => new XAttribute(AttributeNames.Visibility, AttributeNames.Assembly),
+                                        MethodAttributes.Family      => new XAttribute(AttributeNames.Visibility, AttributeNames.Family),
                                         MethodAttributes.FamANDAssem => new XAttribute(AttributeNames.Visibility, AttributeNames.FamilyAndAssembly),
-                                        MethodAttributes.FamORAssem => new XAttribute(AttributeNames.Visibility, AttributeNames.FamilyOrAssembly),
-                                        _ => null
+                                        MethodAttributes.FamORAssem  => new XAttribute(AttributeNames.Visibility, AttributeNames.FamilyOrAssembly),
+                                        _                            => null
                                     }
                                     : null;
 

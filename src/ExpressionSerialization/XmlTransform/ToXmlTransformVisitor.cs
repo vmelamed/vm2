@@ -4,11 +4,11 @@ using System.Linq.Expressions;
 using System.Xml.Linq;
 
 /// <summary>
-/// Class ExpressionVisitor.
+/// Class XmlTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
 /// </summary>
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
-public partial class ExpressionVisitor(Options? options = null) : ExpressionTransformVisitor<XElement>
+public partial class ToXmlTransformVisitor(Options? options = null) : ExpressionTransformVisitor<XElement>
 {
     /// <summary>
     /// The transform options.
@@ -97,31 +97,155 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
         => GenericVisit(
             node,
             base.VisitBinary,
-            (n, e) =>
-            {
-                var right = _elements.Pop();
-                var left = _elements.Pop();
-
-                e.Add(
-                    n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
-                    left,
-                    right,
-                    VisitMethodInfo(n));
-            });
+            (n, e) => e.Add(
+                        n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
+                        PopExpressions(2),
+                        VisitMethodInfo(n)));
 
     /// <inheritdoc/>
     protected override Expression VisitTypeBinary(TypeBinaryExpression node)
         => GenericVisit(
             node,
             base.VisitTypeBinary,
+            (n, e) => e.Add(
+                        new XAttribute(AttributeNames.TypeOperand, Transform.TypeName(n.TypeOperand)),
+                        _elements.Pop()));
+
+    /// <inheritdoc/>
+    protected override Expression VisitIndex(IndexExpression node)
+        => GenericVisit(
+            node,
+            base.VisitIndex,
             (n, e) =>
             {
+                var indexes = new XElement(ElementNames.Indexes, PopExpressions(n.Arguments.Count));
                 e.Add(
-                    new XAttribute(
-                        AttributeNames.TypeOperand,
-                        Transform.TypeName(n.TypeOperand)),
-                    _elements.Pop());
+                    _elements.Pop(),
+                    indexes);
             });
+
+    /// <inheritdoc/>
+    protected override ElementInit VisitElementInit(ElementInit node)
+    {
+        var elementInit = base.VisitElementInit(node);
+
+        _elements.Push(
+            new XElement(
+                    ElementNames.ElementInit,
+                    VisitMemberInfo(node.AddMethod),
+                    new XElement(ElementNames.Arguments, PopExpressions(node.Arguments.Count))));
+
+        return elementInit;
+    }
+
+    /// <inheritdoc/>
+    protected override Expression VisitMember(MemberExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMember,
+            (n, e) =>
+                e.Add(
+                    _elements.Pop(),
+                    VisitMemberInfo(n.Member)));
+
+    #region Member Bindings
+    /// <inheritdoc/>
+    protected override MemberBinding VisitMemberBinding(MemberBinding node)
+        => base.VisitMemberBinding(node);
+
+    /// <inheritdoc/>
+    protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
+    {
+        var binding = base.VisitMemberAssignment(node);
+
+        _elements.Push(
+            new XElement(
+                    ElementNames.AssignmentBinding,
+                    VisitMemberInfo(node.Member),
+                    _elements.Pop()));
+
+        return binding;
+    }
+
+    /// <inheritdoc/>
+    protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
+    {
+        var binding = base.VisitMemberMemberBinding(node);
+
+        _elements.Push(
+            new XElement(
+                    ElementNames.MemberMemberBinding,
+                    VisitMemberInfo(node.Member),
+                    new XElement(ElementNames.Bindings, PopExpressions(node.Bindings.Count))));
+
+        return binding;
+    }
+
+    /// <inheritdoc/>
+    protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
+    {
+        var binding = base.VisitMemberListBinding(node);
+
+        _elements.Push(
+            new XElement(
+                    ElementNames.ListBinding,
+                    VisitMemberInfo(node.Member),
+                    _elements.Pop()));
+
+        return binding;
+    }
+
+    /// <inheritdoc/>
+    protected override Expression VisitMemberInit(MemberInitExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMemberInit,
+            (n, e) => e.Add(
+                        _elements.Pop(),        // the new expression
+                        new XElement(
+                                ElementNames.Bindings,
+                                PopExpressions(n.Bindings.Count))));
+    #endregion
+
+    /// <inheritdoc/>
+    protected override Expression VisitMethodCall(MethodCallExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMethodCall,
+            (n, e) =>
+            {
+                var arguments = new XElement(ElementNames.Arguments, PopExpressions(n.Arguments.Count));
+                var instance = n.Object!=null ? _elements.Pop() : null;
+                var method = VisitMemberInfo(n.Method);
+
+                e.Add(
+                    instance,
+                    method,
+                    arguments);
+            });
+
+    /// <inheritdoc/>
+    protected override Expression VisitInvocation(InvocationExpression node)
+        => GenericVisit(
+            node,
+            base.VisitInvocation,
+            (n, e) =>
+            {
+                var arguments = new XElement(ElementNames.Arguments, PopExpressions(n.Arguments.Count));
+
+                e.Add(
+                    _elements.Pop(),
+                    arguments);
+            });
+
+    /// <inheritdoc/>
+    protected override Expression VisitBlock(BlockExpression node)
+        => GenericVisit(
+            node,
+            base.VisitBlock,
+            (n, e) => e.Add(
+                        new XElement(ElementNames.Variables, PopExpressions(n.Variables.Count)),
+                        PopExpressions(n.Expressions.Count)));
 
     /////////////////////////////////////////////////////////////////
     // IN PROCESS:
@@ -130,13 +254,6 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
     /////////////////////////////////////////////////////////////////
     // TODO:
     /////////////////////////////////////////////////////////////////
-
-    /// <inheritdoc/>
-    protected override Expression VisitBlock(BlockExpression node)
-        => GenericVisit(
-            node,
-            base.VisitBlock,
-            (n, e) => { });
 
     /// <inheritdoc/>
     protected override Expression VisitConditional(ConditionalExpression node)
@@ -150,27 +267,6 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
         => GenericVisit(
             node,
             base.VisitGoto,
-            (n, e) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitExtension(Expression node)
-        => GenericVisit(
-            node,
-            base.VisitExtension,
-            (n, e) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitIndex(IndexExpression node)
-        => GenericVisit(
-            node,
-            base.VisitIndex,
-            (n, e) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitInvocation(InvocationExpression node)
-        => GenericVisit(
-            node,
-            base.VisitInvocation,
             (n, e) => { });
 
     /// <inheritdoc/>
@@ -195,27 +291,6 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
             (n, e) => { });
 
     /// <inheritdoc/>
-    protected override Expression VisitMember(MemberExpression node)
-        => GenericVisit(
-            node,
-            base.VisitMember,
-            (n, e) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitMemberInit(MemberInitExpression node)
-        => GenericVisit(
-            node,
-            base.VisitMemberInit,
-            (n, e) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitMethodCall(MethodCallExpression node)
-        => GenericVisit(
-            node,
-            base.VisitMethodCall,
-            (n, e) => { });
-
-    /// <inheritdoc/>
     protected override Expression VisitNew(NewExpression node)
         => GenericVisit(
             node,
@@ -227,13 +302,6 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
         => GenericVisit(
             node,
             base.VisitNewArray,
-            (n, e) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
-        => GenericVisit(
-            node,
-            base.VisitRuntimeVariables,
             (n, e) => { });
 
     /// <inheritdoc/>
@@ -255,26 +323,10 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
     protected override CatchBlock VisitCatchBlock(CatchBlock node) => base.VisitCatchBlock(node);
 
     /// <inheritdoc/>
-    protected override ElementInit VisitElementInit(ElementInit node) => base.VisitElementInit(node);
-
-    /// <inheritdoc/>
     protected override LabelTarget? VisitLabelTarget(LabelTarget? node) => base.VisitLabelTarget(node);
-    /// <inheritdoc/>
-    protected override MemberAssignment VisitMemberAssignment(MemberAssignment node) => base.VisitMemberAssignment(node);
-
-    /// <inheritdoc/>
-    protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
 
     /// <inheritdoc/>
     protected override SwitchCase VisitSwitchCase(SwitchCase node) => base.VisitSwitchCase(node);
-
-    /// <inheritdoc/>
-    protected override MemberListBinding VisitMemberListBinding(MemberListBinding node) => base.VisitMemberListBinding(node);
-
-    /// <inheritdoc/>
-    protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node) => base.VisitMemberMemberBinding(node);
-
-
 
     /////////////////////////////////////////////////////////////////
     // WOUN'T DO:
@@ -285,11 +337,26 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
         => GenericVisit(
             node,
             base.VisitDebugInfo,
-            (n, e) => { });
+            (n, e) => throw new UnexpectedExpressionException(n.GetType().Name));
+
     /// <inheritdoc/>
     protected override Expression VisitDynamic(DynamicExpression node)
         => GenericVisit(
             node,
             base.VisitDynamic,
-            (n, e) => { });
+            (n, e) => throw new UnexpectedExpressionException(n.GetType().Name));
+
+    /// <inheritdoc/>
+    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
+        => GenericVisit(
+            node,
+            base.VisitRuntimeVariables,
+            (n, e) => throw new UnexpectedExpressionException(n.GetType().Name));
+
+    /// <inheritdoc/>
+    protected override Expression VisitExtension(Expression node)
+        => GenericVisit(
+            node,
+            base.VisitExtension,
+            (n, e) => throw new UnexpectedExpressionException($"{nameof(ExpressionVisitor)}.{VisitExtension}(Expression node)"));
 }

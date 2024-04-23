@@ -10,7 +10,7 @@ using System.Xml.Linq;
 public class ExpressionTransform : IExpressionTransform<XNode>
 {
     Options _options;
-    ExpressionVisitor _visitor;
+    ToXmlTransformVisitor _visitor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExpressionTransform"/> class.
@@ -19,7 +19,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
     public ExpressionTransform(Options? options = null)
     {
         _options = options ?? new Options();
-        _visitor = new ExpressionVisitor(_options);
+        _visitor = new ToXmlTransformVisitor(_options);
     }
 
     /// <summary>

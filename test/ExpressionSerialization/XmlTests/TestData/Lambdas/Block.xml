@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- (a, b) => {var d; ... } -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda>
+        <parameters>
+            <parameter
+                type="int"
+                name="a" />
+            <parameter
+                type="int"
+                name="b" />
+        </parameters>
+        <body>
+            <block>
+                <variables>
+                    <parameter
+                        type="int"
+                        name="d" />
+                </variables>
+                <assign>
+                    <parameter
+                        type="int"
+                        name="d" />
+                    <constant>
+                        <!-- 42 -->
+                        <int>42</int>
+                    </constant>
+                </assign>
+                <addAssign>
+                    <parameter
+                        type="int"
+                        name="a" />
+                    <parameter
+                        type="int"
+                        name="d" />
+                </addAssign>
+                <subtractAssign>
+                    <parameter
+                        type="int"
+                        name="a" />
+                    <parameter
+                        type="int"
+                        name="b" />
+                </subtractAssign>
+                <parameter
+                    type="int"
+                    name="c" />
+                <assign>
+                    <parameter
+                        type="int"
+                        name="c" />
+                    <constant>
+                        <!-- 2 -->
+                        <int>2</int>
+                    </constant>
+                </assign>
+                <leftShiftAssign>
+                    <parameter
+                        type="int"
+                        name="a" />
+                    <parameter
+                        type="int"
+                        name="c" />
+                </leftShiftAssign>
+            </block>
+        </body>
+    </lambda>
+</expression>

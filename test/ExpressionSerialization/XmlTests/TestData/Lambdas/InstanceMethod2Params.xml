@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- a => a._a -->
+<!-- a => a.Method3(1, 1.1) -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
@@ -12,16 +12,35 @@
             </parameter>
         </parameters>
         <body>
-            <memberAccess>
+            <call>
                 <parameter
                     type="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     name="a">
                     <!-- vm2.ExpressionSerialization.XmlTests.TestMethods -->
                 </parameter>
-                <field
+                <method
                     type="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                    name="_a" />
-            </memberAccess>
+                    name="Method3">
+                    <parameters>
+                        <parameter
+                            type="int"
+                            name="i" />
+                        <parameter
+                            type="double"
+                            name="_" />
+                    </parameters>
+                </method>
+                <arguments>
+                    <constant>
+                        <!-- 1 -->
+                        <int>1</int>
+                    </constant>
+                    <constant>
+                        <!-- 1.1 -->
+                        <double>1.1</double>
+                    </constant>
+                </arguments>
+            </call>
         </body>
     </lambda>
 </expression>
