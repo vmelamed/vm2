@@ -1,27 +1,23 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
-public static class XNodeDeepEquals
+public class XNodeDeepEquals
 {
-    static Queue<string> _path = new();
+    Queue<string> _path = new(new string[] { "." });
 
-    public static string LastResult { get; private set; } = "";
+    public string LastResult { get; private set; } = "";
 
-    public static bool False(string difference)
+    public bool False(string difference)
     {
         LastResult = $"First difference at {string.Join("/", _path)} in the {difference}.";
         _path.Clear();
         return false;
     }
 
-    public static bool AreEqual(XNode? left, XNode? right)
+    public bool AreEqual(XNode? left, XNode? right)
     {
-        _path.Clear();
-        _path.Enqueue(".");
-        LastResult = "";
-
         return Equals(left, right);
     }
 
-    static bool Equals(XNode? left, XNode? right)
+    bool Equals(XNode? left, XNode? right)
     {
         if (ReferenceEquals(left, right))
             return true;
@@ -44,7 +40,7 @@ public static class XNodeDeepEquals
         };
     }
 
-    static bool Equals(XComment left, XComment right)
+    bool Equals(XComment left, XComment right)
     {
         if (left.BaseUri != right.BaseUri)
             return False($"comments base URI: \"{left.BaseUri}\" != \"{right.BaseUri}\"");
@@ -54,7 +50,7 @@ public static class XNodeDeepEquals
         return true;
     }
 
-    static bool Equals(XProcessingInstruction left, XProcessingInstruction right)
+    bool Equals(XProcessingInstruction left, XProcessingInstruction right)
     {
         if (left.BaseUri != right.BaseUri)
             return False($"processing instructions base URI: \"{left.BaseUri}\" != \"{right.BaseUri}\"");
@@ -66,7 +62,7 @@ public static class XNodeDeepEquals
         return true;
     }
 
-    static bool Equals(XDocumentType left, XDocumentType right)
+    bool Equals(XDocumentType left, XDocumentType right)
     {
         if (left.BaseUri != right.BaseUri)
             return False($"DTD base URI: \"{left.BaseUri}\" != \"{right.BaseUri}\"");
@@ -82,7 +78,7 @@ public static class XNodeDeepEquals
         return true;
     }
 
-    static bool Equals(XText left, XText right)
+    bool Equals(XText left, XText right)
     {
         if (left.BaseUri != right.BaseUri)
             return False($"text base URI: \"{left.BaseUri}\" != \"{right.BaseUri}\"");
@@ -92,7 +88,7 @@ public static class XNodeDeepEquals
         return true;
     }
 
-    static bool Equals(XDeclaration? left, XDeclaration? right)
+    bool Equals(XDeclaration? left, XDeclaration? right)
     {
         if (ReferenceEquals(left, right))
             return true;
@@ -111,7 +107,7 @@ public static class XNodeDeepEquals
         return true;
     }
 
-    static bool Equals(XDocument left, XDocument right)
+    bool Equals(XDocument left, XDocument right)
     {
         _path.Dequeue();
 
@@ -127,7 +123,7 @@ public static class XNodeDeepEquals
         return Equals(left.Root as XNode, right.Root);
     }
 
-    static bool Equals(XElement left, XElement right)
+    bool Equals(XElement left, XElement right)
     {
         _path.Enqueue(left.Name.ToString());
 

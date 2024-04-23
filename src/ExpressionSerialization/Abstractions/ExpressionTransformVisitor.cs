@@ -84,7 +84,8 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     protected virtual Expression GenericVisit<TExpression>(
         TExpression node,
         Func<TExpression, Expression> baseVisit,
-        Action<TExpression, TElement> thisVisit) where TExpression : Expression
+        Action<TExpression, TElement> thisVisit)
+        where TExpression : Expression
     {
         var reducedNode = baseVisit(node);
 

@@ -1,33 +1,13 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
-public partial class ConstantExpressionTests : IClassFixture<TestsFixture>
+public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    internal const string TestConstantsFilesPath = TestsFixture.TestFilesPath+"Constants/";
-
-    public ITestOutputHelper Out { get; }
-
-    TestsFixture _fixture;
-
-    public ConstantExpressionTests(
-        TestsFixture fixture,
-        ITestOutputHelper output)
-    {
-        FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
-        _fixture = fixture;
-        Out = output;
-    }
+    protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Constants/";
 
     [Theory]
-    [MemberData(nameof(ConstantExpressionData))]
-    public async Task TestConstantAsync(string _, object? value, string fileName)
-    {
-        Substitute(ref value);
-        var pathName = TestConstantsFilesPath + fileName;
-        var expression = value is ClassDataContract2 ? Expression.Constant(value, typeof(ClassDataContract1)) : Expression.Constant(value);
-        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
+    [MemberData(nameof(ConstantsData))]
+    public async Task AssignmentTestAsync(string _, string expressionString, string fileName) => await base.TestAsync(expressionString, fileName);
 
-        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
-        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
-    }
+    protected override Expression Substitute(string id) => _substitutes[id] as ConstantExpression ?? Expression.Constant(_substitutes[id]);
 
     [Theory]
     [InlineData(5, "NullableInt.xml")]

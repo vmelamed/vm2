@@ -952,7 +952,7 @@
             <xs:documentation xml:lang="en-us">
                 Specifies a binary expression:
                 Arithmetic: Add (+), AddChecked (+), Divide (/), Modulo (%), Multiply (*), MultiplyChecked (*), Power (VB ^), Subtract (-), SubtractChecked (-)
-                Bitwise: And (&amp;), Or (|), ExclusiveOr (^), OnesComplement (~)
+                Bitwise: And (&amp;), Or (|), ExclusiveOr (^)
                 Shift: LeftShift (&lt;&lt;), RightShift (&gt;&gt;)
                 Boolean: AndAlso (&amp;&amp;), OrElse (||)
                 Comparison: Equal (==), NotEqual (!=), GreaterThanOrEqual (&gt;=), GreaterThan (&gt;), LessThan (&lt;), LessThanOrEqual (&lt;=),
@@ -1483,11 +1483,14 @@
     <xs:complexType name="typeBinaryType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines the type of elements that represent an expression between an expression and a type.
+                Defines the type of elements that represent an expression between an expression and a type, e.g. &lt;as&gt; and &lt;is&gt;
             </xs:documentation>
         </xs:annotation>
         <xs:group ref="expressionBaseGroup"/>
         <xs:attribute name="type"
+                      type="xs:token"
+                      use="optional"/>
+        <xs:attribute name="typeOperand"
                       type="xs:token"
                       use="required"/>
     </xs:complexType>

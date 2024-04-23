@@ -1,14 +1,12 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class BinaryExpressionTests : IClassFixture<TestsFixture>
+public abstract class BaseTests : IClassFixture<TestsFixture>
 {
-    internal const string TestConstantsFilesPath = TestsFixture.TestFilesPath+"Binary/";
-
     public ITestOutputHelper Out { get; }
 
-    TestsFixture _fixture;
+    protected TestsFixture _fixture;
 
-    public BinaryExpressionTests(
+    public BaseTests(
         TestsFixture fixture,
         ITestOutputHelper output)
     {
@@ -17,9 +15,9 @@ public partial class BinaryExpressionTests : IClassFixture<TestsFixture>
         Out = output;
     }
 
-    [Theory]
-    [MemberData(nameof(BinaryExpressionData))]
-    public async Task BinaryAsync(string _, string expressionString, string fileName)
+    protected abstract string TestConstantsFilesPath { get; }
+
+    public virtual async Task TestAsync(string expressionString, string fileName)
     {
         var expression = Substitute(expressionString);
         var pathName = TestConstantsFilesPath + fileName;
@@ -28,4 +26,6 @@ public partial class BinaryExpressionTests : IClassFixture<TestsFixture>
         _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
         await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
     }
+
+    protected abstract Expression Substitute(string id);
 }

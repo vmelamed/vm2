@@ -1,14 +1,12 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class LambdaExpressionTests
+public partial class LambdaTests
 {
-    public static readonly TheoryData<string, string, string> LambdaExpressionData = new ()
+    public static readonly TheoryData<string, string, string> LambdaData = new ()
     {
         { TestLine(), "i => true",     "Param2BoolConstant.xml" },
         { TestLine(), "(s,d) => true", "2ParamsToConstant.xml" },
     };
-
-    public static Expression Substitute(string value) => _substitutes[value]();
 
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {

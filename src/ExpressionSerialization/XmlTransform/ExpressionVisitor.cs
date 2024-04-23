@@ -1,5 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
 /// <summary>
@@ -24,11 +25,7 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
 
     DataTransform _dataTransform = new(options);
 
-    /// <summary>
-    /// Visits the <see cref="ConstantExpression" />.
-    /// </summary>
-    /// <param name="node">The expression to visit.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    /// <inheritdoc/>
     protected override Expression VisitConstant(ConstantExpression node)
     {
         try
@@ -44,21 +41,13 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                             _dataTransform.TransformNode(n));
                      });
         }
-        catch (InvalidOperationException x)
+        catch (Exception x)
         {
             throw new NonSerializableObjectException(node.Type, x);
         }
-        catch (InvalidDataContractException x)
-        {
-            throw new NonSerializableObjectException(null, x);
-        }
     }
 
-    /// <summary>
-    /// Visits a <see cref="DefaultExpression" /> expression n.
-    /// </summary>
-    /// <param name="node">The expression to visit.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    /// <inheritdoc/>
     protected override Expression VisitDefault(DefaultExpression node)
         => GenericVisit(
             node,
@@ -67,11 +56,7 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                         _options.TypeComment(n.Type),
                         new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type))));
 
-    /// <summary>
-    /// Visits a <see cref="ParameterExpression"/> n.
-    /// </summary>
-    /// <param name="node">The n.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    /// <inheritdoc/>
     protected override Expression VisitParameter(ParameterExpression node)
         => GenericVisit(
             node,
@@ -82,12 +67,7 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                         new XAttribute(AttributeNames.Name, node.Name ?? "_"),
                         n.IsByRef ? new XAttribute(AttributeNames.IsByRef, n.IsByRef) : null));
 
-    /// <summary>
-    /// Visits a lambda expression - <see cref="Expression{TDelegate}"/>.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="node">The n.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    /// <inheritdoc/>
     protected override Expression VisitLambda<T>(Expression<T> node)
         => GenericVisit(
             node,
@@ -99,11 +79,7 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                         new XElement(ElementNames.Parameters, PopElements(n.Parameters.Count)),
                         new XElement(ElementNames.Body, _elements.Pop())));
 
-    /// <summary>
-    /// Visits a <see cref="UnaryExpression"/>.
-    /// </summary>
-    /// <param name="node">The node.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    /// <inheritdoc/>
     protected override Expression VisitUnary(UnaryExpression node)
         => GenericVisit(
             node,
@@ -116,11 +92,7 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                         _elements.Pop(),
                         VisitMethodInfo(n)));
 
-    /// <summary>
-    /// Visits a <see cref="BinaryExpression"/>.
-    /// </summary>
-    /// <param name="node">The node.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    /// <inheritdoc/>
     protected override Expression VisitBinary(BinaryExpression node)
         => GenericVisit(
             node,
@@ -136,4 +108,188 @@ public partial class ExpressionVisitor(Options? options = null) : ExpressionTran
                     right,
                     VisitMethodInfo(n));
             });
+
+    /// <inheritdoc/>
+    protected override Expression VisitTypeBinary(TypeBinaryExpression node)
+        => GenericVisit(
+            node,
+            base.VisitTypeBinary,
+            (n, e) =>
+            {
+                e.Add(
+                    new XAttribute(
+                        AttributeNames.TypeOperand,
+                        Transform.TypeName(n.TypeOperand)),
+                    _elements.Pop());
+            });
+
+    /////////////////////////////////////////////////////////////////
+    // IN PROCESS:
+    /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////
+    // TODO:
+    /////////////////////////////////////////////////////////////////
+
+    /// <inheritdoc/>
+    protected override Expression VisitBlock(BlockExpression node)
+        => GenericVisit(
+            node,
+            base.VisitBlock,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitConditional(ConditionalExpression node)
+        => GenericVisit(
+            node,
+            base.VisitConditional,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitGoto(GotoExpression node)
+        => GenericVisit(
+            node,
+            base.VisitGoto,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitExtension(Expression node)
+        => GenericVisit(
+            node,
+            base.VisitExtension,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitIndex(IndexExpression node)
+        => GenericVisit(
+            node,
+            base.VisitIndex,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitInvocation(InvocationExpression node)
+        => GenericVisit(
+            node,
+            base.VisitInvocation,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitLabel(LabelExpression node)
+        => GenericVisit(
+            node,
+            base.VisitLabel,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitListInit(ListInitExpression node)
+        => GenericVisit(
+            node,
+            base.VisitListInit,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitLoop(LoopExpression node)
+        => GenericVisit(
+            node,
+            base.VisitLoop,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitMember(MemberExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMember,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitMemberInit(MemberInitExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMemberInit,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitMethodCall(MethodCallExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMethodCall,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitNew(NewExpression node)
+        => GenericVisit(
+            node,
+            base.VisitNew,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitNewArray(NewArrayExpression node)
+        => GenericVisit(
+            node,
+            base.VisitNewArray,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
+        => GenericVisit(
+            node,
+            base.VisitRuntimeVariables,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitSwitch(SwitchExpression node)
+        => GenericVisit(
+            node,
+            base.VisitSwitch,
+            (n, e) => { });
+
+    /// <inheritdoc/>
+    protected override Expression VisitTry(TryExpression node)
+        => GenericVisit(
+            node,
+            base.VisitTry,
+            (n, e) => { });
+
+
+    /// <inheritdoc/>
+    protected override CatchBlock VisitCatchBlock(CatchBlock node) => base.VisitCatchBlock(node);
+
+    /// <inheritdoc/>
+    protected override ElementInit VisitElementInit(ElementInit node) => base.VisitElementInit(node);
+
+    /// <inheritdoc/>
+    protected override LabelTarget? VisitLabelTarget(LabelTarget? node) => base.VisitLabelTarget(node);
+    /// <inheritdoc/>
+    protected override MemberAssignment VisitMemberAssignment(MemberAssignment node) => base.VisitMemberAssignment(node);
+
+    /// <inheritdoc/>
+    protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
+
+    /// <inheritdoc/>
+    protected override SwitchCase VisitSwitchCase(SwitchCase node) => base.VisitSwitchCase(node);
+
+    /// <inheritdoc/>
+    protected override MemberListBinding VisitMemberListBinding(MemberListBinding node) => base.VisitMemberListBinding(node);
+
+    /// <inheritdoc/>
+    protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node) => base.VisitMemberMemberBinding(node);
+
+
+
+    /////////////////////////////////////////////////////////////////
+    // WOUN'T DO:
+    /////////////////////////////////////////////////////////////////
+
+    /// <inheritdoc/>
+    protected override Expression VisitDebugInfo(DebugInfoExpression node)
+        => GenericVisit(
+            node,
+            base.VisitDebugInfo,
+            (n, e) => { });
+    /// <inheritdoc/>
+    protected override Expression VisitDynamic(DynamicExpression node)
+        => GenericVisit(
+            node,
+            base.VisitDynamic,
+            (n, e) => { });
 }

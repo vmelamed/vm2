@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class ChangeByOneExpressionTests
+public partial class ChangeByOneTests
 {
     public static readonly TheoryData<string, string, string> ChangeByOneExpressionData = new ()
     {
@@ -11,8 +11,6 @@ public partial class ChangeByOneExpressionTests
         { TestLine(), "a => --a",          "PreDecrementAssign.xml" },
         { TestLine(), "a => a--",          "PostDecrementAssign.xml" },
     };
-
-    public static Expression Substitute(string value) => _substitutes[value];
 
     static ParameterExpression _pa = Expression.Parameter(typeof(int), "a");
 

@@ -19,6 +19,7 @@ static class AttributeNames
     public static readonly XName Static                 = "static";
     public static readonly XName TailCall               = "tailCall";
     public static readonly XName Type                   = "type";
+    public static readonly XName TypeOperand            = "typeOperand";
     public static readonly XName ConcreteType           = "concreteType";   // e.g. derived from ConstantExpression.Type
     public static readonly XName BaseType               = "baseType";
     public static readonly XName Uid                    = "uid";

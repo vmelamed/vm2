@@ -156,7 +156,7 @@ public class TestsFixture : IDisposable
         if (expectedDoc is null)
         {
             fileName = string.IsNullOrEmpty(fileName)
-                            ? Path.GetFullPath($"{ConstantExpressionTests.TestConstantsFilesPath}{DateTime.Now:yyyy-MM-dd hh-mm-ss.fff.xml}")
+                            ? Path.GetFullPath($"{TestFilesPath}{DateTime.Now:yyyy-MM-dd hh-mm-ss.fff.xml}")
                             : Path.GetFullPath(fileName);
 
             var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
@@ -179,10 +179,11 @@ public class TestsFixture : IDisposable
 
         actualStr.Should().Be(expectedStr, "the expected and the actual XML texts should be the same");
 
-        var myEquals = XNodeDeepEquals.AreEqual(actualDoc, expectedDoc);
+        var comparer = new XNodeDeepEquals();
+        var myEquals = comparer.AreEqual(actualDoc, expectedDoc);
 
         if (!myEquals)
-            output?.WriteLine(XNodeDeepEquals.LastResult);
+            output?.WriteLine(comparer.LastResult);
 
         var deepEquals = XNode.DeepEquals(actualDoc, expectedDoc);
 

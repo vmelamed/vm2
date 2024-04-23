@@ -1,36 +1,36 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class ConstantExpressionTests
+public partial class ConstantTests
 {
-    public static readonly TheoryData<string, object?, string> ConstantExpressionData = new ()
+    public static readonly TheoryData<string, string, string> ConstantsData = new ()
     {
-        { TestLine(), null, "NullObject.xml" },
-        { TestLine(), true, "Bool.xml" },
-        { TestLine(), 'V', "Char.xml" },
+        { TestLine(), "null",  "NullObject.xml" },
+        { TestLine(), "true",  "Bool.xml" },
+        { TestLine(), "'V'",  "Char.xml" },
 
-        { TestLine(), (byte)5, "Byte.xml" },
-        { TestLine(), (sbyte)5, "SByte.xml" },
-        { TestLine(), (short)5, "Short.xml" },
-        { TestLine(), (ushort)5, "UShort.xml" },
-        { TestLine(), 5, "Int.xml" },
-        { TestLine(), (uint)5, "UInt.xml" },
-        { TestLine(), 5L, "Long.xml" },
-        { TestLine(), (ulong)5, "ULong.xml" },
+        { TestLine(), "(byte)5",  "Byte.xml" },
+        { TestLine(), "(sbyte)5",  "SByte.xml" },
+        { TestLine(), "(short)5",  "Short.xml" },
+        { TestLine(), "(ushort)5",  "UShort.xml" },
+        { TestLine(), "5",  "Int.xml" },
+        { TestLine(), "(uint)5",  "UInt.xml" },
+        { TestLine(), "5L",  "Long.xml" },
+        { TestLine(), "(ulong)5",  "ULong.xml" },
 
-        { TestLine(), 5.5123453E-34F, "Float.xml" },
-        { TestLine(), 5.1234567891234567E-123, "Double.xml" },
-        { TestLine(), 5.5M, "Decimal.xml" },
+        { TestLine(), "5.5123453E-34F",  "Float.xml" },
+        { TestLine(), "5.1234567891234567E-123",  "Double.xml" },
+        { TestLine(), "5.5M",  "Decimal.xml" },
 
-        { TestLine(), EnumTest.Three, "Enum.xml" },
-        { TestLine(), EnumFlagsTest.One | EnumFlagsTest.Three, "EnumFlags.xml" },
+        { TestLine(), "EnumTest.Three",  "Enum.xml" },
+        { TestLine(), "EnumFlagsTest.One | EnumFlagsTest.Three",  "EnumFlags.xml" },
 
-        { TestLine(), "abrah-cadabrah", "String.xml" },
-        { TestLine(), new DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local), "DateTime.xml" },
-        { TestLine(), new TimeSpan(3, 4, 15, 32, 123), "TimeSpan.xml" },
-        { TestLine(), new DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0)), "DateTimeOffset.xml" },
-        { TestLine(), new int[]{ 1, 2, 3, 4 }, "ArrayOfInt.xml" },
-        { TestLine(), new int?[]{ 1, 2, null, null }, "ArrayOfNullableInt.xml" },
-        { TestLine(), new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }, "ByteArray.xml" },
+        { TestLine(), "abrah-cadabrah",  "String.xml" },
+        { TestLine(), "new DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)", "DateTime.xml" },
+        { TestLine(), "new TimeSpan(3, 4, 15, 32, 123)", "TimeSpan.xml" },
+        { TestLine(), "new DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))", "DateTimeOffset.xml" },
+        { TestLine(), "new int[]{ 1, 2, 3, 4 }", "ArrayOfInt.xml" },
+        { TestLine(), "new int?[]{ 1, 2, null, null }", "ArrayOfNullableInt.xml" },
+        { TestLine(), "new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }", "ByteArray.xml" },
 
         { TestLine(), "new object()", "Object.xml" },
         { TestLine(), "(Half)3.14", "Half.xml" },
@@ -79,7 +79,7 @@ public partial class ConstantExpressionTests
         { TestLine(), "new SortedDictionary<int, string>{ [1] =\"one\", [2]=\"two\" }", "SortedDictionaryIntString.xml" },
         { TestLine(), "ImmutableDictionary.Create<int,string>().Add(1, \"one\").Add(2, \"two\")", "ImmutableDictionaryIntString.xml" },
         { TestLine(), "ImmutableSortedDictionary.Create<int,string>().Add(1, \"one\").Add(2, \"two\")", "ImmutableSortedDictionaryIntString.xml" },
-        { TestLine(), "new ConcurrentDictionary<int, string>{ [1] =\"one\", [2]=\"two\" }", "ConcurrentDictionaryIntString.xml" },
+        { TestLine(), "new ConcurrentDictionary<int, string>{ [1] = \"one\", [2]=\"two\" }", "ConcurrentDictionaryIntString.xml" },
         { TestLine(), "new Dictionary<int, string>{ [1] = \"one\", [2] = \"two\", [3] = \"three\", }", "IntStringDictionary.xml" },
         { TestLine(), "new Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\", [3] = null, [4] = null }", "IntNullableStringDictionary.xml" },
 
@@ -103,21 +103,48 @@ public partial class ConstantExpressionTests
         { TestLine(), "new ClassDataContract1[] { new ClassDataContract1(), new ClassDataContract2(), null }", "ArrayWithClassDataContract1and2.xml"}
     };
 
-    public static object? Substitute(ref object? value)
-        => value is string key && _substitutes.TryGetValue(key, out var v1)
-            ? value = v1 : value;
+    static ClassDataContract1 _classDataContract1 = new ClassDataContract2(1, "two", 3M);
 
-    static Dictionary<string, object> _substitutes = new()
+    static Dictionary<string, object?> _substitutes = new()
     {
-        ["ArraySegment<byte>"] = new ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8),
-        ["new object()"] = new object(),
-        ["(Half)3.14"] = (Half)3.14,
-        ["(IntPtr)5"] = (IntPtr)5,
-        ["(UIntPtr)5"] = (UIntPtr)5,
+        ["null"]                                               = null,
+        ["true"]                                               = true,
+        ["'V'"]                                                = 'V',
+
+        ["(byte)5"]                                            = (byte)5,
+        ["(sbyte)5"]                                           = (sbyte)5,
+        ["(short)5"]                                           = (short)5,
+        ["(ushort)5"]                                          = (ushort)5,
+        ["5"]                                                  = 5,
+        ["(uint)5"]                                            = (uint)5,
+        ["5L"]                                                 = 5L,
+        ["(ulong)5"]                                           = (ulong)5,
+
+        ["5.5123453E-34F"]                                     = 5.5123453E-34F,
+        ["5.1234567891234567E-123"]                            = 5.1234567891234567E-123,
+        ["5.5M"]                                               = 5.5M,
+
+        ["EnumTest.Three"]                                     = EnumTest.Three,
+        ["EnumFlagsTest.One | EnumFlagsTest.Three"]            = EnumFlagsTest.One | EnumFlagsTest.Three,
+
+        ["abrah-cadabrah"]                                     = "abrah-cadabrah",
+
+        ["new DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)"]             = new DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local),
+        ["new TimeSpan(3, 4, 15, 32, 123)"]                                            = new TimeSpan(3, 4, 15, 32, 123),
+        ["new DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))"] = new DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0)),
+        ["new int[]{ 1, 2, 3, 4 }"]                                                    = new int[]{ 1, 2, 3, 4 },
+        ["new int?[]{ 1, 2, null, null }"]                                             = new int?[]{ 1, 2, null, null },
+        ["new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                = new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 },
+
+        ["ArraySegment<byte>"]                                 = new ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8),
+        ["new object()"]                                       = new object(),
+        ["(Half)3.14"]                                         = (Half)3.14,
+        ["(IntPtr)5"]                                          = (IntPtr)5,
+        ["(UIntPtr)5"]                                         = (UIntPtr)5,
         ["new Guid(\"00112233-4455-6677-8899-aabbccddeeff\")"] = new Guid("00112233-4455-6677-8899-aabbccddeeff"),
-        ["new Uri(\"http://www.delinea.com\")"] = new Uri("http://www.delinea.com"),
-        ["DBNull.Value"] = DBNull.Value,
-        ["anonymous"] = new
+        ["new Uri(\"http://www.delinea.com\")"]                = new Uri("http://www.delinea.com"),
+        ["DBNull.Value"]                                       = DBNull.Value,
+        ["anonymous"]                                          = new
         {
             ObjectProperty = (object?)null,
             NullIntProperty = (int?)null,
@@ -141,56 +168,56 @@ public partial class ConstantExpressionTests
             TimeSpanProperty = new TimeSpan(123L),
             DateTimeOffsetProperty = new DateTimeOffset(new DateTime(2013, 1, 13)),
         },
-        ["new Object1()"] = new Object1(),
+        ["new Object1()"]                                                                                 = new Object1(),
 
-        ["new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)"] = new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2),
-        ["new decimal[]{ 1, 2, 3, 4 }.ToFrozenSet()"] = new decimal[]{ 1, 2, 3, 4 }.ToFrozenSet(),
-        ["new Queue<int>([ 1, 2, 3, 4 ])"] = new Queue<int>([ 1, 2, 3, 4 ]),
-        ["new Stack<int>([ 1, 2, 3, 4 ])"] = new Stack<int>([ 1, 2, 3, 4 ]),
-        ["ImmutableArray.Create(1, 2, 3, 4 )"] = ImmutableArray.Create(1, 2, 3, 4 ),
-        ["ImmutableHashSet.Create(1, 2, 3, 4 )"] = ImmutableHashSet.Create(1, 2, 3, 4 ),
-        ["ImmutableList.Create(1, 2, 3, 4 )"] = ImmutableList.Create(1, 2, 3, 4 ),
-        ["ImmutableQueue.Create(1, 2, 3, 4 )"] = ImmutableQueue.Create(1, 2, 3, 4 ),
-        ["ImmutableSortedSet.Create(1, 2, 3, 4 )"] = ImmutableSortedSet.Create(1, 2, 3, 4 ),
-        ["ImmutableStack.Create(1, 2, 3, 4 )"] = ImmutableStack.Create(1, 2, 3, 4 ),
-        ["new ConcurrentBag<int>([1, 2, 3, 4])"] = new ConcurrentBag<int>([1, 2, 3, 4]),
-        ["new ConcurrentQueue<int>([1, 2, 3, 4])"] = new ConcurrentQueue<int>([1, 2, 3, 4]),
-        ["new ConcurrentStack<int>([1, 2, 3, 4])"] = new ConcurrentStack<int>([1, 2, 3, 4]),
-        ["new Collection<int>([1, 2, 3, 4])"] = new Collection<int>([1, 2, 3, 4]),
-        ["new ReadOnlyCollection<int>([1, 2, 3, 4])"] = new ReadOnlyCollection<int>([1, 2, 3, 4]),
-        ["new HashSet<int>([1, 2, 3, 4])"] = new HashSet<int>([1, 2, 3, 4]),
-        ["new LinkedList<int>([1, 2, 3, 4])"] = new LinkedList<int>([1, 2, 3, 4]),
-        ["new List<int>([1, 2, 3, 4])"] = new List<int>([1, 2, 3, 4]),
-        ["new List<int?>{ 1, 2, null, null }"] = new List<int?>{ 1, 2, null, null },
-        ["new Queue<int>([1, 2, 3, 4])"] = new Queue<int>([1, 2, 3, 4]),
-        ["new SortedSet<int>([1, 2, 3, 4])"] = new SortedSet<int>([1, 2, 3, 4]),
-        ["new Stack<int>([1, 2, 3, 4])"] = new Stack<int>([1, 2, 3, 4]),
-        ["new Memory<int>([ 1, 2, 3, 4 ])"] = new Memory<int>([ 1, 2, 3, 4 ]),
-        ["new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])"] = new ReadOnlyMemory<int>([ 1, 2, 3, 4 ]),
+        ["new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)"]                                                   = new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2),
+        ["new decimal[]{ 1, 2, 3, 4 }.ToFrozenSet()"]                                                     = new decimal[]{ 1, 2, 3, 4 }.ToFrozenSet(),
+        ["new Queue<int>([ 1, 2, 3, 4 ])"]                                                                = new Queue<int>([ 1, 2, 3, 4 ]),
+        ["new Stack<int>([ 1, 2, 3, 4 ])"]                                                                = new Stack<int>([ 1, 2, 3, 4 ]),
+        ["ImmutableArray.Create(1, 2, 3, 4 )"]                                                            = ImmutableArray.Create(1, 2, 3, 4 ),
+        ["ImmutableHashSet.Create(1, 2, 3, 4 )"]                                                          = ImmutableHashSet.Create(1, 2, 3, 4 ),
+        ["ImmutableList.Create(1, 2, 3, 4 )"]                                                             = ImmutableList.Create(1, 2, 3, 4 ),
+        ["ImmutableQueue.Create(1, 2, 3, 4 )"]                                                            = ImmutableQueue.Create(1, 2, 3, 4 ),
+        ["ImmutableSortedSet.Create(1, 2, 3, 4 )"]                                                        = ImmutableSortedSet.Create(1, 2, 3, 4 ),
+        ["ImmutableStack.Create(1, 2, 3, 4 )"]                                                            = ImmutableStack.Create(1, 2, 3, 4 ),
+        ["new ConcurrentBag<int>([1, 2, 3, 4])"]                                                          = new ConcurrentBag<int>([1, 2, 3, 4]),
+        ["new ConcurrentQueue<int>([1, 2, 3, 4])"]                                                        = new ConcurrentQueue<int>([1, 2, 3, 4]),
+        ["new ConcurrentStack<int>([1, 2, 3, 4])"]                                                        = new ConcurrentStack<int>([1, 2, 3, 4]),
+        ["new Collection<int>([1, 2, 3, 4])"]                                                             = new Collection<int>([1, 2, 3, 4]),
+        ["new ReadOnlyCollection<int>([1, 2, 3, 4])"]                                                     = new ReadOnlyCollection<int>([1, 2, 3, 4]),
+        ["new HashSet<int>([1, 2, 3, 4])"]                                                                = new HashSet<int>([1, 2, 3, 4]),
+        ["new LinkedList<int>([1, 2, 3, 4])"]                                                             = new LinkedList<int>([1, 2, 3, 4]),
+        ["new List<int>([1, 2, 3, 4])"]                                                                   = new List<int>([1, 2, 3, 4]),
+        ["new List<int?>{ 1, 2, null, null }"]                                                            = new List<int?>{ 1, 2, null, null },
+        ["new Queue<int>([1, 2, 3, 4])"]                                                                  = new Queue<int>([1, 2, 3, 4]),
+        ["new SortedSet<int>([1, 2, 3, 4])"]                                                              = new SortedSet<int>([1, 2, 3, 4]),
+        ["new Stack<int>([1, 2, 3, 4])"]                                                                  = new Stack<int>([1, 2, 3, 4]),
+        ["new Memory<int>([ 1, 2, 3, 4 ])"]                                                               = new Memory<int>([ 1, 2, 3, 4 ]),
+        ["new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])"]                                                       = new ReadOnlyMemory<int>([ 1, 2, 3, 4 ]),
 
-        ["(IntField: 1, StringField: \"one\")"] = (IntField: 1, StringField: "one"),
-        ["new Tuple<int, string>(1, \"one\")"] = new Tuple<int, string>(1, "one"),
+        ["(IntField: 1, StringField: \"one\")"]                                                           = (IntField: 1, StringField: "one"),
+        ["new Tuple<int, string>(1, \"one\")"]                                                            = new Tuple<int, string>(1, "one"),
 
-        ["new int[]{ 1, 2, 3, 4 }.ToFrozenSet()"] = new int[]{ 1, 2, 3, 4 }.ToFrozenSet(),
-        ["new Hashtable(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })"] = new Hashtable(new Dictionary<int, string>{ [1] ="one", [2]="two" }),
-        ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"] = new Dictionary<int, string>{ [1] ="one", [2]="two" },
-        ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }.ToFrozenDictionary()"] = new Dictionary<int, string>{ [1] ="one", [2]="two" }.ToFrozenDictionary(),
+        ["new int[]{ 1, 2, 3, 4 }.ToFrozenSet()"]                                                         = new int[]{ 1, 2, 3, 4 }.ToFrozenSet(),
+        ["new Hashtable(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })"]                       = new Hashtable(new Dictionary<int, string>{ [1] ="one", [2]="two" }),
+        ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"]                                      = new Dictionary<int, string>{ [1] ="one", [2]="two" },
+        ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }.ToFrozenDictionary()"]                 = new Dictionary<int, string>{ [1] ="one", [2]="two" }.ToFrozenDictionary(),
         ["new ReadOnlyDictionary<int, string>(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })"] = new ReadOnlyDictionary<int, string>(new Dictionary<int, string>{ [1] ="one", [2]="two" }),
-        ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"] = new Dictionary<int, string>{ [1] ="one", [2]="two" },
-        ["new SortedDictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"] = new SortedDictionary<int, string>{ [1] ="one", [2]="two" },
-        ["ImmutableDictionary.Create<int,string>().Add(1, \"one\").Add(2, \"two\")"] = ImmutableDictionary.Create<int,string>().Add(1, "one").Add(2, "two"),
-        ["ImmutableSortedDictionary.Create<int,string>().Add(1, \"one\").Add(2, \"two\")"] = ImmutableSortedDictionary.Create<int,string>().Add(1, "one").Add(2, "two"),
-        ["new ConcurrentDictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"] = new ConcurrentDictionary<int, string>{ [1] ="one", [2]="two" },
-        ["new Dictionary<int, string>{ [1] = \"one\", [2] = \"two\", [3] = \"three\", }"] = new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", },
-        ["new Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\", [3] = null, [4] = null }"] = new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null },
+        ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"]                                      = new Dictionary<int, string>{ [1] ="one", [2]="two" },
+        ["new SortedDictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"]                                = new SortedDictionary<int, string>{ [1] ="one", [2]="two" },
+        ["ImmutableDictionary.Create<int,string>().Add(1, \"one\").Add(2, \"two\")"]                      = ImmutableDictionary.Create<int,string>().Add(1, "one").Add(2, "two"),
+        ["ImmutableSortedDictionary.Create<int,string>().Add(1, \"one\").Add(2, \"two\")"]                = ImmutableSortedDictionary.Create<int,string>().Add(1, "one").Add(2, "two"),
+        ["new ConcurrentDictionary<int, string>{ [1] = \"one\", [2]=\"two\" }"]                           = new ConcurrentDictionary<int, string>{ [1] ="one", [2]="two" },
+        ["new Dictionary<int, string>{ [1] = \"one\", [2] = \"two\", [3] = \"three\", }"]                 = new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", },
+        ["new Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\", [3] = null, [4] = null }"]          = new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null },
 
-        ["new ClassDataContract1()"] = new ClassDataContract1(),
-        ["new ClassDataContract1[] { new(0, \"vm\"), new(1, \"vm2 vm\"), }"] = new ClassDataContract1[] { new(0, "vm"), new(1, "vm2 vm"), },
+        ["new ClassDataContract1()"]                                                                      = new ClassDataContract1(),
+        ["new ClassDataContract1[] { new(0, \"vm\"), new(1, \"vm2 vm\"), }"]                              = new ClassDataContract1[] { new(0, "vm"), new(1, "vm2 vm"), },
 
-        ["new ClassSerializable1()"] = new ClassSerializable1(),
+        ["new ClassSerializable1()"]                                                                      = new ClassSerializable1(),
 
-        ["new StructDataContract1()"] = new StructDataContract1(),
-        ["new StructDataContract1[]"] = new StructDataContract1[]
+        ["new StructDataContract1()"]                                                                     = new StructDataContract1(),
+        ["new StructDataContract1[]"]                                                                     = new StructDataContract1[]
                         {
                             new() {
                                 IntProperty = 0,
@@ -294,7 +321,7 @@ public partial class ConstantExpressionTests
             },
             null
         }.ToFrozenSet(),
-        ["new ClassDataContract2()"] = new ClassDataContract2(1, "two", 3M),
+        ["new ClassDataContract2()"] = Expression.Constant(_classDataContract1, typeof(ClassDataContract1)),
         ["new ClassDataContract1[] { new ClassDataContract1(), new ClassDataContract2(), null }"] = new ClassDataContract1?[] { new(), new ClassDataContract2(), null },
     };
 }

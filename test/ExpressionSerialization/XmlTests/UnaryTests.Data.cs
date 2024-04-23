@@ -1,8 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class UnaryExpressionTests
+public partial class UnaryTests
 {
-    public static readonly TheoryData<string, string, string> UnaryExpressionData = new ()
+    public static readonly TheoryData<string, string, string> UnaryData = new ()
     {
         { TestLine(), "(C c) => c as A",                "AsType.xml" },
         { TestLine(), "(int a) => () => a",             "Quote.xml" },
@@ -17,12 +17,10 @@ public partial class UnaryExpressionTests
         { TestLine(), "(A a) => -a",                    "UnaryMinusMethod.xml" },
     };
 
-    public static Expression Substitute(string value) => _substitutes[value];
-
     static Dictionary<string, Expression> _substitutes = new()
     {
         ["(C c) => c as A"]                 = (C c) => c as A,
-        ["(int a) => () => a"]              = QuoteTest(),
+        ["(int a) => () => a"]              = GetQuoteTest(),
         ["(double a) => checked((int)a)"]   = (double a) => checked((int)a),
         ["(double a) => (int)a"]            = (double a) => (int)a,
         ["(int[] a) => !a"]                 = (int[] a) => a.Length,
@@ -34,7 +32,7 @@ public partial class UnaryExpressionTests
         ["(A a) => -a"]                     = (A a) => -a,
     };
 
-    static LambdaExpression QuoteTest()
+    static LambdaExpression GetQuoteTest()
     {
         var pa = Expression.Parameter(typeof(int), "a");
 
