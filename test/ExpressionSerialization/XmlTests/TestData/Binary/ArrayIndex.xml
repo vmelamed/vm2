@@ -3,24 +3,22 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="int">
         <parameters>
             <parameter
                 type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                name="a">
-                <!-- System.Int32[] -->
-            </parameter>
+                name="a" />
             <parameter
                 type="int"
                 name="i" />
         </parameters>
         <body>
-            <arrayIndex>
+            <arrayIndex
+                type="int">
                 <parameter
                     type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                    name="a">
-                    <!-- System.Int32[] -->
-                </parameter>
+                    name="a" />
                 <parameter
                     type="int"
                     name="i" />

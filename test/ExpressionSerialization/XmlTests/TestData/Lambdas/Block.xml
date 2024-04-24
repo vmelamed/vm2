@@ -3,7 +3,8 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="int">
         <parameters>
             <parameter
                 type="int"
@@ -13,13 +14,15 @@
                 name="b" />
         </parameters>
         <body>
-            <block>
+            <block
+                type="int">
                 <variables>
                     <parameter
                         type="int"
                         name="d" />
                 </variables>
-                <assign>
+                <assign
+                    type="int">
                     <parameter
                         type="int"
                         name="d" />
@@ -28,7 +31,8 @@
                         <int>42</int>
                     </constant>
                 </assign>
-                <addAssign>
+                <addAssign
+                    type="int">
                     <parameter
                         type="int"
                         name="a" />
@@ -36,7 +40,8 @@
                         type="int"
                         name="d" />
                 </addAssign>
-                <subtractAssign>
+                <subtractAssign
+                    type="int">
                     <parameter
                         type="int"
                         name="a" />
@@ -47,7 +52,8 @@
                 <parameter
                     type="int"
                     name="c" />
-                <assign>
+                <assign
+                    type="int">
                     <parameter
                         type="int"
                         name="c" />
@@ -56,7 +62,8 @@
                         <int>2</int>
                     </constant>
                 </assign>
-                <leftShiftAssign>
+                <leftShiftAssign
+                    type="int">
                     <parameter
                         type="int"
                         name="a" />

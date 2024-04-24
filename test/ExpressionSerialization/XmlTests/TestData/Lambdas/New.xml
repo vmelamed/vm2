@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- () => new StructDataContract1(42, "don't panic") -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+        <parameters />
+        <body>
+            <new
+                type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                <constructor
+                    type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                    <parameters>
+                        <parameter
+                            type="int"
+                            name="i" />
+                        <parameter
+                            type="string"
+                            name="s" />
+                    </parameters>
+                </constructor>
+                <arguments>
+                    <constant>
+                        <!-- 42 -->
+                        <int>42</int>
+                    </constant>
+                    <constant>
+                        <!-- "don't panic" -->
+                        <string>don't panic</string>
+                    </constant>
+                </arguments>
+            </new>
+        </body>
+    </lambda>
+</expression>

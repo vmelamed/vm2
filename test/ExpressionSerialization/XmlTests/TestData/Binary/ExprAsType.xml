@@ -3,23 +3,19 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
         <parameters>
             <parameter
                 type="vm2.ExpressionSerialization.XmlTests.ClassDataContract2, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="a">
-                <!-- vm2.ExpressionSerialization.XmlTests.ClassDataContract2 -->
-            </parameter>
+                name="a" />
         </parameters>
         <body>
             <typeAs
                 type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-                <!-- vm2.ExpressionSerialization.XmlTests.ClassDataContract1 -->
                 <parameter
                     type="vm2.ExpressionSerialization.XmlTests.ClassDataContract2, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                    name="a">
-                    <!-- vm2.ExpressionSerialization.XmlTests.ClassDataContract2 -->
-                </parameter>
+                    name="a" />
             </typeAs>
         </body>
     </lambda>

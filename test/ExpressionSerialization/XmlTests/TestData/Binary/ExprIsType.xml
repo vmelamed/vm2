@@ -3,22 +3,20 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="boolean">
         <parameters>
             <parameter
                 type="object"
-                name="a">
-                <!-- object -->
-            </parameter>
+                name="a" />
         </parameters>
         <body>
             <typeIs
+                type="boolean"
                 typeOperand="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                 <parameter
                     type="object"
-                    name="a">
-                    <!-- object -->
-                </parameter>
+                    name="a" />
             </typeIs>
         </body>
     </lambda>

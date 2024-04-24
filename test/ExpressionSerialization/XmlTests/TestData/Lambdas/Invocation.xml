@@ -3,24 +3,22 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="int">
         <parameters>
             <parameter
                 type="System.Func`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                name="f">
-                <!-- System.Func<int, int> -->
-            </parameter>
+                name="f" />
             <parameter
                 type="int"
                 name="a" />
         </parameters>
         <body>
-            <invoke>
+            <invoke
+                type="int">
                 <parameter
                     type="System.Func`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                    name="f">
-                    <!-- System.Func<int, int> -->
-                </parameter>
+                    name="f" />
                 <arguments>
                     <parameter
                         type="int"

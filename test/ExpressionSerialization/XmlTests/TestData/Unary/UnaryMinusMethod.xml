@@ -3,24 +3,22 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
         <parameters>
             <parameter
                 type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="a">
-                <!-- vm2.ExpressionSerialization.XmlTests.A -->
-            </parameter>
+                name="a" />
         </parameters>
         <body>
-            <negate>
+            <negate
+                type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                 <parameter
                     type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                    name="a">
-                    <!-- vm2.ExpressionSerialization.XmlTests.A -->
-                </parameter>
+                    name="a" />
                 <method
-                    type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     static="true"
+                    type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     name="op_UnaryNegation">
                     <parameters>
                         <parameter

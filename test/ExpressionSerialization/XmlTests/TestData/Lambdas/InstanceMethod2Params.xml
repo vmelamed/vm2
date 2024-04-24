@@ -3,23 +3,21 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="int">
         <parameters>
             <parameter
                 type="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="a">
-                <!-- vm2.ExpressionSerialization.XmlTests.TestMethods -->
-            </parameter>
+                name="a" />
         </parameters>
         <body>
-            <call>
+            <call
+                type="int">
                 <parameter
                     type="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                    name="a">
-                    <!-- vm2.ExpressionSerialization.XmlTests.TestMethods -->
-                </parameter>
+                    name="a" />
                 <method
-                    type="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                    type="int"
                     name="Method3">
                     <parameters>
                         <parameter

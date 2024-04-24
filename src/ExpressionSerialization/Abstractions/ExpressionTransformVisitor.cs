@@ -44,7 +44,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
         get
         {
             if (_elements.Count > 1)
-                throw new InternalTransformErrorException("There must be exactly one element in the queue.");
+                throw new InternalTransformErrorException($"There must be exactly one element in the queue but there are {_elements.Count}.");
             if (_elements.Count < 1)
                 throw new NoAvailableResultException();
             return _elements.Pop();
@@ -92,7 +92,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
         if (reducedNode is not TExpression n)
             return reducedNode;
 
-        var element = GetEmptyNode(reducedNode.NodeType);
+        var element = GetEmptyNode(reducedNode);
 
         thisVisit(n, element);
         _elements.Push(element);
@@ -105,5 +105,5 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// </summary>
     /// <param name="nodeType">Type of the node.</param>
     /// <returns>TNode.</returns>
-    protected abstract TElement GetEmptyNode(ExpressionType nodeType);
+    protected abstract TElement GetEmptyNode(Expression nodeType);
 }

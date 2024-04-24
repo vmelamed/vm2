@@ -3,7 +3,8 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="int">
         <parameters>
             <parameter
                 type="int"
@@ -13,8 +14,10 @@
                 name="b" />
         </parameters>
         <body>
-            <multiply>
-                <add>
+            <multiply
+                type="int">
+                <add
+                    type="int">
                     <parameter
                         type="int"
                         name="a" />

@@ -41,6 +41,9 @@
     <Folder Include="TestData\Assignments\" />
     <Folder Include="TestData\Binary\" />
     <Folder Include="TestData\ChangeByOne\" />
+    <Folder Include="TestData\Constants\" />
+    <Folder Include="TestData\Lambdas\" />
+    <Folder Include="TestData\Unary\" />
   </ItemGroup>
 
 </Project>

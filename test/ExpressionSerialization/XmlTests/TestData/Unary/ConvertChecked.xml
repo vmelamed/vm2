@@ -3,14 +3,16 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="int">
         <parameters>
             <parameter
                 type="double"
                 name="a" />
         </parameters>
         <body>
-            <convertChecked>
+            <convertChecked
+                type="int">
                 <parameter
                     type="double"
                     name="a" />

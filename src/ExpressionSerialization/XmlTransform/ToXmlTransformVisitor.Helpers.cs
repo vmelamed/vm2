@@ -10,22 +10,6 @@ using System.Xml.Linq;
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
 public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement>
 {
-    Stack<XElement> PopElements(int numberOfExpressions)
-    {
-        var stack = new Stack<XElement>();
-
-        // pop the expressions:
-        for (var i = 0; i < numberOfExpressions; i++)
-            stack.Push(_elements.Pop());
-
-        return stack;
-    }
-
-    static int _nameSuffix;
-
-    static string GetName()
-        => $"_name{_nameSuffix++}";
-
     /// <summary>
     /// Creates a sequence of XML elements for each of the <paramref name="parameters"/>.
     /// </summary>
@@ -40,12 +24,12 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
             yield return new XElement(
                                 ElementNames.Parameter,
                                 new XAttribute(AttributeNames.Type, Transform.TypeName(param.ParameterType)),
-                                new XAttribute(AttributeNames.Name, param.Name ?? GetName()),
+                                param.Name is not null ? new XAttribute(AttributeNames.Name, param.Name) : null,
                                 param.IsOut || param.ParameterType.IsByRef ? new XAttribute(AttributeNames.IsByRef, true) : null);
     }
 
 #pragma warning disable CA1859 // Use concrete types when possible for improved performance
-    IEnumerable<XElement> PopExpressions(int numberOfExpressions)
+    IEnumerable<XElement> PopElements(int numberOfExpressions)
     {
         var stack = new Stack<XElement>();
 
@@ -80,37 +64,38 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
         return member switch {
             ConstructorInfo ci => new XElement(
                                         ElementNames.Constructor,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(ci.DeclaringType ?? throw new InternalTransformErrorException("ConstructorInfo's DeclaringType is null."))),
                                         visibility,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(ci.DeclaringType ?? throw new InternalTransformErrorException("ConstructorInfo's DeclaringType is null."))),
                                         ci.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
                                         new XElement(
                                                 ElementNames.Parameters,
                                                 VisitParameters(ci.GetParameters()))),
             PropertyInfo pi => new XElement(
-                                    ElementNames.Property,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(pi.DeclaringType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null."))),
+                                        ElementNames.Property,
                                         visibility,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null."))),
                                         new XAttribute(AttributeNames.Name, pi.Name),
                                         VisitParameters(pi.GetIndexParameters())),
 
             MethodInfo mi => new XElement(
-                                     ElementNames.Method,
-                                         new XAttribute(AttributeNames.Type, Transform.TypeName(mi.DeclaringType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null."))),
-                                         visibility,
-                                         mi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
-                                         new XAttribute(AttributeNames.Name, mi.Name),
-                                         new XElement(ElementNames.Parameters, VisitParameters(mi.GetParameters()))),
+                                        ElementNames.Method,
+                                        mi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
+                                        visibility,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(mi.ReturnType)),
+                                        new XAttribute(AttributeNames.Name, mi.Name),
+                                        new XElement(ElementNames.Parameters, VisitParameters(mi.GetParameters()))),
 
             EventInfo ei => new XElement(
-                                    ElementNames.Property,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(ei.DeclaringType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null."))),
+                                        ElementNames.Event,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(ei.EventHandlerType ?? throw new InternalTransformErrorException("EventInfo's EventHandlerType is null."))),
                                         new XAttribute(AttributeNames.Name, ei.Name)),
 
             FieldInfo fi => new XElement(
-                                    ElementNames.Field,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(fi.DeclaringType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null."))),
-                                        visibility,
+                                        ElementNames.Field,
                                         fi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
+                                        visibility,
+                                        fi.IsInitOnly ? new XAttribute(AttributeNames.ReadOnly, true) : null,
+                                        new XAttribute(AttributeNames.Type, Transform.TypeName(fi.FieldType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null."))),
                                         new XAttribute(AttributeNames.Name, fi.Name)),
 
             _ => throw new InternalTransformErrorException("Unknown MemberInfo.")

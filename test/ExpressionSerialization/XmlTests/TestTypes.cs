@@ -159,6 +159,11 @@ struct StructSerializable1
 struct StructDataContract1
 {
     public StructDataContract1() { }
+    public StructDataContract1(int i, string s)
+    {
+        IntProperty = i;
+        StringProperty = s;
+    }
 
     [DataMember]
     public int IntProperty { get; set; }

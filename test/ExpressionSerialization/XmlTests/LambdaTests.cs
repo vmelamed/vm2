@@ -6,11 +6,12 @@ public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output)
 
     [Theory]
     [MemberData(nameof(LambdaData))]
-    public async Task AssignmentTestAsync(string _, string expressionString, string fileName)
+    public async Task LambdaTestAsync(string _, string expressionString, string fileName)
         => await base.TestAsync(expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> LambdaData = new ()
     {
+        { TestLine(), "() => new StructDataContract1(42, \"don't panic\")", "New.xml" },
         { TestLine(), "b => b ? 1 : 3",         "Conditional.xml" },
         { TestLine(), "i => true",              "Param2BoolConstant.xml" },
         { TestLine(), "(s,d) => true",          "2ParamsToConstant.xml" },
@@ -26,6 +27,8 @@ public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output)
 
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {
+        ["() => new StructDataContract1(42, \"don't panic\")"]
+                                                = () => () => new StructDataContract1(42, "don't panic"),
         ["b => b ? 1 : 3"]                      = () => (bool b) => b ? 1 : 3,
         ["(s,d) => true"]                       = () => (string s, DateTime d) => true,
         ["i => true"]                           = () => (int i) => true,

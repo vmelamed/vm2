@@ -18,10 +18,15 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// <summary>
     /// Gets a properly named n corresponding to the current expression n.
     /// </summary>
-    /// <param name="nodeType">Type of the n.</param>
+    /// <param name="node">The currently visited expression node from the expression tree.</param>
     /// <returns>TNode.</returns>
-    protected override XElement GetEmptyNode(ExpressionType nodeType)
-        => new(Namespaces.Exs + Transform.Identifier(nodeType.ToString(), IdentifierConventions.Camel));
+    protected override XElement GetEmptyNode(Expression node)
+        => new(Namespaces.Exs + Transform.Identifier(node.NodeType.ToString(), IdentifierConventions.Camel),
+                node switch {
+                    LambdaExpression n => new XAttribute(AttributeNames.Type, Transform.TypeName(n.ReturnType)),
+                    ConstantExpression => null,
+                    _ => new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)),
+                });
 
     DataTransform _dataTransform = new(options);
 
@@ -53,8 +58,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             node,
             base.VisitDefault,
             (n, e) => e.Add(
-                        _options.TypeComment(n.Type),
-                        new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type))));
+                        _options.TypeComment(n.Type)));
 
     /// <inheritdoc/>
     protected override Expression VisitParameter(ParameterExpression node)
@@ -62,8 +66,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             node,
             base.VisitParameter,
             (n, e) => e.Add(
-                        _options.TypeComment(n.Type),
-                        new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)),
                         new XAttribute(AttributeNames.Name, node.Name ?? "_"),
                         n.IsByRef ? new XAttribute(AttributeNames.IsByRef, n.IsByRef) : null));
 
@@ -85,10 +87,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             node,
             base.VisitUnary,
             (n, e) => e.Add(
-                        node.NodeType is ExpressionType.TypeAs or ExpressionType.Convert
-                            ? new XAttribute(AttributeNames.Type, Transform.TypeName(node.Type)) : null,
-                        node.NodeType is ExpressionType.TypeAs or ExpressionType.Convert
-                            ? _options.TypeComment(n.Type) : null,
                         _elements.Pop(),
                         VisitMethodInfo(n)));
 
@@ -99,7 +97,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitBinary,
             (n, e) => e.Add(
                         n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
-                        PopExpressions(2),
+                        PopElements(2),
                         VisitMethodInfo(n)));
 
     /// <inheritdoc/>
@@ -118,7 +116,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitIndex,
             (n, e) =>
             {
-                var indexes = new XElement(ElementNames.Indexes, PopExpressions(n.Arguments.Count));
+                var indexes = new XElement(ElementNames.Indexes, PopElements(n.Arguments.Count));
                 e.Add(
                     _elements.Pop(),
                     indexes);
@@ -133,7 +131,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             new XElement(
                     ElementNames.ElementInit,
                     VisitMemberInfo(node.AddMethod),
-                    new XElement(ElementNames.Arguments, PopExpressions(node.Arguments.Count))));
+                    new XElement(ElementNames.Arguments, PopElements(node.Arguments.Count))));
 
         return elementInit;
     }
@@ -176,7 +174,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             new XElement(
                     ElementNames.MemberMemberBinding,
                     VisitMemberInfo(node.Member),
-                    new XElement(ElementNames.Bindings, PopExpressions(node.Bindings.Count))));
+                    new XElement(ElementNames.Bindings, PopElements(node.Bindings.Count))));
 
         return binding;
     }
@@ -204,7 +202,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                         _elements.Pop(),        // the new expression
                         new XElement(
                                 ElementNames.Bindings,
-                                PopExpressions(n.Bindings.Count))));
+                                PopElements(n.Bindings.Count))));
     #endregion
 
     /// <inheritdoc/>
@@ -214,7 +212,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitMethodCall,
             (n, e) =>
             {
-                var arguments = new XElement(ElementNames.Arguments, PopExpressions(n.Arguments.Count));
+                var arguments = new XElement(ElementNames.Arguments, PopElements(n.Arguments.Count));
                 var instance = n.Object!=null ? _elements.Pop() : null;
                 var method = VisitMemberInfo(n.Method);
 
@@ -231,7 +229,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitInvocation,
             (n, e) =>
             {
-                var arguments = new XElement(ElementNames.Arguments, PopExpressions(n.Arguments.Count));
+                var arguments = new XElement(ElementNames.Arguments, PopElements(n.Arguments.Count));
 
                 e.Add(
                     _elements.Pop(),
@@ -244,19 +242,38 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             node,
             base.VisitBlock,
             (n, e) => e.Add(
-                        new XElement(ElementNames.Variables, PopExpressions(n.Variables.Count)),
-                        PopExpressions(n.Expressions.Count)));
-
-    /////////////////////////////////////////////////////////////////
-    // IN PROCESS:
-    /////////////////////////////////////////////////////////////////
+                        new XElement(ElementNames.Variables, PopElements(n.Variables.Count)),
+                        PopElements(n.Expressions.Count)));
 
     /// <inheritdoc/>
     protected override Expression VisitConditional(ConditionalExpression node)
         => GenericVisit(
             node,
             base.VisitConditional,
-            (n, e) => e.Add(PopExpressions(3)));
+            (n, e) => e.Add(PopElements(3)));
+
+    /////////////////////////////////////////////////////////////////
+    // IN PROCESS:
+    /////////////////////////////////////////////////////////////////
+
+    /// <inheritdoc/>
+    protected override Expression VisitNew(NewExpression node)
+        => GenericVisit(
+            node,
+            base.VisitNew,
+            (n, e) => e.Add(
+                        VisitMemberInfo(n.Constructor!),
+                        new XElement(ElementNames.Arguments, PopElements(n.Arguments.Count)),
+                        n.Members is null
+                            ? null
+                            : new XElement(ElementNames.Members, n.Members.Select(m => VisitMemberInfo(m)))));
+
+    /// <inheritdoc/>
+    protected override Expression VisitLoop(LoopExpression node)
+        => GenericVisit(
+            node,
+            base.VisitLoop,
+            (n, e) => { });
 
     /////////////////////////////////////////////////////////////////
     // TODO:
@@ -284,20 +301,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             (n, e) => { });
 
     /// <inheritdoc/>
-    protected override Expression VisitLoop(LoopExpression node)
-        => GenericVisit(
-            node,
-            base.VisitLoop,
-            (n, e) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitNew(NewExpression node)
-        => GenericVisit(
-            node,
-            base.VisitNew,
-            (n, e) => { });
-
-    /// <inheritdoc/>
     protected override Expression VisitNewArray(NewArrayExpression node)
         => GenericVisit(
             node,
@@ -317,7 +320,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             node,
             base.VisitTry,
             (n, e) => { });
-
 
     /// <inheritdoc/>
     protected override CatchBlock VisitCatchBlock(CatchBlock node) => base.VisitCatchBlock(node);

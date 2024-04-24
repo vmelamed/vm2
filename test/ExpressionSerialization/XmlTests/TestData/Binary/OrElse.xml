@@ -3,7 +3,8 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda>
+    <lambda
+        type="boolean">
         <parameters>
             <parameter
                 type="boolean"
@@ -13,7 +14,8 @@
                 name="b" />
         </parameters>
         <body>
-            <orElse>
+            <orElse
+                type="boolean">
                 <parameter
                     type="boolean"
                     name="a" />
