@@ -24,7 +24,7 @@ public class TestsFixture : IDisposable
         AddComments = true,
     };
 
-    internal const LoadOptions XmlLoadOptions = LoadOptions.None; // LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
+    internal const LoadOptions XmlLoadOptions = LoadOptions.SetLineInfo; // LoadOptions.SetBaseUri | LoadOptions.None;
 
     public TestsFixture()
     {
@@ -45,26 +45,17 @@ public class TestsFixture : IDisposable
 
     public void Dispose() => GC.SuppressFinalize(this);
 
-    public bool Validate(XDocument doc, ITestOutputHelper? output = null)
+    public void Validate(XDocument doc)
     {
         List<XmlSchemaException> exceptions = [];
-        var valid = true;
 
-        doc.Validate(
-                _schemas,
-                (_, e) =>
-                {
-                    exceptions.Add(e.Exception);
-                    valid = false;
-                });
+        doc.Validate(_schemas, (_, e) => exceptions.Add(e.Exception));
 
-        if (valid)
-            return true;
-
-        throw new AggregateException(
-                    "Error(s) validating the XML document against the schema urn:schemas-vm-com:Linq.Expressions.Serialization:\n  " +
-                    string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber},{x.LinePosition}) : {x.Message}")),
-                    exceptions);
+        if (exceptions.Count is not 0)
+            throw new AggregateException(
+                        "Error(s) validating the XML document against the schema urn:schemas-vm-com:Linq.Expressions.Serialization:\n  " +
+                        string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber},{x.LinePosition}) : {x.Message}")),
+                        exceptions);
     }
 
     public async Task<(XDocument?, string)> GetExpectedAsync(string pathName, ITestOutputHelper? output = null)
@@ -85,7 +76,7 @@ public class TestsFixture : IDisposable
             streamExpected.Seek(0, SeekOrigin.Begin);
 
             var expectedDoc = await XDocument.LoadAsync(streamExpected, XmlLoadOptions, CancellationToken.None);
-            var validate = () => Validate(expectedDoc, output);
+            var validate = () => Validate(expectedDoc);
 
             validate.Should().NotThrow("the EXPECTED document should be valid according to the schema");
             return (expectedDoc, expectedStr);
@@ -149,7 +140,7 @@ public class TestsFixture : IDisposable
         output?.WriteLine("ACTUAL:\n{0}\n", actualStr);
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        var validate = () => Validate(actualDoc, output);
+        var validate = () => Validate(actualDoc);
 
         validate.Should().NotThrow("the ACTUAL document should be valid according to the schema");
 

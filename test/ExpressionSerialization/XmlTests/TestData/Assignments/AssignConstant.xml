@@ -5,9 +5,10 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <assign
         type="int">
-        <parameter
+        <parameterDefinition
             type="int"
-            name="a" />
+            name="a"
+            id="P1" />
         <constant>
             <!-- 1 -->
             <int>1</int>

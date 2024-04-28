@@ -11,7 +11,7 @@
 public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
 {
     /// <summary>
-    /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements) into a parent element, 
+    /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements) into a parent x, 
     /// representing an expression node's operation.
     /// E.g. the sequence of operations while serializing "a+b+c" may look like this:
     /// <para>
@@ -27,7 +27,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// </para><para>
     /// As in a reversed polish record.
     /// </para>
-    /// In the end of a successful visit the stack should contain only one element - the root of the whole expression.
+    /// In the end of a successful visit the stack should contain only one x - the root of the whole expression.
     /// </summary>
     protected readonly Stack<TElement> _elements = new();
 
@@ -44,10 +44,14 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
         get
         {
             if (_elements.Count > 1)
-                throw new InternalTransformErrorException($"There must be exactly one element in the queue but there are {_elements.Count}.");
+                throw new InternalTransformErrorException($"There must be exactly one x in the queue but there are {_elements.Count}.");
             if (_elements.Count < 1)
                 throw new NoAvailableResultException();
-            return _elements.Pop();
+
+            var element = _elements.Pop();
+            Reset();
+
+            return element;
         }
     }
 
@@ -74,7 +78,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
 
     /// <summary>
     /// Invokes the base class's visit method on the expression node (which may reduce it), creates the representing XML
-    /// element and invokes the XML serializing delegate.
+    /// x and invokes the XML serializing delegate.
     /// </summary>
     /// <typeparam name="TExpression">The type of the visited expression node.</typeparam>
     /// <param name="node">The expression node to be serialized.</param>
@@ -87,17 +91,17 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
         Action<TExpression, TElement> thisVisit)
         where TExpression : Expression
     {
-        var reducedNode = baseVisit(node);
+        var resNode = baseVisit(node) ?? throw new InternalTransformErrorException($"The base visit of a {node.NodeType} node returned different node or null.");
 
-        if (reducedNode is not TExpression n)
-            return reducedNode;
+        if (resNode is not TExpression n)
+            return resNode;
 
-        var element = GetEmptyNode(reducedNode);
+        var x = GetEmptyNode(n);
 
-        thisVisit(n, element);
-        _elements.Push(element);
+        thisVisit(n, x);
+        _elements.Push(x);
 
-        return node;
+        return n;
     }
 
     /// <summary>
@@ -106,4 +110,9 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// <param name="nodeType">Type of the node.</param>
     /// <returns>TNode.</returns>
     protected abstract TElement GetEmptyNode(Expression nodeType);
+
+    /// <summary>
+    /// Resets this instance.
+    /// </summary>
+    protected virtual void Reset() => _elements.Clear();
 }

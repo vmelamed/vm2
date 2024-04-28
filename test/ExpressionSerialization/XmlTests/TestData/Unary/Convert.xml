@@ -6,16 +6,18 @@
     <lambda
         type="int">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="double"
-                name="a" />
+                name="a"
+                id="P1" />
         </parameters>
         <body>
             <convert
                 type="int">
-                <parameter
+                <parameterReference
                     type="double"
-                    name="a" />
+                    name="a"
+                    idref="P1" />
             </convert>
         </body>
     </lambda>

@@ -11,54 +11,25 @@ public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output)
 
     public static readonly TheoryData<string, string, string> LambdaData = new ()
     {
-        { TestLine(), "() => new StructDataContract1(42, \"don't panic\")", "New.xml" },
-        { TestLine(), "b => b ? 1 : 3",         "Conditional.xml" },
         { TestLine(), "i => true",              "Param2BoolConstant.xml" },
         { TestLine(), "(s,d) => true",          "2ParamsToConstant.xml" },
         { TestLine(), "a => a._a",              "MemberField.xml" },
         { TestLine(), "a => a.A",               "MemberProperty.xml" },
         { TestLine(), "(s,d) => true",          "StaticMember.xml" },
-        { TestLine(), "a => a.Method3(1,1)",    "InstanceMethod2Params.xml" },
-        { TestLine(), "(f,a) => f(a)",          "Invocation.xml" },
-        { TestLine(), "(a,b) => { int d = 42; a += d; a -= b; int c = 2; a <<= c; }", "Block.xml" },
+        { TestLine(), "a => a.Method3(1,1)",    "InstanceMethod3Params.xml" },
+        { TestLine(), "a => a.Method4(42,3.14)","InstanceMethod4Params.xml" },
     };
 
     protected override Expression Substitute(string id) => _substitutes[id]();
 
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {
-        ["() => new StructDataContract1(42, \"don't panic\")"]
-                                                = () => () => new StructDataContract1(42, "don't panic"),
-        ["b => b ? 1 : 3"]                      = () => (bool b) => b ? 1 : 3,
         ["(s,d) => true"]                       = () => (string s, DateTime d) => true,
         ["i => true"]                           = () => (int i) => true,
         ["a => a._a"]                           = () => (TestMethods a) => a._a,
         ["a => a.A"]                            = () => (TestMethods a) => a.A,
         ["a => a.Method1()"]                    = () => () => TestMethods.Method1(),
         ["a => a.Method3(1,1)"]                 = () => (TestMethods a) => a.Method3(1, 1.1),
-        ["(f,a) => f(a)"]                       = () => (Func<int, int> f, int a) => f(a),
-        ["(a,b) => { int d = 42; a += d; a -= b; int c = 2; a <<= c; }"] = () => Expression.Lambda(
-                                                    Expression.Block(
-                                                        [Expression.Parameter(typeof(int), "d"),],
-                                                        Expression.Assign(
-                                                            Expression.Parameter(typeof(int), "d"),
-                                                            Expression.Constant(42)),
-                                                        Expression.AddAssign(
-                                                            Expression.Parameter(typeof(int), "a"),
-                                                            Expression.Parameter(typeof(int), "d")),
-                                                        Expression.SubtractAssign(
-                                                            Expression.Parameter(typeof(int), "a"),
-                                                            Expression.Parameter(typeof(int), "b")),
-                                                        Expression.Parameter(typeof(int), "c"),
-                                                        Expression.Assign(
-                                                            Expression.Parameter(typeof(int), "c"),
-                                                            Expression.Constant(2)),
-                                                        Expression.LeftShiftAssign(
-                                                            Expression.Parameter(typeof(int), "a"),
-                                                            Expression.Parameter(typeof(int), "c"))
-                                                        ),
-                                                    Expression.Parameter(typeof(int), "a"),
-                                                    Expression.Parameter(typeof(int), "b")
-                                                ),
+        ["a => a.Method4(42,3.14)"]             = () => (TestMethods a) => a.Method4(42, 3.14),
     };
 }

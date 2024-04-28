@@ -5,11 +5,13 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <assign
         type="int">
-        <parameter
+        <parameterDefinition
             type="int"
-            name="a" />
-        <parameter
+            name="a"
+            id="P1" />
+        <parameterDefinition
             type="int"
-            name="b" />
+            name="b"
+            id="P2" />
     </assign>
 </expression>

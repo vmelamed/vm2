@@ -6,17 +6,19 @@
     <lambda
         type="boolean">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="int"
-                name="a" />
+                name="a"
+                id="P1" />
         </parameters>
         <body>
             <typeEqual
                 type="boolean"
                 typeOperand="int">
-                <parameter
+                <parameterReference
                     type="int"
-                    name="a" />
+                    name="a"
+                    idref="P1" />
             </typeEqual>
         </body>
     </lambda>

@@ -43,6 +43,7 @@ static class ElementNames
     public static readonly XName IsLiftedToNull         = Namespaces.Exs + "isLiftedToNull";
     public static readonly XName Left                   = Namespaces.Exs + "left";
     public static readonly XName Method                 = Namespaces.Exs + "method";
+    public static readonly XName Parameter              = Namespaces.Exs + "parameter";
     public static readonly XName Parameters             = Namespaces.Exs + "parameters";
     public static readonly XName Right                  = Namespaces.Exs + "right";
     public static readonly XName Variables              = Namespaces.Exs + "variables";
@@ -128,7 +129,8 @@ static class ElementNames
     public static readonly XName Or                     = Namespaces.Exs + "or";
     public static readonly XName OrAssign               = Namespaces.Exs + "orAssign";
     public static readonly XName OrElse                 = Namespaces.Exs + "orElse";
-    public static readonly XName Parameter              = Namespaces.Exs + "parameter";
+    public static readonly XName ParameterDefinition    = Namespaces.Exs + "parameterDefinition";
+    public static readonly XName ParameterReference     = Namespaces.Exs + "parameterReference";
     public static readonly XName PostDecrementAssign    = Namespaces.Exs + "postDecrementAssign";
     public static readonly XName PostIncrementAssign    = Namespaces.Exs + "postIncrementAssign";
     public static readonly XName Power                  = Namespaces.Exs + "power";
@@ -152,7 +154,7 @@ static class ElementNames
     public static readonly XName TypeIs                 = Namespaces.Exs + "typeIs";
     public static readonly XName UnaryPlus              = Namespaces.Exs + "unaryPlus";
     public static readonly XName Unbox                  = Namespaces.Exs + "unbox";
-    public static readonly XName Value                  = Namespaces.Exs + "value";
+    public static readonly XName ValuesCase             = Namespaces.Exs + "valuesCase";
 
     public static readonly XName AssignmentBinding      = Namespaces.Exs + "assignmentBinding";
     public static readonly XName MemberMemberBinding    = Namespaces.Exs + "memberMemberBinding";

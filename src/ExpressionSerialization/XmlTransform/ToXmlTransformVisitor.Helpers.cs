@@ -10,6 +10,44 @@ using System.Xml.Linq;
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
 public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement>
 {
+    Stack<XElement> _tempElements = [];
+
+    IEnumerable<XElement> PopElements(int numberOfExpressions)
+    {
+        _tempElements.Clear();
+
+        // pop the expressions:
+        for (var i = 0; i < numberOfExpressions; i++)
+            _tempElements.Push(_elements.Pop());
+
+        return _tempElements;
+    }
+
+    XAttribute? AttributeName(string identifier)
+        => !string.IsNullOrWhiteSpace(identifier)
+            ? new XAttribute(AttributeNames.Name, Transform.Identifier(identifier, _options.Identifiers))
+            : null;
+
+    static XAttribute? AttributeType(Expression? node)
+        => node is not null
+            ? AttributeType(node.Type)
+            : null;
+
+    static XAttribute? AttributeType(Type type)
+        => type is not null && type != typeof(void)
+            ? new(AttributeNames.Type, Transform.TypeName(type))
+            : null;
+
+    static XElement? VisitMethodInfo(BinaryExpression node)
+        => node.Method is MemberInfo mi
+            ? VisitMemberInfo(mi)
+            : null;
+
+    static XElement? VisitMethodInfo(UnaryExpression node)
+        => node.Method is MemberInfo mi
+            ? VisitMemberInfo(mi)
+            : null;
+
     /// <summary>
     /// Creates a sequence of XML elements for each of the <paramref name="parameters"/>.
     /// </summary>
@@ -23,33 +61,16 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
         foreach (var param in parameters)
             yield return new XElement(
                                 ElementNames.Parameter,
-                                new XAttribute(AttributeNames.Type, Transform.TypeName(param.ParameterType)),
+                                AttributeType(param.ParameterType),
                                 param.Name is not null ? new XAttribute(AttributeNames.Name, param.Name) : null,
                                 param.IsOut || param.ParameterType.IsByRef ? new XAttribute(AttributeNames.IsByRef, true) : null);
     }
 
-#pragma warning disable CA1859 // Use concrete types when possible for improved performance
-    IEnumerable<XElement> PopElements(int numberOfExpressions)
+    static XElement? VisitMemberInfo(MemberInfo? member)
     {
-        var stack = new Stack<XElement>();
+        if (member is null)
+            return null;
 
-        // pop the expressions:
-        for (var i = 0; i < numberOfExpressions; i++)
-            stack.Push(
-                _elements.Pop());
-
-        return stack;
-    }
-#pragma warning restore CA1859 // Use concrete types when possible for improved performance
-
-    static XElement? VisitMethodInfo(BinaryExpression node)
-        => node.Method is MemberInfo mi ? VisitMemberInfo(mi) : null;
-
-    static XElement? VisitMethodInfo(UnaryExpression node)
-        => node.Method is MemberInfo mi ? VisitMemberInfo(mi) : null;
-
-    static XElement VisitMemberInfo(MemberInfo member)
-    {
         XAttribute? visibility = member is MethodInfo method && !method.IsPublic
                                     ? (method.Attributes & MethodAttributes.MemberAccessMask) switch {
                                         MethodAttributes.Private     => new XAttribute(AttributeNames.Visibility, AttributeNames.Private),
@@ -65,7 +86,7 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
             ConstructorInfo ci => new XElement(
                                         ElementNames.Constructor,
                                         visibility,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(ci.DeclaringType ?? throw new InternalTransformErrorException("ConstructorInfo's DeclaringType is null."))),
+                                        AttributeType(ci.DeclaringType ?? throw new InternalTransformErrorException("ConstructorInfo's DeclaringType is null.")),
                                         ci.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
                                         new XElement(
                                                 ElementNames.Parameters,
@@ -73,7 +94,7 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
             PropertyInfo pi => new XElement(
                                         ElementNames.Property,
                                         visibility,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null."))),
+                                        AttributeType(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null.")),
                                         new XAttribute(AttributeNames.Name, pi.Name),
                                         VisitParameters(pi.GetIndexParameters())),
 
@@ -87,7 +108,7 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
 
             EventInfo ei => new XElement(
                                         ElementNames.Event,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(ei.EventHandlerType ?? throw new InternalTransformErrorException("EventInfo's EventHandlerType is null."))),
+                                        AttributeType(ei.EventHandlerType ?? throw new InternalTransformErrorException("EventInfo's EventHandlerType is null.")),
                                         new XAttribute(AttributeNames.Name, ei.Name)),
 
             FieldInfo fi => new XElement(
@@ -95,7 +116,7 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
                                         fi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
                                         visibility,
                                         fi.IsInitOnly ? new XAttribute(AttributeNames.ReadOnly, true) : null,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(fi.FieldType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null."))),
+                                        AttributeType(fi.FieldType ?? throw new InternalTransformErrorException("MethodInfo's DeclaringType is null.")),
                                         new XAttribute(AttributeNames.Name, fi.Name)),
 
             _ => throw new InternalTransformErrorException("Unknown MemberInfo.")

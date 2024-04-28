@@ -4,6 +4,8 @@ public partial class AssignmentTests(TestsFixture fixture, ITestOutputHelper out
 {
     protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Assignments/";
 
+    static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
+
     [Theory]
     [MemberData(nameof(AssignmentsData))]
     public async Task AssignmentTestAsync(string _, string expressionString, string fileName)
@@ -34,49 +36,49 @@ public partial class AssignmentTests(TestsFixture fixture, ITestOutputHelper out
     static Dictionary<string, Expression> _substitutes = new()
     {
         ["a = 1"]           = Expression.Assign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Constant(1)),
         ["a = b"]           = Expression.Assign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a += b"]          = Expression.AddAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["checked(a += b)"] = Expression.AddAssignChecked(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a -= b"]          = Expression.SubtractAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["checked(a -= b)"] = Expression.SubtractAssignChecked(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a *= b"]          = Expression.MultiplyAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["checked(a *= b)"] = Expression.MultiplyAssignChecked(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a /= b"]          = Expression.DivideAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a %= b"]          = Expression.ModuloAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a &= b"]          = Expression.AndAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a |= b"]          = Expression.OrAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a ^= b"]          = Expression.ExclusiveOrAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a <<= b"]         = Expression.LeftShiftAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
         ["a >>= b"]         = Expression.RightShiftAssign(
-                                        Expression.Parameter(typeof(int), "a"),
+                                        _paramA,
                                         Expression.Parameter(typeof(int), "b")),
     };
 }

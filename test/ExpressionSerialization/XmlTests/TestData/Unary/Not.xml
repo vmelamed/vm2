@@ -6,16 +6,18 @@
     <lambda
         type="boolean">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="boolean"
-                name="a" />
+                name="a"
+                id="P1" />
         </parameters>
         <body>
             <not
                 type="boolean">
-                <parameter
+                <parameterReference
                     type="boolean"
-                    name="a" />
+                    name="a"
+                    idref="P1" />
             </not>
         </body>
     </lambda>

@@ -6,16 +6,18 @@
     <lambda
         type="int">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                name="a" />
+                name="a"
+                id="P1" />
         </parameters>
         <body>
             <arrayLength
                 type="int">
-                <parameter
+                <parameterReference
                     type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                    name="a" />
+                    name="a"
+                    idref="P1" />
             </arrayLength>
         </body>
     </lambda>

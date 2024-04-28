@@ -6,16 +6,18 @@
     <lambda
         type="int">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="a" />
+                name="a"
+                id="P1" />
         </parameters>
         <body>
             <call
                 type="int">
-                <parameter
+                <parameterReference
                     type="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                    name="a" />
+                    name="a"
+                    idref="P1" />
                 <method
                     type="int"
                     name="Method3">

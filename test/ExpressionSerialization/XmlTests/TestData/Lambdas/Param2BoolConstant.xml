@@ -6,9 +6,10 @@
     <lambda
         type="boolean">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="int"
-                name="i" />
+                name="i"
+                id="P1" />
         </parameters>
         <body>
             <constant>

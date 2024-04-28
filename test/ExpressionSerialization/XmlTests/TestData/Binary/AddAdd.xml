@@ -6,31 +6,37 @@
     <lambda
         type="int">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="int"
-                name="a" />
-            <parameter
+                name="a"
+                id="P1" />
+            <parameterDefinition
                 type="int"
-                name="b" />
-            <parameter
+                name="b"
+                id="P2" />
+            <parameterDefinition
                 type="int"
-                name="c" />
+                name="c"
+                id="P3" />
         </parameters>
         <body>
             <add
                 type="int">
                 <add
                     type="int">
-                    <parameter
+                    <parameterReference
                         type="int"
-                        name="a" />
-                    <parameter
+                        name="a"
+                        idref="P1" />
+                    <parameterReference
                         type="int"
-                        name="b" />
+                        name="b"
+                        idref="P2" />
                 </add>
-                <parameter
+                <parameterReference
                     type="int"
-                    name="c" />
+                    name="c"
+                    idref="P3" />
             </add>
         </body>
     </lambda>

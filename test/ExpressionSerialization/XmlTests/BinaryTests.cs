@@ -4,6 +4,8 @@ public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output)
 {
     protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Binary/";
 
+    static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
+
     [Theory]
     [MemberData(nameof(BinaryData))]
     public async Task BinaryTestAsync(string _, string expressionString, string fileName)
@@ -79,8 +81,8 @@ public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output)
         ["a => a as b"]                         = (ClassDataContract2 a) => a as ClassDataContract1,
         ["a => a is b"]                         = (object a) => a is ClassDataContract1,
         ["a => a equals int"]                   = Expression.Lambda(
-                                                        Expression.TypeEqual(Expression.Parameter(typeof(int), "a"), typeof(int)),
-                                                        Expression.Parameter(typeof(int), "a")
+                                                        Expression.TypeEqual(_paramA, typeof(int)),
+                                                        _paramA
                                                     ),
     };
 }

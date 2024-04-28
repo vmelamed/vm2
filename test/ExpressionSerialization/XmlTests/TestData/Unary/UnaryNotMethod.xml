@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- b => Not(b) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+        <parameters>
+            <parameterDefinition
+                type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                name="b"
+                id="P1" />
+        </parameters>
+        <body>
+            <not
+                type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                <parameterReference
+                    type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                    name="b"
+                    idref="P1" />
+                <method
+                    static="true"
+                    type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                    name="op_LogicalNot">
+                    <parameters>
+                        <parameter
+                            type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            name="x" />
+                    </parameters>
+                </method>
+            </not>
+        </body>
+    </lambda>
+</expression>

@@ -6,16 +6,18 @@
     <lambda
         type="int">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="int"
-                name="a" />
+                name="a"
+                id="P1" />
         </parameters>
         <body>
             <negate
                 type="int">
-                <parameter
+                <parameterReference
                     type="int"
-                    name="a" />
+                    name="a"
+                    idref="P1" />
             </negate>
         </body>
     </lambda>

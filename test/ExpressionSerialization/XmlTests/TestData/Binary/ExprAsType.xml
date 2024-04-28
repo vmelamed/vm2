@@ -6,16 +6,18 @@
     <lambda
         type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="vm2.ExpressionSerialization.XmlTests.ClassDataContract2, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="a" />
+                name="a"
+                id="P1" />
         </parameters>
         <body>
             <typeAs
                 type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-                <parameter
+                <parameterReference
                     type="vm2.ExpressionSerialization.XmlTests.ClassDataContract2, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                    name="a" />
+                    name="a"
+                    idref="P1" />
             </typeAs>
         </body>
     </lambda>

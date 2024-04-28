@@ -214,6 +214,8 @@ class TestMethods
     public static int Method2(int i, string _) => i;
 
     public int Method3(int i, double _) => i + _a;
+
+    public void Method4(int i, double d) => Console.WriteLine($"Integer: {i}, double: {d}, Integer instance member: {_a}");
 }
 
 class Inner

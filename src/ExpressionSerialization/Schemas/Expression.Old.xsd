@@ -15,7 +15,7 @@
     <xs:element name="expressions">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Specifies a list of expressions.
+                Specifies a list of serialized expressions.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -25,52 +25,36 @@
                             maxOccurs="unbounded"/>
             </xs:choice>
         </xs:complexType>
-
-        <!-- parameters: -->
-        <xs:key name ="parameterDefinitionKey">
-            <xs:selector xpath="parameter" />
-            <xs:field xpath="@id" />
-        </xs:key>
-
-        <xs:key name ="parameterReferenceKey">
-            <xs:selector xpath="parameter" />
-            <xs:field xpath="@idref" />
-        </xs:key>
-        
-        <!-- labels: -->
-        <xs:key name="labelKey">
-            <xs:selector xpath="label/labelTarget"/>
-            <xs:field xpath="@id"/>
-        </xs:key>
-
-        <xs:keyref name="breakKey" refer="labelKey">
-            <xs:selector xpath="break/labelTarget"/>
-            <xs:field xpath="@idref"/>
-        </xs:keyref>
-        <xs:keyref name="continueKey" refer="labelKey">
-            <xs:selector xpath="continue/labelTarget"/>
-            <xs:field xpath="@idref"/>
-        </xs:keyref>
-        <xs:keyref name="returnKey" refer="labelKey">
-            <xs:selector xpath="return/labelTarget"/>
-            <xs:field xpath="@idref"/>
-        </xs:keyref>
-        <xs:keyref name="gotoKey" refer="labelKey">
-            <xs:selector xpath="goto/labelTarget"/>
-            <xs:field xpath="@idref"/>
-        </xs:keyref>
-
     </xs:element>
 
     <xs:element name="expression"
                 type="expressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Specifies a single expression element.
+                Specifies a single serialized expression element.
             </xs:documentation>
         </xs:annotation>
-    </xs:element>    
-    
+
+        <xs:key name="labelKey">
+            <xs:selector xpath="label/labelTarget"/>
+            <xs:field xpath="@labelId"/>
+        </xs:key>
+        <xs:key name="breakKey">
+            <xs:selector xpath="break/labelTarget"/>
+            <xs:field xpath="@labelId"/>
+        </xs:key>
+        <xs:key name="continueKey">
+            <xs:selector xpath="continue/labelTarget"/>
+            <xs:field xpath="@labelId"/>
+        </xs:key>
+
+        <xs:keyref name="gotoLabelKey"
+                   refer="labelKey">
+            <xs:selector xpath="goto/labelTarget"/>
+            <xs:field xpath="@labelIdRef"/>
+        </xs:keyref>
+    </xs:element>
+
     <xs:complexType name ="expressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
@@ -82,17 +66,22 @@
 
     <xs:group name="expressionBaseGroup">
         <xs:choice>
-            <xs:element name="parameterDefinition"
-                        type="parameterDefinitionType"/>
-
-            <xs:element name="parameterReference"
-                        type="parameterReferenceType"/>
-
             <xs:element name="constant"
                         type="constantExpressionType"/>
 
+            <xs:element name="parameter"
+                        type="parameterExpressionType"/>
+
+            <xs:element name="runtimeVariables"
+                        type="runtimeVariablesType"/>
+
             <xs:element name="lambda"
-                        type="lambdaExpressionType"/>
+                        type="lambdaExpressionType">
+                <xs:key name="lambdaLocals">
+                    <xs:selector xpath=".//variables/parameter"/>
+                    <xs:field xpath="@name"/>
+                </xs:key>
+            </xs:element>
 
             <!-- unary expressions -->
             <xs:element name="arrayLength"
@@ -165,39 +154,40 @@
                         type="binaryExpressionType"/>
             <xs:element name="subtract"
                         type="binaryExpressionType"/>
+
             <xs:element name="coalesce"
-                        type="coalesceExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
 
             <xs:element name="assign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="addAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="addAssignChecked"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="andAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="divideAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="exclusiveOrAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="leftShiftAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="moduloAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="multiplyAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="multiplyAssignChecked"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="powerAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="orAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="rightShiftAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="subtractAssign"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
             <xs:element name="subtractAssignChecked"
-                        type="compoundAssignmentExpressionType"/>
+                        type="coalesceOrAssignmentExpressionType"/>
 
             <xs:element name="decrement"
                         type="changeByOneExpressionType"/>
@@ -213,7 +203,16 @@
                         type="changeByOneExpressionType"/>
 
             <xs:element name="block"
-                        type="blockExpressionType"/>
+                        type="blockExpressionType">
+                <xs:key name="blockLocals">
+                    <xs:selector xpath="./variables/parameter"/>
+                    <xs:field xpath="@name"/>
+                </xs:key>
+                <xs:keyref name="refLocals" refer="blockLocals">
+                    <xs:selector xpath="./body/parameter"/>
+                    <xs:field xpath="@name"/>
+                </xs:keyref>
+            </xs:element>
 
             <xs:element name="call"
                         type="callExpressionType"/>
@@ -258,10 +257,14 @@
             <xs:element name="goto"
                         type="gotoExpressionType" />
             <xs:element name="label"
-                        type="labelType"/>
+                        type="labelExpressionType"/>
 
             <xs:element name="loop"
                         type="loopType"/>
+            <xs:element name="break"
+                        type="labelExpressionType" />
+            <xs:element name="continue"
+                        type="labelExpressionType" />
 
             <xs:element name="switch"
                         type="switchType"/>
@@ -269,100 +272,15 @@
             <xs:element name="try"
                         type="tryType"/>
 
+            <xs:element name="extension"
+                        type="extensionType"/>
             <!--            
-            <xs:element name="extension" type="extensionType"/>
             <xs:element name="dynamic" type="dynamicType"/>
             <xs:element name="debugInfo" type="debugInfoType"/>
-            <xs:element name="runtimeVariables" type="runtimeVariablesType"/>
             -->
         </xs:choice>
     </xs:group>
-
-    <xs:complexType name="parameterType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines an element type that represents a parameter definition: name and type.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:attribute name="name"
-                      type="xs:token"
-                      use="required"/>
-        <xs:attribute name="type"
-                      type="xs:token"
-                      use="required"/>
-        <xs:attribute name="isByRef"
-                      use="optional"
-                      default="false"
-                      type="xs:boolean"/>
-    </xs:complexType>
-
-    <xs:complexType name="parameterListType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines a type of element that lists method parameters.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="parameter"
-                        type="parameterType"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="parameterDefinitionType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines an element type that represents a parameter definition: name, type and internal Id.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="parameterType">
-                <xs:attribute name="id"
-                              type="xs:ID"
-                              use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="parameterDefinitionListType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines a type of element that lists method parameters.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="parameterDefinition"
-                        type="parameterDefinitionType"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="parameterReferenceType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines an element type that represents a parameter definition: name, type and internal Id reference.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="parameterType">
-                <xs:attribute name="idref"
-                              type="xs:IDREF"
-                              use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="constantExpressionType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Specifies a constant value in an expression.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:group ref="constantBaseGroup"/>
-    </xs:complexType>
-
+    
     <xs:group name="constantBaseGroup">
         <xs:choice>
             <xs:element name="boolean"
@@ -912,16 +830,68 @@
         </xs:choice>
     </xs:group>
 
-    <xs:complexType name="argumentListType">
+    <xs:complexType name="constantExpressionType">
         <xs:annotation>
-            <xs:documentation>
-                Specifies a list of arguments passed to a method.
+            <xs:documentation xml:lang="en-us">
+                Specifies a constant value in an expression.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:group ref="constantBaseGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="parameterDefinitionType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en-us">
+                Defines an element type that represents a parameter definition: name and (optional) type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name"
+                      type="xs:token"
+                      use="required"/>
+        <xs:attribute name="type"
+                      type="xs:token"
+                      use="required"/>
+        <xs:attribute name="isByRef"
+                      use="optional"
+                      default="false"
+                      type="xs:boolean"/>
+        <xs:attribute name="paramId"
+                      type="xs:ID"
+                      use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="parameterExpressionType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en-us">
+                Defines an element type that represents a parameter reference: name and (optional) type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name"
+                      type="xs:token"
+                      use="required"/>
+        <xs:attribute name="type"
+                      type="xs:token"
+                      use="required"/>
+        <xs:attribute name="isByRef"
+                      use="optional"
+                      default="false"
+                      type="xs:boolean"/>
+        <xs:attribute name="paramId"
+                      type="xs:IDREF"
+                      use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="parameterDefinitionListType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en-us">
+                Defines a type of element that lists method parameters.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:group ref="expressionBaseGroup"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+            <xs:element name="parameter"
+                        type="parameterDefinitionType"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -964,7 +934,7 @@
                       use="optional">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
-                    The name of the lambda.
+                    The name for the lambda.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -986,27 +956,6 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-    </xs:complexType>
-
-    <xs:complexType name="blockExpressionType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines a type of element that represents a block as: { int a; a = 1; a++; a*5; }
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="variables"
-                        type="parameterDefinitionListType"
-                        minOccurs="0"/>
-            <xs:sequence>
-                <xs:group ref="expressionBaseGroup"
-                          minOccurs="0"
-                          maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:sequence>
-        <xs:attribute name="type"
-                      type="xs:token"
-                      use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="unaryExpressionType">
@@ -1105,13 +1054,22 @@
                 <xs:choice>
                     <xs:element name="conversion"
                                 type="lambdaExpressionType"
-                                minOccurs="0"/>
+                                minOccurs="0">
+                        <xs:key name="conversionLambdaLocals">
+                            <xs:selector xpath="./parameters/parameter | ./body/block/variables/parameter"/>
+                            <xs:field xpath="@name"/>
+                        </xs:key>
+                        <xs:keyref name="conversionRefLocals" refer="conversionLambdaLocals">
+                            <xs:selector xpath=".//body/block/parameter"/>
+                            <xs:field xpath="@name"/>
+                        </xs:keyref>
+                    </xs:element>
                 </xs:choice>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="compoundAssignmentExpressionType">
+    <xs:complexType name="assignmentExpressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
                 Defines a type of element that represents a coalesce operator as: a ?? b.
@@ -1122,10 +1080,40 @@
                 <xs:choice>
                     <xs:element name="conversion"
                                 type="lambdaExpressionType"
-                                minOccurs="0"/>
+                                minOccurs="0">
+                        <xs:key name="assignLambdaLocals">
+                            <xs:selector xpath="./parameters/parameter | ./body/block/variables/parameter"/>
+                            <xs:field xpath="@name"/>
+                        </xs:key>
+                        <xs:keyref name="assignRefLocals" refer="assignLambdaLocals">
+                            <xs:selector xpath=".//body/block/parameter"/>
+                            <xs:field xpath="@name"/>
+                        </xs:keyref>
+                    </xs:element>
                 </xs:choice>
             </xs:extension>
         </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="blockExpressionType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en-us">
+                Defines a type of element that represents a block as: { int a; a = 1; a++; a*5; }
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="variables"
+                        type="parameterDefinitionListType"
+                        minOccurs="0"/>
+            <xs:sequence>
+                <xs:group ref="expressionBaseGroup"
+                          minOccurs="0"
+                          maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:sequence>
+        <xs:attribute name="type"
+                      type="xs:token"
+                      use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="memberAccessExpressionType">
@@ -1202,11 +1190,24 @@
             <xs:element name="method"
                         type="methodInfoType"/>
             <xs:element name="arguments"
-                        type="argumentListType"/>
+                        type="argumentsType"/>
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
                       use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="argumentsType">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a list of arguments.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="expressionBaseGroup"
+                      minOccurs="0"
+                      maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="conditionalExpressionType">
@@ -1293,7 +1294,7 @@
                 </xs:annotation>
             </xs:element>
             <xs:element name="arguments"
-                        type="argumentListType"/>
+                        type="argumentsType"/>
             <xs:element name="members"
                         minOccurs="0">
                 <xs:annotation>
@@ -1318,6 +1319,43 @@
         <xs:attribute name="type"
                       type="xs:token"
                       use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="methodParameterListType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en-us">
+                Defines a type of elemnt that lists method parameters.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="parameter"
+                        type="methodParameterType"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="methodParameterType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en-us">
+                Extends the definition of the parameter element type with a modifier (ref, out or in).
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="parameterExpressionType">
+                <xs:attribute name="modifier"
+                              use="optional"
+                              default="in">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                            <xs:enumeration value="in"/>
+                            <xs:enumeration value="out"/>
+                            <xs:enumeration value="ref"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="memberInfoType"
@@ -1375,10 +1413,10 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="memberInfoType">
-                <xs:sequence>
+                <xs:choice minOccurs="0">
                     <xs:element name="parameters"
-                                type="parameterListType"/>
-                </xs:sequence>
+                                type="parameterDefinitionListType"/>
+                </xs:choice>
                 <xs:attribute name="name"
                               type="xs:token"
                               use="required"/>
@@ -1394,10 +1432,10 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="memberInfoType">
-                <xs:sequence>
+                <xs:choice minOccurs="0">
                     <xs:element name="parameters"
-                                type="parameterListType"/>
-                </xs:sequence>
+                                type="parameterDefinitionListType"/>
+                </xs:choice>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1452,19 +1490,19 @@
                     <xs:element name="get"
                                 minOccurs="0">
                         <xs:complexType>
-                            <xs:sequence>
+                            <xs:choice minOccurs="0">
                                 <xs:element name="parameters"
-                                            type="parameterListType"/>
-                            </xs:sequence>
+                                            type="parameterDefinitionListType"/>
+                            </xs:choice>
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="set"
                                 minOccurs="0">
                         <xs:complexType>
-                            <xs:sequence>
+                            <xs:choice minOccurs="0">
                                 <xs:element name="parameters"
-                                            type="parameterListType"/>
-                            </xs:sequence>
+                                            type="parameterDefinitionListType"/>
+                            </xs:choice>
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
@@ -1488,19 +1526,19 @@
                     <xs:element name="add"
                                 minOccurs="0">
                         <xs:complexType>
-                            <xs:sequence>
+                            <xs:choice minOccurs="0">
                                 <xs:element name="parameters"
-                                            type="parameterListType"/>
-                            </xs:sequence>
+                                            type="parameterDefinitionListType"/>
+                            </xs:choice>
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="remove"
                                 minOccurs="0">
                         <xs:complexType>
-                            <xs:sequence>
+                            <xs:choice minOccurs="0">
                                 <xs:element name="parameters"
-                                            type="parameterListType"/>
-                            </xs:sequence>
+                                            type="parameterDefinitionListType"/>
+                            </xs:choice>
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
@@ -1544,7 +1582,7 @@
             <xs:group ref="expressionBaseGroup">
             </xs:group>
             <xs:element name="arguments"
-                        type="argumentListType" />
+                        type="argumentsType" />
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
@@ -1583,7 +1621,7 @@
         </xs:attribute>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="optional">
+                      use="required">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
                     Defines the type of value that is passed when jumping to the label.
@@ -1595,7 +1633,7 @@
     <xs:complexType name="labelType">
         <xs:complexContent>
             <xs:extension base="labelTargetType">
-                <xs:attribute name="id"
+                <xs:attribute name="labelId"
                               type="xs:ID"
                               use="required"/>
             </xs:extension>
@@ -1605,7 +1643,7 @@
     <xs:complexType name="refLabelType">
         <xs:complexContent>
             <xs:extension base="labelTargetType">
-                <xs:attribute name="idref"
+                <xs:attribute name="labelIdRef"
                               type="xs:IDREF"
                               use="required"/>
             </xs:extension>
@@ -1619,7 +1657,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="label"
+            <xs:element name="labelTarget"
                         type="labelType"/>
             <xs:group ref="expressionBaseGroup"
                       minOccurs="0">
@@ -1639,7 +1677,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="target"
+            <xs:element name="labelTarget"
                         type="refLabelType"/>
             <xs:group ref="expressionBaseGroup"
                       minOccurs="0">
@@ -1684,9 +1722,8 @@
         </xs:annotation>
         <xs:sequence>
             <xs:group ref="expressionBaseGroup"/>
-            
-            <xs:element name="break"
-                        type="refLabelType"
+            <xs:element name="breakLabel"
+                        type="labelExpressionType"
                         minOccurs="0">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
@@ -1694,17 +1731,23 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
-            <xs:element name="continue"
-                        type="refLabelType"
+            <xs:element name="continueLabel"
                         minOccurs="0">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
                         Defines the optional break target used by the loop body.
                     </xs:documentation>
                 </xs:annotation>
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="labelTargetType">
+                            <xs:attribute name="labelId"
+                                          type="xs:ID"
+                                          use="required"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
             </xs:element>
-            
         </xs:sequence>
     </xs:complexType>
 
@@ -1742,7 +1785,7 @@
                     </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="valuesCase"
+                            <xs:element name="value"
                                         minOccurs="1"
                                         maxOccurs="unbounded">
                                 <xs:annotation>
@@ -1802,7 +1845,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="exception"
-                                    type="parameterDefinitionType"
+                                    type="parameterExpressionType"
                                     minOccurs="0" />
                         <xs:element name="filter"
                                     type="expressionType"
@@ -1811,7 +1854,7 @@
                     </xs:sequence>
                     <xs:attribute name="type"
                                   type="xs:token"
-                                  use="optional"/>
+                                  use="required"/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="fault"
@@ -1839,7 +1882,7 @@
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="optional"/>
+                      use="required"/>
     </xs:complexType>
 
     <xs:complexType name="elementInitType">
@@ -2054,7 +2097,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="runtimeVariables"
+            <xs:element name="variables"
                         type="parameterDefinitionListType"/>
         </xs:sequence>
     </xs:complexType>

@@ -6,17 +6,19 @@
     <lambda
         type="boolean">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="object"
-                name="a" />
+                name="a"
+                id="P1" />
         </parameters>
         <body>
             <typeIs
                 type="boolean"
                 typeOperand="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-                <parameter
+                <parameterReference
                     type="object"
-                    name="a" />
+                    name="a"
+                    idref="P1" />
             </typeIs>
         </body>
     </lambda>

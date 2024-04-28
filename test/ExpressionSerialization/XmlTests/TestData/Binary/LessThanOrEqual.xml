@@ -6,22 +6,26 @@
     <lambda
         type="boolean">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="int"
-                name="a" />
-            <parameter
+                name="a"
+                id="P1" />
+            <parameterDefinition
                 type="int"
-                name="b" />
+                name="b"
+                id="P2" />
         </parameters>
         <body>
             <lessThanOrEqual
                 type="boolean">
-                <parameter
+                <parameterReference
                     type="int"
-                    name="a" />
-                <parameter
+                    name="a"
+                    idref="P1" />
+                <parameterReference
                     type="int"
-                    name="b" />
+                    name="b"
+                    idref="P2" />
             </lessThanOrEqual>
         </body>
     </lambda>

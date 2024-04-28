@@ -6,22 +6,26 @@
     <lambda
         type="int">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="int"
-                name="a" />
-            <parameter
+                name="a"
+                id="P1" />
+            <parameterDefinition
                 type="int"
-                name="b" />
+                name="b"
+                id="P2" />
         </parameters>
         <body>
             <divide
                 type="int">
-                <parameter
+                <parameterReference
                     type="int"
-                    name="a" />
-                <parameter
+                    name="a"
+                    idref="P1" />
+                <parameterReference
                     type="int"
-                    name="b" />
+                    name="b"
+                    idref="P2" />
             </divide>
         </body>
     </lambda>

@@ -53,9 +53,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Threading\Threading.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Schemas\" />
-  </ItemGroup>
     
 </Project>
