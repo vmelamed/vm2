@@ -25,8 +25,7 @@
                 </arguments>
             </call>
             <throw>
-                <new
-                    type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                <new>
                     <constructor
                         type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                         <parameterSpecs />
@@ -57,5 +56,26 @@
                 </arguments>
             </call>
         </catch>
+        <finally>
+            <call
+                type="void">
+                <method
+                    static="true"
+                    type="void"
+                    name="WriteLine">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="string"
+                            name="value" />
+                    </parameterSpecs>
+                </method>
+                <arguments>
+                    <constant>
+                        <!-- "finally {}" -->
+                        <string>finally {}</string>
+                    </constant>
+                </arguments>
+            </call>
+        </finally>
     </try>
 </expression>

@@ -43,8 +43,11 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     protected override XElement GetEmptyNode(Expression node)
         => new(Namespaces.Exs + Transform.Identifier(node.NodeType.ToString(), IdentifierConventions.Camel),
                 node switch {
-                    // omit the type for constant expressions - their element says it all
+                    // omit the type for expressions where their element says it all
                     ConstantExpression => null,
+                    ListInitExpression => null,
+                    NewExpression => null,
+                    NewArrayExpression => null,
                     // do not omit the void return type for these nodes
                     LambdaExpression n => new(AttributeNames.Type, Transform.TypeName(n.ReturnType)),
                     MethodCallExpression n => new(AttributeNames.Type, Transform.TypeName(n.Method.ReturnType)),
@@ -260,11 +263,15 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         => GenericVisit(
             node,
             base.VisitMemberInit,
-            (n, x) => x.Add(
-                        _elements.Pop(),        // the new expression
-                        new XElement(
-                                ElementNames.Bindings,
-                                PopElements(n.Bindings.Count))));   // pop the expressions to assign to members
+            (n, x) =>
+            {
+                var bindings = PopElements(n.Bindings.Count).ToList();     // pop the expressions to assign to members
+                x.Add(
+                    _elements.Pop(),        // the new expression
+                    new XElement(
+                            ElementNames.Bindings,
+                            bindings));
+            });
     #endregion
 
     /// <inheritdoc/>
@@ -587,10 +594,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         return node;
     }
 
-    /////////////////////////////////////////////////////////////////
-    // IN PROGRESS:
-    /////////////////////////////////////////////////////////////////
-
     /// <inheritdoc/>
     protected override Expression VisitListInit(ListInitExpression node)
         => GenericVisit(
@@ -633,7 +636,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         x.Add(
             new XElement(
                     ElementNames.ArrayElements,
-                    AttributeType(n.Type),
                     inits));
     }
 
@@ -647,9 +649,12 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         x.Add(
             new XElement(
                     ElementNames.Bounds,
-                    AttributeType(n.Type),
                     bounds));
     }
+
+    /////////////////////////////////////////////////////////////////
+    // IN PROGRESS:
+    /////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////
     // TODO:

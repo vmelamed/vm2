@@ -25,8 +25,7 @@
                 </arguments>
             </call>
             <throw>
-                <new
-                    type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                <new>
                     <constructor
                         type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                         <parameterSpecs />
@@ -40,6 +39,38 @@
                 type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                 name="x"
                 id="P1" />
+            <filter>
+                <equal
+                    type="boolean">
+                    <memberAccess
+                        type="string">
+                        <variableDefinition
+                            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                            name="x"
+                            id="P2" />
+                        <property
+                            type="string"
+                            name="ParamName" />
+                    </memberAccess>
+                    <constant>
+                        <!-- "x" -->
+                        <string>x</string>
+                    </constant>
+                    <method
+                        static="true"
+                        type="boolean"
+                        name="op_Equality">
+                        <parameterSpecs>
+                            <parameterSpec
+                                type="string"
+                                name="a" />
+                            <parameterSpec
+                                type="string"
+                                name="b" />
+                        </parameterSpecs>
+                    </method>
+                </equal>
+            </filter>
             <call
                 type="void">
                 <method
@@ -58,10 +89,10 @@
                         <variableDefinition
                             type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                             name="x"
-                            id="P2" />
+                            id="P3" />
                         <property
                             type="string"
-                            name="Message" />
+                            name="ParamName" />
                     </memberAccess>
                 </arguments>
             </call>

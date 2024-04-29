@@ -229,7 +229,7 @@ class TestMembersInitialized
 {
     public int TheOuterIntProperty { get; set; }
 
-    public DateTime _time = new(2024, 4, 14, 22, 48, 34, DateTimeKind.Local);
+    public DateTime Time { get; set; } = new(2024, 4, 14, 22, 48, 34, DateTimeKind.Local);
 
     public Inner InnerProperty { get; set; } = new();
 

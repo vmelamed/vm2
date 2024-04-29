@@ -1363,7 +1363,7 @@
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="required"/>
+                      use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="memberInfoType"
@@ -1978,7 +1978,7 @@
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="required">
+                      use="optional">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
                     Defines the type of elements that represents the element type of the array.
@@ -2006,7 +2006,7 @@
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="required">
+                      use="optional">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
                     Defines the type of elements that represents the element type of the array.
@@ -2034,7 +2034,10 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-    </xs:complexType>
+        <xs:attribute name="type"
+              type="xs:token"
+              use="optional"/>
+        </xs:complexType>
 
     <xs:complexType name="memberBindingType"
                     abstract="true">

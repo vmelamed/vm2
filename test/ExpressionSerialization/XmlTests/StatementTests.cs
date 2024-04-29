@@ -20,12 +20,17 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         { TestLine(), "loop",               "Loop.xml" },
         { TestLine(), "switch(a){ ... }",   "Switch.xml" },
         { TestLine(), "Console.WriteLine",  "Invocation2.xml" },
-        { TestLine(), "try1",               "try1.xml" },
-        { TestLine(), "try2",               "try2.xml" },
-        { TestLine(), "try3",               "try3.xml" },
-        { TestLine(), "try4",               "try4.xml" },
-        { TestLine(), "try5",               "try5.xml" },
-        { TestLine(), "try6",               "try6.xml" },
+        { TestLine(), "try1",               "TryCatch1.xml" },
+        { TestLine(), "try2",               "TryCatch2.xml" },
+        { TestLine(), "try3",               "TryCatch3.xml" },
+        { TestLine(), "try4",               "TryCatch4.xml" },
+        { TestLine(), "try5",               "TryCatch5.xml" },
+        { TestLine(), "try6",               "TryCatch6.xml" },
+        { TestLine(), "newListInit",        "NewListInit.xml" },
+        { TestLine(), "newArrayItems",      "NewArrayInit.xml" },
+        { TestLine(), "newArrayBounds",     "NewArrayBounds.xml" },
+        { TestLine(), "newDictionaryInit",  "NewDictionaryInit.xml" },
+        { TestLine(), "newMembersInit",     "NewMembersInit.xml" },
     };
 
     protected override Expression Substitute(string id) => _substitutes[id]();
@@ -193,30 +198,44 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
                     ]);
     };
 
-    static Expression<Func<IEnumerable<string>>> _testListInit = () =>
-        new List<string>
-        {
-            "aaa",
-            "bbb",
-            "ccc",
-        };
+    static Expression<Func<TestMembersInitialized>> _newMembersInit =
+                () => new TestMembersInitialized
+                {
+                    TheOuterIntProperty = 42,
+                    Time = new DateTime(1776, 7, 4),
+                    InnerProperty = new Inner
+                    {
+                        IntProperty = 23,
+                        StringProperty = "inner string"
+                    },
+                    MyProperty = new List<string>
+                    {
+                        "aaa",
+                        "bbb",
+                        "ccc",
+                    },
+                };
 
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {
         ["() => new StructDataContract1(42, \"don't panic\")"]
-                              = () => () => new StructDataContract1(42, "don't panic"),
-        ["b => b ? 1 : 3"]    = () => (bool b) => b ? 1 : 3,
-        ["(f,a) => f(a)"]     = () => (Func<int, int> f, int a) => f(a),
-        ["(a,b) => { ... }"]  = _lambdaWithBlock,
-        ["loop"]              = _lambdaWithLoopContinueBreak,
-        ["switch(a){ ... }"]  = _switch,
-        ["Console.WriteLine"] = () => WriteLine1Expression("Default"),
-        ["try1"]              = _try1,
-        ["try2"]              = _try2,
-        ["try3"]              = _try3,
-        ["try4"]              = _try4,
-        ["try5"]              = _try5,
-        ["try6"]              = _try6,
-        //["testListInit"]      = _testListInit,
+                                    = () => () => new StructDataContract1(42, "don't panic"),
+        ["b => b ? 1 : 3"]          = () => (bool b) => b ? 1 : 3,
+        ["(f,a) => f(a)"]           = () => (Func<int, int> f, int a) => f(a),
+        ["(a,b) => { ... }"]        = _lambdaWithBlock,
+        ["loop"]                    = _lambdaWithLoopContinueBreak,
+        ["switch(a){ ... }"]        = _switch,
+        ["Console.WriteLine"]       = () => WriteLine1Expression("Default"),
+        ["try1"]                    = _try1,
+        ["try2"]                    = _try2,
+        ["try3"]                    = _try3,
+        ["try4"]                    = _try4,
+        ["try5"]                    = _try5,
+        ["try6"]                    = _try6,
+        ["newListInit"]             = () => () => new List<string> { "aaa", "bbb", "ccc", },
+        ["newArrayItems"]           = () => () => new string[] { "aaa", "bbb", "ccc" },
+        ["newArrayBounds"]          = () => () => new string[2, 3, 4],
+        ["newDictionaryInit"]       = () => () => new Dictionary<int, string> { { 1, "one" }, { 2, "two" }, { 3, "three" }, },
+        ["newMembersInit"]          = () => _newMembersInit,
     };
 }

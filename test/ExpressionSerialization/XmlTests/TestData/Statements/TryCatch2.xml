@@ -25,8 +25,7 @@
                 </arguments>
             </call>
             <throw>
-                <new
-                    type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                <new>
                     <constructor
                         type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                         <parameterSpecs />
@@ -35,7 +34,8 @@
                 </new>
             </throw>
         </block>
-        <finally>
+        <catch
+            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
             <call
                 type="void">
                 <method
@@ -50,11 +50,11 @@
                 </method>
                 <arguments>
                     <constant>
-                        <!-- "finally {}" -->
-                        <string>finally {}</string>
+                        <!-- "catch (ArgumentException) {}" -->
+                        <string>catch (ArgumentException) {}</string>
                     </constant>
                 </arguments>
             </call>
-        </finally>
+        </catch>
     </try>
 </expression>
