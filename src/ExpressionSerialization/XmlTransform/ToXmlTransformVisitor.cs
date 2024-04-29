@@ -17,7 +17,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
     DataTransform _dataTransform = new(options);
 
-    // labels and parameters/variables are created in one expression node and references to them are used in another.
+    // labels and parameters/variables are created in one expression n and references to them are used in another.
     // These dictionaries keep their id-s so we can create `XAttribute` id-s and idref-s to them.
     Dictionary<LabelTarget, XElement> _labelTargets = [];
     Dictionary<ParameterExpression, XElement> _parameters = [];
@@ -357,7 +357,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                 var op2 = n.IfTrue  is not null ? _elements.Pop() : null;
                 var op1 = _elements.Pop();
 
-                Debug.Assert(n.Type != null, "The expression node's type is null - remove the default type value of typeof(void) below.");
+                Debug.Assert(n.Type != null, "The expression n's type is null - remove the default type value of typeof(void) below.");
                 x.Add(
                     op1,
                     op2,
@@ -462,10 +462,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                                     ElementNames.BreakLabel,
                                     _elements.Pop())
                             : null));
-
-    /////////////////////////////////////////////////////////////////
-    // IN PROGRESS:
-    /////////////////////////////////////////////////////////////////
 
     /// <inheritdoc/>
     protected override Expression VisitSwitch(SwitchExpression node)
@@ -592,7 +588,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     }
 
     /////////////////////////////////////////////////////////////////
-    // TODO:
+    // IN PROGRESS:
     /////////////////////////////////////////////////////////////////
 
     /// <inheritdoc/>
@@ -600,14 +596,64 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         => GenericVisit(
             node,
             base.VisitListInit,
-            (n, x) => { });
+            (n, x) =>
+            {
+                Stack<XElement> inits = [];
+
+                for (var i = 0; i < n.Initializers.Count; i++)
+                    inits.Push(_elements.Pop());
+
+                x.Add(
+                    _elements.Pop(),            // the new n
+                    new XElement(
+                        ElementNames.ListInit,
+                        inits));                // the elementsInit n
+            });
 
     /// <inheritdoc/>
     protected override Expression VisitNewArray(NewArrayExpression node)
         => GenericVisit(
             node,
             base.VisitNewArray,
-            (n, x) => { });
+            (n, x) =>
+            {
+                if (n.NodeType == ExpressionType.NewArrayInit)
+                    VisitNewArrayInit(n, x);
+                else
+                    VisitNewArrayBounds(n, x);
+            });
+
+    void VisitNewArrayInit(NewArrayExpression n, XElement x)
+    {
+        Stack<XElement> inits = [];
+
+        for (var i = 0; i < n.Expressions.Count; i++)
+            inits.Push(_elements.Pop());
+
+        x.Add(
+            new XElement(
+                    ElementNames.ArrayElements,
+                    AttributeType(n.Type),
+                    inits));
+    }
+
+    void VisitNewArrayBounds(NewArrayExpression n, XElement x)
+    {
+        Stack<XElement> bounds = [];
+
+        for (var i = 0; i < n.Expressions.Count; i++)
+            bounds.Push(_elements.Pop());
+
+        x.Add(
+            new XElement(
+                    ElementNames.Bounds,
+                    AttributeType(n.Type),
+                    bounds));
+    }
+
+    /////////////////////////////////////////////////////////////////
+    // TODO:
+    /////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////
     // WOUN'T DO:

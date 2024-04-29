@@ -193,6 +193,14 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
                     ]);
     };
 
+    static Expression<Func<IEnumerable<string>>> _testListInit = () =>
+        new List<string>
+        {
+            "aaa",
+            "bbb",
+            "ccc",
+        };
+
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {
         ["() => new StructDataContract1(42, \"don't panic\")"]
@@ -209,5 +217,6 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         ["try4"]              = _try4,
         ["try5"]              = _try5,
         ["try6"]              = _try6,
+        ["testListInit"]      = _testListInit,
     };
 }
