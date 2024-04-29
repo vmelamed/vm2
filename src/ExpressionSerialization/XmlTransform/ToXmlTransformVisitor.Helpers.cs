@@ -10,17 +10,15 @@ using System.Xml.Linq;
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
 public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement>
 {
-    Stack<XElement> _tempElements = [];
-
     IEnumerable<XElement> PopElements(int numberOfExpressions)
     {
-        _tempElements.Clear();
+        Stack<XElement> tempElements = [];
 
         // pop the expressions:
         for (var i = 0; i < numberOfExpressions; i++)
-            _tempElements.Push(_elements.Pop());
+            tempElements.Push(_elements.Pop());
 
-        return _tempElements;
+        return tempElements;
     }
 
     XAttribute? AttributeName(string identifier)
@@ -55,15 +53,13 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
     /// <returns>A sequence of elements.</returns>
     static IEnumerable<XElement> VisitParameters(IEnumerable<ParameterInfo> parameters)
     {
-        if (parameters == null)
-            yield break;
-
-        foreach (var param in parameters)
-            yield return new XElement(
-                                ElementNames.Parameter,
-                                AttributeType(param.ParameterType),
-                                param.Name is not null ? new XAttribute(AttributeNames.Name, param.Name) : null,
-                                param.IsOut || param.ParameterType.IsByRef ? new XAttribute(AttributeNames.IsByRef, true) : null);
+        if (parameters is not null)
+            foreach (var param in parameters)
+                yield return new XElement(
+                                    ElementNames.ParameterSpec,
+                                    AttributeType(param.ParameterType),
+                                    param.Name is not null ? new XAttribute(AttributeNames.Name, param.Name) : null,
+                                    param.IsOut || param.ParameterType.IsByRef ? new XAttribute(AttributeNames.IsByRef, true) : null);
     }
 
     static XElement? VisitMemberInfo(MemberInfo? member)
@@ -89,14 +85,18 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
                                         AttributeType(ci.DeclaringType ?? throw new InternalTransformErrorException("ConstructorInfo's DeclaringType is null.")),
                                         ci.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
                                         new XElement(
-                                                ElementNames.Parameters,
+                                                ElementNames.ParameterSpecs,
                                                 VisitParameters(ci.GetParameters()))),
             PropertyInfo pi => new XElement(
                                         ElementNames.Property,
                                         visibility,
                                         AttributeType(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null.")),
                                         new XAttribute(AttributeNames.Name, pi.Name),
-                                        VisitParameters(pi.GetIndexParameters())),
+                                        pi.GetIndexParameters().Length != 0
+                                            ? new XElement(
+                                                    ElementNames.ParameterSpecs,
+                                                    VisitParameters(pi.GetIndexParameters()))
+                                            : null),
 
             MethodInfo mi => new XElement(
                                         ElementNames.Method,
@@ -104,7 +104,7 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
                                         visibility,
                                         new XAttribute(AttributeNames.Type, Transform.TypeName(mi.ReturnType)),
                                         new XAttribute(AttributeNames.Name, mi.Name),
-                                        new XElement(ElementNames.Parameters, VisitParameters(mi.GetParameters()))),
+                                        new XElement(ElementNames.ParameterSpecs, VisitParameters(mi.GetParameters()))),
 
             EventInfo ei => new XElement(
                                         ElementNames.Event,

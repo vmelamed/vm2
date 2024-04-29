@@ -66,13 +66,9 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
         if (node is null)
             return null;
 
-        Debug.WriteLine("==== " + node.NodeType);
-        Debug.Indent();
+        using var _ = OutputDebugScope(node.NodeType.ToString());
 
-        var x = base.Visit(node);
-
-        Debug.Unindent();
-        return x;
+        return base.Visit(node);
     }
 #endif
 

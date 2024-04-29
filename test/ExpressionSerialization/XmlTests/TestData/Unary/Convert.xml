@@ -14,7 +14,7 @@
         <body>
             <convert
                 type="int">
-                <parameterReference
+                <parameter
                     type="double"
                     name="a"
                     idref="P1" />

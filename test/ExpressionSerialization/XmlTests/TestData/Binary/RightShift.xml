@@ -18,11 +18,11 @@
         <body>
             <rightShift
                 type="int">
-                <parameterReference
+                <parameter
                     type="int"
                     name="a"
                     idref="P1" />
-                <parameterReference
+                <parameter
                     type="int"
                     name="b"
                     idref="P2" />

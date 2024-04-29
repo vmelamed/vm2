@@ -6,16 +6,18 @@
     <lambda
         type="int">
         <parameters>
-            <parameter
+            <parameterDefinition
                 type="boolean"
-                name="b" />
+                name="b"
+                id="P1" />
         </parameters>
         <body>
             <conditional
                 type="int">
                 <parameter
                     type="boolean"
-                    name="b" />
+                    name="b"
+                    idref="P1" />
                 <constant>
                     <!-- 1 -->
                     <int>1</int>

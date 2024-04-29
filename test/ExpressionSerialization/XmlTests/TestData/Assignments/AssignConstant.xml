@@ -5,7 +5,7 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <assign
         type="int">
-        <parameterDefinition
+        <variableDefinition
             type="int"
             name="a"
             id="P1" />

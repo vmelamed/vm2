@@ -14,21 +14,21 @@
         <body>
             <call
                 type="void">
-                <parameterReference
+                <parameter
                     type="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     name="a"
                     idref="P1" />
                 <method
                     type="void"
                     name="Method4">
-                    <parameters>
-                        <parameter
+                    <parameterSpecs>
+                        <parameterSpec
                             type="int"
                             name="i" />
-                        <parameter
+                        <parameterSpec
                             type="double"
                             name="d" />
-                    </parameters>
+                    </parameterSpecs>
                 </method>
                 <arguments>
                     <constant>

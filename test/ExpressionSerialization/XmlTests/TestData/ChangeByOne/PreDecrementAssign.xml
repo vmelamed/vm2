@@ -14,7 +14,7 @@
         <body>
             <preDecrementAssign
                 type="int">
-                <parameterReference
+                <parameter
                     type="int"
                     name="a"
                     idref="P1" />

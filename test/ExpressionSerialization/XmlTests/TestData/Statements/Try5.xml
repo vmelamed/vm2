@@ -1,49 +1,68 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- try { ... } -->
-<expression xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <try type="void">
+    <try>
         <block>
-            <call>
-                <method type="System.Console, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-                        static="true"
-                        name="WriteLine">
-                    <parameters>
-                        <parameter type="string"
-                                   name="value" />
-                    </parameters>
+            <call
+                type="void">
+                <method
+                    static="true"
+                    type="void"
+                    name="WriteLine">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="string"
+                            name="value" />
+                    </parameterSpecs>
                 </method>
                 <arguments>
                     <constant>
+                        <!-- "TryBody" -->
                         <string>TryBody</string>
                     </constant>
                 </arguments>
             </call>
             <throw>
-                <new>
-                    <constructor type="System.Exception, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-                        <parameters />
+                <new
+                    type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                    <constructor
+                        type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                        <parameterSpecs />
                     </constructor>
                     <arguments />
                 </new>
             </throw>
         </block>
-        <catch type="System.ArgumentException, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-            <exception type="System.ArgumentException, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" name="x"/>
-            <call>
-                <method type="System.Console, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-                        static="true"
-                        name="WriteLine">
-                    <parameters>
-                        <parameter type="string"
-                                   name="value" />
-                    </parameters>
+        <catch
+            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+            <exception
+                type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                name="x"
+                id="P1" />
+            <call
+                type="void">
+                <method
+                    static="true"
+                    type="void"
+                    name="WriteLine">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="string"
+                            name="value" />
+                    </parameterSpecs>
                 </method>
                 <arguments>
-                    <memberAccess>
-                        <parameter name="x" />
-                        <property type="System.ArgumentException, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-                                  name="Message" />
+                    <memberAccess
+                        type="string">
+                        <variableDefinition
+                            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                            name="x"
+                            id="P2" />
+                        <property
+                            type="string"
+                            name="Message" />
                     </memberAccess>
                 </arguments>
             </call>

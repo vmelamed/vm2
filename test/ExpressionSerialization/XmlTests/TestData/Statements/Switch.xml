@@ -1,81 +1,99 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<!-- switch (3) { ... } -->
-<expression xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- switch (a) { ... } -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <switch>
-        <constant>
-            <int>3</int>
-        </constant>
+        <variableDefinition
+            type="int"
+            name="a"
+            id="P1" />
         <case>
-            <value>
+            <caseValues>
                 <constant>
+                    <!-- 1 -->
                     <int>1</int>
                 </constant>
-            </value>
-            <call>
-                <method type="System.Console, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-                        static="true"
-                        name="WriteLine">
-                    <parameters>
-                        <parameter type="string"
-                                   name="value" />
-                    </parameters>
+            </caseValues>
+            <call
+                type="void">
+                <method
+                    static="true"
+                    type="void"
+                    name="WriteLine">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="string"
+                            name="value" />
+                    </parameterSpecs>
                 </method>
                 <arguments>
                     <constant>
+                        <!-- "First" -->
                         <string>First</string>
                     </constant>
                 </arguments>
             </call>
         </case>
         <case>
-            <value>
+            <caseValues>
                 <constant>
+                    <!-- 2 -->
                     <int>2</int>
                 </constant>
-            </value>
-            <value>
+            </caseValues>
+            <caseValues>
                 <constant>
+                    <!-- 3 -->
                     <int>3</int>
                 </constant>
-            </value>
-            <value>
+            </caseValues>
+            <caseValues>
                 <constant>
+                    <!-- 4 -->
                     <int>4</int>
                 </constant>
-            </value>
-            <call>
-                <method type="System.Console, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-                        static="true"
-                        name="WriteLine">
-                    <parameters>
-                        <parameter type="string"
-                                   name="value" />
-                    </parameters>
+            </caseValues>
+            <call
+                type="void">
+                <method
+                    static="true"
+                    type="void"
+                    name="WriteLine">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="string"
+                            name="value" />
+                    </parameterSpecs>
                 </method>
                 <arguments>
                     <constant>
+                        <!-- "Second" -->
                         <string>Second</string>
                     </constant>
                 </arguments>
             </call>
         </case>
         <defaultCase>
-            <call>
-                <method type="System.Console, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-                        static="true"
-                        name="WriteLine">
-                    <parameters>
-                        <parameter type="string"
-                                   name="value" />
-                    </parameters>
+            <call
+                type="void">
+                <method
+                    static="true"
+                    type="void"
+                    name="WriteLine">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="string"
+                            name="value" />
+                    </parameterSpecs>
                 </method>
                 <arguments>
                     <constant>
+                        <!-- "Default" -->
                         <string>Default</string>
                     </constant>
                 </arguments>
             </call>
         </defaultCase>
     </switch>
-</expression> 
+</expression>

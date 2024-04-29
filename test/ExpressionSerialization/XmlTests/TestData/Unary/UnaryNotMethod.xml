@@ -14,7 +14,7 @@
         <body>
             <not
                 type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-                <parameterReference
+                <parameter
                     type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     name="b"
                     idref="P1" />
@@ -22,11 +22,11 @@
                     static="true"
                     type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     name="op_LogicalNot">
-                    <parameters>
-                        <parameter
+                    <parameterSpecs>
+                        <parameterSpec
                             type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                             name="x" />
-                    </parameters>
+                    </parameterSpecs>
                 </method>
             </not>
         </body>

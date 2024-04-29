@@ -43,9 +43,14 @@ static class ElementNames
     public static readonly XName IsLiftedToNull         = Namespaces.Exs + "isLiftedToNull";
     public static readonly XName Left                   = Namespaces.Exs + "left";
     public static readonly XName Method                 = Namespaces.Exs + "method";
-    public static readonly XName Parameter              = Namespaces.Exs + "parameter";
+    public static readonly XName ParameterSpec          = Namespaces.Exs + "parameterSpec";             // used in MemberInfo
+    public static readonly XName ParameterDefinition    = Namespaces.Exs + "parameterDefinition";       // used in Lambdas
+    public static readonly XName ParameterReference     = Namespaces.Exs + "parameter";
     public static readonly XName Parameters             = Namespaces.Exs + "parameters";
+    public static readonly XName ParameterSpecs         = Namespaces.Exs + "parameterSpecs";
     public static readonly XName Right                  = Namespaces.Exs + "right";
+    public static readonly XName VariableDefinition     = Namespaces.Exs + "variableDefinition";
+    public static readonly XName VariableReference      = Namespaces.Exs + "variable";                  // used in blocks
     public static readonly XName Variables              = Namespaces.Exs + "variables";
 
     public static readonly XName Arguments              = Namespaces.Exs + "arguments";
@@ -66,6 +71,7 @@ static class ElementNames
     public static readonly XName Case                   = Namespaces.Exs + "case";
     public static readonly XName Catch                  = Namespaces.Exs + "catch";
     public static readonly XName Call                   = Namespaces.Exs + "call";
+    public static readonly XName CaseValues             = Namespaces.Exs + "caseValues";
     public static readonly XName Coalesce               = Namespaces.Exs + "coalesce";
     public static readonly XName Conditional            = Namespaces.Exs + "conditional";
     public static readonly XName Constant               = Namespaces.Exs + "constant";
@@ -108,7 +114,6 @@ static class ElementNames
     public static readonly XName LessThanOrEqual        = Namespaces.Exs + "lessThanOrEqual";
     public static readonly XName ListInit               = Namespaces.Exs + "listInit";
     public static readonly XName Loop                   = Namespaces.Exs + "loop";
-    public static readonly XName LabelTarget            = Namespaces.Exs + "labelTarget";
     public static readonly XName MemberAccess           = Namespaces.Exs + "memberAccess";
     public static readonly XName MemberInit             = Namespaces.Exs + "memberInit";
     public static readonly XName Members                = Namespaces.Exs + "members";
@@ -129,8 +134,6 @@ static class ElementNames
     public static readonly XName Or                     = Namespaces.Exs + "or";
     public static readonly XName OrAssign               = Namespaces.Exs + "orAssign";
     public static readonly XName OrElse                 = Namespaces.Exs + "orElse";
-    public static readonly XName ParameterDefinition    = Namespaces.Exs + "parameterDefinition";
-    public static readonly XName ParameterReference     = Namespaces.Exs + "parameterReference";
     public static readonly XName PostDecrementAssign    = Namespaces.Exs + "postDecrementAssign";
     public static readonly XName PostIncrementAssign    = Namespaces.Exs + "postIncrementAssign";
     public static readonly XName Power                  = Namespaces.Exs + "power";
@@ -147,6 +150,7 @@ static class ElementNames
     public static readonly XName SubtractAssignChecked  = Namespaces.Exs + "subtractAssignChecked";
     public static readonly XName SubtractChecked        = Namespaces.Exs + "subtractChecked";
     public static readonly XName Switch                 = Namespaces.Exs + "switch";
+    public static readonly XName Target                 = Namespaces.Exs + "target";
     public static readonly XName Throw                  = Namespaces.Exs + "throw";
     public static readonly XName Try                    = Namespaces.Exs + "try";
     public static readonly XName TypeAs                 = Namespaces.Exs + "typeAs";
@@ -154,7 +158,6 @@ static class ElementNames
     public static readonly XName TypeIs                 = Namespaces.Exs + "typeIs";
     public static readonly XName UnaryPlus              = Namespaces.Exs + "unaryPlus";
     public static readonly XName Unbox                  = Namespaces.Exs + "unbox";
-    public static readonly XName ValuesCase             = Namespaces.Exs + "valuesCase";
 
     public static readonly XName AssignmentBinding      = Namespaces.Exs + "assignmentBinding";
     public static readonly XName MemberMemberBinding    = Namespaces.Exs + "memberMemberBinding";

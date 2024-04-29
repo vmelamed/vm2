@@ -19,8 +19,8 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
     // labels and parameters/variables are created in one expression node and references to them are used in another.
     // These dictionaries keep their id-s so we can create `XAttribute` id-s and idref-s to them.
-    Dictionary<LabelTarget, string> _labelTargets = [];
-    Dictionary<ParameterExpression, string> _parameters = [];
+    Dictionary<LabelTarget, XElement> _labelTargets = [];
+    Dictionary<ParameterExpression, XElement> _parameters = [];
     int _lastLabelIdNumber;
     int _lastParamIdNumber;
 
@@ -82,32 +82,40 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitDefault,
             (n, x) => x.Add(_options.TypeComment(n.Type)));
 
-    IEnumerable<XElement> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
+    IEnumerable<XElement> VisitParameterDefinitionList(
+        ReadOnlyCollection<ParameterExpression> parameterList,
+        XName definitionElement)
     {
         foreach (var n in parameterList)
         {
-            if (_parameters.TryGetValue(n, out var id))
+            if (_parameters.TryGetValue(n, out var _))
                 throw new InternalTransformErrorException($"Parameter with a name {n.Name} is already defined.");
 
-            id = _parameters[n] = $"P{++_lastParamIdNumber}";
+            var id = $"P{++_lastParamIdNumber}";
 
-            yield return new XElement(
-                                ElementNames.ParameterDefinition,
-                                AttributeType(n),
-                                new XAttribute(AttributeNames.Name, n.Name ?? "_"),
-                                new XAttribute(AttributeNames.Id, id));
+            yield return _parameters[n] = new XElement(
+                                                definitionElement,
+                                                AttributeType(n),
+                                                new XAttribute(AttributeNames.Name, n.Name ?? "_"),
+                                                n.IsByRef ? new XAttribute(AttributeNames.IsByRef, true) : null,
+                                                new XAttribute(AttributeNames.Id, id));
         }
     }
 
     /// <inheritdoc/>
     protected override Expression VisitLambda<T>(Expression<T> node)
     {
+        using var _ = OutputDebugScope(node.NodeType.ToString());
         // here we do not want the base.Visit to drive the immediate subexpressions - it visits them in an inconvenient order.
-        var parameters = new XElement(ElementNames.Parameters, VisitParameterDefinitionList(node.Parameters));
+        var parameters = new XElement(
+                                ElementNames.Parameters,
+                                VisitParameterDefinitionList(node.Parameters, ElementNames.ParameterDefinition));
 
         Visit(node.Body);
 
-        var body = new XElement(ElementNames.Body, _elements.Pop());
+        var body = new XElement(
+                        ElementNames.Body,
+                        _elements.Pop());
 
         var x = GetEmptyNode(node);
 
@@ -158,7 +166,9 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitIndex,
             (n, x) =>
             {
-                var indexes = new XElement(ElementNames.Indexes, PopElements(n.Arguments.Count));
+                var indexes = new XElement(
+                                    ElementNames.Indexes,
+                                    PopElements(n.Arguments.Count));
                 x.Add(
                     _elements.Pop(),    // pop the indexes
                     indexes);
@@ -167,13 +177,16 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// <inheritdoc/>
     protected override ElementInit VisitElementInit(ElementInit node)
     {
+        using var _ = OutputDebugScope(nameof(ElementInit));
         var elementInit = base.VisitElementInit(node);
 
         _elements.Push(
             new XElement(
                     ElementNames.ElementInit,
                     VisitMemberInfo(node.AddMethod),
-                    new XElement(ElementNames.Arguments, PopElements(node.Arguments.Count))));  // pop the elements init expressions
+                    new XElement(
+                            ElementNames.Arguments,
+                            PopElements(node.Arguments.Count))));  // pop the elements init expressions
 
         return elementInit;
     }
@@ -191,11 +204,16 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     #region Member Bindings
     /// <inheritdoc/>
     protected override MemberBinding VisitMemberBinding(MemberBinding node)
-        => base.VisitMemberBinding(node);
+    {
+        using var _ = OutputDebugScope(nameof(MemberBinding));
+
+        return base.VisitMemberBinding(node);
+    }
 
     /// <inheritdoc/>
     protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
     {
+        using var _ = OutputDebugScope(nameof(MemberAssignment));
         var binding = base.VisitMemberAssignment(node);
 
         _elements.Push(
@@ -210,6 +228,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// <inheritdoc/>
     protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
     {
+        using var _ = OutputDebugScope(nameof(MemberMemberBinding));
         var binding = base.VisitMemberMemberBinding(node);
 
         _elements.Push(
@@ -224,6 +243,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// <inheritdoc/>
     protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
     {
+        using var _ = OutputDebugScope(nameof(MemberListBinding));
         var binding = base.VisitMemberListBinding(node);
 
         _elements.Push(
@@ -285,16 +305,18 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// <inheritdoc/>
     protected override Expression VisitParameter(ParameterExpression node)
     {
+        using var _ = OutputDebugScope(node.NodeType.ToString());
+
         _elements.Push(
-            _parameters.TryGetValue(node, out var id)
+            _parameters.TryGetValue(node, out var x)
                 ? new XElement(
-                        ElementNames.ParameterReference,
+                        x.Name == ElementNames.VariableDefinition ? ElementNames.VariableReference : ElementNames.ParameterReference,
                         AttributeType(node),
                         new XAttribute(AttributeNames.Name, node.Name ?? "_"),
                         node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
-                        new XAttribute(AttributeNames.IdRef, id))
+                        new XAttribute(AttributeNames.IdRef, x.Attribute(AttributeNames.Id)?.Value ?? throw new InternalTransformErrorException("A variable of parameter reference without Id.")))
                 : new XElement(
-                        ElementNames.ParameterDefinition,
+                        ElementNames.VariableDefinition,
                         AttributeType(node),
                         new XAttribute(AttributeNames.Name, node.Name ?? "_"),
                         node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
@@ -305,10 +327,14 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// <inheritdoc/>
     protected override Expression VisitBlock(BlockExpression node)
     {
+        using var _ = OutputDebugScope(node.NodeType.ToString());
         // here we do not want the base.Visit to drive the immediate subexpressions - it visits them in an inconvenient order.
-        var variables = new XElement(
+        var varElements = VisitParameterDefinitionList(node.Variables, ElementNames.VariableDefinition).ToList();
+        var variables = varElements.Count > 0
+                            ? new XElement(
                                 ElementNames.Variables,
-                                VisitParameterDefinitionList(node.Variables));
+                                varElements)
+                            : null;
 
         Visit(node.Expressions);
 
@@ -325,7 +351,18 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         => GenericVisit(
             node,
             base.VisitConditional,
-            (n, x) => x.Add(PopElements(3)));   // visit the condition, the if-true expression, else expression
+            (n, x) =>
+            {
+                var op3 = n.IfFalse is not null ? _elements.Pop() : null;
+                var op2 = n.IfTrue  is not null ? _elements.Pop() : null;
+                var op1 = _elements.Pop();
+
+                Debug.Assert(n.Type != null, "The expression node's type is null - remove the default type value of typeof(void) below.");
+                x.Add(
+                    op1,
+                    op2,
+                    op3);
+            });
 
     /// <inheritdoc/>
     protected override Expression VisitNew(NewExpression node)
@@ -334,24 +371,40 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitNew,
             (n, x) => x.Add(
                         VisitMemberInfo(n.Constructor!),
-                        new XElement(ElementNames.Arguments, PopElements(n.Arguments.Count)),   // pop the c-tor argfuments
+                        new XElement(
+                                ElementNames.Arguments,
+                                PopElements(n.Arguments.Count)),   // pop the c-tor arguments
                         n.Members is not null
-                            ? new XElement(ElementNames.Members, n.Members.Select(m => VisitMemberInfo(m)))
+                            ? new XElement(
+                                    ElementNames.Members,
+                                    n.Members.Select(m => VisitMemberInfo(m)))
                             : null));
 
-    /////////////////////////////////////////////////////////////////
-    // IN PROCESS:
-    /////////////////////////////////////////////////////////////////
-
     /// <inheritdoc/>
-    protected override Expression VisitLoop(LoopExpression node)
-        => GenericVisit(
-            node,
-            base.VisitLoop,
-            (n, x) => x.Add(
-                        _elements.Pop(),    // pop the loop-ed expression
-                        n.BreakLabel is not null ? new XElement(ElementNames.BreakLabel, _elements.Pop()) : null,           // pop the break target label
-                        n.ContinueLabel is not null ? new XElement(ElementNames.ContinueLabel, _elements.Pop()) : null));   // pop the continue target label
+    protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
+    {
+        using var _ = OutputDebugScope(nameof(LabelTarget));
+        var n = base.VisitLabelTarget(node);
+
+        if (n is null)
+            return null;
+
+        if (!_labelTargets.TryGetValue(n, out var targetElement))
+            targetElement =
+            _labelTargets[n] = new XElement(
+                                        ElementNames.Target,
+                                        !string.IsNullOrWhiteSpace(n.Name)
+                                            ? new XAttribute(AttributeNames.Name, n.Name)
+                                            : null,
+                                        n.Type != typeof(void)
+                                            ? AttributeType(n.Type)
+                                            : null,
+                                        new XAttribute(AttributeNames.Id, $"L{++_lastLabelIdNumber}"));
+
+        _elements.Push(targetElement);
+
+        return n;
+    }
 
     /// <inheritdoc/>
     protected override Expression VisitLabel(LabelExpression node)
@@ -360,42 +413,14 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitLabel,
             (n, x) =>
             {
-                var value = n.DefaultValue is not null ? _elements.Pop() : null;    // pop the default result if present
-                var targetElement = _elements.Pop();
-
-                // VisitLabelTarget adds an attribute with name idref - remove it and put attribute with name id instead
-                var targetElementIdRef = targetElement.Attributes(AttributeNames.IdRef).First();
-
-                targetElementIdRef.Remove();
-                targetElement.Add(new XAttribute(AttributeNames.Id, targetElementIdRef.Value));
+                var value = n.DefaultValue is not null
+                                ? _elements.Pop()   // pop the default result expression if present
+                                : null;
 
                 x.Add(
-                    targetElement,
+                    _elements.Pop(),
                     value);
             });
-
-    /// <inheritdoc/>
-    protected override LabelTarget? VisitLabelTarget(LabelTarget? n)
-    {
-        var targetNode = base.VisitLabelTarget(n);
-
-        if (targetNode is null)
-            return null;
-
-        if (!_labelTargets.TryGetValue(targetNode, out var id))
-            id = _labelTargets[targetNode] = $"P{++_lastLabelIdNumber}";
-
-        _elements.Push(
-            new XElement(
-                    ElementNames.LabelTarget,
-                    AttributeType(targetNode.Type),
-                    !string.IsNullOrWhiteSpace(targetNode.Name)
-                        ? new XAttribute(AttributeNames.Name, targetNode.Name)
-                        : null,
-                    new XAttribute(AttributeNames.IdRef, id)));
-
-        return targetNode;
-    }
 
     /// <inheritdoc/>
     protected override Expression VisitGoto(GotoExpression node)
@@ -404,13 +429,151 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitGoto,
             (n, x) =>
             {
-                var expression = n.Value != null ? _elements.Pop() : null;
+                var expression = n.Value is not null
+                                    ? _elements.Pop()   // pop the result expression if present
+                                    : null;
+
+                // VisitLabelTarget adds an attribute with name id - fixup: remove it and put attribute with name idref instead
+                XElement targetElement = new(_elements.Pop());
+                var id = targetElement.Attributes(AttributeNames.Id).First();
+
+                id.Remove();
+                targetElement.Add(new XAttribute(AttributeNames.IdRef, id.Value));
 
                 x.Add(
-                    new XAttribute(AttributeNames.Kind, Transform.Identifier(n.Kind.ToString(), IdentifierConventions.Camel)),
-                    _elements.Pop(),    // pop the targetLabel XElement
-                    expression);
+                    targetElement,
+                    new XAttribute(AttributeNames.Kind, Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
             });
+
+    /// <inheritdoc/>
+    protected override Expression VisitLoop(LoopExpression node)
+        => GenericVisit(
+            node,
+            base.VisitLoop,
+            (n, x) => x.Add(
+                        _elements.Pop(),
+                        n.ContinueLabel is not null
+                            ? new XElement(
+                                    ElementNames.ContinueLabel,
+                                    _elements.Pop())
+                            : null,
+                        n.BreakLabel is not null
+                            ? new XElement(
+                                    ElementNames.BreakLabel,
+                                    _elements.Pop())
+                            : null));
+
+    /////////////////////////////////////////////////////////////////
+    // IN PROGRESS:
+    /////////////////////////////////////////////////////////////////
+
+    /// <inheritdoc/>
+    protected override Expression VisitSwitch(SwitchExpression node)
+        => GenericVisit(
+            node,
+            base.VisitSwitch,
+            (n, x) =>
+            {
+                var comparison = n.Comparison != null                // get the non-default comparison method
+                                        ? VisitMemberInfo(n.Comparison)
+                                        : null;
+                var @default = n.DefaultBody != null                 // the body of the default case
+                                        ? new XElement(
+                                                ElementNames.DefaultCase,
+                                                _elements.Pop())
+                                        : null;
+                var cases = PopElements(n.Cases.Count);             // the cases
+                var value = _elements.Pop();                        // the value to switch on
+
+                x.Add(
+                    value,
+                    comparison,
+                    cases,
+                    @default);
+            });
+
+    /// <inheritdoc/>
+    protected override SwitchCase VisitSwitchCase(SwitchCase node)
+    {
+        using var _ = OutputDebugScope(nameof(SwitchCase));
+        var switchCase = base.VisitSwitchCase(node);
+        var caseExpression = _elements.Pop();
+        Stack<XElement> tempElements = [];
+
+        for (int i = 0; i < node.TestValues.Count; i++)
+            tempElements.Push(
+                new XElement(
+                        ElementNames.CaseValues,
+                        _elements.Pop()));
+
+        _elements.Push(new XElement(
+                                ElementNames.Case,
+                                tempElements,
+                                caseExpression));
+
+        return switchCase;
+    }
+
+    /// <inheritdoc/>
+    protected override Expression VisitTry(TryExpression node)
+        => GenericVisit(
+            node,
+            base.VisitTry,
+            (n, x) =>
+            {
+                var @finally = n.Finally!=null
+                                ? new XElement(
+                                        ElementNames.Finally,
+                                        _elements.Pop())
+                                : null;
+                var @catch = n.Fault!=null
+                                ? new XElement(
+                                        ElementNames.Fault,
+                                        _elements.Pop())
+                                : null;
+                Stack<XElement> catches = [];
+
+                for (var i = 0; i < n.Handlers?.Count; i++)
+                    catches.Push(_elements.Pop());
+
+                var @try = _elements.Pop();
+
+                x.Add(
+                    @try,
+                    catches,
+                    @catch,
+                    @finally);
+            });
+
+    /// <inheritdoc/>
+    protected override CatchBlock VisitCatchBlock(CatchBlock node)
+    {
+        using var _ = OutputDebugScope(nameof(CatchBlock));
+        var catchBlock = base.VisitCatchBlock(node);
+        var body = _elements.Pop();
+        var filter = node.Filter!=null
+                                ? new XElement(
+                                        ElementNames.Filter,
+                                        _elements.Pop())
+                                : null;
+        var variable = node.Variable!=null ? _elements.Pop() : null;
+        var exception = variable is not null
+                            ? new XElement(
+                                ElementNames.Exception,
+                                variable.Attributes())
+                            : null;
+        _elements.Push(
+            new XElement(
+                    ElementNames.Catch,
+                    new XAttribute(
+                            AttributeNames.Type,
+                            Transform.TypeName(node.Test)),
+                    exception,
+                    filter,
+                    body));
+
+        return node;
+    }
 
     /////////////////////////////////////////////////////////////////
     // TODO:
@@ -429,26 +592,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             node,
             base.VisitNewArray,
             (n, x) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitSwitch(SwitchExpression node)
-        => GenericVisit(
-            node,
-            base.VisitSwitch,
-            (n, x) => { });
-
-    /// <inheritdoc/>
-    protected override Expression VisitTry(TryExpression node)
-        => GenericVisit(
-            node,
-            base.VisitTry,
-            (n, x) => { });
-
-    /// <inheritdoc/>
-    protected override CatchBlock VisitCatchBlock(CatchBlock node) => base.VisitCatchBlock(node);
-
-    /// <inheritdoc/>
-    protected override SwitchCase VisitSwitchCase(SwitchCase node) => base.VisitSwitchCase(node);
 
     /////////////////////////////////////////////////////////////////
     // WOUN'T DO:

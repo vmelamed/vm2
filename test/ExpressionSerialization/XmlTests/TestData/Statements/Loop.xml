@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- value => {var result; ... } -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="void">
+        <parameters>
+            <parameterDefinition
+                type="int"
+                name="value"
+                id="P1" />
+        </parameters>
+        <body>
+            <block>
+                <variables>
+                    <variableDefinition
+                        type="int"
+                        name="result"
+                        id="P2" />
+                </variables>
+                <assign
+                    type="int">
+                    <parameter
+                        type="int"
+                        name="value"
+                        idref="P1" />
+                    <constant>
+                        <!-- 5 -->
+                        <int>5</int>
+                    </constant>
+                </assign>
+                <assign
+                    type="int">
+                    <variable
+                        type="int"
+                        name="result"
+                        idref="P2" />
+                    <constant>
+                        <!-- 1 -->
+                        <int>1</int>
+                    </constant>
+                </assign>
+                <loop>
+                    <block>
+                        <conditional>
+                            <greaterThan
+                                type="boolean">
+                                <parameter
+                                    type="int"
+                                    name="value"
+                                    idref="P1" />
+                                <constant>
+                                    <!-- 1 -->
+                                    <int>1</int>
+                                </constant>
+                            </greaterThan>
+                            <block>
+                                <multiplyAssign
+                                    type="int">
+                                    <variable
+                                        type="int"
+                                        name="result"
+                                        idref="P2" />
+                                    <postDecrementAssign
+                                        type="int">
+                                        <parameter
+                                            type="int"
+                                            name="value"
+                                            idref="P1" />
+                                    </postDecrementAssign>
+                                </multiplyAssign>
+                                <goto
+                                    kind="continue">
+                                    <target
+                                        name="continue"
+                                        idref="L2" />
+                                </goto>
+                            </block>
+                            <goto
+                                kind="break">
+                                <target
+                                    name="break"
+                                    idref="L1" />
+                            </goto>
+                        </conditional>
+                    </block>
+                    <continueLabel>
+                        <target
+                            name="continue"
+                            id="L2" />
+                    </continueLabel>
+                    <breakLabel>
+                        <target
+                            name="break"
+                            id="L1" />
+                    </breakLabel>
+                </loop>
+            </block>
+        </body>
+    </lambda>
+</expression>

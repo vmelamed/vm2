@@ -18,13 +18,13 @@
         <body>
             <add
                 type="int">
-                <parameterReference
+                <parameter
                     type="int"
                     name="a"
                     idref="P1" />
                 <multiply
                     type="int">
-                    <parameterReference
+                    <parameter
                         type="int"
                         name="b"
                         idref="P2" />

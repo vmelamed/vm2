@@ -14,7 +14,7 @@
         <body>
             <preIncrementAssign
                 type="int">
-                <parameterReference
+                <parameter
                     type="int"
                     name="a"
                     idref="P1" />

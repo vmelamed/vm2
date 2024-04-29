@@ -14,7 +14,7 @@
         <body>
             <negate
                 type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-                <parameterReference
+                <parameter
                     type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     name="a"
                     idref="P1" />
@@ -22,11 +22,11 @@
                     static="true"
                     type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     name="op_UnaryNegation">
-                    <parameters>
-                        <parameter
+                    <parameterSpecs>
+                        <parameterSpec
                             type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                             name="x" />
-                    </parameters>
+                    </parameterSpecs>
                 </method>
             </negate>
         </body>

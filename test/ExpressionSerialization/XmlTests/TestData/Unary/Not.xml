@@ -14,7 +14,7 @@
         <body>
             <not
                 type="boolean">
-                <parameterReference
+                <parameter
                     type="boolean"
                     name="a"
                     idref="P1" />

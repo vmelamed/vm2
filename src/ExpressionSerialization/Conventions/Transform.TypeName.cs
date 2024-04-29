@@ -106,7 +106,9 @@ static partial class Transform
     /// <param name="type">The type.</param>
     /// <param name="convention">The convention.</param>
     /// <returns>System.String.</returns>
-    public static string TypeName(Type type, TypeNameConventions convention)
+    public static string TypeName(
+        Type type,
+        TypeNameConventions convention)
     {
         if (_typesToNames.TryGetValue(type, out var typeName))
             return typeName;

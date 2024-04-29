@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- WriteLine("Default") -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <call
+        type="void">
+        <method
+            static="true"
+            type="void"
+            name="WriteLine">
+            <parameterSpecs>
+                <parameterSpec
+                    type="string"
+                    name="value" />
+            </parameterSpecs>
+        </method>
+        <arguments>
+            <constant>
+                <!-- "Default" -->
+                <string>Default</string>
+            </constant>
+        </arguments>
+    </call>
+</expression>

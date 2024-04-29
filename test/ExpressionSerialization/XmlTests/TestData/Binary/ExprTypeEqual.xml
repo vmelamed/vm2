@@ -15,7 +15,7 @@
             <typeEqual
                 type="boolean"
                 typeOperand="int">
-                <parameterReference
+                <parameter
                     type="int"
                     name="a"
                     idref="P1" />

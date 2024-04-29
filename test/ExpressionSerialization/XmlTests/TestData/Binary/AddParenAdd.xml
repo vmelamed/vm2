@@ -22,17 +22,17 @@
         <body>
             <add
                 type="int">
-                <parameterReference
+                <parameter
                     type="int"
                     name="a"
                     idref="P1" />
                 <add
                     type="int">
-                    <parameterReference
+                    <parameter
                         type="int"
                         name="b"
                         idref="P2" />
-                    <parameterReference
+                    <parameter
                         type="int"
                         name="c"
                         idref="P3" />

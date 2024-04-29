@@ -18,7 +18,7 @@
                     type="int">
                     <parameters />
                     <body>
-                        <parameterReference
+                        <parameter
                             type="int"
                             name="a"
                             idref="P1" />

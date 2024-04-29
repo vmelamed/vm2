@@ -11,14 +11,14 @@
                 type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                 <constructor
                     type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-                    <parameters>
-                        <parameter
+                    <parameterSpecs>
+                        <parameterSpec
                             type="int"
                             name="i" />
-                        <parameter
+                        <parameterSpec
                             type="string"
                             name="s" />
-                    </parameters>
+                    </parameterSpecs>
                 </constructor>
                 <arguments>
                     <constant>

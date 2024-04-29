@@ -18,11 +18,11 @@
         <body>
             <andAlso
                 type="boolean">
-                <parameterReference
+                <parameter
                     type="boolean"
                     name="a"
                     idref="P1" />
-                <parameterReference
+                <parameter
                     type="boolean"
                     name="b"
                     idref="P2" />
