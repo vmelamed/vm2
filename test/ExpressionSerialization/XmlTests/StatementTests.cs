@@ -7,6 +7,19 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
     protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Statements/";
 
     [Theory]
+    [InlineData(typeof(int), "DefaultInt.xml")]
+    [InlineData(typeof(int?), "DefaultNullableInt.xml")]
+    public async Task TestDefaultIntAsync(Type type, string fileName)
+    {
+        var pathName = TestConstantsFilesPath + fileName;
+        var expression = Expression.Default(type);
+        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
+
+        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
+        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+    }
+
+    [Theory]
     [MemberData(nameof(StatementData))]
     public async Task StatementTestAsync(string _, string expressionString, string fileName)
         => await base.TestAsync(expressionString, fileName);
@@ -20,6 +33,7 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         { TestLine(), "loop",               "Loop.xml" },
         { TestLine(), "switch(a){ ... }",   "Switch.xml" },
         { TestLine(), "Console.WriteLine",  "Invocation2.xml" },
+        { TestLine(), "throw",              "Throw.xml" },
         { TestLine(), "try1",               "TryCatch1.xml" },
         { TestLine(), "try2",               "TryCatch2.xml" },
         { TestLine(), "try3",               "TryCatch3.xml" },
@@ -31,6 +45,12 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         { TestLine(), "newArrayBounds",     "NewArrayBounds.xml" },
         { TestLine(), "newDictionaryInit",  "NewDictionaryInit.xml" },
         { TestLine(), "newMembersInit",     "NewMembersInit.xml" },
+        { TestLine(), "goto1",              "Goto1.xml" },
+        { TestLine(), "goto2",              "Goto2.xml" },
+        { TestLine(), "goto3",              "Goto3.xml" },
+        { TestLine(), "goto4",              "Goto4.xml" },
+        { TestLine(), "return1",            "Return1.xml" },
+        { TestLine(), "return2",            "Return2.xml" },
     };
 
     protected override Expression Substitute(string id) => _substitutes[id]();
@@ -105,6 +125,12 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
                     );
     };
 
+    static Func<Expression> _throw = () =>
+        Expression.Block(
+            WriteLine1Expression("Before throwing"),
+            Expression.Throw(ExceptionDefaultCtor())
+        );
+
     static Func<Expression> _try1 = () =>
         Expression.TryFault(
             Expression.Block(
@@ -118,26 +144,23 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
     static Func<Expression> _try2 = () =>
         Expression.TryCatch(
             Expression.Block(
-                new Expression[]
-                {
-                    WriteLine1Expression("TryBody"),
-                    ThrowException(),
-                }),
-                [
-                    Expression.MakeCatchBlock(
-                        typeof(ArgumentException),
-                        null,
-                        WriteLine1Expression("catch (ArgumentException) {}"),
-                        null),
-                ]);
+                WriteLine1Expression("TryBody"),
+                ThrowException()
+            ),
+            [
+                Expression.MakeCatchBlock(
+                    typeof(ArgumentException),
+                    null,
+                    WriteLine1Expression("catch (ArgumentException) {}"),
+                    null),
+            ]);
+
     static Func<Expression> _try3 = () =>
         Expression.TryCatchFinally(
             Expression.Block(
-                new Expression[]
-                {
-                    WriteLine1Expression("TryBody"),
-                    ThrowException(),
-                }),
+                WriteLine1Expression("TryBody"),
+                ThrowException()
+            ),
             WriteLine1Expression("finally {}"),
             [
                 Expression.MakeCatchBlock(
@@ -146,37 +169,35 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
                     WriteLine1Expression("catch (ArgumentException) {}"),
                     null),
             ]);
+
     static Func<Expression> _try4 = () =>
         Expression.TryFinally(
             Expression.Block(
-                new Expression[]
-                {
-                    WriteLine1Expression("TryBody"),
-                    ThrowException(),
-                }),
+                WriteLine1Expression("TryBody"),
+                ThrowException()
+            ),
             WriteLine1Expression("finally {}"));
 
     static Func<Expression> _try5 = () =>
     {
         var exception = Expression.Parameter(typeof(ArgumentException), "x");
         return Expression.TryCatch(
-                    Expression.Block(
-                        new Expression[]
-                        {
-                            WriteLine1Expression("TryBody"),
-                            ThrowException(),
-                        }),
-                    [
-                        Expression.MakeCatchBlock(
-                            typeof(ArgumentException),
-                            exception,
-                            Expression.Call(
-                                        null,
-                                        _miWriteLine,
-                                        Expression.MakeMemberAccess(exception, typeof(ArgumentException).GetProperty("Message")!)),
-                            null),
-                    ]);
+                Expression.Block(
+                    WriteLine1Expression("TryBody"),
+                    ThrowException()
+                ),
+                [
+                    Expression.MakeCatchBlock(
+                        typeof(ArgumentException),
+                        exception,
+                        Expression.Call(
+                                    null,
+                                    _miWriteLine,
+                                    Expression.MakeMemberAccess(exception, typeof(ArgumentException).GetProperty("Message")!)),
+                        null),
+                ]);
     };
+
     static Func<Expression> _try6 = () =>
     {
         var exception = Expression.Parameter(typeof(ArgumentException), "x");
@@ -197,6 +218,64 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
                                 Expression.Constant("x"))),
                     ]);
     };
+
+    static LabelTarget _returnTarget = Expression.Label();
+    static ParameterExpression _a = Expression.Parameter(typeof(int), "a");
+
+    static Func<Expression> _goto1 = () =>
+        Expression.Block(
+                WriteLine1Expression("GoTo"),
+                Expression.Goto(_returnTarget),
+                WriteLine1Expression("Unreachable"),
+                Expression.Label(_returnTarget)
+            );
+    static Func<Expression> _goto2 = () =>
+        Expression.Block(
+                WriteLine1Expression("GoTo"),
+                //Expression.Goto(_returnTarget),
+                WriteLine1Expression("Reachable"),
+                Expression.Label(_returnTarget)
+            );
+
+    static Func<Expression> _goto3 = () =>
+        Expression.Block(
+                [ _a ],
+                Expression.Assign(_a, Expression.Constant(0)),
+                Expression.Increment(_a),
+                Expression.Goto(_returnTarget),
+                Expression.Increment(_a),
+                Expression.Label(_returnTarget)
+            );
+
+    static Func<Expression> _goto4 = () =>
+        Expression.Block(
+                [ _a ],
+                Expression.Assign(_a, Expression.Constant(0)),
+                Expression.Increment(_a),
+                Expression.Goto(_returnTarget, type: typeof(void)),
+                Expression.Increment(_a),
+                Expression.Label(_returnTarget)
+            );
+
+    static Func<Expression> _return1 = () =>
+        Expression.Block(
+                [ _a ],
+                Expression.Assign(_a, Expression.Constant(0)),
+                Expression.Increment(_a),
+                Expression.Return(_returnTarget),
+                Expression.Increment(_a),
+                Expression.Label(_returnTarget)
+            );
+
+    static Func<Expression> _return2 = () =>
+        Expression.Block(
+                [ _a ],
+                Expression.Assign(_a, Expression.Constant(0)),
+                Expression.Increment(_a),
+                Expression.Return(_returnTarget, _a),
+                Expression.Increment(_a),
+                Expression.Label(_returnTarget)
+            );
 
     static Expression<Func<TestMembersInitialized>> _newMembersInit =
                 () => new TestMembersInitialized
@@ -226,6 +305,7 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         ["loop"]                    = _lambdaWithLoopContinueBreak,
         ["switch(a){ ... }"]        = _switch,
         ["Console.WriteLine"]       = () => WriteLine1Expression("Default"),
+        ["throw"]                   = _throw,
         ["try1"]                    = _try1,
         ["try2"]                    = _try2,
         ["try3"]                    = _try3,
@@ -237,5 +317,11 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         ["newArrayBounds"]          = () => () => new string[2, 3, 4],
         ["newDictionaryInit"]       = () => () => new Dictionary<int, string> { { 1, "one" }, { 2, "two" }, { 3, "three" }, },
         ["newMembersInit"]          = () => _newMembersInit,
+        ["goto1"]                   = _goto1,
+        ["goto2"]                   = _goto2,
+        ["goto3"]                   = _goto3,
+        ["goto4"]                   = _goto4,
+        ["return1"]                 = _return1,
+        ["return2"]                 = _return2,
     };
 }

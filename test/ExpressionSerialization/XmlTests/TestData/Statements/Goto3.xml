@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- {var a; ... } -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <block>
+        <variables>
+            <variableDefinition
+                type="int"
+                name="a"
+                id="P1" />
+        </variables>
+        <assign
+            type="int">
+            <variable
+                type="int"
+                name="a"
+                idref="P1" />
+            <constant>
+                <!-- 0 -->
+                <int>0</int>
+            </constant>
+        </assign>
+        <increment
+            type="int">
+            <variable
+                type="int"
+                name="a"
+                idref="P1" />
+        </increment>
+        <goto
+            kind="goto">
+            <target
+                idref="L1" />
+        </goto>
+        <increment
+            type="int">
+            <variable
+                type="int"
+                name="a"
+                idref="P1" />
+        </increment>
+        <label>
+            <target
+                id="L1" />
+        </label>
+    </block>
+</expression>

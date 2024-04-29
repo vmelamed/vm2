@@ -19,6 +19,7 @@ public partial class UnaryTests(TestsFixture fixture, ITestOutputHelper output) 
         { TestLine(), "(bool a) => !a",                 "Not.xml" },
         { TestLine(), "(int a) => checked(-a)",         "NegateChecked.xml" },
         { TestLine(), "(int a) => -a",                  "Negate.xml" },
+        { TestLine(), "(int a) => ~a",                  "BitwiseNot.xml" },
 
         { TestLine(), "(A a) => +a",                    "UnaryPlusMethod.xml" },
         { TestLine(), "(A a) => -a",                    "UnaryMinusMethod.xml" },
@@ -38,6 +39,7 @@ public partial class UnaryTests(TestsFixture fixture, ITestOutputHelper output) 
         ["(bool a) => !a"]                  = (bool a) => !a,
         ["(int a) => checked(-a)"]          = (int a) => checked(-a),
         ["(int a) => -a"]                   = (int a) => -a,
+        ["(int a) => ~a"]                   = (int a) => ~a,
 
         ["(A a) => +a"]                     = (A a) => +a,
         ["(A a) => -a"]                     = (A a) => -a,

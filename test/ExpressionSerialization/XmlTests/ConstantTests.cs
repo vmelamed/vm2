@@ -98,17 +98,4 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
         _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
         await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
     }
-
-    [Theory]
-    [InlineData(typeof(int), "DefaultInt.xml")]
-    [InlineData(typeof(int?), "DefaultNullableInt.xml")]
-    public async Task TestDefaultIntAsync(Type type, string fileName)
-    {
-        var pathName = TestConstantsFilesPath + fileName;
-        var expression = Expression.Default(type);
-        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
-
-        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
-        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
-    }
 }

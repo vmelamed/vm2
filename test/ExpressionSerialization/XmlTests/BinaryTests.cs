@@ -5,6 +5,7 @@ public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output)
     protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Binary/";
 
     static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
+    static ParameterExpression _paramB = Expression.Parameter(typeof(int), "b");
 
     [Theory]
     [MemberData(nameof(BinaryData))]
@@ -16,7 +17,7 @@ public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output)
         { TestLine(), "(a, b) => checked(a - b)",     "SubtractChecked.xml" },
         { TestLine(), "(a, b) => a - b",              "Subtract.xml" },
         { TestLine(), "(a, b) => a >> b",             "RightShift.xml" },
-        { TestLine(), "(a, b) => a ^ b",              "Power.xml" },
+        { TestLine(), "(a, b) => a ^ b",              "Xor.xml" },
         { TestLine(), "(a, b) => a || b",             "OrElse.xml" },
         { TestLine(), "(a, b) => a | b",              "Or.xml" },
         { TestLine(), "(a, b) => a != b",             "NotEqual.xml" },
@@ -44,6 +45,7 @@ public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output)
         { TestLine(), "a => a as b",                  "ExprAsType.xml" },
         { TestLine(), "a => a is b",                  "ExprIsType.xml" },
         { TestLine(), "a => a equals int",            "ExprTypeEqual.xml" },
+        { TestLine(), "(a, b) => a ** b",             "Power.xml" },
     };
 
     protected override Expression Substitute(string id) => _substitutes[id];
@@ -82,7 +84,8 @@ public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output)
         ["a => a is b"]                         = (object a) => a is ClassDataContract1,
         ["a => a equals int"]                   = Expression.Lambda(
                                                         Expression.TypeEqual(_paramA, typeof(int)),
-                                                        _paramA
-                                                    ),
+                                                        _paramA),
+        ["(a, b) => a ** b"]                    = Expression.Lambda(
+                                                        Expression.Power(Expression.Constant(2.0), Expression.Constant(3.0))),
     };
 }
