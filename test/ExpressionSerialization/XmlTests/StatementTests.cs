@@ -27,30 +27,32 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
     public static readonly TheoryData<string, string, string> StatementData = new ()
     {
         { TestLine(), "() => new StructDataContract1(42, \"don't panic\")", "New.xml" },
-        { TestLine(), "b => b ? 1 : 3",     "Conditional.xml" },
-        { TestLine(), "(f,a) => f(a)",      "Invocation.xml" },
-        { TestLine(), "(a,b) => { ... }",   "Block.xml" },
-        { TestLine(), "loop",               "Loop.xml" },
-        { TestLine(), "switch(a){ ... }",   "Switch.xml" },
-        { TestLine(), "Console.WriteLine",  "Invocation2.xml" },
-        { TestLine(), "throw",              "Throw.xml" },
-        { TestLine(), "try1",               "TryCatch1.xml" },
-        { TestLine(), "try2",               "TryCatch2.xml" },
-        { TestLine(), "try3",               "TryCatch3.xml" },
-        { TestLine(), "try4",               "TryCatch4.xml" },
-        { TestLine(), "try5",               "TryCatch5.xml" },
-        { TestLine(), "try6",               "TryCatch6.xml" },
-        { TestLine(), "newListInit",        "NewListInit.xml" },
-        { TestLine(), "newArrayItems",      "NewArrayInit.xml" },
-        { TestLine(), "newArrayBounds",     "NewArrayBounds.xml" },
-        { TestLine(), "newDictionaryInit",  "NewDictionaryInit.xml" },
-        { TestLine(), "newMembersInit",     "NewMembersInit.xml" },
-        { TestLine(), "goto1",              "Goto1.xml" },
-        { TestLine(), "goto2",              "Goto2.xml" },
-        { TestLine(), "goto3",              "Goto3.xml" },
-        { TestLine(), "goto4",              "Goto4.xml" },
-        { TestLine(), "return1",            "Return1.xml" },
-        { TestLine(), "return2",            "Return2.xml" },
+        { TestLine(), "b => b ? 1 : 3",         "Conditional.xml" },
+        { TestLine(), "(f,a) => f(a)",          "Invocation.xml" },
+        { TestLine(), "(a,b) => { ... }",       "Block.xml" },
+        { TestLine(), "loop",                   "Loop.xml" },
+        { TestLine(), "switch(a){ ... }",       "Switch.xml" },
+        { TestLine(), "Console.WriteLine",      "Invocation2.xml" },
+        { TestLine(), "throw",                  "Throw.xml" },
+        { TestLine(), "try1",                   "TryCatch1.xml" },
+        { TestLine(), "try2",                   "TryCatch2.xml" },
+        { TestLine(), "try3",                   "TryCatch3.xml" },
+        { TestLine(), "try4",                   "TryCatch4.xml" },
+        { TestLine(), "try5",                   "TryCatch5.xml" },
+        { TestLine(), "try6",                   "TryCatch6.xml" },
+        { TestLine(), "newListInit",            "NewListInit.xml" },
+        { TestLine(), "newArrayItems",          "NewArrayInit.xml" },
+        { TestLine(), "newArrayBounds",         "NewArrayBounds.xml" },
+        { TestLine(), "newDictionaryInit",      "NewDictionaryInit.xml" },
+        { TestLine(), "newMembersInit",         "NewMembersInit.xml" },
+        { TestLine(), "accessMemberMember",     "AccessMemberMember.xml" },
+        { TestLine(), "accessMemberMember1",    "AccessMemberMember1.xml" },
+        { TestLine(), "goto1",                  "Goto1.xml" },
+        { TestLine(), "goto2",                  "Goto2.xml" },
+        { TestLine(), "goto3",                  "Goto3.xml" },
+        { TestLine(), "goto4",                  "Goto4.xml" },
+        { TestLine(), "return1",                "Return1.xml" },
+        { TestLine(), "return2",                "Return2.xml" },
     };
 
     protected override Expression Substitute(string id) => _substitutes[id]();
@@ -295,6 +297,30 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
                     },
                 };
 
+    static ParameterExpression _m = Expression.Parameter(typeof(TestMembersInitialized), "m");
+    static LabelTarget _return3 = Expression.Label(typeof(int));
+    static Func<Expression> _accessMemberMember1 = () =>
+        Expression.Block(
+            [_m],
+            Expression.Assign(
+                _m,
+                Expression.New(typeof(TestMembersInitialized).GetConstructor(Type.EmptyTypes)!)),
+            Expression.Return(
+                _return3,
+                Expression.Add(
+                    Expression.MakeMemberAccess(
+                        _m,
+                        typeof(TestMembersInitialized).GetProperty(nameof(TestMembersInitialized.TheOuterIntProperty))!
+                    ),
+                    Expression.MakeMemberAccess(
+                        Expression.MakeMemberAccess(_m, typeof(TestMembersInitialized).GetProperty(nameof(TestMembersInitialized.InnerProperty))!),
+                        typeof(Inner).GetProperty(nameof(Inner.IntProperty))!)
+                ),
+                typeof(int)
+            ),
+            Expression.Label(_return3, Expression.Constant(0))
+        );
+
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {
         ["() => new StructDataContract1(42, \"don't panic\")"]
@@ -317,6 +343,8 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         ["newArrayBounds"]          = () => () => new string[2, 3, 4],
         ["newDictionaryInit"]       = () => () => new Dictionary<int, string> { { 1, "one" }, { 2, "two" }, { 3, "three" }, },
         ["newMembersInit"]          = () => _newMembersInit,
+        ["accessMemberMember"]      = () => (TestMembersInitialized m) => m.InnerProperty.IntProperty,
+        ["accessMemberMember1"]     = _accessMemberMember1,
         ["goto1"]                   = _goto1,
         ["goto2"]                   = _goto2,
         ["goto3"]                   = _goto3,

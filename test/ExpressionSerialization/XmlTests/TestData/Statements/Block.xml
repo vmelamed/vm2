@@ -62,10 +62,10 @@
                     id="P4" />
                 <assign
                     type="int">
-                    <variableDefinition
+                    <variable
                         type="int"
                         name="c"
-                        id="P5" />
+                        idref="P4" />
                     <constant>
                         <!-- 2 -->
                         <int>2</int>
@@ -77,10 +77,10 @@
                         type="int"
                         name="a"
                         idref="P1" />
-                    <variableDefinition
+                    <variable
                         type="int"
                         name="c"
-                        id="P6" />
+                        idref="P4" />
                 </leftShiftAssign>
             </block>
         </body>

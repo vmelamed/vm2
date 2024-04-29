@@ -32,6 +32,10 @@
             kind="return">
             <target
                 idref="L1" />
+            <variable
+                type="int"
+                name="a"
+                idref="P1" />
         </goto>
         <increment
             type="int">

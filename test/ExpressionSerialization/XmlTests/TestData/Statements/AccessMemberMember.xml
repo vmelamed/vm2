@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- m => m.InnerProperty.IntProperty -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="int">
+        <parameters>
+            <parameterDefinition
+                type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                name="m"
+                id="P1" />
+        </parameters>
+        <body>
+            <memberAccess
+                type="int">
+                <memberAccess
+                    type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                    <parameter
+                        type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                        name="m"
+                        idref="P1" />
+                    <property
+                        type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                        name="InnerProperty" />
+                </memberAccess>
+                <property
+                    type="int"
+                    name="IntProperty" />
+            </memberAccess>
+        </body>
+    </lambda>
+</expression>

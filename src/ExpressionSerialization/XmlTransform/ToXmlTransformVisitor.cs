@@ -17,7 +17,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
     DataTransform _dataTransform = new(options);
 
-    // labels and parameters/variables are created in one expression n and references to them are used in another.
+    // labels and parameters/variables are created in one value n and references to them are used in another.
     // These dictionaries keep their id-s so we can create `XAttribute` id-s and idref-s to them.
     Dictionary<LabelTarget, XElement> _labelTargets = [];
     Dictionary<ParameterExpression, XElement> _parameters = [];
@@ -36,9 +36,9 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     }
 
     /// <summary>
-    /// Gets a properly named n corresponding to the current expression n.
+    /// Gets a properly named n corresponding to the current value n.
     /// </summary>
-    /// <param name="node">The currently visited expression n from the expression tree.</param>
+    /// <param name="node">The currently visited value n from the value tree.</param>
     /// <returns>TNode.</returns>
     protected override XElement GetEmptyNode(Expression node)
         => new(Namespaces.Exs + Transform.Identifier(node.NodeType.ToString(), IdentifierConventions.Camel),
@@ -48,11 +48,12 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                     ListInitExpression => null,
                     NewExpression => null,
                     NewArrayExpression => null,
-                    // do not omit the void return type for these nodes
+                    LabelExpression => null,
+                    // do not omit the void return type for these nodes:
                     LambdaExpression n => new(AttributeNames.Type, Transform.TypeName(n.ReturnType)),
                     MethodCallExpression n => new(AttributeNames.Type, Transform.TypeName(n.Method.ReturnType)),
                     InvocationExpression n => new(AttributeNames.Type, Transform.TypeName(n.Expression.Type)),
-                    // for the rest: add attribute type if it is not void
+                    // for the rest: add attribute type if it is not void:
                     _ => AttributeType(node),
                 });
 
@@ -201,7 +202,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitMember,
             (n, x) =>
                 x.Add(
-                    _elements.Pop(),    // pop the expression that will give the object whose requested member to access
+                    _elements.Pop(),    // pop the value that will give the object whose requested member to access
                     VisitMemberInfo(n.Member)));
 
     #region Member Bindings
@@ -223,7 +224,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             new XElement(
                     ElementNames.AssignmentBinding,
                     VisitMemberInfo(node.Member),
-                    _elements.Pop()));  // pop the expression to assign
+                    _elements.Pop()));  // pop the value to assign
 
         return binding;
     }
@@ -267,7 +268,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             {
                 var bindings = PopElements(n.Bindings.Count).ToList();     // pop the expressions to assign to members
                 x.Add(
-                    _elements.Pop(),        // the new expression
+                    _elements.Pop(),        // the new value
                     new XElement(
                             ElementNames.Bindings,
                             bindings));
@@ -313,21 +314,45 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     protected override Expression VisitParameter(ParameterExpression node)
     {
         using var _ = OutputDebugScope(node.NodeType.ToString());
+        XElement varElement;
 
-        _elements.Push(
-            _parameters.TryGetValue(node, out var x)
-                ? new XElement(
-                        x.Name == ElementNames.VariableDefinition ? ElementNames.VariableReference : ElementNames.ParameterReference,
-                        AttributeType(node),
-                        new XAttribute(AttributeNames.Name, node.Name ?? "_"),
-                        node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
-                        new XAttribute(AttributeNames.IdRef, x.Attribute(AttributeNames.Id)?.Value ?? throw new InternalTransformErrorException("A variable of parameter reference without Id.")))
-                : new XElement(
-                        ElementNames.VariableDefinition,
-                        AttributeType(node),
-                        new XAttribute(AttributeNames.Name, node.Name ?? "_"),
-                        node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
-                        new XAttribute(AttributeNames.Id, $"P{++_lastParamIdNumber}")));
+        if (_parameters.TryGetValue(node, out var x))
+        {
+            varElement = new XElement(
+                            x.Name == ElementNames.VariableDefinition ? ElementNames.VariableReference : ElementNames.ParameterReference,
+                            AttributeType(node),
+                            new XAttribute(AttributeNames.Name, node.Name ?? "_"),
+                            node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
+                            new XAttribute(AttributeNames.IdRef, x.Attribute(AttributeNames.Id)?.Value ?? throw new InternalTransformErrorException("A variable of parameter reference without Id.")));
+        }
+        else
+        {
+            var varId = $"P{++_lastParamIdNumber}";
+
+            varElement = new XElement(
+                            ElementNames.VariableDefinition,
+                            AttributeType(node),
+                            new XAttribute(AttributeNames.Name, node.Name ?? "_"),
+                            node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
+                            new XAttribute(AttributeNames.Id, varId));
+            _parameters[node] = varElement;
+        }
+
+        _elements.Push(varElement);
+        //_elements.Push(
+        //    _parameters.TryGetValue(node, out var x)
+        //        ? new XElement(
+        //                x.Name == ElementNames.VariableDefinition ? ElementNames.VariableReference : ElementNames.ParameterReference,
+        //                AttributeType(node),
+        //                new XAttribute(AttributeNames.Name, node.Name ?? "_"),
+        //                node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
+        //                new XAttribute(AttributeNames.IdRef, x.Attribute(AttributeNames.Id)?.Value ?? throw new InternalTransformErrorException("A variable of parameter reference without Id.")))
+        //        : new XElement(
+        //                ElementNames.VariableDefinition,
+        //                AttributeType(node),
+        //                new XAttribute(AttributeNames.Name, node.Name ?? "_"),
+        //                node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
+        //                new XAttribute(AttributeNames.Id, $"P{++_lastParamIdNumber}")));
         return node;
     }
 
@@ -364,7 +389,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                 var op2 = n.IfTrue  is not null ? _elements.Pop() : null;
                 var op1 = _elements.Pop();
 
-                Debug.Assert(n.Type != null, "The expression n's type is null - remove the default type value of typeof(void) below.");
+                Debug.Assert(n.Type != null, "The value n's type is null - remove the default type value of typeof(void) below.");
                 x.Add(
                     op1,
                     op2,
@@ -421,7 +446,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             (n, x) =>
             {
                 var value = n.DefaultValue is not null
-                                ? _elements.Pop()   // pop the default result expression if present
+                                ? _elements.Pop()   // pop the default result value if present
                                 : null;
 
                 x.Add(
@@ -436,8 +461,8 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitGoto,
             (n, x) =>
             {
-                var expression = n.Value is not null
-                                    ? _elements.Pop()   // pop the result expression if present
+                var value = n.Value is not null
+                                    ? _elements.Pop()   // pop the result value if present
                                     : null;
 
                 // VisitLabelTarget adds an attribute with name id - fixup: remove it and put attribute with name idref instead
@@ -449,6 +474,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
                 x.Add(
                     targetElement,
+                    value,
                     new XAttribute(AttributeNames.Kind, Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
             });
 

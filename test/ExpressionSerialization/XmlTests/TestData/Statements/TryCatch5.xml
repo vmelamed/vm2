@@ -54,10 +54,10 @@
                 <arguments>
                     <memberAccess
                         type="string">
-                        <variableDefinition
+                        <variable
                             type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                             name="x"
-                            id="P2" />
+                            idref="P1" />
                         <property
                             type="string"
                             name="Message" />
