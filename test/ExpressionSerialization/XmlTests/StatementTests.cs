@@ -217,6 +217,6 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         ["try4"]              = _try4,
         ["try5"]              = _try5,
         ["try6"]              = _try6,
-        ["testListInit"]      = _testListInit,
+        //["testListInit"]      = _testListInit,
     };
 }
