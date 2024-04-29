@@ -549,25 +549,41 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     protected override CatchBlock VisitCatchBlock(CatchBlock node)
     {
         using var _ = OutputDebugScope(nameof(CatchBlock));
-        var catchBlock = base.VisitCatchBlock(node);
-        var body = _elements.Pop();
-        var filter = node.Filter!=null
-                                ? new XElement(
-                                        ElementNames.Filter,
-                                        _elements.Pop())
-                                : null;
-        var variable = node.Variable!=null ? _elements.Pop() : null;
-        var exception = variable is not null
-                            ? new XElement(
+        // here we do not want the base.Visit to drive the immediate subexpressions - it visits them in an inconvenient order.
+        // var catchBlock = base.VisitCatchBlock(node);
+
+        XElement? exception = null;
+
+        if (node.Variable is not null)
+        {
+            base.Visit(node.Variable);
+            exception = new XElement(
                                 ElementNames.Exception,
-                                variable.Attributes())
-                            : null;
+                                _elements.Pop().Attributes());
+        }
+
+        XElement? filter = null;
+
+        if (node.Filter is not null)
+        {
+            base.Visit(node.Filter);
+            filter = new XElement(
+                                ElementNames.Filter,
+                                _elements.Pop());
+        }
+
+        base.Visit(node.Body);
+
+        var body = _elements.Pop();
+
         _elements.Push(
             new XElement(
                     ElementNames.Catch,
-                    new XAttribute(
+                    node.Test != node.Variable?.Type
+                        ? new XAttribute(
                             AttributeNames.Type,
-                            Transform.TypeName(node.Test)),
+                            Transform.TypeName(node.Test))
+                        : null,
                     exception,
                     filter,
                     body));

@@ -35,8 +35,7 @@
                 </new>
             </throw>
         </block>
-        <catch
-            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+        <catch>
             <exception
                 type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                 name="x"
