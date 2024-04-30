@@ -11,7 +11,8 @@ using System.Xml.Linq;
 public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionTransform<XElement>
 {
     Options _options;
-    ToXmlTransformVisitor _visitor;
+    ToXmlTransformVisitor? _expressionVisitor;
+    FromXmlTransformVisitor? _xmlVisitor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExpressionTransform"/> class.
@@ -20,7 +21,7 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
     public ExpressionTransform(Options? options = null)
     {
         _options = options ?? new Options();
-        _visitor = new ToXmlTransformVisitor(_options);
+        _expressionVisitor = new ToXmlTransformVisitor(_options);
     }
 
     #region IExpressionTransform<XElement>
@@ -31,14 +32,14 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
     /// <returns>The resultant top level document model node `XNode`.</returns>
     XElement IExpressionTransform<XElement>.Transform(Expression expression)
     {
-        _visitor.Visit(expression);
+        _expressionVisitor ??= new ToXmlTransformVisitor(_options);
+        _expressionVisitor.Visit(expression);
 
         return new XElement(
                         ElementNames.Expression,
                         new XAttribute("xmlns", Namespaces.Exs),
-                        //new XAttribute(XNamespace.Xmlns + "xs", Namespaces.Xsd),
                         new XAttribute(XNamespace.Xmlns + "i", Namespaces.Xsi),
-                        _visitor.Result);
+                        _expressionVisitor.Result);
     }
 
     /// <summary>
@@ -48,6 +49,7 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
     /// <returns>The resultant expression.</returns>
     Expression IExpressionTransform<XElement>.Transform(XElement element)
     {
+        _xmlVisitor ??= new FromXmlTransformVisitor(_options);
         return Expression.Constant(null);
     }
     #endregion
@@ -60,7 +62,7 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
     /// <returns>The resultant top level document model node `XNode`.</returns>
     public XDocument Transform(Expression expression)
         => new(
-            _options.DocumentDeclaration,
+            _options.DocumentDeclaration(),
             _options.Comment(expression),
             ((IExpressionTransform<XElement>)this).Transform(expression));
 
@@ -157,5 +159,33 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
         await stream.FlushAsync(cancellationToken);
 
         return stream;
+    }
+
+    /// <summary>
+    /// Deserializes an expression from the specified document.
+    /// </summary>
+    /// <param name="stream">The stream to get the XML document from.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Stream.</returns>
+    public async Task<Expression> DeserializeAsync(
+        Stream stream,
+        CancellationToken cancellationToken = default)
+    {
+        using var reader = new StreamReader(stream, _options.GetEncoding());
+        using var xmlReader = XmlReader.Create(reader, new XmlReaderSettings() {
+            Async = true,
+            IgnoreComments = true,
+            IgnoreProcessingInstructions = true,
+            IgnoreWhitespace = true,
+            Schemas = Options.Schemas,
+            ValidationFlags = XmlSchemaValidationFlags.ProcessIdentityConstraints,
+            ValidationType = ValidationType.Schema,
+        });
+
+        return Transform(
+            await XDocument.LoadAsync(
+                xmlReader,
+                LoadOptions.SetLineInfo,
+                cancellationToken));
     }
 }
