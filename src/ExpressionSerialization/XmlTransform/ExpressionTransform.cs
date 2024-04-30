@@ -1,5 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using System.Xml;
 using System.Xml.Linq;
 
 /// <summary>
@@ -7,7 +8,7 @@ using System.Xml.Linq;
 /// Implements the <see cref="IExpressionTransform{XNode}"/>: transforms a Linq expression to an XML Node object.
 /// </summary>
 /// <seealso cref="IExpressionTransform{XNode}" />
-public class ExpressionTransform : IExpressionTransform<XNode>
+public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionTransform<XElement>
 {
     Options _options;
     ToXmlTransformVisitor _visitor;
@@ -22,12 +23,13 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         _visitor = new ToXmlTransformVisitor(_options);
     }
 
+    #region IExpressionTransform<XElement>
     /// <summary>
     /// Transform the specified expression to a document model node type `XNode` (XML).
     /// </summary>
     /// <param name="expression">The expression to be transformed.</param>
     /// <returns>The resultant top level document model node `XNode`.</returns>
-    public XNode Transform(Expression expression)
+    XElement IExpressionTransform<XElement>.Transform(Expression expression)
     {
         _visitor.Visit(expression);
 
@@ -40,27 +42,50 @@ public class ExpressionTransform : IExpressionTransform<XNode>
     }
 
     /// <summary>
+    /// Transform the specified document model node of type `TDocument` to a LINQ expression.
+    /// </summary>
+    /// <param name="element">The document node to be transformed.</param>
+    /// <returns>The resultant expression.</returns>
+    Expression IExpressionTransform<XElement>.Transform(XElement element)
+    {
+        return Expression.Constant(null);
+    }
+    #endregion
+
+    #region IExpressionTransform<XDocument>
+    /// <summary>
     /// Transform the specified expression to a document model node type `XNode` (XML).
     /// </summary>
     /// <param name="expression">The expression to be transformed.</param>
     /// <returns>The resultant top level document model node `XNode`.</returns>
-    public XDocument ToDocument(Expression expression)
+    public XDocument Transform(Expression expression)
         => new(
             _options.DocumentDeclaration,
             _options.Comment(expression),
-            Transform(expression));
+            ((IExpressionTransform<XElement>)this).Transform(expression));
+
+    /// <summary>
+    /// Transform the specified document model node of type `TDocument` to a LINQ expression.
+    /// </summary>
+    /// <param name="document">The document node to be transformed.</param>
+    /// <returns>The resultant expression.</returns>
+    public Expression Transform(XDocument document)
+    {
+        return ((IExpressionTransform<XElement>)this).Transform(document.Root ?? new XElement(ElementNames.Object, new XAttribute(AttributeNames.Nil, true)));
+    }
+    #endregion
 
     /// <summary>
     /// Serializes the specified expression.
     /// </summary>
     /// <param name="expression">The expression.</param>
-    /// <param name="stream">The stream.</param>
+    /// <param name="stream">The stream to put the XML document to.</param>
     /// <returns>Stream.</returns>
-    public Stream Serialize(
+    public void Serialize(
         Expression expression,
         Stream stream)
     {
-        var doc = ToDocument(expression);
+        var doc = Transform(expression);
         using var writer = new StreamWriter(stream, _options.GetEncoding());
         using var xmlWriter = XmlWriter.Create(writer, new() {
             Encoding = _options.GetEncoding(),
@@ -76,8 +101,27 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         xmlWriter.Flush();
         writer.Flush();
         stream.Flush();
+    }
 
-        return stream;
+    /// <summary>
+    /// Serializes the specified expression.
+    /// </summary>
+    /// <param name="stream">The stream to get the XML document from.</param>
+    /// <returns>Stream.</returns>
+    public Expression Deserialize(
+        Stream stream)
+    {
+        using var reader = new StreamReader(stream, _options.GetEncoding());
+        using var xmlReader = XmlReader.Create(reader, new XmlReaderSettings() {
+            IgnoreComments = true,
+            IgnoreProcessingInstructions = true,
+            IgnoreWhitespace = true,
+            Schemas = Options.Schemas,
+            ValidationFlags = XmlSchemaValidationFlags.ProcessIdentityConstraints,
+            ValidationType = ValidationType.Schema,
+        });
+
+        return Transform(XDocument.Load(xmlReader));
     }
 
     /// <summary>
@@ -92,7 +136,7 @@ public class ExpressionTransform : IExpressionTransform<XNode>
         Stream stream,
         CancellationToken cancellationToken = default)
     {
-        var doc = ToDocument(expression);
+        var doc = Transform(expression);
         var encoding = _options.GetEncoding();
         var settings = new XmlWriterSettings() {
             Async = true,

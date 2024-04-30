@@ -39,7 +39,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// Gets a properly named n corresponding to the current value n.
     /// </summary>
     /// <param name="node">The currently visited value n from the value tree.</param>
-    /// <returns>TNode.</returns>
+    /// <returns>TDocument.</returns>
     protected override XElement GetEmptyNode(Expression node)
         => new(Namespaces.Exs + Transform.Identifier(node.NodeType.ToString(), IdentifierConventions.Camel),
                 node switch {

@@ -11,6 +11,7 @@ global using System.Text;
 global using System.Text.RegularExpressions;
 global using System.Xml;
 global using System.Xml.Linq;
+global using System.Xml.Schema;
 
 global using Newtonsoft.Json.Linq;
 
@@ -18,5 +19,6 @@ global using vm2.ExpressionSerialization.Abstractions;
 global using vm2.ExpressionSerialization.Conventions;
 global using vm2.ExpressionSerialization.Exceptions;
 global using vm2.ExpressionSerialization.Utilities;
+global using vm2.Threading;
 
 global using static vm2.ExpressionSerialization.Utilities.DebugExtensions;

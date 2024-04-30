@@ -104,7 +104,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// Gets a properly named node corresponding to the current expression node.
     /// </summary>
     /// <param name="nodeType">Type of the node.</param>
-    /// <returns>TNode.</returns>
+    /// <returns>TDocument.</returns>
     protected abstract TElement GetEmptyNode(Expression nodeType);
 
     /// <summary>

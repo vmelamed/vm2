@@ -28,19 +28,9 @@ public class TestsFixture : IDisposable
 
     public TestsFixture()
     {
-        var readerSettings = new XmlReaderSettings() { DtdProcessing = DtdProcessing.Parse };
-
-        using (var stream = new FileStream($"{schemasPath}Microsoft.Serialization.xsd", FileStreamOptions))
-        using (var reader = XmlReader.Create(stream, readerSettings))
-            _schemas.Add("http://schemas.microsoft.com/2003/10/Serialization/", reader);
-
-        using (var stream = new FileStream($"{schemasPath}DataContract.xsd", FileStreamOptions))
-        using (var reader = XmlReader.Create(stream, readerSettings))
-            _schemas.Add("http://schemas.datacontract.org/2004/07/System", reader);
-
-        using (var stream = new FileStream($"{schemasPath}Expression.xsd", FileStreamOptions))
-        using (var reader = XmlReader.Create(stream, readerSettings))
-            _schemas.Add("urn:schemas-vm-com:Linq.Expressions.Serialization", reader);
+        Options.SetSchemaLocation(Options.Ser, $"{schemasPath}Microsoft.Serialization.xsd");
+        Options.SetSchemaLocation(Options.Dcs, $"{schemasPath}DataContract.xsd");
+        Options.SetSchemaLocation(Options.Exs, $"{schemasPath}Expression.xsd");
     }
 
     public void Dispose() => GC.SuppressFinalize(this);
@@ -49,7 +39,7 @@ public class TestsFixture : IDisposable
     {
         List<XmlSchemaException> exceptions = [];
 
-        doc.Validate(_schemas, (_, e) => exceptions.Add(e.Exception));
+        doc.Validate(Options.Schemas, (_, e) => exceptions.Add(e.Exception));
 
         if (exceptions.Count is not 0)
             throw new AggregateException(
@@ -101,7 +91,7 @@ public class TestsFixture : IDisposable
     {
         // ACT - get the actual string and XDocument by transforming the expression:
         var transform = new ExpressionTransform(Options);
-        var actualDoc = transform.ToDocument(expression);
+        var actualDoc = transform.Transform(expression);
         using var streamActual = new MemoryStream();
         transform.Serialize(expression, streamActual);
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
@@ -120,7 +110,7 @@ public class TestsFixture : IDisposable
     {
         // ACT - get the actual string and XDocument by transforming the expression:
         var transform = new ExpressionTransform(Options);
-        var actualDoc = transform.ToDocument(expression);
+        var actualDoc = transform.Transform(expression);
         using var streamActual = new MemoryStream();
         await transform.SerializeAsync(expression, streamActual, cancellationToken);
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
