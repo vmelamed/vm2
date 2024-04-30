@@ -233,5 +233,26 @@ class TestMembersInitialized
 
     public Inner InnerProperty { get; set; } = new();
 
-    public IEnumerable<string> MyProperty { get; set; } = ["1", "2", "3"];
+    public int[] ArrayProperty { get; set; } = [1, 2, 3];
+
+    public IEnumerable<string> EnumerableProperty { get; set; } = ["1", "2", "3"];
+}
+
+class TestMembersInitialized1
+{
+    public int TheOuterIntProperty { get; set; }
+
+    public DateTime Time { get; set; }
+
+    public Inner InnerProperty { get; set; } = new();
+
+    public int[] ArrayProperty { get; set; } = [];
+
+    public List<Inner> ListProperty { get; set; } = [];
+
+    public int this[int i]
+    {
+        get => ArrayProperty![i];
+        set => ArrayProperty![i] = value;
+    }
 }

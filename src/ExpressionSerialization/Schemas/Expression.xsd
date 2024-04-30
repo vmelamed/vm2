@@ -2061,7 +2061,7 @@
         <xs:complexContent>
             <xs:extension base="memberBindingType">
                 <xs:sequence>
-                    <xs:group ref="expressionBaseGroup"
+                    <xs:group ref="memberBinding"
                               minOccurs="0"
                               maxOccurs="unbounded"/>
                 </xs:sequence>
@@ -2069,7 +2069,7 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="listBindingType">
+    <xs:complexType name="memberListBindingType">
         <xs:complexContent>
             <xs:extension base="memberBindingType">
                 <xs:sequence>
@@ -2088,8 +2088,8 @@
                         type="assignmentBindingType" />
             <xs:element name="memberMemberBinding"
                         type="memberMemberBindingType" />
-            <xs:element name="listBinding"
-                        type="listBindingType" />
+            <xs:element name="memberListBinding"
+                        type="memberListBindingType" />
         </xs:choice>
     </xs:group>
 

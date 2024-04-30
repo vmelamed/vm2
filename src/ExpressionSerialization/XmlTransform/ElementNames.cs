@@ -161,5 +161,5 @@ static class ElementNames
 
     public static readonly XName AssignmentBinding      = Namespaces.Exs + "assignmentBinding";
     public static readonly XName MemberMemberBinding    = Namespaces.Exs + "memberMemberBinding";
-    public static readonly XName ListBinding            = Namespaces.Exs + "listBinding";
+    public static readonly XName MemberListBinding      = Namespaces.Exs + "memberListBinding";
 }

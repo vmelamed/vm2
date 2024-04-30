@@ -173,6 +173,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                 var indexes = new XElement(
                                     ElementNames.Indexes,
                                     PopElements(n.Arguments.Count));
+
                 x.Add(
                     _elements.Pop(),    // pop the indexes
                     indexes);
@@ -239,7 +240,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             new XElement(
                     ElementNames.MemberMemberBinding,
                     VisitMemberInfo(node.Member),
-                    new XElement(ElementNames.Bindings, PopElements(node.Bindings.Count))));    // visit the members to chain obj.p1.p2.p3...
+                    PopElements(node.Bindings.Count)));
 
         return binding;
     }
@@ -252,9 +253,9 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
         _elements.Push(
             new XElement(
-                    ElementNames.ListBinding,
+                    ElementNames.MemberListBinding,
                     VisitMemberInfo(node.Member),
-                    _elements.Pop()));  // pop the list of expressions to assign to elements of a member
+                    PopElements(node.Initializers.Count)));
 
         return binding;
     }
