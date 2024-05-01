@@ -8,21 +8,11 @@ using System.Xml.Linq;
 /// Implements the <see cref="IExpressionTransform{XNode}"/>: transforms a Linq expression to an XML Node object.
 /// </summary>
 /// <seealso cref="IExpressionTransform{XNode}" />
-public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionTransform<XElement>
+public class ExpressionTransform(Options? options = null) : IExpressionTransform<XDocument>, IExpressionTransform<XElement>
 {
-    Options _options;
+    Options _options = options ?? new();
     ToXmlTransformVisitor? _expressionVisitor;
     FromXmlTransformVisitor? _xmlVisitor;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ExpressionTransform"/> class.
-    /// </summary>
-    /// <param name="options">The options.</param>
-    public ExpressionTransform(Options? options = null)
-    {
-        _options = options ?? new Options();
-        _expressionVisitor = new ToXmlTransformVisitor(_options);
-    }
 
     #region IExpressionTransform<XElement>
     /// <summary>
@@ -73,7 +63,10 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
     /// <returns>The resultant expression.</returns>
     public Expression Transform(XDocument document)
     {
-        return ((IExpressionTransform<XElement>)this).Transform(document.Root ?? new XElement(ElementNames.Object, new XAttribute(AttributeNames.Nil, true)));
+        var me = ((IExpressionTransform<XElement>)this);
+        var root = document.Root ?? new XElement(ElementNames.Object, new XAttribute(AttributeNames.Nil, true));
+
+        return me.Transform(root);
     }
     #endregion
 
@@ -103,27 +96,6 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
         xmlWriter.Flush();
         writer.Flush();
         stream.Flush();
-    }
-
-    /// <summary>
-    /// Serializes the specified expression.
-    /// </summary>
-    /// <param name="stream">The stream to get the XML document from.</param>
-    /// <returns>Stream.</returns>
-    public Expression Deserialize(
-        Stream stream)
-    {
-        using var reader = new StreamReader(stream, _options.GetEncoding());
-        using var xmlReader = XmlReader.Create(reader, new XmlReaderSettings() {
-            IgnoreComments = true,
-            IgnoreProcessingInstructions = true,
-            IgnoreWhitespace = true,
-            Schemas = Options.Schemas,
-            ValidationFlags = XmlSchemaValidationFlags.ProcessIdentityConstraints,
-            ValidationType = ValidationType.Schema,
-        });
-
-        return Transform(XDocument.Load(xmlReader));
     }
 
     /// <summary>
@@ -162,6 +134,45 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
     }
 
     /// <summary>
+    /// Serializes the specified expression.
+    /// </summary>
+    /// <param name="stream">The stream to get the XML document from.</param>
+    /// <returns>Stream.</returns>
+    public Expression Deserialize(
+        Stream stream)
+    {
+        using var reader = new StreamReader(stream, _options.GetEncoding());
+        var readerSettings = new XmlReaderSettings()
+        {
+            IgnoreComments = true,
+            IgnoreProcessingInstructions = true,
+            IgnoreWhitespace = true,
+            ValidationFlags = XmlSchemaValidationFlags.None,
+        };
+
+        using var xmlReader = XmlReader.Create(reader, readerSettings);
+        var document = XDocument.Load(
+                            xmlReader,
+                            _options.MustValidate()
+                                ? LoadOptions.SetLineInfo
+                                : LoadOptions.None);
+
+        if (_options.MustValidate())
+        {
+            List<XmlSchemaException> exceptions = [];
+
+            document.Validate(Options.Schemas, (_, e) => exceptions.Add(e.Exception));
+            if (exceptions.Count is not 0)
+                throw new AggregateException(
+                            $"Error(s) validating the XML document against the schema {Options.Exs}:\n  " +
+                            string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
+                            exceptions);
+        }
+
+        return Transform(document);
+    }
+
+    /// <summary>
     /// Deserializes an expression from the specified document.
     /// </summary>
     /// <param name="stream">The stream to get the XML document from.</param>
@@ -172,20 +183,32 @@ public class ExpressionTransform : IExpressionTransform<XDocument>, IExpressionT
         CancellationToken cancellationToken = default)
     {
         using var reader = new StreamReader(stream, _options.GetEncoding());
-        using var xmlReader = XmlReader.Create(reader, new XmlReaderSettings() {
+        var readerSettings = new XmlReaderSettings() {
             Async = true,
             IgnoreComments = true,
             IgnoreProcessingInstructions = true,
             IgnoreWhitespace = true,
-            Schemas = Options.Schemas,
-            ValidationFlags = XmlSchemaValidationFlags.ProcessIdentityConstraints,
-            ValidationType = ValidationType.Schema,
-        });
+        };
 
-        return Transform(
-            await XDocument.LoadAsync(
-                xmlReader,
-                LoadOptions.SetLineInfo,
-                cancellationToken));
+        using var xmlReader = XmlReader.Create(reader, readerSettings);
+        var document = await XDocument.LoadAsync(
+                                xmlReader,
+                                _options.MustValidate()
+                                    ? LoadOptions.SetLineInfo
+                                    : LoadOptions.None, cancellationToken);
+
+        if (_options.MustValidate())
+        {
+            List<XmlSchemaException> exceptions = [];
+
+            document.Validate(Options.Schemas, (_, e) => exceptions.Add(e.Exception));
+            if (exceptions.Count is not 0)
+                throw new AggregateException(
+                            $"Error(s) validating the XML document against the schema {Options.Exs}:\n  " +
+                            string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
+                            exceptions);
+        }
+
+        return Transform(document);
     }
 }

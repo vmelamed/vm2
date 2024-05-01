@@ -2,7 +2,7 @@
 
 public partial class AssignmentTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Assignments/";
+    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Assignments");
 
     static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
 

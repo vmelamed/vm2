@@ -1,4 +1,30 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
+
+/// <summary>
+/// Enum ValidateDocuments specifies whether to validate the input XML documents that are to be transformed to <see cref="Expression"/>-s.
+/// </summary>
+public enum ValidateDocuments
+{
+    /// <summary>
+    /// Do not validate the input - improves performance by skipping the validation. Using only when you are certain that
+    /// the document is coming from a trusted source.
+    /// </summary>
+    Never,
+
+    /// <summary>
+    /// Always validate the input documents. Requires that the schema &quot;urn:schemas-vm-com:Linq.Expressions.Serialization&quot;
+    /// is added to <see cref="Options.Schemas"/>. If the schema is not added, this option will cause throwing an exception.
+    /// </summary>
+    Always,
+
+    /// <summary>
+    /// If the schema &quot;urn:schemas-vm-com:Linq.Expressions.Serialization&quot; is present in the 
+    /// <see cref="Options.Schemas"/> the transform will validate all input documents. Otherwise will quietly proceed 
+    /// with the transform process.
+    /// </summary>
+    IfSchemaPresent,
+}
+
 /// <summary>
 /// Class Options transforms C# identifiers to XML names.
 /// </summary>
@@ -29,13 +55,23 @@ public partial class Options
     /// </summary>
     public const string Dcs = "http://schemas.datacontract.org/2004/07/System";
 
+    static readonly object _sync = new();
+    static XmlSchemaSet _schemas = new();
+
     /// <summary>
     /// Gets the schemas.
     /// </summary>
     /// <value>The schemas.</value>
     public static XmlSchemaSet Schemas => _schemas;
-    static readonly ReaderWriterLockSlim _lock = new();
-    static readonly XmlSchemaSet _schemas = new();
+
+    /// <summary>
+    /// Resets the schemas.
+    /// </summary>
+    public static void ResetSchemas()
+    {
+        lock (_sync)
+            _schemas = new();
+    }
 
     /// <summary>
     /// Sets the schema location.
@@ -45,17 +81,14 @@ public partial class Options
     /// <returns><c>true</c> if the schema was added successfully, <c>false</c> if the schema has been already added.</returns>
     public static bool SetSchemaLocation(string schema, string? location)
     {
-        using (_lock.UpgradableReaderLock())
+        lock (_sync)
         {
             if (_schemas.Contains(schema))
                 return false;
 
-            using (_lock.WriterLock())
-            {
-                using var reader = new XmlTextReader(location ?? schema);
-                _schemas.Add(schema, reader);
-                return true;
-            }
+            using var reader = new XmlTextReader(location ?? schema);
+            _schemas.Add(schema, reader);
+            return true;
         }
     }
 
@@ -142,4 +175,13 @@ public partial class Options
     /// </summary>
     /// <value><c>true</c> if comments are to be added; otherwise, <c>false</c>.</value>
     public bool AddComments { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to validate the input documents that are to be transformed to <see cref="Expression"/>-s.
+    /// </summary>
+    /// <value><c>true</c> if the input documents are to be validated; otherwise, <c>false</c>. By default (null) the 
+    /// documents will be validated if the schema urn:schemas-vm-com:Linq.Expressions.Serialization was added to the 
+    /// <see cref="Schemas"/> collection.
+    /// </value>
+    public ValidateDocuments ValidateInputDocuments { get; set; } = ValidateDocuments.IfSchemaPresent;
 }

@@ -15,12 +15,12 @@ public abstract class BaseTests : IClassFixture<TestsFixture>
         Out = output;
     }
 
-    protected abstract string TestConstantsFilesPath { get; }
+    protected abstract string XmlTestFilesPath { get; }
 
     public virtual async Task TestAsync(string expressionString, string fileName)
     {
         var expression = Substitute(expressionString);
-        var pathName = TestConstantsFilesPath + fileName;
+        var pathName = Path.Combine(XmlTestFilesPath, fileName);
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
 
         _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);

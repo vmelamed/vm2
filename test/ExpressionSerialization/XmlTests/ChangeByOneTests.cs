@@ -2,7 +2,7 @@
 
 public partial class ChangeByOneTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "ChangeByOne/";
+    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "ChangeByOne");
 
     [Theory]
     [MemberData(nameof(ChangeByOneExpressionData))]

@@ -2,9 +2,9 @@
 
 public class TestsFixture : IDisposable
 {
-    internal const string TestFilesPath = "../../../TestData/";
+    internal const string TestFilesPath = "../../../TestData";
 
-    const string schemasPath = "../../../../../../src/ExpressionSerialization/Schemas/";
+    internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";
 
     readonly XmlSchemaSet _schemas = new();
 
@@ -28,9 +28,9 @@ public class TestsFixture : IDisposable
 
     public TestsFixture()
     {
-        Options.SetSchemaLocation(Options.Ser, $"{schemasPath}Microsoft.Serialization.xsd");
-        Options.SetSchemaLocation(Options.Dcs, $"{schemasPath}DataContract.xsd");
-        Options.SetSchemaLocation(Options.Exs, $"{schemasPath}Expression.xsd");
+        Options.SetSchemaLocation(Options.Ser, Path.Combine(SchemasPath, "Microsoft.Serialization.xsd"));
+        Options.SetSchemaLocation(Options.Dcs, Path.Combine(SchemasPath, "DataContract.xsd"));
+        Options.SetSchemaLocation(Options.Exs, Path.Combine(SchemasPath, "Expression.xsd"));
     }
 
     public void Dispose() => GC.SuppressFinalize(this);
@@ -43,7 +43,7 @@ public class TestsFixture : IDisposable
 
         if (exceptions.Count is not 0)
             throw new AggregateException(
-                        "Error(s) validating the XML document against the schema urn:schemas-vm-com:Linq.Expressions.Serialization:\n  " +
+                        $"Error(s) validating the XML document against the {Options.Exs}:\n  " +
                         string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber},{x.LinePosition}) : {x.Message}")),
                         exceptions);
     }
@@ -137,7 +137,7 @@ public class TestsFixture : IDisposable
         if (expectedDoc is null)
         {
             fileName = string.IsNullOrEmpty(fileName)
-                            ? Path.GetFullPath($"{TestFilesPath}{DateTime.Now:yyyy-MM-dd hh-mm-ss.fff.xml}")
+                            ? Path.GetFullPath(Path.Combine(TestFilesPath, DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss.fff") + ".xml"))
                             : Path.GetFullPath(fileName);
 
             var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);

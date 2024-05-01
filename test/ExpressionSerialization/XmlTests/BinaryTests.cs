@@ -2,7 +2,7 @@
 
 public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Binary/";
+    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Binary");
 
     static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
     static ParameterExpression _paramB = Expression.Parameter(typeof(int), "b");

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <constant>
+        <object type="object" i:nil="true">
+            <bananas>many!</bananas>
+        </object>
+    </constant>
+</expression>

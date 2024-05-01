@@ -1,7 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Constants/";
+    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Constants");
 
     [Theory]
     [MemberData(nameof(ConstantsData))]
@@ -14,7 +14,7 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
     [InlineData(null, "NullNullableInt.xml")]
     public async Task TestConstantNullableIntAsync(int? value, string fileName)
     {
-        var pathName = TestConstantsFilesPath + fileName;
+        var pathName = XmlTestFilesPath + fileName;
         var expression = Expression.Constant(value, typeof(int?));
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
 
@@ -27,7 +27,7 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
     [InlineData(null, "NullNullableLong.xml")]
     public async Task TestConstantNullableLongAsync(long? value, string fileName)
     {
-        var pathName = TestConstantsFilesPath + fileName;
+        var pathName = XmlTestFilesPath + fileName;
         var expression = Expression.Constant(value, typeof(long?));
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
 
@@ -38,7 +38,7 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
     [Fact]
     public async Task TestConstantObject1NullAsync()
     {
-        var pathName = TestConstantsFilesPath+"Object1Null.xml";
+        var pathName = XmlTestFilesPath+"Object1Null.xml";
         var expression = Expression.Constant(null, typeof(Object1));
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
 
@@ -51,7 +51,7 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
     [InlineData(true)]
     public async Task TestConstantExpressionClassNonSerializableAsync(bool callAsync)
     {
-        var pathName = TestConstantsFilesPath+"ClassSerializable1.xml";
+        var pathName = XmlTestFilesPath+"ClassSerializable1.xml";
         var expression = Expression.Constant(new ClassNonSerializable(1, "One"));
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
         var testCall = () => _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
@@ -68,7 +68,7 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
     [InlineData(true, "NullNullableStructDataContract1.xml")]
     public async Task TestConstantNullableStructDataContractAsync(bool isNull, string fileName)
     {
-        var pathName = TestConstantsFilesPath + fileName;
+        var pathName = XmlTestFilesPath + fileName;
         StructDataContract1? structDc = isNull ? null : new StructDataContract1()
         {
             IntProperty = 7,
@@ -86,7 +86,7 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
     [InlineData(true, "NullNullableStructSerializable1.xml")]
     public async Task TestConstantNullableStructSerializableAsync(bool isNull, string fileName)
     {
-        var pathName = TestConstantsFilesPath + fileName;
+        var pathName = XmlTestFilesPath + fileName;
         StructSerializable1? structDc = isNull ? null : new StructSerializable1()
         {
             IntProperty = 7,

@@ -2,7 +2,7 @@
 
 public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Lambdas/";
+    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Lambdas");
 
     [Theory]
     [MemberData(nameof(LambdaData))]

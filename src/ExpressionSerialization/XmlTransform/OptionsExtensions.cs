@@ -106,4 +106,33 @@ static class OptionsExtensions
     /// <returns>The transformed <paramref name="identifier"/>.</returns>
     internal static string TransformIdentifier(this Options options, string identifier)
         => Transform.Identifier(identifier, options.Identifiers);
+
+    /// <summary>
+    /// Determines whether has expressions schema <see cref="Options.Exs"/> was added to the <see cref="Options.Schemas"/>.
+    /// </summary>
+    /// <returns><c>true</c> if [has expressions schema] [the specified options]; otherwise, <c>false</c>.</returns>
+    internal static bool HasExpressionsSchema(this Options _)
+        => Options.Schemas.Contains(Options.Exs);
+
+    /// <summary>
+    /// Determines whether to validate the input XML documents against has expressions schema <see cref="Options.Exs"/>.
+    /// If <paramref name="options"/> <see cref="Options.ValidateInputDocuments"/> is <c>true</c> the method will verify
+    /// that the schema was actually added.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <returns><c>true</c> if [has expressions schema] [the specified options]; otherwise, <c>false</c>.</returns>
+    /// <exception cref="System.InvalidOperationException">
+    /// The expressions schema was not added to the Options.Schema - use Options.SetSchemaLocation().
+    /// </exception>
+    internal static bool MustValidate(this Options options)
+    {
+        if (options.ValidateInputDocuments == ValidateDocuments.Always)
+        {
+            if (!options.HasExpressionsSchema())
+                throw new InvalidOperationException("The expressions schema was not added to the Options.Schema - use Options.SetSchemaLocation().");
+            return true;
+        }
+        else
+            return options.ValidateInputDocuments == ValidateDocuments.IfSchemaPresent && options.HasExpressionsSchema();
+    }
 }

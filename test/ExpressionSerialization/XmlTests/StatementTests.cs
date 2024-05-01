@@ -4,14 +4,14 @@ using System.Reflection;
 
 public partial class StatementTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string TestConstantsFilesPath => TestsFixture.TestFilesPath + "Statements/";
+    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Statements");
 
     [Theory]
     [InlineData(typeof(int), "DefaultInt.xml")]
     [InlineData(typeof(int?), "DefaultNullableInt.xml")]
     public async Task TestDefaultIntAsync(Type type, string fileName)
     {
-        var pathName = TestConstantsFilesPath + fileName;
+        var pathName = XmlTestFilesPath + fileName;
         var expression = Expression.Default(type);
         var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
 
