@@ -1,5 +1,8 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests;
-public class TransformDocumentTest()
+﻿namespace vm2.ExpressionSerialization.XmlTests.ToExpressionTests;
+
+using vm2.ExpressionSerialization.XmlTests.ToDocumentTests;
+
+public class TransformLoadDocumentTest()
 {
     [Theory]
     [InlineData(ValidateDocuments.Always, "NullObject.xml", true, null)]
@@ -27,7 +30,7 @@ public class TransformDocumentTest()
         }
 
         var transform = new ExpressionTransform(options);
-        using var stream = new FileStream(Path.Combine(TestsFixture.TestFilesPath, fileName), FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(Path.Combine(TestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
         var deserialize = () => transform.Deserialize(stream);
 
         if (exceptionType is null)
@@ -71,7 +74,7 @@ public class TransformDocumentTest()
         }
 
         var transform = new ExpressionTransform(options);
-        using var stream = new FileStream(Path.Combine(TestsFixture.TestFilesPath, fileName), FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(Path.Combine(TestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
         var deserialize = async () => await transform.DeserializeAsync(stream);
 
         if (exceptionType is null)

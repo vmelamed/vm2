@@ -141,6 +141,8 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             node,
             base.VisitUnary,
             (n, x) => x.Add(
+                        n.IsLifted ? new XAttribute(AttributeNames.IsLifted, true) : null,
+                        n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
                         _elements.Pop(),    // pop the operand
                         VisitMethodInfo(n)));
 
@@ -150,6 +152,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             node,
             base.VisitBinary,
             (n, x) => x.Add(
+                        n.IsLifted ? new XAttribute(AttributeNames.IsLifted, true) : null,
                         n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
                         PopElements(2),     // pop operands. TODO test they are in the right order: left right
                         VisitMethodInfo(n)));

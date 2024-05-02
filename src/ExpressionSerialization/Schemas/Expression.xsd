@@ -1089,6 +1089,26 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="lifted"
+                      type="xs:boolean"
+                      use="optional"
+                      default="false">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-us">
+                    Used if a type conversion of the result to the specified type needs to take place.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="liftedToNull"
+                      type="xs:boolean"
+                      use="optional"
+                      default="false">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-us">
+                    Used if a type conversion of null to the specified type needs to take place.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="binaryExpressionType">
@@ -1131,6 +1151,16 @@
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
                     Used if a type conversion of the result to the specified type needs to take place.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="liftedToNull"
+                      type="xs:boolean"
+                      use="optional"
+                      default="false">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-us">
+                    Used if a type conversion of null to the specified type needs to take place.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

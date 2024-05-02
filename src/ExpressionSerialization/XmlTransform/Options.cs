@@ -56,13 +56,12 @@ public partial class Options
     public const string Dcs = "http://schemas.datacontract.org/2004/07/System";
 
     static readonly object _sync = new();
-    static XmlSchemaSet _schemas = new();
 
     /// <summary>
     /// Gets the schemas.
     /// </summary>
     /// <value>The schemas.</value>
-    public static XmlSchemaSet Schemas => _schemas;
+    public static XmlSchemaSet Schemas { get; private set; } = new();
 
     /// <summary>
     /// Resets the schemas.
@@ -70,7 +69,7 @@ public partial class Options
     public static void ResetSchemas()
     {
         lock (_sync)
-            _schemas = new();
+            Schemas = new();
     }
 
     /// <summary>
@@ -83,11 +82,11 @@ public partial class Options
     {
         lock (_sync)
         {
-            if (_schemas.Contains(schema))
+            if (Schemas.Contains(schema))
                 return false;
 
             using var reader = new XmlTextReader(location ?? schema);
-            _schemas.Add(schema, reader);
+            Schemas.Add(schema, reader);
             return true;
         }
     }

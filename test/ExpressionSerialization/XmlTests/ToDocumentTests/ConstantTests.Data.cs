@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests.ToDocumentTests;
 
 public partial class ConstantTests
 {
@@ -200,7 +200,6 @@ public partial class ConstantTests
 
         ["new int[]{ 1, 2, 3, 4 }.ToFrozenSet()"]                                                         = new int[]{ 1, 2, 3, 4 }.ToFrozenSet(),
         ["new Hashtable(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })"]                       = new Hashtable(new Dictionary<int, string>{ [1] ="one", [2]="two" }),
-        ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"]                                      = new Dictionary<int, string>{ [1] ="one", [2]="two" },
         ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }.ToFrozenDictionary()"]                 = new Dictionary<int, string>{ [1] ="one", [2]="two" }.ToFrozenDictionary(),
         ["new ReadOnlyDictionary<int, string>(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })"] = new ReadOnlyDictionary<int, string>(new Dictionary<int, string>{ [1] ="one", [2]="two" }),
         ["new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"]                                      = new Dictionary<int, string>{ [1] ="one", [2]="two" },

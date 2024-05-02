@@ -9,6 +9,7 @@ static class AttributeNames
     public static readonly XName FamilyAndAssembly      = "familyAndAssembly";
     public static readonly XName FamilyOrAssembly       = "familyOrAssembly";
     public static readonly XName IsByRef                = "isByRef";
+    public static readonly XName IsLifted               = "isLifted";
     public static readonly XName IsLiftedToNull         = "isLiftedToNull";
     public static readonly XName IsOut                  = "isOut";
     public static readonly XName Kind                   = "kind";

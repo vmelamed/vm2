@@ -7,5 +7,4 @@ public partial class FromXmlTransformVisitor(Options options)
 {
     Options _options = options;
 
-
 }

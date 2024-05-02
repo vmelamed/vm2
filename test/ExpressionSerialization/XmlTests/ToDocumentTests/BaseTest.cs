@@ -1,5 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests;
-
+﻿namespace vm2.ExpressionSerialization.XmlTests.ToDocumentTests;
 public abstract class BaseTests : IClassFixture<TestsFixture>
 {
     public ITestOutputHelper Out { get; }
@@ -21,10 +20,10 @@ public abstract class BaseTests : IClassFixture<TestsFixture>
     {
         var expression = Substitute(expressionString);
         var pathName = Path.Combine(XmlTestFilesPath, fileName);
-        var (expectedDoc, expectedStr) = await _fixture.GetExpectedAsync(pathName, Out);
+        var (expectedDoc, expectedStr) = await TestsFixture.GetExpectedAsync(pathName, Out);
 
-        _fixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
-        await _fixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+        TestsFixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
+        await TestsFixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
     }
 
     protected abstract Expression Substitute(string id);

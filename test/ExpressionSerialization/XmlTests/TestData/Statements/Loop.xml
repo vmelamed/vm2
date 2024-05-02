@@ -1,102 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- value => {var result; ... } -->
+<!-- {var _result; ... } -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <lambda
-        type="void">
-        <parameters>
-            <parameterDefinition
+    <block>
+        <variables>
+            <variableDefinition
                 type="int"
-                name="value"
+                name="_result"
                 id="P1" />
-        </parameters>
-        <body>
+        </variables>
+        <assign
+            type="int">
+            <variableDefinition
+                type="int"
+                name="_value"
+                id="P2" />
+            <constant>
+                <!-- 5 -->
+                <int>5</int>
+            </constant>
+        </assign>
+        <assign
+            type="int">
+            <variable
+                type="int"
+                name="_result"
+                idref="P1" />
+            <constant>
+                <!-- 1 -->
+                <int>1</int>
+            </constant>
+        </assign>
+        <loop>
             <block>
-                <variables>
-                    <variableDefinition
-                        type="int"
-                        name="result"
-                        id="P2" />
-                </variables>
-                <assign
-                    type="int">
-                    <parameter
-                        type="int"
-                        name="value"
-                        idref="P1" />
-                    <constant>
-                        <!-- 5 -->
-                        <int>5</int>
-                    </constant>
-                </assign>
-                <assign
-                    type="int">
-                    <variable
-                        type="int"
-                        name="result"
-                        idref="P2" />
-                    <constant>
-                        <!-- 1 -->
-                        <int>1</int>
-                    </constant>
-                </assign>
-                <loop>
+                <conditional>
+                    <greaterThan
+                        type="boolean">
+                        <variable
+                            type="int"
+                            name="_value"
+                            idref="P2" />
+                        <constant>
+                            <!-- 1 -->
+                            <int>1</int>
+                        </constant>
+                    </greaterThan>
                     <block>
-                        <conditional>
-                            <greaterThan
-                                type="boolean">
-                                <parameter
+                        <multiplyAssign
+                            type="int">
+                            <variable
+                                type="int"
+                                name="_result"
+                                idref="P1" />
+                            <postDecrementAssign
+                                type="int">
+                                <variable
                                     type="int"
-                                    name="value"
-                                    idref="P1" />
-                                <constant>
-                                    <!-- 1 -->
-                                    <int>1</int>
-                                </constant>
-                            </greaterThan>
-                            <block>
-                                <multiplyAssign
-                                    type="int">
-                                    <variable
-                                        type="int"
-                                        name="result"
-                                        idref="P2" />
-                                    <postDecrementAssign
-                                        type="int">
-                                        <parameter
-                                            type="int"
-                                            name="value"
-                                            idref="P1" />
-                                    </postDecrementAssign>
-                                </multiplyAssign>
-                                <goto
-                                    kind="continue">
-                                    <target
-                                        name="continue"
-                                        idref="L2" />
-                                </goto>
-                            </block>
-                            <goto
-                                kind="break">
-                                <target
-                                    name="break"
-                                    idref="L1" />
-                            </goto>
-                        </conditional>
+                                    name="_value"
+                                    idref="P2" />
+                            </postDecrementAssign>
+                        </multiplyAssign>
+                        <goto
+                            kind="continue">
+                            <target
+                                name="continue"
+                                idref="L2" />
+                        </goto>
                     </block>
-                    <continueLabel>
-                        <target
-                            name="continue"
-                            id="L2" />
-                    </continueLabel>
-                    <breakLabel>
+                    <goto
+                        kind="break">
                         <target
                             name="break"
-                            id="L1" />
-                    </breakLabel>
-                </loop>
+                            idref="L1" />
+                    </goto>
+                </conditional>
             </block>
-        </body>
-    </lambda>
+            <continueLabel>
+                <target
+                    name="continue"
+                    id="L2" />
+            </continueLabel>
+            <breakLabel>
+                <target
+                    name="break"
+                    id="L1" />
+            </breakLabel>
+        </loop>
+    </block>
 </expression>

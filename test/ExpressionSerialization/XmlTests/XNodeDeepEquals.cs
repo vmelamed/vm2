@@ -12,10 +12,7 @@ public class XNodeDeepEquals
         return false;
     }
 
-    public bool AreEqual(XNode? left, XNode? right)
-    {
-        return Equals(left, right);
-    }
+    public bool AreEqual(XNode? left, XNode? right) => Equals(left, right);
 
     bool Equals(XNode? left, XNode? right)
     {
@@ -83,7 +80,7 @@ public class XNodeDeepEquals
         if (left.BaseUri != right.BaseUri)
             return False($"text base URI: \"{left.BaseUri}\" != \"{right.BaseUri}\"");
         if (left.Value != right.Value)
-            return False($"text value: \"{left.Value}\" != \"{right.Value}\"");
+            return False($"text _value: \"{left.Value}\" != \"{right.Value}\"");
 
         return true;
     }
@@ -151,7 +148,7 @@ public class XNodeDeepEquals
             }
         }
 
-        if (left.Nodes().Count() > 0)
+        if (left.Nodes().Any())
         {
             var lEnum = left.Nodes().GetEnumerator();
             var rEnum = right.Nodes().GetEnumerator();

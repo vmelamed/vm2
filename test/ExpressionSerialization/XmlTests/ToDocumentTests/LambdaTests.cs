@@ -1,5 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests;
-
+﻿namespace vm2.ExpressionSerialization.XmlTests.ToDocumentTests;
 public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
     protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Lambdas");

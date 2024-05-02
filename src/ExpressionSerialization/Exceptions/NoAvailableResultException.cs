@@ -7,5 +7,5 @@
 /// <seealso cref="Exception" />
 public class NoAvailableResultException(string? message = null, Exception? innerException = null) : Exception(message ?? defaultMessage, innerException)
 {
-    const string defaultMessage = "There are no available transform results. Did you call `visitor.Result` already?";
+    const string defaultMessage = "There are no available transform results. Did you call `visitor.Equal` already?";
 }

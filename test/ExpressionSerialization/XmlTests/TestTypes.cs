@@ -1,4 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
+using System;
 
 using System.Runtime.Serialization;
 
@@ -90,7 +91,7 @@ class Object1
 }
 
 [DataContract]
-class ClassDataContract1
+class ClassDataContract1 : IEquatable<ClassDataContract1>
 {
     public ClassDataContract1() { }
 
@@ -107,8 +108,22 @@ class ClassDataContract1
     public string StringProperty { get; set; } = "vm";
 
     public override string ToString() => "this.DumpString()";
+
+    public virtual bool Equals(ClassDataContract1? other)
+        => other is not null &&
+           (ReferenceEquals(this, other) ||
+            GetType() == other.GetType() && IntProperty == other.IntProperty && StringProperty == other.StringProperty);
+
+    public override bool Equals(object? obj) => Equals(obj as ClassDataContract1);
+
+    public override int GetHashCode() => HashCode.Combine(IntProperty, StringProperty);
+
+    public static bool operator ==(ClassDataContract1 left, ClassDataContract1 right) => left is null ? right is null : left.Equals(right);
+
+    public static bool operator !=(ClassDataContract1 left, ClassDataContract1 right) => !(left == right);
 }
 
+#pragma warning disable IDE0021 // Use expression body for constructor
 [DataContract]
 class ClassDataContract2 : ClassDataContract1
 {
@@ -125,6 +140,7 @@ class ClassDataContract2 : ClassDataContract1
     [DataMember]
     public decimal DecimalProperty { get; set; } = 17M;
 }
+#pragma warning restore IDE0021 // Use expression body for constructor
 
 [Serializable]
 class ClassSerializable1
@@ -201,6 +217,7 @@ class C : A
     public double _c;
 }
 
+#pragma warning disable IDE0025 // Use expression body for property
 [DataContract]
 class TestMethods
 {
@@ -217,6 +234,7 @@ class TestMethods
 
     public void Method4(int i, double d) => Console.WriteLine($"Integer: {i}, double: {d}, Integer instance member: {_a}");
 }
+#pragma warning restore IDE0025 // Use expression body for property
 
 class Inner
 {

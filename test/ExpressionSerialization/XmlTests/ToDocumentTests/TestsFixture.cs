@@ -1,12 +1,10 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests.ToDocumentTests;
 
 public class TestsFixture : IDisposable
 {
     internal const string TestFilesPath = "../../../TestData";
 
     internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";
-
-    readonly XmlSchemaSet _schemas = new();
 
     internal static FileStreamOptions FileStreamOptions => new() {
         Mode = FileMode.Open,
@@ -35,7 +33,7 @@ public class TestsFixture : IDisposable
 
     public void Dispose() => GC.SuppressFinalize(this);
 
-    public void Validate(XDocument doc)
+    public static void Validate(XDocument doc)
     {
         List<XmlSchemaException> exceptions = [];
 
@@ -48,7 +46,7 @@ public class TestsFixture : IDisposable
                         exceptions);
     }
 
-    public async Task<(XDocument?, string)> GetExpectedAsync(string pathName, ITestOutputHelper? output = null)
+    public static async Task<(XDocument?, string)> GetExpectedAsync(string pathName, ITestOutputHelper? output = null)
     {
         try
         {
@@ -82,7 +80,7 @@ public class TestsFixture : IDisposable
         return (null, "");
     }
 
-    public void TestSerializeExpression(
+    public static void TestSerializeExpression(
         Expression expression,
         XDocument? expectedDoc,
         string expectedStr,
@@ -100,7 +98,7 @@ public class TestsFixture : IDisposable
         Assert(expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
-    public async Task TestSerializeExpressionAsync(
+    public static async Task TestSerializeExpressionAsync(
         Expression expression,
         XDocument? expectedDoc,
         string expectedStr,
@@ -119,7 +117,7 @@ public class TestsFixture : IDisposable
         Assert(expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
-    void Assert(
+    static void Assert(
         XDocument? expectedDoc,
         string expectedStr,
         XDocument actualDoc,
