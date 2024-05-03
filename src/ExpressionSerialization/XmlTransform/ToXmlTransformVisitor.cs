@@ -211,14 +211,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
     #region Member Bindings
     /// <inheritdoc/>
-    protected override MemberBinding VisitMemberBinding(MemberBinding node)
-    {
-        using var _ = OutputDebugScope(nameof(MemberBinding));
-
-        return base.VisitMemberBinding(node);
-    }
-
-    /// <inheritdoc/>
     protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
     {
         using var _ = OutputDebugScope(nameof(MemberAssignment));
@@ -262,6 +254,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
         return binding;
     }
+    #endregion
 
     /// <inheritdoc/>
     protected override Expression VisitMemberInit(MemberInitExpression node)
@@ -277,7 +270,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                             ElementNames.Bindings,
                             bindings));
             });
-    #endregion
 
     /// <inheritdoc/>
     protected override Expression VisitMethodCall(MethodCallExpression node)

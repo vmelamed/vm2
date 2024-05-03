@@ -1,55 +1,32 @@
 ﻿namespace vm2.ExpressionSerialization.ExpressionsDeepEquals;
-class DeepEqualsVisitor(Expression right) : ExpressionVisitor
+
+class DeepEqualsVisitor : ExpressionVisitor
 {
-    Queue<object?>? _rNodes;
-    Expression _right = right;
+    Queue<object?> _rNodes;
+    Expression _right;
 
     public bool Equal { get; private set; } = true;
 
-    /// <summary>
-    /// Dispatches the expression to one of the more specialized visit methods in this class.
-    /// </summary>
-    /// <param name="left">The expression to visit.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-    public override Expression? Visit(Expression? left)
+    public DeepEqualsVisitor(Expression right)
     {
-        if (left is null)
-        {
-            Equal = _right is null;
-            return left;
-        }
-        if (_right is null)
-        {
-            Equal = false;
-            return left;
-        }
-        if (ReferenceEquals(left, _right))
-            return left;
+        _right = right;
 
-        if (_rNodes is null)
-        {
-            // this is the beginning of the visiting process - initialize the queue
-            var qVisitor = new EnqueueingVisitor();
-            qVisitor.Visit(_right);
-            _rNodes = qVisitor.VisitingQueue;
-        }
+        var qVisitor = new EnqueueingVisitor();
 
-        return base.Visit(left);
+        qVisitor.Visit(_right);
+        _rNodes = qVisitor.VisitingQueue;
     }
 
     bool GetRight<T>(out T? right) where T : class
     {
-        // initialize right with null
-        right = null;
+        right = default;
 
-        Debug.Assert(_rNodes is not null);
-
-        Equal &= _rNodes.Count != 0;
-
-        if (!Equal)
+        if (!(Equal &= _rNodes.Count != 0 &&
+                       _rNodes.Peek() is T))    // if the right node is there and has the same type - equal is true so far
             return false;
 
         right = _rNodes.Dequeue() as T;
+
         return Equal;
     }
 
@@ -62,7 +39,7 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             && left.NodeType == right.NodeType
             && left.Type == right.Type
             && left.IsLifted == right.IsLifted
-            && left.IsLiftedToNull == right.IsLiftedToNull  // TODO: in serialization/deserialization
+            && left.IsLiftedToNull == right.IsLiftedToNull
             && left.Method == right.Method
             ;
 
@@ -98,38 +75,39 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
 
     protected override Expression VisitConstant(ConstantExpression left)
     {
+        Equal = GetRight<ConstantExpression>(out var right);
         if (!Equal)
             return left;
 
-        Equal &= GetRight<ConstantExpression>(out var right);
-
-        if (!Equal)
-            return left;
-
-        Equal &=
+        Equal =
             right is not null
             && left.NodeType == right.NodeType
             && left.Type == right.Type
             && left.Value is null == right.Value is null
             ;
-
-        if (!Equal)
-            return left;
-
-        Debug.Assert(right is not null);
-
-        if (left.Value is null && right.Value is null)
+        if (!Equal || left.Value is null)   // either different or both null
             return left;
 
         Debug.Assert(left.Value is not null);
-        Debug.Assert(right.Value is not null);
+        Debug.Assert(right?.Value is not null);
 
-        Equal &=
-            left.Value.GetType() == right.Value.GetType()
-            && left.Value.Equals(right.Value)
-            ;
+        if (left.Value is IEnumerable enumL && right.Value is IEnumerable enumR &&
+            (left.Type.IsArray || left.Type.Namespace?.StartsWith("System") is true))
+        {
+            Equal = enumL.Cast<object>().Count() == enumL.Cast<object>().Count();
+            if (!Equal)
+                return left;
 
-        return Equal ? base.VisitConstant(left) : left;
+            var itrL = enumL.GetEnumerator();
+            var itrR = enumR.GetEnumerator();
+
+            while (itrL.MoveNext() && itrR.MoveNext())
+                Equal &= itrL.Current.Equals(itrR.Current);
+        }
+        else
+            Equal = left.Value.Equals(right.Value);
+
+        return left; // visiting constant expression gives us nothing so do not go there
     }
 
     protected override Expression VisitDefault(DefaultExpression left)
@@ -141,7 +119,7 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             && left.NodeType == right.NodeType
             && left.Type == right.Type
             ;
-        return Equal ? base.VisitDefault(left) : left;
+        return left;   // visiting default expression gives us nothing so do not go there
     }
 
     protected override Expression VisitGoto(GotoExpression left)
@@ -193,7 +171,7 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             && left.Type == right.Type
             ;
 
-        return Equal ? base.VisitLabelTarget(left) : left;
+        return left;   // visiting label target gives us nothing so do not go there
     }
 
     protected override Expression VisitIndex(IndexExpression left)
@@ -274,21 +252,9 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             && right is not null
             && left.NodeType == right.NodeType
             && left.Type == right.Type
-            && left.Member == left.Member
-            ;
-        return Equal ? base.VisitMember(left) : left;
-    }
-
-    protected override MemberAssignment VisitMemberAssignment(MemberAssignment left)
-    {
-        Equal &=
-            Equal
-            && GetRight<MemberAssignment>(out var right)
-            && right is not null
-            && left.BindingType == right.BindingType
             && left.Member == right.Member
             ;
-        return Equal ? base.VisitMemberAssignment(left) : left;
+        return Equal ? base.VisitMember(left) : left;
     }
 
     protected override Expression VisitMemberInit(MemberInitExpression left)
@@ -304,16 +270,16 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
         return Equal ? base.VisitMemberInit(left) : left;
     }
 
-    protected override MemberBinding VisitMemberBinding(MemberBinding left)
+    protected override MemberAssignment VisitMemberAssignment(MemberAssignment left)
     {
         Equal &=
             Equal
-            && GetRight<MemberBinding>(out var right)
+            && GetRight<MemberAssignment>(out var right)
             && right is not null
             && left.BindingType == right.BindingType
             && left.Member == right.Member
             ;
-        return Equal ? base.VisitMemberBinding(left) : left;
+        return Equal ? base.VisitMemberAssignment(left) : left;
     }
 
     protected override MemberListBinding VisitMemberListBinding(MemberListBinding left)
@@ -322,7 +288,6 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             Equal
             && GetRight<MemberListBinding>(out var right)
             && right is not null
-            // TODO: aren't the next 2 already done in VisitMemberBinding?
             && left.BindingType == right.BindingType
             && left.Member == right.Member
             && left.Initializers.Count == right.Initializers.Count
@@ -336,7 +301,6 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             Equal
             && GetRight<MemberMemberBinding>(out var right)
             && right is not null
-            // TODO: aren't the next 2 already done in VisitMemberBinding?
             && left.BindingType == right.BindingType
             && left.Member == right.Member
             && left.Bindings.Count == right.Bindings.Count
@@ -371,16 +335,19 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             && left.Type == right.Type
             && left.Constructor == right.Constructor
             && left.Arguments.Count == right.Arguments.Count
-            && left.Members is null == right.Members is null    // TODO: in serialization/deserialization
+            && left.Members is null == right.Members is null
             ;
 
-        if (!Equal || left.Members is null)
+        if (!Equal)
             return left;
 
-        Debug.Assert(left.Members is not null);
-        Debug.Assert(right.Members is not null);
+        if (left.Members is not null && right.Members is not null)
+        {
+            Debug.Assert(left.Members is not null);
+            Debug.Assert(right.Members is not null);
 
-        Equal &= left.Members.SequenceEqual(right.Members);
+            Equal &= left.Members.SequenceEqual(right.Members);
+        }
 
         return Equal ? base.VisitNew(left) : left;
     }
@@ -420,7 +387,7 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             && left.IsByRef == right.IsByRef
             && left.Name == right.Name
             ;
-        return Equal ? base.VisitParameter(left) : left;
+        return left;     // visiting parameter expression gives us nothing so do not go there
     }
 
     protected override Expression VisitSwitch(SwitchExpression left)
@@ -499,7 +466,7 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
             && left.NodeType == right.NodeType
             && left.Type == right.Type
             && left.IsLifted == right.IsLifted
-            && left.IsLiftedToNull == right.IsLiftedToNull  // TODO: in serialization/deserialization
+            && left.IsLiftedToNull == right.IsLiftedToNull
             && left.Method == right.Method
             ;
         return Equal ? base.VisitUnary(left) : left;
@@ -509,45 +476,11 @@ class DeepEqualsVisitor(Expression right) : ExpressionVisitor
     // Won't do:
     ///////////////////////////////////////////////////////////////
 
-    protected override Expression VisitExtension(Expression left)
-    {
-        Equal &=
-            Equal
-            && GetRight<Expression>(out var right)
-            && right is not null
-            && left.NodeType == right.NodeType
-            ;
-        return Equal ? base.VisitExtension(left) : left;
-    }
+    protected override Expression VisitExtension(Expression left) => left;
 
-    protected override Expression VisitDebugInfo(DebugInfoExpression left)
-    {
-        Equal &=
-            Equal
-            && GetRight<BlockExpression>(out var right)
-            ;
-        return Equal ? base.VisitDebugInfo(left) : left;
-    }
+    protected override Expression VisitDebugInfo(DebugInfoExpression left) => left;
 
-    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression left)
-    {
-        Equal &=
-            Equal
-            && GetRight<RuntimeVariablesExpression>(out var right)
-            && right is not null
-            && left.NodeType == right.NodeType
-            ;
-        return Equal ? base.VisitRuntimeVariables(left) : left;
-    }
+    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression left) => left;
 
-    protected override Expression VisitDynamic(DynamicExpression left)
-    {
-        Equal &=
-            Equal
-            && GetRight<DynamicExpression>(out var right)
-            && right is not null
-            && left.NodeType == right.NodeType
-            ;
-        return Equal ? base.VisitDynamic(left) : left;
-    }
+    protected override Expression VisitDynamic(DynamicExpression left) => left;
 }

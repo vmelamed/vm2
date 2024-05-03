@@ -23,19 +23,31 @@ class EnqueueingVisitor : ExpressionVisitor
     protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
     {
         VisitingQueue.Enqueue(node);
-        return base.VisitLabelTarget(node);
+        return node;
+    }
+
+    //protected override MemberBinding VisitMemberBinding(MemberBinding node)
+    //{
+    //    VisitingQueue.Enqueue(node);
+    //    return base.VisitMemberBinding(node);
+    //}
+
+    protected override Expression VisitMember(MemberExpression node)
+    {
+        VisitingQueue.Enqueue(node);
+        return base.VisitMember(node);
+    }
+
+    protected override Expression VisitMemberInit(MemberInitExpression node)
+    {
+        VisitingQueue.Enqueue(node);
+        return base.VisitMemberInit(node);
     }
 
     protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
     {
         VisitingQueue.Enqueue(node);
         return base.VisitMemberAssignment(node);
-    }
-
-    protected override MemberBinding VisitMemberBinding(MemberBinding node)
-    {
-        VisitingQueue.Enqueue(node);
-        return base.VisitMemberBinding(node);
     }
 
     protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
@@ -77,26 +89,18 @@ class EnqueueingVisitor : ExpressionVisitor
     protected override Expression VisitConstant(ConstantExpression node)
     {
         VisitingQueue.Enqueue(node);
-        return base.VisitConstant(node);
+        return node;
     }
 
-    protected override Expression VisitDebugInfo(DebugInfoExpression node)
-    {
-        VisitingQueue.Enqueue(node);
-        return base.VisitDebugInfo(node);
-    }
+    protected override Expression VisitDebugInfo(DebugInfoExpression node) => node;
 
     protected override Expression VisitDefault(DefaultExpression node)
     {
         VisitingQueue.Enqueue(node);
-        return base.VisitDefault(node);
+        return node;
     }
 
-    protected override Expression VisitDynamic(DynamicExpression node)
-    {
-        VisitingQueue.Enqueue(node);
-        return base.VisitDynamic(node);
-    }
+    protected override Expression VisitDynamic(DynamicExpression node) => node;
 
     protected override Expression VisitExtension(Expression node)
     {
@@ -146,18 +150,6 @@ class EnqueueingVisitor : ExpressionVisitor
         return base.VisitLoop(node);
     }
 
-    protected override Expression VisitMember(MemberExpression node)
-    {
-        VisitingQueue.Enqueue(node);
-        return base.VisitMember(node);
-    }
-
-    protected override Expression VisitMemberInit(MemberInitExpression node)
-    {
-        VisitingQueue.Enqueue(node);
-        return base.VisitMemberInit(node);
-    }
-
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
         VisitingQueue.Enqueue(node);
@@ -179,14 +171,10 @@ class EnqueueingVisitor : ExpressionVisitor
     protected override Expression VisitParameter(ParameterExpression node)
     {
         VisitingQueue.Enqueue(node);
-        return base.VisitParameter(node);
+        return node;
     }
 
-    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
-    {
-        VisitingQueue.Enqueue(node);
-        return base.VisitRuntimeVariables(node);
-    }
+    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node) => node;
 
     protected override Expression VisitSwitch(SwitchExpression node)
     {

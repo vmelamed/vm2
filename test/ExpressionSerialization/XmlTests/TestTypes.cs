@@ -224,7 +224,12 @@ class TestMethods
     [DataMember]
     public readonly int _a = 3;
 
+    [DataMember]
+    public readonly int _b = 11;
+
     public int A { get => _a; }
+
+    public int B { get => _b; }
 
     public static int Method1() => 1;
 
