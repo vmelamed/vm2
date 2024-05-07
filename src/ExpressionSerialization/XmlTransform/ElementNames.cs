@@ -3,7 +3,6 @@ static class ElementNames
 {
     public static readonly XName Expression             = Namespaces.Exs + "expression";
 
-    public static readonly XName Object                 = Namespaces.Exs + "object";
     public static readonly XName Boolean                = Namespaces.Exs + "boolean";
     public static readonly XName UnsignedByte           = Namespaces.Exs + "unsignedByte";
     public static readonly XName Byte                   = Namespaces.Exs + "byte";
@@ -28,6 +27,7 @@ static class ElementNames
     public static readonly XName IntPtr                 = Namespaces.Exs + "intPtr";
     public static readonly XName UnsignedIntPtr         = Namespaces.Exs + "unsignedIntPtr";
 
+    public static readonly XName Object                 = Namespaces.Exs + "object";
     public static readonly XName Nullable               = Namespaces.Exs + "nullable";
     public static readonly XName Enum                   = Namespaces.Exs + "enum";
     public static readonly XName Anonymous              = Namespaces.Exs + "anonymous";

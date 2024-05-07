@@ -31,7 +31,7 @@ public enum ValidateDocuments
 public partial class Options
 {
     /// <summary>
-    /// The expression serialization XML schema
+    /// The expression transformation XML schema
     /// </summary>
     public const string Exs = "urn:schemas-vm-com:Linq.Expressions.Serialization";
 
@@ -94,7 +94,7 @@ public partial class Options
     string _characterEncoding = "utf-8";
 
     /// <summary>
-    /// Gets or sets the serialized document encoding.
+    /// Gets or sets the transformed document encoding.
     /// </summary>
     /// <value>The encoding.</value>
     public string CharacterEncoding
@@ -122,7 +122,7 @@ public partial class Options
     public bool ByteOrderMark { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets a value indicating the endianness of the (de)serialized document.
+    /// Gets or sets a value indicating the endianness of the transformed document.
     /// </summary>
     /// <value><c>true</c> if it must be big endian; otherwise, <c>false</c>.</value>
     public bool BigEndian { get; set; } = false;

@@ -8,6 +8,23 @@ using System.Runtime.CompilerServices;
 internal static partial class TypeExtensions
 {
     /// <summary>
+    /// Class TypeExtensions contains extension methods of <see cref="Type"/>.
+    /// </summary>
+    static readonly Type[] _nonPrimitiveBasicTypesCollection =
+        [
+            typeof(string),
+            typeof(Guid),
+            typeof(decimal),
+            typeof(Uri),
+            typeof(DateTime),
+            typeof(DateTimeOffset),
+            typeof(TimeSpan),
+            typeof(DBNull),
+            typeof(Half),
+        ];
+    static readonly FrozenSet<Type> _nonPrimitiveBasicTypes = _nonPrimitiveBasicTypesCollection.ToFrozenSet();
+
+    /// <summary>
     /// Determines whether the specified type is a basic type: primitive, enum, decimal, string, Guid, Uri, DateTime, 
     /// TimeSpan, DateTimeOffset, IntPtr, UIntPtr.
     /// </summary>
@@ -16,9 +33,9 @@ internal static partial class TypeExtensions
     ///   <see langword="true"/> if the specified type is one of the basic types; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool IsBasicType(this Type type)
-        => type.IsPrimitive ||
-           type.IsEnum ||
-           _nonPrimitiveBasicTypes.Contains(type);
+    => type.IsPrimitive ||
+       type.IsEnum ||
+       _nonPrimitiveBasicTypes.Contains(type);
 
     const string anonymousTypePrefix = "<>f__AnonymousType";
 
@@ -63,22 +80,6 @@ internal static partial class TypeExtensions
         => type.ImplementsInterface(typeof(ITuple));
 
     /// <summary>
-    /// Determines whether the specified type is a span.
-    /// </summary>
-    /// <param name="type">The type.</param>
-    /// <returns>bool.</returns>
-    public static bool IsSpan(this Type type)
-    {
-        if (!type.IsGenericType)
-            return false;
-
-        var genType = type.GetGenericTypeDefinition();
-
-        return genType == typeof(Span<>) ||
-               genType == typeof(ReadOnlySpan<>);
-    }
-
-    /// <summary>
     /// Determines whether the specified type is a memory{}.
     /// </summary>
     /// <param name="type">The type.</param>
@@ -94,19 +95,22 @@ internal static partial class TypeExtensions
                genType == typeof(ReadOnlyMemory<>);
     }
 
-    /// <summary>
-    /// Determines whether the specified type is an array like sequence of objects (ArraySpan, Span, Memory, etc.).
-    /// </summary>
-    /// <param name="type">The type.</param>
-    /// <returns>bool.</returns>
-    public static bool IsArrayLike(this Type type)
-        => type.IsGenericType && _arrayLikes.Contains(type.GetGenericTypeDefinition());
-
     public static bool ImplementsInterface(this Type type, Type interfaceType)
         => type.GetInterface(interfaceType.Name) is not null;
 
     public static bool ImplementsInterface(this Type type, string interfaceName)
         => type.GetInterface(interfaceName) is not null;
+
+    static readonly Type[] _byteArrayLikeCollection =
+    [
+        typeof(ArraySegment<byte>),
+        typeof(Memory<byte>),
+        typeof(ReadOnlyMemory<byte>),
+        // Span-s cannot be members of objects (ConstantExpression)
+        //typeof(Span<byte>),
+        //typeof(ReadOnlySpan<byte>),
+    ];
+    static readonly FrozenSet<Type> _byteArrayLikeSequences = _byteArrayLikeCollection.ToFrozenSet();
 
     /// <summary>
     /// Determines whether the specified type is a byte sequence: <c>byte[], Span&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;,
@@ -117,6 +121,35 @@ internal static partial class TypeExtensions
     public static bool IsByteSequence(this Type type)
         => type.IsArray && type.GetElementType() == typeof(byte) ||
            _byteArrayLikeSequences.Contains(type);
+    static readonly Type[] _sequencesCollection =
+    [
+        typeof(ArraySegment<>),
+        typeof(Memory<>),
+        typeof(ReadOnlyMemory<>),
+        typeof(FrozenSet<>),
+        typeof(ImmutableArray<>),
+        typeof(ImmutableHashSet<>),
+        typeof(ImmutableList<>),
+        typeof(ImmutableQueue<>),
+        typeof(ImmutableSortedSet<>),
+        typeof(ImmutableStack<>),
+        typeof(BlockingCollection<>),
+        typeof(ConcurrentBag<>),
+        typeof(ConcurrentQueue<>),
+        typeof(ConcurrentStack<>),
+        typeof(Collection<>),
+        typeof(ReadOnlyCollection<>),
+        typeof(HashSet<>),
+        typeof(LinkedList<>),
+        typeof(List<>),
+        typeof(Queue<>),
+        typeof(SortedSet<>),
+        typeof(Stack<>),
+        // Span-s cannot be members of objects (ConstantExpression)
+        //typeof(Span<>),
+        //typeof(ReadOnlySpan<>),
+    ];
+    static readonly FrozenSet<Type> _sequences = _sequencesCollection.ToFrozenSet();
 
     /// <summary>
     /// Determines whether the specified type is a sequence of objects: array, list, set, etc..
@@ -135,7 +168,6 @@ internal static partial class TypeExtensions
             var genType = type.GetGenericTypeDefinition();
 
             if (_sequences.Contains(genType) ||
-                _arrayLikes.Contains(genType) ||
                 genType.Name.EndsWith("FrozenSet`1")) // TODO: this is pretty wonky but I don't know how to fix it for the internal "SmallValueTypeComparableFrozenSet`1" or "SmallFrozenSet`1" 
                 return true;
         }

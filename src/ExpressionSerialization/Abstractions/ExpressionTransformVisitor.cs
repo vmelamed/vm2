@@ -1,7 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.Abstractions;
 
 /// <summary>
-/// Class ExpressionSerializingVisitor.
+/// Class ExpressionTransformVisitor.
 /// Implements <see cref="ExpressionVisitor" /> that recursively transforms the visited expression nodes into document 
 /// elements.
 /// </summary>
@@ -13,7 +13,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// <summary>
     /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements) into a parent x, 
     /// representing an expression node's operation.
-    /// E.g. the sequence of operations while serializing "a+b+c" may look like this:
+    /// E.g. the sequence of operations while transforming "a+b+c" may look like this:
     /// <para>
     /// push Element(b)
     /// </para><para>
@@ -74,12 +74,12 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
 
     /// <summary>
     /// Invokes the base class's visit method on the expression node (which may reduce it), creates the representing XML
-    /// x and invokes the XML serializing delegate.
+    /// x and invokes the transforming delegate.
     /// </summary>
     /// <typeparam name="TExpression">The type of the visited expression node.</typeparam>
-    /// <param name="node">The expression node to be serialized.</param>
+    /// <param name="node">The expression node to be transformed.</param>
     /// <param name="baseVisit">The base visit.</param>
-    /// <param name="thisVisit">Delegate to the XML serializing method.</param>
+    /// <param name="thisVisit">Delegate to the transforming method.</param>
     /// <returns>The possibly reduced expression.</returns>
     protected virtual Expression GenericVisit<TExpression>(
         TExpression node,

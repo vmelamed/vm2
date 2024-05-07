@@ -256,6 +256,71 @@ public partial class DeepEqualsTests
                     _arrayAccessExpr,
                     _valueExpr));
 
+    static Func<Expression> _newMembersInitialized = () => () => new TestMembersInitialized
+    {
+        TheOuterIntProperty = 42,
+        Time = new DateTime(1776, 7, 4),
+        InnerProperty = new Inner
+            {
+            IntProperty = 23,
+            StringProperty = "inner string"
+        },
+        EnumerableProperty = new List<string>
+            {
+                "aaa",
+                "bbb",
+                "ccc",
+            },
+    };
+
+    static Func<Expression> _newMembersInitialized1 = () => () => new TestMembersInitialized1()
+    {
+        TheOuterIntProperty = 42,
+        Time = new DateTime(1776, 7, 4),
+        InnerProperty = new Inner
+            {
+            IntProperty = 23,
+            StringProperty = "inner string"
+        },
+        ArrayProperty = new[] { 4, 5, 6 },
+        ListProperty =
+            {
+                new Inner()
+                {
+                    IntProperty = 23,
+                    StringProperty = "inner string"
+                },
+                new Inner ()
+                {
+                    IntProperty = 42,
+                    StringProperty = "next inner string"
+                }
+            },
+    };
+
+    static Func<Expression> _newMembersInitialized2 = () => () => new TestMembersInitialized1()
+    {
+        TheOuterIntProperty = 42,
+        Time = new DateTime(1776, 7, 4),
+        InnerProperty =
+            {
+            IntProperty = 23,
+                StringProperty = "inner string"
+            },
+        ArrayProperty = new int[] { 4, 5, 6 },
+        ListProperty =
+            {
+            new Inner() {
+                IntProperty = 23,
+                StringProperty = "inner string"
+            },
+                new Inner() {
+                    IntProperty = 42,
+                    StringProperty = "next inner string"
+                }
+            },
+    };
+
     static readonly Dictionary<object, Func<Expression>> _substituteExpressions = new()
     {
         ["null"]                                                                            = () => _nil,
@@ -441,99 +506,38 @@ public partial class DeepEqualsTests
         ["a => a.Method4(42,3.14)"]                                                         = () => () => (TestMethods a) => a.Method4(42, 3.14),
         ["a => a.Method4(23,2.71)"]                                                         = () => () => (TestMethods a) => a.Method4(23, 2.71),
 
-        ["() => new StructDataContract1"] = () => () => new StructDataContract1(42, "don't panic"),
-        ["(a,b) => { ... }"]        = () => _block,
-        ["(f,a) => f(a)"]           = () => (Func<int, int> f, int a) => f(a),
-        ["accessMemberMember"]      = () => (TestMembersInitialized m) => m.InnerProperty.IntProperty,
-        ["accessMemberMember1"]     = () => _accessMemberMember1,
-        ["arrayAccessExpr"]         = () => _arrayAccessExpr,
-        ["b => b ? 1 : 3"]          = () => (bool b) => b ? 1 : 3,
-        ["Console.WriteLine"]       = () => WriteLine1Expression("Default"),
-        ["goto1"]                   = () => _goto1,
-        ["goto2"]                   = () => _goto2,
-        ["goto3"]                   = () => _goto3,
-        ["goto4"]                   = () => _goto4,
-        ["indexMember"]             = () => (TestMembersInitialized m) => m.ArrayProperty.Length > 0 ? m.ArrayProperty[m.ArrayProperty.Length - 1] : -1,
-        ["array[index]"]            = () => _lambdaExpr,
-        ["indexObject1"]            = () => (TestMembersInitialized1 m) => m[1],
-        ["loop"]                    = () => _lambdaWithLoopContinueBreak,
-        ["newArrayBounds"]          = () => () => new string[2, 3, 4],
-        ["newArrayItems"]           = () => () => new string[] { "aaa", "bbb", "ccc" },
-        ["newDictionaryInit"]       = () => () => new Dictionary<int, string> { { 1, "one" }, { 2, "two" }, { 3, "three" }, },
-        ["newListInit"]             = () => () => new List<string> { "aaa", "bbb", "ccc", },
-        ["newMembersInit"]          = () => () => new TestMembersInitialized
-        {
-            TheOuterIntProperty = 42,
-            Time = new DateTime(1776, 7, 4),
-            InnerProperty = new Inner
-            {
-                IntProperty = 23,
-                StringProperty = "inner string"
-            },
-            EnumerableProperty = new List<string>
-            {
-                "aaa",
-                "bbb",
-                "ccc",
-            },
-        },
-        ["newMembersInit1"]         = () => () => new TestMembersInitialized1()
-                                                    {
-            TheOuterIntProperty = 42,
-            Time = new DateTime(1776, 7, 4),
-            InnerProperty = new Inner
-            {
-                IntProperty = 23,
-                StringProperty = "inner string"
-            },
-            ArrayProperty = new[] { 4, 5, 6 },
-            ListProperty =
-            {
-                new Inner()
-                {
-                    IntProperty = 23,
-                    StringProperty = "inner string"
-                },
-                new Inner ()
-                {
-                    IntProperty = 42,
-                    StringProperty = "next inner string"
-                }
-            },
-        },
-        ["newMembersInit2"]         = () => () => new TestMembersInitialized1()
-                                                    {
-            TheOuterIntProperty = 42,
-            Time = new DateTime(1776, 7, 4),
-            InnerProperty =
-            {
-                IntProperty = 23,
-                StringProperty = "inner string"
-            },
-            ArrayProperty = new int[] { 4, 5, 6 },
-            ListProperty =
-            {
-                new Inner()
-                {
-                    IntProperty = 23,
-                    StringProperty = "inner string"
-                },
-                new Inner ()
-                {
-                    IntProperty = 42,
-                    StringProperty = "next inner string"
-                }
-            },
-        },
-        ["return1"]                 = () => _return1,
-        ["return2"]                 = () => _return2,
-        ["switch(a){ ... }"]        = () => _switch,
-        ["throw"]                   = () => _throw,
-        ["try1"]                    = () => _try1,
-        ["try2"]                    = () => _try2,
-        ["try3"]                    = () => _try3,
-        ["try4"]                    = () => _try4,
-        ["try5"]                    = () => _try5,
-        ["try6"]                    = () => _try6,
+        ["() => new StructDataContract1"]                                                   = () => () => new StructDataContract1(42, "don't panic"),
+        ["(a,b) => { ... }"]                                                                = () => _block,
+        ["(f,a) => f(a)"]                                                                   = () => (Func<int, int> f, int a) => f(a),
+        ["accessMemberMember"]                                                              = () => (TestMembersInitialized m) => m.InnerProperty.IntProperty,
+        ["accessMemberMember1"]                                                             = () => _accessMemberMember1,
+        ["arrayAccessExpr"]                                                                 = () => _arrayAccessExpr,
+        ["b => b ? 1 : 3"]                                                                  = () => (bool b) => b ? 1 : 3,
+        ["Console.WriteLine"]                                                               = () => WriteLine1Expression("Default"),
+        ["goto1"]                                                                           = () => _goto1,
+        ["goto2"]                                                                           = () => _goto2,
+        ["goto3"]                                                                           = () => _goto3,
+        ["goto4"]                                                                           = () => _goto4,
+        ["indexMember"]                                                                     = () => (TestMembersInitialized m) => m.ArrayProperty.Length > 0 ? m.ArrayProperty[m.ArrayProperty.Length - 1] : -1,
+        ["array[index]"]                                                                    = () => _lambdaExpr,
+        ["indexObject1"]                                                                    = () => (TestMembersInitialized1 m) => m[1],
+        ["loop"]                                                                            = () => _lambdaWithLoopContinueBreak,
+        ["newArrayBounds"]                                                                  = () => () => new string[2, 3, 4],
+        ["newArrayItems"]                                                                   = () => () => new string[] { "aaa", "bbb", "ccc" },
+        ["newDictionaryInit"]                                                               = () => () => new Dictionary<int, string> { { 1, "one" }, { 2, "two" }, { 3, "three" }, },
+        ["newListInit"]                                                                     = () => () => new List<string> { "aaa", "bbb", "ccc", },
+        ["return1"]                                                                         = () => _return1,
+        ["return2"]                                                                         = () => _return2,
+        ["switch(a){ ... }"]                                                                = () => _switch,
+        ["throw"]                                                                           = () => _throw,
+        ["try1"]                                                                            = () => _try1,
+        ["try2"]                                                                            = () => _try2,
+        ["try3"]                                                                            = () => _try3,
+        ["try4"]                                                                            = () => _try4,
+        ["try5"]                                                                            = () => _try5,
+        ["try6"]                                                                            = () => _try6,
+        ["newMembersInit"]                                                                  = _newMembersInitialized,
+        ["newMembersInit1"]                                                                 = _newMembersInitialized1,
+        ["newMembersInit2"]                                                                 = _newMembersInitialized2,
     };
 }

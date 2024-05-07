@@ -812,7 +812,7 @@
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Specifies a collectio of items in a constant expression.
+                        Specifies a collection of items in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>

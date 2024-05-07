@@ -1,19 +1,20 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 
 using TransformConstant = Func<object?, Type, XElement>;
 
 /// <summary>
-/// Class DataTransform.
+/// Class ToXmlDataTransform.
 /// </summary>
-internal class DataTransform(Options? options = default)
+class ToXmlDataTransform(Options? options = default)
 {
     Options _options = options ?? new Options();
 
-    #region constant serializers
+    #region constant ToXml transforms
     /// <summary>
-    /// The map of base type constants serializers
+    /// The map of base type constants transforms
     /// </summary>
     static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
     {
@@ -51,7 +52,7 @@ internal class DataTransform(Options? options = default)
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>
-    /// A delegate that can serialize a nullable of the specified <paramref name="type"/> into an XML element (<see cref="XElement"/>).
+    /// A delegate that can transform a nullable of the specified <paramref name="type"/> into an XML element (<see cref="XElement"/>).
     /// </returns>
     /// <exception cref="SerializationException"></exception>
     public TransformConstant GetTransform(Type type)
@@ -203,6 +204,9 @@ internal class DataTransform(Options? options = default)
             if (nodeValue is null)
                 throw new InternalTransformErrorException("Unexpected non-array byte sequenceElement with null value of type '{nodeType.FullName}'.");
 
+            if (nodeValue is ImmutableArray<byte> iab)
+                bytes = iab.AsSpan();
+            else
             if (nodeValue is Memory<byte> mb)
                 bytes = mb.Span;
             else
@@ -231,46 +235,61 @@ internal class DataTransform(Options? options = default)
         object? nodeValue,
         Type nodeType)
     {
-        var piCount = nodeType.GetProperty("Count") ?? nodeType.GetProperty("Length");
-        var length = (int?)piCount?.GetValue(nodeValue);
-        var elementType = (nodeType.IsGenericType
+        try
+        {
+            var elementType = (nodeType.IsGenericType
                                 ? nodeType.GetGenericArguments()[0]
                                 : nodeType.GetElementType()) ?? throw new InternalTransformErrorException("Could not find the type of a sequenceElement elements.");
 
-        var collectionElement = new XElement(
+            if (nodeValue is null)
+                return new XElement(
+                                ElementNames.Collection,
+                                new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
+                                _options.TypeComment(elementType),
+                                new XAttribute(AttributeNames.ElementType, Transform.TypeName(elementType)),
+                                new XAttribute(AttributeNames.Nil, true)
+                            );
+
+            var piCount = nodeType.GetProperty("Count") ?? nodeType.GetProperty("Length");
+            var length = (int?)piCount?.GetValue(nodeValue);
+            var collectionElement = new XElement(
                                         ElementNames.Collection,
                                         new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                                         new XAttribute(AttributeNames.ElementType, Transform.TypeName(elementType)),
                                         length.HasValue ? new XAttribute(AttributeNames.Length, length.Value) : null,
-                                        nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null,
                                         _options.TypeComment(elementType)
                                     );
 
-        if (nodeValue is null)
-            return collectionElement;
+            if (nodeValue is IEnumerable enumerable1)
+            {
+                foreach (var element in enumerable1)
+                    collectionElement.Add(
+                        GetTransform(elementType)(element, elementType));
 
-        if (nodeValue is IEnumerable enumerable1)
-        {
-            foreach (var element in enumerable1)
-                collectionElement.Add(
-                    GetTransform(elementType)(element, elementType));
+                return collectionElement;
+            }
 
-            return collectionElement;
+            // Of all sequences only Memory<> does not implement IEnumerable.
+            // TODO: figure out how to enumerate Memory<> with reflection, instead of copying to array:
+            Debug.Assert(nodeType.IsMemory());
+
+            var array = nodeType.GetMethod("ToArray")?.Invoke(nodeValue, null);
+
+            if (array is IEnumerable enumerable2)
+            {
+                foreach (var element in enumerable2)
+                    collectionElement.Add(
+                        GetTransform(elementType)(element, elementType));
+
+                return collectionElement;
+            }
+
+            throw new InternalTransformErrorException($"Could not find the enumerable for {nodeType.FullName}.");
         }
-
-        // TODO: figure out how to enumerate Memory<> with reflection, instead of copying the array:
-        var array = nodeType.GetMethod("ToArray")?.Invoke(nodeValue, null);
-
-        if (array is IEnumerable enumerable2)
+        catch (Exception ex)
         {
-            foreach (var element in enumerable2)
-                collectionElement.Add(
-                    GetTransform(elementType)(element, elementType));
-
-            return collectionElement;
+            throw new SerializationException($"Could not transform {nodeValue}", ex);
         }
-
-        throw new InternalTransformErrorException($"Could not find the enumerable for {nodeType.FullName}.");
     }
 
     /// <summary>
@@ -357,33 +376,46 @@ internal class DataTransform(Options? options = default)
         object? nodeValue,
         Type nodeType)
     {
-        var dict = nodeValue as IDictionary;
-        var length = dict?.Count;
+        if (nodeValue is null)
+            return new XElement(
+                                ElementNames.Dictionary,
+                                new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
+                                nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
+
+        if (nodeValue is not IDictionary dict)
+            throw new InternalTransformErrorException("The value of type 'Dictionary' doesn't implement IDictionary.");
+
+        var length = dict.Count;
         var dictElement = new XElement(
                                 ElementNames.Dictionary,
                                 new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                                length.HasValue ? new XAttribute(AttributeNames.Length, length.Value) : null,
+                                new XAttribute(AttributeNames.Length, length),
                                 nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
 
-        if (nodeValue is null)
-            return dictElement;
-        if (dict is null)
-            throw new InternalTransformErrorException("The value of type 'Dictionary' doesn't implement IDictionary.");
+        Type kType, vType;
 
-        var kvTypes   = nodeType.GetGenericArguments();
-        var keyType   = kvTypes?.Length is 2 ? kvTypes?[0] : null;
-        var valueType = kvTypes?.Length is 2 ? kvTypes?[1] : null;
+        if (nodeType.IsGenericType)
+        {
+            var kvTypes   = nodeType.GetGenericArguments();
+
+            if (kvTypes.Length is not 2)
+                throw new InternalTransformErrorException("The elements of 'Dictionary' do not have key-type and element-type.");
+
+            kType = kvTypes[0];
+            vType = kvTypes[1];
+        }
+        else
+        {
+            kType = typeof(object);
+            vType = typeof(object);
+        }
 
         foreach (DictionaryEntry kv in dict)
-        {
-            var kType = keyType ?? kv.Key.GetType();
-            var vType = valueType ?? kv.Value?.GetType() ?? typeof(object);
             dictElement.Add(
                 new XElement(
                     ElementNames.KeyValuePair,
                     GetTransform(kType)(kv.Key, kType),
                     GetTransform(vType)(kv.Value, vType)));
-        }
 
         return dictElement;
     }
@@ -404,12 +436,12 @@ internal class DataTransform(Options? options = default)
                             new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                             new XAttribute(AttributeNames.Nil, nodeValue is null));
 
-        var actualTransform = GetTransform(nodeValue.GetType());
+        var concreteType = nodeValue.GetType();
+        var actualTransform = GetTransform(concreteType);
 
         if (actualTransform != ObjectTransform)
-            return actualTransform(nodeValue, nodeValue.GetType());
+            return actualTransform(nodeValue, concreteType);
 
-        var concreteType = nodeValue.GetType();
         var objectElement = new XElement(
                                     ElementNames.Object,
                                     new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
@@ -420,8 +452,7 @@ internal class DataTransform(Options? options = default)
         if (nodeValue is null)
             return objectElement;
 
-        var dcSerializer = new DataContractSerializer(nodeValue.GetType(), Type.EmptyTypes);
-
+        var dcSerializer = new DataContractSerializer(concreteType);
         using var writer = objectElement.CreateWriter();
 
         // XML serialize into the element

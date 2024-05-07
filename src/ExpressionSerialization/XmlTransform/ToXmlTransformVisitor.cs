@@ -15,7 +15,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// </summary>
     protected Options _options = options ?? new();
 
-    DataTransform _dataTransform = new(options);
+    ToXmlDataTransform _dataTransform = new(options);
 
     // labels and parameters/variables are created in one value n and references to them are used in another.
     // These dictionaries keep their id-s so we can create `XAttribute` id-s and idref-s to them.
@@ -75,7 +75,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         }
         catch (Exception x)
         {
-            throw new NonSerializableObjectException(node.Type, x);
+            throw new SerializationException($"Don't know how to serialize {node.Type}", x);
         }
     }
 
