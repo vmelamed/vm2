@@ -5,8 +5,8 @@ public partial class UnaryTests(TestsFixture fixture, ITestOutputHelper output) 
 
     [Theory]
     [MemberData(nameof(UnaryData))]
-    public async Task UnaryTestAsync(string _, string expressionString, string fileName)
-        => await base.TestAsync(expressionString, fileName);
+    public async Task UnaryTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> UnaryData = new ()
     {

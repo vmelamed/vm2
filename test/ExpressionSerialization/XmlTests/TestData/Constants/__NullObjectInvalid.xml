@@ -7,6 +7,7 @@
         <!-- null -->
         <object
             type="System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-            i:nil="true" />
+            i:nil="true"
+            bananas="many"/>
     </constant>
 </expression>

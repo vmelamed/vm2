@@ -13,16 +13,17 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
     {
         var pathName = XmlTestFilesPath + fileName;
         var expression = Expression.Default(type);
-        var (expectedDoc, expectedStr) = await TestsFixture.GetExpectedAsync(pathName, Out);
+        var testFileLine = TestLine();
+        var (expectedDoc, expectedStr) = await TestsFixture.GetXmlDocumentAsync(testFileLine, pathName, "EXPECTED", Out);
 
-        TestsFixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
-        await TestsFixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+        TestsFixture.TestExpressionToXml(testFileLine, expression, expectedDoc, expectedStr, pathName, Out);
+        await TestsFixture.TestExpressionToXmlAsync(testFileLine, expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
     }
 
     [Theory]
     [MemberData(nameof(StatementData))]
-    public async Task StatementTestAsync(string _, string expressionString, string fileName)
-        => await base.TestAsync(expressionString, fileName);
+    public async Task StatementTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> StatementData = new ()
     {
@@ -114,7 +115,7 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
             _paramA,
             WriteLine1Expression("Default"),
             Expression.SwitchCase(
-                WriteLine1Expression("First"),
+                WriteLine1Expression("FirstChild"),
                 Expression.Constant(1)),
             Expression.SwitchCase(
                 WriteLine1Expression("Second"),

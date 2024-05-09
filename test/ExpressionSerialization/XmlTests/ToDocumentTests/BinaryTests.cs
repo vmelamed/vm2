@@ -7,8 +7,8 @@ public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output)
 
     [Theory]
     [MemberData(nameof(BinaryData))]
-    public async Task BinaryTestAsync(string _, string expressionString, string fileName)
-        => await base.TestAsync(expressionString, fileName);
+    public async Task BinaryTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> BinaryData = new ()
     {

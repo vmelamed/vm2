@@ -1,41 +1,53 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
+
+using Transform = Func<XElement, Type, object?>;
+
+/// <summary>
+/// Delegate TransformFunc
+/// </summary>
+/// <typeparam name="TElement">The type of the t element.</typeparam>
+/// <param name="arg">The argument.</param>
+/// <returns>IEnumerable&lt;TElement&gt;.</returns>
+public delegate IEnumerable<TElement> TransformFunc<TElement>(IEnumerable<TElement> arg);
 
 partial class FromXmlDataTransform(Options? options = default)
 {
     Options _options = options ?? new Options();
 
-#pragma warning disable IDE0075 // Simplify conditional expression
     #region constant de-serializers
     /// <summary>
     /// The map of base type constants transforms
     /// </summary>
-    static readonly Dictionary<XName, Func<XElement, object?>> _constantTransforms = new()
+    static readonly Dictionary<XName, Transform> _constantDataTransforms = new()
     {
-        { ElementNames.Boolean,        x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToBoolean(x.Value)            : default },
-        { ElementNames.UnsignedByte,   x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToByte(x.Value)               : default },
-        { ElementNames.Byte,           x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToSByte(x.Value)              : default },
-        { ElementNames.Short,          x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt16(x.Value)              : default },
-        { ElementNames.UnsignedShort,  x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt16(x.Value)             : default },
-        { ElementNames.Int,            x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt32(x.Value)              : default },
-        { ElementNames.UnsignedInt,    x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt32(x.Value)             : default },
-        { ElementNames.Long,           x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt64(x.Value)              : default },
-        { ElementNames.UnsignedLong,   x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt64(x.Value)             : default },
-        { ElementNames.Half,           x => !string.IsNullOrWhiteSpace(x.Value) ? (Half)XmlConvert.ToSingle(x.Value)       : default },
-        { ElementNames.Float,          x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToSingle(x.Value)             : default },
-        { ElementNames.Double,         x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDouble(x.Value)             : default },
-        { ElementNames.Decimal,        x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDecimal(x.Value)            : default },
-        { ElementNames.Char,           x => !string.IsNullOrWhiteSpace(x.Value) ? Convert.ToChar(Convert.ToInt32(x.Value, CultureInfo.InvariantCulture)) : default },
-        { ElementNames.Guid,           x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToGuid(x.Value)               : default },
-        { ElementNames.DateTime,       x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDateTime(x.Value, XmlDateTimeSerializationMode.RoundtripKind) : default },
-        { ElementNames.DateTimeOffset, x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDateTimeOffset(x.Value)     : default },
-        { ElementNames.Duration,       x => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToTimeSpan(x.Value)           : default },
-        { ElementNames.IntPtr,         x => !string.IsNullOrWhiteSpace(x.Value) ? (IntPtr)XmlConvert.ToInt32(x.Value)      : default },
-        { ElementNames.UnsignedIntPtr, x => !string.IsNullOrWhiteSpace(x.Value) ? (UIntPtr)XmlConvert.ToUInt32(x.Value)    : default },
-        { ElementNames.AnyURI,         x => !string.IsNullOrWhiteSpace(x.Value) ? new Uri(x.Value)                         : throw new SerializationException("Cannot deserialize URI object from null or empty string.") },
-        { ElementNames.DBNull,         x => DBNull.Value                                                                   },
-        { ElementNames.String,         x => x.Value                                                                        },
+        { ElementNames.Boolean,        (x, t) => !string.IsNullOrWhiteSpace(x.Value) && XmlConvert.ToBoolean(x.Value)                     },
+        { ElementNames.UnsignedByte,   (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToByte(x.Value)               : default },
+        { ElementNames.Byte,           (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToSByte(x.Value)              : default },
+        { ElementNames.Short,          (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt16(x.Value)              : default },
+        { ElementNames.UnsignedShort,  (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt16(x.Value)             : default },
+        { ElementNames.Int,            (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt32(x.Value)              : default },
+        { ElementNames.UnsignedInt,    (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt32(x.Value)             : default },
+        { ElementNames.Long,           (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt64(x.Value)              : default },
+        { ElementNames.UnsignedLong,   (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt64(x.Value)             : default },
+        { ElementNames.Half,           (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? (Half)XmlConvert.ToSingle(x.Value)       : default },
+        { ElementNames.Float,          (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToSingle(x.Value)             : default },
+        { ElementNames.Double,         (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDouble(x.Value)             : default },
+        { ElementNames.Decimal,        (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDecimal(x.Value)            : default },
+        { ElementNames.Char,           (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? x.Value[0]                               : default },
+        { ElementNames.Guid,           (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToGuid(x.Value)               : default },
+        { ElementNames.DateTime,       (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDateTime(x.Value, XmlDateTimeSerializationMode.RoundtripKind) : default },
+        { ElementNames.DateTimeOffset, (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDateTimeOffset(x.Value, "O"): default },
+        { ElementNames.Duration,       (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToTimeSpan(x.Value)           : default },
+        { ElementNames.IntPtr,         (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? (IntPtr)XmlConvert.ToInt32(x.Value)      : default },
+        { ElementNames.UnsignedIntPtr, (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? (UIntPtr)XmlConvert.ToUInt32(x.Value)    : default },
+        { ElementNames.AnyURI,         (x, t) => !string.IsNullOrWhiteSpace(x.Value) ? new Uri(x.Value)                         : throw new SerializationException("Cannot deserialize URI object from null or empty string.") },
+        { ElementNames.DBNull,         (x, t) => DBNull.Value                                                                   },
+        { ElementNames.String,         (x, t) => x.Value                                                                        },
         { ElementNames.Nullable,       TransformNullable                                                                   },
         { ElementNames.Enum,           TransformEnum                                                                       },
         { ElementNames.Object,         TransformObject                                                                     },
@@ -46,167 +58,176 @@ partial class FromXmlDataTransform(Options? options = default)
         { ElementNames.Tuple,          TransformTupleElement                                                               },
         { ElementNames.TupleItem,      TransformTupleElement                                                               },
     };
+    static readonly FrozenDictionary<XName, Transform> _constantTransforms = _constantDataTransforms.ToFrozenDictionary();
     #endregion
-#pragma warning restore IDE0075 // Simplify conditional expression
 
-    static ReaderWriterLockSlim _namesToTypesLock = new(LockRecursionPolicy.SupportsRecursion);
-    static Dictionary<string, Type> _namesToTypes = new()
-        {
-            { "void",           typeof(void)        },
-            { "char",           typeof(char)        },
-            { "boolean",        typeof(bool)        },
-            { "unsignedByte",   typeof(byte)        },
-            { "byte",           typeof(sbyte)       },
-            { "short",          typeof(short)       },
-            { "unsignedShort",  typeof(ushort)      },
-            { "int",            typeof(int)         },
-            { "unsignedInt",    typeof(uint)        },
-            { "long",           typeof(long)        },
-            { "unsignedLong",   typeof(ulong)       },
-            { "float",          typeof(float)       },
-            { "double",         typeof(double)      },
-            { "decimal",        typeof(decimal)     },
-            { "guid",           typeof(Guid)        },
-            { "anyURI",         typeof(Uri)         },
-            { "string",         typeof(string)      },
-            { "duration",       typeof(TimeSpan)    },
-            { "dateTime",       typeof(DateTime)    },
-            { "dbNull",         typeof(DBNull)      },
-            { "nullable",       typeof(Nullable<>)  },
-            { "custom",         typeof(object)      },
-            { "enum",           typeof(Enum)        },
-        };
+    static Dictionary<string, Type> _elementNamesToTypes = new()
+    {
+        { ElementNames.Char.LocalName,              typeof(char)           },
+        { ElementNames.Boolean.LocalName,           typeof(bool)           },
+        { ElementNames.UnsignedByte.LocalName,      typeof(byte)           },
+        { ElementNames.Byte.LocalName,              typeof(sbyte)          },
+        { ElementNames.Short.LocalName,             typeof(short)          },
+        { ElementNames.UnsignedShort.LocalName,     typeof(ushort)         },
+        { ElementNames.Int.LocalName,               typeof(int)            },
+        { ElementNames.UnsignedInt.LocalName,       typeof(uint)           },
+        { ElementNames.Long.LocalName,              typeof(long)           },
+        { ElementNames.UnsignedLong.LocalName,      typeof(ulong)          },
+        { ElementNames.Half.LocalName,              typeof(Half)           },
+        { ElementNames.Float.LocalName,             typeof(float)          },
+        { ElementNames.Double.LocalName,            typeof(double)         },
+        { ElementNames.Decimal.LocalName,           typeof(decimal)        },
+        { ElementNames.Guid.LocalName,              typeof(Guid)           },
+        { ElementNames.AnyURI.LocalName,            typeof(Uri)            },
+        { ElementNames.String.LocalName,            typeof(string)         },
+        { ElementNames.Duration.LocalName,          typeof(TimeSpan)       },
+        { ElementNames.DateTime.LocalName,          typeof(DateTime)       },
+        { ElementNames.DateTimeOffset.LocalName,    typeof(DateTimeOffset) },
+        { ElementNames.DBNull.LocalName,            typeof(DBNull)         },
+        { ElementNames.IntPtr.LocalName,            typeof(IntPtr)         },
+        { ElementNames.UnsignedIntPtr.LocalName,    typeof(UIntPtr)        },
+    };
+    static FrozenDictionary<string, Type> _namesToTypes = _elementNamesToTypes.ToFrozenDictionary();
 
     /// <summary>
     /// Gets the constant value XML to .NET transform delegate corresponding to the XML <paramref name="element"/>.
     /// </summary>
     /// <param name="element">The element which holds transformed constant value.</param>
     /// <returns>The transforming delegate corresponding to the <paramref name="element"/>.</returns>
-    internal static Func<XElement, object?> GetTransform(XElement element) => _constantTransforms[element.Name];
-
-    internal static Type GetType(XElement element)
-        => GetType(element.Attribute(AttributeNames.Type)
-                        ?? throw new SerializationException($"An XML element {element.Name} is missing the type attribute."));
+    internal static Transform GetTransform(XElement element) => _constantTransforms[element.Name];
 
     internal static ConstantExpression ConstantTransform(XElement element)
     {
-        var type = FromXmlDataTransform.GetType(element);
-        var value = FromXmlDataTransform.GetTransform(element)(element);
+        var type = GetType(element);
+        var transform = GetTransform(element);
+        var value = transform(element, type);
 
         return Expression.Constant(value, type);
     }
 
-    /// <summary>
-    /// Gets the type corresponding to a type name written in an XML attribute.
-    /// </summary>
-    /// <param name="typeAttribute">The type attribute.</param>
-    /// <returns>The specified type.</returns>
-    internal static Type GetType(XAttribute typeAttribute)
-        => GetType(typeAttribute.Value);
-
-    /// <summary>
-    /// Gets the type corresponding to a type name.
-    /// </summary>
-    /// <param name="typeName">The type name.</param>
-    /// <returns>The specified type.</returns>
-    internal static Type GetType(string typeName)
+    internal static Type GetType(XElement element)
     {
-        using (_namesToTypesLock.ReaderLock())
-        {
-            if (_namesToTypes.TryGetValue(typeName, out var type))
-                return type;
-
-            type = Type.GetType(typeName) ?? throw new SerializationException($"Unknown type {typeName}.");
-            using (_namesToTypesLock.WriterLock())
-                _namesToTypes[typeName] = type;
+        if (_namesToTypes.TryGetValue(element.Name.LocalName, out var type))
             return type;
+
+        var typeName = element.Attribute(AttributeNames.Type)?.Value;
+
+        if (element.Name == ElementNames.Nullable)
+        {
+            if (string.IsNullOrWhiteSpace(typeName))
+                type = GetType(element.FirstChild());
+            else
+            if (!_namesToTypes.TryGetValue(typeName, out type))
+                type = Type.GetType(typeName) ?? throw new InternalTransformErrorException($"Non-null nullable value of unknown type in {element.Name}.");
+
+            return typeof(Nullable<>).MakeGenericType([type]);
         }
+
+        if (string.IsNullOrWhiteSpace(typeName))
+            if (element.Name == ElementNames.Object)
+                return typeof(object);
+            else
+                throw new SerializationException($"An XML element {element.Name} is missing the type attribute.");
+
+        return Type.GetType(typeName)
+                        ?? throw new SerializationException($"Could not resolve the type name {typeName} specified in element {element.Name}.");
     }
 
-    static object? TransformNullable(XElement element)
+    static object? TransformNullable(
+        XElement element,
+        Type type)
     {
-        if (XmlConvert.ToBoolean(
-                element.Attribute(AttributeNames.Nil)?.Value
-                    ?? throw new SerializationException($"Deserialization error in element {element.Name}.")))
+        if (element.IsNil())
             return null;
 
         // we do not need to return Nullable<T> here. Since the return type is object? the CLR will either return null or the boxed value of the Nullable<T>
-        var valueElement = element.Elements().FirstOrDefault()
-                                ?? throw new SerializationException($"Deserialization error in element {element.Name}.");
-        return _constantTransforms[valueElement.Name](valueElement);
+        var valueElement = element.FirstChild();
+        var typeElement = GetType(valueElement);
+        var value = _constantTransforms[valueElement.Name](valueElement, typeElement);
+
+        return (typeof(Nullable<>)
+                    .MakeGenericType(typeElement)
+                    .GetConstructor([typeElement]) ?? throw new InternalTransformErrorException($"Could not get the constructor for Nullable<{typeElement.Name}>"))
+                    .Invoke([value]);
     }
 
-    static object? TransformEnum(XElement element)
+    static object? TransformEnum(
+        XElement element,
+        Type type)
     {
-        var enumType = GetType(element);
-
         try
         {
-            return Enum.Parse(enumType, element.Value);
+            return Enum.Parse(type, element.Value);
         }
         catch (ArgumentException ex)
         {
             throw new SerializationException(
-                        $"Cannot transform {element.Value} to {enumType.FullName} value.", ex);
+                        $"Cannot transform {element.Value} to {type.FullName} value.", ex);
         }
         catch (OverflowException ex)
         {
             throw new SerializationException(
-                        $"Cannot transform {element.Value} to {enumType.FullName} value.", ex);
+                        $"Cannot transform {element.Value} to {type.FullName} value.", ex);
         }
     }
 
-    static object? TransformObject(XElement element)
+    static object? TransformObject(
+        XElement element,
+        Type type)
     {
-        if (element.Elements().FirstOrDefault() is null)
+        if (element.IsNil() || element.Elements().FirstOrDefault() is null)
             return null;
 
-        string typeString = element.Attribute(AttributeNames.Type)?.Value
-                                ?? throw new SerializationException($"Expected type attribute in element {element.Name}.");
+        if (type == typeof(object))
+            return new();
 
-        var serializer = new DataContractSerializer(GetType(typeString));
-        using var reader = element.Elements().First().CreateReader();
+        var concreteTypeName = element.Attribute(AttributeNames.ConcreteType)?.Value;
+        var concreteType = !string.IsNullOrEmpty(concreteTypeName) ? Type.GetType(concreteTypeName) : null;
+
+        var serializer = new DataContractSerializer(concreteType ?? type);
+        using var reader = element.FirstChild().CreateReader();
 
         return serializer.ReadObject(reader);
     }
 
-    static object? TransformAnonymous(XElement element)
+    static object? TransformAnonymous(
+        XElement element,
+        Type type)
     {
         if (!element.Elements(ElementNames.Property).Any())
             return null;
 
-        var type = GetType(element);
         var constructor = type.GetConstructors()[0];
         var constructorParameters = constructor.GetParameters();
-        var parameters = new object[constructorParameters.Length];
+        var parameters = new object?[constructorParameters.Length];
 
         for (var i = 0; i < constructorParameters.Length; i++)
         {
             var paramName = constructorParameters[i].Name;
             var propElement = element
                                 .Elements(ElementNames.Property)
-                                .Where(e => paramName == (e.Attribute(AttributeNames.Name)?.Value ?? throw new SerializationException($"Expected attribute with name {paramName}.")))
+                                .Where(e => paramName == (e.Attribute(AttributeNames.Name)?.Value
+                                                                ?? throw new SerializationException($"Expected attribute with name {paramName}.")))
                                 .First()
-                                .Elements()
-                                .FirstOrDefault()
+                                .FirstChild()
                                 ;
 
             if (propElement is not null)
-                parameters[i] = GetTransform(propElement)(propElement) ?? throw new SerializationException($"Don't know how to transform {propElement.Name}.");
+                parameters[i] = GetTransform(propElement)(propElement, GetType(propElement));
         }
 
         return constructor.Invoke(parameters);
     }
 
-    static object? TransformByteSequence(XElement element)
+    static object? TransformByteSequence(
+        XElement element,
+        Type type)
     {
-        var length = int.Parse(element.Attribute(AttributeNames.Length)?.Value ?? "0");
+        var length = element.Length();
         var bytes = Convert.FromBase64String(element.Value);
 
-        if (bytes.Length != length)
+        if (length.HasValue && length.Value != bytes.Length)
             throw new SerializationException($"Unexpected value of element {element.Name}.");
-
-        var type = GetType(element);
 
         if (type == typeof(byte[]))
             return bytes;
@@ -222,86 +243,164 @@ partial class FromXmlDataTransform(Options? options = default)
         throw new SerializationException($"Unexpected type of element {element.Name}.");
     }
 
-    static readonly Dictionary<Type, Func<IEnumerable<ConstantExpression>, IEnumerable<ConstantExpression>>> _sequenceTransforms = new ()
-    {
-        [typeof(ArraySegment<>)]       = s => new ArraySegment<ConstantExpression>(s.ToArray()),
-        [typeof(FrozenSet<>)]          = s => s.ToFrozenSet(),
-        [typeof(ImmutableArray<>)]     = s => s.ToImmutableArray(),
-        [typeof(ImmutableHashSet<>)]   = s => s.ToImmutableHashSet(),
-        [typeof(ImmutableList<>)]      = s => s.ToImmutableList(),
-        [typeof(ImmutableQueue<>)]     = s => ImmutableQueue.Create(s.ToArray()),
-        [typeof(ImmutableSortedSet<>)] = s => s.ToImmutableSortedSet(),
-        [typeof(ImmutableStack<>)]     = s => ImmutableStack.Create(s.Reverse().ToArray()),
-        [typeof(ConcurrentBag<>)]      = s => new ConcurrentBag<ConstantExpression>(s),
-        [typeof(ConcurrentQueue<>)]    = s => new ConcurrentQueue<ConstantExpression>(s),
-        [typeof(ConcurrentStack<>)]    = s => new ConcurrentStack<ConstantExpression>(s.Reverse()),
-        [typeof(Collection<>)]         = s => new Collection<ConstantExpression>(s.ToList()),
-        [typeof(ReadOnlyCollection<>)] = s => new ReadOnlyCollection<ConstantExpression>(s.ToList()),
-        [typeof(List<>)]               = s => s.ToList(),
-        [typeof(LinkedList<>)]         = s => new LinkedList<ConstantExpression>(s),
-        [typeof(HashSet<>)]            = s => s.ToHashSet(),
-        [typeof(Queue<>)]              = s => new Queue<ConstantExpression>(s),
-        [typeof(SortedSet<>)]          = s => new SortedSet<ConstantExpression>(s),
-        [typeof(Stack<>)]              = s => new Stack<ConstantExpression>(s.Reverse()),
-        [typeof(BlockingCollection<>)] = s =>
-        {
-            var bc = new BlockingCollection<ConstantExpression>();
-            s.Select(e => { bc.Add(e); return 1; }).Count();
-            return bc!;
-        },
-    };
+    static MethodInfo _toFrozenSet = typeof(FrozenSet).GetMethod("ToFrozenSet")!;
+    static MethodInfo _toImmutableArray = typeof(ImmutableArray).GetMethod("ToImmutableArray", [typeof(IEnumerable<>)])!;  // 
+    static MethodInfo _toImmutableHashSet = typeof(ImmutableHashSet).GetMethod("ToImmutableHashSet", [typeof(IEnumerable<>)])!;
+    static MethodInfo _toImmutableList = typeof(ImmutableList).GetMethod("ToImmutableList", [typeof(IEnumerable<>)])!;
+    static MethodInfo _toImmutableSortedSet = typeof(ImmutableSortedSet).GetMethod("ToImmutableSortedSet", [typeof(IEnumerable<>)])!;
+    static MethodInfo _toImmutableQueue = typeof(ImmutableQueue).GetMethod("Create", [typeof(IEnumerable<>)])!;
+    static MethodInfo _toImmutableStack = typeof(ImmutableStack).GetMethod("Create", [typeof(IEnumerable<>)])!;
+    static MethodInfo _toList = typeof(Enumerable).GetMethod("ToList", [typeof(IEnumerable<>)])!;
+    static MethodInfo _toHashSet = typeof(Enumerable).GetMethod("ToHashSet", [typeof(IEnumerable<>)])!;
+    static MethodInfo _cast = typeof(Enumerable).GetMethod("Cast")!;
 
-    static object? TransformCollection(XElement element)
+    static object? CastSequence(IEnumerable sequence, Type elementType)
+        => _cast.MakeGenericMethod(elementType).Invoke(null, [sequence]);
+
+    static readonly Dictionary<Type, Func<Type, Type, int, IEnumerable, object?>> _sequenceTypesToTransforms = new ()
     {
-        var type = Type.GetType(element.Attribute(AttributeNames.Type)?.Value
-                                    ?? throw new SerializationException($"Could not get the required attribute 'type' in the element {element.Name}"))
-                            ?? throw new SerializationException($"Unknown type {element.Attribute(AttributeNames.Type)?.Value} in the element {element.Name}");
-        var elements = element.Elements().Select(ConstantTransform);
-        var genericType = type.IsGenericType ? type.GetGenericTypeDefinition() : null;
+        [typeof(FrozenSet<>)]           = (gt, et, len, seq) => _toFrozenSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et), null]),
+        [typeof(ImmutableArray<>)]      = (gt, et, len, seq) => _toImmutableArray.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
+        [typeof(ImmutableHashSet<>)]    = (gt, et, len, seq) => _toImmutableHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
+        [typeof(ImmutableList<>)]       = (gt, et, len, seq) => _toImmutableList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
+        [typeof(ImmutableSortedSet<>)]  = (gt, et, len, seq) => _toImmutableSortedSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
+        [typeof(ImmutableQueue<>)]      = (gt, et, len, seq) => _toImmutableQueue.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
+        [typeof(ImmutableStack<>)]      = (gt, et, len, seq) => _toImmutableStack.MakeGenericMethod(et).Invoke(null, [CastSequence(seq.Cast<object?>().Reverse(), et)]),
+        [typeof(List<>)]                = (gt, et, len, seq) => _toList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
+        [typeof(HashSet<>)]             = (gt, et, len, seq) => _toHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
+        [typeof(ArraySegment<>)]        = (gt, et, len, seq) => TransformWithConstructor(gt, et, TransformToArray(et, len, seq)),
+        [typeof(Memory<>)]              = (gt, et, len, seq) => TransformWithConstructor(gt, et, TransformToArray(et, len, seq)),
+        [typeof(ReadOnlyMemory<>)]      = (gt, et, len, seq) => TransformWithConstructor(gt, et, TransformToArray(et, len, seq)),
+        [typeof(ConcurrentBag<>)]       = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq),
+        [typeof(ConcurrentQueue<>)]     = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq),
+        [typeof(ConcurrentStack<>)]     = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq.Cast<object?>().Reverse()),
+        [typeof(Collection<>)]          = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq.Cast<object>().ToList()),
+        [typeof(ReadOnlyCollection<>)]  = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq.Cast<object>().ToList()),
+        [typeof(LinkedList<>)]          = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq),
+        [typeof(Queue<>)]               = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq),
+        [typeof(SortedSet<>)]           = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq),
+        [typeof(Stack<>)]               = (gt, et, len, seq) => TransformWithConstructor(gt, et, seq.Cast<object?>().Reverse()),
+        [typeof(BlockingCollection<>)]  = TransformToBlockingCollection,
+    };
+    static readonly FrozenDictionary<Type, Func<Type, Type, int, IEnumerable, object?>> _sequenceTransforms = _sequenceTypesToTransforms.ToFrozenDictionary();
+
+    static IEnumerable TransformToArray(
+        Type elementType,
+        int length,
+        IEnumerable elements)
+    {
+        var array = Array.CreateInstance(elementType, length);
+        var itr = elements.GetEnumerator();
+
+        itr.MoveNext();
+        for (int i = 0; i < length; i++, itr.MoveNext())
+            array.SetValue(itr.Current, i);
+
+        return array;
+    }
+
+    static object TransformToBlockingCollection(
+        Type genericType,
+        Type elementType,
+        int length,
+        IEnumerable elements)
+    {
+        var bcCtor = genericType
+                        .MakeGenericType(elementType)
+                        .GetConstructors()
+                        .Where(ci => ci.GetParameters().Length == 0)
+                        .FirstOrDefault()
+                            ?? throw new InternalTransformErrorException("Could not get constructor for BlockingCollection<T>(array).")
+                        ;
+        var bc = bcCtor.Invoke([]);
+
+        var addMi = genericType.MakeGenericType(elementType)
+                        .GetMethods()
+                        .Where(ci => ci.Name == "Add" && ci.GetParameters().Length == 1)
+                        .FirstOrDefault()
+                            ?? throw new InternalTransformErrorException("Could not get method info for BlockingCollection<T>.Add(element).")
+                        ;
+        var added = elements.Cast<object?>().Select(e => { addMi.Invoke(bc, [e]); return 1; }).Count();
+
+        if (added != length)
+            throw new InternalTransformErrorException("Could not add some or all members of the input sequence to BlockingCollection<T>.");
+
+        return bc;
+    }
+
+    static object TransformWithConstructor(
+        Type genericType,
+        Type elementType,
+        IEnumerable elements)
+    {
+        var ctor = genericType
+                        .MakeGenericType(elementType)
+                        .GetConstructors()
+                        .Where(ci => ci.GetParameters().Length == 1)
+                        .FirstOrDefault()
+                            ?? throw new InternalTransformErrorException("Could not get constructor for ArraySegment<T>(array).");
+
+        return ctor!.Invoke([CastSequence(elements, elementType)]);
+    }
+
+    static object? TransformCollection(
+        XElement element,
+        Type type)
+    {
+        int length = element.Elements().Count();
+        var len = element.Length();
+
+        if (len.HasValue && len.Value != length)
+            throw new SerializationException($"The specified length af an array in the XML element {element.Name} is different from the actual length.");
+
+        Type elementType = type.IsArray
+                                ? type.GetElementType()
+                                    ?? throw new SerializationException($"Could not get the type of the array elements in the XML element {element.Name}.")
+                                : type.IsGenericType
+                                    ? type.GetGenericArguments()[0]
+                                    : throw new SerializationException($"Could not get the type of the array elements in the XML element {element.Name}.");
+
+        var elements = element
+                        .Elements()
+                        .Select(e => GetTransform(e)(e, GetType(e)));
+
 
         if (type.IsArray)
-            return elements.ToArray();
+            return TransformToArray(elementType, length, elements);
 
-        if (genericType == typeof(Memory<>))
-            return new Memory<Expression>(elements.ToArray());
-        if (genericType == typeof(ReadOnlyMemory<>))
-            return new ReadOnlyMemory<Expression>(elements.ToArray());
+        if (!type.IsGenericType)
+            throw new SerializationException($"The collection in {element.Name} must be either array or a generic collection.");
 
-        if (genericType is not null && _sequenceTransforms.TryGetValue(genericType!, out var transformSequence))
-            return transformSequence(elements);
+        var genericType = type.Name.EndsWith("FrozenSet`1") ? typeof(FrozenSet<>) : type.GetGenericTypeDefinition();
+
+        if (_sequenceTransforms.TryGetValue(genericType, out var fn))
+            return fn(genericType, elementType, length, elements);
 
         throw new SerializationException($"Don't know how to deserialize {type.FullName}.");
     }
 
-    static readonly Dictionary<Type, Func<IDictionary>> _dictionaryTransforms = new ()
+    static object? TransformDictionary(
+        XElement element,
+        Type type)
     {
-        [typeof(Hashtable)]             = () => new Hashtable(),
-        [typeof(Dictionary<,>)]         = () => new Hashtable(),
-    };
+        if (Activator.CreateInstance(type) is not IDictionary dict)
+            throw new InternalTransformErrorException($"The type {type.FullName} does not implement IDictionary.");
 
-    static object? TransformDictionary(XElement element)
-    {
-        var dictType = Type.GetType(element.Attribute(AttributeNames.Type)?.Value
-                                    ?? throw new SerializationException($"Could not get the required attribute 'type' in the element {element.Name}"))
-                            ?? throw new SerializationException($"Unknown type {element.Attribute(AttributeNames.Type)?.Value} in the element {element.Name}");
-        if (Activator.CreateInstance(dictType) is not IDictionary dict)
-            throw new InternalTransformErrorException($"The type {dictType.FullName} does not implement IDictionary.");
-
-        var kvTypes   = dictType.GetGenericArguments();
+        var kvTypes   = type.GetGenericArguments();
 
         if (kvTypes.Length is not 2)
             throw new InternalTransformErrorException("The elements of 'Dictionary' do not have key-type and element-type.");
 
         foreach (var kvElement in element.Elements(ElementNames.KeyValuePair))
         {
-            var keyElement = kvElement.Elements().FirstOrDefault();
+            var keyElement = kvElement.FirstChild();
             var valElement = kvElement.Elements().LastOrDefault();
 
             if (keyElement is null || valElement is null)
                 throw new SerializationException($"Could not find a key-value pair in {element.Name}.");
 
-            var key = TransformObject(keyElement) ?? throw new SerializationException($"Could transform a value of a key in {element.Name}.");
-            var value = TransformObject(valElement);
+            var key = TransformObject(keyElement, GetType(keyElement)) ?? throw new SerializationException($"Could transform a value of a key in {element.Name}.");
+            var value = TransformObject(valElement, GetType(valElement));
 
             dict[key] = value;
         }
@@ -309,20 +408,20 @@ partial class FromXmlDataTransform(Options? options = default)
         return dict;
     }
 
-    const string indexCG = "index";
-
-    [GeneratedRegex($@"Item(?<{indexCG}>\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase, 500)]
-    private static partial Regex ItemName();
-
-    static object? TransformTupleElement(XElement element)
+    static object? TransformTupleElement(
+        XElement element,
+        Type type)
     {
-        var tupleType = Type.GetType(element.Attribute(AttributeNames.Type)?.Value
-                                    ?? throw new SerializationException($"Could not get the required attribute 'type' in the element {element.Name}"))
-                            ?? throw new SerializationException($"Unknown type {element.Attribute(AttributeNames.Type)?.Value} in the element {element.Name}");
-
-        var ctorInfo = tupleType.GetConstructors()[0];
-        var ctorParams = element.Elements(ElementNames.TupleItem).Select(e => TransformObject(e.Elements().First())).ToArray();
-
-        return ctorInfo.Invoke(null, ctorParams);
+        var parameters = element
+                            .Elements(ElementNames.TupleItem)
+                            .Select(
+                                e =>
+                                {
+                                    var i = e.FirstChild();
+                                    return TransformObject(i, GetType(i));
+                                })
+                            .ToArray()
+                            ;
+        return Activator.CreateInstance(type, parameters);
     }
 }

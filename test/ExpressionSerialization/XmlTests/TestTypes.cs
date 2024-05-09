@@ -19,7 +19,7 @@ enum EnumFlagsTest
 }
 
 [DataContract(Namespace = "urn:vm.Test.Diagnostics", IsReference = true)]
-class Object1
+class Object1 : IEquatable<Object1>
 {
     [DataMember]
     public object? ObjectProperty { get; set; }
@@ -88,6 +88,77 @@ class Object1
     public DateTimeOffset DateTimeOffsetProperty { get; set; } = new DateTimeOffset(2024, 4, 14, 22, 48, 34, new TimeSpan(0, 5, 0));
 
     public string _stringField = "Hi there!";
+
+    #region Identity rules implementation.
+    #region IEquatable<Object1> Members
+    public virtual bool Equals(Object1? other)
+        => other is not null &&
+           (ReferenceEquals(this, other) ||
+            GetType() == other.GetType()
+            && ObjectProperty is null == other.ObjectProperty is null
+            && NullIntProperty == other.NullIntProperty
+            && NullLongProperty == other.NullLongProperty
+            && BoolProperty == other.BoolProperty
+            && CharProperty == other.CharProperty
+            && ByteProperty == other.ByteProperty
+            && SByteProperty == other.SByteProperty
+            && ShortProperty == other.ShortProperty
+            && IntProperty == other.IntProperty
+            && LongProperty == other.LongProperty
+            && UShortProperty == other.UShortProperty
+            && UIntProperty == other.UIntProperty
+            && ULongProperty == other.ULongProperty
+            && DoubleProperty == other.DoubleProperty
+            && FloatProperty == other.FloatProperty
+            // && HalfProperty == other.HalfProperty DataContractSerializer cannot de/serialize Half values
+            && DecimalProperty == other.DecimalProperty
+            && GuidProperty == other.GuidProperty
+            && UriProperty == other.UriProperty
+            && DateTimeProperty == other.DateTimeProperty
+            && TimeSpanProperty == other.TimeSpanProperty
+            && DateTimeOffsetProperty == other.DateTimeOffsetProperty
+           );
+    #endregion
+
+    public override bool Equals(object? obj) => Equals(obj as Object1);
+
+    /// <summary>
+    /// Serves as a hash function for the objects of <see cref="Object1"/> and its derived types.
+    /// </summary>
+    /// <returns>A hash code for the current <see cref="Object1"/> instance.</returns>
+    public override int GetHashCode()
+    {
+        var hc = new HashCode();
+        hc.Add(GetType());
+        hc.Add(NullIntProperty);
+        hc.Add(NullLongProperty);
+        hc.Add(BoolProperty);
+        hc.Add(CharProperty);
+        hc.Add(ByteProperty);
+        hc.Add(SByteProperty);
+        hc.Add(ShortProperty);
+        hc.Add(IntProperty);
+        hc.Add(LongProperty);
+        hc.Add(UShortProperty);
+        hc.Add(UIntProperty);
+        hc.Add(ULongProperty);
+        hc.Add(DoubleProperty);
+        hc.Add(FloatProperty);
+        hc.Add(HalfProperty);
+        hc.Add(DecimalProperty);
+        hc.Add(GuidProperty);
+        hc.Add(UriProperty);
+        hc.Add(DateTimeProperty);
+        hc.Add(TimeSpanProperty);
+        hc.Add(DateTimeOffsetProperty);
+        return hc.ToHashCode();
+    }
+
+    public static bool operator ==(Object1 left, Object1 right) => left is null ? right is null : left.Equals(right);
+
+    public static bool operator !=(Object1 left, Object1 right) => !(left == right);
+    #endregion
+
 }
 
 [DataContract]
@@ -112,7 +183,10 @@ class ClassDataContract1 : IEquatable<ClassDataContract1>
     public virtual bool Equals(ClassDataContract1? other)
         => other is not null &&
            (ReferenceEquals(this, other) ||
-            GetType() == other.GetType() && IntProperty == other.IntProperty && StringProperty == other.StringProperty);
+            GetType() == other.GetType()
+            && IntProperty == other.IntProperty
+            && StringProperty == other.StringProperty
+           );
 
     public override bool Equals(object? obj) => Equals(obj as ClassDataContract1);
 
@@ -125,7 +199,7 @@ class ClassDataContract1 : IEquatable<ClassDataContract1>
 
 #pragma warning disable IDE0021 // Use expression body for constructor
 [DataContract]
-class ClassDataContract2 : ClassDataContract1
+class ClassDataContract2 : ClassDataContract1, IEquatable<ClassDataContract2>
 {
     public ClassDataContract2()
     {
@@ -139,17 +213,55 @@ class ClassDataContract2 : ClassDataContract1
 
     [DataMember]
     public decimal DecimalProperty { get; set; } = 17M;
+
+    #region Identity rules implementation.
+    #region IEquatable<ClassDataContract2> Members
+    public virtual bool Equals(ClassDataContract2? other)
+        => other is not null &&
+           (ReferenceEquals(this, other) ||
+            GetType() == other.GetType()
+            && IntProperty == other.IntProperty
+            && StringProperty == other.StringProperty
+            && DecimalProperty == other.DecimalProperty
+           );
+    #endregion
+
+    public override bool Equals(object? obj) => Equals(obj as ClassDataContract2);
+
+    public override int GetHashCode() => HashCode.Combine(IntProperty, StringProperty, DecimalProperty);
+
+    public static bool operator ==(ClassDataContract2 left, ClassDataContract2 right) => left is null ? right is null : left.Equals(right);
+
+    public static bool operator !=(ClassDataContract2 left, ClassDataContract2 right) => !(left == right);
+    #endregion
+
 }
 #pragma warning restore IDE0021 // Use expression body for constructor
 
 [Serializable]
-class ClassSerializable1
+class ClassSerializable1 : IEquatable<ClassSerializable1>
 {
     public int IntProperty { get; set; }
 
     public string StringProperty { get; set; } = "";
 
     public override string ToString() => "this.DumpString()";
+
+    public virtual bool Equals(ClassSerializable1? other)
+        => other is not null &&
+           (ReferenceEquals(this, other) ||
+            GetType() == other.GetType()
+            && IntProperty == other.IntProperty
+            && StringProperty == other.StringProperty
+           );
+
+    public override bool Equals(object? obj) => Equals(obj as ClassSerializable1);
+
+    public override int GetHashCode() => HashCode.Combine(IntProperty, StringProperty);
+
+    public static bool operator ==(ClassSerializable1 left, ClassSerializable1 right) => left is null ? right is null : left.Equals(right);
+
+    public static bool operator !=(ClassSerializable1 left, ClassSerializable1 right) => !(left == right);
 }
 
 class ClassNonSerializable(int intProperty, string strProperty)
@@ -162,17 +274,31 @@ class ClassNonSerializable(int intProperty, string strProperty)
 }
 
 [Serializable]
-struct StructSerializable1
+struct StructSerializable1 : IEquatable<StructSerializable1>
 {
     public StructSerializable1() { }
 
     public int IntProperty { get; set; }
 
     public string StringProperty { get; set; } = "";
+
+    public bool Equals(StructSerializable1 other)
+        => (GetType() == other.GetType()
+            && IntProperty == other.IntProperty
+            && StringProperty == other.StringProperty
+           );
+
+    public override bool Equals(object? obj) => obj is StructSerializable1 s ? Equals(s) : false;
+
+    public override int GetHashCode() => HashCode.Combine(IntProperty, StringProperty);
+
+    public static bool operator ==(StructSerializable1 left, StructSerializable1 right) => left.Equals(right);
+
+    public static bool operator !=(StructSerializable1 left, StructSerializable1 right) => !(left == right);
 }
 
 [DataContract]
-struct StructDataContract1
+struct StructDataContract1 : IEquatable<StructDataContract1>
 {
     public StructDataContract1() { }
     public StructDataContract1(int i, string s)
@@ -188,6 +314,20 @@ struct StructDataContract1
     public string StringProperty { get; set; } = "";
 
     public override readonly string ToString() => "this.DumpString()";
+
+    public bool Equals(StructDataContract1 other)
+        => (GetType() == other.GetType()
+            && IntProperty == other.IntProperty
+            && StringProperty == other.StringProperty
+           );
+
+    public override bool Equals(object? obj) => obj is StructDataContract1 s ? Equals(s) : false;
+
+    public override int GetHashCode() => HashCode.Combine(IntProperty, StringProperty);
+
+    public static bool operator ==(StructDataContract1 left, StructDataContract1 right) => left.Equals(right);
+
+    public static bool operator !=(StructDataContract1 left, StructDataContract1 right) => !(left == right);
 }
 
 [DataContract]

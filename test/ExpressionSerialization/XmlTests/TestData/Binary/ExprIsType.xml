@@ -7,7 +7,7 @@
         type="boolean">
         <parameters>
             <parameterDefinition
-                type="object"
+                type="System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                 name="a"
                 id="P1" />
         </parameters>
@@ -16,7 +16,7 @@
                 type="boolean"
                 typeOperand="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                 <parameter
-                    type="object"
+                    type="System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                     name="a"
                     idref="P1" />
             </typeIs>

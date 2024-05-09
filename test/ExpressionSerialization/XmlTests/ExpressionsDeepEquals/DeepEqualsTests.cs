@@ -7,7 +7,7 @@ public partial class DeepEqualsTests
     [Theory]
     [InlineData("null", "null", true)]
     [InlineData("object", "object", true)]
-    [InlineData("object", "object1", false)]
+    [InlineData("object", "object1", true)]
 
     [InlineData("(byte)5", "(byte)5", true)]
     [InlineData("(byte)5", "(byte)6", false)]

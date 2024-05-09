@@ -85,7 +85,7 @@ class DeepEqualsVisitor : ExpressionVisitor
             && left.Type == right.Type
             && left.Value is null == right.Value is null
             ;
-        if (!Equal || left.Value is null)   // either different or both null
+        if (!Equal || left.Value is null || left.Type == typeof(object))   // either different or both null or both System.Object
             return left;
 
         Debug.Assert(left.Value is not null);
@@ -101,11 +101,11 @@ class DeepEqualsVisitor : ExpressionVisitor
             var itrL = enumL.GetEnumerator();
             var itrR = enumR.GetEnumerator();
 
-            while (itrL.MoveNext() && itrR.MoveNext())
-                Equal &= itrL.Current.Equals(itrR.Current);
+            while (Equal && itrL.MoveNext() && itrR.MoveNext())
+                Equal &= Equals(itrL.Current, itrR.Current);
         }
         else
-            Equal = left.Value.Equals(right.Value);
+            Equal &= Equals(left.Value, right.Value);
 
         return left; // visiting constant expression gives us nothing so do not go there
     }

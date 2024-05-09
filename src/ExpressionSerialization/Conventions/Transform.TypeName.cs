@@ -31,7 +31,6 @@ static partial class Transform
             { typeof(DateTime),     "dateTime"          },
             { typeof(DBNull),       "dbNull"            },
             { typeof(Nullable<>),   "nullable"          },
-            { typeof(object),       "object"            },
             { typeof(Enum),         "enum"              },
         };
 
@@ -65,7 +64,6 @@ static partial class Transform
             { "dateTime",           typeof(DateTime)    },
             { "dbNull",             typeof(DBNull)      },
             { "nullable",           typeof(Nullable<>)  },
-            { "object",             typeof(object)      },
             { "enum",               typeof(Enum)        },
         };
     #endregion

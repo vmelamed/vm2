@@ -7,24 +7,27 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
 
     [Theory]
     [MemberData(nameof(ConstantsData))]
-    public async Task ConstantTestAsync(string _, string expressionString, string fileName) => await base.TestAsync(expressionString, fileName);
+    public async Task ConstantToXmlTestAsync(string testFileLine, string expressionString, string fileName) => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
+
+    [Theory]
+    [MemberData(nameof(ConstantsData))]
+    public async Task ConstantFromXmlTestAsync(string testFileLine, string expressionString, string fileName) => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
     protected override Expression Substitute(string id) => _substitutes[id];
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task TestConstantExpressionClassNonSerializableAsync(bool callAsync)
+    [Fact]
+    public async Task TestConstantToXmlClassNonSerializableAsync()
     {
         var pathName = Path.Combine(XmlTestFilesPath, "ClassSerializable1.xml");
         var expression = Expression.Constant(new ClassNonSerializable(1, "One"));
-        var (expectedDoc, expectedStr) = await TestsFixture.GetExpectedAsync(pathName, Out);
-        var testCall = () => TestsFixture.TestSerializeExpression(expression, expectedDoc, expectedStr, pathName, Out);
-        var testAsyncCall = async () => await TestsFixture.TestSerializeExpressionAsync(expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+        var (expectedDoc, expectedStr) = await TestsFixture.GetXmlDocumentAsync(TestLine(), pathName, "EXPECTED", Out);
 
-        if (!callAsync)
-            testCall.Should().Throw<SerializationException>();
-        else
-            await testAsyncCall.Should().ThrowAsync<SerializationException>();
+        var testCall = () => TestsFixture.TestExpressionToXml(TestLine(), expression, expectedDoc, expectedStr, pathName, Out);
+
+        testCall.Should().Throw<SerializationException>();
+
+        var testAsyncCall = async () => await TestsFixture.TestExpressionToXmlAsync(TestLine(), expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+
+        await testAsyncCall.Should().ThrowAsync<SerializationException>();
     }
 }

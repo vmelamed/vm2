@@ -5,8 +5,8 @@ public partial class ChangeByOneTests(TestsFixture fixture, ITestOutputHelper ou
 
     [Theory]
     [MemberData(nameof(ChangeByOneExpressionData))]
-    public async Task ChangeByOneTestAsync(string _, string expressionString, string fileName)
-        => await base.TestAsync(expressionString, fileName);
+    public async Task ChangeByOneTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
 
     protected override Expression Substitute(string id) => _substitutes[id]();
 

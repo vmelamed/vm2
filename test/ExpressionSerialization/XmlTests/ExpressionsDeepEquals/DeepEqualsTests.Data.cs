@@ -63,7 +63,7 @@ public partial class DeepEqualsTests
             _paramA,
             WriteLine1Expression("Default"),
             Expression.SwitchCase(
-                WriteLine1Expression("First"),
+                WriteLine1Expression("FirstChild"),
                 Expression.Constant(1)),
             Expression.SwitchCase(
                 WriteLine1Expression("Second"),

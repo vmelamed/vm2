@@ -183,8 +183,6 @@ public partial class ConstantTests
         ["new Stack<int>([1, 2, 3, 4])"]                                                                    = Expression.Constant(new Stack<int>([1, 2, 3, 4])),
         ["new Memory<int>([ 1, 2, 3, 4 ])"]                                                                 = Expression.Constant(new Memory<int>([ 1, 2, 3, 4 ])),
         ["new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])"]                                                         = Expression.Constant(new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])),
-        ["new Memory<int>([ 1, 2, 3, 4 ])"]                                                                 = Expression.Constant(new Memory<int>([ 1, 2, 3, 4 ])),
-        ["new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])"]                                                         = Expression.Constant(new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])),
 
         ["(IntField: 1, StringField: \"one\")"]                                                             = Expression.Constant((IntField: 1, StringField: "one")),
         ["new Tuple<int, string>(1, \"one\")"]                                                              = Expression.Constant(new Tuple<int, string>(1, "one")),

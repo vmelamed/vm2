@@ -7,7 +7,7 @@ public class XNodeDeepEquals
 
     public bool False(string difference)
     {
-        LastResult = $"First difference at {string.Join("/", _path)} in the {difference}.";
+        LastResult = $"FirstChild difference at {string.Join("/", _path)} in the {difference}.";
         _path.Clear();
         return false;
     }

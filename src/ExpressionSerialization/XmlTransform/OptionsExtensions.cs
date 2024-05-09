@@ -85,7 +85,7 @@ static class OptionsExtensions
     /// <returns>The comment as System.Nullable&lt;XComment&gt;.</returns>
     internal static XComment? TypeComment(this Options options, Type type)
         => options.TypeNames != TypeNameConventions.AssemblyQualifiedName &&
-           (!type.IsBasicType() || type.IsEnum)
+           (!type.IsBasicType() && type != typeof(object) || type.IsEnum)
                 ? options.Comment($" {Transform.TypeName(type, options.TypeNames)} ")
                 : null;
 
