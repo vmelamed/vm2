@@ -195,7 +195,25 @@ internal static partial class TypeExtensions
     /// </summary>
     /// <param name="ci">The constructor info.</param>
     /// <returns>bool.</returns>
+    public static bool ConstructorHas1ArrayParameter(this ConstructorInfo ci)
+        => ci.GetParameters().Length == 1 &&
+           ci.GetParameters()[0].ParameterType.IsArray;
+
+    /// <summary>
+    /// This predicate determines whether the passed constructor info is for a constructor that has 1 parameter of type <c>"IEnumerable&lt;&gt;"</c>.
+    /// </summary>
+    /// <param name="ci">The constructor info.</param>
+    /// <returns>bool.</returns>
     public static bool ConstructorHas1EnumerableParameter(this ConstructorInfo ci)
         => ci.GetParameters().Length == 1 &&
            ci.GetParameters()[0].ParameterType.Name == typeof(IEnumerable<>).Name;
+
+    /// <summary>
+    /// This predicate determines whether the passed constructor info is for a constructor that has 1 parameter of type <c>"IEnumerable&lt;&gt;"</c>.
+    /// </summary>
+    /// <param name="ci">The constructor info.</param>
+    /// <returns>bool.</returns>
+    public static bool ConstructorHas1ListParameter(this ConstructorInfo ci)
+        => ci.GetParameters().Length == 1 &&
+           ci.GetParameters()[0].ParameterType.Name == typeof(IList<>).Name;
 }

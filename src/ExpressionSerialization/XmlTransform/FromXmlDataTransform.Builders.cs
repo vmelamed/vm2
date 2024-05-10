@@ -4,7 +4,7 @@ using vm2.ExpressionSerialization.Utilities;
 
 partial class FromXmlDataTransform
 {
-    static object BuildWithConstructor(
+    static object BuildWithConstructor1EnumerableParameter(
         Type genericType,
         Type elementType,
         IEnumerable elements)
@@ -15,7 +15,22 @@ partial class FromXmlDataTransform
                         .Where(ci => ci.ConstructorHas1EnumerableParameter())
                         .Single()
                         ;
+        var collection = CastSequence(elements, elementType);
 
+        return ctor!.Invoke([collection]);
+    }
+
+    static object BuildWithConstructor1ArrayParameter(
+        Type genericType,
+        Type elementType,
+        IEnumerable elements)
+    {
+        var ctor = genericType
+                        .MakeGenericType(elementType)
+                        .GetConstructors()
+                        .Where(ci => ci.ConstructorHas1ArrayParameter())
+                        .Single()
+                        ;
         var collection = CastSequence(elements, elementType);
 
         return ctor!.Invoke([collection]);
@@ -29,7 +44,7 @@ partial class FromXmlDataTransform
         var ctor = genericType
                         .MakeGenericType(elementType)
                         .GetConstructors()
-                        .Where(ci => ci.ConstructorHas1EnumerableParameter())
+                        .Where(ci => ci.ConstructorHas1ListParameter())
                         .Single()
                         ;
 
@@ -41,6 +56,7 @@ partial class FromXmlDataTransform
     static object BuildConcurrentBag(
         Type genericType,
         Type elementType,
+        int _,
         IEnumerable elements)
     {
         var ctor = genericType
