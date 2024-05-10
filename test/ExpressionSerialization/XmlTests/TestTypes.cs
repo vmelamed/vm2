@@ -282,15 +282,15 @@ struct StructSerializable1 : IEquatable<StructSerializable1>
 
     public string StringProperty { get; set; } = "";
 
-    public bool Equals(StructSerializable1 other)
+    public readonly bool Equals(StructSerializable1 other)
         => (GetType() == other.GetType()
             && IntProperty == other.IntProperty
             && StringProperty == other.StringProperty
            );
 
-    public override bool Equals(object? obj) => obj is StructSerializable1 s ? Equals(s) : false;
+    public override readonly bool Equals(object? obj) => obj is StructSerializable1 s && Equals(s);
 
-    public override int GetHashCode() => HashCode.Combine(IntProperty, StringProperty);
+    public override readonly int GetHashCode() => HashCode.Combine(IntProperty, StringProperty);
 
     public static bool operator ==(StructSerializable1 left, StructSerializable1 right) => left.Equals(right);
 
@@ -315,15 +315,15 @@ struct StructDataContract1 : IEquatable<StructDataContract1>
 
     public override readonly string ToString() => "this.DumpString()";
 
-    public bool Equals(StructDataContract1 other)
+    public readonly bool Equals(StructDataContract1 other)
         => (GetType() == other.GetType()
             && IntProperty == other.IntProperty
             && StringProperty == other.StringProperty
            );
 
-    public override bool Equals(object? obj) => obj is StructDataContract1 s ? Equals(s) : false;
+    public override readonly bool Equals(object? obj) => obj is StructDataContract1 s && Equals(s);
 
-    public override int GetHashCode() => HashCode.Combine(IntProperty, StringProperty);
+    public override readonly int GetHashCode() => HashCode.Combine(IntProperty, StringProperty);
 
     public static bool operator ==(StructDataContract1 left, StructDataContract1 right) => left.Equals(right);
 

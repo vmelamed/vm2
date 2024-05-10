@@ -5,10 +5,8 @@ using System.Xml.Linq;
 /// <summary>
 /// Class that visits the nodes of an XML element to produce a LINQ expression tree.
 /// </summary>
-public partial class FromXmlTransformVisitor(Options options)
+public partial class FromXmlTransformVisitor
 {
-    Options _options = options;
-
     #region Dispatch map for the concrete XML element Expression transforming visitors
     /// <summary>
     /// Holds dictionary of expression element name - delegate to the respective transform.

@@ -39,7 +39,7 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
     /// <returns>The resultant expression.</returns>
     Expression IExpressionTransform<XElement>.Transform(XElement element)
     {
-        _xmlVisitor ??= new FromXmlTransformVisitor(_options);
+        _xmlVisitor ??= new FromXmlTransformVisitor();
         return _xmlVisitor.Visit(element);
     }
     #endregion

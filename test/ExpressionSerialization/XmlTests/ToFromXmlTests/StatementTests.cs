@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests.ToDocumentTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
 using System.Reflection;
 

@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests.ToDocumentTests;
+﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 using System.Runtime.Serialization;
 
 public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)

@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToExpressionTests;
 
-using vm2.ExpressionSerialization.XmlTests.ToDocumentTests;
+using vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
 public class TransformLoadDocumentTest()
 {
