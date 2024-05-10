@@ -12,32 +12,35 @@ class ToXmlDataTransform(Options? options = default)
 {
     Options _options = options ?? new Options();
 
+    static T Typed<T>(object? value) => value is T v ? v : throw new InternalTransformErrorException($"Expected {typeof(T).Name} value but got {(value is null ? "null" : value.GetType().Name)}");
+
     #region constant ToXml transforms
     static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
     {
-        { typeof(bool),             (v, t) => new XElement(ElementNames.Boolean,        XmlConvert.ToString((bool)v!)) },
-        { typeof(byte),             (v, t) => new XElement(ElementNames.UnsignedByte,   XmlConvert.ToString((byte)v!)) },
-        { typeof(sbyte),            (v, t) => new XElement(ElementNames.Byte,           XmlConvert.ToString((sbyte)v!)) },
-        { typeof(short),            (v, t) => new XElement(ElementNames.Short,          XmlConvert.ToString((short)v!)) },
-        { typeof(ushort),           (v, t) => new XElement(ElementNames.UnsignedShort,  XmlConvert.ToString((ushort)v!)) },
-        { typeof(int),              (v, t) => new XElement(ElementNames.Int,            XmlConvert.ToString((int)v!)) },
-        { typeof(uint),             (v, t) => new XElement(ElementNames.UnsignedInt,    XmlConvert.ToString((uint)v!)) },
-        { typeof(long),             (v, t) => new XElement(ElementNames.Long,           XmlConvert.ToString((long)v!)) },
-        { typeof(ulong),            (v, t) => new XElement(ElementNames.UnsignedLong,   XmlConvert.ToString((ulong)v!)) },
-        { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           XmlConvert.ToString((double)(Half)v!)) },
-        { typeof(float),            (v, t) => new XElement(ElementNames.Float,          XmlConvert.ToString((float)v!)) },
-        { typeof(double),           (v, t) => new XElement(ElementNames.Double,         XmlConvert.ToString((double)v!)) },
-        { typeof(decimal),          (v, t) => new XElement(ElementNames.Decimal,        XmlConvert.ToString((decimal)v!)) },
-        { typeof(string),           (v, t) => new XElement(ElementNames.String,         v is not null ? v : new XAttribute(AttributeNames.Nil, true)) },
-        { typeof(char),             (v, t) => new XElement(ElementNames.Char,           XmlConvert.ToChar(new string((char)v!, 1))) },
-        { typeof(Guid),             (v, t) => new XElement(ElementNames.Guid,           XmlConvert.ToString((Guid)v!)) },
-        { typeof(DateTime),         (v, t) => new XElement(ElementNames.DateTime,       XmlConvert.ToString((DateTime)v!, XmlDateTimeSerializationMode.RoundtripKind)) },
-        { typeof(DateTimeOffset),   (v, t) => new XElement(ElementNames.DateTimeOffset, XmlConvert.ToString((DateTimeOffset)v!, "O")) },
-        { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString((TimeSpan)v!)) },
-        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         v is not null ? ((Uri)v).ToString() : new XAttribute(AttributeNames.Nil, true)) },
+        { typeof(bool),             (v, t) => new XElement(ElementNames.Boolean,        XmlConvert.ToString(Typed<bool>(v))) },
+        { typeof(byte),             (v, t) => new XElement(ElementNames.Byte,           XmlConvert.ToString(Typed<byte>(v))) },
+        { typeof(char),             (v, t) => new XElement(ElementNames.Char,           XmlConvert.ToString(Typed<char>(v))) },
+        { typeof(double),           (v, t) => new XElement(ElementNames.Double,         XmlConvert.ToString(Typed<double>(v))) },
+        { typeof(float),            (v, t) => new XElement(ElementNames.Float,          XmlConvert.ToString(Typed<float>(v))) },
+        { typeof(int),              (v, t) => new XElement(ElementNames.Int,            XmlConvert.ToString(Typed<int>(v))) },
+        { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         XmlConvert.ToString(Typed<IntPtr>(v))) },
+        { typeof(long),             (v, t) => new XElement(ElementNames.Long,           XmlConvert.ToString(Typed<long>(v))) },
+        { typeof(sbyte),            (v, t) => new XElement(ElementNames.SignedByte,     XmlConvert.ToString(Typed<sbyte>(v))) },
+        { typeof(short),            (v, t) => new XElement(ElementNames.Short,          XmlConvert.ToString(Typed<short>(v))) },
+        { typeof(uint),             (v, t) => new XElement(ElementNames.UnsignedInt,    XmlConvert.ToString(Typed<uint>(v))) },
+        { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString(Typed<UIntPtr>(v))) },
+        { typeof(ulong),            (v, t) => new XElement(ElementNames.UnsignedLong,   XmlConvert.ToString(Typed<ulong>(v))) },
+        { typeof(ushort),           (v, t) => new XElement(ElementNames.UnsignedShort,  XmlConvert.ToString(Typed<ushort>(v))) },
+
+        { typeof(DateTime),         (v, t) => new XElement(ElementNames.DateTime,       XmlConvert.ToString(Typed<DateTime>(v), XmlDateTimeSerializationMode.RoundtripKind)) },
+        { typeof(DateTimeOffset),   (v, t) => new XElement(ElementNames.DateTimeOffset, XmlConvert.ToString(Typed<DateTimeOffset>(v), "O")) },
         { typeof(DBNull),           (v, t) => new XElement(ElementNames.DBNull)         },
-        { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         XmlConvert.ToString((IntPtr)v!)) },
-        { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString((UIntPtr)v!)) },
+        { typeof(decimal),          (v, t) => new XElement(ElementNames.Decimal,        XmlConvert.ToString(Typed<decimal>(v))) },
+        { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString(Typed<TimeSpan>(v))) },
+        { typeof(Guid),             (v, t) => new XElement(ElementNames.Guid,           XmlConvert.ToString(Typed<Guid>(v))) },
+        { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           XmlConvert.ToString((double)Typed<Half>(v))) },
+        { typeof(string),           (v, t) => new XElement(ElementNames.String,         (object?)Typed<string?>(v) ?? new XAttribute(AttributeNames.Nil, true)) },
+        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         (object?)Typed<Uri?>(v)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
     #endregion

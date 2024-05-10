@@ -2,7 +2,7 @@
 
 static partial class Transform
 {
-    static readonly UnicodeCategory[] s_beginIdentifierArr =
+    static readonly UnicodeCategory[] _beginIdentifierArr_ =
     [
         UnicodeCategory.UppercaseLetter,
         UnicodeCategory.LowercaseLetter,
@@ -14,9 +14,9 @@ static partial class Transform
         UnicodeCategory.SpacingCombiningMark,
         UnicodeCategory.Format
     ];
-    static readonly FrozenSet<UnicodeCategory> s_beginIdentifier = s_beginIdentifierArr.ToFrozenSet();
+    static readonly FrozenSet<UnicodeCategory> _beginIdentifier = _beginIdentifierArr_.ToFrozenSet();
 
-    static readonly UnicodeCategory[] s_beginWordIdentifierArr =
+    static readonly UnicodeCategory[] _beginWordIdentifierArr_ =
     [
         UnicodeCategory.UppercaseLetter,
         UnicodeCategory.LowercaseLetter,
@@ -29,9 +29,9 @@ static partial class Transform
         UnicodeCategory.Format,
         UnicodeCategory.DecimalDigitNumber,
     ];
-    static readonly FrozenSet<UnicodeCategory> s_beginWordIdentifier = s_beginWordIdentifierArr.ToFrozenSet();
+    static readonly FrozenSet<UnicodeCategory> _beginWordIdentifier = _beginWordIdentifierArr_.ToFrozenSet();
 
-    static readonly UnicodeCategory[] s_restWordIdentifierArr =
+    static readonly UnicodeCategory[] _restWordIdentifierArr_ =
     [
         UnicodeCategory.LowercaseLetter,
         UnicodeCategory.ModifierLetter,
@@ -43,7 +43,7 @@ static partial class Transform
         UnicodeCategory.Format,
         UnicodeCategory.DecimalDigitNumber,
     ];
-    static readonly FrozenSet<UnicodeCategory> s_restWordIdentifier = s_restWordIdentifierArr.ToFrozenSet();
+    static readonly FrozenSet<UnicodeCategory> _restWordIdentifier = _restWordIdentifierArr_.ToFrozenSet();
 
     [GeneratedRegex(@"^@?([\p{L}_])([\p{Ll}\p{Nd}\p{Pc}]*)(([\p{Lu}_])([\p{Ll}\p{Nd}\p{Pc}]*))*$", RegexOptions.Compiled, 500)]
     private static partial Regex CSharpIdentifier();
@@ -86,7 +86,7 @@ static partial class Transform
             var wordStart = c++;
 
             // get the rest of the chars of the word (cannot be upper case)
-            while (c < len && s_restWordIdentifier.Contains(char.GetUnicodeCategory(chars[c])) && chars[c] != '_')
+            while (c < len && _restWordIdentifier.Contains(char.GetUnicodeCategory(chars[c])) && chars[c] != '_')
                 ++c;
 
             // transform the word into xWord and append xWord to the result

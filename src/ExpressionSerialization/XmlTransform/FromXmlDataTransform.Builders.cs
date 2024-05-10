@@ -4,7 +4,7 @@ using vm2.ExpressionSerialization.Utilities;
 
 partial class FromXmlDataTransform
 {
-    static object BuildWithConstructor1EnumerableParameter(
+    static object BuildCollectionFromEnumerable(
         Type genericType,
         Type elementType,
         IEnumerable elements)
@@ -20,7 +20,7 @@ partial class FromXmlDataTransform
         return ctor!.Invoke([collection]);
     }
 
-    static object BuildWithConstructor1ArrayParameter(
+    static object BuildCollectionFromArray(
         Type genericType,
         Type elementType,
         IEnumerable elements)
@@ -36,7 +36,7 @@ partial class FromXmlDataTransform
         return ctor!.Invoke([collection]);
     }
 
-    static object BuildWithConstructor1ListParameter(
+    static object BuildCollectionFromList(
         Type genericType,
         Type elementType,
         IEnumerable elements)
@@ -71,5 +71,32 @@ partial class FromXmlDataTransform
         collection = _reverse.MakeGenericMethod(elementType).Invoke(null, [collection]);
 
         return ctor!.Invoke([collection]);
+    }
+
+    static object BuildBlockingCollection(
+        Type genericType,
+        Type elementType,
+        int length,
+        IEnumerable elements)
+    {
+        var bcCtor = genericType
+                        .MakeGenericType(elementType)
+                        .GetConstructors()
+                        .Where(ci => ci.GetParameters().Length == 0)
+                        .Single()
+                        ;
+        var bc = bcCtor.Invoke([]);
+
+        var addMi = genericType.MakeGenericType(elementType)
+                        .GetMethods()
+                        .Where(ci => ci.Name == "Add" && ci.GetParameters().Length == 1)
+                        .Single()
+                        ;
+        var added = elements.Cast<object?>().Select(e => { addMi.Invoke(bc, [e]); return 1; }).Count();
+
+        if (added != length)
+            throw new InternalTransformErrorException("Could not add some or all members of the input sequence to BlockingCollection<T>.");
+
+        return bc;
     }
 }

@@ -1,68 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.Conventions;
+
 static partial class Transform
 {
-    #region Maps of types and type names
-    static Dictionary<Type, string> _typesToNames_ = new()
-        {
-            { typeof(void),         "void"              },
-            { typeof(char),         "char"              },
-            { typeof(bool),         "boolean"           },
-            { typeof(byte),         "unsignedByte"      },
-            { typeof(sbyte),        "byte"              },
-            { typeof(short),        "short"             },
-            { typeof(ushort),       "unsignedShort"     },
-            { typeof(int),          "int"               },
-            { typeof(uint),         "unsignedInt"       },
-            { typeof(IntPtr),       "intPtr"            },
-            { typeof(UIntPtr),      "unsignedIntPtr"    },
-            { typeof(long),         "long"              },
-            { typeof(ulong),        "unsignedLong"      },
-            { typeof(Half),         "half"              },
-            { typeof(float),        "float"             },
-            { typeof(double),       "double"            },
-            { typeof(decimal),      "decimal"           },
-            { typeof(Guid),         "guid"              },
-            { typeof(Uri),          "uri"               },
-            { typeof(string),       "string"            },
-            { typeof(TimeSpan),     "duration"          },
-            { typeof(DateTime),     "dateTime"          },
-            { typeof(DBNull),       "dbNull"            },
-            { typeof(Nullable<>),   "nullable"          },
-            { typeof(Enum),         "enum"              },
-        };
-    static FrozenDictionary<Type, string> _typesToNames = _typesToNames_.ToFrozenDictionary();
-
-    static Dictionary<string, Type> _namesToTypes_ = new ()
-        {
-            { "void",               typeof(void)        },
-            { "char",               typeof(char)        },
-            { "boolean",            typeof(bool)        },
-            { "unsignedByte",       typeof(byte)        },
-            { "byte",               typeof(sbyte)       },
-            { "short",              typeof(short)       },
-            { "unsignedShort",      typeof(ushort)      },
-            { "int",                typeof(int)         },
-            { "unsignedInt",        typeof(uint)        },
-            { "intPtr",             typeof(IntPtr)      },
-            { "unsignedIntPtr",     typeof(UIntPtr)     },
-            { "long",               typeof(long)        },
-            { "unsignedLong",       typeof(ulong)       },
-            { "half",               typeof(Half)        },
-            { "float",              typeof(float)       },
-            { "double",             typeof(double)      },
-            { "decimal",            typeof(decimal)     },
-            { "guid",               typeof(Guid)        },
-            { "uri",                typeof(Uri)         },
-            { "string",             typeof(string)      },
-            { "duration",           typeof(TimeSpan)    },
-            { "dateTime",           typeof(DateTime)    },
-            { "dbNull",             typeof(DBNull)      },
-            { "nullable",           typeof(Nullable<>)  },
-            { "enum",               typeof(Enum)        },
-        };
-    static FrozenDictionary<string, Type> _namesToTypes = _namesToTypes_.ToFrozenDictionary();
-    #endregion
-
     /// <summary>
     /// Gets the type corresponding to a type name written in an xml string.
     /// </summary>
@@ -73,7 +12,7 @@ static partial class Transform
         if (string.IsNullOrWhiteSpace(typeName))
             return null;
 
-        if (_namesToTypes.TryGetValue(typeName, out var type))
+        if (NamesToTypes.TryGetValue(typeName, out var type))
             return type;
 
         return Type.GetType(typeName, true, false);
@@ -86,7 +25,7 @@ static partial class Transform
     /// <returns>System.String.</returns>
     public static string TypeName(Type type)
     {
-        if (_typesToNames.TryGetValue(type, out var typeName))
+        if (TypesToNames.TryGetValue(type, out var typeName))
             return typeName;
 
         return type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
@@ -103,7 +42,7 @@ static partial class Transform
         Type type,
         TypeNameConventions convention)
     {
-        if (_typesToNames.TryGetValue(type, out var typeName))
+        if (TypesToNames.TryGetValue(type, out var typeName))
             return typeName;
 
         if (type.IsGenericType && !type.IsGenericTypeDefinition && convention != TypeNameConventions.AssemblyQualifiedName)

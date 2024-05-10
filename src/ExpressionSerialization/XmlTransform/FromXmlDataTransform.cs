@@ -61,9 +61,9 @@ partial class FromXmlDataTransform
             return null;
 
         // we do not need to return Nullable<T> here. Since the return type is object? the CLR will either return null or the boxed value of the Nullable<T>
-        var valueElement = element.FirstChild();
-        var typeElement = GetType(valueElement);
-        var value = _constantTransforms[valueElement.Name](valueElement, typeElement);
+        var vElement = element.FirstChild();
+        var typeElement = GetType(vElement);
+        var value = ValueTransform(vElement);
 
         return (typeof(Nullable<>)
                     .MakeGenericType(typeElement)
@@ -370,32 +370,5 @@ partial class FromXmlDataTransform
             array.SetValue(itr.Current, i);
 
         return array;
-    }
-
-    static object TransformToBlockingCollection(
-        Type genericType,
-        Type elementType,
-        int length,
-        IEnumerable elements)
-    {
-        var bcCtor = genericType
-                        .MakeGenericType(elementType)
-                        .GetConstructors()
-                        .Where(ci => ci.GetParameters().Length == 0)
-                        .Single()
-                        ;
-        var bc = bcCtor.Invoke([]);
-
-        var addMi = genericType.MakeGenericType(elementType)
-                        .GetMethods()
-                        .Where(ci => ci.Name == "Add" && ci.GetParameters().Length == 1)
-                        .Single()
-                        ;
-        var added = elements.Cast<object?>().Select(e => { addMi.Invoke(bc, [e]); return 1; }).Count();
-
-        if (added != length)
-            throw new InternalTransformErrorException("Could not add some or all members of the input sequence to BlockingCollection<T>.");
-
-        return bc;
     }
 }

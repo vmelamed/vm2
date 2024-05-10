@@ -335,20 +335,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         }
 
         _elements.Push(varElement);
-        //_elements.Push(
-        //    _parameters.TryGetValue(node, out var x)
-        //        ? new XElement(
-        //                x.Name == ElementNames.VariableDefinition ? ElementNames.VariableReference : ElementNames.ParameterReference,
-        //                AttributeType(node),
-        //                new XAttribute(AttributeNames.Name, node.Name ?? "_"),
-        //                node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
-        //                new XAttribute(AttributeNames.IdRef, x.Attribute(AttributeNames.Id)?.Value ?? throw new InternalTransformErrorException("A variable of parameter reference without Id.")))
-        //        : new XElement(
-        //                ElementNames.VariableDefinition,
-        //                AttributeType(node),
-        //                new XAttribute(AttributeNames.Name, node.Name ?? "_"),
-        //                node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
-        //                new XAttribute(AttributeNames.Id, $"P{++_lastParamIdNumber}")));
         return node;
     }
 

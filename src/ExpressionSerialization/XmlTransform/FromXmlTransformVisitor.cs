@@ -127,6 +127,8 @@ public partial class FromXmlTransformVisitor
     static Expression VisitConstant(XElement e)
         => FromXmlDataTransform.ConstantTransform(e.FirstChild());
 
+    Expression VisitParameter(XElement e) => throw new NotImplementedException();
+
     Expression VisitLambda(XElement e) => throw new NotImplementedException();
     Expression VisitUnary(XElement e) => throw new NotImplementedException();
     Expression VisitBinary(XElement e) => throw new NotImplementedException();
@@ -139,7 +141,6 @@ public partial class FromXmlTransformVisitor
     Expression VisitDefault(XElement e) => throw new NotImplementedException();
     Expression VisitMember(XElement e) => throw new NotImplementedException();
     Expression VisitMethodCall(XElement e) => throw new NotImplementedException();
-    Expression VisitParameter(XElement e) => throw new NotImplementedException();
     Expression VisitLabel(XElement e) => throw new NotImplementedException();
     Expression VisitGoto(XElement e) => throw new NotImplementedException();
     Expression VisitLoop(XElement e) => throw new NotImplementedException();
