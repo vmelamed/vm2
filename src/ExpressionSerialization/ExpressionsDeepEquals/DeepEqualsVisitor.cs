@@ -88,11 +88,43 @@ class DeepEqualsVisitor : ExpressionVisitor
         if (!Equal || left.Value is null || left.Type == typeof(object))   // either different or both null or both System.Object
             return left;
 
-        Debug.Assert(left.Value is not null);
-        Debug.Assert(right?.Value is not null);
+        var lValue = left.Value;
+        var rValue = right?.Value;
 
-        if (left.Value is IEnumerable enumL && right.Value is IEnumerable enumR &&
-            (left.Type.IsArray || left.Type.Namespace?.StartsWith("System") is true))
+        Debug.Assert(lValue is not null);
+        Debug.Assert(rValue is not null);
+
+        IEnumerable? enumL = null;
+        IEnumerable? enumR = null;
+
+        if (lValue is not IEnumerable)
+        {
+            var genType = left.Type.IsGenericType ? left.Type.GetGenericTypeDefinition() : null;
+
+            if (genType is not null)
+            {
+                var elemType = left.Type.GetGenericArguments()[0];
+
+                if (genType == typeof(Memory<>) || genType == typeof(ReadOnlyMemory<>))
+                {
+                    var mi = lValue.GetType().GetMethod("ToArray") ?? throw new InternalTransformErrorException("Could not get the property for Memory<>.Span.");
+
+                    if (mi.IsGenericMethod)
+                        mi = mi.MakeGenericMethod(elemType);
+
+                    enumL = mi.Invoke(lValue, []) as IEnumerable;
+                    enumR = mi.Invoke(rValue, []) as IEnumerable;
+                }
+            }
+        }
+        else
+        if (left.Type.IsArray || left.Type.Namespace?.StartsWith("System") is true)
+        {
+            enumL = (lValue as IEnumerable)?.Cast<object?>();
+            enumR = (rValue as IEnumerable)?.Cast<object?>();
+        }
+
+        if (enumL is not null && enumR is not null)
         {
             Equal = enumL.Cast<object>().Count() == enumL.Cast<object>().Count();
             if (!Equal)
@@ -105,7 +137,7 @@ class DeepEqualsVisitor : ExpressionVisitor
                 Equal &= Equals(itrL.Current, itrR.Current);
         }
         else
-            Equal &= Equals(left.Value, right.Value);
+            Equal &= Equals(lValue, rValue);
 
         return left; // visiting constant expression gives us nothing so do not go there
     }

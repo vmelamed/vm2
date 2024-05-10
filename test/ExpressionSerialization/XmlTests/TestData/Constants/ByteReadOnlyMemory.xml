@@ -7,7 +7,7 @@
         <!-- System.ReadOnlyMemory<Byte>[10] -->
         <!-- System.ReadOnlyMemory<unsignedByte> -->
         <byteSequence
-            type="System.ReadOnlyMemory&lt;unsignedByte&gt;"
+            type="System.ReadOnlyMemory`1[[System.Byte, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
             length="10">AQIDAQIDAQIDCg==</byteSequence>
     </constant>
 </expression>

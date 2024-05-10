@@ -9,6 +9,7 @@ global using System.Diagnostics;
 global using System.Globalization;
 global using System.Linq;
 global using System.Linq.Expressions;
+global using System.Reflection;
 global using System.Runtime.Serialization;
 global using System.Text;
 global using System.Text.RegularExpressions;
@@ -22,6 +23,5 @@ global using vm2.ExpressionSerialization.Abstractions;
 global using vm2.ExpressionSerialization.Conventions;
 global using vm2.ExpressionSerialization.Exceptions;
 global using vm2.ExpressionSerialization.Utilities;
-global using vm2.Threading;
 
 global using static vm2.ExpressionSerialization.Utilities.DebugExtensions;

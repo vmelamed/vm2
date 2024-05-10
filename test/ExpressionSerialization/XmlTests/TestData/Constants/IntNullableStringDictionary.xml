@@ -19,11 +19,13 @@
             </key-value>
             <key-value>
                 <int>3</int>
-                <string />
+                <string
+                    i:nil="true" />
             </key-value>
             <key-value>
                 <int>4</int>
-                <string />
+                <string
+                    i:nil="true" />
             </key-value>
         </dictionary>
     </constant>

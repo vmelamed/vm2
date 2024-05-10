@@ -79,6 +79,7 @@ public partial class ConstantTests
         { TestLine(), "new Stack<int>([1, 2, 3, 4])", "IntStack.xml" },
         { TestLine(), "new Memory<int>([ 1, 2, 3, 4 ])", "IntMemory.xml" },
         { TestLine(), "new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])", "IntReadOnlyMemory.xml" },
+        { TestLine(), "new BlockingCollection<double>()", "BlockingCollection.xml" },
 
         { TestLine(), "(IntField: 1, StringField: \"one\")", "ValueTupleIntString.xml" },
         { TestLine(), "new Tuple<int, string>(1, \"one\")", "ClassTupleIntString.xml" },
@@ -183,7 +184,7 @@ public partial class ConstantTests
         ["new Stack<int>([1, 2, 3, 4])"]                                                                    = Expression.Constant(new Stack<int>([1, 2, 3, 4])),
         ["new Memory<int>([ 1, 2, 3, 4 ])"]                                                                 = Expression.Constant(new Memory<int>([ 1, 2, 3, 4 ])),
         ["new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])"]                                                         = Expression.Constant(new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])),
-
+        ["new BlockingCollection<double>()"]                                                                = Expression.Constant(new BlockingCollection<double>() { Math.PI, Math.Tau, Math.E }),
         ["(IntField: 1, StringField: \"one\")"]                                                             = Expression.Constant((IntField: 1, StringField: "one")),
         ["new Tuple<int, string>(1, \"one\")"]                                                              = Expression.Constant(new Tuple<int, string>(1, "one")),
 

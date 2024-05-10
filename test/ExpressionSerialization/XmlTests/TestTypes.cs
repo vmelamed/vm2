@@ -110,7 +110,7 @@ class Object1 : IEquatable<Object1>
             && ULongProperty == other.ULongProperty
             && DoubleProperty == other.DoubleProperty
             && FloatProperty == other.FloatProperty
-            // && HalfProperty == other.HalfProperty DataContractSerializer cannot de/serialize Half values
+            // && HalfProperty == other.HalfProperty    // the DataContractSerializer cannot de/serialize Half values
             && DecimalProperty == other.DecimalProperty
             && GuidProperty == other.GuidProperty
             && UriProperty == other.UriProperty

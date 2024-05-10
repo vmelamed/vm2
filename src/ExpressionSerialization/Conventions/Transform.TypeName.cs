@@ -2,10 +2,7 @@
 static partial class Transform
 {
     #region Maps of types and type names
-    /// <summary>
-    /// The map of base type to type names
-    /// </summary>
-    static Dictionary<Type, string> _typesToNames = new()
+    static Dictionary<Type, string> _typesToNames_ = new()
         {
             { typeof(void),         "void"              },
             { typeof(char),         "char"              },
@@ -33,14 +30,11 @@ static partial class Transform
             { typeof(Nullable<>),   "nullable"          },
             { typeof(Enum),         "enum"              },
         };
+    static FrozenDictionary<Type, string> _typesToNames = _typesToNames_.ToFrozenDictionary();
 
-    /// <summary>
-    /// The map of type names to base type
-    /// </summary>
-    static Dictionary<string, Type> _namesToTypes = new ()
+    static Dictionary<string, Type> _namesToTypes_ = new ()
         {
-            { "void",               typeof(void)
-},
+            { "void",               typeof(void)        },
             { "char",               typeof(char)        },
             { "boolean",            typeof(bool)        },
             { "unsignedByte",       typeof(byte)        },
@@ -66,6 +60,7 @@ static partial class Transform
             { "nullable",           typeof(Nullable<>)  },
             { "enum",               typeof(Enum)        },
         };
+    static FrozenDictionary<string, Type> _namesToTypes = _namesToTypes_.ToFrozenDictionary();
     #endregion
 
     /// <summary>

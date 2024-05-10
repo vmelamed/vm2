@@ -13,9 +13,6 @@ class ToXmlDataTransform(Options? options = default)
     Options _options = options ?? new Options();
 
     #region constant ToXml transforms
-    /// <summary>
-    /// The map of base type constants transforms
-    /// </summary>
     static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
     {
         { typeof(bool),             (v, t) => new XElement(ElementNames.Boolean,        XmlConvert.ToString((bool)v!)) },
@@ -27,17 +24,17 @@ class ToXmlDataTransform(Options? options = default)
         { typeof(uint),             (v, t) => new XElement(ElementNames.UnsignedInt,    XmlConvert.ToString((uint)v!)) },
         { typeof(long),             (v, t) => new XElement(ElementNames.Long,           XmlConvert.ToString((long)v!)) },
         { typeof(ulong),            (v, t) => new XElement(ElementNames.UnsignedLong,   XmlConvert.ToString((ulong)v!)) },
-        { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           v!.ToString()) },
+        { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           XmlConvert.ToString((double)(Half)v!)) },
         { typeof(float),            (v, t) => new XElement(ElementNames.Float,          XmlConvert.ToString((float)v!)) },
         { typeof(double),           (v, t) => new XElement(ElementNames.Double,         XmlConvert.ToString((double)v!)) },
         { typeof(decimal),          (v, t) => new XElement(ElementNames.Decimal,        XmlConvert.ToString((decimal)v!)) },
-        { typeof(string),           (v, t) => new XElement(ElementNames.String,         v!) },
+        { typeof(string),           (v, t) => new XElement(ElementNames.String,         v is not null ? v : new XAttribute(AttributeNames.Nil, true)) },
         { typeof(char),             (v, t) => new XElement(ElementNames.Char,           XmlConvert.ToChar(new string((char)v!, 1))) },
         { typeof(Guid),             (v, t) => new XElement(ElementNames.Guid,           XmlConvert.ToString((Guid)v!)) },
         { typeof(DateTime),         (v, t) => new XElement(ElementNames.DateTime,       XmlConvert.ToString((DateTime)v!, XmlDateTimeSerializationMode.RoundtripKind)) },
         { typeof(DateTimeOffset),   (v, t) => new XElement(ElementNames.DateTimeOffset, XmlConvert.ToString((DateTimeOffset)v!, "O")) },
         { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString((TimeSpan)v!)) },
-        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         ((Uri)v!).ToString()) },
+        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         v is not null ? ((Uri)v).ToString() : new XAttribute(AttributeNames.Nil, true)) },
         { typeof(DBNull),           (v, t) => new XElement(ElementNames.DBNull)         },
         { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         XmlConvert.ToString((IntPtr)v!)) },
         { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString((UIntPtr)v!)) },
@@ -187,7 +184,7 @@ class ToXmlDataTransform(Options? options = default)
     {
         var sequenceElement = new XElement(
                                     ElementNames.ByteSequence,
-                                    new XAttribute(AttributeNames.Type, _options.TransformTypeName(nodeType)),
+                                    new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                                     nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
                                 );
         ReadOnlySpan<byte> bytes;

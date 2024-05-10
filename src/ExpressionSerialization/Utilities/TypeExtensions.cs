@@ -178,4 +178,24 @@ internal static partial class TypeExtensions
 
     public static bool IsDictionary(this Type type)
         => type.ImplementsInterface(typeof(IDictionary));
+
+    /// <summary>
+    /// This predicate determines whether the passed method info is for a method that has the specified name and has 1 parameter of type <c>"IEnumerable&lt;&gt;"</c>.
+    /// </summary>
+    /// <param name="mi">The method info.</param>
+    /// <param name="name">The name.</param>
+    /// <returns>bool.</returns>
+    public static bool MethodHas1EnumerableParameter(this MethodInfo mi, string name)
+        => mi.Name == name &&
+           mi.GetParameters().Length == 1 &&
+           mi.GetParameters()[0].ParameterType.Name == typeof(IEnumerable<>).Name;
+
+    /// <summary>
+    /// This predicate determines whether the passed constructor info is for a constructor that has 1 parameter of type <c>"IEnumerable&lt;&gt;"</c>.
+    /// </summary>
+    /// <param name="ci">The constructor info.</param>
+    /// <returns>bool.</returns>
+    public static bool ConstructorHas1EnumerableParameter(this ConstructorInfo ci)
+        => ci.GetParameters().Length == 1 &&
+           ci.GetParameters()[0].ParameterType.Name == typeof(IEnumerable<>).Name;
 }
