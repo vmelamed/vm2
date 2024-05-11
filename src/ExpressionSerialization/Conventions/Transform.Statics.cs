@@ -4,31 +4,29 @@ static partial class Transform
 {
     // The following constants represent the names (hence the prefix 'N') of basic types that are common for all text
     // documents that we transform into or from, e.g. XML (local names), JSON, YAML, etc.).
-    public const string NVoid           = "void";
-    public const string NBool           = "boolean";
+    public const string NUri            = "uri";
+    public const string NBool           = "bool";
     public const string NByte           = "byte";
     public const string NChar           = "char";
-    public const string NDouble         = "double";
-    public const string NFloat          = "float";
-    public const string NInt            = "int";
-    public const string NIntPtr         = "intPtr";
-    public const string NLong           = "long";
-    public const string NShort          = "short";
-    public const string NSByte          = "signedByte";
-    public const string NUint           = "unsignedInt";
-    public const string NUIntPtr        = "unsignedIntPtr";
-    public const string NULong          = "unsignedLong";
-    public const string NUShort         = "unsignedShort";
-    // non-primitive, basic types
     public const string NDateTime       = "dateTime";
     public const string NDateTimeOffset = "dateTimeOffset";
     public const string NDBNull         = "dbNull";
     public const string NDecimal        = "decimal";
-    public const string NTimeSpan       = "duration";
+    public const string NDouble         = "double";
+    public const string NFloat          = "float";
     public const string NGuid           = "guid";
     public const string NHalf           = "half";
+    public const string NInt            = "int";
+    public const string NIntPtr         = "intPtr";
+    public const string NLong           = "long";
+    public const string NSByte          = "signedByte";
+    public const string NShort          = "short";
     public const string NString         = "string";
-    public const string NUri            = "uri";
+    public const string NTimeSpan       = "duration";
+    public const string NUInt           = "unsignedInt";
+    public const string NUIntPtr        = "unsignedIntPtr";
+    public const string NULong          = "unsignedLong";
+    public const string NUShort         = "unsignedShort";
 
     // other types and type categories
     public const string NObject         = "object";
@@ -41,6 +39,8 @@ static partial class Transform
     public const string NKeyValuePair   = "key-value";
     public const string NTuple          = "tuple";
     public const string NTupleItem      = "item";
+
+    // names for other types of elements
 
     static readonly Dictionary<Type, string> _typesToNames_ = new()
     {
@@ -62,12 +62,11 @@ static partial class Transform
         [typeof(short)]                 = NShort,
         [typeof(string)]                = NString,
         [typeof(TimeSpan)]              = NTimeSpan,
-        [typeof(uint)]                  = NUint,
+        [typeof(uint)]                  = NUInt,
         [typeof(UIntPtr)]               = NUIntPtr,
         [typeof(ulong)]                 = NULong,
         [typeof(Uri)]                   = NUri,
         [typeof(ushort)]                = NUShort,
-        [typeof(void)]                  = NVoid,
         [typeof(Enum)]                  = NEnum,
         [typeof(Nullable<>)]            = NNullable,
     };
@@ -96,12 +95,11 @@ static partial class Transform
         [NShort]                        = typeof(short),
         [NString]                       = typeof(string),
         [NTimeSpan]                     = typeof(TimeSpan),
-        [NUint]                         = typeof(uint),
+        [NUInt]                         = typeof(uint),
         [NUIntPtr]                      = typeof(UIntPtr),
         [NULong]                        = typeof(ulong),
         [NUri]                          = typeof(Uri),
         [NUShort]                       = typeof(ushort),
-        [NVoid]                         = typeof(void),
         [NEnum]                         = typeof(Enum),
         [NNullable]                     = typeof(Nullable<>),
     };

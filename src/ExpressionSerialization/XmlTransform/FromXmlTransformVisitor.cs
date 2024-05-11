@@ -127,7 +127,21 @@ public partial class FromXmlTransformVisitor
     static Expression VisitConstant(XElement e)
         => FromXmlDataTransform.ConstantTransform(e.FirstChild());
 
-    Expression VisitParameter(XElement e) => throw new NotImplementedException();
+    readonly Dictionary<string, ParameterExpression> _parameters = [];
+
+    Expression VisitParameter(XElement e)
+    {
+        var id = e.Attribute(AttributeNames.Id)?.Value ?? e.Attribute(AttributeNames.IdRef)?.Value
+                                ?? throw new SerializationException($"Could not get the Id or IdRef of a parameter or variable in {e.Name}");
+
+        if (!_parameters.TryGetValue(id, out var expression))
+        {
+            expression = Expression.Parameter(e.OfType(), e.Attribute(AttributeNames.Name)?.Value);
+            _parameters[id] = expression;
+        }
+
+        return expression;
+    }
 
     Expression VisitLambda(XElement e) => throw new NotImplementedException();
     Expression VisitUnary(XElement e) => throw new NotImplementedException();

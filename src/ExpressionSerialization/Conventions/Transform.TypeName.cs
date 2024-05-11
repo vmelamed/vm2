@@ -19,7 +19,7 @@ static partial class Transform
     }
 
     /// <summary>
-    /// Transform the name of the type <paramref name="type"/> to a possibly ugly string.
+    /// Transformer the name of the type <paramref name="type"/> to a possibly ugly string.
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>System.String.</returns>
@@ -32,7 +32,7 @@ static partial class Transform
     }
 
     /// <summary>
-    /// Transform the name of the type <paramref name="type"/> to a human readable string according to 
+    /// Transformer the name of the type <paramref name="type"/> to a human readable string according to 
     /// <paramref name="convention"/>.
     /// </summary>
     /// <param name="type">The type.</param>

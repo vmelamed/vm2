@@ -7,14 +7,14 @@
 public interface IExpressionTransform<TDocument>
 {
     /// <summary>
-    /// Transform the specified expression to a document model type `TDocument`.
+    /// Transformer the specified expression to a document model type `TDocument`.
     /// </summary>
     /// <param name="expression">The expression to be transformed.</param>
     /// <returns>The resultant top level document model node `TDocument`.</returns>
     TDocument Transform(Expression expression);
 
     /// <summary>
-    /// Transform the specified document model node of type `TDocument` to a LINQ expression.
+    /// Transformer the specified document model node of type `TDocument` to a LINQ expression.
     /// </summary>
     /// <param name="document">The document node to be transformed.</param>
     /// <returns>The resultant expression.</returns>

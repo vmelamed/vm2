@@ -6,31 +6,31 @@
 public enum IdentifierConventions
 {
     /// <summary>
-    /// Transform identifiers to camel-case convention: ThisIsName -> ThisIsName
+    /// Transformer identifiers to camel-case convention: ThisIsName -> ThisIsName
     /// </summary>
     Preserve,
     /// <summary>
-    /// Transform identifiers to camel-case convention: ThisIsName -> thisIsName
+    /// Transformer identifiers to camel-case convention: ThisIsName -> thisIsName
     /// </summary>
     Camel,
     /// <summary>
-    /// Transform identifiers to camel-case convention: thisIsName -> ThisIsName
+    /// Transformer identifiers to camel-case convention: thisIsName -> ThisIsName
     /// </summary>
     Pascal,
     /// <summary>
-    /// Transform identifiers to snake-lower-case convention: ThisIsName -> this_is_name
+    /// Transformer identifiers to snake-lower-case convention: ThisIsName -> this_is_name
     /// </summary>
     SnakeLower,
     /// <summary>
-    /// Transform identifiers to snake-lower-case convention: ThisIsName -> THIS_IS_NAME
+    /// Transformer identifiers to snake-lower-case convention: ThisIsName -> THIS_IS_NAME
     /// </summary>
     SnakeUpper,
     /// <summary>
-    /// Transform identifiers to snake-lower-case convention: ThisIsName -> this-is-name
+    /// Transformer identifiers to snake-lower-case convention: ThisIsName -> this-is-name
     /// </summary>
     KebabLower,
     /// <summary>
-    /// Transform identifiers to snake-lower-case convention: ThisIsName -> THIS-IS-NAME
+    /// Transformer identifiers to snake-lower-case convention: ThisIsName -> THIS-IS-NAME
     /// </summary>
     KebabUpper,
 }

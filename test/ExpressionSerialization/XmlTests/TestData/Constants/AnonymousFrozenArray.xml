@@ -34,7 +34,7 @@
                 </property>
                 <property
                     name="BoolProperty">
-                    <boolean>true</boolean>
+                    <bool>true</bool>
                 </property>
                 <property
                     name="CharProperty">
@@ -42,11 +42,11 @@
                 </property>
                 <property
                     name="ByteProperty">
-                    <unsignedByte>1</unsignedByte>
+                    <byte>1</byte>
                 </property>
                 <property
                     name="SByteProperty">
-                    <byte>1</byte>
+                    <signedByte>1</signedByte>
                 </property>
                 <property
                     name="ShortProperty">
@@ -129,7 +129,7 @@
                 </property>
                 <property
                     name="BoolProperty">
-                    <boolean>true</boolean>
+                    <bool>true</bool>
                 </property>
                 <property
                     name="CharProperty">
@@ -137,11 +137,11 @@
                 </property>
                 <property
                     name="ByteProperty">
-                    <unsignedByte>2</unsignedByte>
+                    <byte>2</byte>
                 </property>
                 <property
                     name="SByteProperty">
-                    <byte>2</byte>
+                    <signedByte>2</signedByte>
                 </property>
                 <property
                     name="ShortProperty">

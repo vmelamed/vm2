@@ -12,7 +12,9 @@ class ToXmlDataTransform(Options? options = default)
 {
     Options _options = options ?? new Options();
 
-    static T Typed<T>(object? value) => value is T v ? v : throw new InternalTransformErrorException($"Expected {typeof(T).Name} value but got {(value is null ? "null" : value.GetType().Name)}");
+    static T? Typed<T>(object? value, bool allowNull = false) => value is T || (value is null && allowNull)
+                                            ? (T?)value
+                                            : throw new InternalTransformErrorException($"Expected {typeof(T).Name} value but got {(value is null ? "null" : value.GetType().Name)}");
 
     #region constant ToXml transforms
     static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
@@ -39,8 +41,8 @@ class ToXmlDataTransform(Options? options = default)
         { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString(Typed<TimeSpan>(v))) },
         { typeof(Guid),             (v, t) => new XElement(ElementNames.Guid,           XmlConvert.ToString(Typed<Guid>(v))) },
         { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           XmlConvert.ToString((double)Typed<Half>(v))) },
-        { typeof(string),           (v, t) => new XElement(ElementNames.String,         (object?)Typed<string?>(v) ?? new XAttribute(AttributeNames.Nil, true)) },
-        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         (object?)Typed<Uri?>(v)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
+        { typeof(string),           (v, t) => new XElement(ElementNames.String,         (object?)Typed<string?>(v, true) ?? new XAttribute(AttributeNames.Nil, true)) },
+        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         (object?)Typed<Uri?>(v, true)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
     #endregion

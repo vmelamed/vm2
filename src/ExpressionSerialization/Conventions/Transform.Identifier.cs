@@ -49,7 +49,7 @@ static partial class Transform
     private static partial Regex CSharpIdentifier();
 
     /// <summary>
-    /// Transform the identifier according c the <see cref="IdentifierConventions" />.
+    /// Transformer the identifier according c the <see cref="IdentifierConventions" />.
     /// </summary>
     /// <param name="identifier">The identifier.</param>
     /// <param name="convention">The convention.</param>

@@ -1,15 +1,18 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using Transform = Func<XElement, Type, object?>;
+using System;
+using System.Collections.Generic;
 
-partial class FromXmlDataTransform
+static partial class FromXmlDataTransform
 {
+    delegate object? Transformation(XElement element, ref Type type);
+
     /// <summary>
     /// Gets the constant value XML to .NET transform delegate corresponding to the XML <paramref name="element"/>.
     /// </summary>
     /// <param name="element">The element which holds transformed constant value.</param>
     /// <returns>The transforming delegate corresponding to the <paramref name="element"/>.</returns>
-    internal static Transform GetTransform(XElement element) => _constantTransforms[element.Name];
+    static Transformation GetTransformation(XElement element) => _constantTransformations[element.Name.LocalName];
 
     internal static ConstantExpression ConstantTransform(XElement element)
     {
@@ -18,33 +21,22 @@ partial class FromXmlDataTransform
         return Expression.Constant(value, type);
     }
 
-    internal static (object?, Type) ValueTransform(XElement element)
+    static (object?, Type) ValueTransform(XElement element)
     {
         var type = GetType(element);
-        var transform = GetTransform(element);
-        return (transform(element, type), type);
+        var transform = GetTransformation(element);
+        return (transform(element, ref type), type);
     }
 
-    internal static Type GetType(XElement element)
+    static Type GetType(XElement element)
     {
-        if (_namesToTypes.TryGetValue(element.Name.LocalName, out var type))
-            return type;
+        var typeName = element.GetTypeName();
 
-        var typeName = element.Attribute(AttributeNames.Type)?.Value;
-
-        if (element.Name == ElementNames.Nullable)
-        {
-            if (string.IsNullOrWhiteSpace(typeName))
-                type = GetType(element.FirstChild());
-            else
-            if (!_namesToTypes.TryGetValue(typeName, out type))
-                type = Type.GetType(typeName) ?? throw new InternalTransformErrorException($"Non-null nullable value of unknown type in {element.Name}.");
-
-            return typeof(Nullable<>).MakeGenericType([type]);
-        }
+        if (Transform.NamesToTypes.TryGetValue(element.Name.LocalName, out var type))
+            return type!;
 
         if (string.IsNullOrWhiteSpace(typeName))
-            if (element.Name == ElementNames.Object)
+            if (element.Name.LocalName == Transform.NObject)
                 return typeof(object);
             else
                 throw new SerializationException($"An XML element {element.Name} is missing the type attribute.");
@@ -55,28 +47,42 @@ partial class FromXmlDataTransform
 
     static object? TransformNullable(
         XElement element,
-        Type type)
+        ref Type type)
     {
         if (element.IsNil())
+        {
+            var elTypeName = element.Attribute(AttributeNames.Type)?.Value;
+
+            if (!Transform.NamesToTypes.TryGetValue(elTypeName!, out var elType) && elType != typeof(Enum))
+                elType = elTypeName is not null
+                                    ? (Type.GetType(elTypeName) ?? throw new SerializationException($"Could not resolve the type name {elTypeName} specified in element {element.Name}."))
+                                    : throw new SerializationException($"If a nullable type value is null, the attribute 'type' of the nullable element is mandatory.");
+
+            type = typeof(Nullable<>).MakeGenericType(elType);
             return null;
+        }
 
         // we do not need to return Nullable<T> here. Since the return type is object? the CLR will either return null or the boxed value of the Nullable<T>
         var vElement = element.FirstChild();
-        var typeElement = GetType(vElement);
-        var value = ValueTransform(vElement);
+        var (value, elementType) = ValueTransform(vElement);
 
-        return (typeof(Nullable<>)
-                    .MakeGenericType(typeElement)
-                    .GetConstructor([typeElement]) ?? throw new InternalTransformErrorException($"Could not get the constructor for Nullable<{typeElement.Name}>"))
-                    .Invoke([value]);
+        type = typeof(Nullable<>).MakeGenericType(elementType);
+
+        var ctor = type.GetConstructor([elementType])
+                            ?? throw new InternalTransformErrorException($"Could not get the constructor for Nullable<{elementType.Name}>");
+
+        return ctor.Invoke([value]);
     }
 
     static object? TransformEnum(
         XElement element,
-        Type type)
+        ref Type type)
     {
         try
         {
+            var typeName = element.Attribute(AttributeNames.Type)?.Value
+                                        ?? throw new ArgumentNullException($"Could not get the full name of the enum type at {element.Name}");
+            type = Type.GetType(typeName) ?? throw new ArgumentNullException($"Could not get the enum type at {element.Name}");
             return Enum.Parse(type, element.Value);
         }
         catch (ArgumentException ex)
@@ -91,7 +97,7 @@ partial class FromXmlDataTransform
 
     static object? TransformObject(
         XElement element,
-        Type type)
+        ref Type type)
     {
         if (element.IsNil() || element.Elements().FirstOrDefault() is null)
             return null;
@@ -110,13 +116,14 @@ partial class FromXmlDataTransform
 
     static object? TransformAnonymous(
         XElement element,
-        Type type)
+        ref Type type)
     {
-        if (!element.Elements(ElementNames.Property).Any())
-            return null;
-
         var constructor = type.GetConstructors()[0];
         var constructorParameters = constructor.GetParameters();
+
+        if (element.Elements(ElementNames.Property).Count() != constructorParameters.Length)
+            throw new SerializationException("The number of properties and the number of initialization parameters do not match for anonymous type.");
+
         var parameters = new object?[constructorParameters.Length];
 
         for (var i = 0; i < constructorParameters.Length; i++)
@@ -141,7 +148,7 @@ partial class FromXmlDataTransform
 
     static object? TransformByteSequence(
         XElement element,
-        Type type)
+        ref Type type)
     {
         var length = element.Length();
         var bytes = Convert.FromBase64String(element.Value);
@@ -165,7 +172,7 @@ partial class FromXmlDataTransform
 
     static object? TransformCollection(
         XElement element,
-        Type type)
+        ref Type type)
     {
         int length = element.Elements().Count();
         var len = element.Length();
@@ -182,7 +189,11 @@ partial class FromXmlDataTransform
 
         var elements = element
                         .Elements()
-                        .Select(e => GetTransform(e)(e, GetType(e)))
+                        .Select(e =>
+                        {
+                            var t = GetType(e);
+                            return GetTransformation(e)(e, ref t);
+                        })
                         ;
 
         if (type.IsArray)
@@ -199,18 +210,101 @@ partial class FromXmlDataTransform
         throw new SerializationException($"Don't know how to deserialize {type.FullName}.");
     }
 
+    delegate (IDictionary, Type[], Func<IDictionary, object?>) PrepForDict(Type[] kvTypes);
+
+    static (IDictionary, Type[], Func<IDictionary, object?>) PrepForDictionary(Type[] kvTypes)
+    {
+        var dict = Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary
+                                    ?? throw new InternalTransformErrorException($"Could not create object of type Dictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
+        return (dict, kvTypes, d => d);
+    }
+
+    static (IDictionary, Type[], Func<IDictionary, object?>) PrepForReadOnlyDictionary(Type[] kvTypes)
+    {
+        var dict = Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary
+                                    ?? throw new InternalTransformErrorException($"Could not create object of type Dictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
+        var ctor = typeof(ReadOnlyDictionary<,>)
+                        .MakeGenericType(kvTypes[0], kvTypes[1])
+                        .GetConstructors()
+                        .Where(ci => ci.GetParameters().Length == 1)
+                        .Single()
+                    ;
+        object? convert(IDictionary d) => (ctor!.Invoke([d]) as IDictionary)
+                                                    ?? throw new InternalTransformErrorException($"Could not create object of type ReadOnlyDictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
+
+        return (dict, kvTypes, convert);
+    }
+
+    static (IDictionary, Type[], Func<IDictionary, object?>) PrepForSortedDictionary(Type[] kvTypes)
+    {
+        var dict = Activator.CreateInstance(typeof(SortedDictionary<,>).MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary
+                                    ?? throw new InternalTransformErrorException($"Could not create object of type SortedDictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
+
+        return (dict, kvTypes, d => d);
+    }
+
+    static (IDictionary, Type[], Func<IDictionary, object?>) PrepForImmutableDictionary(Type[] kvTypes)
+    {
+        var dict = Activator.CreateInstance(typeof(Dictionary<,>)
+                            .MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary
+                                    ?? throw new InternalTransformErrorException($"Could not create object of type Dictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
+        return (dict, kvTypes, d => _toImmutableDictionary.MakeGenericMethod(kvTypes).Invoke(null, [d]));
+    }
+
+    static (IDictionary, Type[], Func<IDictionary, object?>) PrepForImmutableSortedDictionary(Type[] kvTypes)
+    {
+        var dict = Activator.CreateInstance(typeof(SortedDictionary<,>)
+                            .MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary
+                                    ?? throw new InternalTransformErrorException($"Could not create object of type SortedDictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
+        return (dict, kvTypes, d => _toImmutableSortedDictionary.MakeGenericMethod(kvTypes).Invoke(null, [d]));
+    }
+
+    static (IDictionary, Type[], Func<IDictionary, object?>) PrepForFrozenDictionary(Type[] kvTypes)
+    {
+        var dict = Activator.CreateInstance(typeof(Dictionary<,>)
+                            .MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary
+                                    ?? throw new InternalTransformErrorException($"Could not create object of type Dictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
+        return (dict, kvTypes, d => _toFrozenDictionary.MakeGenericMethod(kvTypes).Invoke(null, [d, null]));
+    }
+
+    static (IDictionary, Type[], Func<IDictionary, object?>) PrepForConcurrentDictionary(Type[] kvTypes)
+    {
+        var ctor = typeof(ConcurrentDictionary<,>)
+                        .MakeGenericType(kvTypes[0], kvTypes[1])
+                        .GetConstructors()
+                        .Where(ci => ci.GetParameters().Length == 0)
+                        .Single()
+                    ;
+        var dict = ctor!.Invoke([]) as IDictionary
+                                    ?? throw new InternalTransformErrorException($"Could not create object of type ConcurrentDictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
+        return (dict, kvTypes, d => d);
+    }
+
+    static Dictionary<Type, PrepForDict> _typeToPrep_ = new()
+    {
+        [typeof(Hashtable)]                    = kvTypes => (new Hashtable(), kvTypes, d => d),
+        [typeof(Dictionary<,>)]                = PrepForDictionary,
+        [typeof(ReadOnlyDictionary<,>)]        = PrepForReadOnlyDictionary,
+        [typeof(SortedDictionary<,>)]          = PrepForSortedDictionary,
+        [typeof(ImmutableDictionary<,>)]       = PrepForImmutableDictionary,
+        [typeof(ImmutableSortedDictionary<,>)] = PrepForImmutableSortedDictionary,
+        [typeof(FrozenDictionary<,>)]          = PrepForFrozenDictionary,
+        [typeof(ConcurrentDictionary<,>)]      = PrepForConcurrentDictionary,
+    };
+    static FrozenDictionary<Type, PrepForDict> _typeToPrep = _typeToPrep_.ToFrozenDictionary();
+
     static (IDictionary, Type[], Func<IDictionary, object?>) PrepForDictionary(Type dictType)
     {
         if (!dictType.IsAssignableTo(typeof(IDictionary)))
             throw new InternalTransformErrorException($"The type of the element is not 'IDictionary'.");
 
         Type[] kvTypes;
-        Type? genericType = null;
+        Type genericType = typeof(Hashtable);
 
         if (dictType.IsGenericType)
         {
             kvTypes = dictType.GetGenericArguments();
-            genericType = dictType.GetGenericTypeDefinition() ?? throw new InternalTransformErrorException();
+            genericType = dictType.GetGenericTypeDefinition() ?? throw new InternalTransformErrorException($"Could not get the generic type definition of a generic type {dictType.FullName}.");
         }
         else
         if (dictType == typeof(Hashtable))
@@ -221,98 +315,20 @@ partial class FromXmlDataTransform
         if (kvTypes.Length is not 2 and not 0)
             throw new InternalTransformErrorException("The elements of 'Dictionary' do not have key-type and element-type.");
 
-        IDictionary dict;
-        Func<IDictionary, object?> convert;
-
-        if (dictType == typeof(Hashtable))
-        {
-            dict = new Hashtable();
-            convert = d => d;
-
-            return (dict, kvTypes, convert);
-        }
-
-        if (genericType == typeof(Dictionary<,>))
-        {
-            dict = Activator.CreateInstance(typeof(Dictionary<,>)
-                                .MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary ?? throw new InternalTransformErrorException($"Could not create object of type Dictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
-            convert = d => d;
-            return (dict, kvTypes, convert);
-        }
-
-        if (genericType == typeof(ReadOnlyDictionary<,>))
-        {
-            dict = Activator.CreateInstance(typeof(Dictionary<,>)
-                                .MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary ?? throw new InternalTransformErrorException($"Could not create object of type Dictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
-
-            var ctor = typeof(ReadOnlyDictionary<,>)
-                        .MakeGenericType(kvTypes[0], kvTypes[1])
-                        .GetConstructors()
-                        .Where(ci => ci.GetParameters().Length == 1)
-                        .Single()
-                        ;
-            convert = d => ctor!.Invoke([d]) as IDictionary
-                        ?? throw new InternalTransformErrorException($"Could not create object of type ConcurrentDictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
-
-            return (dict, kvTypes, convert);
-        }
-
-        if (genericType == typeof(SortedDictionary<,>))
-        {
-            dict = Activator.CreateInstance(typeof(SortedDictionary<,>).MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary ?? throw new InternalTransformErrorException($"Could not create object of type SortedDictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
-            convert = d => d;
-            return (dict, kvTypes, convert);
-        }
-
-        if (genericType == typeof(ImmutableDictionary<,>))
-        {
-            dict = Activator.CreateInstance(typeof(Dictionary<,>)
-                                .MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary ?? throw new InternalTransformErrorException($"Could not create object of type Dictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
-            convert = d => _toImmutableDictionary.MakeGenericMethod(kvTypes).Invoke(null, [d]);
-            return (dict, kvTypes, convert);
-        }
-
-        if (genericType == typeof(ImmutableSortedDictionary<,>))
-        {
-            dict = Activator.CreateInstance(typeof(SortedDictionary<,>)
-                                .MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary ?? throw new InternalTransformErrorException($"Could not create object of type SortedDictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
-            convert = d => _toImmutableSortedDictionary.MakeGenericMethod(kvTypes).Invoke(null, [d]);
-            return (dict, kvTypes, convert);
-        }
-
-        if (dictType.Name == typeof(ConcurrentDictionary<,>).Name)
-        {
-            Debug.Assert(genericType is not null);
-
-            var ctor = genericType
-                        .MakeGenericType(kvTypes[0], kvTypes[1])
-                        .GetConstructors()
-                        .Where(ci => ci.GetParameters().Length == 0)
-                        .Single()
-                        ;
-            dict = ctor!.Invoke([]) as IDictionary ?? throw new InternalTransformErrorException($"Could not create object of type ConcurrentDictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
-            convert = d => d;
-            return (dict, kvTypes, convert);
-        }
-
+        if (_typeToPrep.TryGetValue(genericType, out var prep))
+            return prep(kvTypes);
+        else
         if (dictType.Name.EndsWith("FrozenDictionary`2"))
-        {
-            dict = Activator.CreateInstance(typeof(Dictionary<,>)
-                                .MakeGenericType(kvTypes[0], kvTypes[1])) as IDictionary ?? throw new InternalTransformErrorException($"Could not create object of type Dictionary<{kvTypes[0].Name},{kvTypes[1].Name}>.");
-            convert = d => _toFrozenDictionary.MakeGenericMethod(kvTypes).Invoke(null, [d, null]);
-            return (dict, kvTypes, convert);
-        }
+            return PrepForFrozenDictionary(kvTypes);
 
         throw new InternalTransformErrorException($"Don't know how to deserialize {dictType}.");
     }
 
     static object? TransformDictionary(
         XElement element,
-        Type type)
+        ref Type type)
     {
-        var (dict, kvTypes, conversionMethod) = PrepForDictionary(type);
-        var keyType = kvTypes[0];
-        var valType = kvTypes[1];
+        var (dict, kvTypes, convertToFinal) = PrepForDictionary(type);
 
         foreach (var kvElement in element.Elements(ElementNames.KeyValuePair))
         {
@@ -326,23 +342,23 @@ partial class FromXmlDataTransform
 
             if (key is null)
                 throw new SerializationException($"Could not transform a value of a key in {element.Name}.");
-            if (!kt.IsAssignableTo(keyType))
+            if (!kt.IsAssignableTo(kvTypes[0]))
                 throw new SerializationException($"Invalid type of a key in {element.Name}.");
 
             var (value, vt) = ValueTransform(valElement);
 
-            if (!vt.IsAssignableTo(valType))
+            if (!vt.IsAssignableTo(kvTypes[1]))
                 throw new SerializationException($"Invalid type of a value in {element.Name}.");
 
             dict[key] = value;
         }
 
-        return conversionMethod(dict);
+        return convertToFinal(dict);
     }
 
     static object? TransformTuple(
         XElement element,
-        Type type)
+        ref Type type)
     {
         var parameters = element
                             .Elements(ElementNames.TupleItem)

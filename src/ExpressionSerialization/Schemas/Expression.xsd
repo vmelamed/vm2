@@ -280,7 +280,564 @@
         </xs:choice>
     </xs:group>
 
-    <xs:complexType name="parameterSpecType">
+    <xs:group name="constantBaseGroup">
+        <xs:choice>
+            <xs:element name="bool"
+                            type="xs:boolean">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Specifies a boolean value of a constant expression.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="byte"
+                        type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies an unsigned byte value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="char"
+                        type="xs:string"
+                        minOccurs="1"
+                        maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a char value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="double"
+                        type="xs:double">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a double precision floating point value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="float"
+                        type="xs:float">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a single precision floating point value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="int"
+                        type="xs:int">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies an integer (32bit) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="intPtr"
+                        type="xs:int">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a .NET IntPtr (32bit) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="long"
+                        type="xs:long">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a long integer (64bit) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="short"
+                        type="xs:short">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a short integer (16bit) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="signedByte"
+                        type="xs:byte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a unsigned byte value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="unsignedInt"
+                        type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a unsigned integer (32bit) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="unsignedIntPtr"
+                        type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a .NET UIntPtr (32bit) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="unsignedLong"
+                        type="xs:unsignedLong">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a unsigned long integer (64bit) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="unsignedShort"
+                        type="xs:unsignedShort">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a unsigned short integer (16bit) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="dateTime"
+                        type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a date and time value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="dateTimeOffset"
+                        type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a date, time, and UTC offset in minutes in a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="dbNull">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a data base NULL (C# DBNull) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType/>
+            </xs:element>
+
+            <xs:element name="decimal"
+                        type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a decimal value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="duration"
+                        type="xs:duration">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a time duration (C# TimeSpan) value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="guid">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a GUID value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="([\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12})|([\da-fA-F]){32}"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="half"
+                        type="xs:float">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a half precision floating point value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="string"
+                        type="xs:string"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a string value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="uri"
+                        type="xs:anyURI"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a URI value of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="object"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies an object of custom type of value (C# user defined class or struct) in a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:annotation>
+                        <xs:documentation>
+                            The content, if present (i:nil=true), can be pretty much any well-formed XML but this implementation uses data contract serialization or XML serialization.
+                            so the contents is valid accordsing to the schemas http://schemas.microsoft.com/2003/10/Serialization/, http://schemas.datacontract.org/2004/07/System.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:sequence>
+                        <xs:any processContents="lax"
+                                minOccurs="0"/>
+                    </xs:sequence>
+                    <xs:attribute name="type"
+                                  type="xs:token"
+                                  use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the type of the object type as a .NET fully qualified name.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="concreteType"
+                                  type="xs:token"
+                                  use="optional">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the concrete type of the object type as a .NET fully qualified name. Required if different (e.g. derived) from @type.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="nullable"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a nullable value (C# Nullable&lt;&gt;) in a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:group ref="constantBaseGroup"
+                              minOccurs="0"
+                              maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Specifies the underlying value of the constant. The element is optional if i:nil=$quot;true$quot;
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:group>
+                    <xs:attribute name="type"
+                                  type="xs:token"
+                                  use="optional">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the type of the underlying value of the constant. The attribute is mandatory if i:nil=$quot;true$quot;
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="enum">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies an enumeration value (C# enum) in a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:token">
+                            <xs:attribute name="type"
+                                          type="xs:token"
+                                          use="required">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Specifies the name of the enum type of the constant.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="baseType"
+                                          type="xs:token"
+                                          default="int">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Specifies the base type of the enum type of the constant.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="baseValue"
+                                          type="xs:token"
+                                          use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Specifies the base type value of the enum value.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="anonymous">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies an anonymous type (C#) of a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies a property of ananonymous type in a constant expression.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:element name="property"
+                                    minOccurs="0"
+                                    maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:group ref="constantBaseGroup"/>
+                                </xs:sequence>
+                                <xs:attribute name="name"
+                                              type="xs:token"
+                                              use="required">
+                                    <xs:annotation>
+                                        <xs:documentation xml:lang="en-us">
+                                            Specifies the name of the property of the ananonymous type in a constant expression.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="type"
+                                  type="xs:token"
+                                  use="required">
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="byteSequence"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies an array of bytes (C# byte[]) in a constant expression.
+                        The bytes are Base64 encoded in the element's contents.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:base64Binary">
+                            <xs:attribute name="type"
+                                          type="xs:token"
+                                          use="required">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="en-us">
+                                        Specifies the type of the list.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="length"
+                                          type="xs:int"
+                                          use="optional">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="en-us">
+                                        Specifies the length of the sequence of bytes.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="collection"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a collection of items in a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence  minOccurs="0"
+                                  maxOccurs="unbounded">
+                        <xs:group ref="constantBaseGroup" />
+                    </xs:sequence>
+                    <xs:attribute name="type"
+                                  type="xs:token"
+                                  use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the type of the list.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="elementType"
+                                  type="xs:token"
+                                  use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the type of the elements in the list.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="length"
+                                  type="xs:int"
+                                  use="optional">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the length of the array.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name ="dictionary"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a dictionary value (collection of key-value pairs) in a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="key-value"
+                                    minOccurs="0"
+                                    maxOccurs="unbounded"
+                                    nillable="true">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en-us">
+                                    Specifies an item from a tuple in a constant expression.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:group ref="constantBaseGroup">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en-us">
+                                                Specifies the current pair's key.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:group>
+                                    <xs:group ref="constantBaseGroup">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en-us">
+                                                Specifies the current pair's value.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:group>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="type"
+                                  type="xs:token"
+                                  use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies an type of the dictionary in a constant expression.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="length"
+                                  type="xs:int"
+                                  use="optional">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies the length of the dictionary in a constant expression.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name ="tuple"
+                        nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en-us">
+                        Specifies a tuple value (C# ValueNullable&lt;&gt; or Nullable&lt;&gt;) in a constant expression.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="item"
+                                    minOccurs="0"
+                                    maxOccurs="unbounded"
+                                    nillable="true">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en-us">
+                                    Specifies an item from a tuple in a constant expression.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:group ref="constantBaseGroup"/>
+                                </xs:sequence>
+                                <xs:attribute name="name"
+                                              type="xs:token"
+                                              use="required">
+                                    <xs:annotation>
+                                        <xs:documentation xml:lang="en-us">
+                                            Specifies the name of an item from a tuple in a constant expression.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="type"
+                                  type="xs:token"
+                                  use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">
+                                Specifies an type of the tuple in a constant expression.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="constantExpressionType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en-us">
+                Specifies a constant value in an expression.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:group ref="constantBaseGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="parameterSpecType"
+                    abstract="true">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
                 Defines an element type that represents a parameter specification: name, type, by reference. Used in methodInfo.
@@ -399,564 +956,6 @@
                         maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-
-    <xs:complexType name="constantExpressionType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Specifies a constant value in an expression.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:group ref="constantBaseGroup"/>
-    </xs:complexType>
-
-    <xs:group name="constantBaseGroup">
-        <xs:choice>
-            <xs:element name="boolean"
-                            type="xs:boolean">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="en-us">
-                            Specifies a boolean value of a constant expression.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="byte"
-                        type="xs:byte">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies an signed byte value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="dateTime"
-                        type="xs:dateTime">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a date and time value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="dateTimeOffset"
-                        type="xs:dateTime">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a date, time, and UTC offset in minutes in a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="decimal"
-                        type="xs:decimal">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a decimal value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="double"
-                        type="xs:double">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a double precision floating point value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="float"
-                        type="xs:float">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a single precision floating point value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="half"
-                        type="xs:float">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a half precision floating point value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="int"
-                        type="xs:int">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies an integer (32bit) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="long"
-                        type="xs:long">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a long integer (64bit) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="short"
-                        type="xs:short">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a short integer (16bit) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="unsignedByte"
-                        type="xs:unsignedByte">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a unsigned byte value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="unsignedInt"
-                        type="xs:unsignedInt">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a unsigned integer (32bit) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="unsignedIntPtr"
-                        type="xs:unsignedInt">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a .NET UIntPtr (32bit) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="intPtr"
-                        type="xs:int">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a .NET IntPtr (32bit) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="unsignedLong"
-                        type="xs:unsignedLong">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a unsigned long integer (64bit) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="unsignedShort"
-                        type="xs:unsignedShort">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a unsigned short integer (16bit) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="char"
-                        type="xs:string"
-                        minOccurs="1"
-                        maxOccurs="1">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a char value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="dbNull">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a data base NULL (C# DBNull) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType/>
-            </xs:element>
-
-            <xs:element name="guid">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a GUID value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:pattern value="([\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12})|([\da-fA-F]){32}"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-
-            <xs:element name="duration"
-                        type="xs:duration">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a time duration (C# TimeSpan) value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="enum">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies an enumeration value (C# enum) in a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:token">
-                            <xs:attribute name="type"
-                                          type="xs:token"
-                                          use="required">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Specifies the name of the enum type of the constant.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:attribute>
-                            <xs:attribute name="baseType"
-                                          type="xs:token"
-                                          default="int">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Specifies the base type of the enum type of the constant.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:attribute>
-                            <xs:attribute name="baseValue"
-                                          type="xs:token"
-                                          use="optional">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Specifies the base type value of the enum value.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:attribute>
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
-
-            <xs:element name="nullable"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a nullable value (C# Nullable&lt;&gt;) in a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:group ref="constantBaseGroup"
-                              minOccurs="0"
-                              maxOccurs="1">
-                        <xs:annotation>
-                            <xs:documentation>
-                                Specifies the underlying value of the constant. The element is optional if i:nil=$quot;true$quot;
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:group>
-                    <xs:attribute name="type"
-                                  type="xs:token"
-                                  use="optional">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies the type of the underlying value of the constant. The attribute is mandatory if i:nil=$quot;true$quot;
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                </xs:complexType>
-            </xs:element>
-
-            <xs:element name="string"
-                        type="xs:string"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a string value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="uri"
-                        type="xs:anyURI"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a URI value of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="anonymous">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies an anonymous type (C#) of a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies a property of ananonymous type in a constant expression.
-                            </xs:documentation>
-                        </xs:annotation>
-                        <xs:element name="property"
-                                    minOccurs="0"
-                                    maxOccurs="unbounded">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:group ref="constantBaseGroup"/>
-                                </xs:sequence>
-                                <xs:attribute name="name"
-                                              type="xs:token"
-                                              use="required">
-                                    <xs:annotation>
-                                        <xs:documentation xml:lang="en-us">
-                                            Specifies the name of the property of the ananonymous type in a constant expression.
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:attribute>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                    <xs:attribute name="type"
-                                  type="xs:token"
-                                  use="required">
-                    </xs:attribute>
-                </xs:complexType>
-            </xs:element>
-
-            <xs:element name="object"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies an object of custom type of value (C# user defined class or struct) in a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:annotation>
-                        <xs:documentation>
-                            The content, if present (i:nil=true), can be pretty much any well-formed XML but this implementation uses data contract serialization or XML serialization.
-                            so the contents is valid accordsing to the schemas http://schemas.microsoft.com/2003/10/Serialization/, http://schemas.datacontract.org/2004/07/System.
-                        </xs:documentation>
-                    </xs:annotation>
-                    <xs:sequence>
-                        <xs:any processContents="lax"
-                                minOccurs="0"/>
-                    </xs:sequence>
-                    <xs:attribute name="type"
-                                  type="xs:token"
-                                  use="required">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies the type of the object type as a .NET fully qualified name.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="concreteType"
-                                  type="xs:token"
-                                  use="optional">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies the concrete type of the object type as a .NET fully qualified name. Required if different (e.g. derived) from @type.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                </xs:complexType>
-            </xs:element>
-
-            <xs:element name="byteSequence"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies an array of bytes (C# byte[]) in a constant expression.
-                        The bytes are Base64 encoded in the element's contents.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:base64Binary">
-                            <xs:attribute name="type"
-                                          type="xs:token"
-                                          use="required">
-                                <xs:annotation>
-                                    <xs:documentation xml:lang="en-us">
-                                        Specifies the type of the list.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:attribute>
-                            <xs:attribute name="length"
-                                          type="xs:int"
-                                          use="optional">
-                                <xs:annotation>
-                                    <xs:documentation xml:lang="en-us">
-                                        Specifies the length of the sequence of bytes.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:attribute>
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
-
-            <xs:element name="collection"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a collection of items in a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:sequence  minOccurs="0"
-                                  maxOccurs="unbounded">
-                        <xs:group ref="constantBaseGroup" />
-                    </xs:sequence>
-                    <xs:attribute name="type"
-                                  type="xs:token"
-                                  use="required">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies the type of the list.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="elementType"
-                                  type="xs:token"
-                                  use="required">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies the type of the elements in the list.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="length"
-                                  type="xs:int"
-                                  use="optional">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies the length of the array.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                </xs:complexType>
-            </xs:element>
-
-            <xs:element name ="tuple"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a tuple value (C# ValueNullable&lt;&gt; or Nullable&lt;&gt;) in a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="item"
-                                    minOccurs="0"
-                                    maxOccurs="unbounded"
-                                    nillable="true">
-                            <xs:annotation>
-                                <xs:documentation xml:lang="en-us">
-                                    Specifies an item from a tuple in a constant expression.
-                                </xs:documentation>
-                            </xs:annotation>
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:group ref="constantBaseGroup"/>
-                                </xs:sequence>
-                                <xs:attribute name="name"
-                                              type="xs:token"
-                                              use="required">
-                                    <xs:annotation>
-                                        <xs:documentation xml:lang="en-us">
-                                            Specifies the name of an item from a tuple in a constant expression.
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:attribute>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                    <xs:attribute name="type"
-                                  type="xs:token"
-                                  use="required">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies an type of the tuple in a constant expression.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                </xs:complexType>
-            </xs:element>
-
-            <xs:element name ="dictionary"
-                        nillable="true">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Specifies a dictionary value (collection of key-value pairs) in a constant expression.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="key-value"
-                                    minOccurs="0"
-                                    maxOccurs="unbounded"
-                                    nillable="true">
-                            <xs:annotation>
-                                <xs:documentation xml:lang="en-us">
-                                    Specifies an item from a tuple in a constant expression.
-                                </xs:documentation>
-                            </xs:annotation>
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:group ref="constantBaseGroup">
-                                        <xs:annotation>
-                                            <xs:documentation xml:lang="en-us">
-                                                Specifies the current pair's key.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                    </xs:group>
-                                    <xs:group ref="constantBaseGroup">
-                                        <xs:annotation>
-                                            <xs:documentation xml:lang="en-us">
-                                                Specifies the current pair's value.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                    </xs:group>
-                                </xs:sequence>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                    <xs:attribute name="type"
-                                  type="xs:token"
-                                  use="required">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies an type of the dictionary in a constant expression.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="length"
-                                  type="xs:int"
-                                  use="optional">
-                        <xs:annotation>
-                            <xs:documentation xml:lang="en-us">
-                                Specifies the length of the dictionary in a constant expression.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                </xs:complexType>
-            </xs:element>
-
-        </xs:choice>
-    </xs:group>
 
     <xs:complexType name="argumentListType">
         <xs:annotation>

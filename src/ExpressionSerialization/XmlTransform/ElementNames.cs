@@ -22,7 +22,7 @@ static class ElementNames
     public static readonly XName Short                  = Namespaces.Exs + Transform.NShort;
     public static readonly XName SignedByte             = Namespaces.Exs + Transform.NSByte;
     public static readonly XName String                 = Namespaces.Exs + Transform.NString;
-    public static readonly XName UnsignedInt            = Namespaces.Exs + Transform.NUint;
+    public static readonly XName UnsignedInt            = Namespaces.Exs + Transform.NUInt;
     public static readonly XName UnsignedIntPtr         = Namespaces.Exs + Transform.NUIntPtr;
     public static readonly XName UnsignedLong           = Namespaces.Exs + Transform.NULong;
     public static readonly XName UnsignedShort          = Namespaces.Exs + Transform.NUShort;

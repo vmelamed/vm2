@@ -16,7 +16,7 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
 
     #region IExpressionTransform<XElement>
     /// <summary>
-    /// Transform the specified expression to a document model node type `XNode` (XML).
+    /// Transformer the specified expression to a document model node type `XNode` (XML).
     /// </summary>
     /// <param name="expression">The expression to be transformed.</param>
     /// <returns>The resultant top level document model node `XNode`.</returns>
@@ -33,7 +33,7 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
     }
 
     /// <summary>
-    /// Transform the specified document model node of type `TDocument` to a LINQ expression.
+    /// Transformer the specified document model node of type `TDocument` to a LINQ expression.
     /// </summary>
     /// <param name="element">The document node to be transformed.</param>
     /// <returns>The resultant expression.</returns>
@@ -46,7 +46,7 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
 
     #region IExpressionTransform<XDocument>
     /// <summary>
-    /// Transform the specified expression to a document model node type `XNode` (XML).
+    /// Transformer the specified expression to a document model node type `XNode` (XML).
     /// </summary>
     /// <param name="expression">The expression to be transformed.</param>
     /// <returns>The resultant top level document model node `XNode`.</returns>
@@ -57,7 +57,7 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
             ((IExpressionTransform<XElement>)this).Transform(expression));
 
     /// <summary>
-    /// Transform the specified document model node of type `TDocument` to a LINQ expression.
+    /// Transformer the specified document model node of type `TDocument` to a LINQ expression.
     /// </summary>
     /// <param name="document">The document node to be transformed.</param>
     /// <returns>The resultant expression.</returns>
