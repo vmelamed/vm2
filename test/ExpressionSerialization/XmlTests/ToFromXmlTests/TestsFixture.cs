@@ -138,7 +138,7 @@ public class TestsFixture : IDisposable
         var transform = new ExpressionTransform(Options);
         var actualExpression = transform.Transform(inputDoc);
 
-        expectedExpression.DeepEquals(actualExpression).Should().BeTrue($"the expression at {testFileLine} should be \"DeepEqual\" to {expectedExpression}");
+        expectedExpression.DeepEquals(actualExpression, out var difference).Should().BeTrue($"the expression at {testFileLine} should be \"DeepEqual\" to `{expectedExpression}`\n({difference})");
     }
 
     static void AssertXmlAsExpectedOrSave(

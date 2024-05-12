@@ -2,6 +2,7 @@
 
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 using TransformConstant = Func<object?, Type, XElement>;
 
@@ -432,35 +433,38 @@ class ToXmlDataTransform(Options? options = default)
         object? nodeValue,
         Type nodeType)
     {
-        if (nodeValue is null)
-            return new XElement(
-                            ElementNames.Object,
-                            new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                            new XAttribute(AttributeNames.Nil, nodeValue is null));
+        var element = new XElement(ElementNames.Object);
 
-        var concreteType = nodeValue.GetType();
-        var actualTransform = GetTransform(concreteType);
+        if (nodeValue is null)
+        {
+            element.Add(new XAttribute(AttributeNames.Nil, true));
+            if (nodeType != typeof(object))
+                element.Add(new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)));
+            return element;
+        }
+
+        var actualType = nodeValue.GetType();
+
+        if (actualType == typeof(object))
+            return element;
+
+        var actualTransform = GetTransform(actualType);
 
         if (actualTransform != ObjectTransform)
-            return actualTransform(nodeValue, concreteType);
+            return actualTransform(nodeValue, actualType);
 
-        var objectElement = new XElement(
-                                    ElementNames.Object,
-                                    new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                                    nodeType != concreteType ? new XAttribute(AttributeNames.ConcreteType, Transform.TypeName(concreteType)) : null,
-                                    nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
-                                );
+        element.Add(
+            new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
+            nodeType != actualType ? new XAttribute(AttributeNames.ConcreteType, Transform.TypeName(actualType)) : null
+        );
 
-        if (nodeValue is null)
-            return objectElement;
-
-        var dcSerializer = new DataContractSerializer(concreteType);
-        using var writer = objectElement.CreateWriter();
+        var dcSerializer = new DataContractSerializer(actualType);
+        using var writer = element.CreateWriter();
 
         // XML serialize into the element
         dcSerializer.WriteObject(writer, nodeValue);
 
-        return objectElement;
+        return element;
     }
     #endregion
 }

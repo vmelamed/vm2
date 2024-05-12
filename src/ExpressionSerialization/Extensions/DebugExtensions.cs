@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Utilities;
+﻿namespace vm2.ExpressionSerialization.Extensions;
 
 /// <summary>
 /// Class DebugExtensions.

@@ -7,7 +7,7 @@
         <!-- null -->
         <!-- vm2.ExpressionSerialization.XmlTests.Object1 -->
         <object
-            type="vm2.ExpressionSerialization.XmlTests.Object1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-            i:nil="true" />
+            i:nil="true"
+            type="vm2.ExpressionSerialization.XmlTests.Object1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b" />
     </constant>
 </expression>

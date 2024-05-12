@@ -23,8 +23,8 @@ public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output)
 
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {
-        ["(s,d) => true"]                       = () => (string s, DateTime d) => true,
         ["i => true"]                           = () => (int i) => true,
+        ["(s,d) => true"]                       = () => (string s, DateTime d) => true,
         ["a => a._a"]                           = () => (TestMethods a) => a._a,
         ["a => a.A"]                            = () => (TestMethods a) => a.A,
         ["a => a.Method1()"]                    = () => () => TestMethods.Method1(),

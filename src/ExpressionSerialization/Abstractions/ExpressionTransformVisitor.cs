@@ -87,7 +87,8 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
         Action<TExpression, TElement> thisVisit)
         where TExpression : Expression
     {
-        var resNode = baseVisit(node) ?? throw new InternalTransformErrorException($"The base visit of a {node.NodeType} node returned different node or null.");
+        var resNode = baseVisit(node)
+                        ?? throw new InternalTransformErrorException($"The base visit of a {node.NodeType} node returned different node or null.");
 
         if (resNode is not TExpression n)
             return resNode;

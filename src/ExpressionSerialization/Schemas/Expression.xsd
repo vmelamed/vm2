@@ -282,7 +282,7 @@
 
     <xs:group name="constantBaseGroup">
         <xs:choice>
-            <xs:element name="bool"
+            <xs:element name="boolean"
                             type="xs:boolean">
                     <xs:annotation>
                         <xs:documentation xml:lang="en-us">
@@ -516,10 +516,10 @@
                     </xs:sequence>
                     <xs:attribute name="type"
                                   type="xs:token"
-                                  use="required">
+                                  use="optional">
                         <xs:annotation>
                             <xs:documentation xml:lang="en-us">
-                                Specifies the type of the object type as a .NET fully qualified name.
+                                Specifies the type of the object type as a .NET fully qualified name. If omitted it is System.Object.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
@@ -836,8 +836,7 @@
         <xs:group ref="constantBaseGroup"/>
     </xs:complexType>
 
-    <xs:complexType name="parameterSpecType"
-                    abstract="true">
+    <xs:complexType name="parameterSpecType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
                 Defines an element type that represents a parameter specification: name, type, by reference. Used in methodInfo.

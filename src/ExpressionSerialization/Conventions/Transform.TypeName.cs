@@ -32,7 +32,7 @@ static partial class Transform
     }
 
     /// <summary>
-    /// Transformer the name of the type <paramref name="type"/> to a human readable string according to 
+    /// Transforms the name of the type <paramref name="type"/> to a human readable string according to 
     /// <paramref name="convention"/>.
     /// </summary>
     /// <param name="type">The type.</param>

@@ -22,6 +22,6 @@ global using Newtonsoft.Json.Linq;
 global using vm2.ExpressionSerialization.Abstractions;
 global using vm2.ExpressionSerialization.Conventions;
 global using vm2.ExpressionSerialization.Exceptions;
-global using vm2.ExpressionSerialization.Utilities;
+global using vm2.ExpressionSerialization.Extensions;
 
-global using static vm2.ExpressionSerialization.Utilities.DebugExtensions;
+global using static vm2.ExpressionSerialization.Extensions.DebugExtensions;

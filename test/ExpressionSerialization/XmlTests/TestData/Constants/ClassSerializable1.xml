@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- this.DumpString() -->
+<!-- ClassSerializable1 -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <!-- this.DumpString() -->
+        <!-- ClassSerializable1 -->
         <!-- vm2.ExpressionSerialization.XmlTests.ClassSerializable1 -->
         <object
             type="vm2.ExpressionSerialization.XmlTests.ClassSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">

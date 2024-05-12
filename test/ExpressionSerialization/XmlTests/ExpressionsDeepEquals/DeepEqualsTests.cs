@@ -2,8 +2,10 @@
 
 using vm2.ExpressionSerialization.ExpressionsDeepEquals;
 
-public partial class DeepEqualsTests
+public partial class DeepEqualsTests(ITestOutputHelper output)
 {
+    public ITestOutputHelper Out { get; } = output;
+
     [Theory]
     [InlineData("null", "null", true)]
     [InlineData("object", "object", true)]
@@ -104,18 +106,6 @@ public partial class DeepEqualsTests
     [InlineData("new ClassDataContract1[]", "new ClassDataContract1[]", true)]
     [InlineData("new ClassDataContract1[]", "new ClassDataContract2[]", false)]
 
-    public void ConstantExpressionTest(string s1, string s2, bool areEqual)
-    {
-        ConstantExpression x1 = (ConstantExpression)_substituteExpressions[s1]();
-        ConstantExpression x2 = (ConstantExpression)_substituteExpressions[s2]();
-
-        if (areEqual)
-            x1.DeepEquals(x2).Should().BeTrue();
-        else
-            x1.DeepEquals(x2).Should().BeFalse();
-    }
-
-    [Theory]
     // assign:
     [InlineData("a = 1", "a = 1", true)]
     [InlineData("a = 1", "a = 2", false)]
@@ -209,9 +199,13 @@ public partial class DeepEqualsTests
     {
         Expression x1 = _substituteExpressions[expr1]();
         Expression x2 = _substituteExpressions[expr2]();
+        string difference;
+
         if (areEqual)
-            x1.DeepEquals(x2).Should().BeTrue();
+            x1.DeepEquals(x2, out difference).Should().BeTrue(difference);
         else
-            x1.DeepEquals(x2).Should().BeFalse();
+            x1.DeepEquals(x2, out difference).Should().BeFalse(difference);
+
+        Out.WriteLine(difference);
     }
 }

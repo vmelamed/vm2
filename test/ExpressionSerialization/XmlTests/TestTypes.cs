@@ -178,7 +178,7 @@ class ClassDataContract1 : IEquatable<ClassDataContract1>
     [DataMember]
     public string StringProperty { get; set; } = "vm";
 
-    public override string ToString() => "this.DumpString()";
+    public override string ToString() => "ClassDataContract1";
 
     public virtual bool Equals(ClassDataContract1? other)
         => other is not null &&
@@ -235,6 +235,7 @@ class ClassDataContract2 : ClassDataContract1, IEquatable<ClassDataContract2>
     public static bool operator !=(ClassDataContract2 left, ClassDataContract2 right) => !(left == right);
     #endregion
 
+    public override string ToString() => "ClassDataContract2";
 }
 #pragma warning restore IDE0021 // Use expression body for constructor
 
@@ -245,7 +246,7 @@ class ClassSerializable1 : IEquatable<ClassSerializable1>
 
     public string StringProperty { get; set; } = "";
 
-    public override string ToString() => "this.DumpString()";
+    public override string ToString() => "ClassSerializable1";
 
     public virtual bool Equals(ClassSerializable1? other)
         => other is not null &&
@@ -270,7 +271,7 @@ class ClassNonSerializable(int intProperty, string strProperty)
 
     public string StringProperty { get; set; } = strProperty;
 
-    public override string ToString() => "this.DumpString()";
+    public override string ToString() => "ClassNonSerializable";
 }
 
 [Serializable]
@@ -313,7 +314,7 @@ struct StructDataContract1 : IEquatable<StructDataContract1>
     [DataMember]
     public string StringProperty { get; set; } = "";
 
-    public override readonly string ToString() => "this.DumpString()";
+    public override readonly string ToString() => "StructDataContract1";
 
     public readonly bool Equals(StructDataContract1 other)
         => (GetType() == other.GetType()

@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Utilities;
+﻿namespace vm2.ExpressionSerialization.Extensions;
 
 using System.Runtime.CompilerServices;
 
@@ -111,7 +111,7 @@ internal static partial class TypeExtensions
             var genType = type.GetGenericTypeDefinition();
 
             if (Transform.SequenceTypes.Contains(genType) ||
-                genType.Name.EndsWith("FrozenSet`1")) // TODO: this is pretty wonky but I don't know how to fix it for the internal "SmallValueTypeComparableFrozenSet`1" or "SmallFrozenSet`1" 
+                genType.Name.EndsWith("FrozenSet`1")) // TODO: this is pretty wonky but I don't know how to detect the internal "SmallValueTypeComparableFrozenSet`1" or "SmallFrozenSet`1" 
                 return true;
         }
 
