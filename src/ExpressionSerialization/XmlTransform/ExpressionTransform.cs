@@ -3,6 +3,8 @@
 using System.Xml;
 using System.Xml.Linq;
 
+using vm2.ExpressionSerialization.Abstractions;
+
 /// <summary>
 /// Class ExpressionTransform.
 /// Implements the <see cref="IExpressionTransform{XNode}"/>: transforms a Linq expression to an XML Node object.
@@ -39,7 +41,10 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
     /// <returns>The resultant expression.</returns>
     Expression IExpressionTransform<XElement>.Transform(XElement element)
     {
-        _xmlVisitor ??= new FromXmlTransformVisitor();
+        if (_xmlVisitor is null)
+            _xmlVisitor = new FromXmlTransformVisitor();
+        else
+            _xmlVisitor.ResetVisitState();
         return _xmlVisitor.Visit(element);
     }
     #endregion
@@ -64,7 +69,10 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
     public Expression Transform(XDocument document)
     {
         var me = ((IExpressionTransform<XElement>)this);
-        var root = document.Root ?? new XElement(ElementNames.Object, new XAttribute(AttributeNames.Nil, true));
+        var root = document.Root ?? new XElement(ElementNames.Expression, ElementNames.Object, new XAttribute(AttributeNames.Nil, true));
+
+        if (root.Name.LocalName != Conventions.Transform.NExpression)
+            throw new SerializationException($"Expected document root element with name `{Conventions.Transform.NExpression}`.");
 
         return me.Transform(root);
     }

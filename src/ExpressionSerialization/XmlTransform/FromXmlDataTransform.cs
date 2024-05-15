@@ -23,7 +23,7 @@ static partial class FromXmlDataTransform
 
     static (object?, Type) ValueTransform(XElement element)
     {
-        var type = element.Type();
+        var type = XNodeExtensions.GetType(element);
 
         if (type == typeof(void))
             throw new SerializationException($"Got 'void' type of constant data in the element `{element.Name}`");
@@ -52,7 +52,7 @@ static partial class FromXmlDataTransform
         }
 
         // we do not need to return Nullable<T> here. Since the return type is object? the CLR will either return null or the boxed value of the Nullable<T>
-        var vElement = element.FirstChild();
+        var vElement = element.GetChild();
         var (value, valueType) = ValueTransform(vElement);
 
         if (valueType == typeof(void))
@@ -92,7 +92,7 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
-        if (element.TryAttributeType(out var t))
+        if (element.TryGetTypeFromAttribute(out var t))
             type = t!;
 
         var concreteTypeName = element.Attribute(AttributeNames.ConcreteType)?.Value;
@@ -108,7 +108,7 @@ static partial class FromXmlDataTransform
             throw new SerializationException($"Unknown type `{concreteType}`");
 
         var serializer = new DataContractSerializer(concreteType);
-        using var reader = element.FirstChild().CreateReader();
+        using var reader = element.GetChild().CreateReader();
         return serializer.ReadObject(reader);
     }
 
@@ -131,7 +131,7 @@ static partial class FromXmlDataTransform
                                 .Elements(ElementNames.Property)
                                 .Where(e => paramName == (e.Attribute(AttributeNames.Name)?.Value ?? throw new SerializationException($"Expected attribute with name `{paramName}`.")))
                                 .First()
-                                .FirstChild()
+                                .GetChild()
                                 ;
 
             if (propElement is not null)
@@ -153,7 +153,7 @@ static partial class FromXmlDataTransform
                             .Select(
                                 e =>
                                 {
-                                    var (i, _) = ValueTransform(e.FirstChild());
+                                    var (i, _) = ValueTransform(e.GetChild());
                                     return i;
                                 })
                             .ToArray()
@@ -182,7 +182,7 @@ static partial class FromXmlDataTransform
     {
         var bytes = Convert.FromBase64String(element.Value);
 
-        if (element.TryLength(out var length) && length != bytes.Length)
+        if (element.TryGetLength(out var length) && length != bytes.Length)
             throw new SerializationException($"The actual length of byte sequence is different from the one specified in the element `{element.Name}`.");
 
         if (type == typeof(byte[]))
@@ -205,7 +205,7 @@ static partial class FromXmlDataTransform
     {
         int length = element.Elements().Count();
 
-        if (element.TryLength(out var len) && len != length)
+        if (element.TryGetLength(out var len) && len != length)
             throw new SerializationException($"The actual length of a collection is different from the one specified in the element `{element.Name}`.");
 
         Type elementType = type.IsArray
@@ -222,7 +222,7 @@ static partial class FromXmlDataTransform
                         .Elements()
                         .Select(e =>
                         {
-                            var t = e.Type();
+                            var t = XNodeExtensions.GetType(e);
                             return GetTransformation(e)(e, ref t);
                         })
                         ;
@@ -365,7 +365,7 @@ static partial class FromXmlDataTransform
 
         foreach (var kvElement in element.Elements(ElementNames.KeyValuePair))
         {
-            var keyElement = kvElement.FirstChild();
+            var keyElement = kvElement.GetChild();
             var valElement = kvElement.Elements().LastOrDefault();
 
             if (keyElement is null || valElement is null)

@@ -118,6 +118,9 @@
                         type="unaryExpressionType"/>
             <xs:element name="throw"
                         type="unaryExpressionType"/>
+            <xs:element name="unbox"
+                        type="unaryExpressionType"/>
+
 
             <!-- binary expressions -->
             <xs:element name="add"
@@ -168,6 +171,11 @@
                         type="binaryExpressionType"/>
             <xs:element name="coalesce"
                         type="coalesceExpressionType"/>
+
+            <xs:element name="typeIs"
+                        type="typeBinaryType"/>
+            <xs:element name="typeEqual"
+                        type="typeBinaryType"/>
 
             <xs:element name="assign"
                         type="compoundAssignmentExpressionType"/>
@@ -248,13 +256,6 @@
                         type="isTestType"/>
             <xs:element name="isTrue"
                         type="isTestType"/>
-
-            <xs:element name="typeIs"
-                        type="typeBinaryType"/>
-            <xs:element name="typeEqual"
-                        type="typeBinaryType"/>
-            <xs:element name="unbox"
-                        type="typeBinaryType"/>
 
             <xs:element name="goto"
                         type="gotoExpressionType" />            
@@ -842,12 +843,12 @@
                 Defines an element type that represents a parameter specification: name, type, by reference. Used in methodInfo.
             </xs:documentation>
         </xs:annotation>
-        <xs:attribute name="name"
-                      type="xs:token"
-                      use="required"/>
         <xs:attribute name="type"
                       type="xs:token"
                       use="required"/>
+        <xs:attribute name="name"
+                      type="xs:token"
+                      use="optional"/>
         <xs:attribute name="isByRef"
                       use="optional"
                       default="false"
@@ -1138,6 +1139,9 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:group>
+            <xs:element name="lambda"
+                        type="lambdaExpressionType"
+                        minOccurs="0"/>
             <xs:element name="method"
                         type="methodInfoType"
                         minOccurs="0"/>
@@ -1401,12 +1405,22 @@
                 Defines the type of elements that represent member information.
             </xs:documentation>
         </xs:annotation>
+        <xs:attribute name="static"
+                      type="xs:boolean"
+                      use="optional"
+                      default="false">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-us">
+                    Specifies weather the member is static or instance.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="visibility"
                       use="optional"
                       default="public">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
-                    Represents the visibility of the member (the default is public).
+                    Represents the visibility of the member.
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>
@@ -1420,25 +1434,74 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="static"
-                      type="xs:boolean"
-                      use="optional"
-                      default="false">
-            <xs:annotation>
-                <xs:documentation xml:lang="en-us">
-                    Specifies weather the member is static (the default is instance).
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
         <xs:attribute name="type"
-                      type="xs:token"
-                      use="required">
+                        type="xs:token"
+                        use="optional">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
-                    Represents the type that defines the member.
+                    Represents the type of the member, e.g. type of a property or field, method return type, event delegate type.
+                    It should be omitted for constructorInfo.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="declaringType"
+                        type="xs:token"
+                        use="optional">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-us">
+                    Represents the type that declares the the member.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name"
+                        type="xs:token"
+                        use="optional">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-us">
+                    Represents the name of the member. It should be omitted for constructorInfo.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="propertyInfoType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en-us">
+                Defines the type of elements that represent properties.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="memberInfoType">
+                <xs:sequence>
+                    <xs:element name="get"
+                                minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="parameterSpecs"
+                                            type="parameterSpecListType"
+                                            minOccurs="0"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="set"
+                                minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="parameterSpecs"
+                                            type="parameterSpecListType"
+                                            minOccurs="0"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="type"
+                                type="xs:token"
+                                use="required"/>
+                <xs:attribute name="name"
+                                type="xs:token"
+                                use="required"/>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="methodInfoType">
@@ -1453,10 +1516,13 @@
                     <xs:element name="parameterSpecs"
                                 type="parameterSpecListType"/>
                 </xs:sequence>
+                <xs:attribute name="type"
+                                type="xs:token"
+                                use="required"/>
                 <xs:attribute name="name"
-                              type="xs:token"
-                              use="required"/>
-                </xs:extension>
+                                type="xs:token"
+                                use="required"/>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
@@ -1507,47 +1573,12 @@
                 <xs:attribute name="readOnly"
                               type="xs:boolean"
                               use="optional"/>
+                <xs:attribute name="type"
+                              type="xs:token"
+                              use="required"/>
                 <xs:attribute name="name"
                               type="xs:token"
                               use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="propertyInfoType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines the type of elements that represent properties.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="memberInfoType">
-                <xs:sequence>
-                    <xs:element name="get"
-                                minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="parameterSpecs"
-                                            type="parameterSpecListType"
-                                            minOccurs="0"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="set"
-                                minOccurs="0">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="parameterSpecs"
-                                            type="parameterSpecListType"
-                                            minOccurs="0"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-                <xs:attribute name="name"
-                              type="xs:token"
-                              use="optional">
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1582,10 +1613,12 @@
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
+                <xs:attribute name="type"
+                                type="xs:token"
+                                use="required"/>
                 <xs:attribute name="name"
-                              type="xs:token"
-                              use="optional">
-                </xs:attribute>
+                                type="xs:token"
+                                use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1838,6 +1871,13 @@
                     </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:group ref="expressionBaseGroup">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="en-us">
+                                        Represents the body of this case.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:group>
                             <xs:element name="caseValues"
                                         minOccurs="1"
                                         maxOccurs="unbounded">
@@ -1850,13 +1890,6 @@
                                     <xs:group ref="expressionBaseGroup"/>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:group ref="expressionBaseGroup">
-                                <xs:annotation>
-                                    <xs:documentation xml:lang="en-us">
-                                        Represents the body of this case.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:group>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -1897,13 +1930,13 @@
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
+                        <xs:group ref="expressionBaseGroup" />
                         <xs:element name="exception"
                                     type="parameterDefinitionType"
                                     minOccurs="0" />
                         <xs:element name="filter"
                                     type="expressionType"
                                     minOccurs="0" />
-                        <xs:group ref="expressionBaseGroup" />
                     </xs:sequence>
                     <xs:attribute name="type"
                                   type="xs:token"

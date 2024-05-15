@@ -1,5 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.Extensions;
 
+using System.Xml.Linq;
+
 using vm2.ExpressionSerialization.XmlTransform;
 
 /// <summary>
@@ -8,7 +10,7 @@ using vm2.ExpressionSerialization.XmlTransform;
 public static class XNodeExtensions
 {
     /// <summary>
-    /// Determines whether the specified element is nil.
+    /// Determines whether the specified element is <c>null</c> from the attribute `i:nil="true"`.
     /// </summary>
     /// <param name="element">The element.</param>
     /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
@@ -16,12 +18,101 @@ public static class XNodeExtensions
         => element.Attribute(AttributeNames.Nil)?.Value is string v && XmlConvert.ToBoolean(v);
 
     /// <summary>
+    /// Translates an element's name to the enum ExpressionType.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <returns>The <see cref="ExpressionType"/> represented by the element.</returns>
+    public static ExpressionType ExpressionType(this XElement element)
+        => Enum.Parse<ExpressionType>(element.Name.LocalName, true);
+
+    /// <summary>
+    /// Tries to gets the child node with index <paramref name="childIndex" /> of the element <paramref name="element" />.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <param name="childIndex">The index of the child.</param>
+    /// <param name="child">The output child.</param>
+    /// <returns><c>true</c> if the child was successfully obtained, <c>false</c> otherwise.</returns>
+    public static bool TryGetChild(this XElement element, int childIndex, out XElement? child)
+    {
+        if (childIndex < element.Elements().Count())
+        {
+            child = element.Elements().ElementAt(childIndex);
+            return true;
+        }
+        else
+        {
+            child = null;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets the child node with index <paramref name="childIndex"/> of the element <paramref name="element"/>.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <param name="childIndex">The index of the child.</param>
+    /// <returns>The <see cref="XElement" /> of the child element.</returns>
+    /// <exception cref="SerializationException"/>
+    public static XElement GetChild(this XElement element, int childIndex = 0)
+        => element.TryGetChild(childIndex, out var child) && child is not null
+                ? child
+                : throw new SerializationException($"The parent element {element.Name} does not have a child with index {childIndex}.");
+
+    /// <summary>
+    /// Tries to get the child node with name <paramref name="childName"/> of the element <paramref name="element"/>.
+    /// </summary>
+    /// <param name="element">The parent element.</param>
+    /// <param name="childName">The local name of the child.</param>
+    /// <param name="child">The output child.</param>
+    /// <returns><c>true</c> if the child was successfully obtained, <c>false</c> otherwise.</returns>
+    public static bool TryGetChild(this XElement element, string childName, out XElement? child)
+        => (child = element.Element(childName)) is not null;
+
+    /// <summary>
+    /// Gets the child node with name <paramref name="childName"/> of the element <paramref name="element"/>.
+    /// </summary>
+    /// <param name="element">The parent element.</param>
+    /// <param name="childName">The local name of the child.</param>
+    /// <returns>The <see cref="XElement" /> of the child element.</returns>
+    /// <exception cref="SerializationException"/>
+    public static XElement GetChild(this XElement element, string childName)
+        => element.TryGetChild(childName, out var child) && child is not null
+                ? child
+                : throw new SerializationException($"The parent element {element.Name} does not have a child with name {childName}.");
+
+    /// <summary>
+    /// Gets the name of the element from attribute <see cref="AttributeNames.Name" />
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <param name="name">The name.</param>
+    /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
+    public static bool TryGetName(this XElement element, out string name)
+    {
+        name = "";
+        if (element.Attribute(AttributeNames.Name)?.Value is not string v)
+            return false;
+
+        name = v;
+        return true;
+    }
+
+    /// <summary>
+    /// Gets the name of the element from attribute <see cref="AttributeNames.Name"/>
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
+    public static string GetName(this XElement element)
+        => TryGetName(element, out var name)
+                ? name
+                : throw new SerializationException($"Could not get the name attribute of the element `{element.Name}`.");
+
+    /// <summary>
     /// Gets the length of the sub-elements in the element from attribute <see cref="AttributeNames.Length" />
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="length">The length.</param>
     /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
-    public static bool TryLength(this XElement element, out int length)
+    public static bool TryGetLength(this XElement element, out int length)
     {
         length = 0;
 
@@ -37,23 +128,60 @@ public static class XNodeExtensions
     /// </summary>
     /// <param name="element">The element.</param>
     /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
-    public static int Length(this XElement element)
-        => TryLength(element, out var length)
+    /// <exception cref="SerializationException"/>
+    public static int GetLength(this XElement element)
+        => TryGetLength(element, out var length)
                 ? length
                 : throw new SerializationException($"Could not get the length attribute of the element `{element.Name}`.");
 
     /// <summary>
-    /// Tries to get the name of the type of an element either from the name of the element or from its attribute "type".
+    /// Tries to get the .NET type of the element from its attribute (default "type").
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <param name="type">The type.</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
+    public static bool TryGetTypeFromAttribute(this XElement element, out Type? type, XName? attributeName = null)
+    {
+        type = null;
+
+        var typeName = element.Attribute(attributeName ?? AttributeNames.Type)?.Value;
+
+        if (typeName is null)
+            return false;
+
+        return Transform.NamesToTypes.TryGetValue(typeName, out type) ||
+               (type = Type.GetType(typeName)) is not null;
+    }
+
+    /// <summary>
+    /// Gets the .NET type of the element only from its attribute (default "type"). If not found - throws Exception.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
+    public static Type GetTypeFromAttribute(this XElement element, XName? attributeName = null)
+        => element.TryGetType(out var type, attributeName)
+                ? type!
+                : throw new SerializationException($"Could not get the .NET type of element `{element.Name}`.");
+
+    /// <summary>
+    /// Tries to get the name of the type of an element
+    /// <list type="bullet">
+    /// <item>either from the name of the element</item>
+    /// <item>or from its attribute "type".</item>
+    /// </list>
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="name">The name.</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static bool TryTypeName(this XElement element, out string name)
+    public static bool TryGetTypeName(this XElement element, out string name, XName? attributeName = null)
     {
         name = "";
         var nm = Transform.NamesToTypes.ContainsKey(element.Name.LocalName)
                     ? element.Name.LocalName
-                    : element.Attribute(AttributeNames.Type)?.Value;
+                    : element.Attribute(attributeName ?? AttributeNames.Type)?.Value;
 
         if (string.IsNullOrWhiteSpace(nm))
             return false;
@@ -63,135 +191,59 @@ public static class XNodeExtensions
     }
 
     /// <summary>
-    /// Tries to get the name of the type of an element either from the name of the element or from its attribute "type".
+    /// Gets the name of the type of an element
+    /// <list type="bullet">
+    /// <item>either from the name of the element</item>
+    /// <item>or from its attribute "type".</item>
+    /// </list>
+    /// If it fails, throws exception.
     /// </summary>
     /// <param name="element">The element.</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static string TypeName(this XElement element)
-        => element.TryTypeName(out var name) && name is not null
+    /// <exception cref="SerializationException"/>
+    public static string GetTypeName(this XElement element, XName? attributeName = null)
+        => element.TryGetTypeName(out var name, attributeName) && name is not null
                         ? name
                         : throw new SerializationException($"Could not get the type name of the element `{element.Name}`.");
 
     /// <summary>
-    /// Tries to get the .NET type of the element either from the name of the element or from its attribute "type".
+    /// Tries to get the .NET type of the element
+    /// <list type="bullet">
+    /// <item>either from the name of the element</item>
+    /// <item>or from its attribute "type".</item>
+    /// </list>
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="type">The type.</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static bool TryType(this XElement element, out Type? type)
+    public static bool TryGetType(this XElement element, out Type? type, XName? attributeName = null)
     {
         type = null;
 
-        if (!element.TryTypeName(out var typeName))
+        if (!element.TryGetTypeName(out var typeName, attributeName))
             return false;
 
         if (Transform.NamesToTypes.TryGetValue(typeName, out type))
             return true;
 
-        return (type = System.Type.GetType(typeName)) is not null;
+        return (type = Type.GetType(typeName)) is not null;
     }
 
     /// <summary>
-    /// Tries to get the .NET type of the element either from the name of the element or from its attribute "type".
+    /// Tries to get the .NET type of the element
+    /// <list type="bullet">
+    /// <item>either from the name of the element</item>
+    /// <item>or from its attribute "type".</item>
+    /// </list>
     /// </summary>
     /// <param name="element">The element.</param>
-    /// <returns>The <see cref="System.Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static Type Type(this XElement element)
-        => element.TryType(out var type)
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
+    public static Type GetType(this XElement element, XName? attributeName = null)
+        => element.TryGetType(out var type, attributeName)
                 ? type!
                 : throw new SerializationException($"Could not get the .NET type of the element `{element.Name}`.");
 
-    /// <summary>
-    /// Tries to get the .NET type of the element either from the name of the element or from its attribute "type".
-    /// </summary>
-    /// <param name="element">The element.</param>
-    /// <param name="type">The type.</param>
-    /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static bool TryAttributeType(this XElement element, out Type? type)
-    {
-        type = null;
-
-        var typeName = element.Attribute(AttributeNames.Type)?.Value;
-
-        if (typeName is null)
-            return false;
-
-        return Transform.NamesToTypes.TryGetValue(typeName, out type) ||
-               (type = System.Type.GetType(typeName)) is not null;
-    }
-
-    /// <summary>
-    /// Tries to get the .NET type of the element either from the name of the element or from its attribute "type".
-    /// </summary>
-    /// <param name="element">The element.</param>
-    /// <returns>The <see cref="System.Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static Type AttributeType(this XElement element)
-        => element.TryType(out var type)
-                ? type!
-                : throw new SerializationException($"Could not get the .NET type of element `{element.Name}`.");
-
-    /// <summary>
-    /// Gets the name of the element from attribute <see cref="AttributeNames.Name" />
-    /// </summary>
-    /// <param name="element">The element.</param>
-    /// <param name="name">The name.</param>
-    /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
-    public static bool TryName(this XElement element, out string name)
-    {
-        name = "";
-        if (element.Attribute(AttributeNames.Name)?.Value is not string v)
-            return false;
-
-        name = v;
-        return true;
-    }
-
-    /// <summary>
-    /// Gets the name of the element from attribute <see cref="AttributeNames.Name"/>
-    /// </summary>
-    /// <param name="element">The element.</param>
-    /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
-    public static string Name(this XElement element)
-        => TryName(element, out var name)
-                ? name
-                : throw new SerializationException($"Could not get the name attribute of the element `{element.Name}`.");
-
-    /// <summary>
-    /// Gets the first child element of the specified element.
-    /// </summary>
-    /// <param name="element">The element.</param>
-    /// <returns>XElement.</returns>
-    public static XElement FirstChild(this XElement element)
-        => element.Elements().FirstOrDefault() ?? throw new SerializationException($"Could not get the first child element of the element `{element.Name}`.");
-
-    /// <summary>
-    /// Translates an element's name to expression type enum.
-    /// </summary>
-    /// <param name="element">The element.</param>
-    /// <returns>The <see cref="ExpressionType"/> represented by the element.</returns>
-    public static ExpressionType ExpressionType(this XElement element)
-        => (ExpressionType)Enum.Parse(typeof(ExpressionType), element.Name.LocalName, true);
-
-    /// <summary>
-    /// Finds the reflection method info about of the method described in the passed element.
-    /// </summary>
-    /// <param name="element">The element.</param>
-    /// <returns><see cref="MethodInfo"/>?</returns>
-    public static MethodInfo? MethodInfo(this XElement element)
-    {
-        var me = element.Element(ElementNames.Method);
-
-        if (me is null)
-            return null;
-
-        var type = me.AttributeType();
-
-        return type.GetMethod(
-                    me.Name(),
-                    BindingFlags.Static | BindingFlags.Public,
-                    (me.Element(ElementNames.Parameters) ?? throw new SerializationException($"Could not get the methods parameter definition specification from the element `{element.Name}`"))
-                        .Elements(ElementNames.ParameterSpec)
-                        .Select(p => p.Type())
-                        .ToArray());
-    }
 }

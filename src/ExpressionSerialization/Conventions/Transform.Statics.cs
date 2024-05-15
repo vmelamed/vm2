@@ -50,7 +50,6 @@ static partial class Transform
     public const string NIsByRef                = "isByRef";
     public const string NIsLifted               = "isLifted";
     public const string NIsLiftedToNull         = "isLiftedToNull";
-    public const string NIsOut                  = "isOut";
     public const string NKind                   = "kind";
     public const string NName                   = "name";
     public const string NPrivate                = "private";
@@ -58,8 +57,9 @@ static partial class Transform
     public const string NStatic                 = "static";
     public const string NTailCall               = "tailCall";
     public const string NType                   = "type";
+    public const string NDeclaringType          = "declaringType";
     public const string NTypeOperand            = "typeOperand";
-    public const string NConcreteType           = "concreteType";   // e.g. derived from ConstantExpression.Type
+    public const string NConcreteType           = "concreteType";   // e.g. derived from ConstantExpression.GetType
     public const string NBaseType               = "baseType";
     public const string NId                     = "id";
     public const string NIdRef                  = "idref";

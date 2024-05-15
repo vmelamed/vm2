@@ -11,8 +11,8 @@
 public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
 {
     /// <summary>
-    /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements) into a parent x, 
-    /// representing an expression node's operation.
+    /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements)
+    /// into the parent XML element representing the parent expression.
     /// E.g. the sequence of operations while transforming "a+b+c" may look like this:
     /// <para>
     /// push Element(b)
@@ -27,7 +27,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// </para><para>
     /// As in a reversed polish record.
     /// </para>
-    /// In the end of a successful visit the stack should contain only one x - the root of the whole expression.
+    /// In the end of a successful visit the stack should contain only one XML element - the root of the whole expression.
     /// </summary>
     protected readonly Stack<TElement> _elements = new();
 
@@ -104,7 +104,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// <summary>
     /// Gets a properly named node corresponding to the current expression node.
     /// </summary>
-    /// <param name="nodeType">Type of the node.</param>
+    /// <param name="nodeType">GetType of the node.</param>
     /// <returns>TDocument.</returns>
     protected abstract TElement GetEmptyNode(Expression nodeType);
 

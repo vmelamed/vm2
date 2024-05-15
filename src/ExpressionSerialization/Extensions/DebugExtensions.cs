@@ -19,7 +19,7 @@ internal static class DebugExtensions
     /// <summary>
     /// When used along an `using` statement provides an indented, debugging output scope with the specified scope name.
     /// </summary>
-    /// <param name="scopeName">Name of the scope.</param>
+    /// <param name="scopeName">GetName of the scope.</param>
     /// <returns>DebugScope.</returns>
     internal static DebugScope OutputDebugScope(string scopeName) => new(scopeName);
 }

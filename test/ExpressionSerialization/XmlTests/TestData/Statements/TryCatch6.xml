@@ -35,6 +35,31 @@
             </throw>
         </block>
         <catch>
+            <call
+                type="void">
+                <method
+                    static="true"
+                    type="void"
+                    name="WriteLine">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="string"
+                            name="value" />
+                    </parameterSpecs>
+                </method>
+                <arguments>
+                    <memberAccess
+                        type="string">
+                        <variable
+                            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                            name="x"
+                            idref="P1" />
+                        <property
+                            type="string"
+                            name="ParamName" />
+                    </memberAccess>
+                </arguments>
+            </call>
             <exception
                 type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                 name="x"
@@ -71,31 +96,6 @@
                     </method>
                 </equal>
             </filter>
-            <call
-                type="void">
-                <method
-                    static="true"
-                    type="void"
-                    name="WriteLine">
-                    <parameterSpecs>
-                        <parameterSpec
-                            type="string"
-                            name="value" />
-                    </parameterSpecs>
-                </method>
-                <arguments>
-                    <memberAccess
-                        type="string">
-                        <variable
-                            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                            name="x"
-                            idref="P1" />
-                        <property
-                            type="string"
-                            name="ParamName" />
-                    </memberAccess>
-                </arguments>
-            </call>
         </catch>
     </try>
 </expression>

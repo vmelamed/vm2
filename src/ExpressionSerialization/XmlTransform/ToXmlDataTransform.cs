@@ -100,7 +100,7 @@ class ToXmlDataTransform(Options? options = default)
     /// Transforms enum values.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     XElement EnumTransform(
         object? nodeValue,
         Type nodeType)
@@ -121,7 +121,7 @@ class ToXmlDataTransform(Options? options = default)
     /// Transforms a nullable nullable.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     XElement NullableTransform(
         object? nodeValue,
         Type nodeType)
@@ -153,7 +153,7 @@ class ToXmlDataTransform(Options? options = default)
     /// Transforms an anonymous object.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     XElement AnonymousTransform(
         object? nodeValue,
         Type nodeType)
@@ -182,7 +182,7 @@ class ToXmlDataTransform(Options? options = default)
     /// Transforms sequences of bytes.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     /// <exception cref="InternalTransformErrorException"></exception>
     XElement ByteSequenceTransform(
         object? nodeValue,
@@ -233,7 +233,7 @@ class ToXmlDataTransform(Options? options = default)
     /// Transforms sequences of objects.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     XElement SequenceTransform(
         object? nodeValue,
         Type nodeType)
@@ -253,7 +253,7 @@ class ToXmlDataTransform(Options? options = default)
                                 new XAttribute(AttributeNames.Nil, true)
                             );
 
-            var piCount = nodeType.GetProperty("Count") ?? nodeType.GetProperty("Length");
+            var piCount = nodeType.GetProperty("Count") ?? nodeType.GetProperty("GetLength");
             var length = (int?)piCount?.GetValue(nodeValue);
             var collectionElement = new XElement(
                                         ElementNames.Collection,
@@ -299,7 +299,7 @@ class ToXmlDataTransform(Options? options = default)
     /// Transforms value tuples.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     XElement ValueTupleTransform(
         object? nodeValue,
         Type nodeType)
@@ -335,7 +335,7 @@ class ToXmlDataTransform(Options? options = default)
     /// Transforms class tuples.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     XElement ClassTupleTransform(
         object? nodeValue,
         Type nodeType)
@@ -374,7 +374,7 @@ class ToXmlDataTransform(Options? options = default)
     /// Transforms dictionaries.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     XElement DictionaryTransform(
         object? nodeValue,
         Type nodeType)
@@ -428,7 +428,7 @@ class ToXmlDataTransform(Options? options = default)
     /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">Type of the node value.</param>
+    /// <param name="nodeType">GetType of the node value.</param>
     XElement ObjectTransform(
         object? nodeValue,
         Type nodeType)
