@@ -11,7 +11,7 @@ using System.Xml.Linq;
 public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement>
 {
     /// <summary>
-    /// Pops one elementfrom the stack
+    /// Pops one element from the stack
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <returns>XElement.</returns>
@@ -46,7 +46,7 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
                 : null;
 
     static XAttribute? AttributeType(Type type)
-        => type is not null && type != typeof(void)
+        => type is not null
                 ? new(AttributeNames.Type, Transform.TypeName(type))
                 : null;
 

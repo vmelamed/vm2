@@ -29,6 +29,7 @@
                 idref="P1" />
         </increment>
         <goto
+            type="void"
             kind="goto">
             <target
                 idref="L1" />

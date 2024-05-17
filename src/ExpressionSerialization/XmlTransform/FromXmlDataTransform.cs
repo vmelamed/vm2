@@ -23,7 +23,7 @@ static partial class FromXmlDataTransform
 
     static (object?, Type) ValueTransform(XElement element)
     {
-        var type = XNodeExtensions.GetType(element);
+        var type = element.GetEType();
 
         if (type == typeof(void))
             throw new SerializationException($"Got 'void' type of constant data in the element `{element.Name}`");
@@ -92,7 +92,7 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
-        if (element.TryGetTypeFromAttribute(out var t))
+        if (element.TryGetETypeFromAttribute(out var t))
             type = t!;
 
         var concreteTypeName = element.Attribute(AttributeNames.ConcreteType)?.Value;
@@ -222,7 +222,7 @@ static partial class FromXmlDataTransform
                         .Elements()
                         .Select(e =>
                         {
-                            var t = XNodeExtensions.GetType(e);
+                            var t = e.GetEType();
                             return GetTransformation(e)(e, ref t);
                         })
                         ;

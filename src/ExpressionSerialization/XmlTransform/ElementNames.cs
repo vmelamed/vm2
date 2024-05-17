@@ -106,6 +106,7 @@ static class ElementNames
     public static XName LessThan => Namespaces.Exs + Transform.NLessThan;
     public static XName LessThanOrEqual => Namespaces.Exs + Transform.NLessThanOrEqual;
     public static XName ListInit => Namespaces.Exs + Transform.NListInit;
+    public static XName Initializers => Namespaces.Exs + Transform.NInitializers;
     public static XName Loop => Namespaces.Exs + Transform.NLoop;
     public static XName MemberAccess => Namespaces.Exs + Transform.NMemberAccess;
     public static XName MemberInit => Namespaces.Exs + Transform.NMemberInit;

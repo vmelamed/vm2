@@ -24,7 +24,7 @@ class DeepEqualsVisitor : ExpressionVisitor
         right = default;
 
         if (!(Equal &= _rNodes.Count != 0 &&
-                       _rNodes.Peek() is T))    // if the right node is there and has the same type - equal is true so far
+                       (_rNodes.Peek()?.GetType()?.IsAssignableTo(typeof(T)) ?? false)))    // if the right node is there and has the same type - equal is true so far
         {
             if (_rNodes.Count == 0)
                 Difference = $"The left node is {left} but there is no right sub-node.";

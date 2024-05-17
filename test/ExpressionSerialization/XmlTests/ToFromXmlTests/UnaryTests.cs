@@ -5,8 +5,13 @@ public partial class UnaryTests(TestsFixture fixture, ITestOutputHelper output) 
 
     [Theory]
     [MemberData(nameof(UnaryData))]
-    public async Task UnaryTestAsync(string testFileLine, string expressionString, string fileName)
+    public async Task UnaryToXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
+
+    [Theory]
+    [MemberData(nameof(UnaryData))]
+    public async Task UnaryFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> UnaryData = new ()
     {
@@ -15,7 +20,7 @@ public partial class UnaryTests(TestsFixture fixture, ITestOutputHelper output) 
         { TestLine(), "(int a) => () => a",             "Quote.xml" },
         { TestLine(), "(double a) => checked((int)a)",  "ConvertChecked.xml" },
         { TestLine(), "(double a) => (int)a",           "Convert.xml" },
-        { TestLine(), "(int[] a) => a.GetLength",          "ArrayLength.xml" },
+        { TestLine(), "(int[] a) => a.GetLength",       "ArrayLength.xml" },
         { TestLine(), "(bool a) => !a",                 "Not.xml" },
         { TestLine(), "(int a) => checked(-a)",         "NegateChecked.xml" },
         { TestLine(), "(int a) => -a",                  "Negate.xml" },
@@ -35,7 +40,7 @@ public partial class UnaryTests(TestsFixture fixture, ITestOutputHelper output) 
         ["(int a) => () => a"]              = GetQuoteTest(),
         ["(double a) => checked((int)a)"]   = (double a) => checked((int)a),
         ["(double a) => (int)a"]            = (double a) => (int)a,
-        ["(int[] a) => a.GetLength"]                 = (int[] a) => a.Length,
+        ["(int[] a) => a.GetLength"]        = (int[] a) => a.Length,
         ["(bool a) => !a"]                  = (bool a) => !a,
         ["(int a) => checked(-a)"]          = (int a) => checked(-a),
         ["(int a) => -a"]                   = (int a) => -a,

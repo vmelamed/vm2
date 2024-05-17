@@ -32,9 +32,11 @@
                 <int>1</int>
             </constant>
         </assign>
-        <loop>
+        <loop
+            type="void">
             <block>
-                <conditional>
+                <conditional
+                    type="void">
                     <greaterThan
                         type="boolean">
                         <variable
@@ -62,6 +64,7 @@
                             </postDecrementAssign>
                         </multiplyAssign>
                         <goto
+                            type="void"
                             kind="continue">
                             <target
                                 name="continue"
@@ -69,6 +72,7 @@
                         </goto>
                     </block>
                     <goto
+                        type="void"
                         kind="break">
                         <target
                             name="break"

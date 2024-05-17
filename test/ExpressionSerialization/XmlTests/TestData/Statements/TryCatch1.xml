@@ -3,11 +3,13 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <try>
+    <try
+        type="void">
         <block>
             <call
                 type="void">
                 <method
+                    declaringType="System.Console, System.Console, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
                     static="true"
                     type="void"
                     name="WriteLine">
@@ -24,10 +26,11 @@
                     </constant>
                 </arguments>
             </call>
-            <throw>
+            <throw
+                type="void">
                 <new>
                     <constructor
-                        type="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                        declaringType="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                         <parameterSpecs />
                     </constructor>
                     <arguments />
@@ -38,6 +41,7 @@
             <call
                 type="void">
                 <method
+                    declaringType="System.Console, System.Console, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
                     static="true"
                     type="void"
                     name="WriteLine">

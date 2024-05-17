@@ -19,6 +19,7 @@
                     name="a"
                     idref="P1" />
                 <field
+                    declaringType="vm2.ExpressionSerialization.XmlTests.TestMethods, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     readOnly="true"
                     type="int"
                     name="_a" />

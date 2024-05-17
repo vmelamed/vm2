@@ -19,6 +19,7 @@
                     name="a"
                     idref="P1" />
                 <method
+                    declaringType="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     static="true"
                     type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     name="op_UnaryPlus">

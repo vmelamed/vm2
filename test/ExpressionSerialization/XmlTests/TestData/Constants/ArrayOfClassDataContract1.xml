@@ -8,8 +8,7 @@
         <!-- vm2.ExpressionSerialization.XmlTests.ClassDataContract1[] -->
         <collection
             type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1[], XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-            elementType="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-            length="2">
+            elementType="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
             <!-- vm2.ExpressionSerialization.XmlTests.ClassDataContract1 -->
             <object
                 type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">

@@ -22,8 +22,13 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
 
     [Theory]
     [MemberData(nameof(StatementData))]
-    public async Task StatementTestAsync(string testFileLine, string expressionString, string fileName)
+    public async Task StatementToXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
+
+    [Theory]
+    [MemberData(nameof(StatementData))]
+    public async Task StatementFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> StatementData = new ()
     {
@@ -40,6 +45,7 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         { TestLine(), "goto2",                  "Goto2.xml" },
         { TestLine(), "goto3",                  "Goto3.xml" },
         { TestLine(), "goto4",                  "Goto4.xml" },
+        { TestLine(), "newHashtableInit",       "NewHashtable.xml" },
         { TestLine(), "indexMember",            "IndexMember.xml" },
         { TestLine(), "indexObject1",           "IndexObject1.xml" },
         { TestLine(), "loop",                   "Loop.xml" },
@@ -331,30 +337,26 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         ["newArrayBounds"]          = () => () => new string[2, 3, 4],
         ["newArrayItems"]           = () => () => new string[] { "aaa", "bbb", "ccc" },
         ["newDictionaryInit"]       = () => () => new Dictionary<int, string> { { 1, "one" }, { 2, "two" }, { 3, "three" }, },
+        ["newHashtableInit"]        = () => () => new Hashtable { { 1, "one" }, { 2, "two" }, { 3, "three" }, },
         ["newListInit"]             = () => () => new List<string> { "aaa", "bbb", "ccc", },
         ["newMembersInit"]          = () => () => new TestMembersInitialized
-                                                    {
+        {
             TheOuterIntProperty = 42,
             Time = new DateTime(1776, 7, 4),
             InnerProperty = new Inner
-                                                            {
+            {
                 IntProperty = 23,
                 StringProperty = "inner string"
             },
-            EnumerableProperty = new List<string>
-                                                            {
-                                                                "aaa",
-                                                                "bbb",
-                                                                "ccc",
-                                                            },
+            EnumerableProperty = new List<string> { "aaa", "bbb", "ccc", },
         },
 #pragma warning disable IDE0300 // Simplify collection initialization
         ["newMembersInit1"]         = () => () => new TestMembersInitialized1()
-                                                    {
+        {
             TheOuterIntProperty = 42,
             Time = new DateTime(1776, 7, 4),
             InnerProperty = new Inner
-                                                            {
+            {
                 IntProperty = 23,
                 StringProperty = "inner string"
             },
@@ -362,7 +364,7 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
             ListProperty = { new Inner() { IntProperty = 23, StringProperty = "inner string" }, new Inner () { IntProperty = 42, StringProperty = "next inner string" } },
         },
         ["newMembersInit2"]         = () => () => new TestMembersInitialized1()
-                                                    {
+        {
             TheOuterIntProperty = 42,
             Time = new DateTime(1776, 7, 4),
             InnerProperty = { IntProperty = 23, StringProperty = "inner string" },

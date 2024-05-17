@@ -9,7 +9,7 @@
         <body>
             <new>
                 <constructor
-                    type="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                    declaringType="vm2.ExpressionSerialization.XmlTests.StructDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                     <parameterSpecs>
                         <parameterSpec
                             type="int"

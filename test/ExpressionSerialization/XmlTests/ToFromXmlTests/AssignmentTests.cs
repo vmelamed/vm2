@@ -8,8 +8,13 @@ public partial class AssignmentTests(TestsFixture fixture, ITestOutputHelper out
 
     [Theory]
     [MemberData(nameof(AssignmentsData))]
-    public async Task AssignmentTestAsync(string testFileLine, string expressionString, string fileName)
+    public async Task AssignmentToXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
+
+    [Theory]
+    [MemberData(nameof(AssignmentsData))]
+    public async Task AssignmentFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> AssignmentsData = new ()
     {

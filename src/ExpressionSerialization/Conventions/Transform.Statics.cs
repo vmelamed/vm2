@@ -59,7 +59,7 @@ static partial class Transform
     public const string NType                   = "type";
     public const string NDeclaringType          = "declaringType";
     public const string NTypeOperand            = "typeOperand";
-    public const string NConcreteType           = "concreteType";   // e.g. derived from ConstantExpression.GetType
+    public const string NConcreteType           = "concreteType";   // e.g. derived from ConstantExpression.GetEType
     public const string NBaseType               = "baseType";
     public const string NId                     = "id";
     public const string NIdRef                  = "idref";
@@ -112,6 +112,7 @@ static partial class Transform
     public const string NContinueLabel          = "continueLabel";
     public const string NConvert                = "convert";
     public const string NConvertChecked         = "convertChecked";
+    public const string NConvertLambda          = "convertLambda";
     public const string NDecrement              = "decrement";
     public const string NDefault                = "default";
     public const string NDefaultCase            = "defaultCase";
@@ -143,6 +144,7 @@ static partial class Transform
     public const string NLessThan               = "lessThan";
     public const string NLessThanOrEqual        = "lessThanOrEqual";
     public const string NListInit               = "listInit";
+    public const string NInitializers           = "initializers";
     public const string NLoop                   = "loop";
     public const string NMemberAccess           = "memberAccess";
     public const string NMemberInit             = "memberInit";

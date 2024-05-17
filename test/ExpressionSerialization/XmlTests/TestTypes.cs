@@ -351,12 +351,14 @@ class B
     public static B operator !(B x) => new() { _b = !x._b };
 }
 
+#pragma warning disable CS0649
 [DataContract]
 class C : A
 {
     [DataMember]
     public double _c;
 }
+#pragma warning restore CS0649
 
 #pragma warning disable IDE0025 // Use expression body for property
 [DataContract]

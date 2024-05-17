@@ -5,8 +5,13 @@ public partial class LambdaTests(TestsFixture fixture, ITestOutputHelper output)
 
     [Theory]
     [MemberData(nameof(LambdaData))]
-    public async Task LambdaTestAsync(string testFileLine, string expressionString, string fileName)
+    public async Task LambdaToXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
+
+    [Theory]
+    [MemberData(nameof(LambdaData))]
+    public async Task LambdaFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> LambdaData = new ()
     {

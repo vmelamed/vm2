@@ -19,6 +19,7 @@
                     name="m"
                     idref="P1" />
                 <method
+                    declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                     type="int"
                     name="get_Item">
                     <parameterSpecs>

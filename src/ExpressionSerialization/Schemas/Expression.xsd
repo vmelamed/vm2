@@ -1139,9 +1139,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:group>
-            <xs:element name="lambda"
-                        type="lambdaExpressionType"
-                        minOccurs="0"/>
             <xs:element name="method"
                         type="methodInfoType"
                         minOccurs="0"/>
@@ -1181,7 +1178,7 @@
         <xs:complexContent>
             <xs:extension base="binaryExpressionType">
                 <xs:choice>
-                    <xs:element name="conversion"
+                    <xs:element name="convertLambda"
                                 type="lambdaExpressionType"
                                 minOccurs="0"/>
                 </xs:choice>
@@ -1198,7 +1195,7 @@
         <xs:complexContent>
             <xs:extension base="binaryExpressionType">
                 <xs:choice>
-                    <xs:element name="conversion"
+                    <xs:element name="convertLambda"
                                 type="lambdaExpressionType"
                                 minOccurs="0"/>
                 </xs:choice>
@@ -1405,6 +1402,15 @@
                 Defines the type of elements that represent member information.
             </xs:documentation>
         </xs:annotation>
+        <xs:attribute name="declaringType"
+                        type="xs:token"
+                        use="optional">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-us">
+                    Represents the type that declares the the member.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="static"
                       type="xs:boolean"
                       use="optional"
@@ -1433,34 +1439,6 @@
                     <xs:enumeration value="public"/>
                 </xs:restriction>
             </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="type"
-                        type="xs:token"
-                        use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="en-us">
-                    Represents the type of the member, e.g. type of a property or field, method return type, event delegate type.
-                    It should be omitted for constructorInfo.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="declaringType"
-                        type="xs:token"
-                        use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="en-us">
-                    Represents the type that declares the the member.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="name"
-                        type="xs:token"
-                        use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="en-us">
-                    Represents the name of the member. It should be omitted for constructorInfo.
-                </xs:documentation>
-            </xs:annotation>
         </xs:attribute>
     </xs:complexType>
 
@@ -1495,11 +1473,23 @@
                     </xs:element>
                 </xs:sequence>
                 <xs:attribute name="type"
-                                type="xs:token"
-                                use="required"/>
+                              type="xs:token"
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Represents the type of the property.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attribute name="name"
-                                type="xs:token"
-                                use="required"/>
+                              type="xs:token"
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Represents the name of the property.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1517,11 +1507,23 @@
                                 type="parameterSpecListType"/>
                 </xs:sequence>
                 <xs:attribute name="type"
-                                type="xs:token"
-                                use="required"/>
+                              type="xs:token"
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Represents the type of the return value.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attribute name="name"
-                                type="xs:token"
-                                use="required"/>
+                              type="xs:token"
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Represents the name of the method.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1575,10 +1577,22 @@
                               use="optional"/>
                 <xs:attribute name="type"
                               type="xs:token"
-                              use="required"/>
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Represents the type of the field.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attribute name="name"
                               type="xs:token"
-                              use="required"/>
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Represents the name of the field.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1614,11 +1628,23 @@
                     </xs:element>
                 </xs:sequence>
                 <xs:attribute name="type"
-                                type="xs:token"
-                                use="required"/>
+                              type="xs:token"
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Represents the type of the event.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attribute name="name"
-                                type="xs:token"
-                                use="required"/>
+                              type="xs:token"
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en-us">
+                            Represents the name of the event.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1851,7 +1877,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:group>
-            <xs:element name="compare"
+            <xs:element name="method"
                         type="methodInfoType"
                         minOccurs="0">
                 <xs:annotation>
@@ -1871,6 +1897,18 @@
                     </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="caseValues">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="en-us">
+                                        Represents the values of this case.
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:group ref="expressionBaseGroup"
+                                              minOccurs="1"
+                                              maxOccurs="unbounded"/>
+                                </xs:complexType>
+                            </xs:element>
                             <xs:group ref="expressionBaseGroup">
                                 <xs:annotation>
                                     <xs:documentation xml:lang="en-us">
@@ -1878,18 +1916,6 @@
                                     </xs:documentation>
                                 </xs:annotation>
                             </xs:group>
-                            <xs:element name="caseValues"
-                                        minOccurs="1"
-                                        maxOccurs="unbounded">
-                                <xs:annotation>
-                                    <xs:documentation xml:lang="en-us">
-                                        Represents the values of this case.
-                                    </xs:documentation>
-                                </xs:annotation>
-                                <xs:complexType>
-                                    <xs:group ref="expressionBaseGroup"/>
-                                </xs:complexType>
-                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -1930,17 +1956,17 @@
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="expressionBaseGroup" />
                         <xs:element name="exception"
                                     type="parameterDefinitionType"
                                     minOccurs="0" />
                         <xs:element name="filter"
                                     type="expressionType"
                                     minOccurs="0" />
+                        <xs:group ref="expressionBaseGroup" />
                     </xs:sequence>
                     <xs:attribute name="type"
                                   type="xs:token"
-                                  use="optional"/>
+                                  use="required"/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="fault"
@@ -2007,12 +2033,12 @@
         <xs:sequence>
             <xs:element name="new"
                         type="newExpressionType" />
-            <xs:element name="listInit">
+            <xs:element name="initializers">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="elementInit"
                                     type="elementInitType"
-                                    minOccurs="1"
+                                    minOccurs="0"
                                     maxOccurs="unbounded" />
                     </xs:sequence>
                 </xs:complexType>
@@ -2039,7 +2065,7 @@
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="optional">
+                      use="required">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
                     Defines the type of elements that represents the element type of the array.
@@ -2067,7 +2093,7 @@
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"
-                      use="optional">
+                      use="required">
             <xs:annotation>
                 <xs:documentation xml:lang="en-us">
                     Defines the type of elements that represents the element type of the array.
@@ -2107,6 +2133,7 @@
                 Provides the base type for the elements that represent bindings that are used to initialize members of a newly created object derive.
             </xs:documentation>
         </xs:annotation>
+        
         <xs:group ref="memberGroup"/>
     </xs:complexType>
 

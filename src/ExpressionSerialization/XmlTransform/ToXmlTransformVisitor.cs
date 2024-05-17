@@ -18,7 +18,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     ToXmlDataTransform _dataTransform = new(options);
 
     // labels and parameters/variables are created in one value n and references to them are used in another.
-    // These dictionaries keep their id-s so we can create `XAttribute` id-s and idref-s to them.
+    // These dictionaries keep their id-s so we can create `XAttribute` id-s and idRef-s to them.
     Dictionary<LabelTarget, XElement> _labelTargets = [];
     Dictionary<ParameterExpression, XElement> _parameters = [];
     int _lastLabelIdNumber;
@@ -159,9 +159,9 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
                 if (n.Conversion is not null)
                 {
-                    var convElement = PopElement();
+                    var convElement = PopElement(); // TODO: debug
 
-                    convElement.Name = Transform.NConvert;
+                    convElement.Name = Transform.NConvertLambda;
                     x.Add(convElement);
                 }
             });
@@ -219,6 +219,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                     VisitMemberInfo(n.Member)));
 
     /// <inheritdoc/>
+    #region Member initialization
     protected override Expression VisitMemberInit(MemberInitExpression node)
         => GenericVisit(
             node,
@@ -280,6 +281,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     }
     #endregion
 
+    #endregion
     /// <inheritdoc/>
     protected override Expression VisitMethodCall(MethodCallExpression node)
         => GenericVisit(
@@ -322,26 +324,20 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         XElement varElement;
 
         if (_parameters.TryGetValue(node, out var x))
-        {
             varElement = new XElement(
                             x.Name == ElementNames.VariableDefinition ? ElementNames.VariableReference : ElementNames.ParameterReference,
                             AttributeType(node),
                             new XAttribute(AttributeNames.Name, node.Name ?? "_"),
                             node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
                             new XAttribute(AttributeNames.IdRef, x.Attribute(AttributeNames.Id)?.Value ?? throw new InternalTransformErrorException("A variable of parameter reference without Id.")));
-        }
         else
-        {
-            var varId = $"P{++_lastParamIdNumber}";
-
+            _parameters[node] =
             varElement = new XElement(
                             ElementNames.VariableDefinition,
                             AttributeType(node),
                             new XAttribute(AttributeNames.Name, node.Name ?? "_"),
                             node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
-                            new XAttribute(AttributeNames.Id, varId));
-            _parameters[node] = varElement;
-        }
+                            new XAttribute(AttributeNames.Id, $"P{++_lastParamIdNumber}"));
 
         _elements.Push(varElement);
         return node;
@@ -413,12 +409,8 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             targetElement =
             _labelTargets[n] = new XElement(
                                         ElementNames.Target,
-                                        !string.IsNullOrWhiteSpace(n.Name)
-                                            ? new XAttribute(AttributeNames.Name, n.Name)
-                                            : null,
-                                        n.Type != typeof(void)
-                                            ? AttributeType(n.Type)
-                                            : null,
+                                        !string.IsNullOrWhiteSpace(n.Name) ? new XAttribute(AttributeNames.Name, n.Name) : null,
+                                        n.Type != typeof(void) ? AttributeType(n.Type) : null,
                                         new XAttribute(AttributeNames.Id, $"L{++_lastLabelIdNumber}"));
 
         _elements.Push(targetElement);
@@ -438,7 +430,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                                 : null;
 
                 x.Add(
-                    PopElement(),
+                    PopElement(),   // add the target
                     value);
             });
 
@@ -449,19 +441,15 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitGoto,
             (n, x) =>
             {
-                var value = n.Value is not null
-                                    ? PopElement()   // pop the result value if present
-                                    : null;
+                var value = n.Value is not null ? PopElement() : null;
 
-                // VisitLabelTarget adds an attribute with name id - fixup: remove it and put attribute with name idref instead
+                // VisitLabelTarget adds an attribute with name id - fixup: remove it and put attribute with name idRef instead
                 XElement targetElement = new(PopElement());
                 var id = targetElement.Attributes(AttributeNames.Id).Single();
 
                 id.Remove();
-
                 targetElement.Add(
-                    new XAttribute(AttributeNames.IdRef, id.Value),
-                    value is not null ? new XAttribute(Transform.NType, value.GetType()) : null);
+                    new XAttribute(AttributeNames.IdRef, id.Value));
 
                 x.Add(
                     targetElement,
@@ -518,17 +506,16 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         using var _ = OutputDebugScope(nameof(SwitchCase));
         var switchCase = base.VisitSwitchCase(node);
         var caseExpression = PopElement();
-        Stack<XElement> tempElements = [];
+        Stack<XElement> tempElements = new(node.TestValues.Count);
 
         for (int i = 0; i < node.TestValues.Count; i++)
-            tempElements.Push(
-                new XElement(
-                        ElementNames.CaseValues,
-                        PopElement()));
+            tempElements.Push(PopElement());
 
         _elements.Push(new XElement(
                                 ElementNames.Case,
-                                tempElements,
+                                new XElement(
+                                    ElementNames.CaseValues,
+                                    tempElements),
                                 caseExpression));
 
         return switchCase;
@@ -551,9 +538,10 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                                         ElementNames.Fault,
                                         PopElement())
                                 : null;
-                Stack<XElement> catches = [];
+                int countCatches = n.Handlers?.Count ?? 0;
+                Stack<XElement> catches = new(countCatches);
 
-                for (var i = 0; i < n.Handlers?.Count; i++)
+                for (var i = 0; i < countCatches; i++)
                     catches.Push(PopElement());
 
                 var @try = PopElement();
@@ -599,11 +587,9 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         _elements.Push(
             new XElement(
                     ElementNames.Catch,
-                    node.Test != node.Variable?.Type
-                        ? new XAttribute(
+                    new XAttribute(
                             AttributeNames.Type,
-                            Transform.TypeName(node.Test))
-                        : null,
+                            Transform.TypeName(node.Test)),
                     exception,
                     filter,
                     body));
@@ -618,16 +604,16 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitListInit,
             (n, x) =>
             {
-                Stack<XElement> inits = [];
+                Stack<XElement> initializers = [];
 
                 for (var i = 0; i < n.Initializers.Count; i++)
-                    inits.Push(PopElement());
+                    initializers.Push(PopElement());
 
                 x.Add(
                     PopElement(),            // the new n
                     new XElement(
-                        ElementNames.ListInit,
-                        inits));                // the elementsInit n
+                        ElementNames.Initializers,
+                        initializers));                // the elementsInit n
             });
 
     /// <inheritdoc/>
@@ -637,6 +623,10 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
             base.VisitNewArray,
             (n, x) =>
             {
+                var elemType = n.Type.GetElementType() ?? throw new InternalTransformErrorException($"Could not get the type of the element.");
+
+                x.Add(new XAttribute(AttributeNames.Type, Transform.TypeName(elemType)));
+
                 if (n.NodeType == ExpressionType.NewArrayInit)
                     VisitNewArrayInit(n, x);
                 else
@@ -645,15 +635,16 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
 
     void VisitNewArrayInit(NewArrayExpression n, XElement x)
     {
-        Stack<XElement> inits = [];
+        Stack<XElement> initializers = [];
 
         for (var i = 0; i < n.Expressions.Count; i++)
-            inits.Push(PopElement());
+            initializers.Push(PopElement());
+
 
         x.Add(
             new XElement(
                     ElementNames.ArrayElements,
-                    inits));
+                    initializers));
     }
 
     void VisitNewArrayBounds(NewArrayExpression n, XElement x)

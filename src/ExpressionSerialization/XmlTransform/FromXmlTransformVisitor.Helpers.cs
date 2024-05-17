@@ -41,7 +41,7 @@ public partial class FromXmlTransformVisitor
 
         return e.Name.LocalName switch {
             Transform.NConstructor => declType.GetConstructor(bindingFlags, null, paramTypes, [modifiers]) as MemberInfo,
-            Transform.NProperty => declType.GetProperty(name!, bindingFlags, null, e.GetType(), paramTypes, [modifiers]),
+            Transform.NProperty => declType.GetProperty(name!, bindingFlags, null, e.GetEType(), paramTypes, [modifiers]),
             Transform.NMethod => declType.GetMethod(name!, bindingFlags, null, paramTypes, [modifiers]),
             Transform.NField => declType.GetField(name!, bindingFlags),
             Transform.NEvent => declType.GetEvent(name!, bindingFlags),
@@ -67,7 +67,7 @@ public partial class FromXmlTransformVisitor
             .Select(
                 p =>
                 {
-                    types[i] = p.GetType();
+                    types[i] = p.GetEType();
                     mods[i] = XmlConvert.ToBoolean(p.Attribute(AttributeNames.IsByRef)?.Value ?? "false");
                     i++;
                     return 1;

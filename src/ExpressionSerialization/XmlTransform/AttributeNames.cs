@@ -21,7 +21,7 @@ static class AttributeNames
     public static XName Type => Transform.NType;
     public static XName DeclaringType => Transform.NDeclaringType;
     public static XName TypeOperand => Transform.NTypeOperand;
-    public static XName ConcreteType => Transform.NConcreteType;   // e.g. derived from ConstantExpression.GetType
+    public static XName ConcreteType => Transform.NConcreteType;   // e.g. derived from ConstantExpression.GetEType
     public static XName BaseType => Transform.NBaseType;
     public static XName Id => Transform.NId;
     public static XName IdRef => Transform.NIdRef;
