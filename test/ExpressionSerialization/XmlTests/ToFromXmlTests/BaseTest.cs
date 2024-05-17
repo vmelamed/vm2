@@ -1,4 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
+
 public abstract class BaseTests : IClassFixture<TestsFixture>
 {
     public ITestOutputHelper Out { get; }

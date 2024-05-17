@@ -640,7 +640,6 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         for (var i = 0; i < n.Expressions.Count; i++)
             initializers.Push(PopElement());
 
-
         x.Add(
             new XElement(
                     ElementNames.ArrayElements,
