@@ -7,47 +7,42 @@
            xmlns:es="urn:schemas-vm-com:Linq.Expressions.Serialization">
     <xs:annotation>
         <xs:documentation xml:lang="en-us">
-            Schema for XML documents representing serialized Microsoft .NET LINQ expression trees
-            (referred to as just expressions in the annotations in this schema).
+            Schema of the XML documents representing serialized Microsoft .NET LINQ expression trees.
+            In the annotations in this schema they are referred to as just "expressions".
         </xs:documentation>
     </xs:annotation>
 
-    <xs:element name="expressions">
+    <xs:element name="expression"
+                type="expressionType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Specifies a list of expressions.
+                Specifies a single expression element.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:choice>
-                <xs:element ref="expression"
-                            minOccurs="0"
-                            maxOccurs="unbounded"/>
-            </xs:choice>
-        </xs:complexType>
 
-        <!-- parameters: -->
+        <!-- parameter definitions and referencess: -->
         <xs:key name ="parameterDefinitionKey">
             <xs:selector xpath="parameter" />
             <xs:field xpath="@id" />
         </xs:key>
 
-        <xs:key name ="parameterReferenceKey">
+        <xs:keyref name ="parameterReferenceKey" refer="parameterDefinitionKey">
             <xs:selector xpath="parameter" />
             <xs:field xpath="@idref" />
-        </xs:key>
+        </xs:keyref>
 
+        <!-- variable definitions and referencess: -->
         <xs:key name ="variableDefinitionKey">
             <xs:selector xpath="variable" />
             <xs:field xpath="@id" />
         </xs:key>
 
-        <xs:key name ="variableReferenceKey">
+        <xs:keyref name ="variableReferenceKey" refer="variableDefinitionKey">
             <xs:selector xpath="variable" />
             <xs:field xpath="@idref" />
-        </xs:key>
+        </xs:keyref>
 
-        <!-- labels: -->
+        <!-- label definitions and referencess: -->
         <xs:key name="labelKey">
             <xs:selector xpath="label/target | break/target | continue/target"/>
             <xs:field xpath="@id"/>
@@ -58,15 +53,6 @@
             <xs:field xpath="@idref"/>
         </xs:keyref>
 
-    </xs:element>
-
-    <xs:element name="expression"
-                type="expressionType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Specifies a single expression element.
-            </xs:documentation>
-        </xs:annotation>
     </xs:element>    
     
     <xs:complexType name ="expressionType">
