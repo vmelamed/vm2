@@ -33,7 +33,7 @@ public partial class Options
     /// <summary>
     /// The expression transformation XML schema
     /// </summary>
-    public const string Exs = "urn:schemas-vm-com:Linq.Expressions.Serialization";
+    public const string Exs = "urn:schemas-vm-com:Linq.Expressions.Serialization.Xml";
 
     /// <summary>
     /// The W3C schema definition.

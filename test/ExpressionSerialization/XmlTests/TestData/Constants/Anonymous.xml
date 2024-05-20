@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- { ObjectProperty = , NullIntProperty = , NullLongProperty = 1, BoolProperty = True, CharProperty = A, ByteProperty = 1, SByteProperty = 1, ShortProperty = 1, IntProperty = 1, LongProperty = 1, UShortProperty = 1, UIntProperty = 1, ULongProperty = 1, DoubleProperty = 1, FloatProperty = 1, DecimalProperty = 1, GuidProperty = 00000000-0000-0000-0000-000000000000, UriProperty = http://localhost/, DateTimeProperty = 1/13/2013 12:00:00 AM, TimeSpanProperty = 00:00:00.0000123, DateTimeOffsetProperty = 1/13/2013 12:00:00 AM -05:00 } -->
 <expression
-    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
         <!-- { ObjectProperty = , NullIntProperty = , NullLongProperty = 1, BoolProperty = True, CharProperty = A, ByteProperty = 1, SByteProperty = 1, ShortProperty = 1, IntProperty = 1, LongProperty = 1, UShortProperty = 1, UIntProperty = 1, ULongProperty = 1, DoubleProperty = 1, FloatProperty = 1, DecimalProperty = 1, GuidProperty = 00000000-0000-0000-0000-000000000000, UriProperty = http://localhost/, DateTimeProperty = 1/13/2013 12:00:00 AM, TimeSpanProperty = 00:00:00.0000123, DateTimeOffsetProperty = 1/13/2013 12:00:00 AM -05:00 } -->

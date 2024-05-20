@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- () => new List`1() {Void Add(System.String)("aaa"), Void Add(System.String)("bbb"), Void Add(System.String)("ccc")} -->
 <expression
-    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <lambda
         type="System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
-           targetNamespace="urn:schemas-vm-com:Linq.Expressions.Serialization"
+<xs:schema xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+           targetNamespace="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:es="urn:schemas-vm-com:Linq.Expressions.Serialization">
+           xmlns:es="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml">
     <xs:annotation>
         <xs:documentation xml:lang="en-us">
             Schema of the XML documents representing serialized Microsoft .NET LINQ expression trees.

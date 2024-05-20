@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- () => new TestMembersInitialized1() {TheOuterIntProperty = 42, Time = new DateTime(1776, 7, 4), InnerProperty = {IntProperty = 23, StringProperty = "inner string"}, ArrayProperty = new [] {4, 5, 6}, ListProperty = {Void Add(vm2.ExpressionSerialization.XmlTests.Inner)(new Inner() {IntProperty = 23, StringProperty = "inner string"}), Void Add(vm2.ExpressionSerialization.XmlTests.Inner)(new Inner() {IntProperty = 42, StringProperty = "next inner string"})}} -->
 <expression
-    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization"
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <lambda
         type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
