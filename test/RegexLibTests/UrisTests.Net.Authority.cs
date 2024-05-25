@@ -7,7 +7,7 @@ public partial class UrisTests
         { TestFileLine(), false, " ", null },
         { TestFileLine("DnsName"), true, "maria.vtmelamed.com:8080", new()
                                                         {
-                                                            ["address"] = "maria.vtmelamed.com:8080",
+                                                            ["endpoint"] = "maria.vtmelamed.com:8080",
                                                             ["host"] = "maria.vtmelamed.com",
                                                             ["ipDnsName"] = "maria.vtmelamed.com",
                                                             ["port"] = "8080",
@@ -15,7 +15,7 @@ public partial class UrisTests
         { TestFileLine("Incomplete IPv4"), false, "1.2.3:321", null },
         { TestFileLine("Complete IPv4"), true, "1.2.3.4:8443", new()
                                                         {
-                                                            ["address"] = "1.2.3.4:8443",
+                                                            ["endpoint"] = "1.2.3.4:8443",
                                                             ["host"] = "1.2.3.4",
                                                             ["ipv4"] = "1.2.3.4",
                                                             ["port"] = "8443",
@@ -24,14 +24,14 @@ public partial class UrisTests
         { TestFileLine("Complete unbracketed IPv6"), false, "1:2:3::4:17", null },
         { TestFileLine("Complete IPv6"), true, "[1:2:3::4]:17", new()
                                                         {
-                                                            ["address"] = "[1:2:3::4]:17",
+                                                            ["endpoint"] = "[1:2:3::4]:17",
                                                             ["host"] = "[1:2:3::4]",
                                                             ["ipv6"] = "1:2:3::4",
                                                             ["port"] = "17",
                                                         } },
         { TestFileLine("Complete IPvF"), true, "[v1a.skiledh.srethg.23546.]:80", new()
                                                         {
-                                                            ["address"] = "[v1a.skiledh.srethg.23546.]:80",
+                                                            ["endpoint"] = "[v1a.skiledh.srethg.23546.]:80",
                                                             ["host"] = "[v1a.skiledh.srethg.23546.]",
                                                             ["ipvF"] = "v1a.skiledh.srethg.23546.",
                                                             ["port"] = "80",
@@ -48,7 +48,7 @@ public partial class UrisTests
         { TestFileLine(), true, "maria.vtmelamed.com:8080", new()
                                                 {
                                                     ["authority"] = "maria.vtmelamed.com:8080",
-                                                    ["address"] = "maria.vtmelamed.com:8080",
+                                                    ["endpoint"] = "maria.vtmelamed.com:8080",
                                                     ["host"] = "maria.vtmelamed.com",
                                                     ["ipDnsName"] = "maria.vtmelamed.com",
                                                     ["port"] = "8080",
@@ -58,7 +58,7 @@ public partial class UrisTests
         { TestFileLine(), true, "john.doe@maria.vtmelamed.com:8080", new()
                                                 {
                                                     ["authority"] = "john.doe@maria.vtmelamed.com:8080",
-                                                    ["address"] = "maria.vtmelamed.com:8080",
+                                                    ["endpoint"] = "maria.vtmelamed.com:8080",
                                                     ["host"] = "maria.vtmelamed.com",
                                                     ["ipDnsName"] = "maria.vtmelamed.com",
                                                     ["port"] = "8080",
@@ -68,7 +68,7 @@ public partial class UrisTests
         { TestFileLine(), true, "john.doe@maria.vtmelamed.com", new()
                                                 {
                                                     ["authority"] = "john.doe@maria.vtmelamed.com",
-                                                    ["address"] = "maria.vtmelamed.com",
+                                                    ["endpoint"] = "maria.vtmelamed.com",
                                                     ["host"] = "maria.vtmelamed.com",
                                                     ["ipDnsName"] = "maria.vtmelamed.com",
                                                     ["port"] = "",
@@ -78,7 +78,7 @@ public partial class UrisTests
         { TestFileLine(), true, "john.doe:@maria.vtmelamed.com", new()
                                                 {
                                                     ["authority"] = "john.doe:@maria.vtmelamed.com",
-                                                    ["address"] = "maria.vtmelamed.com",
+                                                    ["endpoint"] = "maria.vtmelamed.com",
                                                     ["host"] = "maria.vtmelamed.com",
                                                     ["ipDnsName"] = "maria.vtmelamed.com",
                                                     ["port"] = "",
@@ -88,7 +88,7 @@ public partial class UrisTests
         { TestFileLine(), true, "john.doe:@maria.vtmelamed.com:8080", new()
                                                 {
                                                     ["authority"] = "john.doe:@maria.vtmelamed.com:8080",
-                                                    ["address"] = "maria.vtmelamed.com:8080",
+                                                    ["endpoint"] = "maria.vtmelamed.com:8080",
                                                     ["host"] = "maria.vtmelamed.com",
                                                     ["ipDnsName"] = "maria.vtmelamed.com",
                                                     ["port"] = "8080",
@@ -98,7 +98,7 @@ public partial class UrisTests
         { TestFileLine(), true, "john.doe:secret@maria.vtmelamed.com:8080", new()
                                                 {
                                                     ["authority"] = "john.doe:secret@maria.vtmelamed.com:8080",
-                                                    ["address"] = "maria.vtmelamed.com:8080",
+                                                    ["endpoint"] = "maria.vtmelamed.com:8080",
                                                     ["host"] = "maria.vtmelamed.com",
                                                     ["ipDnsName"] = "maria.vtmelamed.com",
                                                     ["port"] = "8080",
@@ -109,7 +109,7 @@ public partial class UrisTests
         { TestFileLine("Complete IPv4"), true, "john.doe:secret@1.2.3.4:8443", new()
                                                 {
                                                     ["authority"] = "john.doe:secret@1.2.3.4:8443",
-                                                    ["address"] = "1.2.3.4:8443",
+                                                    ["endpoint"] = "1.2.3.4:8443",
                                                     ["host"] = "1.2.3.4",
                                                     ["ipv4"] = "1.2.3.4",
                                                     ["port"] = "8443",
@@ -119,7 +119,7 @@ public partial class UrisTests
         { TestFileLine(), true, "john.doe:secret@[1:2:3::4]:17", new()
                                                 {
                                                     ["authority"] = "john.doe:secret@[1:2:3::4]:17",
-                                                    ["address"] = "[1:2:3::4]:17",
+                                                    ["endpoint"] = "[1:2:3::4]:17",
                                                     ["host"] = "[1:2:3::4]",
                                                     ["ipv6"] = "1:2:3::4",
                                                     ["port"] = "17",
@@ -129,7 +129,7 @@ public partial class UrisTests
         { TestFileLine(), true, "john.doe:secret@[v1a.skiledh.srethg.23546.]:80", new()
                                                 {
                                                     ["authority"] = "john.doe:secret@[v1a.skiledh.srethg.23546.]:80",
-                                                    ["address"] = "[v1a.skiledh.srethg.23546.]:80",
+                                                    ["endpoint"] = "[v1a.skiledh.srethg.23546.]:80",
                                                     ["host"] = "[v1a.skiledh.srethg.23546.]",
                                                     ["ipvF"] = "v1a.skiledh.srethg.23546.",
                                                     ["port"] = "80",

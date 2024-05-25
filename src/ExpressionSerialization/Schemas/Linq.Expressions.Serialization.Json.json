@@ -1,0 +1,626 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+    "title": "LINQ Expression Serialization",
+    "description": "Schema of the JSON documents representing serialized Microsoft .NET LINQ expression trees.",
+    "type": "object",
+    "properties": {
+        "constant": {"$ref": "#/$defs/constantValue"}
+    },
+    "$defs": {
+        "constantValue": {
+            "oneOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "byte"
+                        },
+                        "value": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "char"
+                        },
+                        "value": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "double"
+                        },
+                        "value": {
+                            "type": "number",
+                            "minimum": -1.7976931348623157E+308,
+                            "maximum": 1.7976931348623157E+308
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "float"
+                        },
+                        "value": {
+                            "type": "number",
+                            "minimum": -3.4028235E+38,
+                            "maximum": 3.4028235E+38
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "half"
+                        },
+                        "value": {
+                            "type": "number",
+                            "minimum": -65500,
+                            "maximum": 65500
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "int"
+                        },
+                        "value": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": -2147483648,
+                                    "maximum": 2147483647
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "[-+]?\\d{1,10}"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "intPtr"
+                        },
+                        "value": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": -2147483648,
+                                    "maximum": 2147483647
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "[-+]?\\d{1,10}"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "long"
+                        },
+                        "value": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": -9223372036854775808,
+                                    "maximum": 9223372036854775807
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "[-+]?\\d{1,19}"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "short"
+                        },
+                        "value": {
+                            "type": "integer",
+                            "minimum": -32768,
+                            "maximum": 32767
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "signedByte"
+                        },
+                        "value": {
+                            "type": "integer",
+                            "minimum": -128,
+                            "maximum": 127
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "unsignedInt"
+                        },
+                        "value": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 4294967295
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "\\d{1,10}"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "unsignedIntPtr"
+                        },
+                        "value": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 4294967295
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "\\d{1,10}"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "unsignedLong"
+                        },
+                        "value": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 18446744073709551615
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "\\d(1,20)"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "unsignedShort"
+                        },
+                        "value": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "dateTime"
+                        },
+                        "value": {
+                            "type": "string",
+                            "pattern": "^\\d\\d\\d\\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(?:\\.\\d+)?(?:Z|(?:[-+](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?))$",
+                            "format": "date-time"
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "dateTimeOffset"
+                        },
+                        "value": {
+                            "type": "string",
+                            "pattern": "^\\d\\d\\d\\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(?:\\.\\d+)?(?:Z|(?:[-+](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?))$",
+                            "format": "date-time"
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "dbNull"
+                        },
+                        "value": {
+                            "type": null
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "decimal"
+                        },
+                        "value": {
+                            "oneOf": [
+                                {
+                                    "type": "number",
+                                    "minimum": -79228162514264337593543950335,
+                                    "maximum": 79228162514264337593543950335
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "^[+-]?(?:(?:(?:\\d+)(?:\\.(?:\\d*))?)|(?:(?:(?:\\d*)\\.))?(?:(?:\\d+)))$"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "duration"
+                        },
+                        "value": {
+                            "type": "string",
+                            "pattern": "^P(?:(?:(?:\\d+D)|(?:\\d+M)(?:(?:\\d+D))?|(?:\\d+Y)(?:(?:\\d+M)(?:(?:\\d+D))?)?)(?:T(?:(?:(?:\\d+H)(?:(?:\\d+M)(?:(?:\\d+S))?)?|(?:\\d+M)(?:(?:\\d+S))?|(?:\\d+S))))?|T(?:(?:(?:\\d+H)(?:(?:\\d+M)(?:(?:\\d+S))?)?|(?:\\d+M)(?:(?:\\d+S))?|(?:\\d+S)))|(?:\\d+W))$",
+                            "format": "duration"
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "guid"
+                        },
+                        "value": {
+                            "type": "string",
+                            "pattern": "^(?:(?:[\\(\\{]?)[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}(?:[\\}\\)]?))|(?:[0-9A-Fa-f]{32})$",
+                            "format": "uuid"
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "string"
+                        },
+                        "anyOf":
+                        [
+                            {
+                                "value": {
+                                    "type": "string"
+                                }
+                            },
+                            {
+                                "nil": {
+                                    "type": "boolean",
+                                    "default": false
+                                }
+                            }
+                        ]
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "uri"
+                        },
+                        "anyOf": [
+                            {
+                                "value": {
+                                    "type": "string",
+                                    "format": "iri-reference"
+                                }
+                            },
+                            {
+                                "nil": {
+                                    "type": "boolean",
+                                    "default": false
+                                }
+                            }
+                        ]
+                    },
+                    "required": [
+                        "type"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "object"
+                        },
+                        "objectType": {
+                            "type": "string"
+                        },
+                        "concreteType": {
+                            "type": "string"
+                        },
+                        "anyOf":
+                        [
+                            {
+                                "value": {
+                                    "type": "object"
+                                }
+                            },
+                            {
+                                "nil": {
+                                    "type": "boolean",
+                                    "default": false
+                                }
+                            }
+                        ]
+                    },
+                    "required": [
+                        "type",
+                        "objectType"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "anonymous"
+                        },
+                        "objectType": {
+                            "type": "string"
+                        },
+                        "anyOf":
+                        [
+                            {
+                                "value": {
+                                    "type": "object"
+                                }
+                            },
+                            {
+                                "nil": {
+                                    "type": "boolean",
+                                    "default": false
+                                }
+                            }
+                        ]
+                    },
+                    "required": [
+                        "type",
+                        "objectType"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "enum"
+                        },
+                        "enumType": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        },
+                        "baseType": {
+                            "type": "string"
+                        },
+                        "baseValue": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "enumType",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "const": "byteSequence"
+                        },
+                        "anyOf":
+                        [
+                            {
+                                "value": {
+                                    "oneOf":
+                                    [
+                                        {
+                                            "type": "string",
+                                            "contentEncoding": "base64",
+                                            "contentMediaType": "application/octet-stream"
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "contentEncoding": "base64",
+                                                "contentMediaType": "application/octet-stream"
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "nil": {
+                                    "type": "boolean",
+                                    "default": false
+                                }
+                            }
+                        ]
+                    },
+                    "required": [
+                        "type",
+                        "value"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "oneOf": [
+                            {
+                                "type": {
+                                    "const": "nullable"
+                                },
+                                "value": {
+                                    "type": "#"
+                                }
+                            },
+                            {
+                                "type": {
+                                    "const": "nullable"
+                                },
+                                "baseType": {
+                                    "type": "string"
+                                },
+                                "nil": {
+                                    "type": "boolean"
+                                }
+                            }
+                        ]
+                    },
+                    "required": [
+                        "type"
+                    ]
+                },
+                {
+                    "$comment": "TODO: Collection, Dictionary, Tuple - all recursive"
+                }
+            ]
+        }
+    }
+}

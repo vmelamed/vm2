@@ -143,14 +143,14 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(AddressData))]
     public void TestAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Address, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.Endpoint, TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(NetAddressData))]
     public void TestNetAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Address, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Net.Endpoint, TestFileLine, shouldBe, input, captures);
 
     // -----
 

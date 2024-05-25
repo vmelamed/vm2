@@ -1,9 +1,9 @@
 ﻿namespace vm2.RegexLib;
 
 /// <summary>
-/// Class Numerics. Exposes string and <see cref="Regex"/> constants and static properties that match 
+/// Class Numerical. Exposes string and <see cref="Regex"/> constants and static properties that match 
 /// </summary>
-public static class Numerics
+public static class Numerical
 {
     #region OctalNumber
     /// <summary>

@@ -17,7 +17,7 @@ public static class Uris
     /// Matches a percent encoded character.
     /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
     /// </summary>
-    const string pctEncodedChar = $"(?:%{Numerics.HexDigitRex}{Numerics.HexDigitRex})";
+    const string pctEncodedChar = $"(?:%{Numerical.HexDigitRex}{Numerical.HexDigitRex})";
 
     /// <summary>
     /// The URI general delimiters.
@@ -172,42 +172,42 @@ public static class Uris
     public static Regex Host => hostRegex.Value;
     #endregion
 
-    #region Address (Host:Port)
+    #region Endpoint (Host:Port)
     /// <summary>
-    /// The name of a matching group representing an IP address.
+    /// The name of a matching group representing an IP endpoint.
     /// </summary>
-    public const string AddressGr = "address";
+    public const string EndpointGr = "endpoint";
 
     /// <summary>
-    /// Matches an IP address.
-    /// <para>BNF: <c>address := host [: port]</c></para>
-    /// <para>Named groups: <see cref="AddressGr"/> <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
+    /// Matches an IP endpoint.
+    /// <para>BNF: <c>endpoint := host [: port]</c></para>
+    /// <para>Named groups: <see cref="EndpointGr"/> <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string AddressRex = $"(?<{AddressGr}> {HostRex} (?: : {Net.PortRex})? )";
+    public const string EndpointRex = $"(?<{EndpointGr}> {HostRex} (?: : {Net.PortRex})? )";
 
     /// <summary>
-    /// Matches a string that represents an IP address.
-    /// <para>BNF: <c>address := host [: port]</c></para>
+    /// Matches a string that represents an IP endpoint.
+    /// <para>BNF: <c>endpoint := host [: port]</c></para>
     /// <para>Named groups: <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string AddressRegex = $"^{AddressRex}$";
+    public const string EndpointRegex = $"^{EndpointRex}$";
 
-    static readonly Lazy<Regex> addressRegex = new(() => new(AddressRegex, RegexOptions.Compiled |
-                                                                           RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
+    static readonly Lazy<Regex> endpointRegex = new(() => new(EndpointRegex, RegexOptions.Compiled |
+                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IP address.
-    /// <para>BNF: <c>address := host [: port]</c></para>
+    /// A <see cref="Regex"/> object that matches a string that represents an IP endpoint.
+    /// <para>BNF: <c>endpoint := host [: port]</c></para>
     /// <para>Named groups: <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
     /// </summary>
-    /// <value>The address.</value>
-    public static Regex Address => addressRegex.Value;
+    /// <value>The endpoint.</value>
+    public static Regex Endpoint => endpointRegex.Value;
     #endregion
 
     #region Authority
@@ -266,7 +266,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string AuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {AddressRex} )";
+    public const string AuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {EndpointRex} )";
 
     /// <summary>
     /// Matches the URI's authority with network address.
@@ -275,7 +275,7 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string NetAuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {Net.AddressRex} )";
+    public const string NetAuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {Net.EndpointRex} )";
     #endregion
 
     #region Path

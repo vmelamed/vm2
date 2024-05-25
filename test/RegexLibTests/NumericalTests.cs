@@ -1,6 +1,6 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
+public class NumericalTests(ITestOutputHelper output) : RegexTests(output)
 {
     public static TheoryData<string, bool, string> OctalNumberRexData => new() {
         { TestFileLine(), false, "" },
@@ -20,7 +20,7 @@ public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(OctalNumberRexData))]
     public void TestOctalNumberRex(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest(Numerics.OctalNumberRegex, TestLine, shouldBe, input);
+        => base.RegexStringTest(Numerical.OctalNumberRegex, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> HexadecimalNumberRexData => new() {
         { TestFileLine(), false, "" },
@@ -45,7 +45,7 @@ public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(HexadecimalNumberRexData))]
     public void TestHexadecimalNumberRex(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest(Numerics.HexadecimalNumberRegex, TestLine, shouldBe, input);
+        => base.RegexStringTest(Numerical.HexadecimalNumberRegex, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> NaturalNumberRexData => new() {
         { TestFileLine(), false, "" },
@@ -65,7 +65,7 @@ public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(NaturalNumberRexData))]
     public void TestNaturalNumberRex(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest(Numerics.NaturalNumberRegex, TestLine, shouldBe, input);
+        => base.RegexStringTest(Numerical.NaturalNumberRegex, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string, Captures?> IntegerNumberRexData => new() {
         { TestFileLine(), false, "",                                null },
@@ -88,7 +88,7 @@ public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(IntegerNumberRexData))]
     public void TestIntegerNumberRex(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Numerics.IntegerNumber, TestLine, shouldBe, input, captures);
+        => base.RegexTest(Numerical.IntegerNumber, TestLine, shouldBe, input, captures);
 
     public static TheoryData<string, bool, string, Captures?> FractionalNumberRexData => new() {
         { TestFileLine(), false, "",               null },
@@ -129,7 +129,7 @@ public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(FractionalNumberRexData))]
     public void TestFractionalNumberRex(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Numerics.FractionalNumber, TestLine, shouldBe, input, captures);
+        => base.RegexTest(Numerical.FractionalNumber, TestLine, shouldBe, input, captures);
 
     public static TheoryData<string, bool, string, Captures?> ScientificNumberRexData => new() {
         { TestFileLine(), false, "",             null },
@@ -187,7 +187,7 @@ public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(ScientificNumberRexData))]
     public void TestScientificNumberRex(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Numerics.ScientificNumber, TestLine, shouldBe, input, captures);
+        => base.RegexTest(Numerical.ScientificNumber, TestLine, shouldBe, input, captures);
 
     public static TheoryData<string, bool, string> UuidRexData => new() {
         { TestFileLine(), false, "" },
@@ -222,5 +222,5 @@ public class NumericsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(UuidRexData))]
     public void TestUuidRex(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest(Numerics.UuidRegex, TestLine, shouldBe, input, null, failIfMissingExpected: false);
+        => base.RegexStringTest(Numerical.UuidRegex, TestLine, shouldBe, input, null, failIfMissingExpected: false);
 }
