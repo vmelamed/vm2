@@ -1,8 +1,7 @@
-﻿using System.Web;
+﻿namespace vm2.RegexLibTests;
+using System.Web;
 
 using TestUtilities;
-
-namespace vm2.RegexLibTests;
 
 public class Captures : Dictionary<string, string>, IXunitSerializable
 {
@@ -104,7 +103,7 @@ public abstract partial class RegexTests
         foreach (var match in matches!.OfType<Match>())
         {
             Out.WriteLine($"    →{match.Value}←");
-            foreach (var group in match.Groups.AsReadOnly().Skip(1))
+            foreach (var group in match.Groups.AsReadOnly().Where(gr => !string.IsNullOrEmpty(gr.Value)).Skip(1))
                 Out.WriteLine($"      {group.Name}: →{group.Value}←");
         }
 

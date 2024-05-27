@@ -32,6 +32,7 @@ public partial class UrisTests
                                                         {
                                                             ["endpoint"] = "[1:2:3::4]:17",
                                                             ["host"] = "[1:2:3::4]",
+                                                            ["ipv6nz"] = "1:2:3::4",
                                                             ["ipv6"] = "1:2:3::4",
                                                             ["port"] = "17",
                                                         } },
@@ -148,6 +149,7 @@ public partial class UrisTests
                                                     ["authority"] = "john.doe:secret@[1:2:3::4]:17",
                                                     ["endpoint"] = "[1:2:3::4]:17",
                                                     ["host"] = "[1:2:3::4]",
+                                                    ["ipv6nz"] = "1:2:3::4",
                                                     ["ipv6"] = "1:2:3::4",
                                                     ["port"] = "17",
                                                     ["user"] = "john.doe",

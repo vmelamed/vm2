@@ -76,6 +76,7 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
         { TestFileLine("Complete IPv6"), true, "[1:2:3::4]", new()
                                                         {
                                                             ["host"] = "[1:2:3::4]",
+                                                            ["ipv6nz"] = "1:2:3::4",
                                                             ["ipv6"] = "1:2:3::4",
                                                         } },
         { TestFileLine("Complete IPvF"), true, "[v1a.skiledh.srethg.23546.]", new()
@@ -121,6 +122,7 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
         { TestFileLine("Complete IPv6"), true, "[1:2:3::4]", new()
                                                         {
                                                             ["host"] = "[1:2:3::4]",
+                                                            ["ipv6nz"] = "1:2:3::4",
                                                             ["ipv6"] = "1:2:3::4",
                                                         } },
         { TestFileLine("Complete IPvF"), true, "[v1a.skiledh.srethg.23546.]", new()

@@ -137,7 +137,7 @@ public static class Uris
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
     /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpGenNameGr"/>, <see cref="Net.Ipv4Gr"/>, 
-    /// <see cref="Net.Ipv6Gr"/> or <see cref="Net.IpvfGr"/>.
+    /// <see cref="Net.Ipv6NzGr"/> or <see cref="Net.IpvfGr"/>.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -149,7 +149,7 @@ public static class Uris
     /// Matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6Gr"/>,
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6NzGr"/>,
     /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>
     /// </para>
     /// </summary>
@@ -165,7 +165,7 @@ public static class Uris
     /// A <see cref="Regex"/> object that matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6Gr"/>,
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6NzGr"/>,
     /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>
     /// </para>
     /// </summary>

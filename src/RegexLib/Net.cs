@@ -8,6 +8,7 @@
 /// https://datatracker.ietf.org/doc/html/rfc1123
 /// https://datatracker.ietf.org/doc/html/rfc952
 /// https://datatracker.ietf.org/doc/html/rfc3513
+/// https://datatracker.ietf.org/doc/html/rfc6874
 /// </summary>
 public static class Net
 {
@@ -112,19 +113,19 @@ public static class Net
     /// <summary>
     /// The name of a matching group representing an IPv6 address.
     /// </summary>
-    public const string Ipv6Gr = "ipv6";
+    public const string Ipv6NzGr = "ipv6nz";
 
     /// <summary>
     /// Matches an IPv6 address.
-    /// <para>Named groups: <see cref="Ipv6Gr"/>.</para>
+    /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// Must have at least one non-zero number - cannot be the "unspecified address" ::0
     /// </remarks>
-    public const string Ipv6AddressRex = $$"""
+    public const string Ipv6NzAddressRex = $$"""
          (?=.*[1-9A-Fa-f])
-         (?<{{Ipv6Gr}}>
+         (?<{{Ipv6NzGr}}>
              (?:{{h16}}:){1,7}:
            | (?:{{h16}}:){1,6}(?: :{{h16}} )
            | (?:{{h16}}:){1,5}(?: :{{h16}} ){1,2}
@@ -149,20 +150,81 @@ public static class Net
          """;
 
     /// <summary>
+    /// The name of a matching group representing a zone (site) ID of an IPv6 address.
+    /// </summary>
+    public const string ZoneIdGr = "zoneId";
+
+    /// <summary>
+    /// The characters that are allowed in a URI (<see cref="Uris"/>) but do not have a reserved purpose.
+    /// <para>BNF: <c>unreserved  = ALPHA | DIGIT | "-" | "." | "_" | "~"</c></para>
+    /// </summary>
+    internal const string UnreservedChars = $@"\-\.{Ascii.AlphaNumericChars}_~";
+
+    /// <summary>
+    /// Matches a percent encoded character (<see cref="Uris"/>).
+    /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
+    /// </summary>
+    internal const string PctEncodedChar = $"(?:%{Numerical.HexDigitRex}{Numerical.HexDigitRex})";
+
+    const string unreservedRex = $@"[{UnreservedChars}] | {PctEncodedChar}";
+
+    /// <summary>
+    /// Matches a Zone or Scope ID from an IPv6 address.
+    /// <para>Named groups: <see cref="ZoneIdGr"/>.</para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// Must have at least one non-zero number - cannot be the "unspecified address" ::0
+    /// </remarks>
+    public const string Ipv6ZoneIdRex = $@"(?<{ZoneIdGr}> (?: {unreservedRex} )+ )";
+
+    /// <summary>
     /// Matches a string that represents an IPv6 address.
-    /// <para>Named groups: <see cref="Ipv6Gr"/>.</para>
+    /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string Ipv6AddressRegex = $@"^{Ipv6AddressRex}$";
+    public const string Ipv6NzAddressRegex = $@"^{Ipv6NzAddressRex}$";
+
+    static readonly Lazy<Regex> ipv6NzAddressRegex = new(() => new(Ipv6NzAddressRegex, RegexOptions.Compiled |
+                                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
+
+    /// <summary>
+    /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address.
+    /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
+    /// </summary>
+    public static Regex Ipv6NzAddress => ipv6NzAddressRegex.Value;
+
+    /// <summary>
+    /// The name of a matching group representing an IPv6 address with a zone ID.
+    /// </summary>
+    public const string Ipv6Gr = "ipv6";
+
+    /// <summary>
+    /// Matches a string that represents an IPv6 address with a zone ID in a string.
+    /// <para>Named groups: <see cref="Ipv6NzGr"/>, <see cref="ZoneIdGr"/>.</para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string Ipv6AddressRex = $@"(?<{Ipv6Gr}> {Ipv6NzAddressRex} (?: % {Ipv6ZoneIdRex} )? )";
+
+    /// <summary>
+    /// Matches a whole string that represents an IPv6 address with a zone ID.
+    /// <para>Named groups: <see cref="Ipv6NzGr"/>, <see cref="ZoneIdGr"/>.</para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string Ipv6AddressRegex = $@"^(?<{Ipv6Gr}> {Ipv6NzAddressRex} (?: % {Ipv6ZoneIdRex} )? )$";
 
     static readonly Lazy<Regex> ipv6AddressRegex = new(() => new(Ipv6AddressRegex, RegexOptions.Compiled |
                                                                                    RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address.
-    /// <para>Named groups: <see cref="Ipv6Gr"/>.</para>
+    /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address with a zone ID.
+    /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     public static Regex Ipv6Address => ipv6AddressRegex.Value;
     #endregion
@@ -200,7 +262,7 @@ public static class Net
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv.future address.
-    /// <para>Named groups: <see cref="Ipv6Gr"/>.</para>
+    /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     public static Regex IpvFutureAddress => ipvFutureAddressRegex.Value;
     #endregion
@@ -253,7 +315,7 @@ public static class Net
     /// <summary>
     /// Matches an IP address.
     /// <para>BNF: <c>ip-literal-address := [ (IPv6address | IPvFuture) ]</c></para>
-    /// <para>Named groups: <see cref="Ipv6Gr"/> or <see cref="IpvfGr"/>.</para>
+    /// <para>Named groups: <see cref="Ipv6NzGr"/> or <see cref="IpvfGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -263,7 +325,7 @@ public static class Net
     /// <summary>
     /// Matches an IP address in numeric form IPv4, IPv6, or IPvFuture.
     /// <para>BNF: <c>ip-numeric-address := IPv4address | "[" (IPv6address | IPvFuture) "]" </c></para>
-    /// <para>Named groups: <see cref="Ipv4Gr"/>, <see cref="Ipv6Gr"/>, or <see cref="IpvfGr"/>.</para>
+    /// <para>Named groups: <see cref="Ipv4Gr"/>, <see cref="Ipv6NzGr"/>, or <see cref="IpvfGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -281,7 +343,7 @@ public static class Net
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
     /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpDnsNameGr"/>, <see cref="Ipv4Gr"/>, 
-    /// <see cref="Ipv6Gr"/> or <see cref="IpvfGr"/>.
+    /// <see cref="Ipv6NzGr"/> or <see cref="IpvfGr"/>.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -294,7 +356,7 @@ public static class Net
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
     /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpDnsNameGr"/>, <see cref="Ipv4Gr"/>, 
-    /// <see cref="Ipv6Gr"/> or <see cref="IpvfGr"/>.
+    /// <see cref="Ipv6NzGr"/> or <see cref="IpvfGr"/>.
     /// </para>
     /// </summary>
     /// <remarks>

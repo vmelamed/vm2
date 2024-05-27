@@ -359,6 +359,7 @@ public partial class UrisTests
                 ["authority"] = "[::1]",
                 ["endpoint"] = "[::1]",
                 ["host"] = "[::1]",
+                ["ipv6nz"] = "::1",
                 ["ipv6"] = "::1",
             } },
         { TestFileLine(), true,  "http://[1::]", new() {
@@ -367,6 +368,7 @@ public partial class UrisTests
                 ["authority"] = "[1::]",
                 ["endpoint"] = "[1::]",
                 ["host"] = "[1::]",
+                ["ipv6nz"] = "1::",
                 ["ipv6"] = "1::",
             } },
         { TestFileLine(), true,  "http://[::192.168.0.1]", new() {
@@ -375,6 +377,7 @@ public partial class UrisTests
                 ["authority"] = "[::192.168.0.1]",
                 ["endpoint"] = "[::192.168.0.1]",
                 ["host"] = "[::192.168.0.1]",
+                ["ipv6nz"] = "::192.168.0.1",
                 ["ipv6"] = "::192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[::ffff:192.168.0.1]", new() {
@@ -383,6 +386,7 @@ public partial class UrisTests
                 ["authority"] = "[::ffff:192.168.0.1]",
                 ["endpoint"] = "[::ffff:192.168.0.1]",
                 ["host"] = "[::ffff:192.168.0.1]",
+                ["ipv6nz"] = "::ffff:192.168.0.1",
                 ["ipv6"] = "::ffff:192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[000:01:02:003:004:5:6:007]", new() {
@@ -391,6 +395,7 @@ public partial class UrisTests
                 ["authority"] = "[000:01:02:003:004:5:6:007]",
                 ["endpoint"] = "[000:01:02:003:004:5:6:007]",
                 ["host"] = "[000:01:02:003:004:5:6:007]",
+                ["ipv6nz"] = "000:01:02:003:004:5:6:007",
                 ["ipv6"] = "000:01:02:003:004:5:6:007",
             } },
         { TestFileLine(), true,  "http://[A:b:c:DE:fF:0:1:aC]", new() {
@@ -399,6 +404,7 @@ public partial class UrisTests
                 ["authority"] = "[A:b:c:DE:fF:0:1:aC]",
                 ["endpoint"] = "[A:b:c:DE:fF:0:1:aC]",
                 ["host"] = "[A:b:c:DE:fF:0:1:aC]",
+                ["ipv6nz"] = "A:b:c:DE:fF:0:1:aC",
                 ["ipv6"] = "A:b:c:DE:fF:0:1:aC",
             } },
         { TestFileLine(), true,  "http://[1:0:0:2::3:0]", new() {
@@ -407,6 +413,7 @@ public partial class UrisTests
                 ["authority"] = "[1:0:0:2::3:0]",
                 ["endpoint"] = "[1:0:0:2::3:0]",
                 ["host"] = "[1:0:0:2::3:0]",
+                ["ipv6nz"] = "1:0:0:2::3:0",
                 ["ipv6"] = "1:0:0:2::3:0",
             } },
         { TestFileLine(), true,  "http://[1::2:0:0:3:0]", new() {
@@ -415,6 +422,7 @@ public partial class UrisTests
                 ["authority"] = "[1::2:0:0:3:0]",
                 ["endpoint"] = "[1::2:0:0:3:0]",
                 ["host"] = "[1::2:0:0:3:0]",
+                ["ipv6nz"] = "1::2:0:0:3:0",
                 ["ipv6"] = "1::2:0:0:3:0",
             } },
         { TestFileLine(), false, "http://[::eeee:192.168.0.1]", null },
@@ -428,6 +436,7 @@ public partial class UrisTests
                 ["authority"] = "[0:0::0:0:8]",
                 ["endpoint"] = "[0:0::0:0:8]",
                 ["host"] = "[0:0::0:0:8]",
+                ["ipv6nz"] = "0:0::0:0:8",
                 ["ipv6"] = "0:0::0:0:8",
             } },
         { TestFileLine(), true,  "http://[2001:db8::1]", new() {
@@ -436,6 +445,7 @@ public partial class UrisTests
                 ["authority"] = "[2001:db8::1]",
                 ["endpoint"] = "[2001:db8::1]",
                 ["host"] = "[2001:db8::1]",
+                ["ipv6nz"] = "2001:db8::1",
                 ["ipv6"] = "2001:db8::1",
             } },
         { TestFileLine(), false, "http://[2001::db8::1]", null },
@@ -453,6 +463,7 @@ public partial class UrisTests
                 ["authority"] = "[::192.168.0.1]",
                 ["endpoint"] = "[::192.168.0.1]",
                 ["host"] = "[::192.168.0.1]",
+                ["ipv6nz"] = "::192.168.0.1",
                 ["ipv6"] = "::192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[0::192.168.0.1]", new() {
@@ -461,6 +472,7 @@ public partial class UrisTests
                 ["authority"] = "[0::192.168.0.1]",
                 ["endpoint"] = "[0::192.168.0.1]",
                 ["host"] = "[0::192.168.0.1]",
+                ["ipv6nz"] = "0::192.168.0.1",
                 ["ipv6"] = "0::192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[0:0::192.168.0.1]", new() {
@@ -469,6 +481,7 @@ public partial class UrisTests
                 ["authority"] = "[0:0::192.168.0.1]",
                 ["endpoint"] = "[0:0::192.168.0.1]",
                 ["host"] = "[0:0::192.168.0.1]",
+                ["ipv6nz"] = "0:0::192.168.0.1",
                 ["ipv6"] = "0:0::192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[::0:192.168.0.1]", new() {
@@ -477,6 +490,7 @@ public partial class UrisTests
                 ["authority"] = "[::0:192.168.0.1]",
                 ["endpoint"] = "[::0:192.168.0.1]",
                 ["host"] = "[::0:192.168.0.1]",
+                ["ipv6nz"] = "::0:192.168.0.1",
                 ["ipv6"] = "::0:192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[0:0::192.168.0.1]", new() {
@@ -485,6 +499,7 @@ public partial class UrisTests
                 ["authority"] = "[0:0::192.168.0.1]",
                 ["endpoint"] = "[0:0::192.168.0.1]",
                 ["host"] = "[0:0::192.168.0.1]",
+                ["ipv6nz"] = "0:0::192.168.0.1",
                 ["ipv6"] = "0:0::192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[0:0:0::192.168.0.1]", new() {
@@ -493,6 +508,7 @@ public partial class UrisTests
                 ["authority"] = "[0:0:0::192.168.0.1]",
                 ["endpoint"] = "[0:0:0::192.168.0.1]",
                 ["host"] = "[0:0:0::192.168.0.1]",
+                ["ipv6nz"] = "0:0:0::192.168.0.1",
                 ["ipv6"] = "0:0:0::192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[::ffff:192.168.0.1]", new() {
@@ -501,6 +517,7 @@ public partial class UrisTests
                 ["authority"] = "[::ffff:192.168.0.1]",
                 ["endpoint"] = "[::ffff:192.168.0.1]",
                 ["host"] = "[::ffff:192.168.0.1]",
+                ["ipv6nz"] = "::ffff:192.168.0.1",
                 ["ipv6"] = "::ffff:192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[0::ffff:192.168.0.1]", new() {
@@ -509,6 +526,7 @@ public partial class UrisTests
                 ["authority"] = "[0::ffff:192.168.0.1]",
                 ["endpoint"] = "[0::ffff:192.168.0.1]",
                 ["host"] = "[0::ffff:192.168.0.1]",
+                ["ipv6nz"] = "0::ffff:192.168.0.1",
                 ["ipv6"] = "0::ffff:192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[0:0::ffff:192.168.0.1]", new() {
@@ -517,6 +535,7 @@ public partial class UrisTests
                 ["authority"] = "[0:0::ffff:192.168.0.1]",
                 ["endpoint"] = "[0:0::ffff:192.168.0.1]",
                 ["host"] = "[0:0::ffff:192.168.0.1]",
+                ["ipv6nz"] = "0:0::ffff:192.168.0.1",
                 ["ipv6"] = "0:0::ffff:192.168.0.1",
             } },
         { TestFileLine(), true,  "http://[1:2:3:4:5:6::8]", new() {
@@ -525,13 +544,32 @@ public partial class UrisTests
                 ["authority"] = "[1:2:3:4:5:6::8]",
                 ["endpoint"] = "[1:2:3:4:5:6::8]",
                 ["host"] = "[1:2:3:4:5:6::8]",
+                ["ipv6nz"] = "1:2:3:4:5:6::8",
                 ["ipv6"] = "1:2:3:4:5:6::8",
             } },
         { TestFileLine(), false, "http://[1:2:3:4:5:6:7:8:]", null },
         { TestFileLine(), false, "http://[1:2:3:4:5:6:192.168.0.1:]", null },
         { TestFileLine(), false, "http://[-1:2:3:4:5:6:7:8]", null },
-        { TestFileLine(), false, "http://[1::%1]", null },
-        { TestFileLine(), false, "http://[1::%eth0]", null },
+        { TestFileLine(), true, "http://[1::%1]", new() {
+                ["uri"] = "http://[1::%1]",
+                ["scheme"] = "http",
+                ["authority"] = "[1::%1]",
+                ["endpoint"] = "[1::%1]",
+                ["host"] = "[1::%1]",
+                ["ipv6nz"] = "1::",
+                ["ipv6"] = "1::%1",
+                ["zoneId"] = "1",
+            } },
+        { TestFileLine(), true,  "http://[1::%eth0]", new() {
+                ["uri"] = "http://[1::%eth0]",
+                ["scheme"] = "http",
+                ["authority"] = "[1::%eth0]",
+                ["endpoint"] = "[1::%eth0]",
+                ["host"] = "[1::%eth0]",
+                ["ipv6nz"] = "1::",
+                ["ipv6"] = "1::%eth0",
+                ["zoneId"] = "eth0",
+            } },
         { TestFileLine(), false, "http://[1::%]", null },
         { TestFileLine(), false, "http://[%]", null },
         { TestFileLine(), false, "http://[::%:]", null },
@@ -1192,6 +1230,7 @@ public partial class UrisTests
                 ["authority"] = "[2001::1]",
                 ["endpoint"] = "[2001::1]",
                 ["host"] = "[2001::1]",
+                ["ipv6nz"] = "2001::1",
                 ["ipv6"] = "2001::1",
             } },
         { TestFileLine(), true,  "http://[2001::1]:80", new() {
@@ -1200,6 +1239,7 @@ public partial class UrisTests
                 ["authority"] = "[2001::1]:80",
                 ["endpoint"] = "[2001::1]:80",
                 ["host"] = "[2001::1]",
+                ["ipv6nz"] = "2001::1",
                 ["ipv6"] = "2001::1",
                 ["port"] = "80",
             } },
@@ -1350,6 +1390,7 @@ public partial class UrisTests
                 ["authority"] = "[2001::1]",
                 ["endpoint"] = "[2001::1]",
                 ["host"] = "[2001::1]",
+                ["ipv6nz"] = "2001::1",
                 ["ipv6"] = "2001::1",
             } },
         { TestFileLine(), true,  "http://[2001::1]:80", new() {
@@ -1358,7 +1399,19 @@ public partial class UrisTests
                 ["authority"] = "[2001::1]:80",
                 ["endpoint"] = "[2001::1]:80",
                 ["host"] = "[2001::1]",
+                ["ipv6nz"] = "2001::1",
                 ["ipv6"] = "2001::1",
+                ["port"] = "80",
+            } },
+        { TestFileLine(), true,  "http://[2001::1%abc12]:80", new() {
+                ["uri"] = "http://[2001::1%abc12]:80",
+                ["scheme"] = "http",
+                ["authority"] = "[2001::1%abc12]:80",
+                ["endpoint"] = "[2001::1%abc12]:80",
+                ["host"] = "[2001::1%abc12]",
+                ["ipv6nz"] = "2001::1",
+                ["ipv6"] = "2001::1%abc12",
+                ["zoneId"] = "abc12",
                 ["port"] = "80",
             } },
         { TestFileLine(), false, "http://[[::]]", null },
