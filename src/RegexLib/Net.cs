@@ -111,12 +111,12 @@ public static class Net
     const string l48 = $"{h0f}:{ipv4Rex}";  // 0:d.d.d.d or f:d.d.d.d
 
     /// <summary>
-    /// The name of a matching group representing an IPv6 address.
+    /// The name of a matching group representing an IPv6 address without a zone/scope ID.
     /// </summary>
     public const string Ipv6NzGr = "ipv6nz";
 
     /// <summary>
-    /// Matches an IPv6 address.
+    /// Matches an IPv6 address without a zone/scope ID.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     /// <remarks>
@@ -179,7 +179,7 @@ public static class Net
     public const string Ipv6ZoneIdRex = $@"(?<{ZoneIdGr}> (?: {unreservedRex} )+ )";
 
     /// <summary>
-    /// Matches a string that represents an IPv6 address.
+    /// Matches a string that represents an IPv6 address without zone/scope ID.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     /// <remarks>
@@ -191,13 +191,13 @@ public static class Net
                                                                                        RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address.
+    /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address without a zone/scope ID.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     public static Regex Ipv6NzAddress => ipv6NzAddressRegex.Value;
 
     /// <summary>
-    /// The name of a matching group representing an IPv6 address with a zone ID.
+    /// The name of a matching group representing an IPv6 address with an optional zone ID.
     /// </summary>
     public const string Ipv6Gr = "ipv6";
 
@@ -211,7 +211,7 @@ public static class Net
     public const string Ipv6AddressRex = $@"(?<{Ipv6Gr}> {Ipv6NzAddressRex} (?: % {Ipv6ZoneIdRex} )? )";
 
     /// <summary>
-    /// Matches a whole string that represents an IPv6 address with a zone ID.
+    /// Matches a whole string that represents an IPv6 address with an optional zone ID.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>, <see cref="ZoneIdGr"/>.</para>
     /// </summary>
     /// <remarks>
