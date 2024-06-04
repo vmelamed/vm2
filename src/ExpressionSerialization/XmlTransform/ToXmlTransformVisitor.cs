@@ -1,20 +1,12 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using System.Linq.Expressions;
-using System.Xml.Linq;
-
 /// <summary>
 /// Class XmlTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
 /// </summary>
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
-public partial class ToXmlTransformVisitor(Options? options = null) : ExpressionTransformVisitor<XElement>
+public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTransformVisitor<XElement>
 {
-    /// <summary>
-    /// The transform options.
-    /// </summary>
-    protected Options _options = options ?? new();
-
     ToXmlDataTransform _dataTransform = new(options);
 
     // labels and parameters/variables are created in one value n and references to them are used in another.
@@ -41,21 +33,22 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
     /// <param name="node">The currently visited value n from the value tree.</param>
     /// <returns>TDocument.</returns>
     protected override XElement GetEmptyNode(Expression node)
-        => new(Namespaces.Exs + Transform.Identifier(node.NodeType.ToString(), IdentifierConventions.Camel),
-                node switch {
-                    // omit the type for expressions where their element says it all
-                    ConstantExpression => null,
-                    ListInitExpression => null,
-                    NewExpression => null,
-                    NewArrayExpression => null,
-                    LabelExpression => null,
-                    // do not omit the void return type for these nodes:
-                    LambdaExpression n => new(AttributeNames.Type, Transform.TypeName(n.ReturnType)),
-                    MethodCallExpression n => new(AttributeNames.Type, Transform.TypeName(n.Method.ReturnType)),
-                    InvocationExpression n => new(AttributeNames.Type, Transform.TypeName(n.Expression.Type)),
-                    // for the rest: add attribute type if it is not void:
-                    _ => AttributeType(node),
-                });
+        => new(
+            Namespaces.Exs + Transform.Identifier(node.NodeType.ToString(), IdentifierConventions.Camel),
+            node switch {
+                // omit the type for expressions where their element says it all
+                ConstantExpression => null,
+                ListInitExpression => null,
+                NewExpression => null,
+                NewArrayExpression => null,
+                LabelExpression => null,
+                // do not omit the void return type for these nodes:
+                LambdaExpression n => new(AttributeNames.Type, Transform.TypeName(n.ReturnType)),
+                MethodCallExpression n => new(AttributeNames.Type, Transform.TypeName(n.Method.ReturnType)),
+                InvocationExpression n => new(AttributeNames.Type, Transform.TypeName(n.Expression.Type)),
+                // for the rest: add attribute type if it is not void:
+                _ => AttributeType(node),
+            });
 
     /// <inheritdoc/>
     protected override Expression VisitConstant(ConstantExpression node)
@@ -67,9 +60,9 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                      base.VisitConstant,
                      (n, x) =>
                      {
-                         _options.AddComment(x, n);
+                         options.AddComment(x, n);
                          x.Add(
-                            _options.TypeComment(n.Type),
+                            options.TypeComment(n.Type),
                             _dataTransform.TransformNode(n));
                      });
         }
@@ -84,7 +77,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
         => GenericVisit(
             node,
             base.VisitDefault,
-            (n, x) => x.Add(_options.TypeComment(n.Type)));
+            (n, x) => x.Add(options.TypeComment(n.Type)));
 
     IEnumerable<XElement> VisitParameterDefinitionList(
         ReadOnlyCollection<ParameterExpression> parameterList,
@@ -161,7 +154,7 @@ public partial class ToXmlTransformVisitor(Options? options = null) : Expression
                 {
                     var convElement = PopElement(); // TODO: debug
 
-                    convElement.Name = Transform.NConvertLambda;
+                    convElement.Name = Vocabulary.ConvertLambda;
                     x.Add(convElement);
                 }
             });

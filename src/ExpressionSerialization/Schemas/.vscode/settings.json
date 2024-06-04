@@ -1,0 +1,12 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "Linq.Expressions.Serialization.json"
+            ],
+            "url": "urn:schemas-vm-com:Linq.Expressions.Serialization.json",
+            "schema": true
+        }
+    ],
+    "jsonSchemaDiagnostics.schemaSearchPaths": "C:/repos/vm2/src/ExpressionSerialization/Schemas/Linq.Expressions.Serialization.json"
+}

@@ -1,11 +1,13 @@
-﻿namespace vm2.ExpressionSerialization.XmlTransform;
+﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
-using TransformConstant = Func<object?, Type, XElement>;
+using System.Text.Json.Serialization.Metadata;
+
+using TransformConstant = Func<object?, Type, JElement>;
 
 /// <summary>
-/// Class ToXmlDataTransform transforms data (Expression constants) to XML.
+/// Class ToJsonDataTransform transforms data (Expression constants) to JSON.
 /// </summary>
-class ToXmlDataTransform(XmlOptions options)
+class ToJsonDataTransform(JsonOptions options)
 {
     static T? Typed<T>(object? value, bool allowNull = false) => value is T || (value is null && allowNull)
                                             ? (T?)value
@@ -14,42 +16,41 @@ class ToXmlDataTransform(XmlOptions options)
     #region constant ToXml transforms
     static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
     {
-        { typeof(bool),             (v, t) => new XElement(ElementNames.Boolean,        XmlConvert.ToString(Typed<bool>(v))) },
-        { typeof(byte),             (v, t) => new XElement(ElementNames.Byte,           XmlConvert.ToString(Typed<byte>(v))) },
-        { typeof(char),             (v, t) => new XElement(ElementNames.Char,           XmlConvert.ToString(Typed<char>(v))) },
-        { typeof(double),           (v, t) => new XElement(ElementNames.Double,         XmlConvert.ToString(Typed<double>(v))) },
-        { typeof(float),            (v, t) => new XElement(ElementNames.Float,          XmlConvert.ToString(Typed<float>(v))) },
-        { typeof(int),              (v, t) => new XElement(ElementNames.Int,            XmlConvert.ToString(Typed<int>(v))) },
-        { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         XmlConvert.ToString(Typed<IntPtr>(v))) },
-        { typeof(long),             (v, t) => new XElement(ElementNames.Long,           XmlConvert.ToString(Typed<long>(v))) },
-        { typeof(sbyte),            (v, t) => new XElement(ElementNames.SignedByte,     XmlConvert.ToString(Typed<sbyte>(v))) },
-        { typeof(short),            (v, t) => new XElement(ElementNames.Short,          XmlConvert.ToString(Typed<short>(v))) },
-        { typeof(uint),             (v, t) => new XElement(ElementNames.UnsignedInt,    XmlConvert.ToString(Typed<uint>(v))) },
-        { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString(Typed<UIntPtr>(v))) },
-        { typeof(ulong),            (v, t) => new XElement(ElementNames.UnsignedLong,   XmlConvert.ToString(Typed<ulong>(v))) },
-        { typeof(ushort),           (v, t) => new XElement(ElementNames.UnsignedShort,  XmlConvert.ToString(Typed<ushort>(v))) },
-
-        { typeof(DateTime),         (v, t) => new XElement(ElementNames.DateTime,       XmlConvert.ToString(Typed<DateTime>(v), XmlDateTimeSerializationMode.RoundtripKind)) },
-        { typeof(DateTimeOffset),   (v, t) => new XElement(ElementNames.DateTimeOffset, XmlConvert.ToString(Typed<DateTimeOffset>(v), "O")) },
-        { typeof(DBNull),           (v, t) => new XElement(ElementNames.DBNull)         },
-        { typeof(decimal),          (v, t) => new XElement(ElementNames.Decimal,        XmlConvert.ToString(Typed<decimal>(v))) },
-        { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString(Typed<TimeSpan>(v))) },
-        { typeof(Guid),             (v, t) => new XElement(ElementNames.Guid,           XmlConvert.ToString(Typed<Guid>(v))) },
-        { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           XmlConvert.ToString((double)Typed<Half>(v))) },
-        { typeof(string),           (v, t) => new XElement(ElementNames.String,         (object?)Typed<string?>(v, true) ?? new XAttribute(AttributeNames.Nil, true)) },
-        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         (object?)Typed<Uri?>(v, true)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
+        { typeof(bool),             (v, t) => new JElement(Vocabulary.Bool,           JsonValue.Create(Typed<bool>(v))) },
+        { typeof(byte),             (v, t) => new JElement(Vocabulary.Byte,           JsonValue.Create(Typed<byte>(v))) },
+        { typeof(char),             (v, t) => new JElement(Vocabulary.Char,           JsonValue.Create(Typed<char>(v))) },
+        { typeof(double),           (v, t) => new JElement(Vocabulary.Double,         JsonValue.Create(Typed<double>(v))) },
+        { typeof(float),            (v, t) => new JElement(Vocabulary.Float,          JsonValue.Create(Typed<float>(v))) },
+        { typeof(int),              (v, t) => new JElement(Vocabulary.Int,            JsonValue.Create(Typed<int>(v))) },
+        { typeof(IntPtr),           (v, t) => new JElement(Vocabulary.IntPtr,         JsonValue.Create(Typed<IntPtr>(v))) },
+        { typeof(long),             (v, t) => new JElement(Vocabulary.Long,           JsonValue.Create(Typed<long>(v))) },
+        { typeof(sbyte),            (v, t) => new JElement(Vocabulary.SByte,          JsonValue.Create(Typed<sbyte>(v))) },
+        { typeof(short),            (v, t) => new JElement(Vocabulary.Short,          JsonValue.Create(Typed<short>(v))) },
+        { typeof(uint),             (v, t) => new JElement(Vocabulary.UInt,           JsonValue.Create(Typed<uint>(v))) },
+        { typeof(UIntPtr),          (v, t) => new JElement(Vocabulary.UIntPtr,        JsonValue.Create(Typed<UIntPtr>(v))) },
+        { typeof(ulong),            (v, t) => new JElement(Vocabulary.ULong,          JsonValue.Create(Typed<ulong>(v))) },
+        { typeof(ushort),           (v, t) => new JElement(Vocabulary.UShort,         JsonValue.Create(Typed<ushort>(v))) },
+        { typeof(DateTime),         (v, t) => new JElement(Vocabulary.DateTime,       JsonValue.Create(Typed<DateTime>(v))) },
+        { typeof(DateTimeOffset),   (v, t) => new JElement(Vocabulary.DateTimeOffset, JsonValue.Create(Typed<DateTimeOffset>(v))) },
+        { typeof(DBNull),           (v, t) => new JElement(Vocabulary.DBNull)         },
+        { typeof(decimal),          (v, t) => new JElement(Vocabulary.Decimal,        JsonValue.Create(Typed<decimal>(v))) },
+        { typeof(TimeSpan),         (v, t) => new JElement(Vocabulary.TimeSpan,       JsonValue.Create(Typed<TimeSpan>(v))) },  // TODO: ISO 8601 doesn't look good
+        { typeof(Guid),             (v, t) => new JElement(Vocabulary.Guid,           JsonValue.Create(Typed<Guid>(v))) },
+        { typeof(Half),             (v, t) => new JElement(Vocabulary.Half,           JsonValue.Create(Typed<Half>(v))) },
+        { typeof(string),           (v, t) => new JElement(Vocabulary.String,         JsonValue.Create(Typed<string>(v))) },
+        { typeof(Uri),              (v, t) => new JElement(Vocabulary.Uri,            JsonValue.Create(Typed<Uri?>(v))) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
     #endregion
 
-    public XNode TransformNode(ConstantExpression node) => GetTransform(node.Type)(node.Value, node.Type);
+    public JElement TransformNode(ConstantExpression node) => GetTransform(node.Type)(node.Value, node.Type);
 
     /// <summary>
     /// Gets the best matching transform function for the type encapsulated in the  for the specified <paramref name="type"/>.
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>
-    /// A delegate that can transform a nullable of the specified <paramref name="type"/> into an XML element (<see cref="XElement"/>).
+    /// A delegate that can transform a nullable of the specified <paramref name="type"/> into an XML element (<see cref="JElement"/>).
     /// </returns>
     /// <exception cref="SerializationException"></exception>
     public TransformConstant GetTransform(Type type)
@@ -95,19 +96,19 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
-    XElement EnumTransform(
+    JElement EnumTransform(
         object? nodeValue,
         Type nodeType)
     {
         var value = Convert.ChangeType(nodeValue, Enum.GetUnderlyingType(nodeType));
         var baseType = nodeType.GetEnumUnderlyingType();
 
-        return new XElement(
-                        ElementNames.Enum,
-                        new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                        baseType != typeof(int) ? new XAttribute(AttributeNames.BaseType, Transform.TypeName(baseType)) : null,
-                        new XAttribute(AttributeNames.BaseValue, value!.ToString()!),
-                        nodeValue!.ToString()
+        return new JElement(
+                        Vocabulary.Enum,
+                        new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                        value is not null ? new JElement(Vocabulary.BaseValue, value.ToString()) : null,
+                        baseType != typeof(int) ? new JElement(Vocabulary.BaseType, Transform.TypeName(baseType)) : null,
+                        nodeValue is not null ? new JElement(Vocabulary.Value, nodeValue.ToString()) : null
                     );
     }
 
@@ -116,7 +117,7 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
-    XElement NullableTransform(
+    JElement NullableTransform(
         object? nodeValue,
         Type nodeType)
     {
@@ -125,10 +126,10 @@ class ToXmlDataTransform(XmlOptions options)
         var nullable        = nodeValue;
         var isNull          = nullable is null || nullableType.GetProperty("HasValue")?.GetValue(nullable) is false;
 
-        var nullableElement = new XElement(
-                                    ElementNames.Nullable,
-                                    isNull ? new XAttribute(AttributeNames.Type, Transform.TypeName(underlyingType)) : null,
-                                    isNull ? new XAttribute(AttributeNames.Nil, isNull) : null);
+        var nullableElement = new JElement(
+                                    Vocabulary.Nullable,
+                                    isNull ? new JElement(Vocabulary.Type, Transform.TypeName(underlyingType)) : null,
+                                    isNull ? new JElement(Vocabulary.Null, isNull) : null);
 
         if (isNull)
             return nullableElement;
@@ -148,13 +149,13 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
-    XElement AnonymousTransform(
+    JElement AnonymousTransform(
         object? nodeValue,
         Type nodeType)
     {
-        var anonymousElement = new XElement(
-                                    ElementNames.Anonymous,
-                                    new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)));
+        var anonymousElement = new JElement(
+                                    Vocabulary.Anonymous,
+                                    new JElement(Vocabulary.Type, Transform.TypeName(nodeType)));
         var pis = nodeType.GetProperties();
 
         for (var i = 0; i < pis.Length; i++)
@@ -162,9 +163,9 @@ class ToXmlDataTransform(XmlOptions options)
             var pi = pis[i];
 
             anonymousElement.Add(
-                new XElement(
-                        ElementNames.Property,
-                        new XAttribute(AttributeNames.Name, pi.Name),
+                new JElement(
+                        Vocabulary.Property,
+                        new JElement(Vocabulary.Name, pi.Name),
                         options.TypeComment(pi.PropertyType),
                         GetTransform(pi.PropertyType)(pi.GetValue(nodeValue, null), pi.PropertyType)));
         }
@@ -178,14 +179,14 @@ class ToXmlDataTransform(XmlOptions options)
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
     /// <exception cref="InternalTransformErrorException"></exception>
-    XElement ByteSequenceTransform(
+    JElement ByteSequenceTransform(
         object? nodeValue,
         Type nodeType)
     {
-        var sequenceElement = new XElement(
-                                    ElementNames.ByteSequence,
-                                    new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                                    nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null
+        var sequenceElement = new JElement(
+                                    Vocabulary.ByteSequence,
+                                    new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                    nodeValue is null ? new JElement(Vocabulary.Null, true) : null
                                 );
         ReadOnlySpan<byte> bytes;
 
@@ -217,8 +218,8 @@ class ToXmlDataTransform(XmlOptions options)
         }
 
         sequenceElement.Add(
-            new XAttribute(AttributeNames.Length, bytes.Length),
-            Convert.ToBase64String(bytes));
+            new JElement(Vocabulary.Length, bytes.Length),
+            new JElement(Vocabulary.Value, Convert.ToBase64String(bytes)));
 
         return sequenceElement;
     }
@@ -228,7 +229,7 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
-    XElement SequenceTransform(
+    JElement SequenceTransform(
         object? nodeValue,
         Type nodeType)
     {
@@ -239,21 +240,21 @@ class ToXmlDataTransform(XmlOptions options)
                                 : nodeType.GetElementType()) ?? throw new InternalTransformErrorException("Could not find the type of a sequenceElement elements.");
 
             if (nodeValue is null)
-                return new XElement(
-                                ElementNames.Collection,
-                                new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
+                return new JElement(
+                                Vocabulary.Collection,
+                                new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
                                 options.TypeComment(elementType),
-                                new XAttribute(AttributeNames.ElementType, Transform.TypeName(elementType)),
-                                new XAttribute(AttributeNames.Nil, true)
+                                new JElement(Vocabulary.ElementType, Transform.TypeName(elementType)),
+                                new JElement(Vocabulary.Null, true)
                             );
 
             var piCount = nodeType.GetProperty("Count") ?? nodeType.GetProperty("GetLength");
             var length = (int?)piCount?.GetValue(nodeValue);
-            var collectionElement = new XElement(
-                                        ElementNames.Collection,
-                                        new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                                        new XAttribute(AttributeNames.ElementType, Transform.TypeName(elementType)),
-                                        length.HasValue ? new XAttribute(AttributeNames.Length, length.Value) : null,
+            var collectionElement = new JElement(
+                                        Vocabulary.Collection,
+                                        new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                        new JElement(Vocabulary.ElementType, Transform.TypeName(elementType)),
+                                        length.HasValue ? new JElement(Vocabulary.Length, length.Value) : null,
                                         options.TypeComment(elementType)
                                     );
 
@@ -294,16 +295,16 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
-    XElement ValueTupleTransform(
+    JElement ValueTupleTransform(
         object? nodeValue,
         Type nodeType)
     {
         if (nodeValue is null)
             throw new InternalTransformErrorException("Null value for a constant expression node of type 'ValueTuple'.");
 
-        var tupleElement = new XElement(
-                                    ElementNames.Tuple,
-                                    new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)));
+        var tupleElement = new JElement(
+                                    Vocabulary.Tuple,
+                                    new JElement(Vocabulary.Type, Transform.TypeName(nodeType)));
         var types = nodeType.GetGenericArguments();
 
         if (nodeValue is not ITuple tuple)
@@ -315,10 +316,10 @@ class ToXmlDataTransform(XmlOptions options)
             var type = types[i];
 
             tupleElement.Add(
-                new XElement(
-                        ElementNames.TupleItem,
-                        new XAttribute(AttributeNames.Name, $"Item{i + 1}"),
-                        item is null ? new XAttribute(AttributeNames.Nil, true) : null,
+                new JElement(
+                        Vocabulary.TupleItem,
+                        new JElement(Vocabulary.Name, $"Item{i + 1}"),
+                        item is null ? new JElement(Vocabulary.Null, true) : null,
                         options.TypeComment(type),
                         GetTransform(type)(item, type)));
         }
@@ -330,14 +331,14 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
-    XElement ClassTupleTransform(
+    JElement ClassTupleTransform(
         object? nodeValue,
         Type nodeType)
     {
-        var tupleElement = new XElement(
-                                ElementNames.Tuple,
-                                new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                                nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
+        var tupleElement = new JElement(
+                                Vocabulary.Tuple,
+                                new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                nodeValue is null ? new JElement(Vocabulary.Null, true) : null);
 
         if (nodeValue is null)
             return tupleElement;
@@ -353,10 +354,10 @@ class ToXmlDataTransform(XmlOptions options)
             var item = tuple[i];
 
             tupleElement.Add(
-                new XElement(
-                        ElementNames.TupleItem,
-                        new XAttribute(AttributeNames.Name, $"Item{i + 1}"),
-                        item is null ? new XAttribute(AttributeNames.Nil, true) : null,
+                new JElement(
+                        Vocabulary.TupleItem,
+                        new JElement(Vocabulary.Name, $"Item{i + 1}"),
+                        item is null ? new JElement(Vocabulary.Null, true) : null,
                         options.TypeComment(type),
                         GetTransform(type)(item, type)));
         }
@@ -369,25 +370,25 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
-    XElement DictionaryTransform(
+    JElement DictionaryTransform(
         object? nodeValue,
         Type nodeType)
     {
         if (nodeValue is null)
-            return new XElement(
-                                ElementNames.Dictionary,
-                                new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                                nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
+            return new JElement(
+                                Vocabulary.Dictionary,
+                                new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                nodeValue is null ? new JElement(Vocabulary.Null, true) : null);
 
         if (nodeValue is not IDictionary dict)
             throw new InternalTransformErrorException("The value of type 'Dictionary' doesn't implement IDictionary.");
 
         var length = dict.Count;
-        var dictElement = new XElement(
-                                ElementNames.Dictionary,
-                                new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                                new XAttribute(AttributeNames.Length, length),
-                                nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
+        var dictElement = new JElement(
+                                Vocabulary.Dictionary,
+                                new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                new JElement(Vocabulary.Length, length),
+                                nodeValue is null ? new JElement(Vocabulary.Null, true) : null);
 
         Type kType, vType;
 
@@ -409,8 +410,8 @@ class ToXmlDataTransform(XmlOptions options)
 
         foreach (DictionaryEntry kv in dict)
             dictElement.Add(
-                new XElement(
-                    ElementNames.KeyValuePair,
+                new JElement(
+                    Vocabulary.KeyValuePair,
                     GetTransform(kType)(kv.Key, kType),
                     GetTransform(vType)(kv.Value, vType)));
 
@@ -423,42 +424,43 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node value.</param>
     /// <param name="nodeType">GetEType of the node value.</param>
-    XElement ObjectTransform(
+    JElement ObjectTransform(
         object? nodeValue,
         Type nodeType)
     {
-        var element = new XElement(ElementNames.Object);
+        var element = new JElement(Vocabulary.Object);
 
         if (nodeValue is null)
         {
-            element.Add(new XAttribute(AttributeNames.Nil, true));
+            element.Add(new JElement(Vocabulary.Null, true));
             if (nodeType != typeof(object))
-                element.Add(new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)));
+                element.Add(new JElement(Vocabulary.Type, Transform.TypeName(nodeType)));
             return element;
         }
 
-        var actualType = nodeValue.GetType();
+        var concreteType = nodeValue.GetType();
 
-        if (actualType == typeof(object))
+        if (concreteType == typeof(object))
             return element;
 
-        var actualTransform = GetTransform(actualType);
+        var actualTransform = GetTransform(concreteType);
 
         if (actualTransform != ObjectTransform)
-            return actualTransform(nodeValue, actualType);
+            return actualTransform(nodeValue, concreteType);
 
         element.Add(
-            new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-            nodeType != actualType ? new XAttribute(AttributeNames.ConcreteType, Transform.TypeName(actualType)) : null
+            new JElement(Vocabulary.ConcreteType, Transform.TypeName(nodeType)),
+            nodeType != concreteType ? new JElement(Vocabulary.ConcreteType, Transform.TypeName(concreteType)) : null
         );
 
-        var dcSerializer = new DataContractSerializer(actualType);
-        using var writer = element.CreateWriter();
+        //var dcSerializer = new DataContractSerializer(concreteType);
+        //using var writer = element.CreateWriter();
 
         // XML serialize into the element
-        dcSerializer.WriteObject(writer, nodeValue);
+        //dcSerializer.WriteObject(writer, nodeValue);
 
-        return element;
+        var jsonElement = JsonSerializer.SerializeToElement(nodeValue, JsonTypeInfo.CreateJsonTypeInfo(concreteType, options.CreateJsonSerializerOptions()));
+        return element.Add(Vocabulary.Value, JsonObject.Create(jsonElement));
     }
     #endregion
 }

@@ -32,7 +32,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     protected readonly Stack<TElement> _elements = new();
 
     /// <summary>
-    /// Gets the top level document node result, e.g. <see cref="XElement"/> or <see cref="JObject"/>.
+    /// Gets the top level document node result, e.g. <see cref="XElement"/> or <see cref="JsonTransform.JElement"/>.
     /// </summary>
     /// <value>The resultant top level document node.</value>
     /// <remarks>
@@ -104,9 +104,9 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// <summary>
     /// Gets a properly named node corresponding to the current expression node.
     /// </summary>
-    /// <param name="nodeType">GetEType of the node.</param>
+    /// <param name="node">GetEType of the node.</param>
     /// <returns>TDocument.</returns>
-    protected abstract TElement GetEmptyNode(Expression nodeType);
+    protected abstract TElement GetEmptyNode(Expression node);
 
     /// <summary>
     /// Resets this instance.

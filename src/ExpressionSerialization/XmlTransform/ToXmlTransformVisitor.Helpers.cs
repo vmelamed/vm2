@@ -8,7 +8,7 @@ using System.Xml.Linq;
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
 /// </summary>
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
-public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement>
+public partial class ToXmlTransformVisitor
 {
     /// <summary>
     /// Pops one element from the stack
@@ -37,7 +37,7 @@ public partial class ToXmlTransformVisitor : ExpressionTransformVisitor<XElement
 
     XAttribute? AttributeName(string identifier)
         => !string.IsNullOrWhiteSpace(identifier)
-                ? new XAttribute(AttributeNames.Name, Transform.Identifier(identifier, _options.Identifiers))
+                ? new XAttribute(AttributeNames.Name, Transform.Identifier(identifier, options.Identifiers))
                 : null;
 
     static XAttribute? AttributeType(Expression? node)

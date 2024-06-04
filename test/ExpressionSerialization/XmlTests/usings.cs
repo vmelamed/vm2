@@ -3,7 +3,6 @@ global using System.Collections.Concurrent;
 global using System.Collections.Frozen;
 global using System.Collections.Immutable;
 global using System.Collections.ObjectModel;
-global using System.Diagnostics;
 global using System.IO;
 global using System.Linq.Expressions;
 global using System.Text;
@@ -16,6 +15,7 @@ global using FluentAssertions;
 
 global using TestUtilities;
 
+global using vm2.ExpressionSerialization.Abstractions;
 global using vm2.ExpressionSerialization.Conventions;
 global using vm2.ExpressionSerialization.Exceptions;
 global using vm2.ExpressionSerialization.XmlTransform;

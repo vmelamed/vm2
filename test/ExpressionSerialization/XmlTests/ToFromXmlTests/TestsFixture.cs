@@ -14,7 +14,7 @@ public class TestsFixture : IDisposable
         Share = FileShare.Read,
     };
 
-    internal static Options Options => new() {
+    internal static XmlOptions Options => new() {
         ByteOrderMark = true,
         AddDocumentDeclaration = true,
         OmitDuplicateNamespaces = false, // otherwise DeepEquals will fail
@@ -28,9 +28,9 @@ public class TestsFixture : IDisposable
 
     public TestsFixture()
     {
-        Options.SetSchemaLocation(Options.Ser, Path.Combine(SchemasPath, "Microsoft.Serialization.xsd"));
-        Options.SetSchemaLocation(Options.Dcs, Path.Combine(SchemasPath, "DataContract.xsd"));
-        Options.SetSchemaLocation(Options.Exs, Path.Combine(SchemasPath, "Expression.xsd"));
+        XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(SchemasPath, "Microsoft.Serialization.xsd"));
+        XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(SchemasPath, "DataContract.xsd"));
+        XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(SchemasPath, "Expression.xsd"));
     }
 
     public void Dispose() => GC.SuppressFinalize(this);
@@ -39,11 +39,11 @@ public class TestsFixture : IDisposable
     {
         List<XmlSchemaException> exceptions = [];
 
-        doc.Validate(Options.Schemas, (_, e) => exceptions.Add(e.Exception));
+        doc.Validate(XmlOptions.Schemas, (_, e) => exceptions.Add(e.Exception));
 
         if (exceptions.Count is not 0)
             throw new AggregateException(
-                        $"Error(s) validating the XML document against the {Options.Exs}:\n  " +
+                        $"Error(s) validating the XML document against the {XmlOptions.Exs}:\n  " +
                         string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber},{x.LinePosition}) : {x.Message}")),
                         exceptions);
     }

@@ -10,9 +10,9 @@ using vm2.ExpressionSerialization.Abstractions;
 /// Implements the <see cref="IExpressionTransform{XNode}"/>: transforms a Linq expression to an XML Node object.
 /// </summary>
 /// <seealso cref="IExpressionTransform{XNode}" />
-public class ExpressionTransform(Options? options = null) : IExpressionTransform<XDocument>, IExpressionTransform<XElement>
+public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransform<XDocument>, IExpressionTransform<XElement>
 {
-    Options _options = options ?? new();
+    XmlOptions _options = options ?? new();
     ToXmlTransformVisitor? _expressionVisitor;
     FromXmlTransformVisitor? _xmlVisitor;
 
@@ -71,8 +71,8 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
         var me = ((IExpressionTransform<XElement>)this);
         var root = document.Root ?? new XElement(ElementNames.Expression, ElementNames.Object, new XAttribute(AttributeNames.Nil, true));
 
-        if (root.Name.LocalName != Conventions.Transform.NExpression)
-            throw new SerializationException($"Expected document root element with name `{Conventions.Transform.NExpression}`.");
+        if (root.Name.LocalName != Conventions.Vocabulary.Expression)
+            throw new SerializationException($"Expected document root element with name `{Conventions.Vocabulary.Expression}`.");
 
         return me.Transform(root);
     }
@@ -169,10 +169,10 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
         {
             List<XmlSchemaException> exceptions = [];
 
-            document.Validate(Options.Schemas, (_, e) => exceptions.Add(e.Exception));
+            document.Validate(XmlOptions.Schemas, (_, e) => exceptions.Add(e.Exception));
             if (exceptions.Count is not 0)
                 throw new AggregateException(
-                            $"Error(s) validating the XML document against the schema {Options.Exs}:\n  " +
+                            $"Error(s) validating the XML document against the schema {XmlOptions.Exs}:\n  " +
                             string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
                             exceptions);
         }
@@ -209,10 +209,10 @@ public class ExpressionTransform(Options? options = null) : IExpressionTransform
         {
             List<XmlSchemaException> exceptions = [];
 
-            document.Validate(Options.Schemas, (_, e) => exceptions.Add(e.Exception));
+            document.Validate(XmlOptions.Schemas, (_, e) => exceptions.Add(e.Exception));
             if (exceptions.Count is not 0)
                 throw new AggregateException(
-                            $"Error(s) validating the XML document against the schema {Options.Exs}:\n  " +
+                            $"Error(s) validating the XML document against the schema {XmlOptions.Exs}:\n  " +
                             string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
                             exceptions);
         }

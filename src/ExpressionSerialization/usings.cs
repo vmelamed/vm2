@@ -10,14 +10,15 @@ global using System.Globalization;
 global using System.Linq;
 global using System.Linq.Expressions;
 global using System.Reflection;
+global using System.Runtime.CompilerServices;
 global using System.Runtime.Serialization;
 global using System.Text;
+global using System.Text.Json;
+global using System.Text.Json.Nodes;
 global using System.Text.RegularExpressions;
 global using System.Xml;
 global using System.Xml.Linq;
 global using System.Xml.Schema;
-
-global using Newtonsoft.Json.Linq;
 
 global using vm2.ExpressionSerialization.Abstractions;
 global using vm2.ExpressionSerialization.Conventions;

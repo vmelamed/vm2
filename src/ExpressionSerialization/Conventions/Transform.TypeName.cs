@@ -12,7 +12,7 @@ static partial class Transform
         if (string.IsNullOrWhiteSpace(typeName))
             return null;
 
-        if (NamesToTypes.TryGetValue(typeName, out var type))
+        if (Vocabulary.NamesToTypes.TryGetValue(typeName, out var type))
             return type;
 
         return Type.GetType(typeName, true, false);
@@ -25,7 +25,7 @@ static partial class Transform
     /// <returns>System.String.</returns>
     public static string TypeName(Type type)
     {
-        if (TypesToNames.TryGetValue(type, out var typeName))
+        if (Vocabulary.TypesToNames.TryGetValue(type, out var typeName))
             return typeName;
 
         return type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
@@ -42,7 +42,7 @@ static partial class Transform
         Type type,
         TypeNameConventions convention)
     {
-        if (TypesToNames.TryGetValue(type, out var typeName))
+        if (Vocabulary.TypesToNames.TryGetValue(type, out var typeName))
             return typeName;
 
         if (type.IsGenericType && !type.IsGenericTypeDefinition && convention != TypeNameConventions.AssemblyQualifiedName)

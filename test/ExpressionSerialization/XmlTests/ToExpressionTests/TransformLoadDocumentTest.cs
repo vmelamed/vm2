@@ -19,14 +19,14 @@ public class TransformLoadDocumentTest()
     [InlineData(ValidateDocuments.IfSchemaPresent, "__NullObjectInvalid.xml", true, typeof(XmlSchemaValidationException))]
     public void XmlFileShouldLoadTest(ValidateDocuments validate, string fileName, bool loadSchemas, Type? exceptionType)
     {
-        var options = new Options() { ValidateInputDocuments = validate };
+        var options = new XmlOptions() { ValidateInputDocuments = validate };
 
-        Options.ResetSchemas();
+        XmlOptions.ResetSchemas();
         if (loadSchemas)
         {
-            Options.SetSchemaLocation(Options.Ser, Path.Combine(TestsFixture.SchemasPath, "Microsoft.Serialization.xsd"));
-            Options.SetSchemaLocation(Options.Dcs, Path.Combine(TestsFixture.SchemasPath, "DataContract.xsd"));
-            Options.SetSchemaLocation(Options.Exs, Path.Combine(TestsFixture.SchemasPath, "Expression.xsd"));
+            XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(TestsFixture.SchemasPath, "Microsoft.Serialization.xsd"));
+            XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(TestsFixture.SchemasPath, "DataContract.xsd"));
+            XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Expression.xsd"));
         }
 
         var transform = new ExpressionTransform(options);
@@ -63,14 +63,14 @@ public class TransformLoadDocumentTest()
     [InlineData(ValidateDocuments.IfSchemaPresent, "__NullObjectInvalid.xml", true, typeof(XmlSchemaValidationException))]
     public async Task XmlFileShouldLoadTestAsync(ValidateDocuments validate, string fileName, bool loadSchemas, Type? exceptionType)
     {
-        var options = new Options() { ValidateInputDocuments = validate };
+        var options = new XmlOptions() { ValidateInputDocuments = validate };
 
-        Options.ResetSchemas();
+        XmlOptions.ResetSchemas();
         if (loadSchemas)
         {
-            Options.SetSchemaLocation(Options.Ser, Path.Combine(TestsFixture.SchemasPath, "Microsoft.Serialization.xsd"));
-            Options.SetSchemaLocation(Options.Dcs, Path.Combine(TestsFixture.SchemasPath, "DataContract.xsd"));
-            Options.SetSchemaLocation(Options.Exs, Path.Combine(TestsFixture.SchemasPath, "Expression.xsd"));
+            XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(TestsFixture.SchemasPath, "Microsoft.Serialization.xsd"));
+            XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(TestsFixture.SchemasPath, "DataContract.xsd"));
+            XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Expression.xsd"));
         }
 
         var transform = new ExpressionTransform(options);

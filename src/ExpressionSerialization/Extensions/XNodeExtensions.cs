@@ -139,7 +139,7 @@ public static class XNodeExtensions
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="type">The type.</param>
-    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
     public static bool TryGetETypeFromAttribute(this XElement element, out Type? type, XName? attributeName = null)
     {
@@ -150,7 +150,7 @@ public static class XNodeExtensions
         if (typeName is null)
             return false;
 
-        return Transform.NamesToTypes.TryGetValue(typeName, out type) ||
+        return Vocabulary.NamesToTypes.TryGetValue(typeName, out type) ||
                (type = Type.GetType(typeName)) is not null;
     }
 
@@ -158,7 +158,7 @@ public static class XNodeExtensions
     /// Gets the .NET type of the element only from its attribute (default "type"). If not found - throws Exception.
     /// </summary>
     /// <param name="element">The element.</param>
-    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
     public static Type GetETypeFromAttribute(this XElement element, XName? attributeName = null)
         => element.TryGetEType(out var type, attributeName)
@@ -174,12 +174,12 @@ public static class XNodeExtensions
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="name">The name.</param>
-    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
     public static bool TryGetETypeName(this XElement element, out string name, XName? attributeName = null)
     {
         name = "";
-        var nm = Transform.NamesToTypes.ContainsKey(element.Name.LocalName)
+        var nm = Vocabulary.NamesToTypes.ContainsKey(element.Name.LocalName)
                     ? element.Name.LocalName
                     : element.Attribute(attributeName ?? AttributeNames.Type)?.Value;
 
@@ -199,7 +199,7 @@ public static class XNodeExtensions
     /// If it fails, throws exception.
     /// </summary>
     /// <param name="element">The element.</param>
-    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
     /// <exception cref="SerializationException"/>
     public static string GetETypeName(this XElement element, XName? attributeName = null)
@@ -216,7 +216,7 @@ public static class XNodeExtensions
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="type">The type.</param>
-    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
     public static bool TryGetEType(this XElement element, out Type? type, XName? attributeName = null)
     {
@@ -225,7 +225,7 @@ public static class XNodeExtensions
         if (!element.TryGetETypeName(out var typeName, attributeName))
             return false;
 
-        if (Transform.NamesToTypes.TryGetValue(typeName, out type))
+        if (Vocabulary.NamesToTypes.TryGetValue(typeName, out type))
             return true;
 
         return (type = Type.GetType(typeName)) is not null;
@@ -239,7 +239,7 @@ public static class XNodeExtensions
     /// </list>
     /// </summary>
     /// <param name="element">The element.</param>
-    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
     public static Type GetEType(this XElement element, XName? attributeName = null)
         => element.TryGetEType(out var type, attributeName)
