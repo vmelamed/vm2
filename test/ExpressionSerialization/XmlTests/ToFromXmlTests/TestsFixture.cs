@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
-using vm2.ExpressionSerialization.ExpressionsDeepEquals;
-
 public class TestsFixture : IDisposable
 {
     internal const string TestFilesPath = "../../../TestData";
@@ -30,7 +28,7 @@ public class TestsFixture : IDisposable
     {
         XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(SchemasPath, "Microsoft.Serialization.xsd"));
         XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(SchemasPath, "DataContract.xsd"));
-        XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(SchemasPath, "Expression.xsd"));
+        XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(SchemasPath, "Linq.Expressions.Serialization.xsd"));
     }
 
     public void Dispose() => GC.SuppressFinalize(this);

@@ -24,7 +24,7 @@ public class TransformLoadDocumentTest()
         {
             XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(TestsFixture.SchemasPath, "Microsoft.Serialization.xsd"));
             XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(TestsFixture.SchemasPath, "DataContract.xsd"));
-            XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Expression.xsd"));
+            XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Linq.Expressions.Serialization.xsd"));
         }
 
         var transform = new ExpressionTransform(options);
@@ -68,7 +68,7 @@ public class TransformLoadDocumentTest()
         {
             XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(TestsFixture.SchemasPath, "Microsoft.Serialization.xsd"));
             XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(TestsFixture.SchemasPath, "DataContract.xsd"));
-            XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Expression.xsd"));
+            XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Linq.Expressions.Serialization.xsd"));
         }
 
         var transform = new ExpressionTransform(options);

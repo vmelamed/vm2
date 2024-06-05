@@ -15,6 +15,7 @@ global using FluentAssertions;
 
 global using TestUtilities;
 
+global using vm2.ExpressionDeepEquals;
 global using vm2.ExpressionSerialization.Abstractions;
 global using vm2.ExpressionSerialization.Conventions;
 global using vm2.ExpressionSerialization.Exceptions;
