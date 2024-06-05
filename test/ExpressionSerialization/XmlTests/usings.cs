@@ -18,6 +18,7 @@ global using TestUtilities;
 global using vm2.ExpressionSerialization.Abstractions;
 global using vm2.ExpressionSerialization.Conventions;
 global using vm2.ExpressionSerialization.Exceptions;
+global using vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 global using vm2.ExpressionSerialization.XmlTransform;
 
 global using Xunit.Abstractions;

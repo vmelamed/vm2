@@ -1,6 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests.ExpressionsDeepEquals;
-
-using vm2.ExpressionSerialization.ExpressionsDeepEquals;
+﻿namespace vm2.ExpressionDeepEqualsTests;
 
 public partial class DeepEqualsTests(ITestOutputHelper output)
 {

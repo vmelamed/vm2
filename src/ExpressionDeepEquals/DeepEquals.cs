@@ -1,4 +1,6 @@
-﻿namespace vm2.ExpressionSerialization.ExpressionsDeepEquals;
+﻿namespace vm2.ExpressionDeepEquals;
+
+using System.Linq.Expressions;
 
 /// <summary>
 /// Class ExpressionExtensions.

@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.ExpressionsDeepEquals;
+﻿namespace vm2.ExpressionDeepEquals;
 
 class DeepEqualsVisitor : ExpressionVisitor
 {
@@ -139,7 +139,7 @@ class DeepEqualsVisitor : ExpressionVisitor
 
                 if (genType == typeof(Memory<>) || genType == typeof(ReadOnlyMemory<>))
                 {
-                    var mi = lValue.GetType().GetMethod("ToArray") ?? throw new InternalTransformErrorException("Could not get the property for Memory<>.Span.");
+                    var mi = lValue.GetType().GetMethod("ToArray") ?? throw new InvalidOperationException("Could not get the property for Memory<>.Span.");
 
                     if (mi.IsGenericMethod)
                         mi = mi.MakeGenericMethod(elemType);

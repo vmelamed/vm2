@@ -1,8 +1,8 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests.ExpressionsDeepEquals;
+﻿namespace vm2.ExpressionDeepEqualsTests;
 using System.Reflection;
 
-#pragma warning disable IDE0056 // Use index operator
 #pragma warning disable IDE0300 // Simplify collection initialization
+#pragma warning disable IDE0056 // Use index operator
 
 public partial class DeepEqualsTests
 {
@@ -541,3 +541,6 @@ public partial class DeepEqualsTests
         ["newMembersInit2"]                                                                 = _newMembersInitialized2,
     };
 }
+
+#pragma warning restore IDE0300 // Simplify collection initialization
+#pragma warning restore IDE0056 // Use index operator

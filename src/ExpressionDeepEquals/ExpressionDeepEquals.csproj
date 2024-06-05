@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <WarningLevel>9999</WarningLevel>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <NoWarn></NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../vm2signKey.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>vm2.ExpressionDeepEquals</RootNamespace>
+  </PropertyGroup>
+
+
+  <PropertyGroup Label="NuGet">
+    <IsPackable>true</IsPackable>
+    <Title>vm2 Linq Expression Deep Equals</Title>
+    <Company>vm</Company>
+    <Product>vm2</Product>
+    <ProductName>Val Melamed's packages</ProductName>
+    <Authors>Val Melamed</Authors>
+    <Description>Performs &quot;deep equals&quot; of two LINQ Expressions.</Description>
+    <PackageReleaseNotes>Moved to a self-containing project.</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionDeepEquals/ExpressionDeepEquals.csproj</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
+    <PackageTags>C# LINQ expression deep equals</PackageTags>
+    <Copyright>Copyright © 2023-2024 vm</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>      
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+</Project>

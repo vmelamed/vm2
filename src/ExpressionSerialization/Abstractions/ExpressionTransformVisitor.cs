@@ -6,7 +6,7 @@
 /// elements.
 /// </summary>
 /// <typeparam name="TElement">The type of the document nodes that represent expression nodes, 
-/// e.g. <see cref="XElement"/> or <see cref="JObject"/>.</typeparam>
+/// e.g. <see cref="XElement"/> or <see cref="JsonObject"/>.</typeparam>
 /// <seealso cref="ExpressionVisitor" />
 public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
 {

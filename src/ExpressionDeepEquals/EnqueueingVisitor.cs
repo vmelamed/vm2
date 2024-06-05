@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.ExpressionsDeepEquals;
+﻿namespace vm2.ExpressionDeepEquals;
 /// <summary>
 /// Traverses the expression tree and enqueues each node in the order of visit.
 /// Implements the <see cref="ExpressionVisitor" />
