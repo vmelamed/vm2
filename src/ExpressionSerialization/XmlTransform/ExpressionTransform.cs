@@ -41,6 +41,7 @@ public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransf
     /// <returns>The resultant expression.</returns>
     Expression IExpressionTransform<XElement>.Transform(XElement element)
     {
+        _options.Validate(element);
         if (_xmlVisitor is null)
             _xmlVisitor = new FromXmlTransformVisitor();
         else
@@ -68,6 +69,7 @@ public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransf
     /// <returns>The resultant expression.</returns>
     public Expression Transform(XDocument document)
     {
+        _options.Validate(document);
         var me = ((IExpressionTransform<XElement>)this);
         var root = document.Root ?? new XElement(ElementNames.Expression, ElementNames.Object, new XAttribute(AttributeNames.Nil, true));
 
@@ -89,9 +91,9 @@ public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransf
         Stream stream)
     {
         var doc = Transform(expression);
-        using var writer = new StreamWriter(stream, _options.GetEncoding());
+        using var writer = new StreamWriter(stream, _options.Encoding);
         using var xmlWriter = XmlWriter.Create(writer, new() {
-            Encoding = _options.GetEncoding(),
+            Encoding = _options.Encoding,
             Indent = _options.Indent,
             IndentChars = new(' ', _options.IndentSize),
             NamespaceHandling = _options.OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
@@ -119,7 +121,7 @@ public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransf
         CancellationToken cancellationToken = default)
     {
         var doc = Transform(expression);
-        var encoding = _options.GetEncoding();
+        var encoding = _options.Encoding;
         var settings = new XmlWriterSettings() {
             Async = true,
             Encoding = encoding,
@@ -149,7 +151,7 @@ public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransf
     public Expression Deserialize(
         Stream stream)
     {
-        using var reader = new StreamReader(stream, _options.GetEncoding());
+        using var reader = new StreamReader(stream, _options.Encoding);
         var readerSettings = new XmlReaderSettings()
         {
             IgnoreComments = true,
@@ -161,21 +163,9 @@ public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransf
         using var xmlReader = XmlReader.Create(reader, readerSettings);
         var document = XDocument.Load(
                             xmlReader,
-                            _options.MustValidate()
+                            _options.MustValidate
                                 ? LoadOptions.SetLineInfo
                                 : LoadOptions.None);
-
-        if (_options.MustValidate())
-        {
-            List<XmlSchemaException> exceptions = [];
-
-            document.Validate(XmlOptions.Schemas, (_, e) => exceptions.Add(e.Exception));
-            if (exceptions.Count is not 0)
-                throw new AggregateException(
-                            $"Error(s) validating the XML document against the schema {XmlOptions.Exs}:\n  " +
-                            string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
-                            exceptions);
-        }
 
         return Transform(document);
     }
@@ -190,7 +180,7 @@ public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransf
         Stream stream,
         CancellationToken cancellationToken = default)
     {
-        using var reader = new StreamReader(stream, _options.GetEncoding());
+        using var reader = new StreamReader(stream, _options.Encoding);
         var readerSettings = new XmlReaderSettings() {
             Async = true,
             IgnoreComments = true,
@@ -201,21 +191,9 @@ public class ExpressionTransform(XmlOptions? options = null) : IExpressionTransf
         using var xmlReader = XmlReader.Create(reader, readerSettings);
         var document = await XDocument.LoadAsync(
                                 xmlReader,
-                                _options.MustValidate()
+                                _options.MustValidate
                                     ? LoadOptions.SetLineInfo
                                     : LoadOptions.None, cancellationToken);
-
-        if (_options.MustValidate())
-        {
-            List<XmlSchemaException> exceptions = [];
-
-            document.Validate(XmlOptions.Schemas, (_, e) => exceptions.Add(e.Exception));
-            if (exceptions.Count is not 0)
-                throw new AggregateException(
-                            $"Error(s) validating the XML document against the schema {XmlOptions.Exs}:\n  " +
-                            string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
-                            exceptions);
-        }
 
         return Transform(document);
     }

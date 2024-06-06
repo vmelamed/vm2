@@ -163,7 +163,7 @@ public class TestsFixture : IDisposable
 
             var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
             var settings = new XmlWriterSettings() {
-                Encoding = Options.GetEncoding(),
+                Encoding = Options.Encoding,
                 Indent = Options.Indent,
                 IndentChars = new(' ', Options.IndentSize),
                 NamespaceHandling = Options.OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
@@ -171,7 +171,7 @@ public class TestsFixture : IDisposable
                 OmitXmlDeclaration = !Options.AddDocumentDeclaration,
                 WriteEndDocumentOnClose = true,
             };
-            using var writer = new StreamWriter(stream, Options.GetEncoding());
+            using var writer = new StreamWriter(stream, Options.Encoding);
             using var xmlWriter = XmlWriter.Create(writer, settings);
 
             actualDoc.WriteTo(xmlWriter);

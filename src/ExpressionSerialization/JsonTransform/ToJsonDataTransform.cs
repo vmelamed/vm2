@@ -459,7 +459,7 @@ class ToJsonDataTransform(JsonOptions options)
         // XML serialize into the element
         //dcSerializer.WriteObject(writer, nodeValue);
 
-        var jsonElement = JsonSerializer.SerializeToElement(nodeValue, JsonTypeInfo.CreateJsonTypeInfo(concreteType, options.CreateJsonSerializerOptions()));
+        var jsonElement = JsonSerializer.SerializeToElement(nodeValue, JsonTypeInfo.CreateJsonTypeInfo(concreteType, options.GetJsonSerializerOptions()));
         return element.Add(Vocabulary.Value, JsonObject.Create(jsonElement));
     }
     #endregion

@@ -1,5 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using System;
+using System.Xml.Schema;
+
 /// <summary>
 /// Class XmlOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to 
 /// XML documents.
@@ -124,4 +127,117 @@ public partial class XmlOptions : DocumentOptions
     /// </summary>
     /// <returns><c>true</c> if [has expressions schemaUri] [the specified options]; otherwise, <c>false</c>.</returns>
     internal override bool HasExpressionsSchema => Schemas.Contains(Exs);
+
+    /// <summary>
+    /// Validates the specified document against the schema.
+    /// </summary>
+    /// <param name="document">The document.</param>
+    public void Validate(XDocument document)
+    {
+        if (!MustValidate)
+            return;
+
+        List<XmlSchemaException> exceptions = [];
+
+        document.Validate(Schemas, (_, e) => exceptions.Add(e.Exception));
+
+        if (exceptions.Count is not 0)
+            throw new AggregateException(
+                        $"Error(s) validating the XML document against the schema {Exs}:\n  " +
+                        string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
+                        exceptions);
+    }
+
+    /// <summary>
+    /// Validates the specified element against the schema.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    public void Validate(XElement element)
+    {
+        if (!MustValidate)
+            return;
+
+        var schema = Schemas.GlobalElements[new XmlQualifiedName(Vocabulary.Expression, Exs)] ?? throw new InternalTransformErrorException("Could not get the schema for expression");
+        var exceptions = new List<XmlSchemaException>();
+
+        element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
+
+        if (exceptions.Count is not 0)
+            throw new AggregateException(
+                        $"Error(s) validating the XML document against the schema {Exs}:\n  " +
+                        string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
+                        exceptions);
+    }
+
+    /// <summary>
+    /// Gets the set  XML document encoding.
+    /// </summary>
+    /// <returns>The document encoding.</returns>
+    internal Encoding Encoding
+        => CharacterEncoding switch {
+            "ascii" => Encoding.ASCII,
+            "utf-8" => new UTF8Encoding(ByteOrderMark, true),
+            "utf-16" => new UnicodeEncoding(BigEndian, ByteOrderMark, true),
+            "utf-32" => new UTF32Encoding(BigEndian, ByteOrderMark, true),
+            "iso-8859-1" => Encoding.Latin1,
+            _ => throw new NotSupportedException($@"The encoding ""{CharacterEncoding}"" is not supported. " +
+                                    @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
+        };
+
+    /// <summary>
+    /// Gets the document declaration from the current options if declarations are enabled.
+    /// </summary>
+    /// <returns>The document declaration System.Nullable&lt;XDeclaration&gt;.</returns>
+    internal XDeclaration? DocumentDeclaration()
+        => AddDocumentDeclaration ? new XDeclaration("1.0", CharacterEncoding, null) : null;
+
+    /// <summary>
+    /// Builds an XML comment object with the specified comment text if comments are enabled.
+    /// </summary>
+    /// <param name="comment">The comment.</param>
+    /// <returns>The comment object System.Nullable&lt;XComment&gt;.</returns>
+    internal XComment? Comment(string comment)
+        => AddComments ? new XComment(comment) : null;
+
+    /// <summary>
+    /// Builds an XML comment object with the text of the expression if comments are enabled.
+    /// </summary>
+    /// <param name="expression">The expression.</param>
+    /// <returns>System.Nullable&lt;XComment&gt;.</returns>
+    internal XComment? Comment(Expression expression)
+        => AddComments ? Comment($" {expression} ") : null;
+
+    /// <summary>
+    /// Adds the expression comment to the specified XML container if comments are enabled.
+    /// </summary>
+    /// <param name="parent">The parent.</param>
+    /// <param name="expression">The expression.</param>
+    internal void AddComment(XContainer parent, Expression expression)
+    {
+        if (AddComments)
+            parent.Add(new XComment($" {expression} "));
+    }
+
+    /// <summary>
+    /// Adds the comment to the specified XML container if comments are enabled.
+    /// </summary>
+    /// <param name="parent">The parent.</param>
+    /// <param name="comment">The comment.</param>
+    internal void AddComment(XContainer parent, string comment)
+    {
+        if (AddComments)
+            parent.Add(new XComment($" {comment} "));
+    }
+
+    /// <summary>
+    /// Creates an <see cref="XComment" /> with the human readable name of the <paramref name="type" /> if comments are enabled.
+    /// The type must be non-basic type.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns>The comment as System.Nullable&lt;XComment&gt;.</returns>
+    internal XComment? TypeComment(Type type)
+        => TypeNames != TypeNameConventions.AssemblyQualifiedName &&
+           (!type.IsBasicType() && type != typeof(object) || type.IsEnum)
+                ? Comment($" {Transform.TypeName(type, TypeNames)} ")
+                : null;
 }

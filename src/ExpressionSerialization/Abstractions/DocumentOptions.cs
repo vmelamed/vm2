@@ -1,7 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.Abstractions;
 
 /// <summary>
-/// XmlOptions when serializing/deserializing documents.
+/// Options for serializing/deserializing documents.
 /// </summary>
 public abstract class DocumentOptions
 {
@@ -45,4 +45,34 @@ public abstract class DocumentOptions
     /// </summary>
     /// <returns><c>true</c> if [has expressions schema] [the specified options]; otherwise, <c>false</c>.</returns>
     internal abstract bool HasExpressionsSchema { get; }
+
+    /// <summary>
+    /// Transforms the <paramref name="type"/> to a readable string according to the <see cref="DocumentOptions.TypeNames"/> convention.
+    /// </summary>
+    /// <param name="type">The type to be transformed to a readable string.</param>
+    /// <returns>The human readable transformation of the parameter <paramref name="type"/>.</returns>
+    internal string TransformTypeName(Type type)
+        => Transform.TypeName(type, TypeNames);
+
+    /// <summary>
+    /// Transforms the <paramref name="identifier"/> according to the <see cref="DocumentOptions.Identifiers"/> conventions.
+    /// </summary>
+    /// <param name="identifier">The identifier to be transformed.</param>
+    /// <returns>The transformed <paramref name="identifier"/>.</returns>
+    internal string TransformIdentifier(string identifier)
+        => Transform.Identifier(identifier, Identifiers);
+
+    /// <summary>
+    /// Determines whether to validate the input documents against has expressions schema.
+    /// If <see cref="DocumentOptions.ValidateInputDocuments"/> is <c>ValidateDocuments.Always</c> the method will verify
+    /// that the schema was actually added.
+    /// </summary>
+    /// <returns><c>true</c> if the documents must be validated against the schema; otherwise, <c>false</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().
+    /// </exception>
+    internal bool MustValidate
+        => ValidateInputDocuments == ValidateDocuments.Always
+                ? HasExpressionsSchema ? true : throw new InvalidOperationException("The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().")
+                : ValidateInputDocuments == ValidateDocuments.IfSchemaPresent && HasExpressionsSchema;
 }
