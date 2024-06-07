@@ -240,4 +240,14 @@ public partial class XmlOptions : DocumentOptions
            (!type.IsBasicType() && type != typeof(object) || type.IsEnum)
                 ? Comment($" {Transform.TypeName(type, TypeNames)} ")
                 : null;
+
+    internal XmlWriterSettings XmlWriterSettings => new() {
+        Encoding = Encoding,
+        Indent = Indent,
+        IndentChars = new(' ', IndentSize),
+        NamespaceHandling = OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
+        NewLineOnAttributes = AttributesOnNewLine,
+        OmitXmlDeclaration = !AddDocumentDeclaration,
+        WriteEndDocumentOnClose = true,
+    };
 }

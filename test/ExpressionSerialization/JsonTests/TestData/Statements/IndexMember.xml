@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- m => IIF((ArrayLength(m.ArrayProperty) > 0), m.ArrayProperty[(ArrayLength(m.ArrayProperty) - 1)], -1) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="int">
+        <parameters>
+            <parameterDefinition
+                type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                name="m"
+                id="P1" />
+        </parameters>
+        <body>
+            <conditional
+                type="int">
+                <greaterThan
+                    type="boolean">
+                    <arrayLength
+                        type="int">
+                        <memberAccess
+                            type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                            <parameter
+                                type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                name="m"
+                                idref="P1" />
+                            <property
+                                declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                                name="ArrayProperty" />
+                        </memberAccess>
+                    </arrayLength>
+                    <constant>
+                        <!-- 0 -->
+                        <int>0</int>
+                    </constant>
+                </greaterThan>
+                <arrayIndex
+                    type="int">
+                    <memberAccess
+                        type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                        <parameter
+                            type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            name="m"
+                            idref="P1" />
+                        <property
+                            declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                            name="ArrayProperty" />
+                    </memberAccess>
+                    <subtract
+                        type="int">
+                        <arrayLength
+                            type="int">
+                            <memberAccess
+                                type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+                                <parameter
+                                    type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                    name="m"
+                                    idref="P1" />
+                                <property
+                                    declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                    type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                                    name="ArrayProperty" />
+                            </memberAccess>
+                        </arrayLength>
+                        <constant>
+                            <!-- 1 -->
+                            <int>1</int>
+                        </constant>
+                    </subtract>
+                </arrayIndex>
+                <constant>
+                    <!-- -1 -->
+                    <int>-1</int>
+                </constant>
+            </conditional>
+        </body>
+    </lambda>
+</expression>

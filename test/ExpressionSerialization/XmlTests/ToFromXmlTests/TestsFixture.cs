@@ -12,15 +12,16 @@ public class TestsFixture : IDisposable
         Share = FileShare.Read,
     };
 
-    internal static XmlOptions Options => new() {
-        ByteOrderMark = true,
-        AddDocumentDeclaration = true,
-        OmitDuplicateNamespaces = false, // otherwise DeepEquals will fail
-        Indent = true,
-        IndentSize = 4,
-        AttributesOnNewLine = true,
-        AddComments = true,
-    };
+    internal static XmlOptions Options
+        => new() {
+            ByteOrderMark = true,
+            AddDocumentDeclaration = true,
+            OmitDuplicateNamespaces = false, // otherwise DeepEquals will fail
+            Indent = true,
+            IndentSize = 4,
+            AttributesOnNewLine = true,
+            AddComments = true,
+        };
 
     internal const LoadOptions XmlLoadOptions = LoadOptions.SetLineInfo; // LoadOptions.SetBaseUri | LoadOptions.None;
 
@@ -153,26 +154,18 @@ public class TestsFixture : IDisposable
         // ASSERT: both the strings and the XDocument-s are valid and equal
         var validate = () => Validate(actualDoc);
 
-        validate.Should().NotThrow($"the ACTUAL document from {testFileLine} should be valid according to the schema");
+        validate.Should().NotThrow($"the ACTUAL document from {testFileLine} should be valid according to the schema `{XmlOptions.Exs}`.");
 
         if (expectedDoc is null)
         {
+            // create a new file with contents - the actual XML
             fileName = string.IsNullOrEmpty(fileName)
                             ? Path.GetFullPath(Path.Combine(TestFilesPath, DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss.fff") + ".xml"))
                             : Path.GetFullPath(fileName);
 
             var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            var settings = new XmlWriterSettings() {
-                Encoding = Options.Encoding,
-                Indent = Options.Indent,
-                IndentChars = new(' ', Options.IndentSize),
-                NamespaceHandling = Options.OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
-                NewLineOnAttributes = Options.AttributesOnNewLine,
-                OmitXmlDeclaration = !Options.AddDocumentDeclaration,
-                WriteEndDocumentOnClose = true,
-            };
             using var writer = new StreamWriter(stream, Options.Encoding);
-            using var xmlWriter = XmlWriter.Create(writer, settings);
+            using var xmlWriter = XmlWriter.Create(writer, Options.XmlWriterSettings);
 
             actualDoc.WriteTo(xmlWriter);
 

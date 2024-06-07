@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- (a, b) => {var d; ... } -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="int">
+        <parameters>
+            <parameterDefinition
+                type="int"
+                name="a"
+                id="P1" />
+            <parameterDefinition
+                type="int"
+                name="b"
+                id="P2" />
+        </parameters>
+        <body>
+            <block>
+                <variables>
+                    <variableDefinition
+                        type="int"
+                        name="d"
+                        id="P3" />
+                </variables>
+                <assign
+                    type="int">
+                    <variable
+                        type="int"
+                        name="d"
+                        idref="P3" />
+                    <constant>
+                        <!-- 42 -->
+                        <int>42</int>
+                    </constant>
+                </assign>
+                <addAssign
+                    type="int">
+                    <parameter
+                        type="int"
+                        name="a"
+                        idref="P1" />
+                    <variable
+                        type="int"
+                        name="d"
+                        idref="P3" />
+                </addAssign>
+                <subtractAssign
+                    type="int">
+                    <parameter
+                        type="int"
+                        name="a"
+                        idref="P1" />
+                    <parameter
+                        type="int"
+                        name="b"
+                        idref="P2" />
+                </subtractAssign>
+                <variableDefinition
+                    type="int"
+                    name="c"
+                    id="P4" />
+                <assign
+                    type="int">
+                    <variable
+                        type="int"
+                        name="c"
+                        idref="P4" />
+                    <constant>
+                        <!-- 2 -->
+                        <int>2</int>
+                    </constant>
+                </assign>
+                <leftShiftAssign
+                    type="int">
+                    <parameter
+                        type="int"
+                        name="a"
+                        idref="P1" />
+                    <variable
+                        type="int"
+                        name="c"
+                        idref="P4" />
+                </leftShiftAssign>
+            </block>
+        </body>
+    </lambda>
+</expression>

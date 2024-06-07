@@ -25,35 +25,29 @@ public partial class JsonOptions : DocumentOptions
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonOptions"/> class. The schema must be subsequently loaded with
-    /// <see cref="LoadSchemaAsync(string, CancellationToken)"/>.
+    /// <see cref="LoadSchema(string)"/>.
     /// </summary>
     public JsonOptions()
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="JsonOptions"/> class. The schema must be subsequently loaded with
-    /// <see cref="LoadSchemaAsync(string, CancellationToken)"/>.
+    /// Initializes a new instance of the <see cref="JsonOptions"/> class.
     /// </summary>
-    public JsonOptions(string schemaUrl)
-        => LoadSchemaAsync(schemaUrl)
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
+    public JsonOptions(string filePath)
+        => LoadSchema(filePath);
 
     /// <summary>
     /// Loads the schema from the specified URL.
     /// </summary>
-    /// <param name="url">The location of the schema file (can be file:c:/foo/bar/schema.json).</param>
-    /// <param name="cancellationToken">
-    /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
-    /// </param>
+    /// <param name="filePath">The location of the schema file.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public async Task<JsonSchema> LoadSchemaAsync(string url, CancellationToken cancellationToken = default)
+    public JsonSchema LoadSchema(string filePath)
     {
-        using HttpClient client = new();
-
-        return _schema = JsonSchema.FromText(await client.GetStringAsync(url, cancellationToken));
+        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        var text = reader.ReadToEnd();
+        return _schema = JsonSchema.FromText(text);
     }
 
     /// <summary>
@@ -98,6 +92,15 @@ public partial class JsonOptions : DocumentOptions
             return options;
         }
     }
+
+    /// <summary>
+    /// Gets the json writer options based on these options
+    /// </summary>
+    /// <value>The json writer options.</value>
+    public JsonWriterOptions JsonWriterOptions => new() {
+        Indented = Indent,
+        SkipValidation = false,
+    };
 
     /// <summary>
     /// Evaluates the specified jsonNode against the schema (by default the expressions schema).

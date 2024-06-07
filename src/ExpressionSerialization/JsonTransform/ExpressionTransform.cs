@@ -62,6 +62,32 @@ public class ExpressionTransform(JsonOptions? options = null) : IExpressionTrans
                                     });
 
         document.WriteTo(writer, _options.JsonSerializerOptions);
+        writer.Flush();
+    }
+
+    /// <summary>
+    /// Serializes the specified expression.
+    /// </summary>
+    /// <param name="expression">The expression.</param>
+    /// <param name="stream">The stream to put the XML document to.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Stream.</returns>
+    public async Task SerializeAsync(
+        Expression expression,
+        Stream stream,
+        CancellationToken cancellationToken = default)
+    {
+        var document = Transform(expression);
+        using var writer = new Utf8JsonWriter(
+                                    stream,
+                                    new JsonWriterOptions()
+                                    {
+                                        Indented       = _options.Indent,
+                                        SkipValidation = false,
+                                    });
+
+        document.WriteTo(writer, _options.JsonSerializerOptions);
+        await writer.FlushAsync(cancellationToken);
     }
 
     /// <summary>
@@ -81,9 +107,41 @@ public class ExpressionTransform(JsonOptions? options = null) : IExpressionTrans
                         new JsonDocumentOptions()
                         {
                             AllowTrailingCommas = true,
-                            CommentHandling = JsonCommentHandling.Skip,
-                            MaxDepth = 1000
+                            CommentHandling     = JsonCommentHandling.Skip,
+                            MaxDepth            = 1000
                         })
+                        ??
+                        throw new SerializationException("Could not load JSON object;");
+
+        if (document.GetValueKind() != JsonValueKind.Object)
+            throw new SerializationException($"The document does not contain a JSON object but {document.GetValueKind()}");
+
+        return Transform(document.AsObject());
+    }
+
+    /// <summary>
+    /// Serializes the specified expression.
+    /// </summary>
+    /// <param name="stream">The stream to get the XML document from.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Stream.</returns>
+    public async Task<Expression> DeserializeAsync(
+        Stream stream,
+        CancellationToken cancellationToken = default)
+    {
+        var document = await JsonNode.ParseAsync(
+                        stream,
+                        new JsonNodeOptions()
+                        {
+                            PropertyNameCaseInsensitive = false
+                        },
+                        new JsonDocumentOptions()
+                        {
+                            AllowTrailingCommas = true,
+                            CommentHandling     = JsonCommentHandling.Skip,
+                            MaxDepth            = 1000
+                        },
+                        cancellationToken)
                         ??
                         throw new SerializationException("Could not load JSON object;");
 

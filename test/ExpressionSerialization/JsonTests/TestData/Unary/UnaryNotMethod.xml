@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- b => Not(b) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+        <parameters>
+            <parameterDefinition
+                type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                name="b"
+                id="P1" />
+        </parameters>
+        <body>
+            <not
+                type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                <parameter
+                    type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                    name="b"
+                    idref="P1" />
+                <method
+                    declaringType="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                    static="true"
+                    type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                    name="op_LogicalNot">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="vm2.ExpressionSerialization.XmlTests.B, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            name="x" />
+                    </parameterSpecs>
+                </method>
+            </not>
+        </body>
+    </lambda>
+</expression>

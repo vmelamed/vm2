@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- {var m; ... } -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <block>
+        <variables>
+            <variableDefinition
+                type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                name="m"
+                id="P1" />
+        </variables>
+        <assign
+            type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+            <variable
+                type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                name="m"
+                idref="P1" />
+            <new>
+                <constructor
+                    declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                    <parameterSpecs />
+                </constructor>
+                <arguments />
+            </new>
+        </assign>
+        <goto
+            type="int"
+            kind="return">
+            <target
+                type="int"
+                idref="L1" />
+            <add
+                type="int">
+                <memberAccess
+                    type="int">
+                    <variable
+                        type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                        name="m"
+                        idref="P1" />
+                    <property
+                        declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                        type="int"
+                        name="TheOuterIntProperty" />
+                </memberAccess>
+                <memberAccess
+                    type="int">
+                    <memberAccess
+                        type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                        <variable
+                            type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            name="m"
+                            idref="P1" />
+                        <property
+                            declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            name="InnerProperty" />
+                    </memberAccess>
+                    <property
+                        declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                        type="int"
+                        name="IntProperty" />
+                </memberAccess>
+            </add>
+        </goto>
+        <label>
+            <target
+                type="int"
+                id="L1" />
+            <constant>
+                <!-- 0 -->
+                <int>0</int>
+            </constant>
+        </label>
+    </block>
+</expression>

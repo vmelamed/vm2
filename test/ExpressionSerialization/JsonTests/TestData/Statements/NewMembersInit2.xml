@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- () => new TestMembersInitialized1() {TheOuterIntProperty = 42, Time = new DateTime(1776, 7, 4), InnerProperty = {IntProperty = 23, StringProperty = "inner string"}, ArrayProperty = new [] {4, 5, 6}, ListProperty = {Void Add(vm2.ExpressionSerialization.XmlTests.Inner)(new Inner() {IntProperty = 23, StringProperty = "inner string"}), Void Add(vm2.ExpressionSerialization.XmlTests.Inner)(new Inner() {IntProperty = 42, StringProperty = "next inner string"})}} -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+        <parameters />
+        <body>
+            <memberInit
+                type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                <new>
+                    <constructor
+                        declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                        <parameterSpecs />
+                    </constructor>
+                    <arguments />
+                </new>
+                <bindings>
+                    <assignmentBinding>
+                        <property
+                            declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            type="int"
+                            name="TheOuterIntProperty" />
+                        <constant>
+                            <!-- 42 -->
+                            <int>42</int>
+                        </constant>
+                    </assignmentBinding>
+                    <assignmentBinding>
+                        <property
+                            declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            type="dateTime"
+                            name="Time" />
+                        <new>
+                            <constructor
+                                declaringType="dateTime">
+                                <parameterSpecs>
+                                    <parameterSpec
+                                        type="int"
+                                        name="year" />
+                                    <parameterSpec
+                                        type="int"
+                                        name="month" />
+                                    <parameterSpec
+                                        type="int"
+                                        name="day" />
+                                </parameterSpecs>
+                            </constructor>
+                            <arguments>
+                                <constant>
+                                    <!-- 1776 -->
+                                    <int>1776</int>
+                                </constant>
+                                <constant>
+                                    <!-- 7 -->
+                                    <int>7</int>
+                                </constant>
+                                <constant>
+                                    <!-- 4 -->
+                                    <int>4</int>
+                                </constant>
+                            </arguments>
+                        </new>
+                    </assignmentBinding>
+                    <memberMemberBinding>
+                        <property
+                            declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            name="InnerProperty" />
+                        <assignmentBinding>
+                            <property
+                                declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                type="int"
+                                name="IntProperty" />
+                            <constant>
+                                <!-- 23 -->
+                                <int>23</int>
+                            </constant>
+                        </assignmentBinding>
+                        <assignmentBinding>
+                            <property
+                                declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                type="string"
+                                name="StringProperty" />
+                            <constant>
+                                <!-- "inner string" -->
+                                <string>inner string</string>
+                            </constant>
+                        </assignmentBinding>
+                    </memberMemberBinding>
+                    <assignmentBinding>
+                        <property
+                            declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                            name="ArrayProperty" />
+                        <newArrayInit
+                            type="int">
+                            <elements>
+                                <constant>
+                                    <!-- 4 -->
+                                    <int>4</int>
+                                </constant>
+                                <constant>
+                                    <!-- 5 -->
+                                    <int>5</int>
+                                </constant>
+                                <constant>
+                                    <!-- 6 -->
+                                    <int>6</int>
+                                </constant>
+                            </elements>
+                        </newArrayInit>
+                    </assignmentBinding>
+                    <memberListBinding>
+                        <property
+                            declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            type="System.Collections.Generic.List`1[[vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                            name="ListProperty" />
+                        <elementInit>
+                            <method
+                                declaringType="System.Collections.Generic.List`1[[vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                                type="void"
+                                name="Add">
+                                <parameterSpecs>
+                                    <parameterSpec
+                                        type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                        name="item" />
+                                </parameterSpecs>
+                            </method>
+                            <arguments>
+                                <memberInit
+                                    type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                                    <new>
+                                        <constructor
+                                            declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                                            <parameterSpecs />
+                                        </constructor>
+                                        <arguments />
+                                    </new>
+                                    <bindings>
+                                        <assignmentBinding>
+                                            <property
+                                                declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                                type="int"
+                                                name="IntProperty" />
+                                            <constant>
+                                                <!-- 23 -->
+                                                <int>23</int>
+                                            </constant>
+                                        </assignmentBinding>
+                                        <assignmentBinding>
+                                            <property
+                                                declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                                type="string"
+                                                name="StringProperty" />
+                                            <constant>
+                                                <!-- "inner string" -->
+                                                <string>inner string</string>
+                                            </constant>
+                                        </assignmentBinding>
+                                    </bindings>
+                                </memberInit>
+                            </arguments>
+                        </elementInit>
+                        <elementInit>
+                            <method
+                                declaringType="System.Collections.Generic.List`1[[vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                                type="void"
+                                name="Add">
+                                <parameterSpecs>
+                                    <parameterSpec
+                                        type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                        name="item" />
+                                </parameterSpecs>
+                            </method>
+                            <arguments>
+                                <memberInit
+                                    type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                                    <new>
+                                        <constructor
+                                            declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                                            <parameterSpecs />
+                                        </constructor>
+                                        <arguments />
+                                    </new>
+                                    <bindings>
+                                        <assignmentBinding>
+                                            <property
+                                                declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                                type="int"
+                                                name="IntProperty" />
+                                            <constant>
+                                                <!-- 42 -->
+                                                <int>42</int>
+                                            </constant>
+                                        </assignmentBinding>
+                                        <assignmentBinding>
+                                            <property
+                                                declaringType="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                                type="string"
+                                                name="StringProperty" />
+                                            <constant>
+                                                <!-- "next inner string" -->
+                                                <string>next inner string</string>
+                                            </constant>
+                                        </assignmentBinding>
+                                    </bindings>
+                                </memberInit>
+                            </arguments>
+                        </elementInit>
+                    </memberListBinding>
+                </bindings>
+            </memberInit>
+        </body>
+    </lambda>
+</expression>

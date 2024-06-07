@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
     <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
+    <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

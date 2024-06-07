@@ -29,18 +29,14 @@ public class TestsFixture : IDisposable
     internal const LoadOptions JsonLoadOptions = LoadOptions.SetLineInfo; // LoadOptions.SetBaseUri | LoadOptions.None;
 
     public TestsFixture()
-        => Options
-            .LoadSchemaAsync(Path.Combine(SchemasPath, "Linq.Expressions.Serialization.json"))
-            .ConfigureAwait(false)
-            .GetAwaiter()
-            .GetResult();
+        => Options.LoadSchema(Path.Combine(SchemasPath, "delinea.deployment.schema.json"/*"Linq.Expressions.Serialization.json"*/));
 
     public void Dispose() => GC.SuppressFinalize(this);
 
     public static void Validate(JsonNode doc)
         => Options.Validate(doc);
 
-    public static async Task<(JsonNode?, string)> GetXmlDocumentAsync(
+    public static async Task<(JsonNode?, string)> GetJsonDocumentAsync(
         string testFileLine,
         string pathName,
         string expectedOrInput,
@@ -89,7 +85,7 @@ public class TestsFixture : IDisposable
     public static void TestExpressionToJson(
         string testFileLine,
         Expression expression,
-        JsonObject? expectedDoc,
+        JsonNode? expectedDoc,
         string expectedStr,
         string? fileName,
         ITestOutputHelper? output = null)
@@ -106,14 +102,39 @@ public class TestsFixture : IDisposable
         AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
-    public static void TestJsonToExpression(
+    public static async Task TestExpressionToJsonAsync(
         string testFileLine,
-        JsonObject inputDoc,
-        Expression expectedExpression)
+        Expression expression,
+        JsonNode? expectedDoc,
+        string expectedStr,
+        string? fileName,
+        ITestOutputHelper? output = null,
+        CancellationToken cancellationToken = default)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
         var transform = new ExpressionTransform(Options);
-        var actualExpression = transform.Transform(inputDoc);
+
+        var actualDoc = transform.Transform(expression);
+        using var streamActual = new MemoryStream();
+        await transform.SerializeAsync(expression, streamActual, cancellationToken);
+        var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
+
+        // ASSERT: both the strings and the XDocument-s are valid and equal
+        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
+    }
+
+    public static void TestJsonToExpression(
+        string testFileLine,
+        JsonNode? inputDoc,
+        Expression expectedExpression)
+    {
+        inputDoc.Should().NotBeNull("The JSON document (JsonNode?) to transform is null");
+        Debug.Assert(inputDoc is not null);
+        inputDoc.GetValueKind().Should().Be(JsonValueKind.Object, "The input JSON document (JsonNode?) is not JsonObject.");
+
+        // ACT - get the actual string and XDocument by transforming the expression:
+        var transform = new ExpressionTransform(Options);
+        var actualExpression = transform.Transform(inputDoc.AsObject());
 
         expectedExpression
             .DeepEquals(actualExpression, out var difference)
@@ -123,7 +144,7 @@ public class TestsFixture : IDisposable
 
     static void AssertJsonAsExpectedOrSave(
         string testFileLine,
-        JsonObject? expectedDoc,
+        JsonNode? expectedDoc,
         string expectedStr,
         JsonObject actualDoc,
         string actualStr,
@@ -132,37 +153,34 @@ public class TestsFixture : IDisposable
     {
         output?.WriteLine("ACTUAL:\n{0}\n", actualStr);
 
-        // ASSERT: both the strings and the XDocument-s are valid and equal
+        // ASSERT: both the strings and the JsonObject-s are valid and equal
         var validate = () => Validate(actualDoc);
 
-        validate.Should().NotThrow($"the ACTUAL document from {testFileLine} should be valid according to the schema");
+        validate.Should().NotThrow($"the ACTUAL document from {testFileLine} should be valid according to the schema `{JsonOptions.Exs}`.");
 
         if (expectedDoc is null)
         {
+            // create a new file with contents - the actual JSON
             fileName = string.IsNullOrEmpty(fileName)
-                            ? Path.GetFullPath(Path.Combine(TestFilesPath, DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss.fff") + ".xml"))
+                            ? Path.GetFullPath(Path.Combine(TestFilesPath, DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss.fff") + ".json"))
                             : Path.GetFullPath(fileName);
 
             var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            using var writer = new Utf8JsonWriter(
-                                        stream,
-                                        new JsonWriterOptions
-                                        {
-                                            Indented = Options.Indent,
-                                            SkipValidation = false,
-                                        });
+            using var writer = new Utf8JsonWriter(stream, Options.JsonWriterOptions);
 
             actualDoc.WriteTo(writer);
 
-            Assert.Fail($"The expected XML does not appear to exist. Saved the actual XML in the file `{fileName}`.");
+            Assert.Fail($"The expected JSON does not appear to exist. Saved the actual JSON in the file `{fileName}`.");
         }
 
-        actualStr.Should().Be(expectedStr, "the expected and the actual XML texts should be the same");
+        expectedDoc.GetValueKind().Should().Be(JsonValueKind.Object, "The expected JSON document (JsonNode?) is not JsonObject.");
+
+        actualStr.Should().Be(expectedStr, "the expected and the actual JSON texts should be the same");
 
         var equal = JsonNode
                         .DeepEquals(actualDoc, expectedDoc)
                         .Should()
-                        .BeTrue($"the expected and the actual XDocument objects from {testFileLine} should be deep-equal")
+                        .BeTrue($"the expected and the actual top-level JsonObject objects (documents) from {testFileLine} should be deep-equal.")
                         ;
     }
 }
