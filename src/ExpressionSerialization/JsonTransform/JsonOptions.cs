@@ -40,14 +40,11 @@ public partial class JsonOptions : DocumentOptions
     /// <summary>
     /// Loads the schema from the specified URL.
     /// </summary>
-    /// <param name="filePath">The location of the schema file.</param>
+    /// <param name="schemaFilePath">The location of the schema file.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public JsonSchema LoadSchema(string filePath)
+    public JsonSchema LoadSchema(string schemaFilePath)
     {
-        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var reader = new StreamReader(stream, Encoding.UTF8);
-        var text = reader.ReadToEnd();
-        return _schema = JsonSchema.FromText(text);
+        return _schema = JsonSchema.FromFile(schemaFilePath);
     }
 
     /// <summary>
