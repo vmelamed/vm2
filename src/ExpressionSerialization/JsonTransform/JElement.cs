@@ -1,7 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
 /// <summary>
-/// struct JElement is a key-value pair, similar to XElement with no XML element value. The 
+/// struct JElement is a key-value pair, similar to JElement with no JSON element value. The 
 /// <see cref="KeyValuePair{TKey, TValue}"/> is a struct, so we cannot inherit from it but we have implicit conversions 
 /// to and from it.
 /// </summary>

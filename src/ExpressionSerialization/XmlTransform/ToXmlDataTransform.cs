@@ -7,37 +7,39 @@ using TransformConstant = Func<object?, Type, XElement>;
 /// </summary>
 class ToXmlDataTransform(XmlOptions options)
 {
-    static T? Typed<T>(object? value, bool allowNull = false) => value is T || (value is null && allowNull)
-                                            ? (T?)value
-                                            : throw new InternalTransformErrorException($"Expected {typeof(T).Name} value but got {(value is null ? "null" : value.GetType().Name)}");
+    static T Is<T>(object? v) where T : struct
+        => v is T tv ? tv : throw new InternalTransformErrorException($"Expected {typeof(T).Name} v but got {(v is null ? "null" : v.GetType().Name)}");
+
+    static T? Is<T>(object? v, bool nullable = true) where T : class
+        => v is T || (nullable && v is null) ? (T?)v : throw new InternalTransformErrorException($"Expected {typeof(T).Name} v but got {(v is null ? "null" : v.GetType().Name)}");
 
     #region constant ToXml transforms
     static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
     {
-        { typeof(bool),             (v, t) => new XElement(ElementNames.Boolean,        XmlConvert.ToString(Typed<bool>(v))) },
-        { typeof(byte),             (v, t) => new XElement(ElementNames.Byte,           XmlConvert.ToString(Typed<byte>(v))) },
-        { typeof(char),             (v, t) => new XElement(ElementNames.Char,           XmlConvert.ToString(Typed<char>(v))) },
-        { typeof(double),           (v, t) => new XElement(ElementNames.Double,         XmlConvert.ToString(Typed<double>(v))) },
-        { typeof(float),            (v, t) => new XElement(ElementNames.Float,          XmlConvert.ToString(Typed<float>(v))) },
-        { typeof(int),              (v, t) => new XElement(ElementNames.Int,            XmlConvert.ToString(Typed<int>(v))) },
-        { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         XmlConvert.ToString(Typed<IntPtr>(v))) },
-        { typeof(long),             (v, t) => new XElement(ElementNames.Long,           XmlConvert.ToString(Typed<long>(v))) },
-        { typeof(sbyte),            (v, t) => new XElement(ElementNames.SignedByte,     XmlConvert.ToString(Typed<sbyte>(v))) },
-        { typeof(short),            (v, t) => new XElement(ElementNames.Short,          XmlConvert.ToString(Typed<short>(v))) },
-        { typeof(uint),             (v, t) => new XElement(ElementNames.UnsignedInt,    XmlConvert.ToString(Typed<uint>(v))) },
-        { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString(Typed<UIntPtr>(v))) },
-        { typeof(ulong),            (v, t) => new XElement(ElementNames.UnsignedLong,   XmlConvert.ToString(Typed<ulong>(v))) },
-        { typeof(ushort),           (v, t) => new XElement(ElementNames.UnsignedShort,  XmlConvert.ToString(Typed<ushort>(v))) },
+        { typeof(bool),             (v, t) => new XElement(ElementNames.Boolean,        XmlConvert.ToString(Is<bool>(v))) },
+        { typeof(byte),             (v, t) => new XElement(ElementNames.Byte,           XmlConvert.ToString(Is<byte>(v))) },
+        { typeof(char),             (v, t) => new XElement(ElementNames.Char,           XmlConvert.ToString(Is<char>(v))) },
+        { typeof(double),           (v, t) => new XElement(ElementNames.Double,         XmlConvert.ToString(Is<double>(v))) },
+        { typeof(float),            (v, t) => new XElement(ElementNames.Float,          XmlConvert.ToString(Is<float>(v))) },
+        { typeof(int),              (v, t) => new XElement(ElementNames.Int,            XmlConvert.ToString(Is<int>(v))) },
+        { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         XmlConvert.ToString(Is<IntPtr>(v))) },
+        { typeof(long),             (v, t) => new XElement(ElementNames.Long,           XmlConvert.ToString(Is<long>(v))) },
+        { typeof(sbyte),            (v, t) => new XElement(ElementNames.SignedByte,     XmlConvert.ToString(Is<sbyte>(v))) },
+        { typeof(short),            (v, t) => new XElement(ElementNames.Short,          XmlConvert.ToString(Is<short>(v))) },
+        { typeof(uint),             (v, t) => new XElement(ElementNames.UnsignedInt,    XmlConvert.ToString(Is<uint>(v))) },
+        { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString(Is<UIntPtr>(v))) },
+        { typeof(ulong),            (v, t) => new XElement(ElementNames.UnsignedLong,   XmlConvert.ToString(Is<ulong>(v))) },
+        { typeof(ushort),           (v, t) => new XElement(ElementNames.UnsignedShort,  XmlConvert.ToString(Is<ushort>(v))) },
 
-        { typeof(DateTime),         (v, t) => new XElement(ElementNames.DateTime,       XmlConvert.ToString(Typed<DateTime>(v), XmlDateTimeSerializationMode.RoundtripKind)) },
-        { typeof(DateTimeOffset),   (v, t) => new XElement(ElementNames.DateTimeOffset, XmlConvert.ToString(Typed<DateTimeOffset>(v), "O")) },
+        { typeof(DateTime),         (v, t) => new XElement(ElementNames.DateTime,       XmlConvert.ToString(Is<DateTime>(v), XmlDateTimeSerializationMode.RoundtripKind)) },
+        { typeof(DateTimeOffset),   (v, t) => new XElement(ElementNames.DateTimeOffset, XmlConvert.ToString(Is<DateTimeOffset>(v), "O")) },
         { typeof(DBNull),           (v, t) => new XElement(ElementNames.DBNull)         },
-        { typeof(decimal),          (v, t) => new XElement(ElementNames.Decimal,        XmlConvert.ToString(Typed<decimal>(v))) },
-        { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString(Typed<TimeSpan>(v))) },
-        { typeof(Guid),             (v, t) => new XElement(ElementNames.Guid,           XmlConvert.ToString(Typed<Guid>(v))) },
-        { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           XmlConvert.ToString((double)Typed<Half>(v))) },
-        { typeof(string),           (v, t) => new XElement(ElementNames.String,         (object?)Typed<string?>(v, true) ?? new XAttribute(AttributeNames.Nil, true)) },
-        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         (object?)Typed<Uri?>(v, true)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
+        { typeof(decimal),          (v, t) => new XElement(ElementNames.Decimal,        XmlConvert.ToString(Is<decimal>(v))) },
+        { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString(Is<TimeSpan>(v))) },
+        { typeof(Guid),             (v, t) => new XElement(ElementNames.Guid,           XmlConvert.ToString(Is<Guid>(v))) },
+        { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           XmlConvert.ToString((double)Is<Half>(v))) },
+        { typeof(string),           (v, t) => new XElement(ElementNames.String,         (object?)Is<string>(v) ?? new XAttribute(AttributeNames.Nil, true)) },
+        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         (object?)Is<Uri>(v)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
     #endregion
@@ -93,8 +95,8 @@ class ToXmlDataTransform(XmlOptions options)
     /// <summary>
     /// Transforms enum values.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     XElement EnumTransform(
         object? nodeValue,
         Type nodeType)
@@ -114,8 +116,8 @@ class ToXmlDataTransform(XmlOptions options)
     /// <summary>
     /// Transforms a nullable nullable.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     XElement NullableTransform(
         object? nodeValue,
         Type nodeType)
@@ -134,7 +136,7 @@ class ToXmlDataTransform(XmlOptions options)
             return nullableElement;
 
         var value = nullableType.GetProperty("Value")?.GetValue(nullable)
-                        ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but the value is null.");
+                        ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but the v is null.");
 
         nullableElement.Add(
             options.TypeComment(underlyingType),
@@ -146,8 +148,8 @@ class ToXmlDataTransform(XmlOptions options)
     /// <summary>
     /// Transforms an anonymous object.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     XElement AnonymousTransform(
         object? nodeValue,
         Type nodeType)
@@ -175,8 +177,8 @@ class ToXmlDataTransform(XmlOptions options)
     /// <summary>
     /// Transforms sequences of bytes.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     /// <exception cref="InternalTransformErrorException"></exception>
     XElement ByteSequenceTransform(
         object? nodeValue,
@@ -199,7 +201,7 @@ class ToXmlDataTransform(XmlOptions options)
         else
         {
             if (nodeValue is null)
-                throw new InternalTransformErrorException("Unexpected non-array byte sequenceElement with null value of type '{nodeType.FullName}'.");
+                throw new InternalTransformErrorException("Unexpected non-array byte sequenceElement with null v of type '{nodeType.FullName}'.");
 
             if (nodeValue is ImmutableArray<byte> iab)
                 bytes = iab.AsSpan();
@@ -226,8 +228,8 @@ class ToXmlDataTransform(XmlOptions options)
     /// <summary>
     /// Transforms sequences of objects.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     XElement SequenceTransform(
         object? nodeValue,
         Type nodeType)
@@ -290,16 +292,16 @@ class ToXmlDataTransform(XmlOptions options)
     }
 
     /// <summary>
-    /// Transforms value tuples.
+    /// Transforms v tuples.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     XElement ValueTupleTransform(
         object? nodeValue,
         Type nodeType)
     {
         if (nodeValue is null)
-            throw new InternalTransformErrorException("Null value for a constant expression node of type 'ValueTuple'.");
+            throw new InternalTransformErrorException("Null v for a constant expression node of type 'ValueTuple'.");
 
         var tupleElement = new XElement(
                                     ElementNames.Tuple,
@@ -307,7 +309,7 @@ class ToXmlDataTransform(XmlOptions options)
         var types = nodeType.GetGenericArguments();
 
         if (nodeValue is not ITuple tuple)
-            throw new InternalTransformErrorException("The value of type 'ValueTuple' doesn't implement ITuple.");
+            throw new InternalTransformErrorException("The v of type 'ValueTuple' doesn't implement ITuple.");
 
         for (var i = 0; i < tuple.Length; i++)
         {
@@ -328,8 +330,8 @@ class ToXmlDataTransform(XmlOptions options)
     /// <summary>
     /// Transforms class tuples.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     XElement ClassTupleTransform(
         object? nodeValue,
         Type nodeType)
@@ -345,7 +347,7 @@ class ToXmlDataTransform(XmlOptions options)
         var types = nodeType.GetGenericArguments();
 
         if (nodeValue is not ITuple tuple)
-            throw new InternalTransformErrorException("The value of type 'ValueTuple' doesn't implement ITuple.");
+            throw new InternalTransformErrorException("The v of type 'ValueTuple' doesn't implement ITuple.");
 
         for (var i = 0; i < tuple.Length; i++)
         {
@@ -367,8 +369,8 @@ class ToXmlDataTransform(XmlOptions options)
     /// <summary>
     /// Transforms dictionaries.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     XElement DictionaryTransform(
         object? nodeValue,
         Type nodeType)
@@ -380,7 +382,7 @@ class ToXmlDataTransform(XmlOptions options)
                                 nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
 
         if (nodeValue is not IDictionary dict)
-            throw new InternalTransformErrorException("The value of type 'Dictionary' doesn't implement IDictionary.");
+            throw new InternalTransformErrorException("The v of type 'Dictionary' doesn't implement IDictionary.");
 
         var length = dict.Count;
         var dictElement = new XElement(
@@ -421,8 +423,8 @@ class ToXmlDataTransform(XmlOptions options)
     /// Transforms objects using <see cref="DataContractSerializer" /> which also works with classes marked with 
     /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     XElement ObjectTransform(
         object? nodeValue,
         Type nodeType)

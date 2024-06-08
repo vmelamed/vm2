@@ -6,22 +6,21 @@ public class TestsFixture : IDisposable
 
     internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";
 
-    internal static FileStreamOptions FileStreamOptions => new() {
+    internal FileStreamOptions FileStreamOptions { get; } = new() {
         Mode = FileMode.Open,
         Access = FileAccess.Read,
         Share = FileShare.Read,
     };
 
-    internal static XmlOptions Options
-        => new() {
-            ByteOrderMark = true,
-            AddDocumentDeclaration = true,
-            OmitDuplicateNamespaces = false, // otherwise DeepEquals will fail
-            Indent = true,
-            IndentSize = 4,
-            AttributesOnNewLine = true,
-            AddComments = true,
-        };
+    internal XmlOptions Options { get; } = new() {
+        ByteOrderMark = true,
+        AddDocumentDeclaration = true,
+        OmitDuplicateNamespaces = false, // otherwise DeepEquals will fail
+        Indent = true,
+        IndentSize = 4,
+        AttributesOnNewLine = true,
+        AddComments = true,
+    };
 
     internal const LoadOptions XmlLoadOptions = LoadOptions.SetLineInfo; // LoadOptions.SetBaseUri | LoadOptions.None;
 
@@ -47,7 +46,7 @@ public class TestsFixture : IDisposable
                         exceptions);
     }
 
-    public static async Task<(XDocument?, string)> GetXmlDocumentAsync(
+    public async Task<(XDocument?, string)> GetXmlDocumentAsync(
         string testFileLine,
         string pathName,
         string expectedOrInput,
@@ -89,7 +88,7 @@ public class TestsFixture : IDisposable
         return (null, "");
     }
 
-    public static void TestExpressionToXml(
+    public void TestExpressionToXml(
         string testFileLine,
         Expression expression,
         XDocument? expectedDoc,
@@ -98,7 +97,7 @@ public class TestsFixture : IDisposable
         ITestOutputHelper? output = null)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionTransform(Options);
+        var transform = new ExpressionXmlTransform(Options);
         var actualDoc = transform.Transform(expression);
         using var streamActual = new MemoryStream();
         transform.Serialize(expression, streamActual);
@@ -108,7 +107,7 @@ public class TestsFixture : IDisposable
         AssertXmlAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
-    public static async Task TestExpressionToXmlAsync(
+    public async Task TestExpressionToXmlAsync(
         string testFileLine,
         Expression expression,
         XDocument? expectedDoc,
@@ -118,7 +117,7 @@ public class TestsFixture : IDisposable
         CancellationToken cancellationToken = default)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionTransform(Options);
+        var transform = new ExpressionXmlTransform(Options);
         var actualDoc = transform.Transform(expression);
         using var streamActual = new MemoryStream();
         await transform.SerializeAsync(expression, streamActual, cancellationToken);
@@ -128,19 +127,19 @@ public class TestsFixture : IDisposable
         AssertXmlAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
-    public static void TestXmlToExpression(
+    public void TestXmlToExpression(
         string testFileLine,
         XDocument inputDoc,
         Expression expectedExpression)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionTransform(Options);
+        var transform = new ExpressionXmlTransform(Options);
         var actualExpression = transform.Transform(inputDoc);
 
         expectedExpression.DeepEquals(actualExpression, out var difference).Should().BeTrue($"the expression at {testFileLine} should be \"DeepEqual\" to `{expectedExpression}`\n({difference})");
     }
 
-    static void AssertXmlAsExpectedOrSave(
+    void AssertXmlAsExpectedOrSave(
         string testFileLine,
         XDocument? expectedDoc,
         string expectedStr,

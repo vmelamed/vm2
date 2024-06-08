@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 /// <summary>
-/// Class XmlTransformVisitor.
+/// Class ToJsonTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
 /// </summary>
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
@@ -59,7 +59,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                      base.VisitConstant,
                      (n, x) =>
                      {
-                         options.AddComment(x, n);
+                         // options.AddComment(x, n);
                          x.Add(
                             options.TypeComment(n.Type),
                             _dataTransform.TransformNode(n));

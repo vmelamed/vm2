@@ -9,16 +9,15 @@ using vm2.ExpressionSerialization.JsonTransform;
 public class TestsFixture : IDisposable
 {
     internal const string TestFilesPath = "../../../TestData";
-
     internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";
 
-    internal static FileStreamOptions FileStreamOptions => new() {
+    internal FileStreamOptions FileStreamOptions { get; } = new() {
         Mode = FileMode.Open,
         Access = FileAccess.Read,
         Share = FileShare.Read,
     };
 
-    internal static JsonOptions Options => new() {
+    internal JsonOptions Options { get; } = new(Path.Combine(SchemasPath, "Linq.Expressions.Serialization.json")) {
         Indent = true,
         IndentSize = 4,
         AddComments = true,
@@ -26,17 +25,11 @@ public class TestsFixture : IDisposable
         ValidateInputDocuments = ValidateDocuments.Always,
     };
 
-    internal const LoadOptions JsonLoadOptions = LoadOptions.SetLineInfo; // LoadOptions.SetBaseUri | LoadOptions.None;
-
-    public TestsFixture()
-        => Options.LoadSchema(Path.Combine(SchemasPath, "delinea.deployment.schema.json"/*"Linq.Expressions.Serialization.json"*/));
-
     public void Dispose() => GC.SuppressFinalize(this);
 
-    public static void Validate(JsonNode doc)
-        => Options.Validate(doc);
+    public void Validate(JsonNode doc) => Options.Validate(doc);
 
-    public static async Task<(JsonNode?, string)> GetJsonDocumentAsync(
+    public async Task<(JsonNode?, string)> GetJsonDocumentAsync(
         string testFileLine,
         string pathName,
         string expectedOrInput,
@@ -82,7 +75,7 @@ public class TestsFixture : IDisposable
         return (null, "");
     }
 
-    public static void TestExpressionToJson(
+    public void TestExpressionToJson(
         string testFileLine,
         Expression expression,
         JsonNode? expectedDoc,
@@ -91,7 +84,7 @@ public class TestsFixture : IDisposable
         ITestOutputHelper? output = null)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionTransform(Options);
+        var transform = new ExpressionJsonTransform(Options);
 
         var actualDoc = transform.Transform(expression);
         using var streamActual = new MemoryStream();
@@ -102,7 +95,7 @@ public class TestsFixture : IDisposable
         AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
-    public static async Task TestExpressionToJsonAsync(
+    public async Task TestExpressionToJsonAsync(
         string testFileLine,
         Expression expression,
         JsonNode? expectedDoc,
@@ -112,7 +105,7 @@ public class TestsFixture : IDisposable
         CancellationToken cancellationToken = default)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionTransform(Options);
+        var transform = new ExpressionJsonTransform(Options);
 
         var actualDoc = transform.Transform(expression);
         using var streamActual = new MemoryStream();
@@ -123,7 +116,7 @@ public class TestsFixture : IDisposable
         AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
     }
 
-    public static void TestJsonToExpression(
+    public void TestJsonToExpression(
         string testFileLine,
         JsonNode? inputDoc,
         Expression expectedExpression)
@@ -133,7 +126,7 @@ public class TestsFixture : IDisposable
         inputDoc.GetValueKind().Should().Be(JsonValueKind.Object, "The input JSON document (JsonNode?) is not JsonObject.");
 
         // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionTransform(Options);
+        var transform = new ExpressionJsonTransform(Options);
         var actualExpression = transform.Transform(inputDoc.AsObject());
 
         expectedExpression
@@ -142,7 +135,7 @@ public class TestsFixture : IDisposable
             .BeTrue($"the expression at {testFileLine} should be \"DeepEqual\" to `{expectedExpression}`\n({difference})");
     }
 
-    static void AssertJsonAsExpectedOrSave(
+    void AssertJsonAsExpectedOrSave(
         string testFileLine,
         JsonNode? expectedDoc,
         string expectedStr,

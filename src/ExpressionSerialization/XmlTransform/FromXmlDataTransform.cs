@@ -1,8 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using System;
-using System.Collections.Generic;
-
 static partial class FromXmlDataTransform
 {
     delegate object? Transformation(XElement element, ref Type type);

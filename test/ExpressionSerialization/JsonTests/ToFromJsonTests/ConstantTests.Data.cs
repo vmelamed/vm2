@@ -12,7 +12,13 @@ public partial class ConstantTests
 {
     public static readonly TheoryData<string, string, string> ConstantsData = new ()
     {
+        { TestLine(), "false", "BoolFalse.json" },
+        { TestLine(), "true",  "BoolTrue.json" },
         { TestLine(), "(byte)5",  "Byte.json" },
+        { TestLine(), "'V'",  "Char.json" },
+        { TestLine(), "Math.PI",  "DoublePI.json" },
+        { TestLine(), "Math.E",  "DoubleE.json" },
+
         { TestLine(), "(Half)3.14", "Half.json" },
         { TestLine(), "(int?)5", "NullableInt.json" },
         { TestLine(), "(int?)null", "NullNullableInt.json" },
@@ -58,7 +64,6 @@ public partial class ConstantTests
         { TestLine(), "EnumFlagsTest.One | EnumFlagsTest.Three",  "EnumFlags.json" },
         { TestLine(), "EnumTest.Three",  "Enum.json" },
         { TestLine(), "EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }", "ArrayOfNullableEnums.json" },
-        { TestLine(), "false", "False.json" },
         { TestLine(), "Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }", "ByteArrayFrozen.json" },
         { TestLine(), "Frozen decimal[]{ 1, 2, 3, 4 }", "DecimalFrozenSet.json" },
         { TestLine(), "Frozen Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\", [3] = null, [4] = null }", "IntNullableStringDictionary.json" },
@@ -109,15 +114,19 @@ public partial class ConstantTests
         { TestLine(), "StructSerializable1?[]", "ArrayOfNullableStructSerializable1.json" },
         { TestLine(), "StructSerializable1[]", "ArrayOfStructSerializable1.json" },
         { TestLine(), "TimeSpan(3, 4, 15, 32, 123)", "TimeSpan.json" },
-        { TestLine(), "true",  "Bool.json" },
         { TestLine(), "Tuple<int, string>(1, \"one\")", "ClassTupleIntString.json" },
         { TestLine(), "Uri(\"http://www.delinea.com\")", "Uri.json" },
-        { TestLine(), "'V'",  "Char.json" },
     };
 
     static Dictionary<string, ConstantExpression> _substitutes = new()
     {
+        ["false"]                                                                                           = Expression.Constant(false),
+        ["true"]                                                                                            = Expression.Constant(true),
         ["(byte)5"]                                                                                         = Expression.Constant((byte)5),
+        ["'V'"]                                                                                             = Expression.Constant('V'),
+        ["Math.PI"]                                                                                         = Expression.Constant(Math.PI),
+        ["Math.E"]                                                                                          = Expression.Constant(Math.E),
+
         ["(Half)3.14"]                                                                                      = Expression.Constant((Half)3.14),
         ["(int?)5"]                                                                                         = Expression.Constant(5, typeof(int?)),
         ["(int?)null"]                                                                                      = Expression.Constant(null, typeof(int?)),
@@ -188,7 +197,6 @@ public partial class ConstantTests
         ["EnumFlagsTest.One | EnumFlagsTest.Three"]                                                         = Expression.Constant(EnumFlagsTest.One | EnumFlagsTest.Three),
         ["EnumTest.Three"]                                                                                  = Expression.Constant(EnumTest.Three),
         ["EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }"]                                           = Expression.Constant(new EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }),
-        ["false"]                                                                                           = Expression.Constant(false),
         ["Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                                  = Expression.Constant(new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }.ToFrozenSet()),
         ["Frozen decimal[]{ 1, 2, 3, 4 }"]                                                                  = Expression.Constant(new decimal[]{ 1, 2, 3, 4 }.ToFrozenSet()),
         ["Frozen Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\", [3] = null, [4] = null }"]         = Expression.Constant(new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }.ToFrozenDictionary()),
@@ -333,9 +341,7 @@ public partial class ConstantTests
                                                                                                                                         },
                                                                                                                                     }),
         ["TimeSpan(3, 4, 15, 32, 123)"]                                                                     = Expression.Constant(new TimeSpan(3, 4, 15, 32, 123)),
-        ["true"]                                                                                            = Expression.Constant(true),
         ["Tuple<int, string>(1, \"one\")"]                                                                  = Expression.Constant(new Tuple<int, string>(1, "one")),
         ["Uri(\"http://www.delinea.com\")"]                                                                 = Expression.Constant(new Uri("http://www.delinea.com")),
-        ["'V'"]                                                                                             = Expression.Constant('V'),
     };
 }

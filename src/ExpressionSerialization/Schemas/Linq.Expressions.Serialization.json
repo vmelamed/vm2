@@ -19,26 +19,22 @@
         "expression"
     ],
     "additionalProperties": {
-        "$schema": {
-            "type": "string"
-        }
+        "type": "string"
     },
     "$defs": {
         "booleanConstant": {
             "title": "Boolean constants",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "boolean"
-                },
-                "value": {
+                "boolean": {
                     "type": "boolean"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "boolean"
             ]
         },
         "byteConstant": {
@@ -46,103 +42,81 @@
             "description": "Unsigned 8-bit integer value",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "byte"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 255
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^(0*25[0-5])|(0*2[0-4][0-9])|(0*[0-1][0-9]{2})|(0*[0-9]{1,2})$"
-                        }
-                    ]
+                "byte": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 255
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "byte"
             ]
         },
         "charConstant": {
             "title": "Unicode character value",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "char"
-                },
-                "value": {
+                "char": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 1
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "char"
             ]
         },
         "doubleConstant": {
             "title": "Double precision, floating point numerical value",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "double"
-                },
-                "value": {
-                    "type": "number",
-                    "minimum": -1.7976931348623157E+308,
-                    "maximum": 1.7976931348623157E+308
+                "double": {
+                    "type": "number"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "double"
             ]
         },
         "floatConstant": {
             "title": "Floating point numerical value.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "float"
-                },
-                "value": {
-                    "type": "number",
-                    "minimum": -3.4028235E+38,
-                    "maximum": 3.4028235E+38
+                "float": {
+                    "type": "number"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "float"
             ]
         },
         "halfConstant": {
             "title": "Half precision floating point numerical value.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "half"
-                },
-                "value": {
+                "half": {
                     "type": "number",
                     "minimum": -65500,
                     "maximum": 65500
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "half"
             ]
         },
         "intConstant": {
@@ -150,27 +124,17 @@
             "$comment": "Represents 32-bit, signed, integer, numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "int"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "integer",
-                            "minimum": -2147483648,
-                            "maximum": 2147483647
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^(-0*2147483648)|([-+]?0*214748364[0-7])|([-+]?0*21474836[0-3][0-9])|([-+]?0*2147483[0-5][0-9]{2})|([-+]?0*214748[0-2][0-9]{3})|([-+]?0*21474[0-7][0-9]{4})|([-+]?0*2147[0-3][0-9]{5})|([-+]?0*214[0-6][0-9]{6})|([-+]?0*21[0-3][0-9]{7})|([-+]?0*20[0-9]{8})|([-+]?0*1[0-9]{9})|([-+]?0*[0-9]{1,9})$"
-                        }
-                    ]
+                "int": {
+                    "type": "integer",
+                    "minimum": -2147483648,
+                    "maximum": 2147483647
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "int"
             ]
         },
         "intPtrConstant": {
@@ -178,27 +142,17 @@
             "$comment": "Represents 32-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "intPtr"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "integer",
-                            "minimum": -2147483648,
-                            "maximum": 2147483647
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^(-0*2147483648)|([-+]?0*214748364[0-7])|([-+]?0*21474836[0-3][0-9])|([-+]?0*2147483[0-5][0-9]{2})|([-+]?0*214748[0-2][0-9]{3})|([-+]?0*21474[0-7][0-9]{4})|([-+]?0*2147[0-3][0-9]{5})|([-+]?0*214[0-6][0-9]{6})|([-+]?0*21[0-3][0-9]{7})|([-+]?0*20[0-9]{8})|([-+]?0*1[0-9]{9})|([-+]?0*[0-9]{1,9})$"
-                        }
-                    ]
+                "intPtr": {
+                    "type": "integer",
+                    "minimum": -2147483648,
+                    "maximum": 2147483647
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "intPtr"
             ]
         },
         "longConstant": {
@@ -206,15 +160,12 @@
             "description": "Represents 64-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. The larger/smaller values of this type definitely may suffer from loss of fidelity.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "long"
-                },
-                "value": {
+                "long": {
                     "oneOf": [
                         {
                             "type": "integer",
-                            "minimum": -9223372036854775808,
-                            "maximum": 9223372036854775807
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
                         },
                         {
                             "type": "string",
@@ -223,38 +174,29 @@
                     ]
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "long"
             ]
         },
         "shortConstant": {
             "title": "16-bit, signed, integer, numeric value",
             "description": "Represents 16-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
-            "type":  "object",
+            "type": "object",
             "properties": {
-                "type": {
-                    "const": "short"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "integer",
-                            "minimum": -32768,
-                            "maximum": 32767
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^(-0*32768)|([-+]?0*3276[0-7])|([-+]?0*327[0-5][0-9])|([-+]?0*32[0-6][0-9]{2})|([-+]?0*3[0-1][0-9]{3})|([-+]?0*[0-2][0-9]{4})|([-+]?0*[0-9]{1,4})$"
-                        }
-                    ]
+                "short": {
+                    "type": "integer",
+                    "minimum": -32768,
+                    "maximum": 32767
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "short"
             ]
         },
         "signedByteConstant": {
@@ -262,27 +204,17 @@
             "description": "Represents an 8-bit, unsigned, integer numeric values.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "signedByte"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "integer",
-                            "minimum": -128,
-                            "maximum": 127
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^(-0*128)|([-+]?0*12[0-7])|([-+]?0*1[01][0-9])|([-+]?0*[0-9]{1,2})$"
-                        }
-                    ]
+                "signedByte": {
+                    "type": "integer",
+                    "minimum": -128,
+                    "maximum": 127
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "signedByte"
             ]
         },
         "unsignedIntConstant": {
@@ -290,27 +222,17 @@
             "$comment": "Represents 32-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "unsignedInt"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 4294967295
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^(0*429496729[0-5])|(0*42949672[0-8][0-9])|(0*4294967[0-1][0-9]{2})|(0*429496[0-6][0-9]{3})|(0*42949[0-5][0-9]{4})|(0*4294[0-8][0-9]{5})|(0*429[0-3][0-9]{6})|(0*42[0-8][0-9]{7})|(0*4[0-1][0-9]{8})|(0*[0-3][0-9]{9})|(0*[0-9]{1,9})$"
-                        }
-                    ]
+                "unsignedInt": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4294967295
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "unsignedInt"
             ]
         },
         "unsignedIntPtrConstant": {
@@ -318,27 +240,17 @@
             "$comment": "Represents 32-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "unsignedIntPtr"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 4294967295
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^(0*429496729[0-5])|(0*42949672[0-8][0-9])|(0*4294967[0-1][0-9]{2})|(0*429496[0-6][0-9]{3})|(0*42949[0-5][0-9]{4})|(0*4294[0-8][0-9]{5})|(0*429[0-3][0-9]{6})|(0*42[0-8][0-9]{7})|(0*4[0-1][0-9]{8})|(0*[0-3][0-9]{9})|(0*[0-9]{1,9})$"
-                        }
-                    ]
+                "unsignedIntPtr": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4294967295
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "unsignedIntPtr"
             ]
         },
         "unsignedLongConstant": {
@@ -346,15 +258,12 @@
             "description": "Represents 64-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "unsignedLong"
-                },
-                "value": {
+                "unsignedLong": {
                     "oneOf": [
                         {
                             "type": "integer",
                             "minimum": 0,
-                            "maximum": 18446744073709551615
+                            "maximum": 9007199254740991
                         },
                         {
                             "type": "string",
@@ -363,10 +272,11 @@
                     ]
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "unsignedLong"
             ]
         },
         "unsignedShortConstant": {
@@ -374,27 +284,17 @@
             "description": "Represents 16-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "unsignedShort"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 65535
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^(0*6553[0-5])|(0*655[0-2][0-9])|(0*65[0-4][0-9]{2})|(0*6[0-4][0-9]{3})|(0*[0-5][0-9]{4})|(0*[0-9]{1,4})$"
-                        }
-                    ]
+                "unsignedShort": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "unsignedShort"
             ]
         },
         "dateTimeConstant": {
@@ -402,19 +302,17 @@
             "description": "Represents points in time (date and time) as strings following RFC3339 and ISO 8601",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "dateTime"
-                },
-                "value": {
+                "dateTime": {
                     "type": "string",
                     "format": "date-time",
                     "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(\\.[0-9]+)?(Z|([-+]([01][0-9]|2[0-3])(:?[0-5][0-9])?))$"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "dateTime"
             ]
         },
         "dateTimeOffsetConstant": {
@@ -422,36 +320,33 @@
             "description": "Represents points in time (date and time) as strings following RFC3339 and ISO 8601",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "dateTimeOffset"
-                },
-                "value": {
+                "dateTimeOffset": {
                     "type": "string",
                     "format": "date-time",
                     "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(\\.[0-9]+)?(Z|([-+]([01][0-9]|2[0-3])(:?[0-5][0-9])?))$"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "dateTimeOffset"
             ]
         },
         "dbNullConstant": {
             "title": "DBNull type",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "dbNull"
-                },
-                "value": {
+                "dbNull": {
                     "type": "null",
                     "default": null
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type"
+                "dbNull"
             ]
         },
         "decimalConstant": {
@@ -459,27 +354,16 @@
             "description": "The values can be represented as both numeric and string JSON values.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "decimal"
-                },
-                "value": {
-                    "oneOf": [
-                        {
-                            "type": "number",
-                            "minimum": -79228162514264337593543950335,
-                            "maximum": 79228162514264337593543950335
-                        },
-                        {
-                            "type": "string",
-                            "pattern": "^[-+]?([0-9]+(\\.[0-9]*))|(([0-9]*\\.)?([0-9])+)$"
-                        }
-                    ]
+                "decimal": {
+                    "type": "string",
+                    "pattern": "^[-+]?([0-9]+(\\.[0-9]*))|(([0-9]*\\.)?([0-9])+)$"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "decimal"
             ]
         },
         "durationConstant": {
@@ -487,48 +371,41 @@
             "description": "Represents time duration as strings following ISO 8601.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "duration"
-                },
-                "value": {
+                "duration": {
                     "type": "string",
                     "format": "duration",
                     "pattern": "^P((([0-9]+D)|([0-9]+M)(([0-9]+D))?|([0-9]+Y)(([0-9]+M)(([0-9]+D))?)?)(T((([0-9]+H)(([0-9]+M)(([0-9]+S))?)?|([0-9]+M)(([0-9]+S))?|([0-9]+S))))?|T((([0-9]+H)(([0-9]+M)(([0-9]+S))?)?|([0-9]+M)(([0-9]+S))?|([0-9]+S)))|([0-9]+W))$"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "duration"
             ]
         },
         "guidConstant": {
             "title": "UUID (a.k.a. GUID) values",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "guid"
-                },
-                "value": {
+                "guid": {
                     "type": "string",
                     "format": "uuid",
                     "pattern": "^(?:(?:[\\(\\{]?)[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}(?:[\\}\\)]?))|(?:[0-9A-Fa-f]{32})$"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "guid"
             ]
         },
         "stringConstant": {
             "title": "Unicode string values",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "string"
-                },
-                "value": {
+                "string": {
                     "oneOf": [
                         {
                             "type": "string"
@@ -540,20 +417,18 @@
                     "default": null
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "string"
             ]
         },
         "uriConstant": {
             "title": "URI and IRI values",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "uri"
-                },
-                "value": {
+                "uri": {
                     "oneOf": [
                         {
                             "type": "string",
@@ -566,27 +441,18 @@
                     "default": null
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "uri"
             ]
         },
         "objectConstant": {
             "title": "JSON serialized object",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "object"
-                },
-                "objectType": {
-                    "type": "string"
-                },
-                "actualType": {
-                    "$comment": "The actual type of the object can be different from the declared type if the type of the object is derived from the declared type.",
-                    "type": "string"
-                },
-                "value": {
+                "object": {
                     "oneOf": [
                         {
                             "type": "object"
@@ -596,11 +462,20 @@
                             "type": "null"
                         }
                     ]
+                },
+                "objectType": {
+                    "type": "string"
+                },
+                "actualType": {
+                    "$comment": "The actual type of the object can be different from the declared type if the type of the object is derived from the declared type.",
+                    "type": "string"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
+                "object",
                 "objectType"
             ]
         },
@@ -608,13 +483,7 @@
             "title": "JSON serialized anonymous object",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "anonymous"
-                },
-                "objectType": {
-                    "type": "string"
-                },
-                "value": {
+                "anonymous": {
                     "oneOf": [
                         {
                             "type": "object"
@@ -624,11 +493,16 @@
                         }
                     ],
                     "default": null
+                },
+                "objectType": {
+                    "type": "string"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
+                "anonymous",
                 "objectType"
             ]
         },
@@ -636,13 +510,10 @@
             "title": "Enumeration type",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "enum"
-                },
-                "enumType": {
+                "enum": {
                     "type": "string"
                 },
-                "value": {
+                "enumType": {
                     "type": "string"
                 },
                 "baseType": {
@@ -652,11 +523,12 @@
                     "type": "integer"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "enumType",
-                "value"
+                "enum",
+                "enumType"
             ]
         },
         "byteSequenceConstant": {
@@ -664,13 +536,7 @@
             "description": "This type represents a sequence of bytes Base64 encoded. The value can be a single string or an array of strings. It can be also null.",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "byteSequence"
-                },
-                "objectType": {
-                    "type": "string"
-                },
-                "value": {
+                "byteSequence": {
                     "oneOf": [
                         {
                             "type": "string",
@@ -689,25 +555,24 @@
                             "type": "null"
                         }
                     ]
+                },
+                "objectType": {
+                    "type": "string"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "byteSequence",
+                "objectType"
             ]
         },
         "nullableConstant": {
             "title": "Represents Nullable<> .NET types",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "nullable"
-                },
-                "underlyingType": {
-                    "type": "string"
-                },
-                "value": {
+                "nullable": {
                     "oneOf": [
                         {
                             "$ref": "#/$defs/booleanConstant"
@@ -777,31 +642,23 @@
                             "$ref": "#/$defs/objectConstant"
                         }
                     ]
+                },
+                "underlyingType": {
+                    "type": "string"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "value"
+                "nullable"
             ]
         },
         "collectionConstant": {
             "title": "Represents collection (array, list, set, etc.) of values",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "collection"
-                },
-                "objectType": {
-                    "type": "string"
-                },
-                "elementType": {
-                    "type": "string"
-                },
-                "length": {
-                    "type": "integer"
-                },
-                "value": {
+                "collection": {
                     "oneOf": [
                         {
                             "type": "array",
@@ -813,27 +670,31 @@
                             "type": "null"
                         }
                     ]
+                },
+                "objectType": {
+                    "type": "string"
+                },
+                "elementType": {
+                    "type": "string"
+                },
+                "length": {
+                    "type": "integer"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
+                "collection",
                 "objectType",
-                "elementType",
-                "value"
+                "elementType"
             ]
         },
         "dictionaryConstant": {
             "title": "Represents a dictionary (hashtable, dictionary, etc.) of key - value pairs",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "dictionary"
-                },
-                "objectType": {
-                    "type": "string"
-                },
-                "value": {
+                "dictionary": {
                     "oneOf": [
                         {
                             "type": "array",
@@ -847,7 +708,9 @@
                                         "$ref": "#/$defs/constantValue"
                                     }
                                 },
-                                "additionalProperties": false,
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
                                 "required": [
                                     "key",
                                     "value"
@@ -858,26 +721,24 @@
                             "type": "null"
                         }
                     ]
+                },
+                "objectType": {
+                    "type": "string"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "objectType",
-                "value"
+                "dictionary",
+                "objectType"
             ]
         },
         "tupleConstant": {
             "title": "Represents a .NET tuple (Tuple<> or ValueTuple<>)",
             "type": "object",
             "properties": {
-                "type": {
-                    "const": "tuple"
-                },
-                "objectType": {
-                    "type": "string"
-                },
-                "value": {
+                "tuple": {
                     "oneOf": [
                         {
                             "type": "array",
@@ -892,7 +753,9 @@
                                         "$ref": "#/$defs/constantValue"
                                     }
                                 },
-                                "additionalProperties": false,
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
                                 "required": [
                                     "name",
                                     "value"
@@ -904,13 +767,17 @@
                             "type": "null"
                         }
                     ]
+                },
+                "objectType": {
+                    "type": "string"
                 }
             },
-            "additionalProperties": false,
+            "additionalProperties": {
+                "type": "string"
+            },
             "required": [
-                "type",
-                "objectType",
-                "value"
+                "tuple",
+                "objectType"
             ]
         },
         "constantValue": {

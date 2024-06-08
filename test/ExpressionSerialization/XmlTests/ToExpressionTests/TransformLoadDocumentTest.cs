@@ -27,7 +27,7 @@ public class TransformLoadDocumentTest()
             XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Linq.Expressions.Serialization.xsd"));
         }
 
-        var transform = new ExpressionTransform(options);
+        var transform = new ExpressionXmlTransform(options);
         using var stream = new FileStream(Path.Combine(TestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
         var deserialize = () => transform.Deserialize(stream);
 
@@ -71,7 +71,7 @@ public class TransformLoadDocumentTest()
             XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Linq.Expressions.Serialization.xsd"));
         }
 
-        var transform = new ExpressionTransform(options);
+        var transform = new ExpressionXmlTransform(options);
         using var stream = new FileStream(Path.Combine(TestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
         var deserialize = async () => await transform.DeserializeAsync(stream);
 

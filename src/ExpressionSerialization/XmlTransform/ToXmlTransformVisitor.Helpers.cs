@@ -3,11 +3,6 @@
 using System.Reflection;
 using System.Xml.Linq;
 
-/// <summary>
-/// Class XmlTransformVisitor.
-/// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
-/// </summary>
-/// <seealso cref="ExpressionTransformVisitor{XNode}" />
 public partial class ToXmlTransformVisitor
 {
     /// <summary>

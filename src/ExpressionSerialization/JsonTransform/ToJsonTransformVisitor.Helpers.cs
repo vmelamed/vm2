@@ -13,7 +13,7 @@ public partial class ToJsonTransformVisitor
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <param name="numberOfExpressions">The number of expressions.</param>
-    /// <returns>System.Collections.Generic.IEnumerable&lt;System.Xml.Linq.JElement&gt;.</returns>
+    /// <returns>System.Collections.Generic.IEnumerable&lt;JElement&gt;.</returns>
     IEnumerable<JElement> PopElements(int numberOfExpressions)
     {
         // we need this intermediary stack to return the elements in FIFO order
@@ -176,7 +176,7 @@ public partial class ToJsonTransformVisitor
     }
 
     /// <summary>
-    /// Creates a sequence of XML elements for each of the <paramref name="parameters"/>.
+    /// Creates a sequence of JSON elements for each of the <paramref name="parameters"/>.
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <returns>A sequence of elements.</returns>

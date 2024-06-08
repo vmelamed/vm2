@@ -14,10 +14,10 @@ public partial class StatementTests(TestsFixture fixture, ITestOutputHelper outp
         var pathName = XmlTestFilesPath + fileName;
         var expression = Expression.Default(type);
         var testFileLine = TestLine();
-        var (expectedDoc, expectedStr) = await TestsFixture.GetXmlDocumentAsync(testFileLine, pathName, "EXPECTED", Out);
+        var (expectedDoc, expectedStr) = await _fixture.GetXmlDocumentAsync(testFileLine, pathName, "EXPECTED", Out);
 
-        TestsFixture.TestExpressionToXml(testFileLine, expression, expectedDoc, expectedStr, pathName, Out);
-        await TestsFixture.TestExpressionToXmlAsync(testFileLine, expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+        _fixture.TestExpressionToXml(testFileLine, expression, expectedDoc, expectedStr, pathName, Out);
+        await _fixture.TestExpressionToXmlAsync(testFileLine, expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
     }
 
     [Theory]

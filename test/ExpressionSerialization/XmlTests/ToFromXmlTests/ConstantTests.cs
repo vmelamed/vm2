@@ -20,13 +20,13 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
     {
         var pathName = Path.Combine(XmlTestFilesPath, "ClassSerializable1.xml");
         var expression = Expression.Constant(new ClassNonSerializable(1, "One"));
-        var (expectedDoc, expectedStr) = await TestsFixture.GetXmlDocumentAsync(TestLine(), pathName, "EXPECTED", Out);
+        var (expectedDoc, expectedStr) = await _fixture.GetXmlDocumentAsync(TestLine(), pathName, "EXPECTED", Out);
 
-        var testCall = () => TestsFixture.TestExpressionToXml(TestLine(), expression, expectedDoc, expectedStr, pathName, Out);
+        var testCall = () => _fixture.TestExpressionToXml(TestLine(), expression, expectedDoc, expectedStr, pathName, Out);
 
         testCall.Should().Throw<SerializationException>();
 
-        var testAsyncCall = async () => await TestsFixture.TestExpressionToXmlAsync(TestLine(), expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+        var testAsyncCall = async () => await _fixture.TestExpressionToXmlAsync(TestLine(), expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
 
         await testAsyncCall.Should().ThrowAsync<SerializationException>();
     }

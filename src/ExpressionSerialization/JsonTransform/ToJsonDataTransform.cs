@@ -9,36 +9,60 @@ using TransformConstant = Func<object?, Type, JElement>;
 /// </summary>
 class ToJsonDataTransform(JsonOptions options)
 {
-    static T? Typed<T>(object? value, bool allowNull = false) => value is T || (value is null && allowNull)
-                                            ? (T?)value
-                                            : throw new InternalTransformErrorException($"Expected {typeof(T).Name} value but got {(value is null ? "null" : value.GetType().Name)}");
+    static T Is<T>(object? v) where T : struct
+        => v is T tv ? tv : throw new InternalTransformErrorException($"Expected {typeof(T).Name} v but got {(v is null ? "null" : v.GetType().Name)}");
 
-    #region constant ToXml transforms
+    static T? Is<T>(object? v, bool nullable = true) where T : class
+        => v is T || (nullable && v is null) ? (T?)v : throw new InternalTransformErrorException($"Expected {typeof(T).Name} v but got {(v is null ? "null" : v.GetType().Name)}");
+
+    /// <summary>
+    /// The maximum long number that can be expressed as &quot;JSON integer&quot; without loosing fidelity.
+    /// </summary>
+    /// <remarks>
+    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
+    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
+    /// between [-(2^53-1), 2^53 - 1].
+    /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;9007199254740992&quot;</c>.
+    /// </remarks>
+    public const long MaxJsonInteger = 9007199254740991;
+
+    /// <summary>
+    /// The minimum long number that can be expressed as &quot;JSON integer&quot; without loosing fidelity.
+    /// </summary>
+    /// <remarks>
+    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
+    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
+    /// from the range [-(2^53-1), 2^53 - 1].
+    /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;9007199254740992&quot;</c>.
+    /// </remarks>
+    public const long MinJsonInteger = -MaxJsonInteger;
+
+    #region constant ToJson transforms
     static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
     {
-        { typeof(bool),             (v, t) => new JElement(Vocabulary.Bool,           JsonValue.Create(Typed<bool>(v))) },
-        { typeof(byte),             (v, t) => new JElement(Vocabulary.Byte,           JsonValue.Create(Typed<byte>(v))) },
-        { typeof(char),             (v, t) => new JElement(Vocabulary.Char,           JsonValue.Create(Typed<char>(v))) },
-        { typeof(double),           (v, t) => new JElement(Vocabulary.Double,         JsonValue.Create(Typed<double>(v))) },
-        { typeof(float),            (v, t) => new JElement(Vocabulary.Float,          JsonValue.Create(Typed<float>(v))) },
-        { typeof(int),              (v, t) => new JElement(Vocabulary.Int,            JsonValue.Create(Typed<int>(v))) },
-        { typeof(IntPtr),           (v, t) => new JElement(Vocabulary.IntPtr,         JsonValue.Create(Typed<IntPtr>(v))) },
-        { typeof(long),             (v, t) => new JElement(Vocabulary.Long,           JsonValue.Create(Typed<long>(v))) },
-        { typeof(sbyte),            (v, t) => new JElement(Vocabulary.SByte,          JsonValue.Create(Typed<sbyte>(v))) },
-        { typeof(short),            (v, t) => new JElement(Vocabulary.Short,          JsonValue.Create(Typed<short>(v))) },
-        { typeof(uint),             (v, t) => new JElement(Vocabulary.UInt,           JsonValue.Create(Typed<uint>(v))) },
-        { typeof(UIntPtr),          (v, t) => new JElement(Vocabulary.UIntPtr,        JsonValue.Create(Typed<UIntPtr>(v))) },
-        { typeof(ulong),            (v, t) => new JElement(Vocabulary.ULong,          JsonValue.Create(Typed<ulong>(v))) },
-        { typeof(ushort),           (v, t) => new JElement(Vocabulary.UShort,         JsonValue.Create(Typed<ushort>(v))) },
-        { typeof(DateTime),         (v, t) => new JElement(Vocabulary.DateTime,       JsonValue.Create(Typed<DateTime>(v))) },
-        { typeof(DateTimeOffset),   (v, t) => new JElement(Vocabulary.DateTimeOffset, JsonValue.Create(Typed<DateTimeOffset>(v))) },
-        { typeof(DBNull),           (v, t) => new JElement(Vocabulary.DBNull)         },
-        { typeof(decimal),          (v, t) => new JElement(Vocabulary.Decimal,        JsonValue.Create(Typed<decimal>(v))) },
-        { typeof(TimeSpan),         (v, t) => new JElement(Vocabulary.TimeSpan,       JsonValue.Create(Typed<TimeSpan>(v))) },  // TODO: ISO 8601 doesn't look good
-        { typeof(Guid),             (v, t) => new JElement(Vocabulary.Guid,           JsonValue.Create(Typed<Guid>(v))) },
-        { typeof(Half),             (v, t) => new JElement(Vocabulary.Half,           JsonValue.Create(Typed<Half>(v))) },
-        { typeof(string),           (v, t) => new JElement(Vocabulary.String,         JsonValue.Create(Typed<string>(v))) },
-        { typeof(Uri),              (v, t) => new JElement(Vocabulary.Uri,            JsonValue.Create(Typed<Uri?>(v))) },
+        { typeof(bool),             (v, _) => new JElement(Vocabulary.Bool,           JsonValue.Create(Is<bool>(v))) },
+        { typeof(byte),             (v, _) => new JElement(Vocabulary.Byte,           JsonValue.Create(Is<byte>(v))) },
+        { typeof(char),             (v, _) => new JElement(Vocabulary.Char,           JsonValue.Create(Is<char>(v))) },
+        { typeof(double),           (v, _) => new JElement(Vocabulary.Double,         JsonValue.Create(Is<double>(v))) },
+        { typeof(float),            (v, _) => new JElement(Vocabulary.Float,          JsonValue.Create(Is<float>(v))) },
+        { typeof(int),              (v, _) => new JElement(Vocabulary.Int,            JsonValue.Create(Is<int>(v))) },
+        { typeof(IntPtr),           (v, _) => new JElement(Vocabulary.IntPtr,         JsonValue.Create(Is<IntPtr>(v))) },
+        { typeof(long),             (v, _) => new JElement(Vocabulary.Long,           Is<long>(v) is <= MaxJsonInteger and >= MinJsonInteger ? JsonValue.Create(v) : JsonValue.Create(v?.ToString()) ) },
+        { typeof(sbyte),            (v, _) => new JElement(Vocabulary.SByte,          JsonValue.Create(Is<sbyte>(v))) },
+        { typeof(short),            (v, _) => new JElement(Vocabulary.Short,          JsonValue.Create(Is<short>(v))) },
+        { typeof(uint),             (v, _) => new JElement(Vocabulary.UInt,           JsonValue.Create(Is<uint>(v))) },
+        { typeof(UIntPtr),          (v, _) => new JElement(Vocabulary.UIntPtr,        JsonValue.Create(Is<UIntPtr>(v))) },
+        { typeof(ulong),            (v, _) => new JElement(Vocabulary.ULong,          Is<ulong>(v) is <= MaxJsonInteger ? JsonValue.Create(v) : JsonValue.Create(v?.ToString()) ) },
+        { typeof(ushort),           (v, _) => new JElement(Vocabulary.UShort,         JsonValue.Create(Is<ushort>(v))) },
+        { typeof(DateTime),         (v, _) => new JElement(Vocabulary.DateTime,       JsonValue.Create(Is<DateTime>(v))) },
+        { typeof(DateTimeOffset),   (v, _) => new JElement(Vocabulary.DateTimeOffset, JsonValue.Create(Is<DateTimeOffset>(v))) },
+        { typeof(DBNull),           (v, _) => new JElement(Vocabulary.DBNull)         },
+        { typeof(decimal),          (v, _) => new JElement(Vocabulary.Decimal,        JsonValue.Create(Is<decimal>(v).ToString())) },
+        { typeof(TimeSpan),         (v, _) => new JElement(Vocabulary.TimeSpan,       JsonValue.Create(Is<TimeSpan>(v))) },  // TODO: ISO 8601 doesn't look good
+        { typeof(Guid),             (v, _) => new JElement(Vocabulary.Guid,           JsonValue.Create(Is<Guid>(v))) },
+        { typeof(Half),             (v, _) => new JElement(Vocabulary.Half,           JsonValue.Create(Is<Half>(v))) },
+        { typeof(string),           (v, _) => new JElement(Vocabulary.String,         JsonValue.Create(Is<string>(v))) },
+        { typeof(Uri),              (v, _) => new JElement(Vocabulary.Uri,            JsonValue.Create(Is<Uri>(v))) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
     #endregion
@@ -50,7 +74,7 @@ class ToJsonDataTransform(JsonOptions options)
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>
-    /// A delegate that can transform a nullable of the specified <paramref name="type"/> into an XML element (<see cref="JElement"/>).
+    /// A delegate that can transform a nullable of the specified <paramref name="type"/> into an JSON element (<see cref="JElement"/>).
     /// </returns>
     /// <exception cref="SerializationException"></exception>
     public TransformConstant GetTransform(Type type)
@@ -94,8 +118,8 @@ class ToJsonDataTransform(JsonOptions options)
     /// <summary>
     /// Transforms enum values.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     JElement EnumTransform(
         object? nodeValue,
         Type nodeType)
@@ -115,8 +139,8 @@ class ToJsonDataTransform(JsonOptions options)
     /// <summary>
     /// Transforms a nullable nullable.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     JElement NullableTransform(
         object? nodeValue,
         Type nodeType)
@@ -135,7 +159,7 @@ class ToJsonDataTransform(JsonOptions options)
             return nullableElement;
 
         var value = nullableType.GetProperty("Value")?.GetValue(nullable)
-                        ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but the value is null.");
+                        ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but the v is null.");
 
         nullableElement.Add(
             options.TypeComment(underlyingType),
@@ -147,8 +171,8 @@ class ToJsonDataTransform(JsonOptions options)
     /// <summary>
     /// Transforms an anonymous object.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     JElement AnonymousTransform(
         object? nodeValue,
         Type nodeType)
@@ -176,8 +200,8 @@ class ToJsonDataTransform(JsonOptions options)
     /// <summary>
     /// Transforms sequences of bytes.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     /// <exception cref="InternalTransformErrorException"></exception>
     JElement ByteSequenceTransform(
         object? nodeValue,
@@ -200,7 +224,7 @@ class ToJsonDataTransform(JsonOptions options)
         else
         {
             if (nodeValue is null)
-                throw new InternalTransformErrorException("Unexpected non-array byte sequenceElement with null value of type '{nodeType.FullName}'.");
+                throw new InternalTransformErrorException("Unexpected non-array byte sequenceElement with null v of type '{nodeType.FullName}'.");
 
             if (nodeValue is ImmutableArray<byte> iab)
                 bytes = iab.AsSpan();
@@ -227,8 +251,8 @@ class ToJsonDataTransform(JsonOptions options)
     /// <summary>
     /// Transforms sequences of objects.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     JElement SequenceTransform(
         object? nodeValue,
         Type nodeType)
@@ -291,16 +315,16 @@ class ToJsonDataTransform(JsonOptions options)
     }
 
     /// <summary>
-    /// Transforms value tuples.
+    /// Transforms v tuples.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     JElement ValueTupleTransform(
         object? nodeValue,
         Type nodeType)
     {
         if (nodeValue is null)
-            throw new InternalTransformErrorException("Null value for a constant expression node of type 'ValueTuple'.");
+            throw new InternalTransformErrorException("Null v for a constant expression node of type 'ValueTuple'.");
 
         var tupleElement = new JElement(
                                     Vocabulary.Tuple,
@@ -308,7 +332,7 @@ class ToJsonDataTransform(JsonOptions options)
         var types = nodeType.GetGenericArguments();
 
         if (nodeValue is not ITuple tuple)
-            throw new InternalTransformErrorException("The value of type 'ValueTuple' doesn't implement ITuple.");
+            throw new InternalTransformErrorException("The v of type 'ValueTuple' doesn't implement ITuple.");
 
         for (var i = 0; i < tuple.Length; i++)
         {
@@ -329,8 +353,8 @@ class ToJsonDataTransform(JsonOptions options)
     /// <summary>
     /// Transforms class tuples.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     JElement ClassTupleTransform(
         object? nodeValue,
         Type nodeType)
@@ -346,7 +370,7 @@ class ToJsonDataTransform(JsonOptions options)
         var types = nodeType.GetGenericArguments();
 
         if (nodeValue is not ITuple tuple)
-            throw new InternalTransformErrorException("The value of type 'ValueTuple' doesn't implement ITuple.");
+            throw new InternalTransformErrorException("The v of type 'ValueTuple' doesn't implement ITuple.");
 
         for (var i = 0; i < tuple.Length; i++)
         {
@@ -368,8 +392,8 @@ class ToJsonDataTransform(JsonOptions options)
     /// <summary>
     /// Transforms dictionaries.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     JElement DictionaryTransform(
         object? nodeValue,
         Type nodeType)
@@ -381,7 +405,7 @@ class ToJsonDataTransform(JsonOptions options)
                                 nodeValue is null ? new JElement(Vocabulary.Null, true) : null);
 
         if (nodeValue is not IDictionary dict)
-            throw new InternalTransformErrorException("The value of type 'Dictionary' doesn't implement IDictionary.");
+            throw new InternalTransformErrorException("The v of type 'Dictionary' doesn't implement IDictionary.");
 
         var length = dict.Count;
         var dictElement = new JElement(
@@ -422,8 +446,8 @@ class ToJsonDataTransform(JsonOptions options)
     /// Transforms objects using <see cref="DataContractSerializer" /> which also works with classes marked with 
     /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
-    /// <param name="nodeValue">The node value.</param>
-    /// <param name="nodeType">GetEType of the node value.</param>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
     JElement ObjectTransform(
         object? nodeValue,
         Type nodeType)

@@ -1,7 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
 /// <summary>
-/// Class XmlTransformVisitor.
+/// Class ToXmlTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
 /// </summary>
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />

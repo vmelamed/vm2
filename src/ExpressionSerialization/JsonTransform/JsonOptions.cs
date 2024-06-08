@@ -5,7 +5,7 @@ using System;
 using Json.Schema;
 
 /// <summary>
-/// Class XmlOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to 
+/// Class JsonOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to 
 /// JSON documents. Consider caching this object.
 /// </summary>
 public partial class JsonOptions : DocumentOptions
@@ -21,7 +21,7 @@ public partial class JsonOptions : DocumentOptions
     /// Gets the loaded expression serialization schema.
     /// </summary>
     /// <value>The schemas.</value>
-    public JsonSchema Schema => _schema ?? throw new InvalidOperationException("The schema must be loaded with LoadSchemaAsync.");
+    public JsonSchema Schema => _schema ?? throw new InvalidOperationException($"The schema must be loaded with {nameof(LoadSchema)}.");
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonOptions"/> class. The schema must be subsequently loaded with
@@ -41,11 +41,9 @@ public partial class JsonOptions : DocumentOptions
     /// Loads the schema from the specified URL.
     /// </summary>
     /// <param name="schemaFilePath">The location of the schema file.</param>
-    /// <returns>A Task representing the asynchronous operation.</returns>
+    /// <returns>A Task representing the asynchronous operation.</returns>Load
     public JsonSchema LoadSchema(string schemaFilePath)
-    {
-        return _schema = JsonSchema.FromFile(schemaFilePath);
-    }
+        => _schema = JsonSchema.FromFile(schemaFilePath);
 
     /// <summary>
     /// Determines whether the expressions schemaUri <see cref="JsonOptions.Exs"/> was added.
@@ -71,12 +69,13 @@ public partial class JsonOptions : DocumentOptions
             var options = new JsonSerializerOptions()
             {
                 AllowTrailingCommas             = AllowTrailingCommas,
+                Encoder                         = JavaScriptEncoder.Default,
                 Converters                      =
                 {
                     new JsonStringEnumConverter(),
                 },
-                Encoder                         = JavaScriptEncoder.Default,
-                NumberHandling                  = JsonNumberHandling.AllowNamedFloatingPointLiterals | JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString,
+                NumberHandling                  = JsonNumberHandling.AllowNamedFloatingPointLiterals |
+                                                  JsonNumberHandling.AllowReadingFromString,
                 PreferredObjectCreationHandling = JsonObjectCreationHandling.Populate,
                 ReadCommentHandling             = JsonCommentHandling.Skip,
                 ReferenceHandler                = ReferenceHandler.Preserve,
@@ -119,27 +118,26 @@ public partial class JsonOptions : DocumentOptions
 
         var writer = new StringWriter();
 
-        writer.WriteLine($"The validation of the JSON/YAML against the schema \"{Exs}\" failed:");
-
-        static void writeResults(EvaluationResults results, TextWriter writer, int indent)
-        {
-            if (results.HasErrors && results.Errors is not null)
-                foreach (var (k, v) in results.Errors)
-                    writer.WriteLine($"{new string(' ', indent * 2)}{k}: {v}");
-
-            if (results.HasDetails && results.Details is not null)
-                foreach (var nestedResults in results.Details)
-                    writeResults(nestedResults, writer, indent + 1);
-        }
-
-        writeResults(result, writer, 1);
+        writer.WriteLine($"The validation of the JSON/YAML against the schema \"{Exs}\" failed:\n");
+        WriteResults(writer, result, 1);
         writer.Flush();
 
         throw new SerializationException(writer.ToString());
     }
 
+    static void WriteResults(TextWriter writer, EvaluationResults results, int indent)
+    {
+        if (results.HasErrors && results.Errors is not null)
+            foreach (var (k, v) in results.Errors)
+                writer.WriteLine($"{new string(' ', indent * 2)}{k}: {v}");
+
+        if (results.HasDetails && results.Details is not null)
+            foreach (var nestedResults in results.Details)
+                WriteResults(writer, nestedResults, indent + 1);
+    }
+
     /// <summary>
-    /// Builds an XML comment object with the specified comment text if comments are enabled.
+    /// Builds a JSON comment object with the specified comment text if comments are enabled.
     /// </summary>
     /// <param name="comment">The comment.</param>
     /// <returns>The comment object System.Nullable&lt;XComment&gt;.</returns>
@@ -147,7 +145,7 @@ public partial class JsonOptions : DocumentOptions
         => AddComments ? new JElement(Conventions.Vocabulary.Comment, comment) : null;
 
     /// <summary>
-    /// Builds an XML comment object with the text of the expression if comments are enabled.
+    /// Builds an JSON comment object with the text of the expression if comments are enabled.
     /// </summary>
     /// <param name="expression">The expression.</param>
     /// <returns>System.Nullable&lt;XComment&gt;.</returns>
@@ -155,7 +153,7 @@ public partial class JsonOptions : DocumentOptions
         => AddComments ? Comment($" {expression} ") : null;
 
     /// <summary>
-    /// Adds the expression comment to the specified XML container if comments are enabled.
+    /// Adds the expression comment to the specified JSON container if comments are enabled.
     /// </summary>
     /// <param name="parent">The parent.</param>
     /// <param name="expression">The expression.</param>
@@ -166,7 +164,7 @@ public partial class JsonOptions : DocumentOptions
     }
 
     /// <summary>
-    /// Adds the comment to the specified XML container if comments are enabled.
+    /// Adds the comment to the specified JSON container if comments are enabled.
     /// </summary>
     /// <param name="parent">The parent.</param>
     /// <param name="comment">The comment.</param>
@@ -177,7 +175,7 @@ public partial class JsonOptions : DocumentOptions
     }
 
     /// <summary>
-    /// Adds the expression comment to the specified XML container if comments are enabled.
+    /// Adds the expression comment to the specified JSON container if comments are enabled.
     /// </summary>
     /// <param name="parent">The parent.</param>
     /// <param name="expression">The expression.</param>
@@ -194,8 +192,8 @@ public partial class JsonOptions : DocumentOptions
     /// <param name="type">The type.</param>
     /// <returns>The comment as System.Nullable&lt;XComment&gt;.</returns>
     internal JElement? TypeComment(Type type)
-        => TypeNames != TypeNameConventions.AssemblyQualifiedName &&
-           (!type.IsBasicType() && type != typeof(object) || type.IsEnum)
-                    ? Comment($" {Transform.TypeName(type, TypeNames)} ")
-                    : null;
+    => TypeNames != TypeNameConventions.AssemblyQualifiedName &&
+       (!type.IsBasicType() && type != typeof(object) || type.IsEnum)
+                ? Comment($" {Transform.TypeName(type, TypeNames)} ")
+                : null;
 }
