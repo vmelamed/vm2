@@ -9,7 +9,7 @@ internal static partial class TypeExtensions
 {
     /// <summary>
     /// Determines whether the specified type is a basic type: primitive, enum, decimal, string, Guid, Uri, DateTime, 
-    /// TimeSpan, DateTimeOffset, IntPtr, UIntPtr.
+    /// TimeSpan, DateTimeOffset, IntPtr, UnsignedIntPtr.
     /// </summary>
     /// <param name="type">The type to be tested.</param>
     /// <returns>

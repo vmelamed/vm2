@@ -104,7 +104,7 @@ public class TestsFixture : IDisposable
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        AssertXmlAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
+        AssertXmlAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, false, output);
     }
 
     public async Task TestExpressionToXmlAsync(
@@ -124,7 +124,7 @@ public class TestsFixture : IDisposable
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        AssertXmlAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
+        AssertXmlAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, true, output);
     }
 
     public void TestXmlToExpression(
@@ -146,9 +146,10 @@ public class TestsFixture : IDisposable
         XDocument actualDoc,
         string actualStr,
         string? fileName,
+        bool async,
         ITestOutputHelper? output = null)
     {
-        output?.WriteLine("ACTUAL:\n{0}\n", actualStr);
+        output?.WriteLine($"ACTUAL {(async ? "async" : "sync")}:\n{actualStr}\n");
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
         var validate = () => Validate(actualDoc);

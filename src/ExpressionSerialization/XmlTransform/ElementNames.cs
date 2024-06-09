@@ -2,8 +2,8 @@
 static class ElementNames
 {
     public static XName Expression => Namespaces.Exs + Vocabulary.Expression;
-    public static XName AnyURI => Namespaces.Exs + Vocabulary.Uri;
-    public static XName Boolean => Namespaces.Exs + Vocabulary.Bool;
+    public static XName Uri => Namespaces.Exs + Vocabulary.Uri;
+    public static XName Boolean => Namespaces.Exs + Vocabulary.Boolean;
     public static XName Byte => Namespaces.Exs + Vocabulary.Byte;
     public static XName Char => Namespaces.Exs + Vocabulary.Char;
     public static XName DateTime => Namespaces.Exs + Vocabulary.DateTime;
@@ -11,7 +11,7 @@ static class ElementNames
     public static XName DBNull => Namespaces.Exs + Vocabulary.DBNull;
     public static XName Decimal => Namespaces.Exs + Vocabulary.Decimal;
     public static XName Double => Namespaces.Exs + Vocabulary.Double;
-    public static XName Duration => Namespaces.Exs + Vocabulary.TimeSpan;
+    public static XName Duration => Namespaces.Exs + Vocabulary.Duration;
     public static XName Float => Namespaces.Exs + Vocabulary.Float;
     public static XName Guid => Namespaces.Exs + Vocabulary.Guid;
     public static XName Half => Namespaces.Exs + Vocabulary.Half;
@@ -19,12 +19,12 @@ static class ElementNames
     public static XName IntPtr => Namespaces.Exs + Vocabulary.IntPtr;
     public static XName Long => Namespaces.Exs + Vocabulary.Long;
     public static XName Short => Namespaces.Exs + Vocabulary.Short;
-    public static XName SignedByte => Namespaces.Exs + Vocabulary.SByte;
+    public static XName SignedByte => Namespaces.Exs + Vocabulary.SignedByte;
     public static XName String => Namespaces.Exs + Vocabulary.String;
-    public static XName UnsignedInt => Namespaces.Exs + Vocabulary.UInt;
-    public static XName UnsignedIntPtr => Namespaces.Exs + Vocabulary.UIntPtr;
-    public static XName UnsignedLong => Namespaces.Exs + Vocabulary.ULong;
-    public static XName UnsignedShort => Namespaces.Exs + Vocabulary.UShort;
+    public static XName UnsignedInt => Namespaces.Exs + Vocabulary.UnsignedInt;
+    public static XName UnsignedIntPtr => Namespaces.Exs + Vocabulary.UnsignedIntPtr;
+    public static XName UnsignedLong => Namespaces.Exs + Vocabulary.UnsignedLong;
+    public static XName UnsignedShort => Namespaces.Exs + Vocabulary.UnsignedShort;
     public static XName Enum => Namespaces.Exs + Vocabulary.Enum;
     public static XName Nullable => Namespaces.Exs + Vocabulary.Nullable;
     public static XName Object => Namespaces.Exs + Vocabulary.Object;

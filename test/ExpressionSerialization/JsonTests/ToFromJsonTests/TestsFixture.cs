@@ -39,27 +39,33 @@ public class TestsFixture : IDisposable
     {
         try
         {
-            // ARRANGE - get the expected string and JsonNode from a file:
+            // ARRANGE - get the expected string and validated JsonNode from a file:
+
             pathName = Path.GetFullPath(pathName);
             using var streamExpected = new FileStream(pathName, FileStreamOptions);
             var length = (int)streamExpected.Length;
+
+            // get the text to display
             Memory<byte> buf = new byte[length];
             var read = await streamExpected.ReadAsync(buf, cancellationToken);
             read.Should().Be(length, "should be able to read the whole file");
             var expectedStr = Encoding.UTF8.GetString(buf.Span);
+            output?.WriteLine($"{expectedOrInput}:\n{expectedStr}\n");
 
-            output?.WriteLine($"{expectedOrInput}:\n{0}\n", expectedStr);
-
+            // and parse
             streamExpected.Seek(0, SeekOrigin.Begin);
 
-            var expectedDoc = JsonNode.Parse(expectedStr);
+            var parse = async () => await JsonNode.ParseAsync(streamExpected, JsonOptions.JsonNodeOptions, JsonOptions.JsonDocumentOptions, cancellationToken);
+            var expectedDoc = (await parse.Should().NotThrowAsync()).Which;
 
             expectedDoc.Should().NotBeNull();
+
             Debug.Assert(expectedDoc is not null);
 
             var validate = () => Validate(expectedDoc);
 
             validate.Should().NotThrow($"the {expectedOrInput} document from {testFileLine} should be valid according to the schema");
+
             return (expectedDoc, expectedStr);
         }
         catch (IOException x)
@@ -84,6 +90,7 @@ public class TestsFixture : IDisposable
         ITestOutputHelper? output = null)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
+
         var transform = new ExpressionJsonTransform(Options);
 
         var actualDoc = transform.Transform(expression);
@@ -92,7 +99,7 @@ public class TestsFixture : IDisposable
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
+        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, false, output);
     }
 
     public async Task TestExpressionToJsonAsync(
@@ -104,7 +111,8 @@ public class TestsFixture : IDisposable
         ITestOutputHelper? output = null,
         CancellationToken cancellationToken = default)
     {
-        // ACT - get the actual string and XDocument by transforming the expression:
+        // async ACT - get the actual string and XDocument by transforming the expression:
+
         var transform = new ExpressionJsonTransform(Options);
 
         var actualDoc = transform.Transform(expression);
@@ -113,7 +121,7 @@ public class TestsFixture : IDisposable
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, output);
+        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, true, output);
     }
 
     public void TestJsonToExpression(
@@ -142,9 +150,10 @@ public class TestsFixture : IDisposable
         JsonObject actualDoc,
         string actualStr,
         string? fileName,
-        ITestOutputHelper? output = null)
+        bool async,
+        ITestOutputHelper? output)
     {
-        output?.WriteLine("ACTUAL:\n{0}\n", actualStr);
+        output?.WriteLine($"ACTUAL ({(async ? "async" : "sync")}):\n{actualStr}\n");
 
         // ASSERT: both the strings and the JsonObject-s are valid and equal
         var validate = () => Validate(actualDoc);

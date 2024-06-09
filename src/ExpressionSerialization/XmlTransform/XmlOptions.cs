@@ -69,6 +69,12 @@ public partial class XmlOptions : DocumentOptions
     }
 
     string _characterEncoding = "utf-8";
+    bool _byteOrderMark = false;
+    bool _bigEndian = false;
+    bool _addDocumentDeclaration = true;
+    bool _omitDuplicateNamespaces = true;
+    bool _attributesOnNewLine = false;
+    XmlWriterSettings? _xmlWriterSettings;
 
     /// <summary>
     /// Gets or sets the transformed document encoding.
@@ -79,7 +85,7 @@ public partial class XmlOptions : DocumentOptions
         get => _characterEncoding;
         set
         {
-            _characterEncoding = value.ToUpperInvariant() switch {
+            var encoding = value.ToUpperInvariant() switch {
                 "ASCII" => "ascii",
                 "UTF-8" => "utf-8",
                 "UTF-16" => "utf-16",
@@ -89,43 +95,80 @@ public partial class XmlOptions : DocumentOptions
                 _ => throw new NotSupportedException($@"The encoding ""{CharacterEncoding}"" is not supported." +
                                     @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
             };
+
+            if (Changed(_characterEncoding != encoding))
+                _characterEncoding = encoding;
         }
     }
 
     /// <summary>
     /// Gets or sets a value indicating whether to put in the output stream a byte order mark (BOM). Not recommended for UTF-8.
     /// </summary>
-    /// <value><c>true</c> if byte order mark should be added; otherwise, <c>false</c>.</value>
-    public bool ByteOrderMark { get; set; } = false;
+    public bool ByteOrderMark
+    {
+        get => _byteOrderMark;
+        set
+        {
+            if (Changed(_byteOrderMark != value))
+                _byteOrderMark = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets a value indicating the endianness of the transformed document.
     /// </summary>
-    /// <value><c>true</c> if it must be big endian; otherwise, <c>false</c>.</value>
-    public bool BigEndian { get; set; } = false;
+    public bool BigEndian
+    {
+        get => _bigEndian;
+        set
+        {
+            if (Changed(_bigEndian != value))
+                _bigEndian = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether to add an XML document declaration.
     /// </summary>
-    /// <value><c>true</c> if XML document declaration should be added; otherwise, <c>false</c>.</value>
-    public bool AddDocumentDeclaration { get; set; } = true;
+    public bool AddDocumentDeclaration
+    {
+        get => _addDocumentDeclaration;
+        set
+        {
+            if (Changed(_addDocumentDeclaration != value))
+                _addDocumentDeclaration = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether to eliminate duplicate namespaces.
     /// </summary>
-    /// <value><c>true</c> if duplicate namespaces are to be omitted; otherwise, <c>false</c>.</value>
-    public bool OmitDuplicateNamespaces { get; set; } = true;
+    public bool OmitDuplicateNamespaces
+    {
+        get => _omitDuplicateNamespaces;
+        set
+        {
+            if (Changed(_omitDuplicateNamespaces != value))
+                _omitDuplicateNamespaces = value;
+        }
+    }
 
     /// <summary>
     /// Outputs all XML attribute on a new line - below their XML element and indented.
     /// </summary>
-    /// <value><c>true</c> if output the attributes on a new line; otherwise, <c>false</c>.</value>
-    public bool AttributesOnNewLine { get; set; } = false;
+    public bool AttributesOnNewLine
+    {
+        get => _attributesOnNewLine;
+        set
+        {
+            if (Changed(_attributesOnNewLine != value))
+                _attributesOnNewLine = value;
+        }
+    }
 
     /// <summary>
     /// Determines whether the expressions schemaUri <see cref="Exs"/> was added.
     /// </summary>
-    /// <returns><c>true</c> if [has expressions schemaUri] [the specified options]; otherwise, <c>false</c>.</returns>
     internal override bool HasExpressionsSchema => Schemas.Contains(Exs);
 
     /// <summary>
@@ -241,13 +284,16 @@ public partial class XmlOptions : DocumentOptions
                 ? Comment($" {Transform.TypeName(type, TypeNames)} ")
                 : null;
 
-    internal XmlWriterSettings XmlWriterSettings => new() {
-        Encoding = Encoding,
-        Indent = Indent,
-        IndentChars = new(' ', IndentSize),
-        NamespaceHandling = OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
-        NewLineOnAttributes = AttributesOnNewLine,
-        OmitXmlDeclaration = !AddDocumentDeclaration,
-        WriteEndDocumentOnClose = true,
-    };
+    internal XmlWriterSettings XmlWriterSettings => HasChanged() || _xmlWriterSettings is null
+                                                        ? (_xmlWriterSettings = new() {
+                                                            Encoding = Encoding,
+                                                            Indent = Indent,
+                                                            IndentChars = new(' ', IndentSize),
+                                                            NamespaceHandling = OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
+                                                            NewLineOnAttributes = AttributesOnNewLine,
+                                                            OmitXmlDeclaration = !AddDocumentDeclaration,
+                                                            WriteEndDocumentOnClose = true,
+                                                        })
+                                                        : _xmlWriterSettings;
+
 }

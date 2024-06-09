@@ -33,13 +33,13 @@ class ToXmlDataTransform(XmlOptions options)
 
         { typeof(DateTime),         (v, t) => new XElement(ElementNames.DateTime,       XmlConvert.ToString(Is<DateTime>(v), XmlDateTimeSerializationMode.RoundtripKind)) },
         { typeof(DateTimeOffset),   (v, t) => new XElement(ElementNames.DateTimeOffset, XmlConvert.ToString(Is<DateTimeOffset>(v), "O")) },
+        { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString(Is<TimeSpan>(v))) },
         { typeof(DBNull),           (v, t) => new XElement(ElementNames.DBNull)         },
         { typeof(decimal),          (v, t) => new XElement(ElementNames.Decimal,        XmlConvert.ToString(Is<decimal>(v))) },
-        { typeof(TimeSpan),         (v, t) => new XElement(ElementNames.Duration,       XmlConvert.ToString(Is<TimeSpan>(v))) },
         { typeof(Guid),             (v, t) => new XElement(ElementNames.Guid,           XmlConvert.ToString(Is<Guid>(v))) },
         { typeof(Half),             (v, t) => new XElement(ElementNames.Half,           XmlConvert.ToString((double)Is<Half>(v))) },
         { typeof(string),           (v, t) => new XElement(ElementNames.String,         (object?)Is<string>(v) ?? new XAttribute(AttributeNames.Nil, true)) },
-        { typeof(Uri),              (v, t) => new XElement(ElementNames.AnyURI,         (object?)Is<Uri>(v)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
+        { typeof(Uri),              (v, t) => new XElement(ElementNames.Uri,            (object?)Is<Uri>(v)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
     #endregion

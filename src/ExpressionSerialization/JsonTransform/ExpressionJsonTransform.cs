@@ -55,7 +55,7 @@ public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionT
         Expression expression,
         Stream stream)
     {
-        using var writer = SerializerToWriter(expression, stream);
+        using var writer = SerializeToWriter(expression, stream);
         writer.Flush();
     }
 
@@ -71,11 +71,11 @@ public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionT
         Stream stream,
         CancellationToken cancellationToken = default)
     {
-        using var writer = SerializerToWriter(expression, stream);
+        using var writer = SerializeToWriter(expression, stream);
         await writer.FlushAsync(cancellationToken);
     }
 
-    Utf8JsonWriter SerializerToWriter(
+    Utf8JsonWriter SerializeToWriter(
         Expression expression,
         Stream stream)
     {

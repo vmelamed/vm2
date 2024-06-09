@@ -10,31 +10,33 @@ public static class Vocabulary
     // The following constants represent the names (hence the prefix 'N') of basic types that are common for all text
     // documents that we transform into or from, e.g. XML (local names), JSON, YAML, etc.).
     public const string Void                    = "void";   // used only for method return values!
-    public const string Uri                     = "uri";
-    public const string Bool                    = "boolean";
+
+    public const string Boolean                 = "boolean";
     public const string Byte                    = "byte";
     public const string Char                    = "char";
-    public const string DateTime                = "dateTime";
-    public const string DateTimeOffset          = "dateTimeOffset";
-    public const string DBNull                  = "dbNull";
-    public const string Decimal                 = "decimal";
     public const string Double                  = "double";
     public const string Float                   = "float";
-    public const string Guid                    = "guid";
-    public const string Half                    = "half";
     public const string Int                     = "int";
     public const string IntPtr                  = "intPtr";
     public const string Long                    = "long";
-    public const string SByte                   = "signedByte";
+    public const string SignedByte              = "signedByte";
     public const string Short                   = "short";
-    public const string String                  = "string";
-    public const string TimeSpan                = "duration";
-    public const string UInt                    = "unsignedInt";
-    public const string UIntPtr                 = "unsignedIntPtr";
-    public const string ULong                   = "unsignedLong";
-    public const string UShort                  = "unsignedShort";
+    public const string UnsignedInt             = "unsignedInt";
+    public const string UnsignedIntPtr          = "unsignedIntPtr";
+    public const string UnsignedLong            = "unsignedLong";
+    public const string UnsignedShort           = "unsignedShort";
 
-    // other types and type categories
+    public const string DateTime                = "dateTime";
+    public const string DateTimeOffset          = "dateTimeOffset";
+    public const string Duration                = "duration";
+    public const string DBNull                  = "dbNull";
+    public const string Decimal                 = "decimal";
+    public const string Guid                    = "guid";
+    public const string Half                    = "half";
+    public const string String                  = "string";
+    public const string Uri                     = "uri";
+
+    // other types and type categories  
     public const string Object                  = "object";
     public const string Nullable                = "nullable";
     public const string Enum                    = "enum";
@@ -207,33 +209,33 @@ public static class Vocabulary
 
     static readonly Dictionary<Type, string> _typesToNames_ = new()
     {
-        [typeof(void)]                  = Void, // used only for method return values!
-        [typeof(bool)]                  = Bool,
-        [typeof(byte)]                  = Byte,
-        [typeof(char)]                  = Char,
-        [typeof(DateTime)]              = DateTime,
-        [typeof(DateTimeOffset)]        = DateTimeOffset,
-        [typeof(DBNull)]                = DBNull,
-        [typeof(decimal)]               = Decimal,
-        [typeof(double)]                = Double,
-        [typeof(float)]                 = Float,
-        [typeof(Guid)]                  = Guid,
-        [typeof(Half)]                  = Half,
-        [typeof(int)]                   = Int,
-        [typeof(IntPtr)]                = IntPtr,
-        [typeof(long)]                  = Long,
-        [typeof(sbyte)]                 = SByte,
-        [typeof(short)]                 = Short,
-        [typeof(string)]                = String,
-        [typeof(TimeSpan)]              = TimeSpan,
-        [typeof(uint)]                  = UInt,
-        [typeof(UIntPtr)]               = UIntPtr,
-        [typeof(ulong)]                 = ULong,
-        [typeof(Uri)]                   = Uri,
-        [typeof(ushort)]                = UShort,
-        [typeof(Enum)]                  = Enum,
-        [typeof(Nullable<>)]            = Nullable,
-        [typeof(object)]                = Object,
+        [typeof(void)]                          = Void, // used only for method return values!
+        [typeof(bool)]                          = Boolean,
+        [typeof(byte)]                          = Byte,
+        [typeof(char)]                          = Char,
+        [typeof(DateTime)]                      = DateTime,
+        [typeof(DateTimeOffset)]                = DateTimeOffset,
+        [typeof(DBNull)]                        = DBNull,
+        [typeof(decimal)]                       = Decimal,
+        [typeof(double)]                        = Double,
+        [typeof(float)]                         = Float,
+        [typeof(Guid)]                          = Guid,
+        [typeof(Half)]                          = Half,
+        [typeof(int)]                           = Int,
+        [typeof(IntPtr)]                        = IntPtr,
+        [typeof(long)]                          = Long,
+        [typeof(sbyte)]                         = SignedByte,
+        [typeof(short)]                         = Short,
+        [typeof(string)]                        = String,
+        [typeof(TimeSpan)]                      = Duration,
+        [typeof(uint)]                          = UnsignedInt,
+        [typeof(UIntPtr)]                       = UnsignedIntPtr,
+        [typeof(ulong)]                         = UnsignedLong,
+        [typeof(Uri)]                           = Uri,
+        [typeof(ushort)]                        = UnsignedShort,
+        [typeof(Enum)]                          = Enum,
+        [typeof(Nullable<>)]                    = Nullable,
+        [typeof(object)]                        = Object,
     };
 
     /// <summary>
@@ -243,33 +245,33 @@ public static class Vocabulary
 
     static readonly Dictionary<string, Type> _namesToTypes_ = new ()
     {
-        [Void]                         = typeof(void), // used only for method return values!
-        [Bool]                         = typeof(bool),
-        [Byte]                         = typeof(byte),
-        [Char]                         = typeof(char),
-        [DateTime]                     = typeof(DateTime),
-        [DateTimeOffset]               = typeof(DateTimeOffset),
-        [DBNull]                       = typeof(DBNull),
-        [Decimal]                      = typeof(decimal),
-        [Double]                       = typeof(double),
-        [Float]                        = typeof(float),
-        [Guid]                         = typeof(Guid),
-        [Half]                         = typeof(Half),
-        [Int]                          = typeof(int),
-        [IntPtr]                       = typeof(IntPtr),
-        [Long]                         = typeof(long),
-        [SByte]                        = typeof(sbyte),
-        [Short]                        = typeof(short),
-        [String]                       = typeof(string),
-        [TimeSpan]                     = typeof(TimeSpan),
-        [UInt]                         = typeof(uint),
-        [UIntPtr]                      = typeof(UIntPtr),
-        [ULong]                        = typeof(ulong),
-        [Uri]                          = typeof(Uri),
-        [UShort]                       = typeof(ushort),
-        [Enum]                         = typeof(Enum),
-        [Nullable]                     = typeof(Nullable<>),
-        [Object]                       = typeof(object),
+        [Void]                                  = typeof(void), // used only for method return values!
+        [Boolean]                               = typeof(bool),
+        [Byte]                                  = typeof(byte),
+        [Char]                                  = typeof(char),
+        [DateTime]                              = typeof(DateTime),
+        [DateTimeOffset]                        = typeof(DateTimeOffset),
+        [DBNull]                                = typeof(DBNull),
+        [Decimal]                               = typeof(decimal),
+        [Double]                                = typeof(double),
+        [Float]                                 = typeof(float),
+        [Guid]                                  = typeof(Guid),
+        [Half]                                  = typeof(Half),
+        [Int]                                   = typeof(int),
+        [IntPtr]                                = typeof(IntPtr),
+        [Long]                                  = typeof(long),
+        [SignedByte]                            = typeof(sbyte),
+        [Short]                                 = typeof(short),
+        [String]                                = typeof(string),
+        [Duration]                              = typeof(TimeSpan),
+        [UnsignedInt]                           = typeof(uint),
+        [UnsignedIntPtr]                        = typeof(UIntPtr),
+        [UnsignedLong]                          = typeof(ulong),
+        [Uri]                                   = typeof(Uri),
+        [UnsignedShort]                         = typeof(ushort),
+        [Enum]                                  = typeof(Enum),
+        [Nullable]                              = typeof(Nullable<>),
+        [Object]                                = typeof(object),
     };
     /// <summary>
     /// Maps names used in text documents to basic types.

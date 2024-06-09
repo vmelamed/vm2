@@ -15,7 +15,28 @@ public partial class JsonOptions : DocumentOptions
     /// </summary>
     public const string Exs = "urn:schemas-vm-com:Linq.Expressions.Serialization.Json";
 
+    static readonly JsonStringEnumConverter _jsonStringEnumConverter = new();
+
+#pragma warning disable IDE0032 // Use auto property
+    static readonly JsonNodeOptions _jsonNodeOptions = new() {
+        PropertyNameCaseInsensitive = false,
+    };
+
+    static readonly JsonDocumentOptions _jsonDocumentOptions = new() {
+        AllowTrailingCommas = true,
+        CommentHandling     = JsonCommentHandling.Skip,
+        MaxDepth            = 1000
+    };
+#pragma warning restore IDE0032 // Use auto property
+
+    static readonly EvaluationOptions _evaluationOptions = new() {
+        OutputFormat            = OutputFormat.Hierarchical,
+        RequireFormatValidation = true,
+    };
+
     JsonSchema? _schema;
+    bool _allowTrailingCommas = true;
+    JsonSerializerOptions? _jsonSerializerOptions;
 
     /// <summary>
     /// Gets the loaded expression serialization schema.
@@ -56,38 +77,42 @@ public partial class JsonOptions : DocumentOptions
     /// array is allowed (and ignored) within the JSON payload being deserialized.
     /// </summary>
     /// <value>The allow trailing commas.</value>
-    public bool AllowTrailingCommas { get; set; } = true;
+    public bool AllowTrailingCommas
+    {
+        get => _allowTrailingCommas;
+        set
+        {
+            if (Changed(_allowTrailingCommas != value))
+                _allowTrailingCommas = value;
+        }
+    }
 
     /// <summary>
     /// Creates the json serializer options object appropriate for the JsonTransform.
     /// </summary>
     /// <returns>System.Text.Json.JsonSerializerOptions.</returns>
-    public JsonSerializerOptions JsonSerializerOptions
-    {
-        get
-        {
-            var options = new JsonSerializerOptions()
-            {
-                AllowTrailingCommas             = AllowTrailingCommas,
-                Encoder                         = JavaScriptEncoder.Default,
-                Converters                      =
-                {
-                    new JsonStringEnumConverter(),
-                },
-                NumberHandling                  = JsonNumberHandling.AllowNamedFloatingPointLiterals |
-                                                  JsonNumberHandling.AllowReadingFromString,
-                PreferredObjectCreationHandling = JsonObjectCreationHandling.Populate,
-                ReadCommentHandling             = JsonCommentHandling.Skip,
-                ReferenceHandler                = ReferenceHandler.Preserve,
-                UnknownTypeHandling             = JsonUnknownTypeHandling.JsonNode,
-                UnmappedMemberHandling          = JsonUnmappedMemberHandling.Skip,
-                // TypeInfoResolver
-                WriteIndented                   = Indent,
-            };
+    public JsonSerializerOptions JsonSerializerOptions => HasChanged() || _jsonSerializerOptions is null
+                                                                ? (_jsonSerializerOptions = new() {
+                                                                    AllowTrailingCommas = AllowTrailingCommas,
+                                                                    Encoder = JavaScriptEncoder.Default,
+                                                                    Converters = { _jsonStringEnumConverter },
+                                                                    MaxDepth = 1000,
+                                                                    NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals |
+                                                                                     JsonNumberHandling.AllowReadingFromString,
+                                                                    PreferredObjectCreationHandling = JsonObjectCreationHandling.Populate,
+                                                                    ReadCommentHandling = JsonCommentHandling.Skip,
+                                                                    ReferenceHandler = ReferenceHandler.Preserve,
+                                                                    UnknownTypeHandling = JsonUnknownTypeHandling.JsonNode,
+                                                                    UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
+                                                                    TypeInfoResolver = null,
+                                                                    WriteIndented = Indent,
+                                                                })
+                                                                : _jsonSerializerOptions;
 
-            return options;
-        }
-    }
+    /// <summary>
+    /// Gets the json node options.
+    /// </summary>
+    public static JsonNodeOptions JsonNodeOptions => _jsonNodeOptions;
 
     /// <summary>
     /// Gets the json writer options based on these options
@@ -99,19 +124,18 @@ public partial class JsonOptions : DocumentOptions
     };
 
     /// <summary>
+    /// Gets the json document options.
+    /// </summary>
+    public static JsonDocumentOptions JsonDocumentOptions => _jsonDocumentOptions;
+
+    /// <summary>
     /// Evaluates the specified jsonNode against the schema (by default the expressions schema).
     /// </summary>
     /// <param name="jsonNode">The jsonNode.</param>
     /// <returns>Json.Schema.EvaluationResults.</returns>
     public void Validate(JsonNode jsonNode)
     {
-        var result = Schema.Evaluate(
-                                jsonNode,
-                                new EvaluationOptions
-                                {
-                                    OutputFormat            = OutputFormat.Flag,
-                                    RequireFormatValidation = true,
-                                });
+        var result = Schema.Evaluate(jsonNode, _evaluationOptions);
 
         if (result.IsValid)
             return;
