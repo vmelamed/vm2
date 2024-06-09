@@ -659,15 +659,30 @@
                         {
                             "$comment": "Here we mean only struct object values but JSON wouldn't not understand that.",
                             "$ref": "#/$defs/objectConstant"
+                        },
+                        {
+                            "title": "Null Nullable<T>",
+                            "$comment": "Represents a null Nullable<T> value",
+                            "type": "object",
+                            "properties": {
+                                "nil": {
+                                    "const": true
+                                },
+                                "type": {
+                                    "type": "string"
+
+                                }
+                            },
+                            "additionalProperties": {
+                                "type": "string"
+                            },
+                            "required": [
+                                "nil",
+                                "type"
+                            ]
                         }
                     ]
-                },
-                "underlyingType": {
-                    "type": "string"
                 }
-            },
-            "additionalProperties": {
-                "type": "string"
             },
             "required": [
                 "nullable"
