@@ -96,7 +96,7 @@ public partial class XmlOptions : DocumentOptions
                                     @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
             };
 
-            if (Changed(_characterEncoding != encoding))
+            if (Change(_characterEncoding != encoding))
                 _characterEncoding = encoding;
         }
     }
@@ -109,7 +109,7 @@ public partial class XmlOptions : DocumentOptions
         get => _byteOrderMark;
         set
         {
-            if (Changed(_byteOrderMark != value))
+            if (Change(_byteOrderMark != value))
                 _byteOrderMark = value;
         }
     }
@@ -122,7 +122,7 @@ public partial class XmlOptions : DocumentOptions
         get => _bigEndian;
         set
         {
-            if (Changed(_bigEndian != value))
+            if (Change(_bigEndian != value))
                 _bigEndian = value;
         }
     }
@@ -135,7 +135,7 @@ public partial class XmlOptions : DocumentOptions
         get => _addDocumentDeclaration;
         set
         {
-            if (Changed(_addDocumentDeclaration != value))
+            if (Change(_addDocumentDeclaration != value))
                 _addDocumentDeclaration = value;
         }
     }
@@ -148,7 +148,7 @@ public partial class XmlOptions : DocumentOptions
         get => _omitDuplicateNamespaces;
         set
         {
-            if (Changed(_omitDuplicateNamespaces != value))
+            if (Change(_omitDuplicateNamespaces != value))
                 _omitDuplicateNamespaces = value;
         }
     }
@@ -161,7 +161,7 @@ public partial class XmlOptions : DocumentOptions
         get => _attributesOnNewLine;
         set
         {
-            if (Changed(_attributesOnNewLine != value))
+            if (Change(_attributesOnNewLine != value))
                 _attributesOnNewLine = value;
         }
     }
@@ -284,16 +284,17 @@ public partial class XmlOptions : DocumentOptions
                 ? Comment($" {Transform.TypeName(type, TypeNames)} ")
                 : null;
 
-    internal XmlWriterSettings XmlWriterSettings => HasChanged() || _xmlWriterSettings is null
-                                                        ? (_xmlWriterSettings = new() {
-                                                            Encoding = Encoding,
-                                                            Indent = Indent,
-                                                            IndentChars = new(' ', IndentSize),
-                                                            NamespaceHandling = OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
-                                                            NewLineOnAttributes = AttributesOnNewLine,
-                                                            OmitXmlDeclaration = !AddDocumentDeclaration,
-                                                            WriteEndDocumentOnClose = true,
-                                                        })
-                                                        : _xmlWriterSettings;
+    internal XmlWriterSettings XmlWriterSettings
+        => _xmlWriterSettings is not null && !Changed
+                ? _xmlWriterSettings
+                : (_xmlWriterSettings = new() {
+                    Encoding = Encoding,
+                    Indent = Indent,
+                    IndentChars = new(' ', IndentSize),
+                    NamespaceHandling = OmitDuplicateNamespaces ? NamespaceHandling.OmitDuplicates : NamespaceHandling.Default,
+                    NewLineOnAttributes = AttributesOnNewLine,
+                    OmitXmlDeclaration = !AddDocumentDeclaration,
+                    WriteEndDocumentOnClose = true,
+                });
 
 }

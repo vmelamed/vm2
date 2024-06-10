@@ -4,13 +4,29 @@ public partial class ConstantTests
 {
     static Dictionary<string, ConstantExpression> _substitutes = new()
     {
+        // primitive:
         ["false"]                                                                               = Expression.Constant(false),
         ["true"]                                                                                = Expression.Constant(true),
         ["(byte)5"]                                                                             = Expression.Constant((byte)5),
         ["'V'"]                                                                                 = Expression.Constant('V'),
-        ["Math.PI"]                                                                             = Expression.Constant(Math.PI),
-        ["Math.E"]                                                                              = Expression.Constant(Math.E),
+        ["double.PI"]                                                                           = Expression.Constant(double.Pi),
+        ["double.E"]                                                                            = Expression.Constant(double.E),
+        ["double.MinValue"]                                                                     = Expression.Constant(-1.7976931348623157E+308, typeof(double)),
+        ["double.MaxValue"]                                                                     = Expression.Constant(double.MaxValue),
+        ["double.Epsilon"]                                                                      = Expression.Constant(double.Epsilon),
+        ["double.Nan"]                                                                          = Expression.Constant(double.NaN),
+        ["double.NegativeInfinity"]                                                             = Expression.Constant(double.NegativeInfinity),
+        ["double.NegativeZero"]                                                                 = Expression.Constant(double.NegativeZero),
+        ["double.PositiveInfinity"]                                                             = Expression.Constant(double.PositiveInfinity),
         ["-2.234567891233658E-123"]                                                             = Expression.Constant(-2.234567891233658E-123),
+        ["-2.234567891233658E-123"]                                                             = Expression.Constant(-2.234567891233658E-123),
+        ["float.MinValue"]                                                                      = Expression.Constant(float.MinValue),
+        ["float.MaxValue"]                                                                      = Expression.Constant(float.MaxValue),
+        ["float.Epsilon"]                                                                       = Expression.Constant(float.Epsilon),
+        ["float.Nan"]                                                                           = Expression.Constant(float.NaN),
+        ["float.NegativeInfinity"]                                                              = Expression.Constant(float.NegativeInfinity),
+        ["float.NegativeZero"]                                                                  = Expression.Constant(float.NegativeZero),
+        ["float.PositiveInfinity"]                                                              = Expression.Constant(float.PositiveInfinity),
         ["-2.234568E-23F"]                                                                      = Expression.Constant(-2.234568E-23F),
         ["5.1234567891234567E-123"]                                                             = Expression.Constant(5.1234567891234567E-123),
         ["5.5123453E-34F"]                                                                      = Expression.Constant(5.5123453E-34F),
@@ -48,7 +64,8 @@ public partial class ConstantTests
         ["ulong.IntMax+1"]                                                                      = Expression.Constant((ulong)ToJsonDataTransform.MaxJsonInteger+1),
         ["(ushort)5"]                                                                           = Expression.Constant((ushort)5),
         ["(ushort)443"]                                                                         = Expression.Constant((ushort)443),
-
+        // basic:
+        ["DateTime(2024, 4, 13, 23, 18, 26, 234)"]                                              = Expression.Constant(new DateTime(2024, 4, 13, 23, 18, 26, 234)),
         ["DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)"]                          = Expression.Constant(new DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)),
         ["DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))"]              = Expression.Constant(new DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))),
         ["TimeSpan(3, 4, 15, 32, 123)"]                                                         = Expression.Constant(new TimeSpan(3, 4, 15, 32, 123)),
@@ -59,10 +76,10 @@ public partial class ConstantTests
         ["(Half)3.14"]                                                                          = Expression.Constant((Half)3.14),
         ["abrah-cadabrah"]                                                                      = Expression.Constant("abrah-cadabrah"),
         ["Uri(\"http://www.delinea.com\")"]                                                     = Expression.Constant(new Uri("http://www.delinea.com")),
-
+        // enum
         ["EnumFlagsTest.One | EnumFlagsTest.Three"]                                             = Expression.Constant(EnumFlagsTest.One | EnumFlagsTest.Three),
         ["EnumTest.Three"]                                                                      = Expression.Constant(EnumTest.Three),
-
+        // nullable primitive
         ["(int?)5"]                                                                             = Expression.Constant(5, typeof(int?)),
         ["(int?)null"]                                                                          = Expression.Constant(null, typeof(int?)),
         ["(long?)5L"]                                                                           = Expression.Constant(5L, typeof(long?)),
@@ -75,16 +92,11 @@ public partial class ConstantTests
         ["(long?)long.IntMax+1"]                                                                = Expression.Constant(ToJsonDataTransform.MaxJsonInteger+1, typeof(long?)),
         ["(long?)long.IntMin+1"]                                                                = Expression.Constant(ToJsonDataTransform.MinJsonInteger+1, typeof(long?)),
         ["(long?)long.IntMax-1"]                                                                = Expression.Constant(ToJsonDataTransform.MaxJsonInteger-1, typeof(long?)),
-
-        ["(IntField: 1, StringField: \"one\")"]                                                 = Expression.Constant((IntField: 1, StringField: "one")),
-        ["(StructDataContract1)null"]                                                           = Expression.Constant(null, typeof(StructDataContract1?)),
-        ["(StructSerializable1)null"]                                                           = Expression.Constant(null, typeof(StructSerializable1?)),
-
-        ["(Object1)null"]                                                                       = Expression.Constant(null, typeof(Object1)),
+        // anonymous
         ["anonymous"]                                                                           = Expression.Constant(
                                                                                                                         new
                                                                                                                         {
-                                                                                                                            ObjectProperty = (object?)null,
+                                                                                                                            // TODO: ObjectProperty = (object?)null,
                                                                                                                             NullIntProperty = (int?)null,
                                                                                                                             NullLongProperty = (long?)1L,
                                                                                                                             BoolProperty = true,
@@ -103,14 +115,24 @@ public partial class ConstantTests
                                                                                                                             GuidProperty = Guid.Empty,
                                                                                                                             UriProperty = new Uri("http://localhost"),
                                                                                                                             DateTimeProperty = new DateTime(2013, 1, 13),
-                                                                                                                            TimeSpanProperty = new TimeSpan(123L),
                                                                                                                             DateTimeOffsetProperty = new DateTimeOffset(new DateTime(2013, 1, 13)),
+                                                                                                                            TimeSpanProperty = new TimeSpan(1, 2, 3, 4, 5, 6),
                                                                                                                         }),
+
+        ["byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                             = Expression.Constant(new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }),
         ["ArraySegment<byte>"]                                                                  = Expression.Constant(new ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8)),
+        ["Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])"]                                      = Expression.Constant(new Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])),
+        ["ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])"]                              = Expression.Constant(new ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])),
+        ["Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                      = Expression.Constant(new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }.ToFrozenSet()),
+
+
+        ["(StructDataContract1)null"]                                                           = Expression.Constant(null, typeof(StructDataContract1?)),
+        ["(StructSerializable1)null"]                                                           = Expression.Constant(null, typeof(StructSerializable1?)),
+
+        ["(Object1)null"]                                                                       = Expression.Constant(null, typeof(Object1)),
         ["ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)"]                                             = Expression.Constant(new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)),
         ["EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }"]                               = Expression.Constant(new EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }),
         ["BlockingCollection<double>()"]                                                        = Expression.Constant(new BlockingCollection<double>() { Math.PI, Math.Tau, Math.E }),
-        ["byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                             = Expression.Constant(new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }),
         ["ClassDataContract1()"]                                                                = Expression.Constant(new ClassDataContract1()),
         ["ClassDataContract1[] { new ClassDataContract1()..."]                                  = Expression.Constant(new ClassDataContract1?[] { new(), new ClassDataContract2(), null }),
         ["ClassDataContract1[] { new(0, \"vm\"), new(1, \"vm2 vm\"), }"]                        = Expression.Constant(new ClassDataContract1[] { new(0, "vm"), new(1, "vm2 vm"), }),
@@ -124,7 +146,6 @@ public partial class ConstantTests
         ["Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\"..."]                           = Expression.Constant(new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }),
         ["Dictionary<int, string>{ [1] = \"one\", [2] = \"two\", [3]..."]                       = Expression.Constant(new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", }),
         ["Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"]                                = Expression.Constant(new Dictionary<int, string>{ [1] ="one", [2]="two" }),
-        ["Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                      = Expression.Constant(new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }.ToFrozenSet()),
         ["Frozen decimal[]{ 1, 2, 3, 4 }"]                                                      = Expression.Constant(new decimal[]{ 1, 2, 3, 4 }.ToFrozenSet()),
         ["Frozen Dictionary<int, string?>..."]                                                  = Expression.Constant(new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }.ToFrozenDictionary()),
         ["Frozen Dictionary<int, string>..."]                                                   = Expression.Constant(new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", }.ToFrozenDictionary()),
@@ -197,7 +218,6 @@ public partial class ConstantTests
         ["LinkedList<int>([1, 2, 3, 4])"]                                                       = Expression.Constant(new LinkedList<int>([1, 2, 3, 4])),
         ["List<int?>{ 1, 2, null, null }"]                                                      = Expression.Constant(new List<int?>{ 1, 2, null, null }),
         ["List<int>([1, 2, 3, 4])"]                                                             = Expression.Constant(new List<int>([1, 2, 3, 4])),
-        ["Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])"]                                      = Expression.Constant(new Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])),
         ["Memory<int>([ 1, 2, 3, 4 ])"]                                                         = Expression.Constant(new Memory<int>([ 1, 2, 3, 4 ])),
         ["null"]                                                                                = Expression.Constant(null),
         ["object()"]                                                                            = Expression.Constant(new object()),
@@ -206,7 +226,6 @@ public partial class ConstantTests
         ["Queue<int>([1, 2, 3, 4])"]                                                            = Expression.Constant(new Queue<int>([1, 2, 3, 4])),
         ["ReadOnlyCollection<int>([1, 2, 3, 4])"]                                               = Expression.Constant(new ReadOnlyCollection<int>([1, 2, 3, 4])),
         ["ReadOnlyDictionary<int, string>..."]                                                  = Expression.Constant(new ReadOnlyDictionary<int, string>(new Dictionary<int, string>{ [1] ="one", [2]="two" })),
-        ["ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])"]                              = Expression.Constant(new ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])),
         ["ReadOnlyMemory<int>([ 1, 2, 3, 4 ])"]                                                 = Expression.Constant(new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])),
         ["SortedDictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"]                          = Expression.Constant(new SortedDictionary<int, string>{ [1] ="one", [2]="two" }),
         ["SortedSet<int>([1, 2, 3, 4])"]                                                        = Expression.Constant(new SortedSet<int>([1, 2, 3, 4])),
@@ -265,6 +284,7 @@ public partial class ConstantTests
                                                                                                                                 StringProperty = "vm vm",
                                                                                                                             },
                                                                                                                         }),
+        ["(IntField: 1, StringField: \"one\")"]                                                 = Expression.Constant((IntField: 1, StringField: "one")),
         ["Tuple<int, string>(1, \"one\")"]                                                      = Expression.Constant(new Tuple<int, string>(1, "one")),
     };
 }

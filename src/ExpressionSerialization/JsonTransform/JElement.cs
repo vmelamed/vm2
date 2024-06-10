@@ -5,6 +5,7 @@
 /// <see cref="KeyValuePair{TKey, TValue}"/> is a struct, so we cannot inherit from it but we have implicit conversions 
 /// to and from it.
 /// </summary>
+[DebuggerDisplay("\"{Key}\": {Value}")]
 public struct JElement(string key = "", JsonNode? value = null)
 {
     /// <summary>
@@ -28,9 +29,8 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="key">The key of the property represented by this <see cref="JElement"/>.</param>
     /// <param key="properties">The set of key-value pairs/properties to be inserted in the <see cref="Value"/>.</param>
     public JElement(string key, params JElement?[] properties)
-        : this(key, properties.AsEnumerable())
-    {
-    }
+        : this(key, new JsonObject())
+        => Add(properties);
 
     /// <summary>
     /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Value"/>
@@ -40,11 +40,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="properties">The set of key-value pairs/properties to be inserted in the <see cref="Value"/>.</param>
     public JElement(string key, IEnumerable<JElement> properties)
         : this(key, new JsonObject())
-    {
-        if (Value is JsonObject jObj)
-            foreach (var property in properties)
-                jObj.Add((KeyValuePair<string, JsonNode?>)(property!));
-    }
+        => Add(properties);
 
     /// <summary>
     /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Value"/>
@@ -54,11 +50,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="properties">The set of key-value pairs/properties to be inserted in the <see cref="Value"/>.</param>
     public JElement(string key, IEnumerable<JElement?> properties)
         : this(key, new JsonObject())
-    {
-        if (Value is JsonObject jObj)
-            foreach (var property in properties.Where(p => p is not null))
-                jObj.Add((KeyValuePair<string, JsonNode?>)(property!));
-    }
+        => Add(properties);
 
     /// <summary>
     /// Adds the <paramref key="key"/> and <paramref name="value"/> to the current <see cref="Value"/> if its type is 
@@ -106,7 +98,8 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="properties"></param>
     /// <returns>this</returns>
     /// <exception cref="InternalTransformErrorException"></exception>
-    public JElement Add(params JElement?[] properties) => Add(properties.AsEnumerable());
+    public JElement Add(params JElement?[] properties)
+        => Add(properties.AsEnumerable());
 
     /// <summary>
     /// Adds a the properties from the parameter to the current <see cref="Value"/> if the type of the value is 
@@ -124,6 +117,27 @@ public struct JElement(string key = "", JsonNode? value = null)
             throw new InternalTransformErrorException($"Trying to add the properties to a `{Value.GetValueKind()}` JSON element.");
 
         foreach (var property in properties.Where(p => p is not null))
+            jObject.Add(property!);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a the properties from the parameter to the current <see cref="Value"/> if the type of the value is 
+    /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject value). If any of the
+    /// properties in the <paramref key="properties"/> are <c>null</c> the method quietly skips them.
+    /// </summary>
+    /// <param key="properties"></param>
+    /// <returns>this</returns>
+    /// <exception cref="InternalTransformErrorException"></exception>
+    public JElement Add(IEnumerable<JElement> properties)
+    {
+        Value ??= new JsonObject();
+
+        if (Value is not JsonObject jObject)
+            throw new InternalTransformErrorException($"Trying to add the properties to a `{Value.GetValueKind()}` JSON element.");
+
+        foreach (var property in properties)
             jObject.Add(property!);
 
         return this;

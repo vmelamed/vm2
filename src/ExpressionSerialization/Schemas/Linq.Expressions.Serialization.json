@@ -12,7 +12,9 @@
                     "$ref": "#/$defs/constantValue"
                 }
             },
-            "additionalProperties": false
+            "additionalProperties": {
+                "type": "string"
+            }
         }
     },
     "required": [
@@ -77,7 +79,15 @@
             "type": "object",
             "properties": {
                 "double": {
-                    "type": "number"
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^(?:NaN)|(?:-?Infinity)$"
+                        }
+                    ]
                 }
             },
             "additionalProperties": {
@@ -92,7 +102,15 @@
             "type": "object",
             "properties": {
                 "float": {
-                    "type": "number"
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^(?:NaN)|(?:-?Infinity)$"
+                        }
+                    ]
                 }
             },
             "additionalProperties": {
@@ -121,7 +139,6 @@
         },
         "intConstant": {
             "title": "32-bit, signed, integer, numeric value",
-            "$comment": "Represents 32-bit, signed, integer, numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
                 "int": {
@@ -139,7 +156,6 @@
         },
         "intPtrConstant": {
             "title": "32-bit, signed, integer, numeric value (.NET specific)",
-            "$comment": "Represents 32-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
                 "intPtr": {
@@ -183,7 +199,6 @@
         },
         "shortConstant": {
             "title": "16-bit, signed, integer, numeric value",
-            "description": "Represents 16-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
                 "short": {
@@ -219,7 +234,6 @@
         },
         "unsignedIntConstant": {
             "title": "32-bit, unsigned, integer, numeric value",
-            "$comment": "Represents 32-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
                 "unsignedInt": {
@@ -236,8 +250,7 @@
             ]
         },
         "unsignedIntPtrConstant": {
-            "title": "32-bit, unsigned, integer, numeric value (.NET specific)",
-            "$comment": "Represents 32-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
+            "title": "32-bit, unsigned, integer, numeric value (.NET specific)",            
             "type": "object",
             "properties": {
                 "unsignedIntPtr": {
@@ -281,7 +294,6 @@
         },
         "unsignedShortConstant": {
             "title": "16-bit, unsigned, integer, numeric value",
-            "description": "Represents 16-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. Even though the current type of constants fit well in the JavaScript integer range, for consistency this and all integer values can be represented as strings as well.",
             "type": "object",
             "properties": {
                 "unsignedShort": {
@@ -299,13 +311,12 @@
         },
         "dateTimeConstant": {
             "title": "Date and time values",
-            "description": "Represents points in time (date and time) as strings following RFC3339 and ISO 8601",
+            "description": "Represents points in time (date and time) as strings following RFC3339 and ISO 8601. If the UTC relation information is omitted, it is assumed that it is \"local time\".",
             "type": "object",
             "properties": {
                 "dateTime": {
                     "type": "string",
-                    "format": "date-time",
-                    "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(\\.[0-9]+)?(Z|([-+]([01][0-9]|2[0-3])(:?[0-5][0-9])?))$"
+                    "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(\\.[0-9]+)?(Z|([-+]([01][0-9]|2[0-3])(:?[0-5][0-9])?))?$"
                 }
             },
             "additionalProperties": {
@@ -483,26 +494,31 @@
             "type": "object",
             "properties": {
                 "anonymous": {
-                    "oneOf": [
-                        {
-                            "type": "object"
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^@?[A-Z_a-z][0-9A-Z_a-z]*$": {
+                                    "$ref": "#/$defs/constantValue"
+                                }
+                            },
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         },
-                        {
-                            "type": "null"
+                        "type": {
+                            "type": "string"
                         }
-                    ],
-                    "default": null
-                },
-                "objectType": {
-                    "type": "string"
+                    },
+                    "required": [ "value", "type" ]
                 }
             },
             "additionalProperties": {
                 "type": "string"
             },
             "required": [
-                "anonymous",
-                "objectType"
+                "anonymous"
             ]
         },
         "enumConstant": {
@@ -594,6 +610,27 @@
                 "nullable": {
                     "oneOf": [
                         {
+                            "title": "Null Nullable<T>",
+                            "$comment": "Represents a null Nullable<T> value",
+                            "type": "object",
+                            "properties": {
+                                "nil": {
+                                    "const": true
+                                },
+                                "type": {
+                                    "type": "string"
+
+                                }
+                            },
+                            "additionalProperties": {
+                                "type": "string"
+                            },
+                            "required": [
+                                "nil",
+                                "type"
+                            ]
+                        },
+                        {
                             "$ref": "#/$defs/booleanConstant"
                         },
                         {
@@ -659,27 +696,6 @@
                         {
                             "$comment": "Here we mean only struct object values but JSON wouldn't not understand that.",
                             "$ref": "#/$defs/objectConstant"
-                        },
-                        {
-                            "title": "Null Nullable<T>",
-                            "$comment": "Represents a null Nullable<T> value",
-                            "type": "object",
-                            "properties": {
-                                "nil": {
-                                    "const": true
-                                },
-                                "type": {
-                                    "type": "string"
-
-                                }
-                            },
-                            "additionalProperties": {
-                                "type": "string"
-                            },
-                            "required": [
-                                "nil",
-                                "type"
-                            ]
                         }
                     ]
                 }

@@ -5,33 +5,33 @@
 /// </summary>
 public abstract class DocumentOptions
 {
-    /// <summary>
-    /// Flag whether any of the options have changed.
-    /// </summary>
-    bool _changed = false;
-
     IdentifierConventions _identifiers = IdentifierConventions.Preserve;
     TypeNameConventions _typeNames = TypeNameConventions.FullName;
     ValidateDocuments _validateInputDocuments = ValidateDocuments.IfSchemaPresent;
+
     bool _indent = true;
     int _indentSize = 2;
     bool _addComments = false;
+    bool _changed = false;
 
     /// <summary>
     /// Marks the instance as changed if <paramref name="compare"/> (the comparison of old and new value of a property) is true.
     /// </summary>
-    protected bool Changed(bool compare) => _changed |= compare;
+    protected bool Change(bool compare) => _changed |= compare;
 
     /// <summary>
-    /// Determines whether this instance has changed since the last call to <see cref="HasChanged"/> and then marks the
+    /// Determines whether this instance has changed since the last call to <see cref="Changed"/> and then marks the
     /// instance as not-changed.
     /// </summary>
     /// <returns><c>true</c> if this instance has changed; otherwise, <c>false</c>.</returns>
-    public bool HasChanged()
+    public bool Changed
     {
-        var c = _changed;
-        _changed = false;
-        return c;
+        get
+        {
+            var c = _changed;
+            _changed = false;
+            return c;
+        }
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public abstract class DocumentOptions
         get => _identifiers;
         set
         {
-            if (Changed(_identifiers != value))
+            if (Change(_identifiers != value))
                 _identifiers = value;
         }
     }
@@ -57,7 +57,7 @@ public abstract class DocumentOptions
         get => _typeNames;
         set
         {
-            if (Changed(_typeNames != value))
+            if (Change(_typeNames != value))
                 _typeNames = value;
         }
     }
@@ -71,7 +71,7 @@ public abstract class DocumentOptions
         get => _indent;
         set
         {
-            if (Changed(_indent != value))
+            if (Change(_indent != value))
                 _indent = value;
         }
     }
@@ -85,7 +85,7 @@ public abstract class DocumentOptions
         get => _indentSize;
         set
         {
-            if (Changed(_indentSize != value))
+            if (Change(_indentSize != value))
                 _indentSize = value;
         }
     }
@@ -99,7 +99,7 @@ public abstract class DocumentOptions
         get => _addComments;
         set
         {
-            if (Changed(_addComments != value))
+            if (Change(_addComments != value))
                 _addComments = value;
         }
     }
@@ -112,7 +112,7 @@ public abstract class DocumentOptions
         get => _validateInputDocuments;
         set
         {
-            if (Changed(_validateInputDocuments != value))
+            if (Change(_validateInputDocuments != value))
                 _validateInputDocuments = value;
         }
     }

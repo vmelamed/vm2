@@ -27,12 +27,12 @@ public partial class JsonOptions : DocumentOptions
         CommentHandling     = JsonCommentHandling.Skip,
         MaxDepth            = 1000
     };
-#pragma warning restore IDE0032 // Use auto property
 
     static readonly EvaluationOptions _evaluationOptions = new() {
         OutputFormat            = OutputFormat.Hierarchical,
         RequireFormatValidation = true,
     };
+#pragma warning restore IDE0032 // Use auto property
 
     JsonSchema? _schema;
     bool _allowTrailingCommas = true;
@@ -82,7 +82,7 @@ public partial class JsonOptions : DocumentOptions
         get => _allowTrailingCommas;
         set
         {
-            if (Changed(_allowTrailingCommas != value))
+            if (Change(_allowTrailingCommas != value))
                 _allowTrailingCommas = value;
         }
     }
@@ -91,23 +91,24 @@ public partial class JsonOptions : DocumentOptions
     /// Creates the json serializer options object appropriate for the JsonTransform.
     /// </summary>
     /// <returns>System.Text.Json.JsonSerializerOptions.</returns>
-    public JsonSerializerOptions JsonSerializerOptions => HasChanged() || _jsonSerializerOptions is null
-                                                                ? (_jsonSerializerOptions = new() {
-                                                                    AllowTrailingCommas = AllowTrailingCommas,
-                                                                    Encoder = JavaScriptEncoder.Default,
-                                                                    Converters = { _jsonStringEnumConverter },
-                                                                    MaxDepth = 1000,
-                                                                    NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals |
-                                                                                     JsonNumberHandling.AllowReadingFromString,
-                                                                    PreferredObjectCreationHandling = JsonObjectCreationHandling.Populate,
-                                                                    ReadCommentHandling = JsonCommentHandling.Skip,
-                                                                    ReferenceHandler = ReferenceHandler.Preserve,
-                                                                    UnknownTypeHandling = JsonUnknownTypeHandling.JsonNode,
-                                                                    UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
-                                                                    TypeInfoResolver = null,
-                                                                    WriteIndented = Indent,
-                                                                })
-                                                                : _jsonSerializerOptions;
+    public JsonSerializerOptions JsonSerializerOptions
+        => _jsonSerializerOptions is not null && !Changed
+                ? _jsonSerializerOptions
+                : (_jsonSerializerOptions = new() {
+                    AllowTrailingCommas = AllowTrailingCommas,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    Converters = { _jsonStringEnumConverter },
+                    MaxDepth = 1000,
+                    NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals |
+                                     JsonNumberHandling.AllowReadingFromString,
+                    PreferredObjectCreationHandling = JsonObjectCreationHandling.Populate,
+                    ReadCommentHandling = JsonCommentHandling.Skip,
+                    ReferenceHandler = ReferenceHandler.Preserve,
+                    UnknownTypeHandling = JsonUnknownTypeHandling.JsonNode,
+                    UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
+                    TypeInfoResolver = null,
+                    WriteIndented = Indent,
+                });
 
     /// <summary>
     /// Gets the json node options.
@@ -153,7 +154,7 @@ public partial class JsonOptions : DocumentOptions
     {
         if (results.HasErrors && results.Errors is not null)
             foreach (var (k, v) in results.Errors)
-                writer.WriteLine($"{new string(' ', indent * 2)}{k}: {v}");
+                writer.WriteLine($"{new string(' ', indent * 2)}{k}: {v} ({results.InstanceLocation})");
 
         if (results.HasDetails && results.Details is not null)
             foreach (var nestedResults in results.Details)

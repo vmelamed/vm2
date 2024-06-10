@@ -157,19 +157,17 @@ class ToXmlDataTransform(XmlOptions options)
         var anonymousElement = new XElement(
                                     ElementNames.Anonymous,
                                     new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)));
-        var pis = nodeType.GetProperties();
 
-        for (var i = 0; i < pis.Length; i++)
-        {
-            var pi = pis[i];
+        anonymousElement.Add(
+            nodeType
+                .GetProperties()
+                .Select(pi => new XElement(
+                    ElementNames.Property,
+                    new XAttribute(AttributeNames.Name, pi.Name),
+                    options.TypeComment(pi.PropertyType),
+                    GetTransform(pi.PropertyType)(pi.GetValue(nodeValue, null), pi.PropertyType)))
+                .ToArray());
 
-            anonymousElement.Add(
-                new XElement(
-                        ElementNames.Property,
-                        new XAttribute(AttributeNames.Name, pi.Name),
-                        options.TypeComment(pi.PropertyType),
-                        GetTransform(pi.PropertyType)(pi.GetValue(nodeValue, null), pi.PropertyType)));
-        }
 
         return anonymousElement;
     }

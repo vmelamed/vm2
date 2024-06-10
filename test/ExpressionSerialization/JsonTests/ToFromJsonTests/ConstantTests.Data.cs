@@ -4,14 +4,29 @@ public partial class ConstantTests
 {
     public static readonly TheoryData<string, string, string> ConstantsData = new ()
     {
+        // primitive:
         { TestLine(), "false",                                                                  "Bool.False.json" },
         { TestLine(), "true",                                                                   "Bool.True.json" },
         { TestLine(), "(byte)5",                                                                "Byte.json" },
         { TestLine(), "'V'",                                                                    "Char.json" },
-        { TestLine(), "Math.PI",                                                                "Double.PI.json" },
-        { TestLine(), "Math.E",                                                                 "Double.E.json" },
+        { TestLine(), "double.PI",                                                              "Double.Pi.json" },
+        { TestLine(), "double.E",                                                               "Double.E.json" },
+        { TestLine(), "double.MinValue",                                                        "Double.MinValue.json" },
+        { TestLine(), "double.MaxValue",                                                        "Double.MaxValue.json" },
+        { TestLine(), "double.Epsilon",                                                         "Double.Epsilon.json" },
+        { TestLine(), "double.Nan",                                                             "Double.Nan.json" },
+        { TestLine(), "double.NegativeInfinity",                                                "Double.NegativeInfinity.json" },
+        { TestLine(), "double.NegativeZero",                                                    "Double.NegativeZero.json" },
+        { TestLine(), "double.PositiveInfinity",                                                "Double.PositiveInfinity.json" },
         { TestLine(), "-2.234567891233658E-123",                                                "Double.2.2345.json" },
         { TestLine(), "5.1234567891234567E-123",                                                "Double.5.12345.json" },
+        { TestLine(), "float.MinValue",                                                         "Float.MinValue.json" },
+        { TestLine(), "float.MaxValue",                                                         "Float.MaxValue.json" },
+        { TestLine(), "float.Epsilon",                                                          "Float.Epsilon.json" },
+        { TestLine(), "float.Nan",                                                              "Float.Nan.json" },
+        { TestLine(), "float.NegativeInfinity",                                                 "Float.NegativeInfinity.json" },
+        { TestLine(), "float.NegativeZero",                                                     "Float.NegativeZero.json" },
+        { TestLine(), "float.PositiveInfinity",                                                 "Float.PositiveInfinity.json" },
         { TestLine(), "-2.234568E-23F",                                                         "Float.2.2345.json" },
         { TestLine(), "5.5123453E-34F",                                                         "Float.5.512345.json" },
         { TestLine(), "5",                                                                      "Int.5.json" },
@@ -48,8 +63,9 @@ public partial class ConstantTests
         { TestLine(), "ulong.IntMax+1",                                                         "UnsignedLong.IntMax+1.json"},
         { TestLine(), "(ushort)5",                                                              "UnsignedShort.5.json"},
         { TestLine(), "(ushort)443",                                                            "UnsignedShort.443.json"},
-
+        // basic:
         { TestLine(), "DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)",             "DateTime.json" },
+        { TestLine(), "DateTime(2024, 4, 13, 23, 18, 26, 234)",                                 "DateTime.Local.json" },
         { TestLine(), "DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))", "DateTimeOffset.json" },
         { TestLine(), "TimeSpan(3, 4, 15, 32, 123)",                                            "TimeSpan.json" },
         { TestLine(), "TimeSpan(-3, 4, 15, 32, 123)",                                           "TimeSpan-.json" },
@@ -59,10 +75,10 @@ public partial class ConstantTests
         { TestLine(), "(Half)3.14",                                                             "Half.json" },
         { TestLine(), "abrah-cadabrah",                                                         "String.json" },
         { TestLine(), "Uri(\"http://www.delinea.com\")",                                        "Uri.json" },
-
+        // enum
         { TestLine(), "EnumFlagsTest.One | EnumFlagsTest.Three",                                "EnumFlags.json" },
         { TestLine(), "EnumTest.Three",                                                         "Enum.json" },
-
+        // nullable primitive
         { TestLine(), "(int?)5",                                                                "Int0.5.json" },
         { TestLine(), "(int?)null",                                                             "Int0.Null.json" },
         { TestLine(), "(long?)5L",                                                              "Long0.5.json" },
@@ -75,18 +91,25 @@ public partial class ConstantTests
         { TestLine(), "(long?)long.IntMax+1",                                                   "Long0.IntMax+1.json" },
         { TestLine(), "(long?)long.IntMin+1",                                                   "Long0.IntMin+1.json" },
         { TestLine(), "(long?)long.IntMax-1",                                                   "Long0.IntMax-1.json" },
+        // anonymous
+        { TestLine(), "anonymous",                                                              "Anonymous.json" },
+
+        { TestLine(), "byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                                "Bytes.Array.json" },
+        { TestLine(), "Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                         "Bytes.Memory.json" },
+        { TestLine(), "ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                 "Bytes.ReadOnlyMemory.json" },
+        { TestLine(), "ArraySegment<byte>",                                                     "Bytes.ArraySegment.json" },
+        { TestLine(), "Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                         "Bytes.ArrayFrozen.json" },
+
+
 
         { TestLine(), "(IntField: 1, StringField: \"one\")",                                    "ValueTupleIntString.json" },
         { TestLine(), "(Object1)null",                                                          "Object1Null.json" },
         { TestLine(), "(StructDataContract1)null",                                              "NullNullableStructDataContract1.json" },
         { TestLine(), "(StructSerializable1)null",                                              "NullNullableStructSerializable1.json" },
 
-        { TestLine(), "anonymous",                                                              "Anonymous.json" },
-        { TestLine(), "ArraySegment<byte>",                                                     "ByteArraySegment.json" },
         { TestLine(), "ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)",                                "IntArraySegment.json" },
         { TestLine(), "EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }",                  "ArrayOfNullableEnums.json" },
         { TestLine(), "BlockingCollection<double>()",                                           "BlockingCollection.json" },
-        { TestLine(), "byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                                "ByteArray.json" },
         { TestLine(), "ClassDataContract1()",                                                   "ClassDataContract1.json" },
         { TestLine(), "ClassDataContract1[] { new ClassDataContract1()...",                     "ArrayWithClassDataContract1and2.json" },
         { TestLine(), "ClassDataContract1[] { new(0, \"vm\"), new(1, \"vm2 vm\"), }",           "ArrayOfClassDataContract1.json" },
@@ -99,7 +122,6 @@ public partial class ConstantTests
         { TestLine(), "ConcurrentStack<int>([1, 2, 3, 4])",                                     "IntConcurrentStack.json" },
         { TestLine(), "Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }",                   "DictionaryIntString.json" },
         { TestLine(), "Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" }",                   "DictionaryIntString.json" },
-        { TestLine(), "Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                         "ByteArrayFrozen.json" },
         { TestLine(), "Frozen decimal[]{ 1, 2, 3, 4 }",                                         "DecimalFrozenSet.json" },
         { TestLine(), "Frozen Dictionary<int, string?>...",                                     "IntNullableStringDictionary.json" },
         { TestLine(), "Frozen Dictionary<int, string>...",                                      "IntStringDictionaryFrozen.json" },
@@ -122,7 +144,6 @@ public partial class ConstantTests
         { TestLine(), "LinkedList<int>([1, 2, 3, 4])",                                          "IntLinkedList.json" },
         { TestLine(), "List<int?>{ 1, 2, null, null }",                                         "ListOfNullableInt.json" },
         { TestLine(), "List<int>([1, 2, 3, 4])",                                                "IntList.json" },
-        { TestLine(), "Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                         "ByteMemory.json" },
         { TestLine(), "Memory<int>([ 1, 2, 3, 4 ])",                                            "IntMemory.json" },
         { TestLine(), "null",                                                                   "NullObject.json" },
         { TestLine(), "object()",                                                               "Object.json" },
@@ -131,7 +152,6 @@ public partial class ConstantTests
         { TestLine(), "Queue<int>([1, 2, 3, 4])",                                               "IntQueue.json" },
         { TestLine(), "ReadOnlyCollection<int>([1, 2, 3, 4])",                                  "IntReadOnlyCollection.json" },
         { TestLine(), "ReadOnlyDictionary<int, string>...",                                     "ReadOnlyDictionaryIntString.json" },
-        { TestLine(), "ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                 "ByteReadOnlyMemory.json" },
         { TestLine(), "ReadOnlyMemory<int>([ 1, 2, 3, 4 ])",                                    "IntReadOnlyMemory.json" },
         { TestLine(), "SortedDictionary<int, string>{ [1] =\"one\", [2]=\"two\" }",             "SortedDictionaryIntString.json" },
         { TestLine(), "SortedSet<int>([1, 2, 3, 4])",                                           "IntSortedSet.json" },

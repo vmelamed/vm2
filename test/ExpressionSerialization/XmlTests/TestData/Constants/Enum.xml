@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Three -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <constant>
+        <!-- Three -->
+        <!-- vm2.ExpressionSerialization.XmlTests.EnumTest -->
+        <enum
+            type="vm2.ExpressionSerialization.XmlTests.EnumTest, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+            baseValue="2">Three</enum>
+    </constant>
+</expression>
