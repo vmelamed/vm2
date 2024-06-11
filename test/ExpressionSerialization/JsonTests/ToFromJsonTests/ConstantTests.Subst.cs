@@ -123,8 +123,6 @@ public partial class ConstantTests
         ["ArraySegment<byte>"]                                                                  = Expression.Constant(new ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8)),
         ["Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])"]                                      = Expression.Constant(new Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])),
         ["ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])"]                              = Expression.Constant(new ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])),
-        ["Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                      = Expression.Constant(new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }.ToFrozenSet()),
-
 
         ["(StructDataContract1)null"]                                                           = Expression.Constant(null, typeof(StructDataContract1?)),
         ["(StructSerializable1)null"]                                                           = Expression.Constant(null, typeof(StructSerializable1?)),
@@ -150,6 +148,7 @@ public partial class ConstantTests
         ["Frozen Dictionary<int, string?>..."]                                                  = Expression.Constant(new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }.ToFrozenDictionary()),
         ["Frozen Dictionary<int, string>..."]                                                   = Expression.Constant(new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", }.ToFrozenDictionary()),
         ["Frozen EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }"]                        = Expression.Constant(new EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }.ToFrozenSet()),
+        ["Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                      = Expression.Constant(new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }.ToFrozenSet()),
         ["Frozen int?[]{ 1, 2, null, null }"]                                                   = Expression.Constant(new int?[]{ 1, 2, null, null }.ToFrozenSet()),
         ["Frozen int[]{ 1, 2, 3, 4 }"]                                                          = Expression.Constant(new int[]{ 1, 2, 3, 4 }.ToFrozenSet()),
         ["Frozen object[anonymous]"]                                                            = Expression.Constant(new object?[] {

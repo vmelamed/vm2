@@ -260,8 +260,8 @@ public class ToJsonDataTransform(JsonOptions options)
         }
 
         sequenceElement.Add(
-            new JElement(Vocabulary.Length, bytes.Length),
-            new JElement(Vocabulary.Value, Convert.ToBase64String(bytes)));
+            new JElement(Vocabulary.Value, Convert.ToBase64String(bytes)),
+            new JElement(Vocabulary.Length, bytes.Length));
 
         return sequenceElement;
     }
