@@ -122,10 +122,9 @@ class ToXmlDataTransform(XmlOptions options)
         object? nodeValue,
         Type nodeType)
     {
-        var nullableType    = nodeType;
-        var underlyingType  = nullableType.GetGenericArguments()[0];
+        var underlyingType  = nodeType.GetGenericArguments()[0];
         var nullable        = nodeValue;
-        var isNull          = nullable is null || nullableType.GetProperty("HasValue")?.GetValue(nullable) is false;
+        var isNull          = nullable is null || nodeType.GetProperty("HasValue")?.GetValue(nullable) is false;
 
         var nullableElement = new XElement(
                                     ElementNames.Nullable,
@@ -135,7 +134,7 @@ class ToXmlDataTransform(XmlOptions options)
         if (isNull)
             return nullableElement;
 
-        var value = nullableType.GetProperty("Value")?.GetValue(nullable)
+        var value = nodeType.GetProperty("Value")?.GetValue(nullable)
                         ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but the v is null.");
 
         nullableElement.Add(

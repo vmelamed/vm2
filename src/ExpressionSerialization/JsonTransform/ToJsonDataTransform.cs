@@ -287,44 +287,37 @@ public class ToJsonDataTransform(JsonOptions options)
                                 new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
                                 options.TypeComment(elementType),
                                 new JElement(Vocabulary.ElementType, Transform.TypeName(elementType)),
-                                new JElement(Vocabulary.Null, true)
+                                new JElement(Vocabulary.Value)
                             );
 
-            var piCount = nodeType.GetProperty("Count") ?? nodeType.GetProperty("GetLength");
-            var length = (int?)piCount?.GetValue(nodeValue);
-            var collectionElement = new JElement(
-                                        Vocabulary.Collection,
-                                        new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                                        new JElement(Vocabulary.ElementType, Transform.TypeName(elementType)),
-                                        length.HasValue ? new JElement(Vocabulary.Length, length.Value) : null,
-                                        options.TypeComment(elementType)
-                                    );
+            var piLength = nodeType.GetProperty("Count") ?? nodeType.GetProperty("GetLength");
+            var length = (int?)piLength?.GetValue(nodeValue);
+            var enumerable = nodeValue as IEnumerable;
 
-            if (nodeValue is IEnumerable enumerable1)
+            if (enumerable is null)
             {
-                foreach (var element in enumerable1)
-                    collectionElement.Add(
-                        GetTransform(elementType)(element, elementType));
+                Debug.Assert(nodeType.IsMemory());
 
-                return collectionElement;
+                enumerable = nodeType.GetMethod("ToArray")?.Invoke(nodeValue, null) as IEnumerable;
+
+                if (enumerable is null)
+                    throw new InternalTransformErrorException($"Could not find the enumerable for {nodeType.FullName}.");
             }
 
-            // Of all sequences only Memory<> does not implement IEnumerable.
-            // TODO: figure out how to enumerate Memory<> with reflection, instead of copying to array:
-            Debug.Assert(nodeType.IsMemory());
-
-            var array = nodeType.GetMethod("ToArray")?.Invoke(nodeValue, null);
-
-            if (array is IEnumerable enumerable2)
-            {
-                foreach (var element in enumerable2)
-                    collectionElement.Add(
-                        GetTransform(elementType)(element, elementType));
-
-                return collectionElement;
-            }
-
-            throw new InternalTransformErrorException($"Could not find the enumerable for {nodeType.FullName}.");
+            return new JElement(
+                            Vocabulary.Collection,
+                            new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                            new JElement(Vocabulary.ElementType, Transform.TypeName(elementType)),
+                            options.TypeComment(elementType),
+                            new JElement(
+                                    Vocabulary.Value,
+                                    new JsonArray(
+                                        enumerable
+                                            .Cast<object?>()
+                                            .Select(e => new JsonObject()
+                                                                .Add((JElement?)GetTransform(elementType)(e, elementType)))
+                                            .ToArray())),
+                            length.HasValue ? new JElement(Vocabulary.Length, length.Value) : null);
         }
         catch (Exception ex)
         {
