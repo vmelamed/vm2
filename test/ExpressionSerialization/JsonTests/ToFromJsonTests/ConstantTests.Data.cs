@@ -103,11 +103,15 @@ public partial class ConstantTests
         { TestLine(), "int?[]{ 1, 2, null, null }",                                             "ArrayOfNullableInt.json" },
         { TestLine(), "Memory<int>([ 1, 2, 3, 4 ])",                                            "IntMemory.json" },
         { TestLine(), "EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }",                  "ArrayOfNullableEnums.json" },
+        { TestLine(), "ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)",                                "IntArraySegment.json" },
         { TestLine(), "List<int>([1, 2, 3, 4])",                                                "IntList.json" },
         { TestLine(), "List<int?>{ 1, 2, null, null }",                                         "ListOfNullableInt.json" },
         { TestLine(), "LinkedList<int>([1, 2, 3, 4])",                                          "IntLinkedList.json" },
         { TestLine(), "Collection<int>([1, 2, 3, 4])",                                          "IntCollection.json" },
+        { TestLine(), "ReadOnlyCollection<int>([1, 2, 3, 4])",                                  "IntReadOnlyCollection.json" },
+        { TestLine(), "ReadOnlyMemory<int>([ 1, 2, 3, 4 ])",                                    "IntReadOnlyMemory.json" },
         { TestLine(), "HashSet<int>([1, 2, 3, 4])",                                             "IntHashSet.json" },
+        { TestLine(), "SortedSet<int>([1, 2, 3, 4])",                                           "IntSortedSet.json" },
         { TestLine(), "Queue<int>([1, 2, 3, 4])",                                               "IntQueue.json" },
         { TestLine(), "Stack<int>([1, 2, 3, 4])",                                               "IntStack.json" },
         { TestLine(), "BlockingCollection<double>()",                                           "BlockingCollection.json" },
@@ -126,9 +130,12 @@ public partial class ConstantTests
         { TestLine(), "ImmutableQueue.Create(1, 2, 3, 4 )",                                     "IntImmutableQueue.json" },
         { TestLine(), "ImmutableSortedSet.Create(1, 2, 3, 4 )",                                 "IntImmutableSortedSet.json" },
         { TestLine(), "ImmutableStack.Create(1, 2, 3, 4 )",                                     "IntImmutableStack.json" },
-        { TestLine(), "ReadOnlyCollection<int>([1, 2, 3, 4])",                                  "IntReadOnlyCollection.json" },
-        { TestLine(), "ReadOnlyMemory<int>([ 1, 2, 3, 4 ])",                                    "IntReadOnlyMemory.json" },
-        { TestLine(), "SortedSet<int>([1, 2, 3, 4])",                                           "IntSortedSet.json" },
+
+        { TestLine(), "Tuple<int, string>",                                                     "Tuple.json" },
+        { TestLine(), "ValueTuple<int, string>",                                                "TupleValue.json" },
+
+        // --------------------------------------------------------------------------------------------------------
+
         { TestLine(), "StructDataContract1?[]",                                                 "ArrayOfNullableStructDataContract1.json" },
         { TestLine(), "StructDataContract1[]",                                                  "ArrayOfStructDataContract1.json" },
         { TestLine(), "StructSerializable1?[]",                                                 "ArrayOfNullableStructSerializable1.json" },
@@ -137,12 +144,11 @@ public partial class ConstantTests
         { TestLine(), "ClassDataContract1[] { new ClassDataContract1()...",                     "ArrayWithClassDataContract1and2.json" },
         { TestLine(), "ClassDataContract1[] { new(0, \"vm\"), new(1, \"vm2 vm\"), }",           "ArrayOfClassDataContract1.json" },
 
+        // -----------------------------------
 
         { TestLine(), "(Object1)null",                                                          "Object1Null.json" },
         { TestLine(), "(StructDataContract1)null",                                              "NullNullableStructDataContract1.json" },
         { TestLine(), "(StructSerializable1)null",                                              "NullNullableStructSerializable1.json" },
-
-        { TestLine(), "ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)",                                "IntArraySegment.json" },
 
         { TestLine(), "ClassDataContract1()",                                                   "ClassDataContract1.json" },
         { TestLine(), "ClassDataContract2()",                                                   "ClassDataContract2.json" },
@@ -165,9 +171,5 @@ public partial class ConstantTests
         { TestLine(), "StructDataContract1?() { IntProperty = 7, StringProperty = \"vm\" }",    "NullableStructDataContract1.json" },
         { TestLine(), "StructSerializable1() { IntProperty = 7, StringProperty = \"vm\" }",     "NullableStructSerializable1.json" },
         { TestLine(), "StructSerializable1()",                                                  "StructSerializable1.json" },
-
-        // Tuples
-        { TestLine(), "(IntField: 1, StringField: \"one\")",                                    "ValueTupleIntString.json" },
-        { TestLine(), "Tuple<int, string>(1, \"one\")",                                         "ClassTupleIntString.json" },
     };
 }

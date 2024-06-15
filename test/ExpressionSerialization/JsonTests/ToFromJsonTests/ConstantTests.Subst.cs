@@ -19,7 +19,6 @@ public partial class ConstantTests
         ["double.NegativeZero"]                                                                 = Expression.Constant(double.NegativeZero),
         ["double.PositiveInfinity"]                                                             = Expression.Constant(double.PositiveInfinity),
         ["-2.234567891233658E-123"]                                                             = Expression.Constant(-2.234567891233658E-123),
-        ["-2.234567891233658E-123"]                                                             = Expression.Constant(-2.234567891233658E-123),
         ["float.MinValue"]                                                                      = Expression.Constant(float.MinValue),
         ["float.MaxValue"]                                                                      = Expression.Constant(float.MaxValue),
         ["float.Epsilon"]                                                                       = Expression.Constant(float.Epsilon),
@@ -128,11 +127,15 @@ public partial class ConstantTests
         ["int?[]{ 1, 2, null, null }"]                                                          = Expression.Constant(new int?[]{ 1, 2, null, null }),
         ["Memory<int>([ 1, 2, 3, 4 ])"]                                                         = Expression.Constant(new Memory<int>([ 1, 2, 3, 4 ])),
         ["EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }"]                               = Expression.Constant(new EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }),
+        ["ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)"]                                             = Expression.Constant(new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)),
         ["List<int?>{ 1, 2, null, null }"]                                                      = Expression.Constant(new List<int?>{ 1, 2, null, null }),
         ["List<int>([1, 2, 3, 4])"]                                                             = Expression.Constant(new List<int>([1, 2, 3, 4])),
         ["LinkedList<int>([1, 2, 3, 4])"]                                                       = Expression.Constant(new LinkedList<int>([1, 2, 3, 4])),
         ["Collection<int>([1, 2, 3, 4])"]                                                       = Expression.Constant(new Collection<int>([1, 2, 3, 4])),
+        ["ReadOnlyCollection<int>([1, 2, 3, 4])"]                                               = Expression.Constant(new ReadOnlyCollection<int>([1, 2, 3, 4])),
+        ["ReadOnlyMemory<int>([ 1, 2, 3, 4 ])"]                                                 = Expression.Constant(new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])),
         ["HashSet<int>([1, 2, 3, 4])"]                                                          = Expression.Constant(new HashSet<int>([1, 2, 3, 4])),
+        ["SortedSet<int>([1, 2, 3, 4])"]                                                        = Expression.Constant(new SortedSet<int>([1, 2, 3, 4])),
         ["Queue<int>([1, 2, 3, 4])"]                                                            = Expression.Constant(new Queue<int>([1, 2, 3, 4])),
         ["Stack<int>([1, 2, 3, 4])"]                                                            = Expression.Constant(new Stack<int>([1, 2, 3, 4])),
         ["BlockingCollection<double>()"]                                                        = Expression.Constant(new BlockingCollection<double>() { Math.PI, Math.Tau, Math.E }),
@@ -195,14 +198,23 @@ public partial class ConstantTests
                                                                                                                         },
                                                                                                                         null
                                                                                                                     }.ToFrozenSet()),
+        ["ImmutableArray.Create(1, 2, 3, 4 )"]                                                  = Expression.Constant(ImmutableArray.Create(1, 2, 3, 4 )),
+        ["ImmutableHashSet.Create(1, 2, 3, 4 )"]                                                = Expression.Constant(ImmutableHashSet.Create(1, 2, 3, 4 )),
+        ["ImmutableSortedSet.Create(1, 2, 3, 4 )"]                                              = Expression.Constant(ImmutableSortedSet.Create(1, 2, 3, 4 )),
+        ["ImmutableList.Create(1, 2, 3, 4 )"]                                                   = Expression.Constant(ImmutableList.Create(1, 2, 3, 4 )),
+        ["ImmutableQueue.Create(1, 2, 3, 4 )"]                                                  = Expression.Constant(ImmutableQueue.Create(1, 2, 3, 4 )),
+        ["ImmutableStack.Create(1, 2, 3, 4 )"]                                                  = Expression.Constant(ImmutableStack.Create(1, 2, 3, 4 )),
 
+        ["Tuple<int, string>"]                                                                  = Expression.Constant(new Tuple<int, string>(1, "one")),
+        ["ValueTuple<int, string>"]                                                             = Expression.Constant((1, "one")),
+
+        // -----------------------------------
 
         ["(StructDataContract1)null"]                                                           = Expression.Constant(null, typeof(StructDataContract1?)),
         ["(StructSerializable1)null"]                                                           = Expression.Constant(null, typeof(StructSerializable1?)),
 
         ["ConcurrentDictionary<int, string>{ [1] = \"one\", [2]=\"two\" }"]                     = Expression.Constant(new ConcurrentDictionary<int, string>{ [1] ="one", [2]="two" }),
         ["(Object1)null"]                                                                       = Expression.Constant(null, typeof(Object1)),
-        ["ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)"]                                             = Expression.Constant(new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)),
         ["ClassDataContract1()"]                                                                = Expression.Constant(new ClassDataContract1()),
         ["ClassDataContract1[] { new ClassDataContract1()..."]                                  = Expression.Constant(new ClassDataContract1?[] { new(), new ClassDataContract2(), null }),
         ["ClassDataContract1[] { new(0, \"vm\"), new(1, \"vm2 vm\"), }"]                        = Expression.Constant(new ClassDataContract1[] { new(0, "vm"), new(1, "vm2 vm"), }),
@@ -214,23 +226,16 @@ public partial class ConstantTests
         ["Frozen Dictionary<int, string?>..."]                                                  = Expression.Constant(new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }.ToFrozenDictionary()),
         ["Frozen Dictionary<int, string>..."]                                                   = Expression.Constant(new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", }.ToFrozenDictionary()),
         ["Hashtable(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })"]                 = Expression.Constant(new Hashtable(new Dictionary<int, string>{ [1] ="one", [2]="two" })),
-        ["ImmutableArray.Create(1, 2, 3, 4 )"]                                                  = Expression.Constant(ImmutableArray.Create(1, 2, 3, 4 )),
+
+
         ["ImmutableDictionary.Create<int,string>().Add(...)"]                                   = Expression.Constant(ImmutableDictionary.Create<int,string>().Add(1, "one").Add(2, "two")),
-        ["ImmutableHashSet.Create(1, 2, 3, 4 )"]                                                = Expression.Constant(ImmutableHashSet.Create(1, 2, 3, 4 )),
-        ["ImmutableList.Create(1, 2, 3, 4 )"]                                                   = Expression.Constant(ImmutableList.Create(1, 2, 3, 4 )),
-        ["ImmutableQueue.Create(1, 2, 3, 4 )"]                                                  = Expression.Constant(ImmutableQueue.Create(1, 2, 3, 4 )),
         ["ImmutableSortedDictionary.Create<int,string>().Add(...)"]                             = Expression.Constant(ImmutableSortedDictionary.Create<int,string>().Add(1, "one").Add(2, "two")),
-        ["ImmutableSortedSet.Create(1, 2, 3, 4 )"]                                              = Expression.Constant(ImmutableSortedSet.Create(1, 2, 3, 4 )),
-        ["ImmutableStack.Create(1, 2, 3, 4 )"]                                                  = Expression.Constant(ImmutableStack.Create(1, 2, 3, 4 )),
 
         ["null"]                                                                                = Expression.Constant(null),
         ["object()"]                                                                            = Expression.Constant(new object()),
         ["Object1()"]                                                                           = Expression.Constant(new Object1(), typeof(Object1)),
-        ["ReadOnlyCollection<int>([1, 2, 3, 4])"]                                               = Expression.Constant(new ReadOnlyCollection<int>([1, 2, 3, 4])),
         ["ReadOnlyDictionary<int, string>..."]                                                  = Expression.Constant(new ReadOnlyDictionary<int, string>(new Dictionary<int, string>{ [1] ="one", [2]="two" })),
-        ["ReadOnlyMemory<int>([ 1, 2, 3, 4 ])"]                                                 = Expression.Constant(new ReadOnlyMemory<int>([ 1, 2, 3, 4 ])),
         ["SortedDictionary<int, string>{ [1] =\"one\", [2]=\"two\" }"]                          = Expression.Constant(new SortedDictionary<int, string>{ [1] ="one", [2]="two" }),
-        ["SortedSet<int>([1, 2, 3, 4])"]                                                        = Expression.Constant(new SortedSet<int>([1, 2, 3, 4])),
         ["StructDataContract1() { IntProperty = 7, StringProperty = \"vm\" }"]                  = Expression.Constant(new StructDataContract1() { IntProperty = 7, StringProperty = "vm" }, typeof(StructDataContract1)),
         ["StructDataContract1()"]                                                               = Expression.Constant(new StructDataContract1()),
         ["StructDataContract1?() { IntProperty = 7, StringProperty = \"vm\" }"]                 = Expression.Constant((StructDataContract1?)new StructDataContract1() { IntProperty = 7, StringProperty = "vm" }, typeof(StructDataContract1?)),
@@ -284,7 +289,5 @@ public partial class ConstantTests
                                                                                                                                 StringProperty = "vm vm",
                                                                                                                             },
                                                                                                                         }),
-        ["(IntField: 1, StringField: \"one\")"]                                                 = Expression.Constant((IntField: 1, StringField: "one")),
-        ["Tuple<int, string>(1, \"one\")"]                                                      = Expression.Constant(new Tuple<int, string>(1, "one")),
     };
 }

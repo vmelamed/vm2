@@ -44,6 +44,7 @@ public static class Vocabulary
     public const string ByteSequence            = "byteSequence";
     public const string Collection              = "collection";
     public const string Dictionary              = "dictionary";
+    public const string Key                     = "key";
     public const string KeyValuePair            = "key-value";
     public const string Tuple                   = "tuple";
     public const string TupleItem               = "item";

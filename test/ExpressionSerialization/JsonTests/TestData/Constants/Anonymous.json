@@ -9,7 +9,7 @@
           "NullIntProperty": {
             "nullable": {
               "type": "int",
-              "nil": true
+              "value": null
             }
           },
           "NullLongProperty": {

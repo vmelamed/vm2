@@ -21,7 +21,6 @@ public partial class ConstantTests
         ["double.NegativeZero"]                                                                 = Expression.Constant(double.NegativeZero),
         ["double.PositiveInfinity"]                                                             = Expression.Constant(double.PositiveInfinity),
         ["-2.234567891233658E-123"]                                                             = Expression.Constant(-2.234567891233658E-123),
-        ["-2.234567891233658E-123"]                                                             = Expression.Constant(-2.234567891233658E-123),
         ["float.MinValue"]                                                                      = Expression.Constant(float.MinValue),
         ["float.MaxValue"]                                                                      = Expression.Constant(float.MaxValue),
         ["float.Epsilon"]                                                                       = Expression.Constant(float.Epsilon),
@@ -112,6 +111,7 @@ public partial class ConstantTests
         ["ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])"]                              = Expression.Constant(new ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])),
         ["Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }"]                                      = Expression.Constant(new byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }.ToFrozenSet()),
 
+        // --------------------------------------------------------------
 
         ["(StructDataContract1)null"]                                                           = Expression.Constant(null, typeof(StructDataContract1?)),
         ["(StructSerializable1)null"]                                                           = Expression.Constant(null, typeof(StructSerializable1?)),

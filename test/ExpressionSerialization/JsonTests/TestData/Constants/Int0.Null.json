@@ -5,7 +5,7 @@
       "$comment": " nullable\u003Cint\u003E ",
       "nullable": {
         "type": "int",
-        "nil": true
+        "value": null
       }
     }
   }

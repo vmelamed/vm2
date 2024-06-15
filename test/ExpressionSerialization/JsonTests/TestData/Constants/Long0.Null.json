@@ -5,7 +5,7 @@
       "$comment": " nullable\u003Clong\u003E ",
       "nullable": {
         "type": "long",
-        "nil": true
+        "value": null
       }
     }
   }

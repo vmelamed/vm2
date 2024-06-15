@@ -5,7 +5,6 @@
       "$comment": " System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][] ",
       "collection": {
         "type": "System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
-        "elementType": "System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
         "$comment": " nullable\u003Cvm2.ExpressionSerialization.JsonTests.EnumTest\u003E ",
         "value": [
           {
@@ -31,13 +30,13 @@
           {
             "nullable": {
               "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
-              "nil": true
+              "value": null
             }
           },
           {
             "nullable": {
               "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
-              "nil": true
+              "value": null
             }
           }
         ]

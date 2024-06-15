@@ -124,11 +124,8 @@ public class ToJsonDataTransform(JsonOptions options)
         if (type.IsSequence())
             return SequenceTransform;
 
-        if (type.IsTupleValue())
-            return ValueTupleTransform;
-
-        if (type.IsTupleClass())
-            return ClassTupleTransform;
+        if (type.IsTuple())
+            return TupleTransform;
 
         // get general object transform
         return ObjectTransform;
@@ -163,10 +160,10 @@ public class ToJsonDataTransform(JsonOptions options)
 
         return new JElement(
                         Vocabulary.Enum,
-                        valueType,
-                        valueElement,
-                        underlyingType != typeof(int) ? new JElement(Vocabulary.BaseType, Transform.TypeName(underlyingType)) : null,
-                        new JElement(Vocabulary.BaseValue, (int)nodeValue)
+                            valueType,
+                            valueElement,
+                            underlyingType != typeof(int) ? new JElement(Vocabulary.BaseType, Transform.TypeName(underlyingType)) : null,
+                            new JElement(Vocabulary.BaseValue, (int)nodeValue)
                     );
     }
 
@@ -184,36 +181,17 @@ public class ToJsonDataTransform(JsonOptions options)
         if (nodeValue is null || nodeType.GetProperty("HasValue")?.GetValue(nodeValue) is false)
             return new JElement(
                             Vocabulary.Nullable,
-                            new JElement(Vocabulary.Type, Transform.TypeName(underlyingType)),
-                            new JElement(Vocabulary.Null, true));
+                                new JElement(Vocabulary.Type, Transform.TypeName(underlyingType)),
+                                new JElement(Vocabulary.Value));    // null value
 
         var value = nodeType.GetProperty("Value")?.GetValue(nodeValue)
                         ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but 'Nullable<T>.Value' is null.");
 
         return new JElement(
-            Vocabulary.Nullable,
-            options.TypeComment(underlyingType),
-            GetTransform(underlyingType)(value, underlyingType));
+                        Vocabulary.Nullable,
+                            options.TypeComment(underlyingType),
+                            GetTransform(underlyingType)(value, underlyingType));
     }
-
-    /// <summary>
-    /// Transforms an anonymous object.
-    /// </summary>
-    /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetEType of the node v.</param>
-    JElement AnonymousTransform(
-        object? nodeValue,
-        Type nodeType)
-        => new(
-                    Vocabulary.Anonymous,
-                    new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                    new JElement(Vocabulary.Value, nodeType
-                                                    .GetProperties()
-                                                    .Select(pi => new JElement(
-                                                                        pi.Name,
-                                                                        GetTransform(pi.PropertyType)(
-                                                                            pi.GetValue(nodeValue, null),
-                                                                            pi.PropertyType)))));
 
     /// <summary>
     /// Transforms sequences of bytes.
@@ -227,8 +205,8 @@ public class ToJsonDataTransform(JsonOptions options)
     {
         var sequenceElement = new JElement(
                                     Vocabulary.ByteSequence,
-                                    new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                                    nodeValue is null ? new JElement(Vocabulary.Null, true) : null
+                                        new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                        nodeValue is null ? new JElement(Vocabulary.Null, true) : null
                                 );
         ReadOnlySpan<byte> bytes;
 
@@ -267,6 +245,67 @@ public class ToJsonDataTransform(JsonOptions options)
     }
 
     /// <summary>
+    /// Transforms an anonymous object.
+    /// </summary>
+    /// <param name="nodeValue">The node v.</param>
+    /// <param name="nodeType">GetEType of the node v.</param>
+    JElement AnonymousTransform(
+        object? nodeValue,
+        Type nodeType)
+        => new(
+            Vocabulary.Anonymous,
+                new JElement(
+                        Vocabulary.Type,
+                            Transform.TypeName(nodeType)),
+                new JElement(
+                        Vocabulary.Value,
+                            nodeType
+                                .GetProperties()
+                                .Select(pi => new JElement(
+                                                        pi.Name,
+                                                        GetTransform(pi.PropertyType)(
+                                                            pi.GetValue(nodeValue, null),
+                                                            pi.PropertyType)))));
+
+    JElement TupleTransform(
+        object? nodeValue,
+        Type nodeType)
+    {
+        if (nodeType.IsValueType && nodeValue is null)
+            throw new InternalTransformErrorException("The propValue of a 'ValueTuple' is null.");
+
+        var value = nodeValue is not null ? new JsonObject() : null;
+        var tupleElement = new JElement(
+                                    Vocabulary.Tuple,
+                                        new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                        new JElement(Vocabulary.Value, value));
+
+        if (nodeValue is null)
+            return tupleElement;
+
+        Debug.Assert(value is not null);
+
+        var tuple = nodeValue as ITuple ?? throw new InternalTransformErrorException("Expected tuple propValue to implement ITuple");
+        var types = nodeType.GetGenericArguments();
+
+        for (var i = 0; i < tuple.Length; i++)
+        {
+            var propValue = tuple[i];
+            var declaredType = types[i];
+            var concreteType = propValue?.GetType() ?? declaredType;
+
+            value.Add(
+                new JElement(
+                        $"Item{i + 1}",
+                            new JElement(Vocabulary.Type, Transform.TypeName(declaredType)),
+                            new JElement(Vocabulary.Value, GetTransform(declaredType)(propValue, propValue?.GetType() ?? declaredType))
+                        ));
+        }
+
+        return tupleElement;
+    }
+
+    /// <summary>
     /// Transforms sequences of objects.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
@@ -275,129 +314,45 @@ public class ToJsonDataTransform(JsonOptions options)
         object? nodeValue,
         Type nodeType)
     {
-        try
-        {
-            var elementType = (nodeType.IsGenericType
+        var elementType = (nodeType.IsGenericType
                                 ? nodeType.GetGenericArguments()[0]
                                 : nodeType.GetElementType()) ?? throw new InternalTransformErrorException("Could not find the type of a sequenceElement elements.");
 
-            if (nodeValue is null)
-                return new JElement(
-                                Vocabulary.Collection,
-                                new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                                options.TypeComment(elementType),
-                                new JElement(Vocabulary.ElementType, Transform.TypeName(elementType)),
-                                new JElement(Vocabulary.Value)
-                            );
-
-            var piLength = nodeType.GetProperty("Count") ?? nodeType.GetProperty("GetLength");
-            var length = (int?)piLength?.GetValue(nodeValue);
-            var enumerable = nodeValue as IEnumerable;
-
-            if (enumerable is null)
-            {
-                Debug.Assert(nodeType.IsMemory());
-
-                enumerable = nodeType.GetMethod("ToArray")?.Invoke(nodeValue, null) as IEnumerable;
-
-                if (enumerable is null)
-                    throw new InternalTransformErrorException($"Could not find the enumerable for {nodeType.FullName}.");
-            }
-
+        if (nodeValue is null)
             return new JElement(
                             Vocabulary.Collection,
+                                new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                options.TypeComment(elementType),
+                                new JElement(Vocabulary.Value)
+                        );
+
+        var piLength = nodeType.GetProperty("Count") ?? nodeType.GetProperty("GetLength");
+        var length = (int?)piLength?.GetValue(nodeValue);
+        var enumerable = nodeValue as IEnumerable;
+
+        if (enumerable is null)
+        {
+            Debug.Assert(nodeType.IsMemory());
+
+            enumerable = nodeType.GetMethod("ToArray")?.Invoke(nodeValue, null) as IEnumerable;
+
+            if (enumerable is null)
+                throw new InternalTransformErrorException($"Could not find the enumerable for {nodeType.FullName}.");
+        }
+
+        return new JElement(
+                        Vocabulary.Collection,
                             new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                            new JElement(Vocabulary.ElementType, Transform.TypeName(elementType)),
                             options.TypeComment(elementType),
                             new JElement(
                                     Vocabulary.Value,
-                                    new JsonArray(
+                                    (JsonNode)new JsonArray(
                                         enumerable
                                             .Cast<object?>()
                                             .Select(e => new JsonObject()
                                                                 .Add((JElement?)GetTransform(elementType)(e, elementType)))
                                             .ToArray())),
                             length.HasValue ? new JElement(Vocabulary.Length, length.Value) : null);
-        }
-        catch (Exception ex)
-        {
-            throw new SerializationException($"Could not transform {nodeValue}", ex);
-        }
-    }
-
-    /// <summary>
-    /// Transforms v tuples.
-    /// </summary>
-    /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetEType of the node v.</param>
-    JElement ValueTupleTransform(
-        object? nodeValue,
-        Type nodeType)
-    {
-        if (nodeValue is null)
-            throw new InternalTransformErrorException("Null v for a constant expression node of type 'ValueTuple'.");
-
-        var tupleElement = new JElement(
-                                    Vocabulary.Tuple,
-                                    new JElement(Vocabulary.Type, Transform.TypeName(nodeType)));
-        var types = nodeType.GetGenericArguments();
-
-        if (nodeValue is not ITuple tuple)
-            throw new InternalTransformErrorException("The v of type 'ValueTuple' doesn't implement ITuple.");
-
-        for (var i = 0; i < tuple.Length; i++)
-        {
-            var item = tuple[i];
-            var type = types[i];
-
-            tupleElement.Add(
-                new JElement(
-                        Vocabulary.TupleItem,
-                        new JElement(Vocabulary.Name, $"Item{i + 1}"),
-                        item is null ? new JElement(Vocabulary.Null, true) : null,
-                        options.TypeComment(type),
-                        GetTransform(type)(item, type)));
-        }
-        return tupleElement;
-    }
-
-    /// <summary>
-    /// Transforms class tuples.
-    /// </summary>
-    /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetEType of the node v.</param>
-    JElement ClassTupleTransform(
-        object? nodeValue,
-        Type nodeType)
-    {
-        var tupleElement = new JElement(
-                                Vocabulary.Tuple,
-                                new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                                nodeValue is null ? new JElement(Vocabulary.Null, true) : null);
-
-        if (nodeValue is null)
-            return tupleElement;
-
-        var types = nodeType.GetGenericArguments();
-
-        if (nodeValue is not ITuple tuple)
-            throw new InternalTransformErrorException("The v of type 'ValueTuple' doesn't implement ITuple.");
-
-        for (var i = 0; i < tuple.Length; i++)
-        {
-            var type = types[i];
-            var item = tuple[i];
-
-            tupleElement.Add(
-                new JElement(
-                        Vocabulary.TupleItem,
-                        new JElement(Vocabulary.Name, $"Item{i + 1}"),
-                        item is null ? new JElement(Vocabulary.Null, true) : null,
-                        options.TypeComment(type),
-                        GetTransform(type)(item, type)));
-        }
-
-        return tupleElement;
     }
 
     /// <summary>
@@ -411,25 +366,18 @@ public class ToJsonDataTransform(JsonOptions options)
     {
         if (nodeValue is null)
             return new JElement(
-                                Vocabulary.Dictionary,
+                            Vocabulary.Dictionary,
                                 new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                                nodeValue is null ? new JElement(Vocabulary.Null, true) : null);
+                                new JElement(Vocabulary.Value));
 
         if (nodeValue is not IDictionary dict)
             throw new InternalTransformErrorException("The v of type 'Dictionary' doesn't implement IDictionary.");
-
-        var length = dict.Count;
-        var dictElement = new JElement(
-                                Vocabulary.Dictionary,
-                                new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                                new JElement(Vocabulary.Length, length),
-                                nodeValue is null ? new JElement(Vocabulary.Null, true) : null);
 
         Type kType, vType;
 
         if (nodeType.IsGenericType)
         {
-            var kvTypes   = nodeType.GetGenericArguments();
+            var kvTypes = nodeType.GetGenericArguments();
 
             if (kvTypes.Length is not 2)
                 throw new InternalTransformErrorException("The elements of 'Dictionary' do not have key-type and element-type.");
@@ -443,14 +391,24 @@ public class ToJsonDataTransform(JsonOptions options)
             vType = typeof(object);
         }
 
-        foreach (DictionaryEntry kv in dict)
-            dictElement.Add(
-                new JElement(
-                    Vocabulary.KeyValuePair,
-                    GetTransform(kType)(kv.Key, kType),
-                    GetTransform(vType)(kv.Value, vType)));
+        var dictElements = new JsonArray();
+        var dictionary = new JElement(
+                                Vocabulary.Dictionary,
+                                    new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                                    new JElement(Vocabulary.Value, (JsonNode)dictElements));
 
-        return dictElement;
+        foreach (DictionaryEntry kv in dict)
+            dictElements.Add(
+                new JsonObject()
+                        .Add(
+                            new JElement(
+                                    Vocabulary.Key,
+                                        GetTransform(kType)(kv.Key, kv.Key.GetType())),
+                            new JElement(
+                                    Vocabulary.Value,
+                                        GetTransform(vType)(kv.Value, kv.Value?.GetType() ?? vType))));
+
+        return dictionary.Add(Vocabulary.Length, dict.Count);
     }
 
     /// <summary>
@@ -463,7 +421,7 @@ public class ToJsonDataTransform(JsonOptions options)
         object? nodeValue,
         Type nodeType)
     {
-        var element = new JElement(Vocabulary.Object);
+        var element = new JElement(Vocabulary.Object, Transform.TypeName(nodeType));
 
         if (nodeValue is null)
         {

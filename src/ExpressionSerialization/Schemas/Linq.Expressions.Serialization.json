@@ -18,6 +18,43 @@
     "required": [ "expression" ],
     "additionalProperties": { "type": "string" },
     "$defs": {
+        "constantValue": {
+            "title": "Constant value in a LINQ expression.",
+            "oneOf": [
+                { "type": "null" },
+                { "$ref": "#/$defs/booleanConstant" },
+                { "$ref": "#/$defs/byteConstant" },
+                { "$ref": "#/$defs/charConstant" },
+                { "$ref": "#/$defs/doubleConstant" },
+                { "$ref": "#/$defs/floatConstant" },
+                { "$ref": "#/$defs/halfConstant" },
+                { "$ref": "#/$defs/intConstant" },
+                { "$ref": "#/$defs/intPtrConstant" },
+                { "$ref": "#/$defs/longConstant" },
+                { "$ref": "#/$defs/shortConstant" },
+                { "$ref": "#/$defs/signedByteConstant" },
+                { "$ref": "#/$defs/unsignedIntConstant" },
+                { "$ref": "#/$defs/unsignedIntPtrConstant" },
+                { "$ref": "#/$defs/unsignedLongConstant" },
+                { "$ref": "#/$defs/unsignedShortConstant" },
+                { "$ref": "#/$defs/dateTimeConstant" },
+                { "$ref": "#/$defs/dateTimeOffsetConstant" },
+                { "$ref": "#/$defs/decimalConstant" },
+                { "$ref": "#/$defs/durationConstant" },
+                { "$ref": "#/$defs/guidConstant" },
+                { "$ref": "#/$defs/enumConstant" },
+                { "$ref": "#/$defs/nullableConstant" },
+                { "$ref": "#/$defs/stringConstant" },
+                { "$ref": "#/$defs/dbNullConstant" },
+                { "$ref": "#/$defs/uriConstant" },
+                { "$ref": "#/$defs/objectConstant" },
+                { "$ref": "#/$defs/anonymousConstant" },
+                { "$ref": "#/$defs/byteSequenceConstant" },
+                { "$ref": "#/$defs/collectionConstant" },
+                { "$ref": "#/$defs/dictionaryConstant" },
+                { "$ref": "#/$defs/tupleConstant" }
+            ]
+        },
         "booleanConstant": {
             "title": "Boolean constants",
             "type": "object",
@@ -323,8 +360,7 @@
                     "oneOf": [
                         { "type": "string" },
                         { "type": "null" }
-                    ],
-                    "default": null
+                    ]
                 }
             },
             "additionalProperties": { "type": "string" },
@@ -336,13 +372,12 @@
             "properties": {
                 "uri": {
                     "oneOf": [
+                        { "type": "null" },
                         {
                             "type": "string",
                             "format": "iri-reference"
-                        },
-                        { "type": "null" }
-                    ],
-                    "default": null
+                        }
+                    ]
                 }
             },
             "additionalProperties": { "type": "string" },
@@ -360,6 +395,7 @@
                             "oneOf": [
                                 { "type": "string" },
                                 {
+                                    "$comment": "When the enum type is marked with FlagsAttribute",
                                     "type": "array",
                                     "items": { "type": "string" }
                                 }
@@ -378,29 +414,52 @@
             "additionalProperties": { "type": "string" },
             "required": [ "enum" ]
         },
-        "anonymousConstant": {
-            "title": "JSON serialized anonymous object",
+        "nullableConstant": {
+            "title": "Represents Nullable<> .NET types",
             "type": "object",
             "properties": {
-                "anonymous": {
-                    "type": "object",
-                    "properties": {
-                        "value": {
+                "nullable": {
+                    "oneOf": [
+                        {
+                            "title": "Null Nullable<T>",
+                            "$comment": "Represents a Nullable<T> value for which `HasValue` is `false`.",
                             "type": "object",
-                            "patternProperties": {
-                                "^@?[A-Z_a-z][0-9A-Z_a-z]*$": {
-                                    "$ref": "#/$defs/constantValue"
-                                }
+                            "properties": {
+                                "type": { "type": "string" },
+                                "value": { "type": "null" }
                             },
-                            "additionalProperties": { "type": "string" }
+                            "additionalProperties": { "type": "string" },
+                            "required": [ "type" ]
                         },
-                        "type": { "type": "string" }
-                    },
-                    "required": [ "type", "value" ]
+                        { "$ref": "#/$defs/booleanConstant" },
+                        { "$ref": "#/$defs/byteConstant" },
+                        { "$ref": "#/$defs/charConstant" },
+                        { "$ref": "#/$defs/doubleConstant" },
+                        { "$ref": "#/$defs/floatConstant" },
+                        { "$ref": "#/$defs/halfConstant" },
+                        { "$ref": "#/$defs/intConstant" },
+                        { "$ref": "#/$defs/intPtrConstant" },
+                        { "$ref": "#/$defs/longConstant" },
+                        { "$ref": "#/$defs/shortConstant" },
+                        { "$ref": "#/$defs/signedByteConstant" },
+                        { "$ref": "#/$defs/unsignedIntConstant" },
+                        { "$ref": "#/$defs/unsignedIntPtrConstant" },
+                        { "$ref": "#/$defs/unsignedLongConstant" },
+                        { "$ref": "#/$defs/unsignedShortConstant" },
+                        { "$ref": "#/$defs/dateTimeConstant" },
+                        { "$ref": "#/$defs/dateTimeOffsetConstant" },
+                        { "$ref": "#/$defs/decimalConstant" },
+                        { "$ref": "#/$defs/durationConstant" },
+                        { "$ref": "#/$defs/guidConstant" },
+                        { "$ref": "#/$defs/enumConstant" },
+                        {
+                            "$comment": "Here we mean only struct object values but there is no way to specify that in JSON schema",
+                            "$ref": "#/$defs/objectConstant"
+                        }
+                    ]
                 }
             },
-            "additionalProperties": { "type": "string" },
-            "required": [ "anonymous" ]
+            "required": [ "nullable" ]
         },
         "byteSequenceConstant": {
             "title": "Arbitrary sequence of bytes",
@@ -413,6 +472,7 @@
                         "type": { "type": "string" },
                         "value": {
                             "oneOf": [
+                                { "type": "null" },
                                 {
                                     "type": "string",
                                     "pattern": "^[0-9A-Za-z/+]+={0,2}$",
@@ -420,6 +480,7 @@
                                     "contentMediaType": "application/octet-stream"
                                 },
                                 {
+                                    "$comment": "when the value is encoded with multiline Base64",
                                     "type": "array",
                                     "items": {
                                         "type": "string",
@@ -427,8 +488,7 @@
                                         "contentEncoding": "base64",
                                         "contentMediaType": "application/octet-stream"
                                     }
-                                },
-                                { "type": "null" }
+                                }
                             ]
                         },
                         "length": { "type": "integer" }
@@ -440,6 +500,67 @@
             "additionalProperties": { "type": "string" },
             "required": [ "byteSequence" ]
         },
+        "anonymousConstant": {
+            "title": "JSON serialized anonymous object",
+            "type": "object",
+            "properties": {
+                "anonymous": {
+                    "type": "object",
+                    "properties": {
+                        "type": { "type": "string" },
+                        "value": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^@?[A-Z_a-z][0-9A-Z_a-z]*$": { "$ref": "#/$defs/constantValue" }
+                            },
+                            "minProperties": 1,
+                            "additionalProperties": false
+                        }
+                    },
+                    "required": [ "type", "value" ]
+                }
+            },
+            "additionalProperties": { "type": "string" },
+            "required": [ "anonymous" ]
+        },
+        "tupleConstant": {
+            "title": "Represents a .NET tuple (class Tuple<> or ValueTuple<>)",
+            "type": "object",
+            "properties": {
+                "tuple": {
+                    "type": "object",
+                    "properties": {
+                        "type": { "type": "string" },
+                        "value": {
+                            "oneOf": [
+                                { "type": "null" },
+                                {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^Item[1-8]$": {
+                                            "type": "object",
+                                            "properties": {
+                                                "type": { "type": "string" },
+                                                "value": { "$ref": "#/$defs/constantValue" }
+                                            },
+                                            "required": [ "type", "value" ],
+                                            "additionalProperties": { "type": "string" }
+                                        }
+                                    },
+                                    "minProperties": 1,
+                                    "maxProperties": 8,
+                                    "additionalProperties": false
+                                }
+                            ]
+                        }
+                    },
+                    "required": [ "type", "value" ],
+                    "additionalProperties": { "type": "string" }
+                }
+            },
+            "additionalProperties": { "type": "string" },
+            "required": [ "tuple" ]
+        },
         "collectionConstant": {
             "title": "Represents collection (array, list, set, etc.) of values",
             "type": "object",
@@ -448,7 +569,6 @@
                     "type": "object",
                     "properties": {
                         "type": { "type": "string" },
-                        "elementType": { "type": "string" },
                         "value": {
                             "oneOf": [
                                 {
@@ -461,7 +581,7 @@
                         "length": { "type": "integer" }
                     },
                     "additionalProperties": { "type": "string" },
-                    "required": [ "type", "elementType" ]
+                    "required": [ "type", "value" ]
                 }
             },
             "additionalProperties": { "type": "string" },
@@ -472,62 +592,40 @@
             "type": "object",
             "properties": {
                 "dictionary": {
-                    "oneOf": [
-                        {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "key": {
-                                        "$ref": "#/$defs/constantValue"
-                                    },
-                                    "value": {
-                                        "$ref": "#/$defs/constantValue"
+                    "type": "object",
+                    "properties": {
+                        "type": { "type": "string" },
+                        "value": {
+                            "oneOf": [
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "key": {
+                                                "$ref": "#/$defs/constantValue"
+                                            },
+                                            "value": {
+                                                "$ref": "#/$defs/constantValue"
+                                            }
+                                        },
+                                        "additionalProperties": { "type": "string" },
+                                        "required": [ "key", "value" ]
                                     }
                                 },
-                                "additionalProperties": { "type": "string" },
-                                "required": [ "key", "value" ]
-                            }
+                                {
+                                    "type": "null"
+                                }
+                            ]
                         },
-                        { "type": "null" }
-                    ]
-                },
-                "type": { "type": "string" }
+                        "length": { "type": "integer" }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "type", "value" ]
+                }
             },
             "additionalProperties": { "type": "string" },
-            "required": [ "dictionary", "type" ]
-        },
-        "tupleConstant": {
-            "title": "Represents a .NET tuple (Tuple<> or ValueTuple<>)",
-            "type": "object",
-            "properties": {
-                "tuple": {
-                    "oneOf": [
-                        {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "pattern": "^Item[1-9][0-9]*$"
-                                    },
-                                    "value": { "$ref": "#/$defs/constantValue" }
-                                },
-                                "additionalProperties": { "type": "string" },
-                                "required": [ "name", "value" ]
-                            },
-                            "minItems": 1
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "type": { "type": "string" }
-            },
-            "additionalProperties": { "type": "string" },
-            "required": [ "tuple", "type" ]
+            "required": [ "dictionary" ]
         },
         "objectConstant": {
             "title": "JSON serialized object",
@@ -550,196 +648,6 @@
             },
             "additionalProperties": { "type": "string" },
             "required": [ "object", "type" ]
-        },
-        "nullableConstant": {
-            "title": "Represents Nullable<> .NET types",
-            "type": "object",
-            "properties": {
-                "nullable": {
-                    "oneOf": [
-                        {
-                            "title": "Null Nullable<T>",
-                            "$comment": "Represents a null Nullable<T> value",
-                            "type": "object",
-                            "properties": {
-                                "type": { "type": "string" },
-                                "nil": { "const": true }
-                            },
-                            "additionalProperties": { "type": "string" },
-                            "required": [ "type", "nil" ]
-                        },
-                        {
-                            "$ref": "#/$defs/booleanConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/byteConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/charConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/doubleConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/floatConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/halfConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/intConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/intPtrConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/longConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/shortConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/signedByteConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/unsignedIntConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/unsignedIntPtrConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/unsignedLongConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/unsignedShortConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/dateTimeConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/dateTimeOffsetConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/decimalConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/durationConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/guidConstant"
-                        },
-                        {
-                            "$ref": "#/$defs/enumConstant"
-                        },
-                        {
-                            "$comment": "Here we mean only struct object values but JSON wouldn't not understand that.",
-                            "$ref": "#/$defs/objectConstant"
-                        }
-                    ]
-                }
-            },
-            "required": [ "nullable" ]
-        },
-        "constantValue": {
-            "title": "Constant value in a LINQ expression.",
-            "oneOf": [
-                {
-                    "$ref": "#/$defs/booleanConstant"
-                },
-                {
-                    "$ref": "#/$defs/byteConstant"
-                },
-                {
-                    "$ref": "#/$defs/charConstant"
-                },
-                {
-                    "$ref": "#/$defs/doubleConstant"
-                },
-                {
-                    "$ref": "#/$defs/floatConstant"
-                },
-                {
-                    "$ref": "#/$defs/halfConstant"
-                },
-                {
-                    "$ref": "#/$defs/intConstant"
-                },
-                {
-                    "$ref": "#/$defs/intPtrConstant"
-                },
-                {
-                    "$ref": "#/$defs/longConstant"
-                },
-                {
-                    "$ref": "#/$defs/shortConstant"
-                },
-                {
-                    "$ref": "#/$defs/signedByteConstant"
-                },
-                {
-                    "$ref": "#/$defs/unsignedIntConstant"
-                },
-                {
-                    "$ref": "#/$defs/unsignedIntPtrConstant"
-                },
-                {
-                    "$ref": "#/$defs/unsignedLongConstant"
-                },
-                {
-                    "$ref": "#/$defs/unsignedShortConstant"
-                },
-                {
-                    "$ref": "#/$defs/dateTimeConstant"
-                },
-                {
-                    "$ref": "#/$defs/dateTimeOffsetConstant"
-                },
-                {
-                    "$ref": "#/$defs/decimalConstant"
-                },
-                {
-                    "$ref": "#/$defs/durationConstant"
-                },
-                {
-                    "$ref": "#/$defs/guidConstant"
-                },
-                {
-                    "$ref": "#/$defs/enumConstant"
-                },
-                {
-                    "$ref": "#/$defs/nullableConstant"
-                },
-                {
-                    "$ref": "#/$defs/stringConstant"
-                },
-                {
-                    "$ref": "#/$defs/dbNullConstant"
-                },
-                {
-                    "$ref": "#/$defs/uriConstant"
-                },
-                {
-                    "$ref": "#/$defs/objectConstant"
-                },
-                {
-                    "$ref": "#/$defs/anonymousConstant"
-                },
-                {
-                    "$ref": "#/$defs/byteSequenceConstant"
-                },
-                {
-                    "$ref": "#/$defs/collectionConstant"
-                },
-                {
-                    "$ref": "#/$defs/dictionaryConstant"
-                },
-                {
-                    "$ref": "#/$defs/tupleConstant"
-                },
-                {
-                    "type": "null"
-                }
-            ]
         }
     }
 }

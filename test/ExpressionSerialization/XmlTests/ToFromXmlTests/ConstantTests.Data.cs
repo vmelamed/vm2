@@ -85,7 +85,7 @@ public partial class ConstantTests
         { TestLine(), "ArraySegment<byte>",                                                     "Bytes.ArraySegment.xml" },
         { TestLine(), "Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                         "Bytes.ArrayFrozen.xml" },
 
-
+        // ------------------------------------------------------------
 
         { TestLine(), "(IntField: 1, StringField: \"one\")",                                    "ValueTupleIntString.xml" },
         { TestLine(), "(Object1)null",                                                          "Object1Null.xml" },

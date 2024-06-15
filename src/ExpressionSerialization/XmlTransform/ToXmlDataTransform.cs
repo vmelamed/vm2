@@ -81,11 +81,8 @@ class ToXmlDataTransform(XmlOptions options)
         if (type.IsSequence())
             return SequenceTransform;
 
-        if (type.IsTupleValue())
-            return ValueTupleTransform;
-
-        if (type.IsTupleClass())
-            return ClassTupleTransform;
+        if (type.IsTuple())
+            return TupleTransform;
 
         // get general object transform
         return ObjectTransform;
@@ -166,7 +163,6 @@ class ToXmlDataTransform(XmlOptions options)
                     options.TypeComment(pi.PropertyType),
                     GetTransform(pi.PropertyType)(pi.GetValue(nodeValue, null), pi.PropertyType)))
                 .ToArray());
-
 
         return anonymousElement;
     }
@@ -293,73 +289,41 @@ class ToXmlDataTransform(XmlOptions options)
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
     /// <param name="nodeType">GetEType of the node v.</param>
-    XElement ValueTupleTransform(
+    XElement TupleTransform(
         object? nodeValue,
         Type nodeType)
     {
-        if (nodeValue is null)
-            throw new InternalTransformErrorException("Null v for a constant expression node of type 'ValueTuple'.");
+        if (nodeType.IsValueType && nodeValue is null)
+            throw new InternalTransformErrorException("The value of a 'ValueTuple' is null.");
 
         var tupleElement = new XElement(
                                     ElementNames.Tuple,
-                                    new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)));
-        var types = nodeType.GetGenericArguments();
-
-        if (nodeValue is not ITuple tuple)
-            throw new InternalTransformErrorException("The v of type 'ValueTuple' doesn't implement ITuple.");
-
-        for (var i = 0; i < tuple.Length; i++)
-        {
-            var item = tuple[i];
-            var type = types[i];
-
-            tupleElement.Add(
-                new XElement(
-                        ElementNames.TupleItem,
-                        new XAttribute(AttributeNames.Name, $"Item{i + 1}"),
-                        item is null ? new XAttribute(AttributeNames.Nil, true) : null,
-                        options.TypeComment(type),
-                        GetTransform(type)(item, type)));
-        }
-        return tupleElement;
-    }
-
-    /// <summary>
-    /// Transforms class tuples.
-    /// </summary>
-    /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetEType of the node v.</param>
-    XElement ClassTupleTransform(
-        object? nodeValue,
-        Type nodeType)
-    {
-        var tupleElement = new XElement(
-                                ElementNames.Tuple,
-                                new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
-                                nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
+                                    new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
+                                    nodeValue is null ? new XAttribute(AttributeNames.Nil, true) : null);
 
         if (nodeValue is null)
             return tupleElement;
 
+        var tuple = nodeValue as ITuple ?? throw new InternalTransformErrorException("Expected tuple value to implement ITuple");
         var types = nodeType.GetGenericArguments();
-
-        if (nodeValue is not ITuple tuple)
-            throw new InternalTransformErrorException("The v of type 'ValueTuple' doesn't implement ITuple.");
 
         for (var i = 0; i < tuple.Length; i++)
         {
-            var type = types[i];
             var item = tuple[i];
+            var declaredType = types[i];
+            var concreteType = item?.GetType() ?? declaredType;
+
+            if (!concreteType.IsAssignableTo(declaredType))
+                throw new InternalTransformErrorException("The concrete type of an item of a 'ValueTuple<>' or a 'Tuple<>' is not assignable to the declared item type.");
 
             tupleElement.Add(
                 new XElement(
                         ElementNames.TupleItem,
                         new XAttribute(AttributeNames.Name, $"Item{i + 1}"),
                         item is null ? new XAttribute(AttributeNames.Nil, true) : null,
-                        options.TypeComment(type),
-                        GetTransform(type)(item, type)));
+                        options.TypeComment(concreteType),
+                        GetTransform(declaredType)(item, concreteType)));
         }
-
         return tupleElement;
     }
 

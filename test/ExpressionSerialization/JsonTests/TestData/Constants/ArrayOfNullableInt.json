@@ -5,7 +5,6 @@
       "$comment": " System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]][] ",
       "collection": {
         "type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
-        "elementType": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
         "$comment": " nullable\u003Cint\u003E ",
         "value": [
           {
@@ -21,13 +20,13 @@
           {
             "nullable": {
               "type": "int",
-              "nil": true
+              "value": null
             }
           },
           {
             "nullable": {
               "type": "int",
-              "nil": true
+              "value": null
             }
           }
         ]
