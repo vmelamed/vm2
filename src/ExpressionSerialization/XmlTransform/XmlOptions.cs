@@ -1,7 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using System;
-using System.Xml.Schema;
+using vm2.Threading;
 
 /// <summary>
 /// Class XmlOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to 
@@ -34,20 +33,23 @@ public partial class XmlOptions : DocumentOptions
     /// </summary>
     public const string Dcs = "http://schemas.datacontract.org/2004/07/System";
 
-    static readonly object _sync = new();
+    /// <summary>
+    /// The schemas lock synchronizes the <see cref="Schemas"/> collection.
+    /// </summary>
+    static ReaderWriterLockSlim _schemasLock = new(LockRecursionPolicy.SupportsRecursion);
 
     /// <summary>
     /// Gets the schemas.
     /// </summary>
     /// <value>The schemas.</value>
-    public static XmlSchemaSet Schemas { get; private set; } = new();
+    static XmlSchemaSet Schemas { get; set; } = new();
 
     /// <summary>
     /// Resets the schemas.
     /// </summary>
     public static void ResetSchemas()
     {
-        lock (_sync)
+        using (_schemasLock.WriterLock())
             Schemas = new();
     }
 
@@ -58,13 +60,36 @@ public partial class XmlOptions : DocumentOptions
     /// <param name="url">The location of the schema file.</param>
     public static void SetSchemaLocation(string schemaUri, string? url)
     {
-        lock (_sync)
+        using (_schemasLock.WriterLock())
         {
             if (Schemas.Contains(schemaUri))
                 return;
 
             using var reader = new XmlTextReader(url ?? schemaUri);
             Schemas.Add(schemaUri, reader);
+        }
+    }
+
+    /// <summary>
+    /// Sets the schemaUri path.
+    /// </summary>
+    /// <param name="schemaUrisUrls">The schema URIs and their URLs.</param>
+    /// <param name="reset">if set to <c>true</c> the method will first reset the schema collection.</param>
+    public static void SetSchemasLocations(IEnumerable<KeyValuePair<string, string?>> schemaUrisUrls, bool reset = false)
+    {
+        using (_schemasLock.WriterLock())
+        {
+            if (reset)
+                Schemas = new();
+
+            foreach (var (schemaUri, url) in schemaUrisUrls)
+            {
+                if (Schemas.Contains(schemaUri))
+                    continue;
+
+                using var reader = new XmlTextReader(url ?? schemaUri);
+                Schemas.Add(schemaUri, reader);
+            }
         }
     }
 
@@ -169,7 +194,14 @@ public partial class XmlOptions : DocumentOptions
     /// <summary>
     /// Determines whether the expressions schemaUri <see cref="Exs"/> was added.
     /// </summary>
-    internal override bool HasExpressionsSchema => Schemas.Contains(Exs);
+    internal override bool HasExpressionsSchema
+    {
+        get
+        {
+            using (_schemasLock.ReaderLock())
+                return Schemas.Contains(Exs);
+        }
+    }
 
     /// <summary>
     /// Validates the specified document against the schema.
@@ -182,7 +214,8 @@ public partial class XmlOptions : DocumentOptions
 
         List<XmlSchemaException> exceptions = [];
 
-        document.Validate(Schemas, (_, e) => exceptions.Add(e.Exception));
+        using (_schemasLock.ReaderLock())
+            document.Validate(Schemas, (_, e) => exceptions.Add(e.Exception));
 
         if (exceptions.Count is not 0)
             throw new AggregateException(
@@ -200,10 +233,20 @@ public partial class XmlOptions : DocumentOptions
         if (!MustValidate)
             return;
 
-        var schema = Schemas.GlobalElements[new XmlQualifiedName(Vocabulary.Expression, Exs)] ?? throw new InternalTransformErrorException("Could not get the schema for expression");
         var exceptions = new List<XmlSchemaException>();
+        XmlSchemaObject? schema = null;
 
-        element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
+        for (var i = 0; i < 5 && schema is null; i++)
+        {
+            using (_schemasLock.ReaderLock())
+            {
+                schema = Schemas.GlobalElements[new XmlQualifiedName(Vocabulary.Expression, Exs)];
+                if (schema is not null)
+                    element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
+            }
+            if (schema is null)
+                Task.Delay(50).Wait();
+        }
 
         if (exceptions.Count is not 0)
             throw new AggregateException(

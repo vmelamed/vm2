@@ -1,7 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
-public partial class BinaryTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+
+[CollectionDefinition("XML")]
+public partial class BinaryTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Binary");
+    protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "Binary");
 
     static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
 

@@ -1,10 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
-using System.Reflection;
-
-public partial class StatementTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+[CollectionDefinition("XML")]
+public partial class StatementTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Statements");
+    protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "Statements");
 
     [Theory]
     [InlineData(typeof(int), "DefaultInt.xml")]

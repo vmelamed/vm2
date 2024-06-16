@@ -1,7 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
-public partial class UnaryTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+
+[CollectionDefinition("XML")]
+public partial class UnaryTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Unary");
+    protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "Unary");
 
     [Theory]
     [MemberData(nameof(UnaryData))]

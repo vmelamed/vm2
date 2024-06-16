@@ -1,7 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
-public partial class ChangeByOneTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+
+[CollectionDefinition("XML")]
+public partial class ChangeByOneTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "ChangeByOne");
+    protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "ChangeByOne");
 
     [Theory]
     [MemberData(nameof(ChangeByOneExpressionData))]

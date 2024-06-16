@@ -2,6 +2,19 @@
 
 public class TransformLoadDocumentTest()
 {
+    static void ResetReloadSchemas(bool loadSchemas)
+    {
+        if (loadSchemas)
+            XmlOptions.SetSchemasLocations(
+                new Dictionary<string, string?> {
+                    [XmlOptions.Ser] = Path.Combine(XmlTestsFixture.SchemasPath, "Microsoft.Serialization.xsd"),
+                    [XmlOptions.Dcs] = Path.Combine(XmlTestsFixture.SchemasPath, "DataContract.xsd"),
+                    [XmlOptions.Exs] = Path.Combine(XmlTestsFixture.SchemasPath, "Linq.Expressions.Serialization.xsd"),
+                }, true);
+        else
+            XmlOptions.ResetSchemas();
+    }
+
     [Theory]
     [InlineData(ValidateDocuments.Always, "NullObject.xml", true, null)]
     [InlineData(ValidateDocuments.Always, "NullObject.xml", false, typeof(InvalidOperationException))]
@@ -19,16 +32,10 @@ public class TransformLoadDocumentTest()
     {
         var options = new XmlOptions() { ValidateInputDocuments = validate };
 
-        XmlOptions.ResetSchemas();
-        if (loadSchemas)
-        {
-            XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(TestsFixture.SchemasPath, "Microsoft.Serialization.xsd"));
-            XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(TestsFixture.SchemasPath, "DataContract.xsd"));
-            XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Linq.Expressions.Serialization.xsd"));
-        }
+        ResetReloadSchemas(loadSchemas);
 
         var transform = new ExpressionXmlTransform(options);
-        using var stream = new FileStream(Path.Combine(TestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(Path.Combine(XmlTestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
         var deserialize = () => transform.Deserialize(stream);
 
         if (exceptionType is null)
@@ -63,16 +70,10 @@ public class TransformLoadDocumentTest()
     {
         var options = new XmlOptions() { ValidateInputDocuments = validate };
 
-        XmlOptions.ResetSchemas();
-        if (loadSchemas)
-        {
-            XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(TestsFixture.SchemasPath, "Microsoft.Serialization.xsd"));
-            XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(TestsFixture.SchemasPath, "DataContract.xsd"));
-            XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(TestsFixture.SchemasPath, "Linq.Expressions.Serialization.xsd"));
-        }
+        ResetReloadSchemas(loadSchemas);
 
         var transform = new ExpressionXmlTransform(options);
-        using var stream = new FileStream(Path.Combine(TestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(Path.Combine(XmlTestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
         var deserialize = async () => await transform.DeserializeAsync(stream);
 
         if (exceptionType is null)

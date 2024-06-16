@@ -87,12 +87,8 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
-        // get the expression type
-        if (element.TryGetEType(out var t) && t is not null)
-            type = t;
-
         // get the concrete type but do not change the expression type
-        if (!element.TryGetETypeFromAttribute(out t, AttributeNames.ConcreteType) || t is null)
+        if (!element.TryGetETypeFromAttribute(out var t, AttributeNames.ConcreteType) || t is null)
             t = type;   // the element type IS the concrete type
 
         if (t is null)

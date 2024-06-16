@@ -1,14 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public partial class TransformOptionsTests
+[CollectionDefinition("XML")]
+public partial class TransformOptionsTests(ITestOutputHelper output)
 {
-    public ITestOutputHelper Out { get; }
-
-    public TransformOptionsTests(ITestOutputHelper output)
-    {
-        Out = output;
-        FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
-    }
+    public ITestOutputHelper Out { get; } = output;
 
     [Theory]
     [MemberData(nameof(TransformIdentifiersData))]

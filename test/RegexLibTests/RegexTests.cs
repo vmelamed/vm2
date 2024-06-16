@@ -1,8 +1,6 @@
 ﻿namespace vm2.RegexLibTests;
 using System.Web;
 
-using TestUtilities;
-
 public class Captures : Dictionary<string, string>, IXunitSerializable
 {
     const string countId = "countId";
@@ -33,16 +31,10 @@ public class Captures : Dictionary<string, string>, IXunitSerializable
     }
 }
 
-public abstract partial class RegexTests
+public abstract partial class RegexTests(ITestOutputHelper output)
 {
 
-    public ITestOutputHelper Out { get; }
-
-    public RegexTests(ITestOutputHelper output)
-    {
-        Out = output;
-        FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
-    }
+    public ITestOutputHelper Out { get; } = output;
 
     public const RegexOptions RegexOpt = RegexOptions.IgnorePatternWhitespace;
 

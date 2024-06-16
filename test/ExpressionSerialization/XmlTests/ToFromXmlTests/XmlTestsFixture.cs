@@ -1,6 +1,7 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
+﻿
+namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
-public class TestsFixture : IDisposable
+public class XmlTestsFixture : IDisposable
 {
     internal const string TestFilesPath = "../../../TestData";
 
@@ -24,27 +25,21 @@ public class TestsFixture : IDisposable
 
     internal const LoadOptions XmlLoadOptions = LoadOptions.SetLineInfo; // LoadOptions.SetBaseUri | LoadOptions.None;
 
-    public TestsFixture()
+    public XmlTestsFixture()
     {
-        XmlOptions.SetSchemaLocation(XmlOptions.Ser, Path.Combine(SchemasPath, "Microsoft.Serialization.xsd"));
-        XmlOptions.SetSchemaLocation(XmlOptions.Dcs, Path.Combine(SchemasPath, "DataContract.xsd"));
-        XmlOptions.SetSchemaLocation(XmlOptions.Exs, Path.Combine(SchemasPath, "Linq.Expressions.Serialization.xsd"));
+        XmlOptions.SetSchemasLocations(
+            new Dictionary<string, string?> {
+                [XmlOptions.Ser] = Path.Combine(XmlTestsFixture.SchemasPath, "Microsoft.Serialization.xsd"),
+                [XmlOptions.Dcs] = Path.Combine(XmlTestsFixture.SchemasPath, "DataContract.xsd"),
+                [XmlOptions.Exs] = Path.Combine(XmlTestsFixture.SchemasPath, "Linq.Expressions.Serialization.xsd"),
+            }, true);
+
+        FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
     }
 
     public void Dispose() => GC.SuppressFinalize(this);
 
-    public static void Validate(XDocument doc)
-    {
-        List<XmlSchemaException> exceptions = [];
-
-        doc.Validate(XmlOptions.Schemas, (_, e) => exceptions.Add(e.Exception));
-
-        if (exceptions.Count is not 0)
-            throw new AggregateException(
-                        $"Error(s) validating the XML document against the {XmlOptions.Exs}:\n  " +
-                        string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber},{x.LinePosition}) : {x.Message}")),
-                        exceptions);
-    }
+    public void Validate(XDocument doc) => Options.Validate(doc);
 
     public async Task<(XDocument?, string)> GetXmlDocumentAsync(
         string testFileLine,

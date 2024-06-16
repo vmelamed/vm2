@@ -1,21 +1,11 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
-
-using TestUtilities;
-
-public abstract class BaseTests : IClassFixture<TestsFixture>
-{
-    public ITestOutputHelper Out { get; }
-
-    protected TestsFixture _fixture;
-
-    public BaseTests(
+public abstract class BaseTests(
         TestsFixture fixture,
-        ITestOutputHelper output)
-    {
-        FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
-        _fixture = fixture;
-        Out = output;
-    }
+        ITestOutputHelper output) : IClassFixture<TestsFixture>
+{
+    public ITestOutputHelper Out { get; } = output;
+
+    protected TestsFixture _fixture = fixture;
 
     protected abstract string JsonTestFilesPath { get; }
 

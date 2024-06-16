@@ -1,7 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
-public partial class AssignmentTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+
+[CollectionDefinition("XML")]
+public partial class AssignmentTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string XmlTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Assignments");
+    protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "Assignments");
 
     static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
     static ParameterExpression _paramB = Expression.Parameter(typeof(int), "b");

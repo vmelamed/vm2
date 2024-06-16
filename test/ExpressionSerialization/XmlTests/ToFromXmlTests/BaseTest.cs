@@ -1,19 +1,13 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
-public abstract class BaseTests : IClassFixture<TestsFixture>
+[CollectionDefinition("XML")]
+public abstract class BaseTests(
+        XmlTestsFixture fixture,
+        ITestOutputHelper output) : IClassFixture<XmlTestsFixture>
 {
-    public ITestOutputHelper Out { get; }
+    public ITestOutputHelper Out { get; } = output;
 
-    protected TestsFixture _fixture;
-
-    public BaseTests(
-        TestsFixture fixture,
-        ITestOutputHelper output)
-    {
-        FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
-        _fixture = fixture;
-        Out = output;
-    }
+    protected XmlTestsFixture _fixture = fixture;
 
     protected abstract string XmlTestFilesPath { get; }
 
