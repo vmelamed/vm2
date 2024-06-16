@@ -34,15 +34,10 @@ public partial class JsonOptions : DocumentOptions
     };
 #pragma warning restore IDE0032 // Use auto property
 
+    ReaderWriterLockSlim _syncSchema = new(LockRecursionPolicy.SupportsRecursion);
     JsonSchema? _schema;
     bool _allowTrailingCommas = true;
     JsonSerializerOptions? _jsonSerializerOptions;
-
-    /// <summary>
-    /// Gets the loaded expression serialization schema.
-    /// </summary>
-    /// <value>The schemas.</value>
-    public JsonSchema Schema => _schema ?? throw new InvalidOperationException($"The schema must be loaded with {nameof(LoadSchema)}.");
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonOptions"/> class. The schema must be subsequently loaded with
@@ -64,13 +59,23 @@ public partial class JsonOptions : DocumentOptions
     /// <param name="schemaFilePath">The location of the schema file.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>Load
     public JsonSchema LoadSchema(string schemaFilePath)
-        => _schema = JsonSchema.FromFile(schemaFilePath);
+    {
+        using (_syncSchema.WriterLock())
+            return _schema = JsonSchema.FromFile(schemaFilePath);
+    }
 
     /// <summary>
     /// Determines whether the expressions schemaUri <see cref="JsonOptions.Exs"/> was added.
     /// </summary>
     /// <returns><c>true</c> if [has expressions schemaUri] [the specified options]; otherwise, <c>false</c>.</returns>
-    internal override bool HasExpressionsSchema => Schema is not null;
+    internal override bool HasExpressionsSchema
+    {
+        get
+        {
+            using (_syncSchema.ReaderLock())
+                return _schema is not null;
+        }
+    }
 
     /// <summary>
     /// Get or sets a value that indicates whether an extra comma at the end of a list of JSON values in an object or 
@@ -99,8 +104,7 @@ public partial class JsonOptions : DocumentOptions
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                     Converters = { _jsonStringEnumConverter },
                     MaxDepth = 1000,
-                    NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals |
-                                     JsonNumberHandling.AllowReadingFromString,
+                    NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals | JsonNumberHandling.AllowReadingFromString,
                     PreferredObjectCreationHandling = JsonObjectCreationHandling.Populate,
                     ReadCommentHandling = JsonCommentHandling.Skip,
                     ReferenceHandler = ReferenceHandler.Preserve,
@@ -136,15 +140,23 @@ public partial class JsonOptions : DocumentOptions
     /// <returns>Json.Schema.EvaluationResults.</returns>
     public void Validate(JsonNode jsonNode)
     {
-        var result = Schema.Evaluate(jsonNode, _evaluationOptions);
+        if (!MustValidate)
+            return;
 
-        if (result.IsValid)
+        EvaluationResults results;
+
+        using (_syncSchema.ReaderLock())
+            results = _schema is not null
+                            ? _schema.Evaluate(jsonNode, _evaluationOptions)
+                            : throw new InvalidOperationException("The schema is not loaded. Use JsonOptions.LoadSchema.");
+
+        if (results.IsValid)
             return;
 
         var writer = new StringWriter();
 
         writer.WriteLine($"The validation of the JSON/YAML against the schema \"{Exs}\" failed:\n");
-        WriteResults(writer, result, 1);
+        WriteResults(writer, results, 1);
         writer.Flush();
 
         throw new SerializationException(writer.ToString());

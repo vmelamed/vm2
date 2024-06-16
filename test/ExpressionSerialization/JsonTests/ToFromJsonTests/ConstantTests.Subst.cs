@@ -265,7 +265,7 @@ public partial class ConstantTests
         ["ValueTuple<int, string>"]                                                             = Expression.Constant((1, "one")),
         // dictionaries
         ["Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\"..."]                           = Expression.Constant(new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }),
-        ["Dictionary<int, string>{ [1] = \"one\", [2]=\"two\" }"]                               = Expression.Constant(new Dictionary<int, string>{ [1] ="one", [2]="two" }),
+        ["Dictionary<int, string>{ [1] = \"one\", [2] = \"two\" }"]                             = Expression.Constant(new Dictionary<int, string>{ [1] ="one", [2]="two" }),
         ["Frozen Dictionary<int, string?>..."]                                                  = Expression.Constant(new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }.ToFrozenDictionary()),
         ["Frozen Dictionary<int, string>..."]                                                   = Expression.Constant(new Dictionary<int, string>{ [1] = "one", [2] = "two", [3] = "three", }.ToFrozenDictionary()),
         ["Hashtable(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })"]                 = Expression.Constant(new Hashtable(new Dictionary<int, string>{ [1] ="one", [2]="two" })),

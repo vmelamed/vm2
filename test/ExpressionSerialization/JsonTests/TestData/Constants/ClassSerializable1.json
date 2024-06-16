@@ -1,0 +1,16 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "$comment": " vm2.ExpressionSerialization.JsonTests.ClassSerializable1 ",
+      "object": {
+        "type": "vm2.ExpressionSerialization.JsonTests.ClassSerializable1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+        "value": {
+          "$id": "1",
+          "IntProperty": 0,
+          "StringProperty": ""
+        }
+      }
+    }
+  }
+}

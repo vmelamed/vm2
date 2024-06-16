@@ -187,8 +187,8 @@ public partial class ConstantTests
         { TestLine(), "Tuple<int, string>",                                                     "Tuple.json" },
         { TestLine(), "ValueTuple<int, string>",                                                "TupleValue.json" },
         // dictionaries
-        { TestLine(), "Dictionary<int, string?>{ [1] = \"one\", [2]=\"two\"...",                "DictionaryIntNullableString.json" },
-        { TestLine(), "Dictionary<int, string>{ [1] = \"one\", [2]=\"two\" }",                  "DictionaryIntString.json" },
+        { TestLine(), "Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\"...",              "DictionaryIntNullableString.json" },
+        { TestLine(), "Dictionary<int, string>{ [1] = \"one\", [2] = \"two\" }",                "DictionaryIntString.json" },
         { TestLine(), "Frozen Dictionary<int, string?>...",                                     "Frozen.DictionaryIntNullableString.json" },
         { TestLine(), "Frozen Dictionary<int, string>...",                                      "Frozen.DictionaryIntString.son" },
         { TestLine(), "Hashtable(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })",    "Hashtable.json" },

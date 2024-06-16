@@ -22,7 +22,7 @@ public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionT
         _expressionVisitor ??= new ToJsonTransformVisitor(_options);
         _expressionVisitor.Visit(expression);
 
-        var docObject = new JsonObject(_nodeOptions)
+        return new JsonObject(_nodeOptions)
         {
             { Vocabulary.Schema, JsonOptions.Exs },
             { Vocabulary.Expression, new JsonObject(_nodeOptions)
@@ -30,7 +30,6 @@ public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionT
                                         _expressionVisitor.Result
                                      } }
         };
-        return docObject;
     }
 
     /// <summary>

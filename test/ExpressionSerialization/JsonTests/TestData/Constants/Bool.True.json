@@ -1,0 +1,8 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "boolean": true
+    }
+  }
+}

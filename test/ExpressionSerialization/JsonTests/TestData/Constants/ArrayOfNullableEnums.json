@@ -1,0 +1,46 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "$comment": " System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][] ",
+      "collection": {
+        "type": "System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+        "$comment": " nullable\u003Cvm2.ExpressionSerialization.JsonTests.EnumTest\u003E ",
+        "value": [
+          {
+            "nullable": {
+              "$comment": " vm2.ExpressionSerialization.JsonTests.EnumTest ",
+              "enum": {
+                "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+                "value": "One",
+                "baseValue": 0
+              }
+            }
+          },
+          {
+            "nullable": {
+              "$comment": " vm2.ExpressionSerialization.JsonTests.EnumTest ",
+              "enum": {
+                "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+                "value": "Two",
+                "baseValue": 1
+              }
+            }
+          },
+          {
+            "nullable": {
+              "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": null
+            }
+          },
+          {
+            "nullable": {
+              "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": null
+            }
+          }
+        ]
+      }
+    }
+  }
+}

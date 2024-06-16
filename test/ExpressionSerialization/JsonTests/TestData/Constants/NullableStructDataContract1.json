@@ -1,0 +1,18 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "$comment": " nullable\u003Cvm2.ExpressionSerialization.JsonTests.StructDataContract1\u003E ",
+      "nullable": {
+        "$comment": " vm2.ExpressionSerialization.JsonTests.StructDataContract1 ",
+        "object": {
+          "type": "vm2.ExpressionSerialization.JsonTests.StructDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+          "value": {
+            "IntProperty": 7,
+            "StringProperty": "vm"
+          }
+        }
+      }
+    }
+  }
+}

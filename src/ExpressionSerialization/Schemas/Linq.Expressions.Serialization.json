@@ -475,7 +475,7 @@
                                 { "type": "null" },
                                 {
                                     "type": "string",
-                                    "pattern": "^[0-9A-Za-z/+]+={0,2}$",
+                                    "pattern": "^[0-9A-Za-z/+]*={0,2}$",
                                     "contentEncoding": "base64",
                                     "contentMediaType": "application/octet-stream"
                                 },
@@ -484,7 +484,7 @@
                                     "type": "array",
                                     "items": {
                                         "type": "string",
-                                        "pattern": "^[0-9A-Za-z/+]+={0,2}$",
+                                        "pattern": "^[0-9A-Za-z/+]*={0,2}$",
                                         "contentEncoding": "base64",
                                         "contentMediaType": "application/octet-stream"
                                     }

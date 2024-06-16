@@ -24,8 +24,8 @@ public class ToJsonDataTransform(JsonOptions options)
     /// <remarks>
     /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
     /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
-    /// from the range [-(2^53-1), 2^53 - 1].
-    /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;9007199254740992&quot;</c>.
+    /// from the range [-(2^53-1), 2^53-1].
+    /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;-9007199254740992&quot;</c>.
     /// </remarks>
     public const long MinJsonInteger = -MaxJsonInteger;
 
@@ -204,7 +204,7 @@ public class ToJsonDataTransform(JsonOptions options)
         var sequenceElement = new JElement(
                                     Vocabulary.ByteSequence,
                                         new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                                        nodeValue is null ? new JElement(Vocabulary.Null, true) : null
+                                        nodeValue is null ? new JElement(Vocabulary.Value) : null
                                 );
         ReadOnlySpan<byte> bytes;
 
@@ -218,7 +218,7 @@ public class ToJsonDataTransform(JsonOptions options)
         else
         {
             if (nodeValue is null)
-                throw new InternalTransformErrorException("Unexpected non-array byte sequenceElement with null v of type '{nodeType.FullName}'.");
+                throw new InternalTransformErrorException($"Unexpected non-array byte sequenceElement with null value of type '{nodeType.FullName}'.");
 
             if (nodeValue is ImmutableArray<byte> iab)
                 bytes = iab.AsSpan();
@@ -419,28 +419,31 @@ public class ToJsonDataTransform(JsonOptions options)
         object? nodeValue,
         Type nodeType)
     {
+        if (nodeValue is null)
+            return new JElement(
+                        Vocabulary.Object,
+                            new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                            new JElement(Vocabulary.Value));
+
         var concreteType = nodeValue?.GetType();
-        var value = new JElement(Vocabulary.Value);
         var obj = new JElement(
                         Vocabulary.Object,
-                        new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                        concreteType is not null && concreteType != nodeType
-                            ? new JElement(Vocabulary.ConcreteType, Transform.TypeName(concreteType))
-                            : null,
-                        value);
-
-        if (nodeValue is null)
-            return obj;
+                            new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                            concreteType is not null && concreteType != nodeType
+                                ? new JElement(Vocabulary.ConcreteType, Transform.TypeName(concreteType))
+                                : null);
 
         Debug.Assert(concreteType is not null);
 
-        var actualTransform = GetTransform(nodeType);
+        var actualTransform = GetTransform(concreteType);
 
         if (actualTransform != ObjectTransform)
-            value.Add(actualTransform(nodeValue, concreteType));
-        else
-            value.Value = JsonSerializer.SerializeToNode(nodeValue, concreteType, options.JsonSerializerOptions);
-        return obj;
+            return actualTransform(nodeValue, concreteType);
+
+        if (concreteType == typeof(object))
+            return obj.Add(Vocabulary.Value, new JsonObject());
+
+        return obj.Add(Vocabulary.Value, JsonSerializer.SerializeToNode(nodeValue, options.JsonSerializerOptions));
     }
     #endregion
 }

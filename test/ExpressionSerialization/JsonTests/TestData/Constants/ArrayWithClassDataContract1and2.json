@@ -1,0 +1,42 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "$comment": " vm2.ExpressionSerialization.JsonTests.ClassDataContract1[] ",
+      "collection": {
+        "type": "vm2.ExpressionSerialization.JsonTests.ClassDataContract1[], JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+        "$comment": " vm2.ExpressionSerialization.JsonTests.ClassDataContract1 ",
+        "value": [
+          {
+            "object": {
+              "type": "vm2.ExpressionSerialization.JsonTests.ClassDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": {
+                "$id": "1",
+                "IntProperty": 7,
+                "StringProperty": "vm"
+              }
+            }
+          },
+          {
+            "object": {
+              "type": "vm2.ExpressionSerialization.JsonTests.ClassDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "concreteType": "vm2.ExpressionSerialization.JsonTests.ClassDataContract2, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": {
+                "$id": "1",
+                "DecimalProperty": 17,
+                "IntProperty": 7,
+                "StringProperty": "vm"
+              }
+            }
+          },
+          {
+            "object": {
+              "type": "vm2.ExpressionSerialization.JsonTests.ClassDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": null
+            }
+          }
+        ]
+      }
+    }
+  }
+}

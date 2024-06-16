@@ -1,0 +1,32 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "$comment": " vm2.ExpressionSerialization.JsonTests.StructSerializable1[] ",
+      "collection": {
+        "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1[], JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+        "$comment": " vm2.ExpressionSerialization.JsonTests.StructSerializable1 ",
+        "value": [
+          {
+            "object": {
+              "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": {
+                "IntProperty": 0,
+                "StringProperty": "vm"
+              }
+            }
+          },
+          {
+            "object": {
+              "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": {
+                "IntProperty": 1,
+                "StringProperty": "vm vm"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

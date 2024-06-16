@@ -1,0 +1,50 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "$comment": " System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.StructDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][] ",
+      "collection": {
+        "type": "System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.StructDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+        "$comment": " nullable\u003Cvm2.ExpressionSerialization.JsonTests.StructDataContract1\u003E ",
+        "value": [
+          {
+            "nullable": {
+              "$comment": " vm2.ExpressionSerialization.JsonTests.StructDataContract1 ",
+              "object": {
+                "type": "vm2.ExpressionSerialization.JsonTests.StructDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+                "value": {
+                  "IntProperty": 0,
+                  "StringProperty": "vm"
+                }
+              }
+            }
+          },
+          {
+            "nullable": {
+              "type": "vm2.ExpressionSerialization.JsonTests.StructDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": null
+            }
+          },
+          {
+            "nullable": {
+              "$comment": " vm2.ExpressionSerialization.JsonTests.StructDataContract1 ",
+              "object": {
+                "type": "vm2.ExpressionSerialization.JsonTests.StructDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+                "value": {
+                  "IntProperty": 1,
+                  "StringProperty": "vm vm"
+                }
+              }
+            }
+          },
+          {
+            "nullable": {
+              "type": "vm2.ExpressionSerialization.JsonTests.StructDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "value": null
+            }
+          }
+        ]
+      }
+    }
+  }
+}
