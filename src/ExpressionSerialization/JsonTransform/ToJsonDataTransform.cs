@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
-using System.Text.Json.Serialization.Metadata;
-
 using TransformConstant = Func<object?, Type, JElement>;
 
 /// <summary>
@@ -94,7 +92,7 @@ public class ToJsonDataTransform(JsonOptions options)
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>
-    /// A delegate that can transform a nodeValue of the specified <paramref name="type"/> into an JSON element (<see cref="JElement"/>).
+    /// A delegate that can transform a nodeValue of the specified <paramref name="type"/> into an JSON obj (<see cref="JElement"/>).
     /// </returns>
     /// <exception cref="SerializationException"></exception>
     public TransformConstant GetTransform(Type type)
@@ -380,7 +378,7 @@ public class ToJsonDataTransform(JsonOptions options)
             var kvTypes = nodeType.GetGenericArguments();
 
             if (kvTypes.Length is not 2)
-                throw new InternalTransformErrorException("The elements of 'Dictionary' do not have key-type and element-type.");
+                throw new InternalTransformErrorException("The elements of 'Dictionary' do not have key-type and obj-type.");
 
             kType = kvTypes[0];
             vType = kvTypes[1];
@@ -421,41 +419,28 @@ public class ToJsonDataTransform(JsonOptions options)
         object? nodeValue,
         Type nodeType)
     {
-        var element = new JElement(Vocabulary.Object, Transform.TypeName(nodeType));
+        var concreteType = nodeValue?.GetType();
+        var value = new JElement(Vocabulary.Value);
+        var obj = new JElement(
+                        Vocabulary.Object,
+                        new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
+                        concreteType is not null && concreteType != nodeType
+                            ? new JElement(Vocabulary.ConcreteType, Transform.TypeName(concreteType))
+                            : null,
+                        value);
 
         if (nodeValue is null)
-        {
-            element.Add(new JElement(Vocabulary.Null, true));
-            if (nodeType != typeof(object))
-                element.Add(new JElement(Vocabulary.Type, Transform.TypeName(nodeType)));
-            return element;
-        }
+            return obj;
 
-        var concreteType = nodeValue.GetType();
+        Debug.Assert(concreteType is not null);
 
-        if (concreteType == typeof(object))
-            return element;
-
-        var actualTransform = GetTransform(concreteType);
+        var actualTransform = GetTransform(nodeType);
 
         if (actualTransform != ObjectTransform)
-            return actualTransform(nodeValue, concreteType);
-
-        element.Add(
-            new JElement(Vocabulary.ConcreteType, Transform.TypeName(nodeType)),
-            nodeType != concreteType ? new JElement(Vocabulary.ConcreteType, Transform.TypeName(concreteType)) : null
-        );
-
-        // USE: Utf8JsonWriter.WriteRawValue?
-
-        //var dcSerializer = new DataContractSerializer(concreteType);
-        //using var writer = element.CreateWriter();
-
-        // XML serialize into the element
-        //dcSerializer.WriteObject(writer, nodeValue);
-
-        var jsonElement = JsonSerializer.SerializeToElement(nodeValue, JsonTypeInfo.CreateJsonTypeInfo(concreteType, options.JsonSerializerOptions));
-        return element.Add(Vocabulary.Value, JsonObject.Create(jsonElement));
+            value.Add(actualTransform(nodeValue, concreteType));
+        else
+            value.Value = JsonSerializer.SerializeToNode(nodeValue, concreteType, options.JsonSerializerOptions);
+        return obj;
     }
     #endregion
 }

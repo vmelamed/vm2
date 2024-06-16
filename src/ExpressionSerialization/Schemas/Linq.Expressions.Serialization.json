@@ -631,23 +631,30 @@
             "title": "JSON serialized object",
             "type": "object",
             "properties": {
-                "type": { "type": "string" },
                 "object": {
-                    "oneOf": [
-                        { "type": "object" },
-                        {
-                            "$Comment": "Only reference types can have value null.",
-                            "type": "null"
+                    "type": "object",
+                    "properties": {
+                        "type": { "type": "string" },
+                        "concreteType": {
+                            "$comment": "The actual type of the object can be different from the declared type if the type of the object is derived from the declared type.",
+                            "type": "string"
+                        },
+                        "value": {
+                            "oneOf": [
+                                { "type": "object" },
+                                {
+                                    "$comment": "Only reference types can have value null.",
+                                    "type": "null"
+                                }
+                            ]
                         }
-                    ]
-                },
-                "actualType": {
-                    "$comment": "The actual type of the object can be different from the declared type if the type of the object is derived from the declared type.",
-                    "type": "string"
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "type", "value" ]
                 }
             },
             "additionalProperties": { "type": "string" },
-            "required": [ "object", "type" ]
+            "required": [ "object" ]
         }
     }
 }

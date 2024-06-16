@@ -168,8 +168,8 @@ public static class XNodeExtensions
     /// <summary>
     /// Tries to get the name of the type of an element
     /// <list type="bullet">
-    /// <item>either from the name of the element</item>
-    /// <item>or from its attribute "type".</item>
+    /// <item>either from its attribute "type".</item>
+    /// <item>or from the name of the element</item>
     /// </list>
     /// </summary>
     /// <param name="element">The element.</param>
@@ -179,9 +179,11 @@ public static class XNodeExtensions
     public static bool TryGetETypeName(this XElement element, out string name, XName? attributeName = null)
     {
         name = "";
-        var nm = Vocabulary.NamesToTypes.ContainsKey(element.Name.LocalName)
-                    ? element.Name.LocalName
-                    : element.Attribute(attributeName ?? AttributeNames.Type)?.Value;
+
+        var nm = element.Attribute(attributeName ?? AttributeNames.Type)?.Value ??
+                    (Vocabulary.NamesToTypes.ContainsKey(element.Name.LocalName)
+                            ? element.Name.LocalName
+                            : null);
 
         if (string.IsNullOrWhiteSpace(nm))
             return false;
@@ -193,8 +195,8 @@ public static class XNodeExtensions
     /// <summary>
     /// Gets the name of the type of an element
     /// <list type="bullet">
-    /// <item>either from the name of the element</item>
-    /// <item>or from its attribute "type".</item>
+    /// <item>either from its attribute "type".</item>
+    /// <item>or from the name of the element</item>
     /// </list>
     /// If it fails, throws exception.
     /// </summary>
@@ -210,8 +212,8 @@ public static class XNodeExtensions
     /// <summary>
     /// Tries to get the .NET type of the element
     /// <list type="bullet">
-    /// <item>either from the name of the element</item>
-    /// <item>or from its attribute "type".</item>
+    /// <item>either from its attribute "type".</item>
+    /// <item>or from the name of the element</item>
     /// </list>
     /// </summary>
     /// <param name="element">The element.</param>
@@ -222,20 +224,15 @@ public static class XNodeExtensions
     {
         type = null;
 
-        if (!element.TryGetETypeName(out var typeName, attributeName))
-            return false;
-
-        if (Vocabulary.NamesToTypes.TryGetValue(typeName, out type))
-            return true;
-
-        return (type = Type.GetType(typeName)) is not null;
+        return element.TryGetETypeFromAttribute(out type, attributeName) ||
+               Vocabulary.NamesToTypes.TryGetValue(element.Name.LocalName, out type);
     }
 
     /// <summary>
     /// Tries to get the .NET type of the element
     /// <list type="bullet">
-    /// <item>either from the name of the element</item>
-    /// <item>or from its attribute "type".</item>
+    /// <item>either from its attribute "type".</item>
+    /// <item>or from the name of the element</item>
     /// </list>
     /// </summary>
     /// <param name="element">The element.</param>

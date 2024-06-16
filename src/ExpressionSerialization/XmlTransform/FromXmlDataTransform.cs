@@ -1,5 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+using vm2.ExpressionSerialization.Extensions;
+
 static partial class FromXmlDataTransform
 {
     delegate object? Transformation(XElement element, ref Type type);
@@ -69,10 +71,6 @@ static partial class FromXmlDataTransform
     {
         try
         {
-            var typeName = element.Attribute(AttributeNames.Type)?.Value
-                                        ?? throw new ArgumentNullException($"Could not get the full name of the enum type at `{element.Name}`");
-            type = Type.GetType(typeName) ?? throw new ArgumentNullException($"Could not get the enum type at `{element.Name}`");
-
             return Enum.Parse(type, element.Value);
         }
         catch (ArgumentException ex)
@@ -89,22 +87,24 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
-        if (element.TryGetETypeFromAttribute(out var t))
-            type = t!;
+        // get the expression type
+        if (element.TryGetEType(out var t) && t is not null)
+            type = t;
 
-        var concreteTypeName = element.Attribute(AttributeNames.ConcreteType)?.Value;
-        var concreteType = string.IsNullOrEmpty(concreteTypeName) ? type : Type.GetType(concreteTypeName);
+        // get the concrete type but do not change the expression type
+        if (!element.TryGetETypeFromAttribute(out t, AttributeNames.ConcreteType) || t is null)
+            t = type;   // the element type IS the concrete type
+
+        if (t is null)
+            throw new SerializationException($"Unknown type at the element {element.Name}.");
 
         if (element.IsNil())
             return null;
 
-        if (concreteType == typeof(object))
+        if (t == typeof(object))
             return new();
 
-        if (concreteType is null)
-            throw new SerializationException($"Unknown type `{concreteType}`");
-
-        var serializer = new DataContractSerializer(concreteType);
+        var serializer = new DataContractSerializer(t);
         using var reader = element.GetChild().CreateReader();
         return serializer.ReadObject(reader);
     }
@@ -113,6 +113,9 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
+        if (element.IsNil())
+            return null;
+
         var constructor = type.GetConstructors()[0];
         var constructorParameters = constructor.GetParameters();
 
@@ -145,6 +148,9 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
+        if (element.IsNil())
+            return null;
+
         var parameters = element
                             .Elements(ElementNames.TupleItem)
                             .Select(
@@ -177,6 +183,9 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
+        if (element.IsNil())
+            return null;
+
         var bytes = Convert.FromBase64String(element.Value);
 
         if (element.TryGetLength(out var length) && length != bytes.Length)
@@ -200,6 +209,9 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
+        if (element.IsNil())
+            return null;
+
         int length = element.Elements().Count();
 
         if (element.TryGetLength(out var len) && len != length)
@@ -358,6 +370,9 @@ static partial class FromXmlDataTransform
         XElement element,
         ref Type type)
     {
+        if (element.IsNil())
+            return null;
+
         var (dict, kvTypes, convertToFinal) = PrepForDictionary(type);
 
         foreach (var kvElement in element.Elements(ElementNames.KeyValuePair))
