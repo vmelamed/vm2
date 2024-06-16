@@ -419,12 +419,6 @@ public class ToJsonDataTransform(JsonOptions options)
         object? nodeValue,
         Type nodeType)
     {
-        if (nodeValue is null)
-            return new JElement(
-                        Vocabulary.Object,
-                            new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
-                            new JElement(Vocabulary.Value));
-
         var concreteType = nodeValue?.GetType();
         var obj = new JElement(
                         Vocabulary.Object,
@@ -432,6 +426,9 @@ public class ToJsonDataTransform(JsonOptions options)
                             concreteType is not null && concreteType != nodeType
                                 ? new JElement(Vocabulary.ConcreteType, Transform.TypeName(concreteType))
                                 : null);
+
+        if (nodeValue is null)
+            return obj.Add(Vocabulary.Value, null);
 
         Debug.Assert(concreteType is not null);
 

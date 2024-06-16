@@ -101,7 +101,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// If a property with the same name as the <paramref name="key"/> already exists in the <see cref="Value"/> of this instance.
     /// If <paramref name="key"/> is an empty string.
     /// </exception>
-    public JElement Add(string key, JsonNode? value)
+    public JElement Add(string key, JsonNode? value = null)
     {
         Value ??= new JsonObject();
 
@@ -129,7 +129,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <exception cref="ArgumentException">
     /// If <paramref name="key"/> is an empty string.
     /// </exception>
-    public (JElement, bool) TryAdd(string key, JsonNode? value)
+    public (JElement, bool) TryAdd(string key, JsonNode? value = null)
     {
         Value ??= new JsonObject();
 
