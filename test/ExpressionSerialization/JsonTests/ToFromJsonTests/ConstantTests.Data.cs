@@ -15,6 +15,10 @@ public partial class ConstantTests
         // double
         //{ TestLine(), "double.MinValue",                                                        "Double.MinValue.json" },
         //{ TestLine(), "double.MaxValue",                                                        "Double.MaxValue.json" },
+        //{ TestLine(), "double.float.MinValue",                                                  "Double.Float.MinValue.json" },
+        //{ TestLine(), "double.float.MaxValue",                                                  "Double.Float.MaxValue.json" },
+        //{ TestLine(), "double.BigValue",                                                        "Double.BigValue.json" },
+        //{ TestLine(), "double.SmallValue",                                                      "Double.SmallValue.json" },
         //{ TestLine(), "double.Nan",                                                             "Double.Nan.json" },
         //{ TestLine(), "double.NegativeInfinity",                                                "Double.NegativeInfinity.json" },
         //{ TestLine(), "double.PositiveInfinity",                                                "Double.PositiveInfinity.json" },
@@ -23,8 +27,10 @@ public partial class ConstantTests
         { TestLine(), "double.Epsilon",                                                         "Double.Epsilon.json" },
         { TestLine(), "double.PI",                                                              "Double.Pi.json" },
         { TestLine(), "double.E",                                                               "Double.E.json" },
-        { TestLine(), "-2.234567891233658E-123",                                                "Double.2.2345.json" },
-        { TestLine(), "5.1234567891234567E-123",                                                "Double.5.12345.json" },
+        { TestLine(), "-2.234567891233658E-123",                                                "Double.-2.23..E-123.json" },
+        { TestLine(), "5.1234567891234567E-123",                                                "Double.5.12..E-123.json" },
+        //{ TestLine(), "-3.4028234663852886E+38",                                                "Double.3.40..E38.json" },
+        //{ TestLine(), "3.4028234663852886E+38",                                                 "Double.-3.40..E38.json" },
         // float
         //{ TestLine(), "float.MinValue",                                                         "Float.MinValue.json" },
         //{ TestLine(), "float.MaxValue",                                                         "Float.MaxValue.json" },
@@ -34,8 +40,8 @@ public partial class ConstantTests
         { TestLine(), "float.Epsilon",                                                          "Float.Epsilon.json" },
         { TestLine(), "float.NegativeZero",                                                     "Float.NegativeZero.json" },
         { TestLine(), "float.Zero",                                                             "Float.Zero.json" },
-        { TestLine(), "-2.234568E-23F",                                                         "Float.2.2345.json" },
-        { TestLine(), "5.5123453E-34F",                                                         "Float.5.512345.json" },
+        { TestLine(), "-2.234568E-23F",                                                         "Float.-2.23..E-23.json" },
+        { TestLine(), "5.5123453E-34F",                                                         "Float.5.51..E-34.json" },
         // int
         { TestLine(), "5",                                                                      "Int.5.json" },
         { TestLine(), "42",                                                                     "Int.42.json" },
@@ -44,6 +50,8 @@ public partial class ConstantTests
         // IntPtr
         { TestLine(), "IntPtr5",                                                                "IntPtr.5.json" },
         { TestLine(), "IntPtr23",                                                               "IntPtr.23.json" },
+        { TestLine(), "IntPtr.MinValue",                                                        "IntPtr.MinValue.json" },
+        { TestLine(), "IntPtr.MaxValue",                                                        "IntPtr.MaxValue.json" },
         // long
         { TestLine(), "long0",                                                                  "Long.0.json" },
         { TestLine(), "5L",                                                                     "Long.5.json" },
@@ -58,8 +66,12 @@ public partial class ConstantTests
         // sbyte
         { TestLine(), "(sbyte)5",                                                               "SignedByte.5.json"},
         { TestLine(), "(sbyte)-5",                                                              "SignedByte.-5.json"},
+        { TestLine(), "sbyte.MinValue",                                                         "SignedByte.MinValue.json"},
+        { TestLine(), "sbyte.MaxValue",                                                         "SignedByte.MaxValue.json"},
         // short
         { TestLine(), "(short)32000",                                                           "Short.json"},
+        { TestLine(), "short.MinValue",                                                         "Short.MinValue.json"},
+        { TestLine(), "short.MaxValue",                                                         "Short.MaxValue.json"},
         // uint
         { TestLine(), "(uint)5",                                                                "UnsignedInt.5.json"},
         { TestLine(), "(uint)42",                                                               "UnsignedInt.42.json"},
@@ -68,6 +80,8 @@ public partial class ConstantTests
         // UIntPtr
         { TestLine(), "(UnsignedIntPtr)5",                                                      "UnsignedIntPtr.5.json"},
         { TestLine(), "(UnsignedIntPtr)42",                                                     "UnsignedIntPtr.42.json"},
+        { TestLine(), "UnsignedIntPtr.MinValue",                                                "UnsignedIntPtr.MinValue.json"},
+        { TestLine(), "UnsignedIntPtr.MaxValue",                                                "UnsignedIntPtr.MaxValue.json"},
         // ulong
         { TestLine(), "ulong0",                                                                 "UnsignedLong.0.json"},
         { TestLine(), "(ulong)5",                                                               "UnsignedLong.5.json"},
@@ -79,26 +93,42 @@ public partial class ConstantTests
         // ushort
         { TestLine(), "(ushort)5",                                                              "UnsignedShort.5.json"},
         { TestLine(), "(ushort)443",                                                            "UnsignedShort.443.json"},
+        { TestLine(), "ushort.MinValue",                                                        "UnsignedShort.MinValue.json"},
+        { TestLine(), "ushort.MaxValue",                                                        "UnsignedShort.MaxValue.json"},
         
         // basic:
         // DateTime
+        { TestLine(), "DateTime.MinValue",                                                      "DateTime.MinValue.json" },
+        { TestLine(), "DateTime.MaxValue",                                                      "DateTime.MaxValue.json" },
         { TestLine(), "DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)",             "DateTime.json" },
         { TestLine(), "DateTime(2024, 4, 13, 23, 18, 26, 234)",                                 "DateTime.Local.json" },
         // DateTimeOffset
         { TestLine(), "DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))", "DateTimeOffset.json" },
         // TimeSpan
+        { TestLine(), "TimeSpan.MinValue",                                                      "TimeSpan.MinValue.json" },
+        { TestLine(), "TimeSpan.MaxValue",                                                      "TimeSpan.MaxValue.json" },
+        { TestLine(), "TimeSpan.Zero",                                                          "TimeSpan.Zero.json" },
         { TestLine(), "TimeSpan(3, 4, 15, 32, 123)",                                            "TimeSpan.json" },
         { TestLine(), "TimeSpan(-3, 4, 15, 32, 123)",                                           "TimeSpan-.json" },
         // DBNull
         { TestLine(), "DBNull.Value",                                                           "DBNull.json" },
         // decimal
+        { TestLine(), "decimal.Zero",                                                           "Decimal.Zero.json" },
+        { TestLine(), "decimal.MinusOne",                                                       "Decimal.MinusOne.json" },
+        { TestLine(), "decimal.One",                                                            "Decimal.One.json" },
+        { TestLine(), "decimal.MinValue",                                                       "Decimal.MinValue.json" },
+        { TestLine(), "decimal.MaxValue",                                                       "Decimal.MaxValue.json" },
         { TestLine(), "5.5M",                                                                   "Decimal.json" },
         // GUID
+        { TestLine(), "Guid.Empty",                                                             "Guid.Empty.json" },
         { TestLine(), "Guid(\"00112233-4455-6677-8899-aabbccddeeff\")",                         "Guid.json" },
         // Half
         { TestLine(), "(Half)3.14",                                                             "Half.json" },
         // string
-        { TestLine(), "abrah-cadabrah",                                                         "String.json" },
+        { TestLine(), "string.Empty",                                                           "String.string.Empty.json" },
+        { TestLine(), "(string?)null",                                                          "String.string.null.json" },
+        { TestLine(), "abrah-cadabrah",                                                         "String.abrah-cadabrah.json" },
+        { TestLine(), "ала-бала",                                                               "String.ала-бала.json" },
         // Uri
         { TestLine(), "Uri(\"http://www.delinea.com\")",                                        "Uri.json" },
         // enum
@@ -190,7 +220,7 @@ public partial class ConstantTests
         { TestLine(), "Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\"...",              "DictionaryIntNullableString.json" },
         { TestLine(), "Dictionary<int, string>{ [1] = \"one\", [2] = \"two\" }",                "DictionaryIntString.json" },
         { TestLine(), "Frozen Dictionary<int, string?>...",                                     "Frozen.DictionaryIntNullableString.json" },
-        { TestLine(), "Frozen Dictionary<int, string>...",                                      "Frozen.DictionaryIntString.son" },
+        { TestLine(), "Frozen Dictionary<int, string>...",                                      "Frozen.DictionaryIntString.json" },
         { TestLine(), "Hashtable(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })",    "Hashtable.json" },
         { TestLine(), "ImmutableDictionary.Create<int,string>().Add(...)",                      "Immutable.DictionaryIntString.json" },
         { TestLine(), "ImmutableSortedDictionary.Create<int,string>().Add(...)",                "Immutable.SortedDictionaryIntString.json" },

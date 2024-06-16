@@ -15,11 +15,15 @@ public partial class ConstantTests
         // char
         ["'V'"]                                                                                 = Expression.Constant('V'),
         // double
-        //["double.MinValue"]                                                                     = Expression.Constant(-1.7976931348623157E+308, typeof(double)),
-        //["double.MaxValue"]                                                                     = Expression.Constant(double.MaxValue),
-        //["double.Nan"]                                                                          = Expression.Constant(double.NaN),
-        //["double.NegativeInfinity"]                                                             = Expression.Constant(double.NegativeInfinity),
-        //["double.PositiveInfinity"]                                                             = Expression.Constant(double.PositiveInfinity),
+        ["double.MinValue"]                                                                     = Expression.Constant(double.MinValue),
+        ["double.MaxValue"]                                                                     = Expression.Constant(double.MaxValue),
+        ["double.float.MinValue"]                                                               = Expression.Constant((double)float.MinValue),
+        ["double.float.MaxValue"]                                                               = Expression.Constant((double)float.MaxValue),
+        ["double.BigValue"]                                                                     = Expression.Constant(1.7976931348623157e308),
+        ["double.SmallValue"]                                                                   = Expression.Constant(-1.7976931348623157e+308),
+        ["double.Nan"]                                                                          = Expression.Constant(double.NaN),
+        ["double.NegativeInfinity"]                                                             = Expression.Constant(double.NegativeInfinity),
+        ["double.PositiveInfinity"]                                                             = Expression.Constant(double.PositiveInfinity),
         ["double.NegativeZero"]                                                                 = Expression.Constant(double.NegativeZero),
         ["double.Zero"]                                                                         = Expression.Constant(0.0),
         ["double.Epsilon"]                                                                      = Expression.Constant(double.Epsilon),
@@ -27,6 +31,8 @@ public partial class ConstantTests
         ["double.E"]                                                                            = Expression.Constant(double.E),
         ["-2.234567891233658E-123"]                                                             = Expression.Constant(-2.234567891233658E-123),
         ["5.1234567891234567E-123"]                                                             = Expression.Constant(5.1234567891234567E-123),
+        ["-3.4028234663852886E+38"]                                                             = Expression.Constant(-3.4028234663852886E+38),
+        [ "3.4028234663852886E+38"]                                                             = Expression.Constant(3.4028234663852886E+38),
         // float
         ["float.MinValue"]                                                                      = Expression.Constant(float.MinValue),
         ["float.MaxValue"]                                                                      = Expression.Constant(float.MaxValue),
@@ -46,6 +52,8 @@ public partial class ConstantTests
         // IntPtr
         ["IntPtr5"]                                                                             = Expression.Constant((IntPtr)5),
         ["IntPtr23"]                                                                            = Expression.Constant((IntPtr)23),
+        ["IntPtr.MinValue"]                                                                          = Expression.Constant(IntPtr.MinValue),
+        ["IntPtr.MaxValue"]                                                                          = Expression.Constant(IntPtr.MaxValue),
         // long
         ["long0"]                                                                               = Expression.Constant(0L),
         ["5L"]                                                                                  = Expression.Constant(5L),
@@ -60,8 +68,12 @@ public partial class ConstantTests
         // sbyte
         ["(sbyte)5"]                                                                            = Expression.Constant((sbyte)5),
         ["(sbyte)-5"]                                                                           = Expression.Constant((sbyte)-5),
+        ["sbyte.MinValue"]                                                                      = Expression.Constant(sbyte.MinValue),
+        ["sbyte.MaxValue"]                                                                      = Expression.Constant(sbyte.MaxValue),
         // short
         ["(short)32000"]                                                                        = Expression.Constant((short)32000),
+        ["short.MinValue"]                                                                      = Expression.Constant(short.MinValue),
+        ["short.MaxValue"]                                                                      = Expression.Constant(short.MaxValue),
         // uint
         ["(uint)5"]                                                                             = Expression.Constant((uint)5),
         ["(uint)42"]                                                                            = Expression.Constant((uint)42),
@@ -70,6 +82,8 @@ public partial class ConstantTests
         // UIntPtr
         ["(UnsignedIntPtr)5"]                                                                   = Expression.Constant((UIntPtr)5),
         ["(UnsignedIntPtr)42"]                                                                  = Expression.Constant((UIntPtr)42),
+        ["UnsignedIntPtr.MinValue"]                                                             = Expression.Constant(UIntPtr.MinValue),
+        ["UnsignedIntPtr.MaxValue"]                                                             = Expression.Constant(UIntPtr.MaxValue),
         // ulong
         ["ulong0"]                                                                              = Expression.Constant(0UL),
         ["(ulong)5"]                                                                            = Expression.Constant((ulong)5),
@@ -81,26 +95,44 @@ public partial class ConstantTests
         // ushort
         ["(ushort)5"]                                                                           = Expression.Constant((ushort)5),
         ["(ushort)443"]                                                                         = Expression.Constant((ushort)443),
+        ["ushort.MinValue"]                                                                     = Expression.Constant(ushort.MinValue),
+        ["ushort.MaxValue"]                                                                     = Expression.Constant(ushort.MaxValue),
         
         // basic:
         // DateTime
+        ["DateTime.MinValue"]                                                                   = Expression.Constant(DateTime.MinValue),
+        ["DateTime.MaxValue"]                                                                   = Expression.Constant(DateTime.MaxValue),
         ["DateTime(2024, 4, 13, 23, 18, 26, 234)"]                                              = Expression.Constant(new DateTime(2024, 4, 13, 23, 18, 26, 234)),
         ["DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)"]                          = Expression.Constant(new DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)),
         // DateTimeOffset
+        ["DateTimeOffset.MinValue"]                                                             = Expression.Constant(DateTimeOffset.MinValue),
+        ["DateTimeOffset.MaxValue"]                                                             = Expression.Constant(DateTimeOffset.MaxValue),
         ["DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))"]              = Expression.Constant(new DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))),
         // TimeSpan
+        ["TimeSpan.MinValue"]                                                                   = Expression.Constant(TimeSpan.MinValue),
+        ["TimeSpan.MaxValue"]                                                                   = Expression.Constant(TimeSpan.MaxValue),
+        ["TimeSpan.Zero"]                                                                       = Expression.Constant(TimeSpan.Zero),
         ["TimeSpan(3, 4, 15, 32, 123)"]                                                         = Expression.Constant(new TimeSpan(3, 4, 15, 32, 123)),
         ["TimeSpan(-3, 4, 15, 32, 123)"]                                                        = Expression.Constant(new TimeSpan(3, 4, 15, 32, 123).Negate()),
         // DBNull
         ["DBNull.Value"]                                                                        = Expression.Constant(DBNull.Value),
         // decimal
+        ["decimal.Zero"]                                                                        = Expression.Constant(decimal.Zero),
+        ["decimal.MinusOne"]                                                                    = Expression.Constant(decimal.MinusOne),
+        ["decimal.One"]                                                                         = Expression.Constant(decimal.One),
+        ["decimal.MinValue"]                                                                    = Expression.Constant(decimal.MinValue),
+        ["decimal.MaxValue"]                                                                    = Expression.Constant(decimal.MaxValue),
         ["5.5M"]                                                                                = Expression.Constant(5.5M),
         // GUID
+        ["Guid.Empty"]                                                                          = Expression.Constant(Guid.Empty),
         ["Guid(\"00112233-4455-6677-8899-aabbccddeeff\")"]                                      = Expression.Constant(new Guid("00112233-4455-6677-8899-aabbccddeeff")),
         // Half
         ["(Half)3.14"]                                                                          = Expression.Constant((Half)3.14),
         // string
+        ["string.Empty"]                                                                        = Expression.Constant(string.Empty),
+        ["(string?)null"]                                                                       = Expression.Constant(null, typeof(string)),
         ["abrah-cadabrah"]                                                                      = Expression.Constant("abrah-cadabrah"),
+        ["ала-бала"]                                                                            = Expression.Constant("ала-бала"),
         // Uri
         ["Uri(\"http://www.delinea.com\")"]                                                     = Expression.Constant(new Uri("http://www.delinea.com")),
         // enum

@@ -68,18 +68,15 @@ public class ToJsonDataTransform(JsonOptions options)
 
     static string Duration(TimeSpan ts)
     {
-        var sbFormat = new StringBuilder();
-        if (ts < TimeSpan.Zero)
-        {
-            sbFormat.Append(@"\-");
-            ts = ts.Negate();
-        }
-        sbFormat.Append(@"\P");
+        var sbFormat = new StringBuilder(ts < TimeSpan.Zero ? @"\-\P" : @"\P");
+
         if (ts.Days != 0)
             sbFormat.Append(@"d\D");
         sbFormat.Append(@"\Th\Hm\Ms\S");
 
-        return ts.ToString(sbFormat.ToString());
+        var format = $@"{(ts < TimeSpan.Zero ? @"\-" : "")}\P{(ts.Days != 0 ? @"d\D" : "")}\Th\Hm\Ms\S";
+
+        return ts.ToString(format);
     }
 
     /// <summary>Transforms the node.</summary>
