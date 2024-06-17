@@ -23,7 +23,6 @@
                             type="int"
                             name="TheOuterIntProperty" />
                         <constant>
-                            <!-- 42 -->
                             <int>42</int>
                         </constant>
                     </assignmentBinding>
@@ -49,15 +48,12 @@
                             </constructor>
                             <arguments>
                                 <constant>
-                                    <!-- 1776 -->
                                     <int>1776</int>
                                 </constant>
                                 <constant>
-                                    <!-- 7 -->
                                     <int>7</int>
                                 </constant>
                                 <constant>
-                                    <!-- 4 -->
                                     <int>4</int>
                                 </constant>
                             </arguments>
@@ -84,7 +80,6 @@
                                         type="int"
                                         name="IntProperty" />
                                     <constant>
-                                        <!-- 23 -->
                                         <int>23</int>
                                     </constant>
                                 </assignmentBinding>
@@ -94,7 +89,6 @@
                                         type="string"
                                         name="StringProperty" />
                                     <constant>
-                                        <!-- "inner string" -->
                                         <string>inner string</string>
                                     </constant>
                                 </assignmentBinding>
@@ -128,7 +122,6 @@
                                     </method>
                                     <arguments>
                                         <constant>
-                                            <!-- "aaa" -->
                                             <string>aaa</string>
                                         </constant>
                                     </arguments>
@@ -146,7 +139,6 @@
                                     </method>
                                     <arguments>
                                         <constant>
-                                            <!-- "bbb" -->
                                             <string>bbb</string>
                                         </constant>
                                     </arguments>
@@ -164,7 +156,6 @@
                                     </method>
                                     <arguments>
                                         <constant>
-                                            <!-- "ccc" -->
                                             <string>ccc</string>
                                         </constant>
                                     </arguments>

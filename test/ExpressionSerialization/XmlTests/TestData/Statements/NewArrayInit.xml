@@ -11,15 +11,12 @@
                 type="string">
                 <elements>
                     <constant>
-                        <!-- "aaa" -->
                         <string>aaa</string>
                     </constant>
                     <constant>
-                        <!-- "bbb" -->
                         <string>bbb</string>
                     </constant>
                     <constant>
-                        <!-- "ccc" -->
                         <string>ccc</string>
                     </constant>
                 </elements>

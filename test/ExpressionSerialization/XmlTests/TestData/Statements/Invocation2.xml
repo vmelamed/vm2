@@ -18,7 +18,6 @@
         </method>
         <arguments>
             <constant>
-                <!-- "Default" -->
                 <string>Default</string>
             </constant>
         </arguments>

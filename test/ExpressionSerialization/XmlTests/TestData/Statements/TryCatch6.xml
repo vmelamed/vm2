@@ -21,7 +21,6 @@
                 </method>
                 <arguments>
                     <constant>
-                        <!-- "TryBody" -->
                         <string>TryBody</string>
                     </constant>
                 </arguments>
@@ -58,7 +57,6 @@
                             name="ParamName" />
                     </memberAccess>
                     <constant>
-                        <!-- "x" -->
                         <string>x</string>
                     </constant>
                     <method

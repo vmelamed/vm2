@@ -17,7 +17,6 @@
                 name="_value"
                 id="P2" />
             <constant>
-                <!-- 5 -->
                 <int>5</int>
             </constant>
         </assign>
@@ -28,7 +27,6 @@
                 name="_result"
                 idref="P1" />
             <constant>
-                <!-- 1 -->
                 <int>1</int>
             </constant>
         </assign>
@@ -44,7 +42,6 @@
                             name="_value"
                             idref="P2" />
                         <constant>
-                            <!-- 1 -->
                             <int>1</int>
                         </constant>
                     </greaterThan>

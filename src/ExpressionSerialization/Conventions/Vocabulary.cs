@@ -50,6 +50,9 @@ public static class Vocabulary
 
     // names for other types of elements, attributes, and properties
     public const string Null                    = "nil";
+    public const string NaN                     = "NaN";
+    public const string PosInfinity             = "INF";
+    public const string NegInfinity             = "-INF";
     public const string Type                    = "type";
     public const string DeclaringType           = "declaringType";
     public const string ConcreteType            = "concreteType";   // e.g. derived from ConstantExpression.GetEType

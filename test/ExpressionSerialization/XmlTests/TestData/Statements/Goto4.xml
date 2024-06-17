@@ -17,7 +17,6 @@
                 name="a"
                 idref="P1" />
             <constant>
-                <!-- 0 -->
                 <int>0</int>
             </constant>
         </assign>

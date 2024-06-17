@@ -30,7 +30,6 @@
                         name="d"
                         idref="P3" />
                     <constant>
-                        <!-- 42 -->
                         <int>42</int>
                     </constant>
                 </assign>
@@ -67,7 +66,6 @@
                         name="c"
                         idref="P4" />
                     <constant>
-                        <!-- 2 -->
                         <int>2</int>
                     </constant>
                 </assign>

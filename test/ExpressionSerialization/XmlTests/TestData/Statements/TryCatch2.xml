@@ -21,7 +21,6 @@
                 </method>
                 <arguments>
                     <constant>
-                        <!-- "TryBody" -->
                         <string>TryBody</string>
                     </constant>
                 </arguments>
@@ -54,7 +53,6 @@
                 </method>
                 <arguments>
                     <constant>
-                        <!-- "catch (ArgumentException) {}" -->
                         <string>catch (ArgumentException) {}</string>
                     </constant>
                 </arguments>

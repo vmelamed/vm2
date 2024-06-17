@@ -13,7 +13,6 @@
         </parameters>
         <body>
             <constant>
-                <!-- True -->
                 <boolean>true</boolean>
             </constant>
         </body>

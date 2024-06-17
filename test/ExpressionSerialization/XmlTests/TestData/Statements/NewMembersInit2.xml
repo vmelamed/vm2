@@ -23,7 +23,6 @@
                             type="int"
                             name="TheOuterIntProperty" />
                         <constant>
-                            <!-- 42 -->
                             <int>42</int>
                         </constant>
                     </assignmentBinding>
@@ -49,15 +48,12 @@
                             </constructor>
                             <arguments>
                                 <constant>
-                                    <!-- 1776 -->
                                     <int>1776</int>
                                 </constant>
                                 <constant>
-                                    <!-- 7 -->
                                     <int>7</int>
                                 </constant>
                                 <constant>
-                                    <!-- 4 -->
                                     <int>4</int>
                                 </constant>
                             </arguments>
@@ -74,7 +70,6 @@
                                 type="int"
                                 name="IntProperty" />
                             <constant>
-                                <!-- 23 -->
                                 <int>23</int>
                             </constant>
                         </assignmentBinding>
@@ -84,7 +79,6 @@
                                 type="string"
                                 name="StringProperty" />
                             <constant>
-                                <!-- "inner string" -->
                                 <string>inner string</string>
                             </constant>
                         </assignmentBinding>
@@ -98,15 +92,12 @@
                             type="int">
                             <elements>
                                 <constant>
-                                    <!-- 4 -->
                                     <int>4</int>
                                 </constant>
                                 <constant>
-                                    <!-- 5 -->
                                     <int>5</int>
                                 </constant>
                                 <constant>
-                                    <!-- 6 -->
                                     <int>6</int>
                                 </constant>
                             </elements>
@@ -145,7 +136,6 @@
                                                 type="int"
                                                 name="IntProperty" />
                                             <constant>
-                                                <!-- 23 -->
                                                 <int>23</int>
                                             </constant>
                                         </assignmentBinding>
@@ -155,7 +145,6 @@
                                                 type="string"
                                                 name="StringProperty" />
                                             <constant>
-                                                <!-- "inner string" -->
                                                 <string>inner string</string>
                                             </constant>
                                         </assignmentBinding>
@@ -191,7 +180,6 @@
                                                 type="int"
                                                 name="IntProperty" />
                                             <constant>
-                                                <!-- 42 -->
                                                 <int>42</int>
                                             </constant>
                                         </assignmentBinding>
@@ -201,7 +189,6 @@
                                                 type="string"
                                                 name="StringProperty" />
                                             <constant>
-                                                <!-- "next inner string" -->
                                                 <string>next inner string</string>
                                             </constant>
                                         </assignmentBinding>

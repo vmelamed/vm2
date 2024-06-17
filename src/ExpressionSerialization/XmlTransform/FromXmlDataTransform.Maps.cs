@@ -39,15 +39,17 @@ static partial class FromXmlDataTransform
     };
     static readonly FrozenDictionary<string, Transformation> _constantTransformations = _constantTransformations_.ToFrozenDictionary();
 
+#if true
     static IntPtr XmlStringToPtr(string v)
-        => (IntPtr)(Environment.Is64BitProcess
-                        ? XmlConvert.ToInt64(v)
-                        : XmlConvert.ToInt32(v));
+        => (Environment.Is64BitProcess
+                ? checked((IntPtr)XmlConvert.ToInt64(v))
+                : checked(XmlConvert.ToInt32(v)));
 
     static UIntPtr XmlStringToUPtr(string v)
-        => (UIntPtr)(Environment.Is64BitProcess
-                        ? XmlConvert.ToUInt64(v)
-                        : XmlConvert.ToUInt32(v));
+        => (Environment.Is64BitProcess
+                ? checked((UIntPtr)XmlConvert.ToUInt64(v))
+                : checked(XmlConvert.ToUInt32(v)));
+#endif
 
     #region cache some method info-s used in deserialization
     static MethodInfo _toFrozenSet                  = typeof(FrozenSet).GetMethod("ToFrozenSet") ?? throw new InternalTransformErrorException($"Could not get reflection of the method FrozenSet.ToFrozenSet");

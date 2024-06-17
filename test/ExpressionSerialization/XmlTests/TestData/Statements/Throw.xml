@@ -19,7 +19,6 @@
             </method>
             <arguments>
                 <constant>
-                    <!-- "Before throwing" -->
                     <string>Before throwing</string>
                 </constant>
             </arguments>

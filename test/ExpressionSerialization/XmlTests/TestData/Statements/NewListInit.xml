@@ -29,7 +29,6 @@
                         </method>
                         <arguments>
                             <constant>
-                                <!-- "aaa" -->
                                 <string>aaa</string>
                             </constant>
                         </arguments>
@@ -47,7 +46,6 @@
                         </method>
                         <arguments>
                             <constant>
-                                <!-- "bbb" -->
                                 <string>bbb</string>
                             </constant>
                         </arguments>
@@ -65,7 +63,6 @@
                         </method>
                         <arguments>
                             <constant>
-                                <!-- "ccc" -->
                                 <string>ccc</string>
                             </constant>
                         </arguments>

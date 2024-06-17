@@ -68,7 +68,6 @@
                 type="int"
                 id="L1" />
             <constant>
-                <!-- 0 -->
                 <int>0</int>
             </constant>
         </label>

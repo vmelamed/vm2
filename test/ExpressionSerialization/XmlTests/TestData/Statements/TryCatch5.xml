@@ -21,7 +21,6 @@
                 </method>
                 <arguments>
                     <constant>
-                        <!-- "TryBody" -->
                         <string>TryBody</string>
                     </constant>
                 </arguments>

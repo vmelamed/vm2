@@ -31,7 +31,6 @@
                         </memberAccess>
                     </arrayLength>
                     <constant>
-                        <!-- 0 -->
                         <int>0</int>
                     </constant>
                 </greaterThan>
@@ -65,13 +64,11 @@
                             </memberAccess>
                         </arrayLength>
                         <constant>
-                            <!-- 1 -->
                             <int>1</int>
                         </constant>
                     </subtract>
                 </arrayIndex>
                 <constant>
-                    <!-- -1 -->
                     <int>-1</int>
                 </constant>
             </conditional>

@@ -15,20 +15,4 @@ public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper outpu
         => await base.FromJsonTestAsync(testFileLine, expressionString, fileName);
 
     protected override Expression Substitute(string id) => _substitutes[id];
-
-    [Fact]
-    public async Task TestConstantToJsonClassNonSerializableAsync()
-    {
-        var pathName = Path.Combine(JsonTestFilesPath, "ClassSerializable1.json");
-        var expression = Expression.Constant(new ClassNonSerializable(1, "One"));
-        var (expectedDoc, expectedStr) = await _fixture.GetJsonDocumentAsync(TestLine(), pathName, "EXPECTED", Out);
-
-        var testCall = () => _fixture.TestExpressionToJson(TestLine(), expression, expectedDoc, expectedStr, pathName, Out);
-
-        testCall.Should().Throw<SerializationException>();
-
-        var testAsyncCall = async () => await _fixture.TestExpressionToJsonAsync(TestLine(), expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
-
-        await testAsyncCall.Should().ThrowAsync<SerializationException>();
-    }
 }

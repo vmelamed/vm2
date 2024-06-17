@@ -41,8 +41,8 @@ public class ToJsonDataTransform(JsonOptions options)
         { typeof(bool),             (v, _) => new JElement(Vocabulary.Boolean,        JsonValue.Create(Is<bool>(v))) },
         { typeof(byte),             (v, _) => new JElement(Vocabulary.Byte,           JsonValue.Create(Is<byte>(v))) },
         { typeof(char),             (v, _) => new JElement(Vocabulary.Char,           JsonValue.Create(Is<char>(v).ToString())) },
-        { typeof(double),           (v, _) => new JElement(Vocabulary.Double,         JsonValue.Create(Is<double>(v))) },
-        { typeof(float),            (v, _) => new JElement(Vocabulary.Float,          JsonValue.Create(Is<float>(v))) },
+        { typeof(double),           (v, _) => new JElement(Vocabulary.Double,         DoubleToJson(Is<double>(v))) },
+        { typeof(float),            (v, _) => new JElement(Vocabulary.Float,          FloatToJson(Is<float>(v))) },
         { typeof(int),              (v, _) => new JElement(Vocabulary.Int,            JsonValue.Create(Is<int>(v))) },
         { typeof(IntPtr),           (v, _) => new JElement(Vocabulary.IntPtr,         PtrToJson(Is<IntPtr>(v))) },
         { typeof(long),             (v, _) => new JElement(Vocabulary.Long,           Is<long>(v) is <= MaxJsonInteger and >= MinJsonInteger ? JsonValue.Create((long)v!) : JsonValue.Create(v!.ToString()) ) },
@@ -59,11 +59,38 @@ public class ToJsonDataTransform(JsonOptions options)
         { typeof(DBNull),           (v, _) => new JElement(Vocabulary.DBNull)         },
         { typeof(decimal),          (v, _) => new JElement(Vocabulary.Decimal,        JsonValue.Create(Is<decimal>(v).ToString())) },
         { typeof(Guid),             (v, _) => new JElement(Vocabulary.Guid,           JsonValue.Create(Is<Guid>(v).ToString())) },
-        { typeof(Half),             (v, _) => new JElement(Vocabulary.Half,           JsonValue.Create((float)Is<Half>(v))) },
+        { typeof(Half),             (v, _) => new JElement(Vocabulary.Half,           HalfToJson(Is<Half>(v))) },
         { typeof(string),           (v, _) => new JElement(Vocabulary.String,         JsonValue.Create(Is<string>(v))) },
         { typeof(Uri),              (v, _) => new JElement(Vocabulary.Uri,            JsonValue.Create(Is<Uri>(v)?.ToString())) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
+
+    static JsonValue DoubleToJson(double d)
+        => d switch {
+            double.NaN => JsonValue.Create(Vocabulary.NaN),
+            double.NegativeInfinity => JsonValue.Create(Vocabulary.NegInfinity),
+            double.PositiveInfinity => JsonValue.Create(Vocabulary.PosInfinity),
+            _ => JsonValue.Create(d),
+        };
+
+    static JsonValue FloatToJson(float f)
+        => f switch {
+            float.NaN => JsonValue.Create(Vocabulary.NaN),
+            float.NegativeInfinity => JsonValue.Create(Vocabulary.NegInfinity),
+            float.PositiveInfinity => JsonValue.Create(Vocabulary.PosInfinity),
+            _ => JsonValue.Create(f),
+        };
+
+    static JsonValue HalfToJson(Half h)
+    {
+        if (h == Half.NaN)
+            return JsonValue.Create(Vocabulary.NaN);
+        if (h == Half.PositiveInfinity)
+            return JsonValue.Create(Vocabulary.PosInfinity);
+        if (h == Half.NegativeInfinity)
+            return JsonValue.Create(Vocabulary.NegInfinity);
+        return JsonValue.Create((float)h);
+    }
 
     static JsonValue PtrToJson(IntPtr v)
 #pragma warning disable IDE0049 // Simplify Names
@@ -78,17 +105,7 @@ public class ToJsonDataTransform(JsonOptions options)
 #pragma warning restore IDE0049 // Simplify Names
 
     static string Duration(TimeSpan ts)
-    {
-        var sbFormat = new StringBuilder(ts < TimeSpan.Zero ? @"\-\P" : @"\P");
-
-        if (ts.Days != 0)
-            sbFormat.Append(@"d\D");
-        sbFormat.Append(@"\Th\Hm\Ms\S");
-
-        var format = $@"{(ts < TimeSpan.Zero ? @"\-" : "")}\P{(ts.Days != 0 ? @"d\D" : "")}\Th\Hm\Ms\S";
-
-        return ts.ToString(format);
-    }
+        => ts.ToString($@"{(ts < TimeSpan.Zero ? @"\-" : "")}\P{(ts.Days != 0 ? @"d\D" : "")}\Th\Hm\Ms\S");
     #endregion
 
     /// <summary>Transforms the node.</summary>

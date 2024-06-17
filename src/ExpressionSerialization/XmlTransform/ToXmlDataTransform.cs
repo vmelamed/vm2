@@ -43,15 +43,17 @@ class ToXmlDataTransform(XmlOptions options)
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
 
+#pragma warning disable IDE0049 // Simplify Names
     static string PtrToXmlString(IntPtr v)
         => Environment.Is64BitProcess
-                ? XmlConvert.ToString(v)
-                : XmlConvert.ToString((Int32)v);
+                ? XmlConvert.ToString(checked(v))
+                : XmlConvert.ToString(checked((Int32)v));
 
     static string PtrToXmlString(UIntPtr v)
         => Environment.Is64BitProcess
-                ? XmlConvert.ToString(v)
-                : XmlConvert.ToString((UInt32)v);
+                ? XmlConvert.ToString(checked(v))
+                : XmlConvert.ToString(checked((UInt32)v));
+#pragma warning restore IDE0049 // Simplify Names
     #endregion
 
     public XNode TransformNode(ConstantExpression node) => GetTransform(node.Type)(node.Value, node.Type);

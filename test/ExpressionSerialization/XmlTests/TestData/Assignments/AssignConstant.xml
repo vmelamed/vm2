@@ -10,7 +10,6 @@
             name="a"
             id="P1" />
         <constant>
-            <!-- 1 -->
             <int>1</int>
         </constant>
     </assign>

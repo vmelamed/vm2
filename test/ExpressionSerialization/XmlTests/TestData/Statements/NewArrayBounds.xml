@@ -11,15 +11,12 @@
                 type="string">
                 <bounds>
                     <constant>
-                        <!-- 2 -->
                         <int>2</int>
                     </constant>
                     <constant>
-                        <!-- 3 -->
                         <int>3</int>
                     </constant>
                     <constant>
-                        <!-- 4 -->
                         <int>4</int>
                     </constant>
                 </bounds>

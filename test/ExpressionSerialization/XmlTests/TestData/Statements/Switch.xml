@@ -12,7 +12,6 @@
         <case>
             <caseValues>
                 <constant>
-                    <!-- 1 -->
                     <int>1</int>
                 </constant>
             </caseValues>
@@ -31,7 +30,6 @@
                 </method>
                 <arguments>
                     <constant>
-                        <!-- "FirstChild" -->
                         <string>FirstChild</string>
                     </constant>
                 </arguments>
@@ -40,15 +38,12 @@
         <case>
             <caseValues>
                 <constant>
-                    <!-- 2 -->
                     <int>2</int>
                 </constant>
                 <constant>
-                    <!-- 3 -->
                     <int>3</int>
                 </constant>
                 <constant>
-                    <!-- 4 -->
                     <int>4</int>
                 </constant>
             </caseValues>
@@ -67,7 +62,6 @@
                 </method>
                 <arguments>
                     <constant>
-                        <!-- "Second" -->
                         <string>Second</string>
                     </constant>
                 </arguments>
@@ -89,7 +83,6 @@
                 </method>
                 <arguments>
                     <constant>
-                        <!-- "Default" -->
                         <string>Default</string>
                     </constant>
                 </arguments>

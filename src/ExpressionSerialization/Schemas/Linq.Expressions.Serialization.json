@@ -98,7 +98,7 @@
                         { "type": "number" },
                         {
                             "type": "string",
-                            "pattern": "^(?:NaN)|(?:-?Infinity)$"
+                            "pattern": "^(?:NaN)|(?:-?INF)$"
                         }
                     ]
                 }
@@ -115,7 +115,7 @@
                         { "type": "number" },
                         {
                             "type": "string",
-                            "pattern": "^(?:NaN)|(?:-?Infinity)$"
+                            "pattern": "^(?:NaN)|(?:-?INF)$"
                         }
                     ]
                 }
@@ -128,9 +128,17 @@
             "type": "object",
             "properties": {
                 "half": {
-                    "type": "number",
-                    "minimum": -65504,
-                    "maximum": 65504
+                    "oneOf": [
+                        {
+                            "type": "number",
+                            "minimum": -65504,
+                            "maximum": 65504
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^(?:NaN)|(?:-?INF)$"
+                        }
+                    ]
                 }
             },
             "additionalProperties": { "type": "string" },

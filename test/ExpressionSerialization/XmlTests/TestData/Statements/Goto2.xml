@@ -19,7 +19,6 @@
             </method>
             <arguments>
                 <constant>
-                    <!-- "GoTo" -->
                     <string>GoTo</string>
                 </constant>
             </arguments>
@@ -39,7 +38,6 @@
             </method>
             <arguments>
                 <constant>
-                    <!-- "Reachable" -->
                     <string>Reachable</string>
                 </constant>
             </arguments>

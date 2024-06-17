@@ -32,11 +32,9 @@
                         </method>
                         <arguments>
                             <constant>
-                                <!-- 1 -->
                                 <int>1</int>
                             </constant>
                             <constant>
-                                <!-- "one" -->
                                 <string>one</string>
                             </constant>
                         </arguments>
@@ -57,11 +55,9 @@
                         </method>
                         <arguments>
                             <constant>
-                                <!-- 2 -->
                                 <int>2</int>
                             </constant>
                             <constant>
-                                <!-- "two" -->
                                 <string>two</string>
                             </constant>
                         </arguments>
@@ -82,11 +78,9 @@
                         </method>
                         <arguments>
                             <constant>
-                                <!-- 3 -->
                                 <int>3</int>
                             </constant>
                             <constant>
-                                <!-- "three" -->
                                 <string>three</string>
                             </constant>
                         </arguments>

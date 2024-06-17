@@ -30,7 +30,6 @@
                         idref="P2" />
                 </add>
                 <constant>
-                    <!-- 42 -->
                     <int>42</int>
                 </constant>
             </multiply>
