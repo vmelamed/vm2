@@ -301,7 +301,7 @@ public partial class XmlOptions : DocumentOptions
     internal void AddComment(XContainer parent, Expression expression)
     {
         if (AddComments)
-            parent.Add(new XComment($" {expression} "));
+            parent.Add(Comment($" {expression} "));
     }
 
     /// <summary>
@@ -312,7 +312,7 @@ public partial class XmlOptions : DocumentOptions
     internal void AddComment(XContainer parent, string comment)
     {
         if (AddComments)
-            parent.Add(new XComment($" {comment} "));
+            parent.Add(Comment($" {comment} "));
     }
 
     /// <summary>

@@ -42,15 +42,25 @@ public static class Vocabulary
     public const string Enum                    = "enum";
     public const string Anonymous               = "anonymous";
     public const string ByteSequence            = "byteSequence";
-    public const string Collection              = "collection";
+    public const string Sequence                = "sequence";
     public const string Dictionary              = "dictionary";
-    public const string Key                     = "key";
     public const string KeyValuePair            = "key-value";
     public const string Tuple                   = "tuple";
     public const string TupleItem               = "item";
 
-    // names for other types of elements and attributes
+    // names for other types of elements, attributes, and properties
     public const string Null                    = "nil";
+    public const string Type                    = "type";
+    public const string DeclaringType           = "declaringType";
+    public const string ConcreteType            = "concreteType";   // e.g. derived from ConstantExpression.GetEType
+    public const string BaseType                = "baseType";
+    public const string Name                    = "name";
+    public const string Key                     = "key";
+    public const string Value                   = "value";
+    public const string Id                      = "id";
+    public const string IdRef                   = "idref";
+    public const string BaseValue               = "baseValue";
+    public const string Length                  = "length";
     public const string Assembly                = "assembly";
     public const string DelegateType            = "delegateType";
     public const string Family                  = "family";
@@ -60,22 +70,12 @@ public static class Vocabulary
     public const string IsLifted                = "isLifted";
     public const string IsLiftedToNull          = "isLiftedToNull";
     public const string Kind                    = "kind";
-    public const string Name                    = "name";
     public const string Private                 = "private";
     public const string Public                  = "public";
     public const string Static                  = "static";
     public const string TailCall                = "tailCall";
-    public const string Type                    = "type";
-    public const string DeclaringType           = "declaringType";
     public const string TypeOperand             = "typeOperand";
-    public const string ConcreteType            = "concreteType";   // e.g. derived from ConstantExpression.GetEType
-    public const string BaseType                = "baseType";
-    public const string Id                      = "id";
-    public const string IdRef                   = "idref";
-    public const string Value                   = "value";
-    public const string BaseValue               = "baseValue";
     public const string Visibility              = "visibility";
-    public const string Length                  = "length";
     public const string ElementType             = "elementType";
     public const string ReadOnly                = "readOnly";
 

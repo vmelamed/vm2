@@ -4,7 +4,6 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <!-- ClassSerializable1 -->
         <!-- vm2.ExpressionSerialization.XmlTests.ClassSerializable1 -->
         <object
             type="vm2.ExpressionSerialization.XmlTests.ClassSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">

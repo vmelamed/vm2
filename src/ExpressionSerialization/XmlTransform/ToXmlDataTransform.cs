@@ -22,12 +22,12 @@ class ToXmlDataTransform(XmlOptions options)
         { typeof(double),           (v, t) => new XElement(ElementNames.Double,         XmlConvert.ToString(Is<double>(v))) },
         { typeof(float),            (v, t) => new XElement(ElementNames.Float,          XmlConvert.ToString(Is<float>(v))) },
         { typeof(int),              (v, t) => new XElement(ElementNames.Int,            XmlConvert.ToString(Is<int>(v))) },
-        { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         XmlConvert.ToString(Is<IntPtr>(v))) },
+        { typeof(IntPtr),           (v, t) => new XElement(ElementNames.IntPtr,         PtrToXmlString(Is<IntPtr>(v))) },
         { typeof(long),             (v, t) => new XElement(ElementNames.Long,           XmlConvert.ToString(Is<long>(v))) },
         { typeof(sbyte),            (v, t) => new XElement(ElementNames.SignedByte,     XmlConvert.ToString(Is<sbyte>(v))) },
         { typeof(short),            (v, t) => new XElement(ElementNames.Short,          XmlConvert.ToString(Is<short>(v))) },
         { typeof(uint),             (v, t) => new XElement(ElementNames.UnsignedInt,    XmlConvert.ToString(Is<uint>(v))) },
-        { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, XmlConvert.ToString(Is<UIntPtr>(v))) },
+        { typeof(UIntPtr),          (v, t) => new XElement(ElementNames.UnsignedIntPtr, PtrToXmlString(Is<UIntPtr>(v))) },
         { typeof(ulong),            (v, t) => new XElement(ElementNames.UnsignedLong,   XmlConvert.ToString(Is<ulong>(v))) },
         { typeof(ushort),           (v, t) => new XElement(ElementNames.UnsignedShort,  XmlConvert.ToString(Is<ushort>(v))) },
 
@@ -42,6 +42,16 @@ class ToXmlDataTransform(XmlOptions options)
         { typeof(Uri),              (v, t) => new XElement(ElementNames.Uri,            (object?)Is<Uri>(v)?.ToString() ?? new XAttribute(AttributeNames.Nil, true)) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
+
+    static string PtrToXmlString(IntPtr v)
+        => Environment.Is64BitProcess
+                ? XmlConvert.ToString(v)
+                : XmlConvert.ToString((Int32)v);
+
+    static string PtrToXmlString(UIntPtr v)
+        => Environment.Is64BitProcess
+                ? XmlConvert.ToString(v)
+                : XmlConvert.ToString((UInt32)v);
     #endregion
 
     public XNode TransformNode(ConstantExpression node) => GetTransform(node.Type)(node.Value, node.Type);

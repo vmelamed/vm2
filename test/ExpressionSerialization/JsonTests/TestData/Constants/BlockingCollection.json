@@ -3,7 +3,7 @@
   "expression": {
     "constant": {
       "$comment": " System.Collections.Concurrent.BlockingCollection\u003Cdouble\u003E ",
-      "collection": {
+      "sequence": {
         "type": "System.Collections.Concurrent.BlockingCollection\u00601[[System.Double, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Collections.Concurrent, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
         "value": [
           {

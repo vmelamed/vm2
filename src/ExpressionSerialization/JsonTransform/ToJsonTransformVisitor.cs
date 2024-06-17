@@ -1,4 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
+
 /// <summary>
 /// Class ToJsonTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />

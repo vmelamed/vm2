@@ -60,7 +60,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                      base.VisitConstant,
                      (n, x) =>
                      {
-                         options.AddComment(x, n);
+                         // options.AddComment(x, n);
                          x.Add(
                             options.TypeComment(n.Type),
                             _dataTransform.TransformNode(n));

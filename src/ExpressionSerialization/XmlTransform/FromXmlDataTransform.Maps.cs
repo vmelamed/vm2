@@ -4,40 +4,50 @@ static partial class FromXmlDataTransform
 {
     static readonly Dictionary<string, Transformation> _constantTransformations_ = new()
     {
-        { Vocabulary.Uri,               (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? new Uri(x.Value)                         : throw new SerializationException("Cannot deserialize URI object from null or empty string.") },
-        { Vocabulary.Boolean,           (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) && XmlConvert.ToBoolean(x.Value)                     },
-        { Vocabulary.Byte,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToByte(x.Value)               : default },
-        { Vocabulary.Char,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? x.Value[0]                               : default },
+        { Vocabulary.Uri,               (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? new Uri(x.Value)                          : throw new SerializationException("Cannot deserialize URI object from null or empty string.") },
+        { Vocabulary.Boolean,           (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) && XmlConvert.ToBoolean(x.Value)                      },
+        { Vocabulary.Byte,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToByte(x.Value)                : default },
+        { Vocabulary.Char,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? x.Value[0]                                : default },
         { Vocabulary.DateTime,          (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDateTime(x.Value, XmlDateTimeSerializationMode.RoundtripKind) : default },
-        { Vocabulary.DateTimeOffset,    (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDateTimeOffset(x.Value, "O"): default },
-        { Vocabulary.DBNull,            (XElement x, ref Type t) => DBNull.Value                                                                             },
-        { Vocabulary.Decimal,           (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDecimal(x.Value)            : default },
-        { Vocabulary.Double,            (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDouble(x.Value)             : default },
-        { Vocabulary.Duration,          (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToTimeSpan(x.Value)           : default },
-        { Vocabulary.Float,             (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToSingle(x.Value)             : default },
-        { Vocabulary.Guid,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToGuid(x.Value)               : default },
-        { Vocabulary.Half,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? (Half)XmlConvert.ToDouble(x.Value)       : default },
-        { Vocabulary.Int,               (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt32(x.Value)              : default },
-        { Vocabulary.IntPtr,            (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? (IntPtr)XmlConvert.ToInt32(x.Value)      : default },
-        { Vocabulary.Long,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt64(x.Value)              : default },
-        { Vocabulary.Short,             (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt16(x.Value)              : default },
-        { Vocabulary.String,            (XElement x, ref Type t) => x.IsNil() ? null : x.Value                                                               },
-        { Vocabulary.SignedByte,        (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToSByte(x.Value)              : default },
-        { Vocabulary.UnsignedInt,       (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt32(x.Value)             : default },
-        { Vocabulary.UnsignedIntPtr,    (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? (UIntPtr)XmlConvert.ToUInt32(x.Value)    : default },
-        { Vocabulary.UnsignedLong,      (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt64(x.Value)             : default },
-        { Vocabulary.UnsignedShort,     (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt16(x.Value)             : default },
-        { Vocabulary.Anonymous,         TransformAnonymous                                                                                                   },
-        { Vocabulary.ByteSequence,      TransformByteSequence                                                                                                },
-        { Vocabulary.Collection,        TransformCollection                                                                                                  },
-        { Vocabulary.Dictionary,        TransformDictionary                                                                                                  },
-        { Vocabulary.Enum,              TransformEnum                                                                                                        },
-        { Vocabulary.Nullable,          TransformNullable                                                                                                    },
-        { Vocabulary.Object,            TransformObject                                                                                                      },
-        { Vocabulary.Tuple,             TransformTuple                                                                                                       },
-        { Vocabulary.TupleItem,         TransformTuple                                                                                                       },
+        { Vocabulary.DateTimeOffset,    (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDateTimeOffset(x.Value, "O") : default },
+        { Vocabulary.DBNull,            (XElement x, ref Type t) => DBNull.Value                                                                              },
+        { Vocabulary.Decimal,           (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDecimal(x.Value)             : default },
+        { Vocabulary.Double,            (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToDouble(x.Value)              : default },
+        { Vocabulary.Duration,          (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToTimeSpan(x.Value)            : default },
+        { Vocabulary.Float,             (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToSingle(x.Value)              : default },
+        { Vocabulary.Guid,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToGuid(x.Value)                : default },
+        { Vocabulary.Half,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? (Half)XmlConvert.ToDouble(x.Value)        : default },
+        { Vocabulary.Int,               (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt32(x.Value)               : default },
+        { Vocabulary.IntPtr,            (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlStringToPtr(x.Value)                   : default },
+        { Vocabulary.Long,              (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt64(x.Value)               : default },
+        { Vocabulary.Short,             (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToInt16(x.Value)               : default },
+        { Vocabulary.String,            (XElement x, ref Type t) => x.IsNil() ? null : x.Value                                                                },
+        { Vocabulary.SignedByte,        (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToSByte(x.Value)               : default },
+        { Vocabulary.UnsignedInt,       (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt32(x.Value)              : default },
+        { Vocabulary.UnsignedIntPtr,    (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlStringToUPtr(x.Value)                  : default },
+        { Vocabulary.UnsignedLong,      (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt64(x.Value)              : default },
+        { Vocabulary.UnsignedShort,     (XElement x, ref Type t) => !string.IsNullOrWhiteSpace(x.Value) ? XmlConvert.ToUInt16(x.Value)              : default },
+        { Vocabulary.Anonymous,         TransformAnonymous                                                                                                    },
+        { Vocabulary.ByteSequence,      TransformByteSequence                                                                                                 },
+        { Vocabulary.Sequence,          TransformCollection                                                                                                   },
+        { Vocabulary.Dictionary,        TransformDictionary                                                                                                   },
+        { Vocabulary.Enum,              TransformEnum                                                                                                         },
+        { Vocabulary.Nullable,          TransformNullable                                                                                                     },
+        { Vocabulary.Object,            TransformObject                                                                                                       },
+        { Vocabulary.Tuple,             TransformTuple                                                                                                        },
+        { Vocabulary.TupleItem,         TransformTuple                                                                                                        },
     };
     static readonly FrozenDictionary<string, Transformation> _constantTransformations = _constantTransformations_.ToFrozenDictionary();
+
+    static IntPtr XmlStringToPtr(string v)
+        => (IntPtr)(Environment.Is64BitProcess
+                        ? XmlConvert.ToInt64(v)
+                        : XmlConvert.ToInt32(v));
+
+    static UIntPtr XmlStringToUPtr(string v)
+        => (UIntPtr)(Environment.Is64BitProcess
+                        ? XmlConvert.ToUInt64(v)
+                        : XmlConvert.ToUInt32(v));
 
     #region cache some method info-s used in deserialization
     static MethodInfo _toFrozenSet                  = typeof(FrozenSet).GetMethod("ToFrozenSet") ?? throw new InternalTransformErrorException($"Could not get reflection of the method FrozenSet.ToFrozenSet");

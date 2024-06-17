@@ -44,12 +44,12 @@ public class ToJsonDataTransform(JsonOptions options)
         { typeof(double),           (v, _) => new JElement(Vocabulary.Double,         JsonValue.Create(Is<double>(v))) },
         { typeof(float),            (v, _) => new JElement(Vocabulary.Float,          JsonValue.Create(Is<float>(v))) },
         { typeof(int),              (v, _) => new JElement(Vocabulary.Int,            JsonValue.Create(Is<int>(v))) },
-        { typeof(IntPtr),           (v, _) => new JElement(Vocabulary.IntPtr,         JsonValue.Create((int)Is<IntPtr>(v))) },
+        { typeof(IntPtr),           (v, _) => new JElement(Vocabulary.IntPtr,         PtrToJson(Is<IntPtr>(v))) },
         { typeof(long),             (v, _) => new JElement(Vocabulary.Long,           Is<long>(v) is <= MaxJsonInteger and >= MinJsonInteger ? JsonValue.Create((long)v!) : JsonValue.Create(v!.ToString()) ) },
         { typeof(sbyte),            (v, _) => new JElement(Vocabulary.SignedByte,     JsonValue.Create(Is<sbyte>(v))) },
         { typeof(short),            (v, _) => new JElement(Vocabulary.Short,          JsonValue.Create(Is<short>(v))) },
         { typeof(uint),             (v, _) => new JElement(Vocabulary.UnsignedInt,    JsonValue.Create(Is<uint>(v))) },
-        { typeof(UIntPtr),          (v, _) => new JElement(Vocabulary.UnsignedIntPtr, JsonValue.Create((uint)Is<UIntPtr>(v))) },
+        { typeof(UIntPtr),          (v, _) => new JElement(Vocabulary.UnsignedIntPtr, PtrToJson(Is<UIntPtr>(v))) },
         { typeof(ulong),            (v, _) => new JElement(Vocabulary.UnsignedLong,   Is<ulong>(v) is <= MaxJsonInteger ? JsonValue.Create((long)(ulong)v!) : JsonValue.Create(v!.ToString()) ) },
         { typeof(ushort),           (v, _) => new JElement(Vocabulary.UnsignedShort,  JsonValue.Create(Is<ushort>(v))) },
 
@@ -64,7 +64,18 @@ public class ToJsonDataTransform(JsonOptions options)
         { typeof(Uri),              (v, _) => new JElement(Vocabulary.Uri,            JsonValue.Create(Is<Uri>(v)?.ToString())) },
     });
     static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
-    #endregion
+
+    static JsonValue PtrToJson(IntPtr v)
+#pragma warning disable IDE0049 // Simplify Names
+        => Environment.Is64BitProcess
+                ? ((Int64)v is <= MaxJsonInteger and >= MinJsonInteger ? JsonValue.Create((Int64)v) : JsonValue.Create(((Int64)v).ToString()))
+                : JsonValue.Create(checked((Int32)v));
+
+    static JsonValue PtrToJson(UIntPtr v)
+        => Environment.Is64BitProcess
+                ? JsonValue.Create(((UInt64)v).ToString()) // Should be `((UInt64)v is <= MaxJsonInteger ? JsonValue.Create((UInt64)v) : JsonValue.Create(((UInt64)v).ToString()))` but the Json.Schema doesn't like it
+                : JsonValue.Create(checked((UInt32)v));
+#pragma warning restore IDE0049 // Simplify Names
 
     static string Duration(TimeSpan ts)
     {
@@ -78,6 +89,7 @@ public class ToJsonDataTransform(JsonOptions options)
 
         return ts.ToString(format);
     }
+    #endregion
 
     /// <summary>Transforms the node.</summary>
     /// <param name="node">The node.</param>
@@ -315,7 +327,7 @@ public class ToJsonDataTransform(JsonOptions options)
 
         if (nodeValue is null)
             return new JElement(
-                            Vocabulary.Collection,
+                            Vocabulary.Sequence,
                                 new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
                                 options.TypeComment(elementType),
                                 new JElement(Vocabulary.Value)
@@ -336,7 +348,7 @@ public class ToJsonDataTransform(JsonOptions options)
         }
 
         return new JElement(
-                        Vocabulary.Collection,
+                        Vocabulary.Sequence,
                             new JElement(Vocabulary.Type, Transform.TypeName(nodeType)),
                             options.TypeComment(elementType),
                             new JElement(

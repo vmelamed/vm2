@@ -43,12 +43,12 @@ class DeepEqualsVisitor : ExpressionVisitor
         return Equal;
     }
 
-    bool AreEqual<T>(T? left, T? right)
+    bool AreEqual<T>(T? left, T? right, string? message = null)
     {
         if (Equal)
             return true;
 
-        Difference += $"Difference at sub-nodes: `{left}` != `{right}` ";
+        Difference += $"Difference at sub-nodes: `{left}` != `{right}` {(message is null ? "" : ": {message} ")} ";
         return false;
     }
 
@@ -120,8 +120,11 @@ class DeepEqualsVisitor : ExpressionVisitor
         if (!AreEqual(left, right) || left.Value is null || left.Type == typeof(object))   // either different or both null or both System.Object
             return left;
 
+        Debug.Assert(right is not null);
+
+        var lType = left.Type;
         var lValue = left.Value;
-        var rValue = right?.Value;
+        var rValue = right.Value;
 
         Debug.Assert(lValue is not null);
         Debug.Assert(rValue is not null);
@@ -129,17 +132,33 @@ class DeepEqualsVisitor : ExpressionVisitor
         IEnumerable? enumL = null;
         IEnumerable? enumR = null;
 
+        if (lType.IsGenericType && lType.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            var piHasValue = lType.GetProperty("HasValue") ?? throw new InvalidOperationException("Could not get the property Nullable<>.HasValue.");
+            var hasValue = (bool)piHasValue.GetValue(lValue, null)!;
+
+            Equal &= hasValue == (bool)(piHasValue.GetValue(rValue, null) ?? throw new InvalidOperationException("Could not get the value of the property Nullable<>.HasValue."));
+            if (!AreEqual(left, right) || !hasValue)
+                return left;
+
+            var piValue = lType.GetProperty("Value") ?? throw new InvalidOperationException("Could not get the property Nullable<>.Value.");
+
+            lType = lValue.GetType();
+            lValue = piValue.GetValue(lValue) ?? throw new InvalidOperationException("Could not get the value of the property Nullable<>.Value.");
+            rValue = piValue.GetValue(rValue) ?? throw new InvalidOperationException("Could not get the value of the property Nullable<>.Value.");
+        }
+
         if (lValue is not IEnumerable)
         {
-            var genType = left.Type.IsGenericType ? left.Type.GetGenericTypeDefinition() : null;
+            var genType = lType.IsGenericType ? lType.GetGenericTypeDefinition() : null;
 
             if (genType is not null)
             {
-                var elemType = left.Type.GetGenericArguments()[0];
+                var elemType = lType.GetGenericArguments()[0];
 
                 if (genType == typeof(Memory<>) || genType == typeof(ReadOnlyMemory<>))
                 {
-                    var mi = lValue.GetType().GetMethod("ToArray") ?? throw new InvalidOperationException("Could not get the property for Memory<>.Span.");
+                    var mi = lValue.GetType().GetMethod("ToArray") ?? throw new InvalidOperationException("Could not get the methos Memory<T>.ToArray.");
 
                     if (mi.IsGenericMethod)
                         mi = mi.MakeGenericMethod(elemType);
@@ -150,8 +169,19 @@ class DeepEqualsVisitor : ExpressionVisitor
             }
         }
         else
-        if (left.Type.IsArray || left.Type.Namespace?.StartsWith("System") is true)
+        if (lType.IsArray || lType.Namespace?.StartsWith("System") is true)
         {
+            if (lType.IsGenericType && lType.GetGenericTypeDefinition() == typeof(ArraySegment<>))
+            {
+                var piArray = lType.GetProperty("Array") ?? throw new InvalidOperationException("Could not get the methos ArraySegment<T>.Array.");
+                var lArray = piArray.GetValue(lValue);
+                var rArray = piArray.GetValue(rValue);
+
+                Equal &= lArray is null == rArray is null;
+                if (!AreEqual(left, right) || lArray is null)
+                    return left;
+            }
+
             enumL = (lValue as IEnumerable)?.Cast<object?>();
             enumR = (rValue as IEnumerable)?.Cast<object?>();
         }

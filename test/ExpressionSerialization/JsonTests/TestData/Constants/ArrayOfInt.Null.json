@@ -3,7 +3,7 @@
   "expression": {
     "constant": {
       "$comment": " System.Int32[] ",
-      "collection": {
+      "sequence": {
         "type": "System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
         "value": null
       }

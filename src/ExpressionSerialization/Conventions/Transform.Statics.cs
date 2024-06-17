@@ -50,7 +50,7 @@ static partial class Transform
         //  typeof(ReadOnlySpan<>),
     ];
     /// <summary>
-    /// Collection of supported generic types that represent sequences of elements. These are mostly types that 
+    /// Sequence of supported generic types that represent sequences of elements. These are mostly types that 
     /// implement <see cref="IEnumerable{T}"/>. Technically <see cref="Memory{T}"/> and <see cref="ReadOnlyMemory{T}"/> 
     /// do not qualify but their property <see cref="Memory{T}.Span"/> does and the spirit of these classes is a
     /// sequence-like.
@@ -69,7 +69,7 @@ static partial class Transform
         //  typeof(ReadOnlySpan<byte>),
     ];
     /// <summary>
-    /// Collection of supported generic types that represent contiguous sequences of bytes with similar behavior as <c>byte[]</c>. 
+    /// Sequence of supported generic types that represent contiguous sequences of bytes with similar behavior as <c>byte[]</c>. 
     /// Technically <see cref="Memory{T}"/> and <see cref="ReadOnlyMemory{T}"/> do not qualify but their property 
     /// <c>Memory&lt;byte&gt;.Span</c> does and the spirit of these classes is a byte sequence-like.
     /// </summary>

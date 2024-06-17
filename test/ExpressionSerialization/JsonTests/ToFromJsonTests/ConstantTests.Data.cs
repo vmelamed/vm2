@@ -4,7 +4,6 @@ public partial class ConstantTests
 {
     public static readonly TheoryData<string, string, string> ConstantsData = new ()
     {
-        // primitive:
         // bool
         { TestLine(), "false",                                                                  "Bool.False.json" },
         { TestLine(), "true",                                                                   "Bool.True.json" },
@@ -95,14 +94,14 @@ public partial class ConstantTests
         { TestLine(), "(ushort)443",                                                            "UnsignedShort.443.json"},
         { TestLine(), "ushort.MinValue",                                                        "UnsignedShort.MinValue.json"},
         { TestLine(), "ushort.MaxValue",                                                        "UnsignedShort.MaxValue.json"},
-        
-        // basic:
         // DateTime
         { TestLine(), "DateTime.MinValue",                                                      "DateTime.MinValue.json" },
         { TestLine(), "DateTime.MaxValue",                                                      "DateTime.MaxValue.json" },
         { TestLine(), "DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)",             "DateTime.json" },
         { TestLine(), "DateTime(2024, 4, 13, 23, 18, 26, 234)",                                 "DateTime.Local.json" },
         // DateTimeOffset
+        { TestLine(), "DateTimeOffset.MinValue",                                                "DateTimeOffset.MinValue.json" },
+        { TestLine(), "DateTimeOffset.MaxValue",                                                "DateTimeOffset.MaxValue.json" },
         { TestLine(), "DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))", "DateTimeOffset.json" },
         // TimeSpan
         { TestLine(), "TimeSpan.MinValue",                                                      "TimeSpan.MinValue.json" },
@@ -124,6 +123,18 @@ public partial class ConstantTests
         { TestLine(), "Guid(\"00112233-4455-6677-8899-aabbccddeeff\")",                         "Guid.json" },
         // Half
         { TestLine(), "(Half)3.14",                                                             "Half.json" },
+        { TestLine(), "Half.E",                                                                 "Half.E.json" },
+        { TestLine(), "Half.MinValue",                                                          "Half.MinValue.json" },
+        { TestLine(), "Half.MaxValue",                                                          "Half.MaxValue.json" },
+        { TestLine(), "Half.Zero",                                                              "Half.Zero.json" },
+        { TestLine(), "Half.One",                                                               "Half.One.json" },
+        //{ TestLine(), "Half.NaN",                                                               "Half.NaN.json" },
+        //{ TestLine(), "Half.NegativeInfinity",                                                  "Half.NegativeInfinity.json" },
+        //{ TestLine(), "Half.PositiveInfinity",                                                  "Half.PositiveInfinity.json" },
+        { TestLine(), "Half.Pi",                                                                "Half.Pi.json" },
+        { TestLine(), "Half.Epsilon",                                                           "Half.Epsilon.json" },
+        { TestLine(), "Half.NegativeOne",                                                       "Half.NegativeOne.json" },
+        { TestLine(), "Half.NegativeZero",                                                      "Half.NegativeZero.json" },
         // string
         { TestLine(), "string.Empty",                                                           "String.string.Empty.json" },
         { TestLine(), "(string?)null",                                                          "String.string.null.json" },
@@ -166,20 +177,28 @@ public partial class ConstantTests
         // anonymous
         { TestLine(), "anonymous",                                                              "Anonymous.json" },
         // byte sequences
-        { TestLine(), "byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                                "Bytes.Array.json" },
-        { TestLine(), "byte[]{ }",                                                              "Bytes.Array.Empty.json" },
         { TestLine(), "(byte[])null",                                                           "Bytes.Array.Null.json" },
+        { TestLine(), "byte[]{}",                                                               "Bytes.Array.Empty.json" },
+        { TestLine(), "byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                                "Bytes.Array.json" },
+        { TestLine(), "Memory<byte>()",                                                         "Bytes.Memory.Empty.json" },
         { TestLine(), "Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                         "Bytes.Memory.json" },
+        { TestLine(), "ReadOnlyMemory<byte>()",                                                 "Bytes.ReadOnlyMemory.Empty.json" },
         { TestLine(), "ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                 "Bytes.ReadOnlyMemory.json" },
-        { TestLine(), "ArraySegment<byte>",                                                     "Bytes.ArraySegment.json" },
+        { TestLine(), "ArraySegment<byte>([])",                                                 "Bytes.ArraySegment.Empty.json" },
+        { TestLine(), "ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8)",              "Bytes.ArraySegment.json" },
         // sequences
-        { TestLine(), "int[]{ 1, 2, 3, 4 }",                                                    "ArrayOfInt.json" },
-        { TestLine(), "int[]{}",                                                                "ArrayOfInt.Empty.json" },
         { TestLine(), "(int[])null",                                                            "ArrayOfInt.Null.json" },
-        { TestLine(), "int?[]{ 1, 2, null, null }",                                             "ArrayOfNullableInt.json" },
+        { TestLine(), "int[]{}",                                                                "ArrayOfInt.Empty.json" },
+        { TestLine(), "int[]{ 1, 2, 3, 4 }",                                                    "ArrayOfInt.json" },
         { TestLine(), "(int?[])null",                                                           "ArrayOfNullableInt.Null.json" },
+        { TestLine(), "int?[]{}",                                                               "ArrayOfNullableInt.Empty.json" },
+        { TestLine(), "int?[]{ 1, 2, null, null }",                                             "ArrayOfNullableInt.json" },
+        { TestLine(), "Memory<int>(null)",                                                      "IntMemory.Null.json" },
+        { TestLine(), "Memory<int>()",                                                          "IntMemory.Empty.json" },
         { TestLine(), "Memory<int>([ 1, 2, 3, 4 ])",                                            "IntMemory.json" },
-        { TestLine(), "(Memory<int>)null",                                                      "IntMemory.Null.json" },
+        { TestLine(), "(Memory<int>?)null",                                                     "IntMemory0.Null.json" },
+        { TestLine(), "(Memory<int>?)()",                                                       "IntMemory0.Empty.json" },
+        { TestLine(), "(Memory<int>?)([ 1, 2, 3, 4 ])",                                         "IntMemory0.json" },
         { TestLine(), "EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }",                  "ArrayOfNullableEnums.json" },
         { TestLine(), "(EnumTest?[])null",                                                      "ArrayOfNullableEnums.Null.json" },
         { TestLine(), "ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)",                                "IntArraySegment.json" },
@@ -187,7 +206,7 @@ public partial class ConstantTests
         { TestLine(), "List<int?>{ 1, 2, null, null }",                                         "ListOfNullableInt.json" },
         { TestLine(), "(List<int?>)null",                                                       "ListOfNullableInt.Null.json" },
         { TestLine(), "LinkedList<int>([1, 2, 3, 4])",                                          "IntLinkedList.json" },
-        { TestLine(), "Collection<int>([1, 2, 3, 4])",                                          "IntCollection.json" },
+        { TestLine(), "Sequence<int>([1, 2, 3, 4])",                                          "IntCollection.json" },
         { TestLine(), "ReadOnlyCollection<int>([1, 2, 3, 4])",                                  "IntReadOnlyCollection.json" },
         { TestLine(), "ReadOnlyMemory<int>([ 1, 2, 3, 4 ])",                                    "IntReadOnlyMemory.json" },
         { TestLine(), "HashSet<int>([1, 2, 3, 4])",                                             "IntHashSet.json" },
@@ -198,6 +217,7 @@ public partial class ConstantTests
         { TestLine(), "ConcurrentBag<int>([1, 2, 3, 4])",                                       "IntConcurrentBag.json" },
         { TestLine(), "ConcurrentQueue<int>([1, 2, 3, 4])",                                     "IntConcurrentQueue.json" },
         { TestLine(), "ConcurrentStack<int>([1, 2, 3, 4])",                                     "IntConcurrentStack.json" },
+        { TestLine(), "ImmutableArray.Create()",                                                "IntImmutableSet.Empty.json" },
         { TestLine(), "ImmutableArray.Create(1, 2, 3, 4 )",                                     "IntImmutableSet.json" },
         { TestLine(), "ImmutableHashSet.Create(1, 2, 3, 4 )",                                   "IntImmutableHashSet.json" },
         { TestLine(), "ImmutableList.Create(1, 2, 3, 4 )",                                      "IntImmutableList.json" },
@@ -206,6 +226,7 @@ public partial class ConstantTests
         { TestLine(), "ImmutableStack.Create(1, 2, 3, 4 )",                                     "IntImmutableStack.json" },
         { TestLine(), "ClassDataContract1[] { new ClassDataContract1()...",                     "ArrayWithClassDataContract1and2.json" },
         { TestLine(), "ClassDataContract1[] { new(0, \"vm\"), new(1, \"vm2 vm\"), }",           "ArrayOfClassDataContract1.json" },
+        { TestLine(), "Frozen byte[]{}",                                                        "Bytes.Empty.SetFrozen.json" },
         { TestLine(), "Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                         "Bytes.SetFrozen.json" },
         { TestLine(), "Frozen int[]{ 1, 2, 3, 4 }",                                             "SetOfIntFrozen.json" },
         { TestLine(), "Frozen int?[]{ 1, 2, null, null }",                                      "SetOfNullableIntFrozen.json" },

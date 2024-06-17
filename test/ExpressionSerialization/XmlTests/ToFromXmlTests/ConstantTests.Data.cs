@@ -4,7 +4,6 @@ public partial class ConstantTests
 {
     public static readonly TheoryData<string, string, string> ConstantsData = new ()
     {
-        // primitive:
         // bool
         { TestLine(), "false",                                                                  "Bool.False.xml" },
         { TestLine(), "true",                                                                   "Bool.True.xml" },
@@ -13,29 +12,35 @@ public partial class ConstantTests
         // char
         { TestLine(), "'V'",                                                                    "Char.xml" },
         // double
-        //{ TestLine(), "double.MinValue",                                                        "Double.MinValue.xml" },
-        //{ TestLine(), "double.MaxValue",                                                        "Double.MaxValue.xml" },
-        //{ TestLine(), "double.Nan",                                                             "Double.Nan.xml" },
-        //{ TestLine(), "double.NegativeInfinity",                                                "Double.NegativeInfinity.xml" },
-        //{ TestLine(), "double.PositiveInfinity",                                                "Double.PositiveInfinity.xml" },
+        { TestLine(), "double.MinValue",                                                        "Double.MinValue.xml" },
+        { TestLine(), "double.MaxValue",                                                        "Double.MaxValue.xml" },
+        { TestLine(), "double.float.MinValue",                                                  "Double.Float.MinValue.xml" },
+        { TestLine(), "double.float.MaxValue",                                                  "Double.Float.MaxValue.xml" },
+        { TestLine(), "double.BigValue",                                                        "Double.BigValue.xml" },
+        { TestLine(), "double.SmallValue",                                                      "Double.SmallValue.xml" },
+        { TestLine(), "double.Nan",                                                             "Double.Nan.xml" },
+        { TestLine(), "double.NegativeInfinity",                                                "Double.NegativeInfinity.xml" },
+        { TestLine(), "double.PositiveInfinity",                                                "Double.PositiveInfinity.xml" },
         { TestLine(), "double.NegativeZero",                                                    "Double.NegativeZero.xml" },
         { TestLine(), "double.Zero",                                                            "Double.Zero.xml" },
         { TestLine(), "double.Epsilon",                                                         "Double.Epsilon.xml" },
         { TestLine(), "double.PI",                                                              "Double.Pi.xml" },
         { TestLine(), "double.E",                                                               "Double.E.xml" },
-        { TestLine(), "-2.234567891233658E-123",                                                "Double.2.2345.xml" },
-        { TestLine(), "5.1234567891234567E-123",                                                "Double.5.12345.xml" },
+        { TestLine(), "-2.234567891233658E-123",                                                "Double.-2.23..E-123.xml" },
+        { TestLine(), "5.1234567891234567E-123",                                                "Double.5.12..E-123.xml" },
+        { TestLine(), "-3.4028234663852886E+38",                                                "Double.3.40..E38.xml" },
+        { TestLine(), "3.4028234663852886E+38",                                                 "Double.-3.40..E38.xml" },
         // float
-        //{ TestLine(), "float.MinValue",                                                         "Float.MinValue.xml" },
-        //{ TestLine(), "float.MaxValue",                                                         "Float.MaxValue.xml" },
-        //{ TestLine(), "float.Nan",                                                              "Float.Nan.xml" },
-        //{ TestLine(), "float.NegativeInfinity",                                                 "Float.NegativeInfinity.xml" },
-        //{ TestLine(), "float.PositiveInfinity",                                                 "Float.PositiveInfinity.xml" },
+        { TestLine(), "float.MinValue",                                                         "Float.MinValue.xml" },
+        { TestLine(), "float.MaxValue",                                                         "Float.MaxValue.xml" },
+        { TestLine(), "float.Nan",                                                              "Float.Nan.xml" },
+        { TestLine(), "float.NegativeInfinity",                                                 "Float.NegativeInfinity.xml" },
+        { TestLine(), "float.PositiveInfinity",                                                 "Float.PositiveInfinity.xml" },
         { TestLine(), "float.Epsilon",                                                          "Float.Epsilon.xml" },
         { TestLine(), "float.NegativeZero",                                                     "Float.NegativeZero.xml" },
         { TestLine(), "float.Zero",                                                             "Float.Zero.xml" },
-        { TestLine(), "-2.234568E-23F",                                                         "Float.2.2345.xml" },
-        { TestLine(), "5.5123453E-34F",                                                         "Float.5.512345.xml" },
+        { TestLine(), "-2.234568E-23F",                                                         "Float.-2.23..E-23.xml" },
+        { TestLine(), "5.5123453E-34F",                                                         "Float.5.51..E-34.xml" },
         // int
         { TestLine(), "5",                                                                      "Int.5.xml" },
         { TestLine(), "42",                                                                     "Int.42.xml" },
@@ -44,6 +49,8 @@ public partial class ConstantTests
         // IntPtr
         { TestLine(), "IntPtr5",                                                                "IntPtr.5.xml" },
         { TestLine(), "IntPtr23",                                                               "IntPtr.23.xml" },
+        { TestLine(), "IntPtr.MinValue",                                                        "IntPtr.MinValue.xml" },
+        { TestLine(), "IntPtr.MaxValue",                                                        "IntPtr.MaxValue.xml" },
         // long
         { TestLine(), "long0",                                                                  "Long.0.xml" },
         { TestLine(), "5L",                                                                     "Long.5.xml" },
@@ -58,8 +65,12 @@ public partial class ConstantTests
         // sbyte
         { TestLine(), "(sbyte)5",                                                               "SignedByte.5.xml"},
         { TestLine(), "(sbyte)-5",                                                              "SignedByte.-5.xml"},
+        { TestLine(), "sbyte.MinValue",                                                         "SignedByte.MinValue.xml"},
+        { TestLine(), "sbyte.MaxValue",                                                         "SignedByte.MaxValue.xml"},
         // short
         { TestLine(), "(short)32000",                                                           "Short.xml"},
+        { TestLine(), "short.MinValue",                                                         "Short.MinValue.xml"},
+        { TestLine(), "short.MaxValue",                                                         "Short.MaxValue.xml"},
         // uint
         { TestLine(), "(uint)5",                                                                "UnsignedInt.5.xml"},
         { TestLine(), "(uint)42",                                                               "UnsignedInt.42.xml"},
@@ -68,6 +79,8 @@ public partial class ConstantTests
         // UIntPtr
         { TestLine(), "(UnsignedIntPtr)5",                                                      "UnsignedIntPtr.5.xml"},
         { TestLine(), "(UnsignedIntPtr)42",                                                     "UnsignedIntPtr.42.xml"},
+        { TestLine(), "UnsignedIntPtr.MinValue",                                                "UnsignedIntPtr.MinValue.xml"},
+        { TestLine(), "UnsignedIntPtr.MaxValue",                                                "UnsignedIntPtr.MaxValue.xml"},
         // ulong
         { TestLine(), "ulong0",                                                                 "UnsignedLong.0.xml"},
         { TestLine(), "(ulong)5",                                                               "UnsignedLong.5.xml"},
@@ -79,26 +92,54 @@ public partial class ConstantTests
         // ushort
         { TestLine(), "(ushort)5",                                                              "UnsignedShort.5.xml"},
         { TestLine(), "(ushort)443",                                                            "UnsignedShort.443.xml"},
-        
-        // basic:
+        { TestLine(), "ushort.MinValue",                                                        "UnsignedShort.MinValue.xml"},
+        { TestLine(), "ushort.MaxValue",                                                        "UnsignedShort.MaxValue.xml"},
         // DateTime
+        { TestLine(), "DateTime.MinValue",                                                      "DateTime.MinValue.xml" },
+        { TestLine(), "DateTime.MaxValue",                                                      "DateTime.MaxValue.xml" },
         { TestLine(), "DateTime(2024, 4, 13, 23, 18, 26, 234, DateTimeKind.Local)",             "DateTime.xml" },
         { TestLine(), "DateTime(2024, 4, 13, 23, 18, 26, 234)",                                 "DateTime.Local.xml" },
         // DateTimeOffset
+        { TestLine(), "DateTimeOffset.MinValue",                                                "DateTimeOffset.MinValue.xml" },
+        { TestLine(), "DateTimeOffset.MaxValue",                                                "DateTimeOffset.MaxValue.xml" },
         { TestLine(), "DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))", "DateTimeOffset.xml" },
         // TimeSpan
+        { TestLine(), "TimeSpan.MinValue",                                                      "TimeSpan.MinValue.xml" },
+        { TestLine(), "TimeSpan.MaxValue",                                                      "TimeSpan.MaxValue.xml" },
+        { TestLine(), "TimeSpan.Zero",                                                          "TimeSpan.Zero.xml" },
         { TestLine(), "TimeSpan(3, 4, 15, 32, 123)",                                            "TimeSpan.xml" },
         { TestLine(), "TimeSpan(-3, 4, 15, 32, 123)",                                           "TimeSpan-.xml" },
         // DBNull
         { TestLine(), "DBNull.Value",                                                           "DBNull.xml" },
         // decimal
+        { TestLine(), "decimal.Zero",                                                           "Decimal.Zero.xml" },
+        { TestLine(), "decimal.MinusOne",                                                       "Decimal.MinusOne.xml" },
+        { TestLine(), "decimal.One",                                                            "Decimal.One.xml" },
+        { TestLine(), "decimal.MinValue",                                                       "Decimal.MinValue.xml" },
+        { TestLine(), "decimal.MaxValue",                                                       "Decimal.MaxValue.xml" },
         { TestLine(), "5.5M",                                                                   "Decimal.xml" },
         // GUID
+        { TestLine(), "Guid.Empty",                                                             "Guid.Empty.xml" },
         { TestLine(), "Guid(\"00112233-4455-6677-8899-aabbccddeeff\")",                         "Guid.xml" },
         // Half
         { TestLine(), "(Half)3.14",                                                             "Half.xml" },
+        { TestLine(), "Half.E",                                                                 "Half.E.xml" },
+        { TestLine(), "Half.MinValue",                                                          "Half.MinValue.xml" },
+        { TestLine(), "Half.MaxValue",                                                          "Half.MaxValue.xml" },
+        { TestLine(), "Half.Zero",                                                              "Half.Zero.xml" },
+        { TestLine(), "Half.One",                                                               "Half.One.xml" },
+        { TestLine(), "Half.NaN",                                                               "Half.NaN.xml" },
+        { TestLine(), "Half.NegativeInfinity",                                                  "Half.NegativeInfinity.xml" },
+        { TestLine(), "Half.PositiveInfinity",                                                  "Half.PositiveInfinity.xml" },
+        { TestLine(), "Half.Pi",                                                                "Half.Pi.xml" },
+        { TestLine(), "Half.Epsilon",                                                           "Half.Epsilon.xml" },
+        { TestLine(), "Half.NegativeOne",                                                       "Half.NegativeOne.xml" },
+        { TestLine(), "Half.NegativeZero",                                                      "Half.NegativeZero.xml" },
         // string
-        { TestLine(), "abrah-cadabrah",                                                         "String.xml" },
+        { TestLine(), "string.Empty",                                                           "String.string.Empty.xml" },
+        { TestLine(), "(string?)null",                                                          "String.string.null.xml" },
+        { TestLine(), "abrah-cadabrah",                                                         "String.abrah-cadabrah.xml" },
+        { TestLine(), "ала-бала",                                                               "String.ала-бала.xml" },
         // Uri
         { TestLine(), "Uri(\"http://www.delinea.com\")",                                        "Uri.xml" },
         // enum
@@ -136,20 +177,28 @@ public partial class ConstantTests
         // anonymous
         { TestLine(), "anonymous",                                                              "Anonymous.xml" },
         // byte sequences
-        { TestLine(), "byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                                "Bytes.Array.xml" },
-        { TestLine(), "byte[]{ }",                                                              "Bytes.Array.Empty.xml" },
         { TestLine(), "(byte[])null",                                                           "Bytes.Array.Null.xml" },
+        { TestLine(), "byte[]{}",                                                               "Bytes.Array.Empty.xml" },
+        { TestLine(), "byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                                "Bytes.Array.xml" },
+        { TestLine(), "Memory<byte>()",                                                         "Bytes.Memory.Empty.xml" },
         { TestLine(), "Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                         "Bytes.Memory.xml" },
+        { TestLine(), "ReadOnlyMemory<byte>()",                                                 "Bytes.ReadOnlyMemory.Empty.xml" },
         { TestLine(), "ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                 "Bytes.ReadOnlyMemory.xml" },
-        { TestLine(), "ArraySegment<byte>",                                                     "Bytes.ArraySegment.xml" },
+        { TestLine(), "ArraySegment<byte>([])",                                                 "Bytes.ArraySegment.Empty.xml" },
+        { TestLine(), "ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8)",              "Bytes.ArraySegment.xml" },
         // sequences
-        { TestLine(), "int[]{ 1, 2, 3, 4 }",                                                    "ArrayOfInt.xml" },
-        { TestLine(), "int[]{}",                                                                "ArrayOfInt.Empty.xml" },
         { TestLine(), "(int[])null",                                                            "ArrayOfInt.Null.xml" },
-        { TestLine(), "int?[]{ 1, 2, null, null }",                                             "ArrayOfNullableInt.xml" },
+        { TestLine(), "int[]{}",                                                                "ArrayOfInt.Empty.xml" },
+        { TestLine(), "int[]{ 1, 2, 3, 4 }",                                                    "ArrayOfInt.xml" },
         { TestLine(), "(int?[])null",                                                           "ArrayOfNullableInt.Null.xml" },
+        { TestLine(), "int?[]{}",                                                               "ArrayOfNullableInt.Empty.xml" },
+        { TestLine(), "int?[]{ 1, 2, null, null }",                                             "ArrayOfNullableInt.xml" },
+        { TestLine(), "Memory<int>(null)",                                                      "IntMemory.Null.xml" },
+        { TestLine(), "Memory<int>()",                                                          "IntMemory.Empty.xml" },
         { TestLine(), "Memory<int>([ 1, 2, 3, 4 ])",                                            "IntMemory.xml" },
-        { TestLine(), "(Memory<int>)null",                                                      "IntMemory.Null.xml" },
+        { TestLine(), "(Memory<int>?)null",                                                     "IntMemory0.Null.xml" },
+        { TestLine(), "(Memory<int>?)()",                                                       "IntMemory0.Empty.xml" },
+        { TestLine(), "(Memory<int>?)([ 1, 2, 3, 4 ])",                                         "IntMemory0.xml" },
         { TestLine(), "EnumTest?[]{ EnumTest.One, EnumTest.Two, null, null }",                  "ArrayOfNullableEnums.xml" },
         { TestLine(), "(EnumTest?[])null",                                                      "ArrayOfNullableEnums.Null.xml" },
         { TestLine(), "ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)",                                "IntArraySegment.xml" },
@@ -157,7 +206,7 @@ public partial class ConstantTests
         { TestLine(), "List<int?>{ 1, 2, null, null }",                                         "ListOfNullableInt.xml" },
         { TestLine(), "(List<int?>)null",                                                       "ListOfNullableInt.Null.xml" },
         { TestLine(), "LinkedList<int>([1, 2, 3, 4])",                                          "IntLinkedList.xml" },
-        { TestLine(), "Collection<int>([1, 2, 3, 4])",                                          "IntCollection.xml" },
+        { TestLine(), "Sequence<int>([1, 2, 3, 4])",                                            "IntCollection.xml" },
         { TestLine(), "ReadOnlyCollection<int>([1, 2, 3, 4])",                                  "IntReadOnlyCollection.xml" },
         { TestLine(), "ReadOnlyMemory<int>([ 1, 2, 3, 4 ])",                                    "IntReadOnlyMemory.xml" },
         { TestLine(), "HashSet<int>([1, 2, 3, 4])",                                             "IntHashSet.xml" },
@@ -168,6 +217,7 @@ public partial class ConstantTests
         { TestLine(), "ConcurrentBag<int>([1, 2, 3, 4])",                                       "IntConcurrentBag.xml" },
         { TestLine(), "ConcurrentQueue<int>([1, 2, 3, 4])",                                     "IntConcurrentQueue.xml" },
         { TestLine(), "ConcurrentStack<int>([1, 2, 3, 4])",                                     "IntConcurrentStack.xml" },
+        { TestLine(), "ImmutableArray.Create()",                                                "IntImmutableSet.Empty.xml" },
         { TestLine(), "ImmutableArray.Create(1, 2, 3, 4 )",                                     "IntImmutableSet.xml" },
         { TestLine(), "ImmutableHashSet.Create(1, 2, 3, 4 )",                                   "IntImmutableHashSet.xml" },
         { TestLine(), "ImmutableList.Create(1, 2, 3, 4 )",                                      "IntImmutableList.xml" },
@@ -176,6 +226,7 @@ public partial class ConstantTests
         { TestLine(), "ImmutableStack.Create(1, 2, 3, 4 )",                                     "IntImmutableStack.xml" },
         { TestLine(), "ClassDataContract1[] { new ClassDataContract1()...",                     "ArrayWithClassDataContract1and2.xml" },
         { TestLine(), "ClassDataContract1[] { new(0, \"vm\"), new(1, \"vm2 vm\"), }",           "ArrayOfClassDataContract1.xml" },
+        { TestLine(), "Frozen byte[]{}",                                                        "Bytes.Empty.SetFrozen.xml" },
         { TestLine(), "Frozen byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                         "Bytes.SetFrozen.xml" },
         { TestLine(), "Frozen int[]{ 1, 2, 3, 4 }",                                             "SetOfIntFrozen.xml" },
         { TestLine(), "Frozen int?[]{ 1, 2, null, null }",                                      "SetOfNullableIntFrozen.xml" },
@@ -188,9 +239,9 @@ public partial class ConstantTests
         { TestLine(), "ValueTuple<int, string>",                                                "TupleValue.xml" },
         // dictionaries
         { TestLine(), "Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\"...",              "DictionaryIntNullableString.xml" },
-        { TestLine(), "Dictionary<int, string>{ [1] = \"one\", [2]=\"two\" }",                  "DictionaryIntString.xml" },
+        { TestLine(), "Dictionary<int, string>{ [1] = \"one\", [2] = \"two\" }",                "DictionaryIntString.xml" },
         { TestLine(), "Frozen Dictionary<int, string?>...",                                     "Frozen.DictionaryIntNullableString.xml" },
-        { TestLine(), "Frozen Dictionary<int, string>...",                                      "Frozen.DictionaryIntString.son" },
+        { TestLine(), "Frozen Dictionary<int, string>...",                                      "Frozen.DictionaryIntString.xml" },
         { TestLine(), "Hashtable(new Dictionary<int, string>{ [1] =\"one\", [2]=\"two\" })",    "Hashtable.xml" },
         { TestLine(), "ImmutableDictionary.Create<int,string>().Add(...)",                      "Immutable.DictionaryIntString.xml" },
         { TestLine(), "ImmutableSortedDictionary.Create<int,string>().Add(...)",                "Immutable.SortedDictionaryIntString.xml" },

@@ -30,7 +30,7 @@ static class ElementNames
     public static XName Object => Namespaces.Exs + Vocabulary.Object;
     public static XName Anonymous => Namespaces.Exs + Vocabulary.Anonymous;
     public static XName ByteSequence => Namespaces.Exs + Vocabulary.ByteSequence;
-    public static XName Collection => Namespaces.Exs + Vocabulary.Collection;
+    public static XName Collection => Namespaces.Exs + Vocabulary.Sequence;
     public static XName Dictionary => Namespaces.Exs + Vocabulary.Dictionary;
     public static XName KeyValuePair => Namespaces.Exs + Vocabulary.KeyValuePair;
     public static XName Tuple => Namespaces.Exs + Vocabulary.Tuple;

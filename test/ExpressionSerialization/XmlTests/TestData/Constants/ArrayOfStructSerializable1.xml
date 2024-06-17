@@ -4,9 +4,8 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <!-- value(vm2.ExpressionSerialization.XmlTests.StructSerializable1[]) -->
         <!-- vm2.ExpressionSerialization.XmlTests.StructSerializable1[] -->
-        <collection
+        <sequence
             type="vm2.ExpressionSerialization.XmlTests.StructSerializable1[], XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
             elementType="vm2.ExpressionSerialization.XmlTests.StructSerializable1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
             <!-- vm2.ExpressionSerialization.XmlTests.StructSerializable1 -->
@@ -28,6 +27,6 @@
                     <_x003C_StringProperty_x003E_k__BackingField>vm vm</_x003C_StringProperty_x003E_k__BackingField>
                 </StructSerializable1>
             </object>
-        </collection>
+        </sequence>
     </constant>
 </expression>

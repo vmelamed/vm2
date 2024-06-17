@@ -4,7 +4,6 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <!-- 4/13/2024 11:18:26 PM -->
         <dateTime>2024-04-13T23:18:26.234-04:00</dateTime>
     </constant>
 </expression>

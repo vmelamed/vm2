@@ -86,7 +86,7 @@ class Object1 : IEquatable<Object1>
     public TimeSpan TimeSpanProperty { get; set; } = new TimeSpan(123L);
 
     [DataMember]
-    public DateTimeOffset DateTimeOffsetProperty { get; set; } = new DateTimeOffset(2024, 4, 14, 22, 48, 34, new TimeSpan(0, 5, 0));
+    public DateTimeOffset DateTimeOffsetProperty { get; set; } = new DateTimeOffset(2024, 4, 14, 22, 48, 34, new TimeSpan(5, 0, 0));
 
     public string _stringField = "Hi there!";
 

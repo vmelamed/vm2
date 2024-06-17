@@ -2,7 +2,7 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "constant": {
-      "intPtr": -1
+      "intPtr": "9223372036854775807"
     }
   }
 }

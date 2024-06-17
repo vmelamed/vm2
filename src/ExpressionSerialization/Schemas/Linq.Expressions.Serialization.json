@@ -8,9 +8,7 @@
         "expression": {
             "type": "object",
             "properties": {
-                "constant": {
-                    "$ref": "#/$defs/constantValue"
-                }
+                "constant": { "$ref": "#/$defs/constantValue" }
             },
             "additionalProperties": { "type": "string" }
         }
@@ -43,16 +41,16 @@
                 { "$ref": "#/$defs/durationConstant" },
                 { "$ref": "#/$defs/guidConstant" },
                 { "$ref": "#/$defs/enumConstant" },
-                { "$ref": "#/$defs/nullableConstant" },
                 { "$ref": "#/$defs/stringConstant" },
                 { "$ref": "#/$defs/dbNullConstant" },
                 { "$ref": "#/$defs/uriConstant" },
                 { "$ref": "#/$defs/objectConstant" },
                 { "$ref": "#/$defs/anonymousConstant" },
                 { "$ref": "#/$defs/byteSequenceConstant" },
-                { "$ref": "#/$defs/collectionConstant" },
+                { "$ref": "#/$defs/sequenceConstant" },
                 { "$ref": "#/$defs/dictionaryConstant" },
-                { "$ref": "#/$defs/tupleConstant" }
+                { "$ref": "#/$defs/tupleConstant" },
+                { "$ref": "#/$defs/nullableConstant" }
             ]
         },
         "booleanConstant": {
@@ -131,8 +129,8 @@
             "properties": {
                 "half": {
                     "type": "number",
-                    "minimum": -65500,
-                    "maximum": 65500
+                    "minimum": -65504,
+                    "maximum": 65504
                 }
             },
             "additionalProperties": { "type": "string" },
@@ -152,13 +150,22 @@
             "required": [ "int" ]
         },
         "intPtrConstant": {
-            "title": "32-bit, signed, integer, numeric value (.NET specific)",
+            "title": "Architecture dependent 32 or 64 bit, signed, integer, numeric value (.NET specific)",
+            "description": "Represents architecture dependent 32 or 64 bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
             "type": "object",
             "properties": {
                 "intPtr": {
-                    "type": "integer",
-                    "minimum": -2147483648,
-                    "maximum": 2147483647
+                    "oneOf": [
+                        {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$$"
+                        }
+                    ]
                 }
             },
             "additionalProperties": { "type": "string" },
@@ -166,7 +173,7 @@
         },
         "longConstant": {
             "title": "64-bit, signed, integer, numeric value",
-            "description": "Represents 64-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. The larger/smaller values of this type definitely may suffer from loss of fidelity.",
+            "description": "Represents 64-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. The larger/smaller values of this type definitely may suffer from loss of fidelity.",
             "type": "object",
             "properties": {
                 "long": {
@@ -227,13 +234,22 @@
             "required": [ "unsignedInt" ]
         },
         "unsignedIntPtrConstant": {
-            "title": "32-bit, unsigned, integer, numeric value (.NET specific)",
+            "title": "32 or 64 bit, unsigned, integer, numeric value (.NET specific)",
+            "description": "Represents architecture dependent 32 or 64 bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
             "type": "object",
             "properties": {
                 "unsignedIntPtr": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 4294967295
+                    "oneOf": [
+                        {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^(0*1844674407370955161[0-5])|(0*1844674407370955160[0-9])|(0*18446744073709551[0-5][0-9]{2})|(0*18446744073709550[0-9]{3})|(0*184467440737095[0-4][0-9]{4})|(0*18446744073709[0-4][0-9]{5})|(0*1844674407370[0-8][0-9]{6})|(0*18446744073[0-6][0-9]{8})|(0*1844674407[0-2][0-9]{9})|(0*184467440[0-6][0-9]{10})|(0*1844674[0-3][0-9]{12})|(0*184467[0-3][0-9]{13})|(0*18446[0-6][0-9]{14})|(0*1844[0-5][0-9]{15})|(0*184[0-3][0-9]{16})|(0*18[0-3][0-9]{17})|(0*1[0-7][0-9]{18})|(0*[0-9]{1,19})$"
+                        }
+                    ]
                 }
             },
             "additionalProperties": { "type": "string" },
@@ -241,7 +257,7 @@
         },
         "unsignedLongConstant": {
             "title": "64-bit, unsigned, integer, numeric value",
-            "description": "Represents 64-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
+            "description": "Represents 64-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
             "type": "object",
             "properties": {
                 "unsignedLong": {
@@ -414,53 +430,6 @@
             "additionalProperties": { "type": "string" },
             "required": [ "enum" ]
         },
-        "nullableConstant": {
-            "title": "Represents Nullable<> .NET types",
-            "type": "object",
-            "properties": {
-                "nullable": {
-                    "oneOf": [
-                        {
-                            "title": "Null Nullable<T>",
-                            "$comment": "Represents a Nullable<T> value for which `HasValue` is `false`.",
-                            "type": "object",
-                            "properties": {
-                                "type": { "type": "string" },
-                                "value": { "type": "null" }
-                            },
-                            "additionalProperties": { "type": "string" },
-                            "required": [ "type" ]
-                        },
-                        { "$ref": "#/$defs/booleanConstant" },
-                        { "$ref": "#/$defs/byteConstant" },
-                        { "$ref": "#/$defs/charConstant" },
-                        { "$ref": "#/$defs/doubleConstant" },
-                        { "$ref": "#/$defs/floatConstant" },
-                        { "$ref": "#/$defs/halfConstant" },
-                        { "$ref": "#/$defs/intConstant" },
-                        { "$ref": "#/$defs/intPtrConstant" },
-                        { "$ref": "#/$defs/longConstant" },
-                        { "$ref": "#/$defs/shortConstant" },
-                        { "$ref": "#/$defs/signedByteConstant" },
-                        { "$ref": "#/$defs/unsignedIntConstant" },
-                        { "$ref": "#/$defs/unsignedIntPtrConstant" },
-                        { "$ref": "#/$defs/unsignedLongConstant" },
-                        { "$ref": "#/$defs/unsignedShortConstant" },
-                        { "$ref": "#/$defs/dateTimeConstant" },
-                        { "$ref": "#/$defs/dateTimeOffsetConstant" },
-                        { "$ref": "#/$defs/decimalConstant" },
-                        { "$ref": "#/$defs/durationConstant" },
-                        { "$ref": "#/$defs/guidConstant" },
-                        { "$ref": "#/$defs/enumConstant" },
-                        {
-                            "$comment": "Here we mean only struct object values but there is no way to specify that in JSON schema",
-                            "$ref": "#/$defs/objectConstant"
-                        }
-                    ]
-                }
-            },
-            "required": [ "nullable" ]
-        },
         "byteSequenceConstant": {
             "title": "Arbitrary sequence of bytes",
             "description": "This type represents a sequence of bytes Base64 encoded. The value can be a single string or an array of strings. It can be also null.",
@@ -561,11 +530,11 @@
             "additionalProperties": { "type": "string" },
             "required": [ "tuple" ]
         },
-        "collectionConstant": {
-            "title": "Represents collection (array, list, set, etc.) of values",
+        "sequenceConstant": {
+            "title": "Represents sequences of values (array, list, set, etc.)",
             "type": "object",
             "properties": {
-                "collection": {
+                "sequence": {
                     "type": "object",
                     "properties": {
                         "type": { "type": "string" },
@@ -585,7 +554,7 @@
                 }
             },
             "additionalProperties": { "type": "string" },
-            "required": [ "collection" ]
+            "required": [ "sequence" ]
         },
         "dictionaryConstant": {
             "title": "Represents a dictionary (hashtable, dictionary, etc.) of key - value pairs",
@@ -655,6 +624,61 @@
             },
             "additionalProperties": { "type": "string" },
             "required": [ "object" ]
+        },
+        "nullableConstant": {
+            "title": "Represents Nullable<> .NET types",
+            "type": "object",
+            "properties": {
+                "nullable": {
+                    "oneOf": [
+                        {
+                            "title": "Null Nullable<T>",
+                            "$comment": "Represents a Nullable<T> value for which `HasValue` is `false`.",
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "value": { "type": "null" }
+                            },
+                            "additionalProperties": { "type": "string" },
+                            "required": [ "type" ]
+                        },
+                        {   "$ref": "#/$defs/booleanConstant" },
+                        {   "$ref": "#/$defs/byteConstant" },
+                        {   "$ref": "#/$defs/charConstant" },
+                        {   "$ref": "#/$defs/doubleConstant" },
+                        {   "$ref": "#/$defs/floatConstant" },
+                        {   "$ref": "#/$defs/halfConstant" },
+                        {   "$ref": "#/$defs/intConstant" },
+                        {   "$ref": "#/$defs/intPtrConstant" },
+                        {   "$ref": "#/$defs/longConstant" },
+                        {   "$ref": "#/$defs/shortConstant" },
+                        {   "$ref": "#/$defs/signedByteConstant" },
+                        {   "$ref": "#/$defs/unsignedIntConstant" },
+                        {   "$ref": "#/$defs/unsignedIntPtrConstant" },
+                        {   "$ref": "#/$defs/unsignedLongConstant" },
+                        {   "$ref": "#/$defs/unsignedShortConstant" },
+                        {   "$ref": "#/$defs/dateTimeConstant" },
+                        {   "$ref": "#/$defs/dateTimeOffsetConstant" },
+                        {   "$ref": "#/$defs/decimalConstant" },
+                        {   "$ref": "#/$defs/durationConstant" },
+                        {   "$ref": "#/$defs/guidConstant" },
+                        {   "$ref": "#/$defs/enumConstant" },
+                        {
+                            "$comment": "Here we mean only struct object values but I don't know how to constrain that.",
+                            "$ref": "#/$defs/objectConstant"
+                        },
+                        {
+                            "$comment": "Here we mean only struct object values (e.g. Memory<>, ReadOnlyMemory<> or ArraySegment<>) I don't know how to constrain that.",
+                            "$ref": "#/$defs/sequenceConstant"
+                        },
+                        {
+                            "$comment": "Here we mean only struct object values (i.e. ValueTuple<>) I don't know how to constrain that.",
+                            "$ref": "#/$defs/tupleConstant"
+                        }
+                    ]
+                }
+            },
+            "required": [ "nullable" ]
         }
     }
 }

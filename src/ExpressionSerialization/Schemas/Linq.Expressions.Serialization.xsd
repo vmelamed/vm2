@@ -326,7 +326,7 @@
             </xs:element>
 
             <xs:element name="intPtr"
-                        type="xs:int">
+                        type="xs:long">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
                         Specifies a .NET IntPtr (32bit) value of a constant expression.
@@ -371,7 +371,7 @@
             </xs:element>
 
             <xs:element name="unsignedIntPtr"
-                        type="xs:unsignedInt">
+                        type="xs:unsignedLong">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
                         Specifies a .NET UIntPtr (32bit) value of a constant expression.
@@ -666,11 +666,11 @@
                 </xs:complexType>
             </xs:element>
 
-            <xs:element name="collection"
+            <xs:element name="sequence"
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Specifies a collection of items in a constant expression.
+                        Specifies a sequence of items (array, list, etc.) in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -712,7 +712,7 @@
                         nillable="true">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Specifies a dictionary value (collection of key-value pairs) in a constant expression.
+                        Specifies a dictionary value (sequence of key-value pairs) in a constant expression.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -1987,7 +1987,7 @@
     <xs:complexType name="elementInitType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines the type of elements that represent initializers for a single element of an IEnumerable collection.
+                Defines the type of elements that represent initializers for a single element of an IEnumerable sequence.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -1995,7 +1995,7 @@
                         type="methodInfoType">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Specifies the instance method that is used to add an element to an IEnumerable collection.
+                        Specifies the instance method that is used to add an element to an IEnumerable sequence.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -2014,7 +2014,7 @@
     <xs:complexType name="listInitType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
-                Defines the type of elements that represent a collection initializer.
+                Defines the type of elements that represent a sequence initializer.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>

@@ -4,7 +4,6 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <!-- 2.718281828459045 -->
         <double>2.718281828459045</double>
     </constant>
 </expression>
