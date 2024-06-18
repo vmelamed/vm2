@@ -57,7 +57,7 @@ public class ToJsonDataTransform(JsonOptions options)
         { typeof(DateTimeOffset),   (v, _) => new JElement(Vocabulary.DateTimeOffset, JsonValue.Create(Is<DateTimeOffset>(v).ToString("o"))) },
         { typeof(TimeSpan),         (v, _) => new JElement(Vocabulary.Duration,       JsonValue.Create(Duration(Is<TimeSpan>(v)))) },
         { typeof(DBNull),           (v, _) => new JElement(Vocabulary.DBNull)         },
-        { typeof(decimal),          (v, _) => new JElement(Vocabulary.Decimal,        JsonValue.Create(Is<decimal>(v).ToString())) },
+        { typeof(decimal),          (v, _) => new JElement(Vocabulary.Decimal,        JsonValue.Create(Is<decimal>(v).ToString("G", CultureInfo.InvariantCulture))) },
         { typeof(Guid),             (v, _) => new JElement(Vocabulary.Guid,           JsonValue.Create(Is<Guid>(v).ToString())) },
         { typeof(Half),             (v, _) => new JElement(Vocabulary.Half,           HalfToJson(Is<Half>(v))) },
         { typeof(string),           (v, _) => new JElement(Vocabulary.String,         JsonValue.Create(Is<string>(v))) },
