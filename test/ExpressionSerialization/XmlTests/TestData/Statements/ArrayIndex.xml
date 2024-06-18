@@ -7,36 +7,36 @@
         type="int">
         <index
             type="int">
-            <variableDefinition
+            <parameter
                 type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                name="Array"
-                id="P1" />
+                id="P1"
+                name="Array" />
             <indexes>
-                <variableDefinition
+                <parameter
                     type="int"
-                    name="Index"
-                    id="P2" />
+                    id="P2"
+                    name="Index" />
             </indexes>
         </index>
         <add
             type="int">
             <index
                 type="int">
-                <variable
+                <parameter
                     type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                    name="Array"
-                    idref="P1" />
+                    id="P1"
+                    name="Array" />
                 <indexes>
-                    <variable
+                    <parameter
                         type="int"
-                        name="Index"
-                        idref="P2" />
+                        id="P2"
+                        name="Index" />
                 </indexes>
             </index>
-            <variableDefinition
+            <parameter
                 type="int"
-                name="Value"
-                id="P3" />
+                id="P3"
+                name="Value" />
         </add>
     </assign>
 </expression>

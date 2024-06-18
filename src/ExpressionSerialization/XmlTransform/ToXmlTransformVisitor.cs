@@ -9,24 +9,6 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 {
     ToXmlDataTransform _dataTransform = new(options);
 
-    // labels and parameters/variables are created in one value n and references to them are used in another.
-    // These dictionaries keep their id-s so we can create `XAttribute` id-s and idRef-s to them.
-    Dictionary<LabelTarget, XElement> _labelTargets = [];
-    Dictionary<ParameterExpression, XElement> _parameters = [];
-    int _lastLabelIdNumber;
-    int _lastParamIdNumber;
-
-    /// <inheritdoc/>>
-    protected override void Reset()
-    {
-        base.Reset();
-
-        _parameters = [];
-        _labelTargets = [];
-        _lastParamIdNumber = 0;
-        _lastLabelIdNumber = 0;
-    }
-
     /// <summary>
     /// Gets a properly named n corresponding to the current value n.
     /// </summary>
@@ -79,23 +61,14 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitDefault,
             (n, x) => x.Add(options.TypeComment(n.Type)));
 
-    IEnumerable<XElement> VisitParameterDefinitionList(
-        ReadOnlyCollection<ParameterExpression> parameterList,
-        XName definitionElement)
+    IEnumerable<XElement> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
     {
         foreach (var n in parameterList)
         {
-            if (_parameters.TryGetValue(n, out var _))
+            if (IsDefined(n))
                 throw new InternalTransformErrorException($"Parameter with a name {n.Name} is already defined.");
 
-            var id = $"P{++_lastParamIdNumber}";
-
-            yield return _parameters[n] = new XElement(
-                                                definitionElement,
-                                                AttributeType(n),
-                                                new XAttribute(AttributeNames.Name, n.Name ?? "_"),
-                                                n.IsByRef ? new XAttribute(AttributeNames.IsByRef, true) : null,
-                                                new XAttribute(AttributeNames.Id, id));
+            yield return GetParameter(n);
         }
     }
 
@@ -107,7 +80,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 
         var parameters = new XElement(
                                 ElementNames.Parameters,
-                                VisitParameterDefinitionList(node.Parameters, ElementNames.ParameterDefinition));
+                                VisitParameterDefinitionList(node.Parameters));
 
         Visit(node.Body);
 
@@ -314,25 +287,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
     protected override Expression VisitParameter(ParameterExpression node)
     {
         using var _ = OutputDebugScope(node.NodeType.ToString());
-        XElement varElement;
-
-        if (_parameters.TryGetValue(node, out var x))
-            varElement = new XElement(
-                            x.Name == ElementNames.VariableDefinition ? ElementNames.VariableReference : ElementNames.ParameterReference,
-                            AttributeType(node),
-                            new XAttribute(AttributeNames.Name, node.Name ?? "_"),
-                            node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
-                            new XAttribute(AttributeNames.IdRef, x.Attribute(AttributeNames.Id)?.Value ?? throw new InternalTransformErrorException("A variable of parameter reference without Id.")));
-        else
-            _parameters[node] =
-            varElement = new XElement(
-                            ElementNames.VariableDefinition,
-                            AttributeType(node),
-                            new XAttribute(AttributeNames.Name, node.Name ?? "_"),
-                            node.IsByRef ? new XAttribute(AttributeNames.IsByRef, node.IsByRef) : null,
-                            new XAttribute(AttributeNames.Id, $"P{++_lastParamIdNumber}"));
-
-        _elements.Push(varElement);
+        _elements.Push(GetParameter(node));
         return node;
     }
 
@@ -341,7 +296,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
     {
         using var _ = OutputDebugScope(node.NodeType.ToString());
         // here we do not want the base.Visit to drive the immediate subexpressions - it visits them in an inconvenient order.
-        var varElements = VisitParameterDefinitionList(node.Variables, ElementNames.VariableDefinition).ToList();
+        var varElements = VisitParameterDefinitionList(node.Variables).ToList();
         var variables = varElements.Count > 0
                             ? new XElement(
                                 ElementNames.Variables,
@@ -395,18 +350,8 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         using var _ = OutputDebugScope(nameof(LabelTarget));
         var n = base.VisitLabelTarget(node);
 
-        if (n is null)
-            return null;
-
-        if (!_labelTargets.TryGetValue(n, out var targetElement))
-            targetElement =
-            _labelTargets[n] = new XElement(
-                                        ElementNames.Target,
-                                        !string.IsNullOrWhiteSpace(n.Name) ? new XAttribute(AttributeNames.Name, n.Name) : null,
-                                        n.Type != typeof(void) ? AttributeType(n.Type) : null,
-                                        new XAttribute(AttributeNames.Id, $"L{++_lastLabelIdNumber}"));
-
-        _elements.Push(targetElement);
+        if (n is not null)
+            _elements.Push(new XElement(GetLabelTarget(n)));
 
         return n;
     }
@@ -438,11 +383,6 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 
                 // VisitLabelTarget adds an attribute with name id - fixup: remove it and put attribute with name idRef instead
                 XElement targetElement = new(PopElement());
-                var id = targetElement.Attributes(AttributeNames.Id).Single();
-
-                id.Remove();
-                targetElement.Add(
-                    new XAttribute(AttributeNames.IdRef, id.Value));
 
                 x.Add(
                     targetElement,
@@ -484,7 +424,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                                                 PopElement())
                                         : null;
                 var cases = PopElements(n.Cases.Count);             // the cases
-                var value = PopElement();                        // the value to switch on
+                var value = PopElement();                           // the value to switch on
 
                 x.Add(
                     value,

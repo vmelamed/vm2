@@ -6,10 +6,10 @@
     <lambda
         type="int">
         <parameters>
-            <parameterDefinition
+            <parameter
                 type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="m"
-                id="P1" />
+                id="P1"
+                name="m" />
         </parameters>
         <body>
             <memberAccess
@@ -18,8 +18,8 @@
                     type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
                     <parameter
                         type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                        name="m"
-                        idref="P1" />
+                        id="P1"
+                        name="m" />
                     <property
                         declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                         type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"

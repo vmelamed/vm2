@@ -5,17 +5,17 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <block>
         <variables>
-            <variableDefinition
+            <parameter
                 type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="m"
-                id="P1" />
+                id="P1"
+                name="m" />
         </variables>
         <assign
             type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-            <variable
+            <parameter
                 type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="m"
-                idref="P1" />
+                id="P1"
+                name="m" />
             <new>
                 <constructor
                     declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
@@ -28,16 +28,16 @@
             type="int"
             kind="return">
             <target
-                type="int"
-                idref="L1" />
+                id="L1"
+                type="int" />
             <add
                 type="int">
                 <memberAccess
                     type="int">
-                    <variable
+                    <parameter
                         type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                        name="m"
-                        idref="P1" />
+                        id="P1"
+                        name="m" />
                     <property
                         declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                         type="int"
@@ -47,10 +47,10 @@
                     type="int">
                     <memberAccess
                         type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
-                        <variable
+                        <parameter
                             type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                            name="m"
-                            idref="P1" />
+                            id="P1"
+                            name="m" />
                         <property
                             declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                             type="vm2.ExpressionSerialization.XmlTests.Inner, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
@@ -65,8 +65,8 @@
         </goto>
         <label>
             <target
-                type="int"
-                id="L1" />
+                id="L1"
+                type="int" />
             <constant>
                 <int>0</int>
             </constant>

@@ -81,7 +81,7 @@ public static class XNodeExtensions
                 : throw new SerializationException($"The parent element {element.Name} does not have a child with name {childName}.");
 
     /// <summary>
-    /// Gets the name of the element from attribute <see cref="AttributeNames.Name" />
+    /// Tries to get the name of the element from attribute <see cref="AttributeNames.Name" />
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="name">The name.</param>
@@ -107,7 +107,7 @@ public static class XNodeExtensions
                 : throw new SerializationException($"Could not get the name attribute of the element `{element.Name}`.");
 
     /// <summary>
-    /// Gets the length of the sub-elements in the element from attribute <see cref="AttributeNames.Length" />
+    /// Tries to get the length of the sub-elements in the element from attribute <see cref="AttributeNames.Length" />
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="length">The length.</param>

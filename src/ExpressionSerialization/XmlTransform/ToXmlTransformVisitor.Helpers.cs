@@ -5,6 +5,52 @@ using System.Xml.Linq;
 
 public partial class ToXmlTransformVisitor
 {
+    int _lastParamIdNumber;
+    int _lastLabelIdNumber;
+    // labels, parameters, and variables are created in one value and references to them are used in another.
+    // These dictionaries keep their id-s so we can create `XAttribute` id-s and idRef-s to them.
+    readonly Dictionary<ParameterExpression, XElement> _parameters = [];
+    readonly Dictionary<LabelTarget, XElement> _labelTargets = [];
+
+    /// <inheritdoc/>
+    protected override void Reset()
+    {
+        base.Reset();
+
+        _parameters.Clear();
+        _labelTargets.Clear();
+        _lastParamIdNumber = 0;
+        _lastLabelIdNumber = 0;
+    }
+
+    string NewParameterId => $"P{++_lastParamIdNumber}";
+
+    string NewLabelId => $"L{++_lastLabelIdNumber}";
+
+    bool IsDefined(ParameterExpression parameterExpression)
+        => _parameters.ContainsKey(parameterExpression);
+
+    XElement GetParameter(ParameterExpression parameterExpression)
+        => _parameters.TryGetValue(parameterExpression, out var parameterElement)
+                ? parameterElement
+                : _parameters[parameterExpression] =
+                        new XElement(
+                                ElementNames.Parameter,
+                                    AttributeType(parameterExpression),
+                                    new XAttribute(AttributeNames.Id, NewParameterId),
+                                    !string.IsNullOrWhiteSpace(parameterExpression.Name) ? new XAttribute(AttributeNames.Name, parameterExpression.Name) : null,
+                                    parameterExpression.IsByRef ? new XAttribute(AttributeNames.IsByRef, parameterExpression.IsByRef) : null);
+
+    XElement GetLabelTarget(LabelTarget labelTarget)
+        => _labelTargets.TryGetValue(labelTarget, out var targetElement)
+                ? targetElement
+                : _labelTargets[labelTarget] =
+                        new XElement(
+                                ElementNames.LabelTarget,
+                                    new XAttribute(AttributeNames.Id, NewLabelId),
+                                    !string.IsNullOrWhiteSpace(labelTarget.Name) ? new XAttribute(AttributeNames.Name, labelTarget.Name) : null,
+                                    labelTarget.Type != typeof(void) ? AttributeType(labelTarget.Type) : null);
+
     /// <summary>
     /// Pops one element from the stack
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.

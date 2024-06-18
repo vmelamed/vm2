@@ -6,14 +6,14 @@
     <lambda
         type="boolean">
         <parameters>
-            <parameterDefinition
+            <parameter
                 type="string"
-                name="s"
-                id="P1" />
-            <parameterDefinition
+                id="P1"
+                name="s" />
+            <parameter
                 type="dateTime"
-                name="d"
-                id="P2" />
+                id="P2"
+                name="d" />
         </parameters>
         <body>
             <constant>

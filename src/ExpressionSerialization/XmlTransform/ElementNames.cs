@@ -37,12 +37,9 @@ static class ElementNames
     public static XName TupleItem => Namespaces.Exs + Vocabulary.TupleItem;
     public static XName Arguments => Namespaces.Exs + Vocabulary.Arguments;
     public static XName ParameterSpec => Namespaces.Exs + Vocabulary.ParameterSpec;
-    public static XName ParameterDefinition => Namespaces.Exs + Vocabulary.ParameterDefinition;
-    public static XName ParameterReference => Namespaces.Exs + Vocabulary.ParameterReference;
+    public static XName Parameter => Namespaces.Exs + Vocabulary.Parameter;
     public static XName Parameters => Namespaces.Exs + Vocabulary.Parameters;
     public static XName ParameterSpecs => Namespaces.Exs + Vocabulary.ParameterSpecs;
-    public static XName VariableDefinition => Namespaces.Exs + Vocabulary.VariableDefinition;
-    public static XName VariableReference => Namespaces.Exs + Vocabulary.VariableReference;
     public static XName Variables => Namespaces.Exs + Vocabulary.Variables;
     public static XName Body => Namespaces.Exs + Vocabulary.Body;
     public static XName Indexes => Namespaces.Exs + Vocabulary.Indexes;
@@ -143,7 +140,7 @@ static class ElementNames
     public static XName SubtractAssignChecked => Namespaces.Exs + Vocabulary.SubtractAssignChecked;
     public static XName SubtractChecked => Namespaces.Exs + Vocabulary.SubtractChecked;
     public static XName Switch => Namespaces.Exs + Vocabulary.Switch;
-    public static XName Target => Namespaces.Exs + Vocabulary.Target;
+    public static XName LabelTarget => Namespaces.Exs + Vocabulary.LabelTarget;
     public static XName Throw => Namespaces.Exs + Vocabulary.Throw;
     public static XName Try => Namespaces.Exs + Vocabulary.Try;
     public static XName TypeAs => Namespaces.Exs + Vocabulary.TypeAs;

@@ -20,39 +20,6 @@
             </xs:documentation>
         </xs:annotation>
 
-        <!-- parameter definitions and referencess: -->
-        <xs:key name ="parameterDefinitionKey">
-            <xs:selector xpath="parameter" />
-            <xs:field xpath="@id" />
-        </xs:key>
-
-        <xs:keyref name ="parameterReferenceKey" refer="parameterDefinitionKey">
-            <xs:selector xpath="parameter" />
-            <xs:field xpath="@idref" />
-        </xs:keyref>
-
-        <!-- variable definitions and referencess: -->
-        <xs:key name ="variableDefinitionKey">
-            <xs:selector xpath="variable" />
-            <xs:field xpath="@id" />
-        </xs:key>
-
-        <xs:keyref name ="variableReferenceKey" refer="variableDefinitionKey">
-            <xs:selector xpath="variable" />
-            <xs:field xpath="@idref" />
-        </xs:keyref>
-
-        <!-- label definitions and referencess: -->
-        <xs:key name="labelKey">
-            <xs:selector xpath="label/target | break/target | continue/target"/>
-            <xs:field xpath="@id"/>
-        </xs:key>
-
-        <xs:keyref name="gotoKey" refer="labelKey">
-            <xs:selector xpath="goto/target"/>
-            <xs:field xpath="@idref"/>
-        </xs:keyref>
-
     </xs:element>
 
     <xs:complexType name ="expressionType">
@@ -66,14 +33,8 @@
 
     <xs:group name="expressionBaseGroup">
         <xs:choice>
-            <xs:element name="variableDefinition"
-                        type="variableDefinitionType"/>
-
-            <xs:element name="variable"
-                        type="variableReferenceType"/>
-
             <xs:element name="parameter"
-                        type="parameterReferenceType"/>
+                        type="parameterType"/>
 
             <xs:element name="constant"
                         type="constantExpressionType"/>
@@ -856,7 +817,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="parameterDefinitionType">
+    <xs:complexType name="parameterType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
                 Defines an element type that represents a parameter definition: name, type and internal Id.
@@ -865,80 +826,21 @@
         <xs:complexContent>
             <xs:extension base="parameterSpecType">
                 <xs:attribute name="id"
-                              type="xs:ID"
+                              type="xs:token"
                               use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="parameterReferenceType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines an element type that represents a parameter definition: name, type and internal Id reference.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="parameterSpecType">
-                <xs:attribute name="idref"
-                              type="xs:IDREF"
-                              use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="parameterDefinitionListType">
+    <xs:complexType name="parameterListType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
                 Defines a type of element that lists method parameters.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="parameterDefinition"
-                        type="parameterDefinitionType"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="variableDefinitionType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines an element type that represents a parameter definition: name, type and internal Id.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="parameterSpecType">
-                <xs:attribute name="id"
-                              type="xs:ID"
-                              use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="variableReferenceType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines an element type that represents a parameter definition: name, type and internal Id reference.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="parameterSpecType">
-                <xs:attribute name="idref"
-                              type="xs:IDREF"
-                              use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="variableDefinitionListType">
-        <xs:annotation>
-            <xs:documentation xml:lang="en-us">
-                Defines a type of element that lists method local variables.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="variableDefinition"
-                        type="variableDefinitionType"
+            <xs:element name="parameter"
+                        type="parameterType"
                         minOccurs="0"
                         maxOccurs="unbounded"/>
         </xs:sequence>
@@ -965,7 +867,7 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element name="parameters"
-                        type="parameterDefinitionListType">
+                        type="parameterListType">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
                         Represents the list of parameters of a lambda expression.
@@ -1028,7 +930,7 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element name="variables"
-                        type="variableDefinitionListType"
+                        type="parameterListType"
                         minOccurs="0"/>
             <xs:sequence>
                 <xs:group ref="expressionBaseGroup"
@@ -1690,8 +1592,7 @@
                       use="optional"/>
     </xs:complexType>
 
-    <xs:complexType name="labelTargetType"
-                    abstract="true">
+    <xs:complexType name="targetType">
         <xs:annotation>
             <xs:documentation xml:lang="en-us">
                 Defines the type of elements that represent label targets.
@@ -1706,6 +1607,15 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="id"
+                      type="xs:token"
+                      use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-us">
+                    Identifies a label target marking a location and target(s) for jumping to.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="type"
                       type="xs:token"
                       use="optional">
@@ -1715,26 +1625,6 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-    </xs:complexType>
-
-    <xs:complexType name="targetType">
-        <xs:complexContent>
-            <xs:extension base="labelTargetType">
-                <xs:attribute name="id"
-                              type="xs:ID"
-                              use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="refTargetType">
-        <xs:complexContent>
-            <xs:extension base="labelTargetType">
-                <xs:attribute name="idref"
-                              type="xs:IDREF"
-                              use="required"/>
-            </xs:extension>
-        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="labelExpressionType">
@@ -1750,7 +1640,7 @@
                       minOccurs="0">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        This expression gives the default value of this LabelExpression when the label is reached through regular control flow, e.g. `return "banana";`.
+                        This expression gives the default value of this LabelExpression when the label is reached through regular control flow - not jump to, e.g. `return "banana";`.
                     </xs:documentation>
                 </xs:annotation>
             </xs:group>
@@ -1765,7 +1655,7 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element name="target"
-                        type="refTargetType"/>
+                        type="targetType"/>
             <xs:group ref="expressionBaseGroup"
                       minOccurs="0">
                 <xs:annotation>
@@ -1944,7 +1834,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="exception"
-                                    type="parameterDefinitionType"
+                                    type="parameterType"
                                     minOccurs="0" />
                         <xs:element name="filter"
                                     type="expressionType"

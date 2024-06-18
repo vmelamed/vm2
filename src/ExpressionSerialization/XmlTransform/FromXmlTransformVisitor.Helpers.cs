@@ -2,6 +2,45 @@
 
 public partial class FromXmlTransformVisitor
 {
+    readonly Dictionary<string, ParameterExpression> _parameters = [];
+    readonly Dictionary<string, LabelTarget> _labelTargets = [];
+
+    internal void ResetVisitState()
+    {
+        _parameters.Clear();
+        _labelTargets.Clear();
+    }
+
+    ParameterExpression GetParameter(XElement e)
+    {
+        var id = e.Attribute(AttributeNames.Id)?.Value
+                        ?? throw new SerializationException($"Could not get the Id or the IdRef of a parameter or variable in {e.Name}");
+
+        if (_parameters.TryGetValue(id, out var expression))
+            return expression;
+
+        var type = e.GetEType();
+
+        if (XmlConvert.ToBoolean(e.Attribute(AttributeNames.IsByRef)?.Value ?? "false"))
+            type = type.MakeByRefType();
+
+        return _parameters[id] = Expression.Parameter(type, e.TryGetName(out var name) ? name : null);
+    }
+
+    LabelTarget GetTarget(XElement e)
+    {
+        var id = e.Attribute(AttributeNames.Id)?.Value
+                        ?? throw new SerializationException($"Could not get the Id or the IdRef of a label target in `{e.Name}`");
+
+        if (_labelTargets.TryGetValue(id, out var target))
+            return target;
+
+        e.TryGetName(out var name);
+        e.TryGetEType(out var type);
+
+        return _labelTargets[id] = type is not null ? Expression.Label(type, name) : Expression.Label(name);
+    }
+
     /// <summary>
     /// Gets the member information that may be attached to the expression.
     /// </summary>

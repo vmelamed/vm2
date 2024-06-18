@@ -7,15 +7,6 @@ using System.Xml.Linq;
 /// </summary>
 public partial class FromXmlTransformVisitor
 {
-    Dictionary<string, ParameterExpression> _parameters = [];
-    Dictionary<string, LabelTarget> _labelTargets = [];
-
-    internal void ResetVisitState()
-    {
-        _parameters.Clear();
-        _labelTargets.Clear();
-    }
-
     /// <summary>
     /// Dispatches the visit to the concrete implementation based on the element's name.
     /// </summary>
@@ -65,7 +56,7 @@ public partial class FromXmlTransformVisitor
     /// Visits an XML element representing a parameter expression.
     /// </summary>
     /// <param name="e">The element.</param>
-    /// <param name="expectedName">The expected local name of the element, e.g. 'variable' or `parameterDefinition`.</param>
+    /// <param name="expectedName">The expected local name of the element, e.g. 'variable' or `parameter`.</param>
     /// <returns>The <see cref="ParameterExpression" /> represented by the element.</returns>
     /// <exception cref="SerializationException">$</exception>
     protected virtual ParameterExpression VisitParameter(XElement e, string? expectedName = null)
@@ -73,15 +64,7 @@ public partial class FromXmlTransformVisitor
         if (expectedName is not null && e.Name.LocalName != expectedName)
             throw new SerializationException($"Expected element with name `{expectedName}` but got `{e.Name.LocalName}`.");
 
-        var id = e.Attribute(AttributeNames.Id)?.Value
-                    ?? e.Attribute(AttributeNames.IdRef)?.Value ?? throw new SerializationException($"Could not get the Id or the IdRef of a parameter or variable in {e.Name}");
-
-        if (_parameters.TryGetValue(id, out var expression))
-            return expression;
-
-        return _parameters[id] = Expression.Parameter(
-                                                e.GetEType(),
-                                                e.TryGetName(out var name) ? name : null);
+        return GetParameter(e);
     }
 
     /// <summary>
@@ -89,9 +72,9 @@ public partial class FromXmlTransformVisitor
     /// </summary>
     /// <param name="e">The element.</param>
     /// <returns>The <see cref="IEnumerable{ParameterExpression}"/> represented by the element.</returns>
-    protected virtual IEnumerable<ParameterExpression> VisitParameterDefinitionList(XElement e)
+    protected virtual IEnumerable<ParameterExpression> VisitParameterList(XElement e)
         => e.Elements()
-            .Select(pe => VisitParameter(pe, Vocabulary.ParameterDefinition));
+            .Select(pe => VisitParameter(pe, Vocabulary.Parameter));
 
     /// <summary>
     /// Visits an XML element representing a lambda expression, e.g. `a => a.Abc + 42`.
@@ -102,7 +85,7 @@ public partial class FromXmlTransformVisitor
         => Expression.Lambda(
                             VisitChild(e.GetChild(Vocabulary.Body)),
                             XmlConvert.ToBoolean(e.Attribute(AttributeNames.TailCall)?.Value ?? "false"),
-                            VisitParameterDefinitionList(e.GetChild(Vocabulary.Parameters)));
+                            VisitParameterList(e.GetChild(Vocabulary.Parameters)));
 
     /// <summary>
     /// Visits an XML element representing a unary expression, e.g. `-a`.
@@ -177,7 +160,7 @@ public partial class FromXmlTransformVisitor
         => Expression.Block(
                             (e.TryGetChild(Vocabulary.Variables, out var vars) ? vars : null)?
                              .Elements()?
-                             .Select(v => VisitParameter(v, Vocabulary.VariableDefinition)),
+                             .Select(v => VisitParameter(v, Vocabulary.Parameter)),
                             e.Elements()
                              .Where(e => e.Name.LocalName != Vocabulary.Variables)
                              .Select(Visit));
@@ -284,33 +267,18 @@ public partial class FromXmlTransformVisitor
     /// <exception cref="SerializationException">$"Expected element with name `{expectedName}` but got `{e.Key.LocalName}`.</exception>
     protected virtual LabelExpression VisitLabel(XElement e)
         => Expression.Label(
-                            VisitLabelTarget(e.GetChild(Vocabulary.Target), false),
+                            VisitLabelTarget(e.GetChild(Vocabulary.LabelTarget)),
                             e.TryGetChild(1, out var value) && value != null ? Visit(value) : null);
 
     /// <summary>
     /// Visits an XML element representing a `LabelTarget` expression.
     /// </summary>
     /// <param name="e">The element.</param>
-    /// <param name="isRef">
-    /// Set to <c>true</c> if this is a label reference as in a `goto` statement, 
-    /// or <c>false</c> if this is a label definition as in a label.
-    /// </param>
+    /// 
     /// <returns>System.Linq.Expressions.LabelTarget.</returns>
     /// <exception cref="SerializationException">$"Expected XML attribute `{(isRef.Value ? Vocabulary.IdRef : Vocabulary.Id)}` in the element `{e.Key}`.</exception>
-    protected virtual LabelTarget VisitLabelTarget(XElement e, bool isRef)
-    {
-        var id = (isRef
-                    ? e.Attribute(AttributeNames.IdRef)?.Value
-                    : e.Attribute(AttributeNames.Id)?.Value) ?? throw new SerializationException($"Could not get the Id or the IdRef of a label target in `{e.Name}`");
-
-        if (_labelTargets.TryGetValue(id, out var target))
-            return target;
-
-        e.TryGetName(out var name);
-        e.TryGetEType(out var type);
-
-        return _labelTargets[id] = type is not null ? Expression.Label(type, name) : Expression.Label(name);
-    }
+    protected virtual LabelTarget VisitLabelTarget(XElement e)
+        => GetTarget(e);
 
     /// <summary>
     /// Visits an XML element representing a `goto` expression.
@@ -319,7 +287,7 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual GotoExpression VisitGoto(XElement e)
     {
-        var target = VisitLabelTarget(e.GetChild(Vocabulary.Target), true);
+        var target = VisitLabelTarget(e.GetChild(Vocabulary.LabelTarget));
 
         return Expression.MakeGoto(
                             Enum.Parse<GotoExpressionKind>(

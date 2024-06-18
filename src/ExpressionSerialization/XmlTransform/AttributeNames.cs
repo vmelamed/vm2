@@ -24,7 +24,6 @@ static class AttributeNames
     public static XName ConcreteType => Vocabulary.ConcreteType;   // e.g. derived from ConstantExpression.GetEType
     public static XName BaseType => Vocabulary.BaseType;
     public static XName Id => Vocabulary.Id;
-    public static XName IdRef => Vocabulary.IdRef;
     public static XName Value => Vocabulary.Value;
     public static XName BaseValue => Vocabulary.BaseValue;
     public static XName Visibility => Vocabulary.Visibility;

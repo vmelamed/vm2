@@ -40,17 +40,17 @@
             type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
             <exception
                 type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                name="x"
-                id="P1" />
+                id="P1"
+                name="x" />
             <filter>
                 <equal
                     type="boolean">
                     <memberAccess
                         type="string">
-                        <variable
+                        <parameter
                             type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                            name="x"
-                            idref="P1" />
+                            id="P1"
+                            name="x" />
                         <property
                             declaringType="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                             type="string"
@@ -91,10 +91,10 @@
                 <arguments>
                     <memberAccess
                         type="string">
-                        <variable
+                        <parameter
                             type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                            name="x"
-                            idref="P1" />
+                            id="P1"
+                            name="x" />
                         <property
                             declaringType="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                             type="string"

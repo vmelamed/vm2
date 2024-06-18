@@ -6,26 +6,26 @@
     <lambda
         type="int">
         <parameters>
-            <parameterDefinition
+            <parameter
                 type="System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                name="a"
-                id="P1" />
-            <parameterDefinition
+                id="P1"
+                name="a" />
+            <parameter
                 type="int"
-                name="b"
-                id="P2" />
+                id="P2"
+                name="b" />
         </parameters>
         <body>
             <coalesce
                 type="int">
                 <parameter
                     type="System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                    name="a"
-                    idref="P1" />
+                    id="P1"
+                    name="a" />
                 <parameter
                     type="int"
-                    name="b"
-                    idref="P2" />
+                    id="P2"
+                    name="b" />
             </coalesce>
         </body>
     </lambda>

@@ -6,27 +6,27 @@
     <lambda
         type="int">
         <parameters>
-            <parameterDefinition
+            <parameter
                 type="System.Func`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                name="f"
-                id="P1" />
-            <parameterDefinition
+                id="P1"
+                name="f" />
+            <parameter
                 type="int"
-                name="a"
-                id="P2" />
+                id="P2"
+                name="a" />
         </parameters>
         <body>
             <invoke
                 type="System.Func`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                 <parameter
                     type="System.Func`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                    name="f"
-                    idref="P1" />
+                    id="P1"
+                    name="f" />
                 <arguments>
                     <parameter
                         type="int"
-                        name="a"
-                        idref="P2" />
+                        id="P2"
+                        name="a" />
                 </arguments>
             </invoke>
         </body>

@@ -6,10 +6,10 @@
     <lambda
         type="int">
         <parameters>
-            <parameterDefinition
+            <parameter
                 type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                name="m"
-                id="P1" />
+                id="P1"
+                name="m" />
         </parameters>
         <body>
             <conditional
@@ -22,8 +22,8 @@
                             type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                             <parameter
                                 type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                                name="m"
-                                idref="P1" />
+                                id="P1"
+                                name="m" />
                             <property
                                 declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                                 type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
@@ -40,8 +40,8 @@
                         type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                         <parameter
                             type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                            name="m"
-                            idref="P1" />
+                            id="P1"
+                            name="m" />
                         <property
                             declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                             type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
@@ -55,8 +55,8 @@
                                 type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                                 <parameter
                                     type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-                                    name="m"
-                                    idref="P1" />
+                                    id="P1"
+                                    name="m" />
                                 <property
                                     declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
                                     type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"

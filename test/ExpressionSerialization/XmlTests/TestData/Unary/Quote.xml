@@ -6,10 +6,10 @@
     <lambda
         type="System.Linq.Expressions.Expression`1[[System.Func`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Linq.Expressions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
         <parameters>
-            <parameterDefinition
+            <parameter
                 type="int"
-                name="a"
-                id="P1" />
+                id="P1"
+                name="a" />
         </parameters>
         <body>
             <quote
@@ -20,8 +20,8 @@
                     <body>
                         <parameter
                             type="int"
-                            name="a"
-                            idref="P1" />
+                            id="P1"
+                            name="a" />
                     </body>
                 </lambda>
             </quote>

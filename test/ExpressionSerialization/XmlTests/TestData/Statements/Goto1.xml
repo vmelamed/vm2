@@ -27,7 +27,7 @@
             type="void"
             kind="goto">
             <target
-                idref="L1" />
+                id="L1" />
         </goto>
         <call
             type="void">

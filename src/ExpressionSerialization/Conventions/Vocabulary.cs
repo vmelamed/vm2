@@ -84,12 +84,9 @@ public static class Vocabulary
 
     public const string Arguments               = "arguments";
     public const string ParameterSpec           = "parameterSpec";             // used in MemberInfo
-    public const string ParameterDefinition     = "parameterDefinition";       // used in Lambdas
-    public const string ParameterReference      = "parameter";
+    public const string Parameter               = "parameter";
     public const string Parameters              = "parameters";
     public const string ParameterSpecs          = "parameterSpecs";
-    public const string VariableDefinition      = "variableDefinition";
-    public const string VariableReference       = "variable";                  // used in blocks
     public const string Variables               = "variables";
 
     // for JSON the comments are added as a property with a name "$comment" - one comment per JsonObject is allowed!
@@ -197,7 +194,7 @@ public static class Vocabulary
     public const string SubtractAssignChecked   = "subtractAssignChecked";
     public const string SubtractChecked         = "subtractChecked";
     public const string Switch                  = "switch";
-    public const string Target                  = "target";
+    public const string LabelTarget                  = "target";
     public const string Throw                   = "throw";
     public const string Try                     = "try";
     public const string TypeAs                  = "typeAs";

@@ -6,26 +6,26 @@
     <lambda
         type="boolean">
         <parameters>
-            <parameterDefinition
+            <parameter
                 type="boolean"
-                name="a"
-                id="P1" />
-            <parameterDefinition
+                id="P1"
+                name="a" />
+            <parameter
                 type="boolean"
-                name="b"
-                id="P2" />
+                id="P2"
+                name="b" />
         </parameters>
         <body>
             <orElse
                 type="boolean">
                 <parameter
                     type="boolean"
-                    name="a"
-                    idref="P1" />
+                    id="P1"
+                    name="a" />
                 <parameter
                     type="boolean"
-                    name="b"
-                    idref="P2" />
+                    id="P2"
+                    name="b" />
             </orElse>
         </body>
     </lambda>

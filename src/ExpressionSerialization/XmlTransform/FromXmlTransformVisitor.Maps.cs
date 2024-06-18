@@ -16,10 +16,7 @@ public partial class FromXmlTransformVisitor
             { Vocabulary.Expression,           (v, e) => v.VisitChild(e, 0)       },
             { Vocabulary.Constant,             (v, e) => v.VisitConstant(e)       },
             { Vocabulary.ParameterSpec,        (v, e) => v.VisitParameter(e)      },
-            { Vocabulary.ParameterDefinition,  (v, e) => v.VisitParameter(e)      },
-            { Vocabulary.ParameterReference,   (v, e) => v.VisitParameter(e)      },
-            { Vocabulary.VariableDefinition,   (v, e) => v.VisitParameter(e)      },
-            { Vocabulary.VariableReference,    (v, e) => v.VisitParameter(e)      },
+            { Vocabulary.Parameter,            (v, e) => v.VisitParameter(e)      },
             { Vocabulary.Lambda,               (v, e) => v.VisitLambda(e)         },
         // unary
             { Vocabulary.ArrayLength,          (v, e) => v.VisitUnary(e)          },

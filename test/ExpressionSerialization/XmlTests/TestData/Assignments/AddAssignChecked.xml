@@ -5,13 +5,13 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <addAssignChecked
         type="int">
-        <variableDefinition
+        <parameter
             type="int"
-            name="a"
-            id="P1" />
-        <variableDefinition
+            id="P1"
+            name="a" />
+        <parameter
             type="int"
-            name="b"
-            id="P2" />
+            id="P2"
+            name="b" />
     </addAssignChecked>
 </expression>

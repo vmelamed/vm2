@@ -6,29 +6,29 @@
     <lambda
         type="int">
         <parameters>
-            <parameterDefinition
+            <parameter
                 type="int"
-                name="a"
-                id="P1" />
-            <parameterDefinition
+                id="P1"
+                name="a" />
+            <parameter
                 type="int"
-                name="b"
-                id="P2" />
+                id="P2"
+                name="b" />
         </parameters>
         <body>
             <block>
                 <variables>
-                    <variableDefinition
+                    <parameter
                         type="int"
-                        name="d"
-                        id="P3" />
+                        id="P3"
+                        name="d" />
                 </variables>
                 <assign
                     type="int">
-                    <variable
+                    <parameter
                         type="int"
-                        name="d"
-                        idref="P3" />
+                        id="P3"
+                        name="d" />
                     <constant>
                         <int>42</int>
                     </constant>
@@ -37,34 +37,34 @@
                     type="int">
                     <parameter
                         type="int"
-                        name="a"
-                        idref="P1" />
-                    <variable
+                        id="P1"
+                        name="a" />
+                    <parameter
                         type="int"
-                        name="d"
-                        idref="P3" />
+                        id="P3"
+                        name="d" />
                 </addAssign>
                 <subtractAssign
                     type="int">
                     <parameter
                         type="int"
-                        name="a"
-                        idref="P1" />
+                        id="P1"
+                        name="a" />
                     <parameter
                         type="int"
-                        name="b"
-                        idref="P2" />
+                        id="P2"
+                        name="b" />
                 </subtractAssign>
-                <variableDefinition
+                <parameter
                     type="int"
-                    name="c"
-                    id="P4" />
+                    id="P4"
+                    name="c" />
                 <assign
                     type="int">
-                    <variable
+                    <parameter
                         type="int"
-                        name="c"
-                        idref="P4" />
+                        id="P4"
+                        name="c" />
                     <constant>
                         <int>2</int>
                     </constant>
@@ -73,12 +73,12 @@
                     type="int">
                     <parameter
                         type="int"
-                        name="a"
-                        idref="P1" />
-                    <variable
+                        id="P1"
+                        name="a" />
+                    <parameter
                         type="int"
-                        name="c"
-                        idref="P4" />
+                        id="P4"
+                        name="c" />
                 </leftShiftAssign>
             </block>
         </body>
