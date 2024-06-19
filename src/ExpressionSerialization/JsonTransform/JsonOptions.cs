@@ -159,7 +159,7 @@ public partial class JsonOptions : DocumentOptions
         WriteResults(writer, results, 1);
         writer.Flush();
 
-        throw new SerializationException(writer.ToString());
+        throw new SchemaValidationErrorsException(writer.ToString());
     }
 
     static void WriteResults(TextWriter writer, EvaluationResults results, int indent)

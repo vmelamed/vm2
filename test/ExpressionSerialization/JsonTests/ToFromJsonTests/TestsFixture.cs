@@ -11,13 +11,13 @@ public class TestsFixture : IDisposable
     internal const string TestFilesPath = "../../../TestData";
     internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";
 
-    internal FileStreamOptions FileStreamOptions { get; } = new() {
+    public FileStreamOptions FileStreamOptions { get; } = new() {
         Mode = FileMode.Open,
         Access = FileAccess.Read,
         Share = FileShare.Read,
     };
 
-    internal JsonOptions Options { get; } = new(Path.Combine(SchemasPath, "Linq.Expressions.Serialization.json")) {
+    public JsonOptions Options { get; set; } = new(Path.Combine(SchemasPath, "Linq.Expressions.Serialization.json")) {
         Indent = true,
         IndentSize = 4,
         AddComments = true,

@@ -45,6 +45,7 @@
     <Folder Include="TestData\Lambdas\" />
     <Folder Include="TestData\Statements\" />
     <Folder Include="TestData\Unary\" />
+    <Folder Include="ToExpressionTests\" />
   </ItemGroup>
 
 </Project>

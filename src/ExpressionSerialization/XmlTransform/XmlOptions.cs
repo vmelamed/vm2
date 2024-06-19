@@ -218,10 +218,9 @@ public partial class XmlOptions : DocumentOptions
             document.Validate(Schemas, (_, e) => exceptions.Add(e.Exception));
 
         if (exceptions.Count is not 0)
-            throw new AggregateException(
-                        $"Error(s) validating the XML document against the schema {Exs}:\n  " +
-                        string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
-                        exceptions);
+            throw new SchemaValidationErrorsException(
+                        $"The validation of the XML document against the schema \"{Exs}\" failed:\n  " +
+                        string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")));
     }
 
     /// <summary>
@@ -249,10 +248,9 @@ public partial class XmlOptions : DocumentOptions
         }
 
         if (exceptions.Count is not 0)
-            throw new AggregateException(
-                        $"Error(s) validating the XML document against the schema {Exs}:\n  " +
-                        string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")),
-                        exceptions);
+            throw new SchemaValidationErrorsException(
+                        $"The validation of the XML element against the schema \"{Exs}\" failed:\n  " +
+                        string.Join("\n  ", exceptions.Select(x => $"({x.LineNumber}, {x.LinePosition}) : {x.Message}")));
     }
 
     /// <summary>
