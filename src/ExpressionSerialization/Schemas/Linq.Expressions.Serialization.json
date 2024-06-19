@@ -39,37 +39,37 @@
             "type": "object",
             "oneOf": [
                 { "type": "null" },
-                { "$ref": "#/$defs/constants/boolean" },
-                { "$ref": "#/$defs/constants/byte" },
-                { "$ref": "#/$defs/constants/char" },
-                { "$ref": "#/$defs/constants/double" },
-                { "$ref": "#/$defs/constants/float" },
-                { "$ref": "#/$defs/constants/halfConstant" },
-                { "$ref": "#/$defs/constants/intConstant" },
-                { "$ref": "#/$defs/constants/intPtr" },
-                { "$ref": "#/$defs/constants/long" },
-                { "$ref": "#/$defs/constants/short" },
-                { "$ref": "#/$defs/constants/signedByte" },
-                { "$ref": "#/$defs/constants/unsignedInt" },
-                { "$ref": "#/$defs/constants/unsignedIntPtr" },
-                { "$ref": "#/$defs/constants/unsignedLong" },
-                { "$ref": "#/$defs/constants/unsignedShort" },
-                { "$ref": "#/$defs/constants/dateTime" },
-                { "$ref": "#/$defs/constants/dateTimeOffset" },
-                { "$ref": "#/$defs/constants/decimal" },
-                { "$ref": "#/$defs/constants/timeSpan" },
-                { "$ref": "#/$defs/constants/guid" },
-                { "$ref": "#/$defs/constants/enumeration" },
-                { "$ref": "#/$defs/constants/string" },
-                { "$ref": "#/$defs/constants/dbNull" },
-                { "$ref": "#/$defs/constants/uri" },
-                { "$ref": "#/$defs/constants/object" },
-                { "$ref": "#/$defs/constants/anonymous" },
-                { "$ref": "#/$defs/constants/byteSequence" },
-                { "$ref": "#/$defs/constants/sequence" },
-                { "$ref": "#/$defs/constants/dictionary" },
-                { "$ref": "#/$defs/constants/tuple" },
-                { "$ref": "#/$defs/constants/nullable" }
+                { "$ref": "#/$defs/elements/constants/boolean" },
+                { "$ref": "#/$defs/elements/constants/byte" },
+                { "$ref": "#/$defs/elements/constants/char" },
+                { "$ref": "#/$defs/elements/constants/double" },
+                { "$ref": "#/$defs/elements/constants/float" },
+                { "$ref": "#/$defs/elements/constants/halfConstant" },
+                { "$ref": "#/$defs/elements/constants/intConstant" },
+                { "$ref": "#/$defs/elements/constants/intPtr" },
+                { "$ref": "#/$defs/elements/constants/long" },
+                { "$ref": "#/$defs/elements/constants/short" },
+                { "$ref": "#/$defs/elements/constants/signedByte" },
+                { "$ref": "#/$defs/elements/constants/unsignedInt" },
+                { "$ref": "#/$defs/elements/constants/unsignedIntPtr" },
+                { "$ref": "#/$defs/elements/constants/unsignedLong" },
+                { "$ref": "#/$defs/elements/constants/unsignedShort" },
+                { "$ref": "#/$defs/elements/constants/dateTime" },
+                { "$ref": "#/$defs/elements/constants/dateTimeOffset" },
+                { "$ref": "#/$defs/elements/constants/decimal" },
+                { "$ref": "#/$defs/elements/constants/timeSpan" },
+                { "$ref": "#/$defs/elements/constants/guid" },
+                { "$ref": "#/$defs/elements/constants/enumeration" },
+                { "$ref": "#/$defs/elements/constants/string" },
+                { "$ref": "#/$defs/elements/constants/dbNull" },
+                { "$ref": "#/$defs/elements/constants/uri" },
+                { "$ref": "#/$defs/elements/constants/object" },
+                { "$ref": "#/$defs/elements/constants/anonymous" },
+                { "$ref": "#/$defs/elements/constants/byteSequence" },
+                { "$ref": "#/$defs/elements/constants/sequence" },
+                { "$ref": "#/$defs/elements/constants/dictionary" },
+                { "$ref": "#/$defs/elements/constants/tuple" },
+                { "$ref": "#/$defs/elements/constants/nullable" }
             ]
         },
         "parameter": {
@@ -77,708 +77,710 @@
             "type": "object",
             "properties": {
                 "type": { "type": "string" },
-                "name": { "$ref": "#/$defs/tokens/identifier" },
+                "name": { "$ref": "#/$defs/elements/tokens/identifier" },
                 "isByRef": { "type": "boolean" },
-                "id": { "$ref": "#/$defs/tokens/parameterIdType" }
+                "id": { "$ref": "#/$defs/elements/tokens/parameterIdType" }
             },
             "required": [ "type", "name", "id" ],
             "additionalProperties": { "type": "string" }
         },
-        "constants": {
-            "boolean": {
-                "title": "Boolean constants",
-                "type": "object",
-                "properties": {
-                    "boolean": { "type": "boolean" }
+        "elements": {
+            "constants": {
+                "boolean": {
+                    "title": "Boolean constants",
+                    "type": "object",
+                    "properties": {
+                        "boolean": { "type": "boolean" }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "boolean" ]
                 },
-                "additionalProperties": { "type": "string" },
-                "required": [ "boolean" ]
-            },
-            "byte": {
-                "title": "Byte constants",
-                "description": "Unsigned 8-bit integer value",
-                "type": "object",
-                "properties": {
-                    "byte": {
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 255
-                    }
+                "byte": {
+                    "title": "Byte constants",
+                    "description": "Unsigned 8-bit integer value",
+                    "type": "object",
+                    "properties": {
+                        "byte": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 255
+                        }
+                    },
+                    "required": [ "byte" ],
+                    "additionalProperties": { "type": "string" }
                 },
-                "required": [ "byte" ],
-                "additionalProperties": { "type": "string" }
-            },
-            "char": {
-                "title": "Unicode character value",
-                "type": "object",
-                "properties": {
-                    "char": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 1
-                    }
+                "char": {
+                    "title": "Unicode character value",
+                    "type": "object",
+                    "properties": {
+                        "char": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "char" ]
                 },
-                "additionalProperties": { "type": "string" },
-                "required": [ "char" ]
-            },
-            "double": {
-                "title": "Double precision, floating point numerical value",
-                "type": "object",
-                "properties": {
-                    "double": {
-                        "oneOf": [
-                            { "type": "number" },
-                            {
-                                "type": "string",
-                                "pattern": "^(?:NaN)|(?:-?INF)$"
-                            }
-                        ]
-                    }
+                "double": {
+                    "title": "Double precision, floating point numerical value",
+                    "type": "object",
+                    "properties": {
+                        "double": {
+                            "oneOf": [
+                                { "type": "number" },
+                                {
+                                    "type": "string",
+                                    "pattern": "^(?:NaN)|(?:-?INF)$"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "double" ]
                 },
-                "additionalProperties": { "type": "string" },
-                "required": [ "double" ]
-            },
-            "float": {
-                "title": "Floating point numerical value.",
-                "type": "object",
-                "properties": {
-                    "float": {
-                        "oneOf": [
-                            { "type": "number" },
-                            {
-                                "type": "string",
-                                "pattern": "^(?:NaN)|(?:-?INF)$"
-                            }
-                        ]
-                    }
+                "float": {
+                    "title": "Floating point numerical value.",
+                    "type": "object",
+                    "properties": {
+                        "float": {
+                            "oneOf": [
+                                { "type": "number" },
+                                {
+                                    "type": "string",
+                                    "pattern": "^(?:NaN)|(?:-?INF)$"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "float" ]
                 },
-                "additionalProperties": { "type": "string" },
-                "required": [ "float" ]
-            },
-            "halfConstant": {
-                "title": "Half precision floating point numerical value.",
-                "type": "object",
-                "properties": {
-                    "half": {
-                        "oneOf": [
-                            {
-                                "type": "number",
-                                "minimum": -65504,
-                                "maximum": 65504
+                "halfConstant": {
+                    "title": "Half precision floating point numerical value.",
+                    "type": "object",
+                    "properties": {
+                        "half": {
+                            "oneOf": [
+                                {
+                                    "type": "number",
+                                    "minimum": -65504,
+                                    "maximum": 65504
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "^(?:NaN)|(?:-?INF)$"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "half" ]
+                },
+                "intConstant": {
+                    "title": "32-bit, signed, integer, numeric value",
+                    "type": "object",
+                    "properties": {
+                        "int": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "int" ]
+                },
+                "intPtr": {
+                    "title": "Architecture dependent 32 or 64 bit, signed, integer, numeric value (.NET specific)",
+                    "description": "Represents architecture dependent 32 or 64 bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
+                    "type": "object",
+                    "properties": {
+                        "intPtr": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$$"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "intPtr" ]
+                },
+                "long": {
+                    "title": "64-bit, signed, integer, numeric value",
+                    "description": "Represents 64-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. The larger/smaller values of this type definitely may suffer from loss of fidelity.",
+                    "type": "object",
+                    "properties": {
+                        "long": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$$"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "long" ]
+                },
+                "short": {
+                    "title": "16-bit, signed, integer, numeric value",
+                    "type": "object",
+                    "properties": {
+                        "short": {
+                            "type": "integer",
+                            "minimum": -32768,
+                            "maximum": 32767
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "short" ]
+                },
+                "signedByte": {
+                    "title": "8-bit, signed, integer, numeric value",
+                    "description": "Represents an 8-bit, unsigned, integer numeric values.",
+                    "type": "object",
+                    "properties": {
+                        "signedByte": {
+                            "type": "integer",
+                            "minimum": -128,
+                            "maximum": 127
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "signedByte" ]
+                },
+                "unsignedInt": {
+                    "title": "32-bit, unsigned, integer, numeric value",
+                    "type": "object",
+                    "properties": {
+                        "unsignedInt": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "unsignedInt" ]
+                },
+                "unsignedIntPtr": {
+                    "title": "32 or 64 bit, unsigned, integer, numeric value (.NET specific)",
+                    "description": "Represents architecture dependent 32 or 64 bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
+                    "type": "object",
+                    "properties": {
+                        "unsignedIntPtr": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "^(0*1844674407370955161[0-5])|(0*1844674407370955160[0-9])|(0*18446744073709551[0-5][0-9]{2})|(0*18446744073709550[0-9]{3})|(0*184467440737095[0-4][0-9]{4})|(0*18446744073709[0-4][0-9]{5})|(0*1844674407370[0-8][0-9]{6})|(0*18446744073[0-6][0-9]{8})|(0*1844674407[0-2][0-9]{9})|(0*184467440[0-6][0-9]{10})|(0*1844674[0-3][0-9]{12})|(0*184467[0-3][0-9]{13})|(0*18446[0-6][0-9]{14})|(0*1844[0-5][0-9]{15})|(0*184[0-3][0-9]{16})|(0*18[0-3][0-9]{17})|(0*1[0-7][0-9]{18})|(0*[0-9]{1,19})$"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "unsignedIntPtr" ]
+                },
+                "unsignedLong": {
+                    "title": "64-bit, unsigned, integer, numeric value",
+                    "description": "Represents 64-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
+                    "type": "object",
+                    "properties": {
+                        "unsignedLong": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "^(0*1844674407370955161[0-5])|(0*1844674407370955160[0-9])|(0*18446744073709551[0-5][0-9]{2})|(0*18446744073709550[0-9]{3})|(0*184467440737095[0-4][0-9]{4})|(0*18446744073709[0-4][0-9]{5})|(0*1844674407370[0-8][0-9]{6})|(0*18446744073[0-6][0-9]{8})|(0*1844674407[0-2][0-9]{9})|(0*184467440[0-6][0-9]{10})|(0*1844674[0-3][0-9]{12})|(0*184467[0-3][0-9]{13})|(0*18446[0-6][0-9]{14})|(0*1844[0-5][0-9]{15})|(0*184[0-3][0-9]{16})|(0*18[0-3][0-9]{17})|(0*1[0-7][0-9]{18})|(0*[0-9]{1,19})$"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "unsignedLong" ]
+                },
+                "unsignedShort": {
+                    "title": "16-bit, unsigned, integer, numeric value",
+                    "type": "object",
+                    "properties": {
+                        "unsignedShort": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "unsignedShort" ]
+                },
+                "dateTime": {
+                    "title": "Date and time values",
+                    "description": "Represents points in time (date and time) as strings following RFC3339 and ISO 8601. If the UTC relation information is omitted, it is assumed that it is \"local time\".",
+                    "type": "object",
+                    "properties": {
+                        "dateTime": {
+                            "type": "string",
+                            "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(\\.[0-9]+)?(Z|([-+]([01][0-9]|2[0-3])(:?[0-5][0-9])?))?$"
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "dateTime" ]
+                },
+                "dateTimeOffset": {
+                    "title": "Date and time values represented as offset from UTC.",
+                    "description": "Represents points in time (date and time) as strings following RFC3339 and ISO 8601",
+                    "type": "object",
+                    "properties": {
+                        "dateTimeOffset": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(\\.[0-9]+)?(Z|([-+]([01][0-9]|2[0-3])(:?[0-5][0-9])?))$"
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "dateTimeOffset" ]
+                },
+                "dbNull": {
+                    "title": "DBNull type",
+                    "type": "object",
+                    "properties": {
+                        "dbNull": {
+                            "type": "null",
+                            "default": null
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "dbNull" ]
+                },
+                "decimal": {
+                    "title": "Represents decimal, fixed point values.",
+                    "description": "The values can be represented as both numeric and string JSON values.",
+                    "type": "object",
+                    "properties": {
+                        "decimal": {
+                            "type": "string",
+                            "pattern": "^[-+]?([0-9]+(\\.[0-9]*))|(([0-9]*\\.)?([0-9])+)$"
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "decimal" ]
+                },
+                "timeSpan": {
+                    "title": "Time duration values",
+                    "description": "Represents time duration as strings following ISO 8601.",
+                    "type": "object",
+                    "properties": {
+                        "duration": {
+                            "type": "string",
+                            "pattern": "^-?P((([0-9]+D)|([0-9]+M)(([0-9]+D))?|([0-9]+Y)(([0-9]+M)(([0-9]+D))?)?)(T((([0-9]+H)(([0-9]+M)(([0-9]+S))?)?|([0-9]+M)(([0-9]+S))?|([0-9]+S))))?|T((([0-9]+H)(([0-9]+M)(([0-9]+S))?)?|([0-9]+M)(([0-9]+S))?|([0-9]+S)))|([0-9]+W))$"
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "duration" ]
+                },
+                "guid": {
+                    "title": "UUID (a.k.a. GUID) values",
+                    "type": "object",
+                    "properties": {
+                        "guid": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^(?:(?:[\\(\\{]?)[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}(?:[\\}\\)]?))|(?:[0-9A-Fa-f]{32})$"
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "guid" ]
+                },
+                "string": {
+                    "title": "Unicode string values",
+                    "type": "object",
+                    "properties": {
+                        "string": {
+                            "oneOf": [
+                                { "type": "string" },
+                                { "type": "null" }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "string" ]
+                },
+                "uri": {
+                    "title": "URI and IRI values",
+                    "type": "object",
+                    "properties": {
+                        "uri": {
+                            "oneOf": [
+                                { "type": "null" },
+                                {
+                                    "type": "string",
+                                    "format": "iri-reference"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "uri" ]
+                },
+                "enumeration": {
+                    "title": "Enumeration type",
+                    "type": "object",
+                    "properties": {
+                        "enum": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "value": {
+                                    "oneOf": [
+                                        { "type": "string" },
+                                        {
+                                            "$comment": "When the enum type is marked with FlagsAttribute",
+                                            "type": "array",
+                                            "items": { "type": "string" }
+                                        }
+                                    ]
+                                },
+                                "baseType": {
+                                    "type": "string",
+                                    "default": "int"
+                                },
+                                "baseValue": { "type": "integer" }
                             },
-                            {
-                                "type": "string",
-                                "pattern": "^(?:NaN)|(?:-?INF)$"
-                            }
-                        ]
-                    }
+                            "additionalProperties": false,
+                            "required": [ "type", "value" ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "enum" ]
                 },
-                "additionalProperties": { "type": "string" },
-                "required": [ "half" ]
-            },
-            "intConstant": {
-                "title": "32-bit, signed, integer, numeric value",
-                "type": "object",
-                "properties": {
-                    "int": {
-                        "type": "integer",
-                        "minimum": -2147483648,
-                        "maximum": 2147483647
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "int" ]
-            },
-            "intPtr": {
-                "title": "Architecture dependent 32 or 64 bit, signed, integer, numeric value (.NET specific)",
-                "description": "Represents architecture dependent 32 or 64 bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
-                "type": "object",
-                "properties": {
-                    "intPtr": {
-                        "oneOf": [
-                            {
-                                "type": "integer",
-                                "minimum": -9007199254740991,
-                                "maximum": 9007199254740991
-                            },
-                            {
-                                "type": "string",
-                                "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$$"
-                            }
-                        ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "intPtr" ]
-            },
-            "long": {
-                "title": "64-bit, signed, integer, numeric value",
-                "description": "Represents 64-bit, signed, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains. The larger/smaller values of this type definitely may suffer from loss of fidelity.",
-                "type": "object",
-                "properties": {
-                    "long": {
-                        "oneOf": [
-                            {
-                                "type": "integer",
-                                "minimum": -9007199254740991,
-                                "maximum": 9007199254740991
-                            },
-                            {
-                                "type": "string",
-                                "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$$"
-                            }
-                        ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "long" ]
-            },
-            "short": {
-                "title": "16-bit, signed, integer, numeric value",
-                "type": "object",
-                "properties": {
-                    "short": {
-                        "type": "integer",
-                        "minimum": -32768,
-                        "maximum": 32767
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "short" ]
-            },
-            "signedByte": {
-                "title": "8-bit, signed, integer, numeric value",
-                "description": "Represents an 8-bit, unsigned, integer numeric values.",
-                "type": "object",
-                "properties": {
-                    "signedByte": {
-                        "type": "integer",
-                        "minimum": -128,
-                        "maximum": 127
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "signedByte" ]
-            },
-            "unsignedInt": {
-                "title": "32-bit, unsigned, integer, numeric value",
-                "type": "object",
-                "properties": {
-                    "unsignedInt": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 4294967295
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "unsignedInt" ]
-            },
-            "unsignedIntPtr": {
-                "title": "32 or 64 bit, unsigned, integer, numeric value (.NET specific)",
-                "description": "Represents architecture dependent 32 or 64 bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
-                "type": "object",
-                "properties": {
-                    "unsignedIntPtr": {
-                        "oneOf": [
-                            {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 9007199254740991
-                            },
-                            {
-                                "type": "string",
-                                "pattern": "^(0*1844674407370955161[0-5])|(0*1844674407370955160[0-9])|(0*18446744073709551[0-5][0-9]{2})|(0*18446744073709550[0-9]{3})|(0*184467440737095[0-4][0-9]{4})|(0*18446744073709[0-4][0-9]{5})|(0*1844674407370[0-8][0-9]{6})|(0*18446744073[0-6][0-9]{8})|(0*1844674407[0-2][0-9]{9})|(0*184467440[0-6][0-9]{10})|(0*1844674[0-3][0-9]{12})|(0*184467[0-3][0-9]{13})|(0*18446[0-6][0-9]{14})|(0*1844[0-5][0-9]{15})|(0*184[0-3][0-9]{16})|(0*18[0-3][0-9]{17})|(0*1[0-7][0-9]{18})|(0*[0-9]{1,19})$"
-                            }
-                        ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "unsignedIntPtr" ]
-            },
-            "unsignedLong": {
-                "title": "64-bit, unsigned, integer, numeric value",
-                "description": "Represents 64-bit, unsigned, integer numeric values. Note: it is a well-known problem that different languages represent internally big integer values differently: e.g. JavaScript and Go internally represent these JSON values as integers when they are in the range of [-2^53+1, 2^53-1] and as double precision values outside of that region. Therefore to avoid ambiguity and loss of fidelity this schema allows the integer values to be expressed also as string values, subject to pattern constrains.  The larger/smaller values of this type definitely may suffer from loss of fidelity.",
-                "type": "object",
-                "properties": {
-                    "unsignedLong": {
-                        "oneOf": [
-                            {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 9007199254740991
-                            },
-                            {
-                                "type": "string",
-                                "pattern": "^(0*1844674407370955161[0-5])|(0*1844674407370955160[0-9])|(0*18446744073709551[0-5][0-9]{2})|(0*18446744073709550[0-9]{3})|(0*184467440737095[0-4][0-9]{4})|(0*18446744073709[0-4][0-9]{5})|(0*1844674407370[0-8][0-9]{6})|(0*18446744073[0-6][0-9]{8})|(0*1844674407[0-2][0-9]{9})|(0*184467440[0-6][0-9]{10})|(0*1844674[0-3][0-9]{12})|(0*184467[0-3][0-9]{13})|(0*18446[0-6][0-9]{14})|(0*1844[0-5][0-9]{15})|(0*184[0-3][0-9]{16})|(0*18[0-3][0-9]{17})|(0*1[0-7][0-9]{18})|(0*[0-9]{1,19})$"
-                            }
-                        ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "unsignedLong" ]
-            },
-            "unsignedShort": {
-                "title": "16-bit, unsigned, integer, numeric value",
-                "type": "object",
-                "properties": {
-                    "unsignedShort": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 65535
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "unsignedShort" ]
-            },
-            "dateTime": {
-                "title": "Date and time values",
-                "description": "Represents points in time (date and time) as strings following RFC3339 and ISO 8601. If the UTC relation information is omitted, it is assumed that it is \"local time\".",
-                "type": "object",
-                "properties": {
-                    "dateTime": {
-                        "type": "string",
-                        "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(\\.[0-9]+)?(Z|([-+]([01][0-9]|2[0-3])(:?[0-5][0-9])?))?$"
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "dateTime" ]
-            },
-            "dateTimeOffset": {
-                "title": "Date and time values represented as offset from UTC.",
-                "description": "Represents points in time (date and time) as strings following RFC3339 and ISO 8601",
-                "type": "object",
-                "properties": {
-                    "dateTimeOffset": {
-                        "type": "string",
-                        "format": "date-time",
-                        "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[0-1])[T ](?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(\\.[0-9]+)?(Z|([-+]([01][0-9]|2[0-3])(:?[0-5][0-9])?))$"
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "dateTimeOffset" ]
-            },
-            "dbNull": {
-                "title": "DBNull type",
-                "type": "object",
-                "properties": {
-                    "dbNull": {
-                        "type": "null",
-                        "default": null
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "dbNull" ]
-            },
-            "decimal": {
-                "title": "Represents decimal, fixed point values.",
-                "description": "The values can be represented as both numeric and string JSON values.",
-                "type": "object",
-                "properties": {
-                    "decimal": {
-                        "type": "string",
-                        "pattern": "^[-+]?([0-9]+(\\.[0-9]*))|(([0-9]*\\.)?([0-9])+)$"
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "decimal" ]
-            },
-            "timeSpan": {
-                "title": "Time duration values",
-                "description": "Represents time duration as strings following ISO 8601.",
-                "type": "object",
-                "properties": {
-                    "duration": {
-                        "type": "string",
-                        "pattern": "^-?P((([0-9]+D)|([0-9]+M)(([0-9]+D))?|([0-9]+Y)(([0-9]+M)(([0-9]+D))?)?)(T((([0-9]+H)(([0-9]+M)(([0-9]+S))?)?|([0-9]+M)(([0-9]+S))?|([0-9]+S))))?|T((([0-9]+H)(([0-9]+M)(([0-9]+S))?)?|([0-9]+M)(([0-9]+S))?|([0-9]+S)))|([0-9]+W))$"
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "duration" ]
-            },
-            "guid": {
-                "title": "UUID (a.k.a. GUID) values",
-                "type": "object",
-                "properties": {
-                    "guid": {
-                        "type": "string",
-                        "format": "uuid",
-                        "pattern": "^(?:(?:[\\(\\{]?)[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}(?:[\\}\\)]?))|(?:[0-9A-Fa-f]{32})$"
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "guid" ]
-            },
-            "string": {
-                "title": "Unicode string values",
-                "type": "object",
-                "properties": {
-                    "string": {
-                        "oneOf": [
-                            { "type": "string" },
-                            { "type": "null" }
-                        ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "string" ]
-            },
-            "uri": {
-                "title": "URI and IRI values",
-                "type": "object",
-                "properties": {
-                    "uri": {
-                        "oneOf": [
-                            { "type": "null" },
-                            {
-                                "type": "string",
-                                "format": "iri-reference"
-                            }
-                        ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "uri" ]
-            },
-            "enumeration": {
-                "title": "Enumeration type",
-                "type": "object",
-                "properties": {
-                    "enum": {
-                        "type": "object",
-                        "properties": {
-                            "type": { "type": "string" },
-                            "value": {
-                                "oneOf": [
-                                    { "type": "string" },
-                                    {
-                                        "$comment": "When the enum type is marked with FlagsAttribute",
-                                        "type": "array",
-                                        "items": { "type": "string" }
-                                    }
-                                ]
-                            },
-                            "baseType": {
-                                "type": "string",
-                                "default": "int"
-                            },
-                            "baseValue": { "type": "integer" }
-                        },
-                        "additionalProperties": false,
-                        "required": [ "type", "value" ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "enum" ]
-            },
-            "byteSequence": {
-                "title": "Arbitrary sequence of bytes",
-                "description": "This type represents a sequence of bytes Base64 encoded. The value can be a single string or an array of strings. It can be also null.",
-                "type": "object",
-                "properties": {
-                    "byteSequence": {
-                        "type": "object",
-                        "properties": {
-                            "type": { "type": "string" },
-                            "value": {
-                                "oneOf": [
-                                    { "type": "null" },
-                                    {
-                                        "type": "string",
-                                        "pattern": "^[0-9A-Za-z/+]*={0,2}$",
-                                        "contentEncoding": "base64",
-                                        "contentMediaType": "application/octet-stream"
-                                    },
-                                    {
-                                        "$comment": "when the value is encoded with multiline Base64",
-                                        "type": "array",
-                                        "items": {
+                "byteSequence": {
+                    "title": "Arbitrary sequence of bytes",
+                    "description": "This type represents a sequence of bytes Base64 encoded. The value can be a single string or an array of strings. It can be also null.",
+                    "type": "object",
+                    "properties": {
+                        "byteSequence": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "value": {
+                                    "oneOf": [
+                                        { "type": "null" },
+                                        {
                                             "type": "string",
                                             "pattern": "^[0-9A-Za-z/+]*={0,2}$",
                                             "contentEncoding": "base64",
                                             "contentMediaType": "application/octet-stream"
+                                        },
+                                        {
+                                            "$comment": "when the value is encoded with multiline Base64",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "pattern": "^[0-9A-Za-z/+]*={0,2}$",
+                                                "contentEncoding": "base64",
+                                                "contentMediaType": "application/octet-stream"
+                                            }
                                         }
-                                    }
-                                ]
-                            },
-                            "length": { "type": "integer" }
-                        },
-                        "additionalProperties": { "type": "string" },
-                        "required": [ "type", "value" ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "byteSequence" ]
-            },
-            "anonymous": {
-                "title": "JSON serialized anonymous object",
-                "type": "object",
-                "properties": {
-                    "anonymous": {
-                        "type": "object",
-                        "properties": {
-                            "type": { "type": "string" },
-                            "value": {
-                                "type": "object",
-                                "patternProperties": {
-                                    "^@?[A-Z_a-z][0-9A-Z_a-z]*$": { "$ref": "#/$defs/constant" }
+                                    ]
                                 },
-                                "minProperties": 1,
-                                "additionalProperties": false
-                            }
-                        },
-                        "required": [ "type", "value" ]
-                    }
+                                "length": { "type": "integer" }
+                            },
+                            "additionalProperties": { "type": "string" },
+                            "required": [ "type", "value" ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "byteSequence" ]
                 },
-                "additionalProperties": { "type": "string" },
-                "required": [ "anonymous" ]
-            },
-            "tuple": {
-                "title": "Represents a .NET tuple (class Tuple<> or ValueTuple<>)",
-                "type": "object",
-                "properties": {
-                    "tuple": {
-                        "type": "object",
-                        "properties": {
-                            "type": { "type": "string" },
-                            "value": {
-                                "oneOf": [
-                                    { "type": "null" },
-                                    {
-                                        "type": "object",
-                                        "patternProperties": {
-                                            "^Item[1-8]$": {
+                "anonymous": {
+                    "title": "JSON serialized anonymous object",
+                    "type": "object",
+                    "properties": {
+                        "anonymous": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "value": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^@?[A-Z_a-z][0-9A-Z_a-z]*$": { "$ref": "#/$defs/constant" }
+                                    },
+                                    "minProperties": 1,
+                                    "additionalProperties": false
+                                }
+                            },
+                            "required": [ "type", "value" ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "anonymous" ]
+                },
+                "tuple": {
+                    "title": "Represents a .NET tuple (class Tuple<> or ValueTuple<>)",
+                    "type": "object",
+                    "properties": {
+                        "tuple": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "value": {
+                                    "oneOf": [
+                                        { "type": "null" },
+                                        {
+                                            "type": "object",
+                                            "patternProperties": {
+                                                "^Item[1-8]$": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": { "type": "string" },
+                                                        "value": { "$ref": "#/$defs/constant" }
+                                                    },
+                                                    "required": [ "type", "value" ],
+                                                    "additionalProperties": { "type": "string" }
+                                                }
+                                            },
+                                            "minProperties": 1,
+                                            "maxProperties": 8,
+                                            "additionalProperties": false
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": [ "type", "value" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "tuple" ]
+                },
+                "sequence": {
+                    "title": "Represents sequences of values (array, list, set, etc.)",
+                    "type": "object",
+                    "properties": {
+                        "sequence": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "value": {
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": { "$ref": "#/$defs/constant" }
+                                        },
+                                        { "type": "null" }
+                                    ]
+                                },
+                                "length": { "type": "integer" }
+                            },
+                            "additionalProperties": { "type": "string" },
+                            "required": [ "type", "value" ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "sequence" ]
+                },
+                "dictionary": {
+                    "title": "Represents a dictionary (hashtable, dictionary, etc.) of key - value pairs",
+                    "type": "object",
+                    "properties": {
+                        "dictionary": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "value": {
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
                                                 "type": "object",
                                                 "properties": {
-                                                    "type": { "type": "string" },
+                                                    "key": { "$ref": "#/$defs/constant" },
                                                     "value": { "$ref": "#/$defs/constant" }
                                                 },
-                                                "required": [ "type", "value" ],
-                                                "additionalProperties": { "type": "string" }
+                                                "additionalProperties": { "type": "string" },
+                                                "required": [ "key", "value" ]
                                             }
                                         },
-                                        "minProperties": 1,
-                                        "maxProperties": 8,
-                                        "additionalProperties": false
-                                    }
-                                ]
-                            }
-                        },
-                        "required": [ "type", "value" ],
-                        "additionalProperties": { "type": "string" }
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "tuple" ]
-            },
-            "sequence": {
-                "title": "Represents sequences of values (array, list, set, etc.)",
-                "type": "object",
-                "properties": {
-                    "sequence": {
-                        "type": "object",
-                        "properties": {
-                            "type": { "type": "string" },
-                            "value": {
-                                "oneOf": [
-                                    {
-                                        "type": "array",
-                                        "items": { "$ref": "#/$defs/constant" }
-                                    },
-                                    { "type": "null" }
-                                ]
-                            },
-                            "length": { "type": "integer" }
-                        },
-                        "additionalProperties": { "type": "string" },
-                        "required": [ "type", "value" ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "sequence" ]
-            },
-            "dictionary": {
-                "title": "Represents a dictionary (hashtable, dictionary, etc.) of key - value pairs",
-                "type": "object",
-                "properties": {
-                    "dictionary": {
-                        "type": "object",
-                        "properties": {
-                            "type": { "type": "string" },
-                            "value": {
-                                "oneOf": [
-                                    {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "key": { "$ref": "#/$defs/constant" },
-                                                "value": { "$ref": "#/$defs/constant" }
-                                            },
-                                            "additionalProperties": { "type": "string" },
-                                            "required": [ "key", "value" ]
+                                        {
+                                            "type": "null"
                                         }
-                                    },
-                                    {
-                                        "type": "null"
-                                    }
-                                ]
-                            },
-                            "length": { "type": "integer" }
-                        },
-                        "additionalProperties": { "type": "string" },
-                        "required": [ "type", "value" ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "dictionary" ]
-            },
-            "object": {
-                "title": "JSON serialized object",
-                "type": "object",
-                "properties": {
-                    "object": {
-                        "type": "object",
-                        "properties": {
-                            "type": { "type": "string" },
-                            "concreteType": {
-                                "$comment": "The actual type of the object can be different from the declared type if the type of the object is derived from the declared type.",
-                                "type": "string"
-                            },
-                            "value": {
-                                "oneOf": [
-                                    { "type": "object" },
-                                    {
-                                        "$comment": "Only reference types can have value null.",
-                                        "type": "null"
-                                    }
-                                ]
-                            }
-                        },
-                        "additionalProperties": { "type": "string" },
-                        "required": [ "type", "value" ]
-                    }
-                },
-                "additionalProperties": { "type": "string" },
-                "required": [ "object" ]
-            },
-            "nullable": {
-                "title": "Represents Nullable<> .NET types",
-                "type": "object",
-                "properties": {
-                    "nullable": {
-                        "oneOf": [
-                            {
-                                "title": "Null Nullable<T>",
-                                "$comment": "Represents a Nullable<T> value for which `HasValue` is `false`.",
-                                "type": "object",
-                                "properties": {
-                                    "type": { "type": "string" },
-                                    "value": { "type": "null" }
+                                    ]
                                 },
-                                "additionalProperties": { "type": "string" },
-                                "required": [ "type" ]
+                                "length": { "type": "integer" }
                             },
-                            { "$ref": "#/$defs/constants/boolean" },
-                            { "$ref": "#/$defs/constants/byte" },
-                            { "$ref": "#/$defs/constants/char" },
-                            { "$ref": "#/$defs/constants/double" },
-                            { "$ref": "#/$defs/constants/float" },
-                            { "$ref": "#/$defs/constants/halfConstant" },
-                            { "$ref": "#/$defs/constants/intConstant" },
-                            { "$ref": "#/$defs/constants/intPtr" },
-                            { "$ref": "#/$defs/constants/long" },
-                            { "$ref": "#/$defs/constants/short" },
-                            { "$ref": "#/$defs/constants/signedByte" },
-                            { "$ref": "#/$defs/constants/unsignedInt" },
-                            { "$ref": "#/$defs/constants/unsignedIntPtr" },
-                            { "$ref": "#/$defs/constants/unsignedLong" },
-                            { "$ref": "#/$defs/constants/unsignedShort" },
-                            { "$ref": "#/$defs/constants/dateTime" },
-                            { "$ref": "#/$defs/constants/dateTimeOffset" },
-                            { "$ref": "#/$defs/constants/decimal" },
-                            { "$ref": "#/$defs/constants/timeSpan" },
-                            { "$ref": "#/$defs/constants/guid" },
-                            { "$ref": "#/$defs/constants/enumeration" },
-                            {
-                                "$comment": "Here we mean only struct object values but I don't know how to constrain that.",
-                                "$ref": "#/$defs/constants/object"
+                            "additionalProperties": { "type": "string" },
+                            "required": [ "type", "value" ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "dictionary" ]
+                },
+                "object": {
+                    "title": "JSON serialized object",
+                    "type": "object",
+                    "properties": {
+                        "object": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "concreteType": {
+                                    "$comment": "The actual type of the object can be different from the declared type if the type of the object is derived from the declared type.",
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "oneOf": [
+                                        { "type": "object" },
+                                        {
+                                            "$comment": "Only reference types can have value null.",
+                                            "type": "null"
+                                        }
+                                    ]
+                                }
                             },
-                            {
-                                "$comment": "Here we mean only struct object values (e.g. Memory<>, ReadOnlyMemory<> or ArraySegment<>) I don't know how to constrain that.",
-                                "$ref": "#/$defs/constants/sequence"
-                            },
-                            {
-                                "$comment": "Here we mean only struct object values (i.e. ValueTuple<>) I don't know how to constrain that.",
-                                "$ref": "#/$defs/constants/tuple"
+                            "additionalProperties": { "type": "string" },
+                            "required": [ "type", "value" ]
+                        }
+                    },
+                    "additionalProperties": { "type": "string" },
+                    "required": [ "object" ]
+                },
+                "nullable": {
+                    "title": "Represents Nullable<> .NET types",
+                    "type": "object",
+                    "properties": {
+                        "nullable": {
+                            "oneOf": [
+                                {
+                                    "title": "Null Nullable<T>",
+                                    "$comment": "Represents a Nullable<T> value for which `HasValue` is `false`.",
+                                    "type": "object",
+                                    "properties": {
+                                        "type": { "type": "string" },
+                                        "value": { "type": "null" }
+                                    },
+                                    "additionalProperties": { "type": "string" },
+                                    "required": [ "type" ]
+                                },
+                                { "$ref": "#/$defs/elements/constants/boolean" },
+                                { "$ref": "#/$defs/elements/constants/byte" },
+                                { "$ref": "#/$defs/elements/constants/char" },
+                                { "$ref": "#/$defs/elements/constants/double" },
+                                { "$ref": "#/$defs/elements/constants/float" },
+                                { "$ref": "#/$defs/elements/constants/halfConstant" },
+                                { "$ref": "#/$defs/elements/constants/intConstant" },
+                                { "$ref": "#/$defs/elements/constants/intPtr" },
+                                { "$ref": "#/$defs/elements/constants/long" },
+                                { "$ref": "#/$defs/elements/constants/short" },
+                                { "$ref": "#/$defs/elements/constants/signedByte" },
+                                { "$ref": "#/$defs/elements/constants/unsignedInt" },
+                                { "$ref": "#/$defs/elements/constants/unsignedIntPtr" },
+                                { "$ref": "#/$defs/elements/constants/unsignedLong" },
+                                { "$ref": "#/$defs/elements/constants/unsignedShort" },
+                                { "$ref": "#/$defs/elements/constants/dateTime" },
+                                { "$ref": "#/$defs/elements/constants/dateTimeOffset" },
+                                { "$ref": "#/$defs/elements/constants/decimal" },
+                                { "$ref": "#/$defs/elements/constants/timeSpan" },
+                                { "$ref": "#/$defs/elements/constants/guid" },
+                                { "$ref": "#/$defs/elements/constants/enumeration" },
+                                {
+                                    "$comment": "Here we mean only struct object values but I don't know how to constrain that.",
+                                    "$ref": "#/$defs/elements/constants/object"
+                                },
+                                {
+                                    "$comment": "Here we mean only struct object values (e.g. Memory<>, ReadOnlyMemory<> or ArraySegment<>) I don't know how to constrain that.",
+                                    "$ref": "#/$defs/elements/constants/sequence"
+                                },
+                                {
+                                    "$comment": "Here we mean only struct object values (i.e. ValueTuple<>) I don't know how to constrain that.",
+                                    "$ref": "#/$defs/elements/constants/tuple"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [ "nullable" ]
+                }
+            },
+            "tokens": {
+                "identifier": {
+                    "type": "string",
+                    "pattern": "^@?[A-Z_a-z][0-9A-Z_a-z]*$"
+                },
+                "parameterIdType": {
+                    "type": "string",
+                    "patern": "^P[0-9]+$"
+                },
+                "labelTargetIdType": {
+                    "type": "string",
+                    "patern": "^L[0-9]+$"
+                }
+            },
+            "parameters": {
+                "parameterSpec": {
+                    "title": "Represents a parameter specification as in a MethodInfo or delegate",
+                    "type": "object",
+                    "properties": {
+                        "type": { "type": "string" },
+                        "name": { "$ref": "#/$defs/elements/tokens/identifier" },
+                        "isByRef": { "type": "boolean" }
+                    },
+                    "required": [ "type" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                "parameterSpecList": {
+                    "title": "Represents a list of parameter specifications as in a MethodInfo or delegate",
+                    "type": "object",
+                    "properties": {
+                        "parameterSpecs": {
+                            "type": "array",
+                            "items": {
+                                "type": { "$ref": "#/$defs/elements/parameters/parameterSpec" }
                             }
-                        ]
+                        }
                     }
                 },
-                "required": [ "nullable" ]
-            }
-        },
-        "tokens": {
-            "identifier": {
-                "type": "string",
-                "pattern": "^@?[A-Z_a-z][0-9A-Z_a-z]*$"
-            },
-            "parameterIdType": {
-                "type": "string",
-                "patern": "^P[0-9]+$"
-            },
-            "labelTargetIdType": {
-                "type": "string",
-                "patern": "^L[0-9]+$"
-            }
-        },
-        "parameters": {
-            "parameterSpec": {
-                "title": "Represents a parameter specification as in a MethodInfo or delegate",
-                "type": "object",
-                "properties": {
-                    "type": { "type": "string" },
-                    "name": { "$ref": "#/$defs/tokens/identifier" },
-                    "isByRef": { "type": "boolean" }
-                },
-                "required": [ "type" ],
-                "additionalProperties": { "type": "string" }
-            },
-            "parameterSpecList": {
-                "title": "Represents a list of parameter specifications as in a MethodInfo or delegate",
-                "type": "object",
-                "properties": {
-                    "parameterSpecs": {
-                        "type": "array",
-                        "items": {
-                            "type": { "$ref": "#/$defs/parameters/parameterSpec" }
+                "parameterList": {
+                    "title": "Represents a list of parameter specifications",
+                    "type": "object",
+                    "properties": {
+                        "parameters": {
+                            "type": "array",
+                            "items": {
+                                "type": { "$ref": "#/$defs/elements/parameters/parameter" }
+                            }
                         }
                     }
                 }
             },
-            "parameterList": {
-                "title": "Represents a list of parameter specifications",
-                "type": "object",
-                "properties": {
-                    "parameters": {
-                        "type": "array",
-                        "items": {
-                            "type": { "$ref": "#/$defs/parameters/parameter" }
-                        }
-                    }
+            "labels": {
+                "target": {
+                    "title": "Represents a location target in an (e.g. block) expression or a reference to a location target in a goto, break, continue, return statements.",
+                    "type": "object",
+                    "properties": {
+                        "type": { "type": "string" },
+                        "name": { "$ref": "#/$defs/elements/tokens/identifier" },
+                        "id": { "$ref": "#/$defs/elements/tokens/labelTargetIdType" }
+                    },
+                    "required": [ "id" ],
+                    "additionalProperties": { "type": "string" }
                 }
-            }
-        },
-        "labels": {
-            "target": {
-                "title": "Represents a location target in an (e.g. block) expression or a reference to a location target in a goto, break, continue, return statements.",
-                "type": "object",
-                "properties": {
-                    "type": { "type": "string" },
-                    "name": { "$ref": "#/$defs/tokens/identifier" },
-                    "id": { "$ref": "#/$defs/tokens/labelTargetIdType" }
-                },
-                "required": [ "id" ],
-                "additionalProperties": { "type": "string" }
             }
         }
     }
