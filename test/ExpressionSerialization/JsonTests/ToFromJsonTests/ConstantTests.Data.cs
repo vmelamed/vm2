@@ -41,6 +41,20 @@ public partial class ConstantTests
         { TestLine(), "float.Zero",                                                             "Float.Zero.json" },
         { TestLine(), "-2.234568E-23F",                                                         "Float.-2.23..E-23.json" },
         { TestLine(), "5.5123453E-34F",                                                         "Float.5.51..E-34.json" },
+        // Half
+        { TestLine(), "(Half)3.14",                                                             "Half.json" },
+        { TestLine(), "Half.E",                                                                 "Half.E.json" },
+        { TestLine(), "Half.MinValue",                                                          "Half.MinValue.json" },
+        { TestLine(), "Half.MaxValue",                                                          "Half.MaxValue.json" },
+        { TestLine(), "Half.Zero",                                                              "Half.Zero.json" },
+        { TestLine(), "Half.One",                                                               "Half.One.json" },
+        //{ TestLine(), "Half.NaN",                                                               "Half.NaN.json" }, // Json.Schema doesn't like that
+        { TestLine(), "Half.NegativeInfinity",                                                  "Half.NegativeInfinity.json" },
+        { TestLine(), "Half.PositiveInfinity",                                                  "Half.PositiveInfinity.json" },
+        { TestLine(), "Half.Pi",                                                                "Half.Pi.json" },
+        { TestLine(), "Half.Epsilon",                                                           "Half.Epsilon.json" },
+        { TestLine(), "Half.NegativeOne",                                                       "Half.NegativeOne.json" },
+        { TestLine(), "Half.NegativeZero",                                                      "Half.NegativeZero.json" },
         // int
         { TestLine(), "5",                                                                      "Int.5.json" },
         { TestLine(), "42",                                                                     "Int.42.json" },
@@ -72,6 +86,7 @@ public partial class ConstantTests
         { TestLine(), "short.MinValue",                                                         "Short.MinValue.json"},
         { TestLine(), "short.MaxValue",                                                         "Short.MaxValue.json"},
         // uint
+        { TestLine(), "(uint)0",                                                                "UnsignedInt.0.json"},
         { TestLine(), "(uint)5",                                                                "UnsignedInt.5.json"},
         { TestLine(), "(uint)42",                                                               "UnsignedInt.42.json"},
         { TestLine(), "uint.Min",                                                               "UnsignedInt.Min.json"},
@@ -121,20 +136,6 @@ public partial class ConstantTests
         // GUID
         { TestLine(), "Guid.Empty",                                                             "Guid.Empty.json" },
         { TestLine(), "Guid(\"00112233-4455-6677-8899-aabbccddeeff\")",                         "Guid.json" },
-        // Half
-        { TestLine(), "(Half)3.14",                                                             "Half.json" },
-        { TestLine(), "Half.E",                                                                 "Half.E.json" },
-        { TestLine(), "Half.MinValue",                                                          "Half.MinValue.json" },
-        { TestLine(), "Half.MaxValue",                                                          "Half.MaxValue.json" },
-        { TestLine(), "Half.Zero",                                                              "Half.Zero.json" },
-        { TestLine(), "Half.One",                                                               "Half.One.json" },
-        //{ TestLine(), "Half.NaN",                                                               "Half.NaN.json" }, // the schema doesn't like that
-        { TestLine(), "Half.NegativeInfinity",                                                  "Half.NegativeInfinity.json" },
-        { TestLine(), "Half.PositiveInfinity",                                                  "Half.PositiveInfinity.json" },
-        { TestLine(), "Half.Pi",                                                                "Half.Pi.json" },
-        { TestLine(), "Half.Epsilon",                                                           "Half.Epsilon.json" },
-        { TestLine(), "Half.NegativeOne",                                                       "Half.NegativeOne.json" },
-        { TestLine(), "Half.NegativeZero",                                                      "Half.NegativeZero.json" },
         // string
         { TestLine(), "string.Empty",                                                           "String.string.Empty.json" },
         { TestLine(), "(string?)null",                                                          "String.string.null.json" },
