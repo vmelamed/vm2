@@ -30,6 +30,9 @@ public partial class ToXmlTransformVisitor
     bool IsDefined(ParameterExpression parameterExpression)
         => _parameters.ContainsKey(parameterExpression);
 
+    bool IsDefined(LabelTarget labelTarget)
+        => _labelTargets.ContainsKey(labelTarget);
+
     XElement GetParameter(ParameterExpression parameterExpression)
         => _parameters.TryGetValue(parameterExpression, out var parameterElement)
                 ? parameterElement
@@ -148,7 +151,7 @@ public partial class ToXmlTransformVisitor
 
         return member switch {
             ConstructorInfo ci => new XElement(
-                                        ElementNames.Constructor,
+                                    ElementNames.Constructor,
                                         declaringType,
                                         visibility,
                                         !ci.IsStatic ? null : throw new InternalTransformErrorException($"Don't know how to use static constructors."),
@@ -157,7 +160,7 @@ public partial class ToXmlTransformVisitor
                                                 VisitParameters(ci.GetParameters()))),
 
             PropertyInfo pi => new XElement(
-                                        ElementNames.Property,
+                                    ElementNames.Property,
                                         declaringType,
                                         visibility,
                                         AttributeType(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null.")),
@@ -169,7 +172,7 @@ public partial class ToXmlTransformVisitor
                                             : null),
 
             MethodInfo mi => new XElement(
-                                        ElementNames.Method,
+                                    ElementNames.Method,
                                         declaringType,
                                         mi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
                                         visibility,
@@ -178,13 +181,13 @@ public partial class ToXmlTransformVisitor
                                         new XElement(ElementNames.ParameterSpecs, VisitParameters(mi.GetParameters()))),
 
             EventInfo ei => new XElement(
-                                        ElementNames.Event,
+                                    ElementNames.Event,
                                         declaringType,
                                         AttributeType(ei.EventHandlerType ?? throw new InternalTransformErrorException("EventInfo's EventHandlerType is null.")),
                                         nameAttribute),
 
             FieldInfo fi => new XElement(
-                                        ElementNames.Field,
+                                    ElementNames.Field,
                                         declaringType,
                                         fi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
                                         visibility,
@@ -204,7 +207,7 @@ public partial class ToXmlTransformVisitor
     static IEnumerable<XElement> VisitParameters(IEnumerable<ParameterInfo> parameters)
         => parameters.Select(param => new XElement(
                                             ElementNames.ParameterSpec,
-                                            AttributeType(param.ParameterType),
-                                            param.Name is not null ? new XAttribute(AttributeNames.Name, param.Name) : null,
-                                            param.ParameterType.IsByRef || param.IsOut ? new XAttribute(AttributeNames.IsByRef, true) : null));
+                                                AttributeType(param.ParameterType),
+                                                param.Name is not null ? new XAttribute(AttributeNames.Name, param.Name) : null,
+                                                param.ParameterType.IsByRef || param.IsOut ? new XAttribute(AttributeNames.IsByRef, true) : null));
 }

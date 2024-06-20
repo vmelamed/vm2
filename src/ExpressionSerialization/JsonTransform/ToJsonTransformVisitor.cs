@@ -1,5 +1,4 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
-
 /// <summary>
 /// Class ToJsonTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
@@ -7,26 +6,6 @@
 /// <seealso cref="ExpressionTransformVisitor{XNode}" />
 public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTransformVisitor<JElement>
 {
-    ToJsonDataTransform _dataTransform = new(options);
-
-    // labels and parameters/variables are created in one value n and references to them are used in another.
-    // These dictionaries keep their id-s so we can create `XAttribute` id-s and idRef-s to them.
-    //Dictionary<LabelTarget, XElement> _labelTargets = [];
-    //Dictionary<ParameterExpression, XElement> _parameters = [];
-    //int _lastLabelIdNumber;
-    //int _lastParamIdNumber;
-
-    /// <inheritdoc/>>
-    protected override void Reset()
-    {
-        base.Reset();
-
-        //_parameters = [];
-        //_labelTargets = [];
-        //_lastParamIdNumber = 0;
-        //_lastLabelIdNumber = 0;
-    }
-
     /// <summary>
     /// Gets a properly named node corresponding to the current expression node.
     /// </summary>
@@ -70,5 +49,62 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
         {
             throw new SerializationException($"Don't know how to serialize {node.Type}", x);
         }
+    }
+
+    /// <inheritdoc/>
+    protected override Expression VisitDefault(DefaultExpression node)
+        => GenericVisit(
+            node,
+            base.VisitDefault,
+            (n, x) => x.Add(options.TypeComment(n.Type)));
+
+    IEnumerable<JsonNode?> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
+        => parameterList.Select(p => !IsDefined(p)
+                                        ? GetParameter(p).Value
+                                        : throw new InternalTransformErrorException($"Parameter with a name {p.Name} is already defined."));
+
+    /// <inheritdoc/>
+    protected override Expression VisitLambda<T>(Expression<T> node)
+    {
+        using var _ = OutputDebugScope(node.NodeType.ToString());
+        // here we do not want the base.Visit to drive the immediate subexpressions - it visits them in the reversed order.
+
+        var parameters = new JElement(
+                                Vocabulary.Parameters,
+                                    VisitParameterDefinitionList(node.Parameters).ToList());
+
+        Visit(node.Body);
+
+        var body = new JElement(Vocabulary.Body, PopElement());
+
+        var x = GetEmptyNode(node);
+
+        x.Add(
+            node.TailCall
+                    ? new JElement(
+                                Vocabulary.TailCall,
+                                    node.TailCall) : null,
+            !string.IsNullOrWhiteSpace(node.Name)
+                    ? PropertyName(node.Name) : null,
+            node.ReturnType != node.Body.Type
+                    ? new JElement(
+                                Vocabulary.DelegateType,
+                                    Transform.TypeName(node.ReturnType)) : null,
+            parameters,
+            body);
+
+        _elements.Push(x);
+
+        return node;
+    }
+
+    /// <inheritdoc/>
+    protected override Expression VisitParameter(ParameterExpression node)
+    {
+        using var _ = OutputDebugScope(node.NodeType.ToString());
+
+        _elements.Push(GetParameter(node));
+
+        return node;
     }
 }

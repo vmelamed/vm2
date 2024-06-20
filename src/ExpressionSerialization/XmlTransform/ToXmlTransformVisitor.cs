@@ -62,15 +62,9 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             (n, x) => x.Add(options.TypeComment(n.Type)));
 
     IEnumerable<XElement> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
-    {
-        foreach (var n in parameterList)
-        {
-            if (IsDefined(n))
-                throw new InternalTransformErrorException($"Parameter with a name {n.Name} is already defined.");
-
-            yield return GetParameter(n);
-        }
-    }
+        => parameterList.Select(p => !IsDefined(p)
+                                        ? GetParameter(p)
+                                        : throw new InternalTransformErrorException($"Parameter with a name {p.Name} is already defined."));
 
     /// <inheritdoc/>
     protected override Expression VisitLambda<T>(Expression<T> node)
@@ -80,20 +74,20 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 
         var parameters = new XElement(
                                 ElementNames.Parameters,
-                                VisitParameterDefinitionList(node.Parameters));
+                                    VisitParameterDefinitionList(node.Parameters));
 
         Visit(node.Body);
 
         var body = new XElement(
                         ElementNames.Body,
-                        PopElement());
+                            PopElement());
 
         var x = GetEmptyNode(node);
 
         x.Add(
             node.TailCall ? new XAttribute(AttributeNames.TailCall, node.TailCall) : null,
-            string.IsNullOrWhiteSpace(node.Name) ? null : new XAttribute(AttributeNames.Name, node.Name),
-            node.ReturnType == node.Body.Type ? null : new XAttribute(AttributeNames.DelegateType, node.ReturnType),
+            string.IsNullOrWhiteSpace(node.Name) ? null : AttributeName(node.Name),
+            node.ReturnType == node.Body.Type ? null : new XAttribute(AttributeNames.DelegateType, Transform.TypeName(node.ReturnType)),
             parameters,
             body);
 

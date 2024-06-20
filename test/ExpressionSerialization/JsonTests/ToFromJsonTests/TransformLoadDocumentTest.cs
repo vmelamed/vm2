@@ -4,15 +4,15 @@ using System.Linq.Expressions;
 
 using vm2.ExpressionSerialization.Exceptions;
 
-public class TransformLoadDocumentTest(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+public class TransformLoadDocumentTest(JsonTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string JsonTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Constants");
+    protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestFilesPath, "Constants");
 
     protected override Expression Substitute(string id) => throw new NotImplementedException();
 
     void ResetReloadSchemas(bool loadSchemas, ValidateDocuments validate)
         => _fixture.Options = loadSchemas
-                                ? new(Path.Combine(TestsFixture.SchemasPath, "Linq.Expressions.Serialization.Json")) {
+                                ? new(Path.Combine(JsonTestsFixture.SchemasPath, "Linq.Expressions.Serialization.Json")) {
                                     Indent = true,
                                     IndentSize = 4,
                                     AddComments = true,
@@ -42,7 +42,6 @@ public class TransformLoadDocumentTest(TestsFixture fixture, ITestOutputHelper o
         { TestLine(), ValidateDocuments.IfSchemaPresent, "NullObject.json", false, null },
         { TestLine(), ValidateDocuments.IfSchemaPresent, "NullObject.json", true, null },
     };
-
 
     [Theory]
     [MemberData(nameof(TransformLoadDocumentData))]

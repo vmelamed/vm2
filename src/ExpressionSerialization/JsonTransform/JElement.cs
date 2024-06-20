@@ -2,10 +2,13 @@
 
 /// <summary>
 /// struct JElement is a key-value pair, similar to <see cref="XElement"/>. The <paramref name="key"/> is the name of 
-/// the element in the parent JsonObject. The <see cref="KeyValuePair{TKey, TValue}"/> is also a struct, so we cannot inherit 
+/// the element in the parent JsonObject.
+/// </summary>
+/// <remarks>
+/// The <see cref="KeyValuePair{TKey, TValue}"/> is a struct, so we cannot inherit 
 /// from it but we have implicit conversions to and from it and instances of this class can be used anywhere where 
 /// <see cref="KeyValuePair{TKey, TValue}"/> is required.
-/// </summary>
+/// </remarks>
 [DebuggerDisplay("\"{Key}\": {Value}")]
 public struct JElement(string key = "", JsonNode? value = null)
 {
@@ -340,6 +343,13 @@ public struct JElement(string key = "", JsonNode? value = null)
 
         return this;
     }
+
+    /// <summary>
+    /// Deeply clones this element.
+    /// </summary>
+    /// <returns>vm2.ExpressionSerialization.JsonTransform.JElement.</returns>
+    public JElement DeepClone()
+            => new(Key, Value?.DeepClone());
 
     /// <summary>
     /// Performs an implicit conversion from <see cref="JElement"/> to <see cref="KeyValuePair{String, JsonNode}"/>.

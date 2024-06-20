@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 
 using vm2.ExpressionSerialization.JsonTransform;
 
-public class TestsFixture : IDisposable
+public class JsonTestsFixture : IDisposable
 {
     internal const string TestFilesPath = "../../../TestData";
     internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";

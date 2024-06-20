@@ -1,0 +1,27 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "lambda": {
+      "type": "double",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "i",
+          "id": "P1"
+        },
+        {
+          "type": "double",
+          "name": "j",
+          "id": "P2"
+        }
+      ],
+      "body": {
+        "parameter": {
+          "type": "double",
+          "name": "j",
+          "id": "P2"
+        }
+      }
+    }
+  }
+}

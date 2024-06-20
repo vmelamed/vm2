@@ -1,19 +1,19 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
+﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
 
-[CollectionDefinition("XML")]
-public partial class UnaryTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+[CollectionDefinition("JSON")]
+public partial class UnaryTests(JsonTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "Unary");
+    protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestFilesPath, "Unary");
 
     [Theory]
     [MemberData(nameof(UnaryData))]
     public async Task UnaryToXmlTestAsync(string testFileLine, string expressionString, string fileName)
-        => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
+        => await base.ToJsonTestAsync(testFileLine, expressionString, fileName);
 
     [Theory]
     [MemberData(nameof(UnaryData))]
     public async Task UnaryFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
-        => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
+        => await base.FromJsonTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> UnaryData = new ()
     {
@@ -32,25 +32,21 @@ public partial class UnaryTests(XmlTestsFixture fixture, ITestOutputHelper outpu
         { TestLine(), "default(object)",                "Default.object.xml" },
         { TestLine(), "default(ClassDataContract1)",    "Default.ClassDataContract1.xml" },
         { TestLine(), "default(StructDataContract1)",   "Default.StructDataContract1.xml" },
-        { TestLine(), "default(bool)",                  "Default.bool.xml" },
-        { TestLine(), "default(bool)",                  "Default.bool.xml" },
-        { TestLine(), "default(bool)",                  "Default.bool.xml" },
-        { TestLine(), "default(bool)",                  "Default.bool.xml" },
 
-        { TestLine(), "(C c) => c as A",                "AsType.xml" },
-        { TestLine(), "(object c) => c as int?",        "ObjectAsNullable.xml" },
-        { TestLine(), "(int a) => () => a",             "Quote.xml" },
-        { TestLine(), "(double a) => checked((int)a)",  "ConvertChecked.xml" },
-        { TestLine(), "(double a) => (int)a",           "Convert.xml" },
-        { TestLine(), "(int[] a) => a.GetLength",       "ArrayLength.xml" },
-        { TestLine(), "(bool a) => !a",                 "Not.xml" },
-        { TestLine(), "(int a) => checked(-a)",         "NegateChecked.xml" },
-        { TestLine(), "(int a) => -a",                  "Negate.xml" },
-        { TestLine(), "(int a) => ~a",                  "BitwiseNot.xml" },
+        //{ TestLine(), "(C c) => c as A",                "AsType.xml" },
+        //{ TestLine(), "(object c) => c as int?",        "ObjectAsNullable.xml" },
+        //{ TestLine(), "(int a) => () => a",             "Quote.xml" },
+        //{ TestLine(), "(double a) => checked((int)a)",  "ConvertChecked.xml" },
+        //{ TestLine(), "(double a) => (int)a",           "Convert.xml" },
+        //{ TestLine(), "(int[] a) => a.GetLength",       "ArrayLength.xml" },
+        //{ TestLine(), "(bool a) => !a",                 "Not.xml" },
+        //{ TestLine(), "(int a) => checked(-a)",         "NegateChecked.xml" },
+        //{ TestLine(), "(int a) => -a",                  "Negate.xml" },
+        //{ TestLine(), "(int a) => ~a",                  "BitwiseNot.xml" },
 
-        { TestLine(), "(A a) => +a",                    "UnaryPlusMethod.xml" },
-        { TestLine(), "(A a) => -a",                    "UnaryMinusMethod.xml" },
-        { TestLine(), "(B b) => !b",                    "UnaryNotMethod.xml" },
+        //{ TestLine(), "(A a) => +a",                    "UnaryPlusMethod.xml" },
+        //{ TestLine(), "(A a) => -a",                    "UnaryMinusMethod.xml" },
+        //{ TestLine(), "(B b) => !b",                    "UnaryNotMethod.xml" },
     };
 
     protected override Expression Substitute(string id) => _substitutes[id];
@@ -72,10 +68,6 @@ public partial class UnaryTests(XmlTestsFixture fixture, ITestOutputHelper outpu
         ["default(object)"]                 = Expression.Default(typeof(object)),
         ["default(ClassDataContract1)"]     = Expression.Default(typeof(ClassDataContract1)),
         ["default(StructDataContract1)"]    = Expression.Default(typeof(StructDataContract1)),
-        ["default(bool)"]                   = Expression.Default(typeof(bool)),
-        ["default(bool)"]                   = Expression.Default(typeof(bool)),
-        ["default(bool)"]                   = Expression.Default(typeof(bool)),
-        ["default(bool)"]                   = Expression.Default(typeof(bool)),
 
         ["(C c) => c as A"]                 = (C c) => c as A,
         ["(object c) => c as int?"]         = (object c) => c as int?,

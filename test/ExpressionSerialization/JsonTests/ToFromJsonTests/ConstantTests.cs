@@ -1,8 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
 
-public partial class ConstantTests(TestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+[CollectionDefinition("JSON")]
+public partial class ConstantTests(JsonTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string JsonTestFilesPath => Path.Combine(TestsFixture.TestFilesPath, "Constants");
+    protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestFilesPath, "Constants");
 
     [Theory]
     [MemberData(nameof(ConstantsData))]
