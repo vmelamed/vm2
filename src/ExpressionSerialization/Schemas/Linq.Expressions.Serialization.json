@@ -701,6 +701,347 @@
                     "additionalProperties": {
                         "type": "string"
                     }
+                },
+                {
+                    "title": "Represents indexing operation on an object with one or more indexes",
+                    "type": "object",
+                    "properties": {
+                        "object": {
+                            "$ref": "#/$defs/expression"
+                        },
+                        "indexes": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/expression"
+                            }
+                        },
+                        "indexer": {
+                            "$comment": "Present if the expression represents an indexed property",
+                            "$ref": "#/$defs/components/reflection/property"
+                        }
+                    },
+                    "required": [
+                        "object",
+                        "indexes"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Assign the value of right to the left (`a=42`)",
+                    "type": "object",
+                    "properties": {
+                        "assign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "assign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Add the left and the right and assign the result to the left (`a+=42`)",
+                    "type": "object",
+                    "properties": {
+                        "addAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "addAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Add checked the left and the right and assign the result to the left (`checked(a+=42)`)",
+                    "type": "object",
+                    "properties": {
+                        "addAssignChecked": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "addAssignChecked"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "And the left and the right and assign the result to the left (`a&=42`)",
+                    "type": "object",
+                    "properties": {
+                        "andAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "andAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Divide the left by the right and assign the result to the left (`a/=42`)",
+                    "type": "object",
+                    "properties": {
+                        "divideAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "divideAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Xor the left and the right and assign the result to the left (`a^=42`)",
+                    "type": "object",
+                    "properties": {
+                        "exclusiveOrAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "exclusiveOrAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Left shift the left right times and assign the result to the left (`a<<=42`)",
+                    "type": "object",
+                    "properties": {
+                        "leftShiftAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "leftShiftAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Modulo divide the left by the right and assign the result to the left (`a%=42`)",
+                    "type": "object",
+                    "properties": {
+                        "moduloAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "moduloAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Multiply the left by the right and assign the result to the left (`a*=42`)",
+                    "type": "object",
+                    "properties": {
+                        "multiplyAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "multiplyAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Multiply checked the left by the right and assign the result to the left (`checked(a*=42)`)",
+                    "type": "object",
+                    "properties": {
+                        "multiplyAssignChecked": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "multiplyAssignChecked"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Power the left by the right and assign the result to the left (`a**=42`)",
+                    "type": "object",
+                    "properties": {
+                        "powerAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "powerAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Or the left and the right and assign the result to the left (`a|=42`)",
+                    "type": "object",
+                    "properties": {
+                        "orAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "orAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Right shift the left right times and assign the result to the left (`a>>=42`)",
+                    "type": "object",
+                    "properties": {
+                        "rightShiftAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "rightShiftAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Subtract from the left the right and assign the result to the left (`a-=42`)",
+                    "type": "object",
+                    "properties": {
+                        "subtractAssign": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "subtractAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Subtract checked the right from the left and assign the result to the left (`a-=42`)",
+                    "type": "object",
+                    "properties": {
+                        "subtractAssignChecked": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "subtractAssignChecked"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Subtracts 1 from the operand (a-1)",
+                    "type": "object",
+                    "properties": {
+                        "decrement": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "decrement"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Adds 1 to the operand (a+1)",
+                    "type": "object",
+                    "properties": {
+                        "increment": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "increment"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Subtracts 1 from the operand (--a)",
+                    "type": "object",
+                    "properties": {
+                        "preDecrementAssign": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "preDecrementAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Adds 1 to the operand (++a)",
+                    "type": "object",
+                    "properties": {
+                        "preIncrementAssign": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "preIncrementAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Subtracts 1 from the operand (a--)",
+                    "type": "object",
+                    "properties": {
+                        "postDecrementAssign": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "postDecrementAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Adds 1 to the operand (a++)",
+                    "type": "object",
+                    "properties": {
+                        "postIncrementAssign": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "postIncrementAssign"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
                 }
             ]
         },
@@ -806,29 +1147,6 @@
                 }
             ]
         },
-
-        "assign": {},
-        "addAssign": {},
-        "addAssignChecked": {},
-        "andAssign": {},
-        "divideAssign": {},
-        "exclusiveOrAssign": {},
-        "leftShiftAssign": {},
-        "moduloAssign": {},
-        "multiplyAssign": {},
-        "multiplyAssignChecked": {},
-        "powerAssign": {},
-        "orAssign": {},
-        "rightShiftAssign": {},
-        "subtractAssign": {},
-        "subtractAssignChecked": {},
-
-        "decrement": {},
-        "increment": {},
-        "postDecrementAssign": {},
-        "postIncrementAssign": {},
-        "preDecrementAssign": {},
-        "preIncrementAssign": {},
 
         "components": {
             "constants": {

@@ -1130,7 +1130,7 @@
             <xs:group ref="expressionBaseGroup">
                 <xs:annotation>
                     <xs:documentation xml:lang="en-us">
-                        Represents the expression which evaluates to the array being indexed.
+                        Represents the expression which evaluates to the object being indexed.
                     </xs:documentation>
                 </xs:annotation>
             </xs:group>

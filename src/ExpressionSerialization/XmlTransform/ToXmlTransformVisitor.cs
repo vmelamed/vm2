@@ -112,18 +112,19 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitBinary,
             (n, x) =>
             {
-                x.Add(
+                var right = PopElement();
+                var convert = n.Conversion is not null ? PopElement() : null;
+                var left = PopElement();
+
+                if (convert is not null)
+                    convert.Name = Vocabulary.ConvertLambda;
+
+                x.Add(left,
+                        right,
+                        convert,
+                        n.IsLifted ? new XAttribute(AttributeNames.IsLifted, true) : null,
                         n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
-                        PopElements(2),
                         VisitMethodInfo(n));
-
-                if (n.Conversion is not null)
-                {
-                    var convElement = PopElement(); // TODO: debug
-
-                    convElement.Name = Vocabulary.ConvertLambda;
-                    x.Add(convElement);
-                }
             });
 
     /// <inheritdoc/>

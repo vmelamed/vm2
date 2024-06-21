@@ -79,6 +79,7 @@ public static class Vocabulary
     public const string TailCall                = "tailCall";
     public const string TypeOperand             = "typeOperand";
     public const string Visibility              = "visibility";
+    public const string Indexer                 = "indexer";
     public const string ElementType             = "elementType";
     public const string ReadOnly                = "readOnly";
 

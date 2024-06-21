@@ -1,0 +1,24 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "exclusiveOrAssign": {
+      "type": "int",
+      "operands": [
+        {
+          "parameter": {
+            "type": "int",
+            "name": "a",
+            "id": "P1"
+          }
+        },
+        {
+          "parameter": {
+            "type": "int",
+            "name": "b",
+            "id": "P2"
+          }
+        }
+      ]
+    }
+  }
+}

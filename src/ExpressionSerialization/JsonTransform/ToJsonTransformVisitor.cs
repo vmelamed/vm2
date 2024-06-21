@@ -116,20 +116,17 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitBinary,
             (n, x) =>
             {
+                var right = PopWrappedValue();
+                var convert = n.Conversion is not null ? PopElementValue() : null;
+                var left = PopWrappedValue();
+
                 x.Add(
                         new JElement(
-                            Vocabulary.Operands, PopWrappedValues(2)),     // pop the right operand
+                            Vocabulary.Operands, left, right),
                         VisitMethodInfo(n),
                         n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
-                        n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null);
-
-                if (n.Conversion is not null)
-                {
-                    var convElement = PopElement(); // TODO: debug
-
-                    convElement.Key = Vocabulary.ConvertLambda;
-                    x.Add(convElement);
-                }
+                        n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null,
+                        convert is not null ? new JElement(Vocabulary.ConvertLambda, convert) : null);
             });
 
     /// <inheritdoc/>
@@ -140,4 +137,21 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             (n, x) => x.Add(
                         new JElement(Vocabulary.Expression, PopElement()),
                         new JElement(Vocabulary.TypeOperand, Transform.TypeName(n.TypeOperand))));
+
+    /// <inheritdoc/>
+    protected override Expression VisitIndex(IndexExpression node)
+        => GenericVisit(
+            node,
+            base.VisitIndex,
+            (n, x) =>
+            {
+                var indexes = new JElement(
+                                    Vocabulary.Indexes,
+                                        PopWrappedValues(n.Arguments.Count));   // pop the index expressions
+
+                x.Add(
+                    PopElement(),    // pop the object being indexed
+                    indexes,
+                    VisitMemberInfo(n.Indexer));
+            });
 }

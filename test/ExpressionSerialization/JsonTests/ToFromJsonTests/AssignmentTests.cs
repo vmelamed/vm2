@@ -1,38 +1,38 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
+﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
 
-[CollectionDefinition("XML")]
-public partial class AssignmentTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
+[CollectionDefinition("JSON")]
+public partial class AssignmentTests(JsonTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "Assignments");
+    protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestFilesPath, "Assignments");
 
     [Theory]
     [MemberData(nameof(AssignmentsData))]
-    public async Task AssignmentToXmlTestAsync(string testFileLine, string expressionString, string fileName)
-        => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
+    public async Task AssignmentToJsonTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.ToJsonTestAsync(testFileLine, expressionString, fileName);
 
     [Theory]
     [MemberData(nameof(AssignmentsData))]
-    public async Task AssignmentFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
-        => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
+    public async Task AssignmentFromJsonTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.FromJsonTestAsync(testFileLine, expressionString, fileName);
 
     public static readonly TheoryData<string, string, string> AssignmentsData = new ()
     {
-        { TestLine(), "a = 1",              "AssignConstant.xml" },
-        { TestLine(), "a = b",              "AssignVariable.xml" },
-        { TestLine(), "a += b",             "AddAssign.xml" },
-        { TestLine(), "checked(a += b)",    "AddAssignChecked.xml" },
-        { TestLine(), "a -= b",             "SubtractAssign.xml" },
-        { TestLine(), "checked(a -= b)",    "SubtractAssignChecked.xml" },
-        { TestLine(), "a *= b",             "MultiplyAssign.xml" },
-        { TestLine(), "checked(a *= b)",    "MultiplyAssignChecked.xml" },
-        { TestLine(), "a /= b",             "DivideAssign.xml" },
-        { TestLine(), "a %= b",             "ModuloAssign.xml" },
-        { TestLine(), "a &= b",             "AndAssign.xml" },
-        { TestLine(), "a |= b",             "OrAssign.xml" },
-        { TestLine(), "a ^= b",             "XorAssign.xml" },
+        { TestLine(), "a = 1",              "AssignConstant.json" },
+        { TestLine(), "a = b",              "AssignVariable.json" },
+        { TestLine(), "a += b",             "AddAssign.json" },
+        { TestLine(), "checked(a += b)",    "AddAssignChecked.json" },
+        { TestLine(), "a -= b",             "SubtractAssign.json" },
+        { TestLine(), "checked(a -= b)",    "SubtractAssignChecked.json" },
+        { TestLine(), "a *= b",             "MultiplyAssign.json" },
+        { TestLine(), "checked(a *= b)",    "MultiplyAssignChecked.json" },
+        { TestLine(), "a /= b",             "DivideAssign.json" },
+        { TestLine(), "a %= b",             "ModuloAssign.json" },
+        { TestLine(), "a &= b",             "AndAssign.json" },
+        { TestLine(), "a |= b",             "OrAssign.json" },
+        { TestLine(), "a ^= b",             "XorAssign.json" },
         { TestLine(), "x **= z",            "PowerAssign.json" },
-        { TestLine(), "a <<= b",            "LShiftAssign.xml" },
-        { TestLine(), "a >>= b",            "RShiftAssign.xml" },
+        { TestLine(), "a <<= b",            "LShiftAssign.json" },
+        { TestLine(), "a >>= b",            "RShiftAssign.json" },
     };
 
     protected override Expression Substitute(string id) => _substitutes[id]();
@@ -58,7 +58,7 @@ public partial class AssignmentTests(XmlTestsFixture fixture, ITestOutputHelper 
         ["a |= b"]          = () => Expression.OrAssign(_paramA,_paramB),
         ["a ^= b"]          = () => Expression.ExclusiveOrAssign(_paramA,_paramB),
         ["a <<= b"]         = () => Expression.LeftShiftAssign(_paramA,_paramB),
-        ["a >>= b"]         = () => Expression.RightShiftAssign(_paramA,_paramB),
+        ["a >>= b"]         = () => Expression.RightShiftAssign(_paramA, _paramB),
         ["x **= z"]         = () => Expression.PowerAssign(_paramX,_paramZ)
     };
 }
