@@ -148,7 +148,7 @@ public struct JElement(string key = "", JsonNode? value = null)
         if (Value is not JsonObject jObject)
             throw new InternalTransformErrorException($"Trying to add a string key and JsonNode to a Value of `{Value.GetValueKind()}` type of JSON element. The Value must be JsonObject type.");
 
-        return (this, jObject.TryAdd(key, value));
+        return (this, jObject.TryAdd(key, value).Item2);
     }
 
     /// <summary>
@@ -425,7 +425,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// Deeply clones this element.
     /// </summary>
     /// <returns>vm2.ExpressionSerialization.JsonTransform.JElement.</returns>
-    public JElement DeepClone()
+    public readonly JElement DeepClone()
             => new(Key, Value?.DeepClone());
 
     /// <summary>

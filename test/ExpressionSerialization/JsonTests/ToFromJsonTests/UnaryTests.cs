@@ -32,6 +32,8 @@ public partial class UnaryTests(JsonTestsFixture fixture, ITestOutputHelper outp
         { TestLine(), "default(object)",                "Default.object.json" },
         { TestLine(), "default(ClassDataContract1)",    "Default.ClassDataContract1.json" },
         { TestLine(), "default(StructDataContract1)",   "Default.StructDataContract1.json" },
+        { TestLine(), "default(int?)",                  "Default.int0.json" },
+        { TestLine(), "default(StructDataContract1?)",  "Default.StructDataContract10.json" },
 
         { TestLine(), "(C c) => c as A",                "AsType.json" },
         { TestLine(), "(object c) => c as int?",        "ObjectAsNullable.json" },
@@ -68,6 +70,8 @@ public partial class UnaryTests(JsonTestsFixture fixture, ITestOutputHelper outp
         ["default(object)"]                 = Expression.Default(typeof(object)),
         ["default(ClassDataContract1)"]     = Expression.Default(typeof(ClassDataContract1)),
         ["default(StructDataContract1)"]    = Expression.Default(typeof(StructDataContract1)),
+        ["default(int?)"]                   = Expression.Default(typeof(int?)),
+        ["default(StructDataContract1?)"]   = Expression.Default(typeof(StructDataContract1?)),
 
         ["(C c) => c as A"]                 = (C c) => c as A,
         ["(object c) => c as int?"]         = (object c) => c as int?,

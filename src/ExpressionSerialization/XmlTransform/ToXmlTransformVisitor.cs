@@ -584,7 +584,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         x.Add(
             new XElement(
                     ElementNames.Bounds,
-                    bounds));
+                        bounds));
     }
 
     /////////////////////////////////////////////////////////////////

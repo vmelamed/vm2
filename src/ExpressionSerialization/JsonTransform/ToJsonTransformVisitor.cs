@@ -89,9 +89,11 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
     /// <inheritdoc/>
     protected override Expression VisitParameter(ParameterExpression node)
     {
-        using var _ = OutputDebugScope(node.NodeType.ToString());
+        var n = (ParameterExpression)base.VisitParameter(node);
 
-        _elements.Push(GetParameter(node));
+        using var _ = OutputDebugScope(n.NodeType.ToString());
+
+        _elements.Push(GetParameter(n));
 
         return node;
     }
@@ -103,8 +105,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitUnary,
             (n, x) => x.Add(
                             new JElement(
-                                Vocabulary.Operands,
-                                    new JsonArray(PopWrappedValue())),    // pop the operand
+                                    Vocabulary.Operands,
+                                        new JsonArray(PopWrappedValue())),    // pop the operand
                             VisitMethodInfo(n),
                             n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
                             n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null));
@@ -154,4 +156,20 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                     indexes,
                     VisitMemberInfo(n.Indexer));
             });
+
+    /// <inheritdoc/>
+    protected override Expression VisitBlock(BlockExpression node)
+        => GenericVisit(
+            node,
+            base.VisitBlock,
+            (n, x) => x.Add(
+                        node.Variables?.Count is > 0
+                                            ? new JElement(
+                                                    Vocabulary.Variables,
+                                                        PopElementsValues(node.Variables.Count))
+                                            : null,
+                        new JElement(
+                                Vocabulary.Expressions,
+                                    PopElementsValues(node.Expressions.Count))
+                    ));
 }

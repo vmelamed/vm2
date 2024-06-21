@@ -89,6 +89,7 @@ public static class Vocabulary
     public const string Parameters              = "parameters";
     public const string ParameterSpecs          = "parameterSpecs";
     public const string Variables               = "variables";
+    public const string Expressions             = "expressions";
 
     // for JSON the comments are added as a property with a name "$comment" - one comment per JsonObject is allowed!
     public const string Comment                 = "$comment";

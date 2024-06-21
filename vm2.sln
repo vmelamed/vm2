@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionDeepEquals", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionDeepEqualsTests", "test\ExpressionDeepEquals\ExpressionDeepEqualsTests.csproj", "{D364A040-6F62-47C7-8380-14A7FDDE0D67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonTests", "test\ExpressionSerialization\JsonTests\JsonTests.csproj", "{5E7184E0-A8E3-479A-9001-F595236C9E3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonTests", "test\ExpressionSerialization\JsonTests\JsonTests.csproj", "{5E7184E0-A8E3-479A-9001-F595236C9E3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
