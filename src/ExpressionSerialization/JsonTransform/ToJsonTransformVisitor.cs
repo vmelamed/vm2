@@ -145,6 +145,6 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             node,
             base.VisitTypeBinary,
             (n, x) => x.Add(
-                        new JElement(Vocabulary.TypeOperand, Transform.TypeName(n.TypeOperand)),
-                        PopElement()));  // pop the value operand
+                        new JElement(Vocabulary.Expression, PopElement()),
+                        new JElement(Vocabulary.TypeOperand, Transform.TypeName(n.TypeOperand))));
 }

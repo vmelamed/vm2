@@ -101,45 +101,7 @@
                 },
                 {
                     "title": "Lambda expression (`(int a, int b) => a+b`)",
-                    "type": "object",
-                    "properties": {
-                        "lambda": {
-                            "type": "object",
-                            "properties": {
-                                "parameters": {
-                                    "$ref": "#/$defs/components/parameters/parameterList"
-                                },
-                                "body": {
-                                    "$ref": "#/$defs/expression"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "delegateType": {
-                                    "type": "string"
-                                },
-                                "type": {
-                                    "type": "string"
-                                },
-                                "tailCall": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
-                                "parameters",
-                                "body"
-                            ],
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "required": [
-                        "lambda"
-                    ],
-                    "additionalProperties": {
-                        "type": "string"
-                    }
+                    "$ref": "#/$defs/components/expressions/lambda"
                 },
                 {
                     "title": "Block expression (`{ ...; ...; }`)",
@@ -711,30 +673,30 @@
                     }
                 },
                 {
-                    "title": "Type is expression (`a is string`)",
+                    "title": "Type equal expression (no C# equivalent operation but can be expressed as `a.GetType() == typeof(T)`)",
                     "type": "object",
                     "properties": {
-                        "typeIs": {
-                            "$ref": "#/$defs/components/expressions/binary"
+                        "typeEqual": {
+                            "$ref": "#/$defs/components/expressions/typeBinary"
                         }
                     },
                     "required": [
-                        "typeIs"
+                        "typeEqual"
                     ],
                     "additionalProperties": {
                         "type": "string"
                     }
                 },
                 {
-                    "title": "Type equal expression (no C# equivalent operation but can be expressed as `a.GetType() == typeof(T)`)",
+                    "title": "Type is expression (`a is string`)",
                     "type": "object",
                     "properties": {
-                        "typeEqual": {
-                            "$ref": "#/$defs/components/expressions/binary"
+                        "typeIs": {
+                            "$ref": "#/$defs/components/expressions/typeBinary"
                         }
                     },
                     "required": [
-                        "typeEqual"
+                        "typeIs"
                     ],
                     "additionalProperties": {
                         "type": "string"
@@ -2025,6 +1987,48 @@
                 }
             },
             "expressions": {
+                "lambda": {
+                    "title": "Specifies a lambda expression (`(int a, int b) => a+b`)",
+                    "type": "object",
+                    "properties": {
+                        "lambda": {
+                            "type": "object",
+                            "properties": {
+                                "parameters": {
+                                    "$ref": "#/$defs/components/parameters/parameterList"
+                                },
+                                "body": {
+                                    "$ref": "#/$defs/expression"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "delegateType": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "tailCall": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "parameters",
+                                "body"
+                            ],
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": [
+                        "lambda"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
                 "unary": {
                     "title": "Specifies a unary expression: Negate, NegateChecked, Not, ArrayLength, Convert, ConvertChecked, Quote, TypeAs, UnaryPlus",
                     "type": "object",
@@ -2058,7 +2062,61 @@
                     }
                 },
                 "binary": {
-
+                    "title": "Specifies a binary expression: Add, Subtract, etc.",
+                    "type": "object",
+                    "properties": {
+                        "operands": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/expression"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2
+                        },
+                        "method": {
+                            "$ref": "#/$defs/components/reflection/method"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "conversion": {
+                            "$ref": "#/$defs/components/expressions/lambda"
+                        },
+                        "lifted": {
+                            "type": "boolean"
+                        },
+                        "liftedToNull": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "operands"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "typeBinary": {
+                    "title": "Specifies an operation between an expression and a type.",
+                    "type": "object",
+                    "properties": {
+                        "expression": {
+                            "$ref": "#/$defs/expression"
+                        },
+                        "typeOperand": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "expression",
+                        "typeOperand"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
                 }
             }
         }
