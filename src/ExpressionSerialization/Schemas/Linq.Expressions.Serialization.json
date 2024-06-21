@@ -18,7 +18,7 @@
             "type": "object",
             "oneOf": [
                 {
-                    "title": "Constant expression",
+                    "title": "Constant expression (e.g. `42`)",
                     "type": "object",
                     "properties": {
                         "constant": {
@@ -33,11 +33,22 @@
                     }
                 },
                 {
-                    "title": "Expression that returns the default value of the specified type",
+                    "title": "Default value for the specified type (`default(int)`)",
                     "type": "object",
                     "properties": {
                         "default": {
-                            "$ref": "#/$defs/defaultExpr"
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ],
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "required": [
@@ -48,11 +59,11 @@
                     }
                 },
                 {
-                    "title": "Parameter reference or Variable declaration or reference expression",
+                    "title": "Parameter or Variable declaration or reference expression (e.g. `int i;`)",
                     "type": "object",
                     "properties": {
                         "parameter": {
-                            "$ref": "#/$defs/parameter"
+                            "$ref": "#/$defs/components/parameters/parameter"
                         }
                     },
                     "required": [
@@ -63,11 +74,22 @@
                     }
                 },
                 {
-                    "title": "Label, e.g. in a block statement",
+                    "title": "Label, e.g. to jump to with goto or break, etc. (e.g. `goto thePlace; ...; thePlace: ...`)",
                     "type": "object",
                     "properties": {
                         "label": {
-                            "$ref": "#/$defs/label"
+                            "type": "object",
+                            "properties": {
+                                "target": {
+                                    "$ref": "#/$defs/components/labels/target"
+                                }
+                            },
+                            "required": [
+                                "target"
+                            ],
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "required": [
@@ -78,15 +100,641 @@
                     }
                 },
                 {
-                    "title": "Lambda expression",
+                    "title": "Lambda expression (`(int a, int b) => a+b`)",
                     "type": "object",
                     "properties": {
                         "lambda": {
-                            "$ref": "#/$defs/lambda"
+                            "type": "object",
+                            "properties": {
+                                "parameters": {
+                                    "$ref": "#/$defs/components/parameters/parameterList"
+                                },
+                                "body": {
+                                    "$ref": "#/$defs/expression"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "delegateType": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "tailCall": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "parameters",
+                                "body"
+                            ],
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "required": [
                         "lambda"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Block expression (`{ ...; ...; }`)",
+                    "type": "object",
+                    "properties": {
+                        "block": {
+                            "type": "object",
+                            "properties": {
+                                "variables": {
+                                    "$ref": "#/$defs/components/parameters/parameterList"
+                                },
+                                "expressions": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/$defs/expression"
+                                    }
+                                }
+                            },
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": [
+                        "block"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Array length expression (int[] a; ...; a.Length; ...)",
+                    "type": "object",
+                    "properties": {
+                        "arrayLength": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "arrayLength"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Convert (cast) expression (`(double)i`)",
+                    "type": "object",
+                    "properties": {
+                        "convert": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "convert"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Convert (cast) checked expression (`checked((int)d)`)",
+                    "type": "object",
+                    "properties": {
+                        "convertChecked": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "convertChecked"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Negate expression (`-a`)",
+                    "type": "object",
+                    "properties": {
+                        "negate": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "negate"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Negate checked expression (`checked(-a)`)",
+                    "type": "object",
+                    "properties": {
+                        "negateChecked": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "negateChecked"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Logical Not expression (`!a`)",
+                    "type": "object",
+                    "properties": {
+                        "not": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "not"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Quote expression (returns the expression structure - no C# equivalent)",
+                    "type": "object",
+                    "properties": {
+                        "quote": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "quote"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Type as (dynamic cast) expression (`(int?)5`)",
+                    "type": "object",
+                    "properties": {
+                        "typeAs": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "typeAs"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Unary plus expression (`+a`)",
+                    "type": "object",
+                    "properties": {
+                        "unaryPlus": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "unaryPlus"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Ones complement (bitwise not) expression (`~a`)",
+                    "type": "object",
+                    "properties": {
+                        "onesComplement": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "onesComplement"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Throw (exception) expression (`throw new Exception()`)",
+                    "type": "object",
+                    "properties": {
+                        "throw": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "throw"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Unbox expression (`object a; ...; int b = (int)a; ...`)",
+                    "type": "object",
+                    "properties": {
+                        "unbox": {
+                            "$ref": "#/$defs/components/expressions/unary"
+                        }
+                    },
+                    "required": [
+                        "unbox"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Add expression (`a+b`)",
+                    "type": "object",
+                    "properties": {
+                        "add": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "add"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Add checked expression (`checked(a+b)`)",
+                    "type": "object",
+                    "properties": {
+                        "addChecked": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "addChecked"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Bitwise and expression (`a & b`)",
+                    "type": "object",
+                    "properties": {
+                        "and": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "and"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Logical and expression (`a && b`)",
+                    "type": "object",
+                    "properties": {
+                        "andAlso": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "andAlso"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Index array expression (`arr[i]`)",
+                    "type": "object",
+                    "properties": {
+                        "arrayIndex": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "arrayIndex"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Divide expression (`a/b`)",
+                    "type": "object",
+                    "properties": {
+                        "divide": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "divide"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Equal expression (`a==b`)",
+                    "type": "object",
+                    "properties": {
+                        "equal": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "equal"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Exclusive or expression (`a^b`)",
+                    "type": "object",
+                    "properties": {
+                        "exclusiveOr": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "exclusiveOr"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "GreaterThan expression (`a>b`)",
+                    "type": "object",
+                    "properties": {
+                        "greaterThan": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "greaterThan"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Greater than or equal expression (`a>=b`)",
+                    "type": "object",
+                    "properties": {
+                        "greaterThanOrEqual": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "greaterThanOrEqual"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Left shift expression (`a << b`)",
+                    "type": "object",
+                    "properties": {
+                        "leftShift": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "leftShift"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Less than expression (`a<b`)",
+                    "type": "object",
+                    "properties": {
+                        "lessThan": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "lessThan"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Less than or equal expression (`a<=b`)",
+                    "type": "object",
+                    "properties": {
+                        "lessThanOrEqual": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "lessThanOrEqual"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Modulo expression (`a%b`)",
+                    "type": "object",
+                    "properties": {
+                        "modulo": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "modulo"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Multiply expression (`a*b`)",
+                    "type": "object",
+                    "properties": {
+                        "multiply": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "multiply"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Multiply checked expression (`checked(a*b)`)",
+                    "type": "object",
+                    "properties": {
+                        "multiplyChecked": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "multiplyChecked"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Not equal expression (`a!=b`)",
+                    "type": "object",
+                    "properties": {
+                        "notEqual": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "notEqual"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Or expression (`a|b`)",
+                    "type": "object",
+                    "properties": {
+                        "or": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "or"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Or else expression (`a||b`)",
+                    "type": "object",
+                    "properties": {
+                        "orElse": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "orElse"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Power expression (VBasic: `a**b`)",
+                    "type": "object",
+                    "properties": {
+                        "power": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "power"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Right shift expression (`a >> b`)",
+                    "type": "object",
+                    "properties": {
+                        "rightShift": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "rightShift"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Subtract expression (`a-b`)",
+                    "type": "object",
+                    "properties": {
+                        "subtract": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "subtract"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Subtract checked expression (`checked(a-b)`)",
+                    "type": "object",
+                    "properties": {
+                        "subtractChecked": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "subtractChecked"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Coalesce expression (`a ?? b`)",
+                    "type": "object",
+                    "properties": {
+                        "coalesce": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "coalesce"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Type is expression (`a is string`)",
+                    "type": "object",
+                    "properties": {
+                        "typeIs": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "typeIs"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "title": "Type equal expression (no C# equivalent operation but can be expressed as `a.GetType() == typeof(T)`)",
+                    "type": "object",
+                    "properties": {
+                        "typeEqual": {
+                            "$ref": "#/$defs/components/expressions/binary"
+                        }
+                    },
+                    "required": [
+                        "typeEqual"
                     ],
                     "additionalProperties": {
                         "type": "string"
@@ -102,188 +750,125 @@
                     "type": "null"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/boolean"
+                    "$ref": "#/$defs/components/constants/boolean"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/byte"
+                    "$ref": "#/$defs/components/constants/byte"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/char"
+                    "$ref": "#/$defs/components/constants/char"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/double"
+                    "$ref": "#/$defs/components/constants/double"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/float"
+                    "$ref": "#/$defs/components/constants/float"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/halfConstant"
+                    "$ref": "#/$defs/components/constants/halfConstant"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/intConstant"
+                    "$ref": "#/$defs/components/constants/intConstant"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/intPtr"
+                    "$ref": "#/$defs/components/constants/intPtr"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/long"
+                    "$ref": "#/$defs/components/constants/long"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/short"
+                    "$ref": "#/$defs/components/constants/short"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/signedByte"
+                    "$ref": "#/$defs/components/constants/signedByte"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/unsignedInt"
+                    "$ref": "#/$defs/components/constants/unsignedInt"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/unsignedIntPtr"
+                    "$ref": "#/$defs/components/constants/unsignedIntPtr"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/unsignedLong"
+                    "$ref": "#/$defs/components/constants/unsignedLong"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/unsignedShort"
+                    "$ref": "#/$defs/components/constants/unsignedShort"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/dateTime"
+                    "$ref": "#/$defs/components/constants/dateTime"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/dateTimeOffset"
+                    "$ref": "#/$defs/components/constants/dateTimeOffset"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/decimal"
+                    "$ref": "#/$defs/components/constants/decimal"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/timeSpan"
+                    "$ref": "#/$defs/components/constants/timeSpan"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/guid"
+                    "$ref": "#/$defs/components/constants/guid"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/enumeration"
+                    "$ref": "#/$defs/components/constants/enumeration"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/string"
+                    "$ref": "#/$defs/components/constants/string"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/dbNull"
+                    "$ref": "#/$defs/components/constants/dbNull"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/uri"
+                    "$ref": "#/$defs/components/constants/uri"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/object"
+                    "$ref": "#/$defs/components/constants/object"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/anonymous"
+                    "$ref": "#/$defs/components/constants/anonymous"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/byteSequence"
+                    "$ref": "#/$defs/components/constants/byteSequence"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/sequence"
+                    "$ref": "#/$defs/components/constants/sequence"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/dictionary"
+                    "$ref": "#/$defs/components/constants/dictionary"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/tuple"
+                    "$ref": "#/$defs/components/constants/tuple"
                 },
                 {
-                    "$ref": "#/$defs/elements/constants/nullable"
+                    "$ref": "#/$defs/components/constants/nullable"
                 }
             ]
         },
-        "defaultExpr": {
-            "title": "Default value for a type",
-            "type": "object",
-            "properties": {
-                "type": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "type"
-            ],
-            "additionalProperties": {
-                "type": "string"
-            }
-        },
-        "parameter": {
-            "title": "Represents a parameter definition or parameter reference, e.g. for lambda parameters",
-            "type": "object",
-            "properties": {
-                "type": {
-                    "type": "string"
-                },
-                "name": {
-                    "$ref": "#/$defs/elements/tokens/identifier"
-                },
-                "isByRef": {
-                    "type": "boolean"
-                },
-                "id": {
-                    "$ref": "#/$defs/elements/tokens/parameterIdType"
-                }
-            },
-            "required": [
-                "type",
-                "name",
-                "id"
-            ],
-            "additionalProperties": {
-                "type": "string"
-            }
-        },
-        "label": {
-            "title": "Represents a label, e.g. in a block statement",
-            "type": "object",
-            "properties": {
-                "target": {
-                    "$ref": "#/$defs/elements/labels/target"
-                }
-            },
-            "required": [
-                "target"
-            ],
-            "additionalProperties": {
-                "type": "string"
-            }
-        },
-        "lambda": {
-            "title": "Represents a lambda expression",
-            "type": "object",
-            "properties": {
-                "parameters": {
-                    "$ref": "#/$defs/elements/parameters/parameterList"
-                },
-                "body": {
-                    "$ref": "#/$defs/expression"
-                },
-                "tailCall": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "delegateType": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "parameters",
-                "body"
-            ],
-            "additionalProperties": {
-                "type": "string"
-            }
-        },
-        "elements": {
+
+        "assign": {},
+        "addAssign": {},
+        "addAssignChecked": {},
+        "andAssign": {},
+        "divideAssign": {},
+        "exclusiveOrAssign": {},
+        "leftShiftAssign": {},
+        "moduloAssign": {},
+        "multiplyAssign": {},
+        "multiplyAssignChecked": {},
+        "powerAssign": {},
+        "orAssign": {},
+        "rightShiftAssign": {},
+        "subtractAssign": {},
+        "subtractAssignChecked": {},
+
+        "decrement": {},
+        "increment": {},
+        "postDecrementAssign": {},
+        "postIncrementAssign": {},
+        "preDecrementAssign": {},
+        "preIncrementAssign": {},
+
+        "components": {
             "constants": {
                 "boolean": {
                     "title": "Boolean constants",
@@ -1106,79 +1691,79 @@
                                     ]
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/boolean"
+                                    "$ref": "#/$defs/components/constants/boolean"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/byte"
+                                    "$ref": "#/$defs/components/constants/byte"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/char"
+                                    "$ref": "#/$defs/components/constants/char"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/double"
+                                    "$ref": "#/$defs/components/constants/double"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/float"
+                                    "$ref": "#/$defs/components/constants/float"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/halfConstant"
+                                    "$ref": "#/$defs/components/constants/halfConstant"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/intConstant"
+                                    "$ref": "#/$defs/components/constants/intConstant"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/intPtr"
+                                    "$ref": "#/$defs/components/constants/intPtr"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/long"
+                                    "$ref": "#/$defs/components/constants/long"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/short"
+                                    "$ref": "#/$defs/components/constants/short"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/signedByte"
+                                    "$ref": "#/$defs/components/constants/signedByte"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/unsignedInt"
+                                    "$ref": "#/$defs/components/constants/unsignedInt"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/unsignedIntPtr"
+                                    "$ref": "#/$defs/components/constants/unsignedIntPtr"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/unsignedLong"
+                                    "$ref": "#/$defs/components/constants/unsignedLong"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/unsignedShort"
+                                    "$ref": "#/$defs/components/constants/unsignedShort"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/dateTime"
+                                    "$ref": "#/$defs/components/constants/dateTime"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/dateTimeOffset"
+                                    "$ref": "#/$defs/components/constants/dateTimeOffset"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/decimal"
+                                    "$ref": "#/$defs/components/constants/decimal"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/timeSpan"
+                                    "$ref": "#/$defs/components/constants/timeSpan"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/guid"
+                                    "$ref": "#/$defs/components/constants/guid"
                                 },
                                 {
-                                    "$ref": "#/$defs/elements/constants/enumeration"
+                                    "$ref": "#/$defs/components/constants/enumeration"
                                 },
                                 {
                                     "$comment": "Here we mean only struct object values but I don't know how to constrain that.",
-                                    "$ref": "#/$defs/elements/constants/object"
+                                    "$ref": "#/$defs/components/constants/object"
                                 },
                                 {
                                     "$comment": "Here we mean only struct object values (e.g. Memory<>, ReadOnlyMemory<> or ArraySegment<>) I don't know how to constrain that.",
-                                    "$ref": "#/$defs/elements/constants/sequence"
+                                    "$ref": "#/$defs/components/constants/sequence"
                                 },
                                 {
                                     "$comment": "Here we mean only struct object values (i.e. ValueTuple<>) I don't know how to constrain that.",
-                                    "$ref": "#/$defs/elements/constants/tuple"
+                                    "$ref": "#/$defs/components/constants/tuple"
                                 }
                             ]
                         }
@@ -1211,7 +1796,7 @@
                             "type": "string"
                         },
                         "name": {
-                            "$ref": "#/$defs/elements/tokens/identifier"
+                            "$ref": "#/$defs/components/tokens/identifier"
                         },
                         "isByRef": {
                             "type": "boolean"
@@ -1228,16 +1813,39 @@
                     "title": "Represents a list of parameter specifications",
                     "type": "array",
                     "items": {
+                        "$ref": "#/$defs/components/parameters/parameterSpec"
+                    }
+                },
+                "parameter": {
+                    "type": "object",
+                    "properties": {
                         "type": {
-                            "$ref": "#/$defs/elements/parameters/parameterSpec"
+                            "type": "string"
+                        },
+                        "name": {
+                            "$ref": "#/$defs/components/tokens/identifier"
+                        },
+                        "isByRef": {
+                            "type": "boolean"
+                        },
+                        "id": {
+                            "$ref": "#/$defs/components/tokens/parameterIdType"
                         }
+                    },
+                    "required": [
+                        "type",
+                        "name",
+                        "id"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
                     }
                 },
                 "parameterList": {
                     "title": "Represents a list of parameters",
                     "type": "array",
                     "items": {
-                        "$ref": "#/$defs/parameter"
+                        "$ref": "#/$defs/components/parameters/parameter"
                     }
                 }
             },
@@ -1250,10 +1858,10 @@
                             "type": "string"
                         },
                         "name": {
-                            "$ref": "#/$defs/elements/tokens/identifier"
+                            "$ref": "#/$defs/components/tokens/identifier"
                         },
                         "id": {
-                            "$ref": "#/$defs/elements/tokens/labelTargetIdType"
+                            "$ref": "#/$defs/components/tokens/labelTargetIdType"
                         }
                     },
                     "required": [
@@ -1280,16 +1888,19 @@
                     "title": "Represents ConstructorInfo",
                     "type": "object",
                     "properties": {
-                        "declaringType": "string",
+                        "declaringType": {
+                            "type": "string"
+                        },
                         "visibility": {
-                            "$ref": "#/$defs/elements/reflection/visibility"
+                            "$ref": "#/$defs/components/reflection/visibility"
                         },
                         "parameterSpecs": {
-                            "$ref": "#/$defs/elements/parameters/parameterSpecList"
+                            "$ref": "#/$defs/components/parameters/parameterSpecList"
                         }
                     },
                     "required": [
-                        "declaringType"
+                        "declaringType",
+                        "parameterSpecs"
                     ],
                     "additionalProperties": {
                         "type": "string"
@@ -1299,18 +1910,20 @@
                     "title": "Represents PropertyInfo",
                     "type": "object",
                     "properties": {
-                        "declaringType": "string",
+                        "declaringType": {
+                            "type": "string"
+                        },
                         "visibility": {
-                            "$ref": "#/$defs/elements/reflection/visibility"
+                            "$ref": "#/$defs/components/reflection/visibility"
                         },
                         "type": {
                             "type": "string"
                         },
                         "name": {
-                            "$ref": "#/$defs/elements/tokens/identifier"
+                            "$ref": "#/$defs/components/tokens/identifier"
                         },
                         "parameterSpecs": {
-                            "$ref": "#/$defs/elements/parameters/parameterSpecList"
+                            "$ref": "#/$defs/components/parameters/parameterSpecList"
                         }
                     },
                     "required": [
@@ -1326,27 +1939,30 @@
                     "title": "Represents MethodInfo",
                     "type": "object",
                     "properties": {
-                        "declaringType": "string",
+                        "declaringType": {
+                            "type": "string"
+                        },
                         "static": {
                             "type": "boolean"
                         },
                         "visibility": {
-                            "$ref": "#/$defs/elements/reflection/visibility"
+                            "$ref": "#/$defs/components/reflection/visibility"
                         },
                         "type": {
                             "type": "string"
                         },
                         "name": {
-                            "$ref": "#/$defs/elements/tokens/identifier"
+                            "$ref": "#/$defs/components/tokens/identifier"
                         },
                         "parameterSpecs": {
-                            "$ref": "#/$defs/elements/parameters/parameterSpecList"
+                            "$ref": "#/$defs/components/parameters/parameterSpecList"
                         }
                     },
                     "required": [
                         "declaringType",
                         "type",
-                        "name"
+                        "name",
+                        "parameterSpecs"
                     ],
                     "additionalProperties": {
                         "type": "string"
@@ -1356,12 +1972,14 @@
                     "title": "Represents EventInfo",
                     "type": "object",
                     "properties": {
-                        "declaringType": "string",
+                        "declaringType": {
+                            "type": "string"
+                        },
                         "type": {
                             "type": "string"
                         },
                         "name": {
-                            "$ref": "#/$defs/elements/tokens/identifier"
+                            "$ref": "#/$defs/components/tokens/identifier"
                         }
                     },
                     "required": [
@@ -1377,12 +1995,14 @@
                     "title": "Represents FieldInfo",
                     "type": "object",
                     "properties": {
-                        "declaringType": "string",
+                        "declaringType": {
+                            "type": "string"
+                        },
                         "static": {
                             "type": "boolean"
                         },
                         "visibility": {
-                            "$ref": "#/$defs/elements/reflection/visibility"
+                            "$ref": "#/$defs/components/reflection/visibility"
                         },
                         "readOnly": {
                             "type": "boolean"
@@ -1391,7 +2011,7 @@
                             "type": "string"
                         },
                         "name": {
-                            "$ref": "#/$defs/elements/tokens/identifier"
+                            "$ref": "#/$defs/components/tokens/identifier"
                         }
                     },
                     "required": [
@@ -1402,6 +2022,43 @@
                     "additionalProperties": {
                         "type": "string"
                     }
+                }
+            },
+            "expressions": {
+                "unary": {
+                    "title": "Specifies a unary expression: Negate, NegateChecked, Not, ArrayLength, Convert, ConvertChecked, Quote, TypeAs, UnaryPlus",
+                    "type": "object",
+                    "properties": {
+                        "operands": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/expression"
+                            },
+                            "minItems": 1,
+                            "maxItems": 1
+                        },
+                        "method": {
+                            "$ref": "#/$defs/components/reflection/method"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "lifted": {
+                            "type": "boolean"
+                        },
+                        "liftedToNull": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "operands"
+                    ],
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "binary": {
+
                 }
             }
         }

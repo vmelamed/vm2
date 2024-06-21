@@ -143,9 +143,9 @@ public struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds a the <paramref key="elements"/> to the current <see cref="Value"/> if the type of the element is 
-    /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element). If any of the
-    /// parameters are <c>null</c> the method quietly skips them.
+    /// Adds the <see cref="JElement"/> <paramref key="properties"/> to the current <see cref="Value"/> if its type is 
+    /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element).
+    /// If any of the parameters are <c>null</c> the method quietly skips them.
     /// </summary>
     /// <param key="elements"></param>
     /// <returns>This instance.</returns>
@@ -160,11 +160,11 @@ public struct JElement(string key = "", JsonNode? value = null)
         => Add(properties.AsEnumerable());
 
     /// <summary>
-    /// Adds a the <paramref key="elements"/> to the current <see cref="Value"/> if the type of the element is 
+    /// Adds a the <paramref key="properties"/> to the current <see cref="Value"/> if the type of the element is 
     /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element). If any of the
     /// parameters are <c>null</c> the method quietly skips them.
     /// </summary>
-    /// <param key="elements"></param>
+    /// <param key="properties"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
     /// <c>false</c> if a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
@@ -175,6 +175,74 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// </exception>
     public (JElement, bool) TryAdd(params JElement?[] properties)
         => TryAdd(properties.AsEnumerable());
+
+    /// <summary>
+    /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="properties"/> to the 
+    /// current <see cref="Value"/> if its type is <see cref="JsonObject"/> or <c>null</c> (in which case the method 
+    /// creates a new JsonObject element).
+    /// If any of the parameters are <c>null</c> the method quietly skips them. The <see cref="IEnumerable{JElement}"/>
+    /// parameters are added iteratively in the current <see cref="Value"/>.
+    /// </summary>
+    /// <param key="properties"></param>
+    /// <returns>
+    /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
+    /// <c>false</c> if a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// already exists in the <see cref="Value"/> of this instance.
+    /// </returns>
+    /// <exception cref="InternalTransformErrorException">
+    /// If the <see cref="Value"/> of this <see cref="JElement"/> is not <see cref="JsonObject"/>
+    /// </exception>
+    public JElement Add(params object?[] properties)
+    {
+        Value ??= new JsonObject();
+
+        if (Value is not JsonObject jObject)
+            throw new InternalTransformErrorException($"Trying to add JElement-s to a Value of `{Value.GetValueKind()}` type of JSON element. The Value must be JsonObject type.");
+
+        foreach (var prop in properties)
+            _ = prop switch {
+                IEnumerable<JElement?> p => Add(p),
+                JElement p => Add(p),
+                null => this,
+                _ => throw new InternalTransformErrorException($"Don't know how to add {prop.GetType().Name} to a JElement")
+            };
+        return this;
+    }
+
+    /// <summary>
+    /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="properties"/> to the 
+    /// current <see cref="Value"/> if its type is <see cref="JsonObject"/> or <c>null</c> (in which case the method 
+    /// creates a new JsonObject element).
+    /// If any of the parameters are <c>null</c> the method quietly skips them. The <see cref="IEnumerable{JElement}"/>
+    /// parameters are added iteratively in the current <see cref="Value"/>.
+    /// </summary>
+    /// <param key="properties"></param>
+    /// <returns>
+    /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
+    /// <c>false</c> if a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// already exists in the <see cref="Value"/> of this instance.
+    /// </returns>
+    /// <exception cref="InternalTransformErrorException">
+    /// If the <see cref="Value"/> of this <see cref="JElement"/> is not <see cref="JsonObject"/>
+    /// </exception>
+    public (JElement, bool) TryAdd(params object?[] properties)
+    {
+        Value ??= new JsonObject();
+
+        if (Value is not JsonObject jObject)
+            throw new InternalTransformErrorException($"Trying to add JElement-s to a Value of `{Value.GetValueKind()}` type of JSON element. The Value must be JsonObject type.");
+
+        bool ret = true;
+
+        foreach (var prop in properties)
+            ret &= prop switch {
+                IEnumerable<JElement?> p => TryAdd(p).Item2,
+                JElement p => TryAdd(p).Item2,
+                null => true,
+                _ => throw new InternalTransformErrorException($"Don't know how to add {prop.GetType().Name} to a JElement")
+            };
+        return (this, ret);
+    }
 
     /// <summary>
     /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is 

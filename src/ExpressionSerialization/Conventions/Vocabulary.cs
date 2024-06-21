@@ -94,6 +94,7 @@ public static class Vocabulary
     public const string Schema                  = "$schema";
 
     public const string Expression              = "expression";
+    public const string Operands                = "operands";
 
     public const string Body                    = "body";
     public const string Indexes                 = "indexes";
@@ -194,7 +195,7 @@ public static class Vocabulary
     public const string SubtractAssignChecked   = "subtractAssignChecked";
     public const string SubtractChecked         = "subtractChecked";
     public const string Switch                  = "switch";
-    public const string LabelTarget                  = "target";
+    public const string LabelTarget             = "target";
     public const string Throw                   = "throw";
     public const string Try                     = "try";
     public const string TypeAs                  = "typeAs";

@@ -7,15 +7,22 @@
       "parameters": [
         {
           "type": "int",
-          "name": "i",
+          "name": "a",
           "id": "P1"
         }
       ],
       "body": {
-        "parameter": {
+        "negate": {
           "type": "int",
-          "name": "i",
-          "id": "P1"
+          "operands": [
+            {
+              "parameter": {
+                "type": "int",
+                "name": "a",
+                "id": "P1"
+              }
+            }
+          ]
         }
       }
     }

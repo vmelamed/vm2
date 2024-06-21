@@ -231,10 +231,11 @@ public partial class ToJsonTransformVisitor
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <returns>A sequence of elements.</returns>
-    static IEnumerable<JElement> VisitParameters(IEnumerable<ParameterInfo> parameters)
-        => parameters.Select(param => new JElement(
-                                            Vocabulary.ParameterSpec,
-                                                PropertyType(param.ParameterType),
-                                                param.Name is not null ? new JElement(Vocabulary.Name, param.Name) : null,
-                                                param.ParameterType.IsByRef || param.IsOut ? new JElement(Vocabulary.IsByRef, true) : null));
+    static IEnumerable<JsonObject> VisitParameters(IEnumerable<ParameterInfo> parameters)
+        => parameters.Select(
+                param => new JsonObject()
+                                .Add(
+                                    PropertyType(param.ParameterType),
+                                    param.Name is not null ? new JElement(Vocabulary.Name, param.Name) : null,
+                                    param.ParameterType.IsByRef || param.IsOut ? new JElement(Vocabulary.IsByRef, true) : null));
 }

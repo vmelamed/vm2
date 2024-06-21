@@ -1,0 +1,42 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "lambda": {
+      "type": "boolean",
+      "delegateType": "System.Func\u00603[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "a",
+          "id": "P1"
+        },
+        {
+          "type": "int",
+          "name": "b",
+          "id": "P2"
+        }
+      ],
+      "body": {
+        "greaterThan": {
+          "type": "boolean",
+          "operands": [
+            {
+              "parameter": {
+                "type": "int",
+                "name": "a",
+                "id": "P1"
+              }
+            },
+            {
+              "parameter": {
+                "type": "int",
+                "name": "b",
+                "id": "P2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

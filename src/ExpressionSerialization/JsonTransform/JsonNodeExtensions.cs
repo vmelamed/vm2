@@ -2,7 +2,7 @@
 /// <summary>
 /// Class JsonObject extensions.
 /// </summary>
-public static class JsonObjectExtension
+public static class JsonNodeExtensions
 {
     /// <summary>
     /// Adds the specified elements (key, JsonNode) to the object.

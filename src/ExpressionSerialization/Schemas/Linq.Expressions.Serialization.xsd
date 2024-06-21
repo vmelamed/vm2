@@ -68,7 +68,6 @@
             <xs:element name="unbox"
                         type="unaryExpressionType"/>
 
-
             <!-- binary expressions -->
             <xs:element name="add"
                         type="binaryExpressionType"/>
@@ -124,6 +123,7 @@
             <xs:element name="typeEqual"
                         type="typeBinaryType"/>
 
+            <!-- assignment expressions -->
             <xs:element name="assign"
                         type="compoundAssignmentExpressionType"/>
             <xs:element name="addAssign"
@@ -155,6 +155,7 @@
             <xs:element name="subtractAssignChecked"
                         type="compoundAssignmentExpressionType"/>
 
+            <!-- change by one expressions -->
             <xs:element name="decrement"
                         type="changeByOneExpressionType"/>
             <xs:element name="increment"
@@ -168,6 +169,7 @@
             <xs:element name="preIncrementAssign"
                         type="changeByOneExpressionType"/>
 
+            <!-- statements -->
             <xs:element name="block"
                         type="blockExpressionType"/>
 

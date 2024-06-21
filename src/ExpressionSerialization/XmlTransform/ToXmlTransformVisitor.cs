@@ -114,7 +114,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             {
                 x.Add(
                         n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
-                        PopElements(2),     // pop operands. TODO test they are in the right order: left, right, (lambda)
+                        PopElements(2),
                         VisitMethodInfo(n));
 
                 if (n.Conversion is not null)

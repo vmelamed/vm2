@@ -7,13 +7,19 @@
       "parameters": [
         {
           "type": "int",
-          "name": "i",
+          "name": "a",
           "id": "P1"
         }
       ],
       "body": {
-        "constant": {
-          "boolean": true
+        "typeEqual": {
+          "type": "boolean",
+          "typeOperand": "int",
+          "parameter": {
+            "type": "int",
+            "name": "a",
+            "id": "P1"
+          }
         }
       }
     }

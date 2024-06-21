@@ -72,10 +72,6 @@ public partial class UnaryTests(XmlTestsFixture fixture, ITestOutputHelper outpu
         ["default(object)"]                 = Expression.Default(typeof(object)),
         ["default(ClassDataContract1)"]     = Expression.Default(typeof(ClassDataContract1)),
         ["default(StructDataContract1)"]    = Expression.Default(typeof(StructDataContract1)),
-        ["default(bool)"]                   = Expression.Default(typeof(bool)),
-        ["default(bool)"]                   = Expression.Default(typeof(bool)),
-        ["default(bool)"]                   = Expression.Default(typeof(bool)),
-        ["default(bool)"]                   = Expression.Default(typeof(bool)),
 
         ["(C c) => c as A"]                 = (C c) => c as A,
         ["(object c) => c as int?"]         = (object c) => c as int?,
