@@ -27,6 +27,15 @@ public struct JElement(string key = "", JsonNode? value = null)
     public JsonNode? Value { get; set; } = value;
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="JElement" /> struct. Disambiguates the <see cref="JsonArray"/> 
+    /// parameter as a <see cref="JsonNode"/>, instead of <see cref="IEnumerable{JsonNode}"/>.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <param name="jArray">The j array.</param>
+    public JElement(string key, JsonArray jArray)
+        : this(key, (JsonNode)jArray) { }
+
+    /// <summary>
     /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Value"/>
     /// with the given set of <see cref="JElement"/>-s.
     /// </summary>

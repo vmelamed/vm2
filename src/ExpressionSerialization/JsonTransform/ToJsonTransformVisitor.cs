@@ -104,8 +104,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             (n, x) => x.Add(
                             new JElement(
                                 Vocabulary.Operands,
-                                    (JsonNode)new JsonArray(
-                                                    new JsonObject().Add(PopElement(), null))),    // pop the operand
+                                    new JsonArray(PopWrappedValue())),    // pop the operand
                             VisitMethodInfo(n),
                             n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
                             n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null));
@@ -117,15 +116,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitBinary,
             (n, x) =>
             {
-                var right = PopElement();
-                var left = PopElement();
-
                 x.Add(
                         new JElement(
-                            Vocabulary.Operands,
-                                (JsonNode)new JsonArray(
-                                                new JsonObject().Add(left, null),       // pop the left operand
-                                                new JsonObject().Add(right, null))),     // pop the right operand
+                            Vocabulary.Operands, PopWrappedValues(2)),     // pop the right operand
                         VisitMethodInfo(n),
                         n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
                         n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null);

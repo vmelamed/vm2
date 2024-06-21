@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
 
-[CollectionDefinition("XML")]
+[CollectionDefinition("JSON")]
 public partial class LambdaTests(JsonTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
     protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestFilesPath, "Lambdas");
