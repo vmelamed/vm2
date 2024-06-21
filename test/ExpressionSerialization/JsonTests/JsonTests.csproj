@@ -51,6 +51,7 @@
     <Folder Include="TestData\Assignments\" />
     <Folder Include="TestData\ChangeByOne\" />
     <Folder Include="TestData\Statements\" />
+    <Folder Include="TestData\Statements\" />
     <Folder Include="TestData\Unary\" />
     <Folder Include="TestData\Statements\" />
     <Folder Include="TestData\Unary\" />

@@ -2,35 +2,35 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "lambda": {
-      "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
-      "delegateType": "System.Func\u00602[[vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b],[vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+      "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "delegateType": "System.Func\u00602[[vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f],[vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
       "parameters": [
         {
-          "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+          "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "name": "a",
           "id": "P1"
         }
       ],
       "body": {
         "negate": {
-          "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+          "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "operands": [
             {
               "parameter": {
-                "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+                "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                 "name": "a",
                 "id": "P1"
               }
             }
           ],
           "method": {
-            "declaringType": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+            "declaringType": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
             "static": true,
-            "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+            "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
             "name": "op_UnaryNegation",
             "parameterSpecs": [
               {
-                "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+                "type": "vm2.ExpressionSerialization.JsonTests.A, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                 "name": "x"
               }
             ]

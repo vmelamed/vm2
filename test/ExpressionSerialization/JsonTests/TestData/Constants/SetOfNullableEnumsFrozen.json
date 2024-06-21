@@ -4,14 +4,14 @@
     "constant": {
       "$comment": " System.Collections.Frozen.SmallValueTypeDefaultComparerFrozenSet\u003Cnullable\u003Cvm2.ExpressionSerialization.JsonTests.EnumTest\u003E\u003E ",
       "sequence": {
-        "type": "System.Collections.Frozen.SmallValueTypeDefaultComparerFrozenSet\u00601[[System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Collections.Immutable, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "type": "System.Collections.Frozen.SmallValueTypeDefaultComparerFrozenSet\u00601[[System.Nullable\u00601[[vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Collections.Immutable, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
         "$comment": " nullable\u003Cvm2.ExpressionSerialization.JsonTests.EnumTest\u003E ",
         "value": [
           {
             "nullable": {
               "$comment": " vm2.ExpressionSerialization.JsonTests.EnumTest ",
               "enum": {
-                "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+                "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                 "value": "One",
                 "baseValue": 0
               }
@@ -21,7 +21,7 @@
             "nullable": {
               "$comment": " vm2.ExpressionSerialization.JsonTests.EnumTest ",
               "enum": {
-                "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+                "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                 "value": "Two",
                 "baseValue": 1
               }
@@ -29,7 +29,7 @@
           },
           {
             "nullable": {
-              "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "type": "vm2.ExpressionSerialization.JsonTests.EnumTest, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "value": null
             }
           }

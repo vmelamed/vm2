@@ -106,7 +106,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             (n, x) => x.Add(
                             new JElement(
                                     Vocabulary.Operands,
-                                        new JsonArray(PopWrappedValue())),    // pop the operand
+                                        new JsonArray(PopWrappedElements())),    // pop the operand
                             VisitMethodInfo(n),
                             n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
                             n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null));
@@ -118,9 +118,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitBinary,
             (n, x) =>
             {
-                var right = PopWrappedValue();
+                var right = PopWrappedElements();
                 var convert = n.Conversion is not null ? PopElementValue() : null;
-                var left = PopWrappedValue();
+                var left = PopWrappedElements();
 
                 x.Add(
                         new JElement(
@@ -149,7 +149,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             {
                 var indexes = new JElement(
                                     Vocabulary.Indexes,
-                                        PopWrappedValues(n.Arguments.Count));   // pop the index expressions
+                                        PopWrappedElements(n.Arguments.Count));   // pop the index expressions
 
                 x.Add(
                     PopElement(),    // pop the object being indexed
@@ -170,6 +170,6 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                                             : null,
                         new JElement(
                                 Vocabulary.Expressions,
-                                    PopElementsValues(node.Expressions.Count))
+                                    PopWrappedElements(node.Expressions.Count))
                     ));
 }

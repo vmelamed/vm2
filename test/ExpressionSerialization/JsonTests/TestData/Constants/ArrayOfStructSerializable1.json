@@ -4,12 +4,12 @@
     "constant": {
       "$comment": " vm2.ExpressionSerialization.JsonTests.StructSerializable1[] ",
       "sequence": {
-        "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1[], JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+        "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1[], JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
         "$comment": " vm2.ExpressionSerialization.JsonTests.StructSerializable1 ",
         "value": [
           {
             "object": {
-              "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "value": {
                 "IntProperty": 0,
                 "StringProperty": "vm"
@@ -18,7 +18,7 @@
           },
           {
             "object": {
-              "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b",
+              "type": "vm2.ExpressionSerialization.JsonTests.StructSerializable1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "value": {
                 "IntProperty": 1,
                 "StringProperty": "vm vm"

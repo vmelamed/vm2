@@ -25,7 +25,7 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
         //{ TestLine(), "accessMemberMember",     "AccessMemberMember.json" },
         //{ TestLine(), "accessMemberMember1",    "AccessMemberMember1.json" },
         //{ TestLine(), "arrayAccessExpr",        "ArrayAccessExpr.json" },
-        //{ TestLine(), "array[index]",           "ArrayIndex.json" },
+        { TestLine(), "array[index]",           "ArrayIndex.json" },
         //{ TestLine(), "b => b ? 1 : 3",         "Conditional.json" },
         //{ TestLine(), "Console.WriteLine",      "Invocation2.json" },
         //{ TestLine(), "goto1",                  "Goto1.json" },
@@ -294,12 +294,11 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
     static Expression _arrayAccessExpr = Expression.ArrayAccess(_arrayExpr, _indexExpr);
 
     // Array[Index] = (Array[Index] + Value)
-    static Expression _lambdaExpr =
-            Expression.Assign(
-                _arrayAccessExpr,
-                Expression.Add(
-                    _arrayAccessExpr,
-                    _valueExpr));
+    static Expression _lambdaExpr = Expression.Assign(
+                                                _arrayAccessExpr,
+                                                Expression.Add(
+                                                    _arrayAccessExpr,
+                                                    _valueExpr));
 
     static Dictionary<string, Func<Expression>> _substitutes = new()
     {

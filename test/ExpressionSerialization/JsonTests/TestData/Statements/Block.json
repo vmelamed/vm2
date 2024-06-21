@@ -1,0 +1,143 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "lambda": {
+      "type": "int",
+      "delegateType": "System.Func\u00603[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "a",
+          "id": "P1"
+        },
+        {
+          "type": "int",
+          "name": "b",
+          "id": "P2"
+        }
+      ],
+      "body": {
+        "block": {
+          "type": "int",
+          "variables": [
+            {
+              "type": "int",
+              "name": "d",
+              "id": "P3"
+            }
+          ],
+          "expressions": [
+            {
+              "assign": {
+                "type": "int",
+                "operands": [
+                  {
+                    "parameter": {
+                      "type": "int",
+                      "name": "d",
+                      "id": "P3"
+                    }
+                  },
+                  {
+                    "constant": {
+                      "int": 42
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "addAssign": {
+                "type": "int",
+                "operands": [
+                  {
+                    "parameter": {
+                      "type": "int",
+                      "name": "a",
+                      "id": "P1"
+                    }
+                  },
+                  {
+                    "parameter": {
+                      "type": "int",
+                      "name": "d",
+                      "id": "P3"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "subtractAssign": {
+                "type": "int",
+                "operands": [
+                  {
+                    "parameter": {
+                      "type": "int",
+                      "name": "a",
+                      "id": "P1"
+                    }
+                  },
+                  {
+                    "parameter": {
+                      "type": "int",
+                      "name": "b",
+                      "id": "P2"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "parameter": {
+                "type": "int",
+                "name": "c",
+                "id": "P4"
+              }
+            },
+            {
+              "assign": {
+                "type": "int",
+                "operands": [
+                  {
+                    "parameter": {
+                      "type": "int",
+                      "name": "c",
+                      "id": "P4"
+                    }
+                  },
+                  {
+                    "constant": {
+                      "int": 2
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "leftShiftAssign": {
+                "type": "int",
+                "operands": [
+                  {
+                    "parameter": {
+                      "type": "int",
+                      "name": "a",
+                      "id": "P1"
+                    }
+                  },
+                  {
+                    "parameter": {
+                      "type": "int",
+                      "name": "c",
+                      "id": "P4"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -2,8 +2,10 @@
   "solution": {
     "path": "vm2.sln",
     "projects": [
+      "src\\ExpressionDeepEquals\\ExpressionDeepEquals.csproj",
       "src\\ExpressionSerialization\\ExpressionSerialization.csproj",
       "src\\Threading\\Threading.csproj",
+      "test\\ExpressionSerialization\\JsonTests\\JsonTests.csproj",
       "test\\ExpressionSerialization\\XmlTests\\XmlTests.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"
     ]

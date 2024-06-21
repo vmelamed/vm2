@@ -42,7 +42,7 @@ public static class JsonNodeExtensions
         if (element.Value.Key is "")
             throw new ArgumentException("The key of the elements is an empty string.");
 
-        return (jsObj, jsObj.TryAdd(element.Value.Key, element.Value.Value));
+        return (jsObj, jsObj.TryAdd(element.Value.Key, element.Value.Value).Item2);
     }
 
     /// <summary>
@@ -164,7 +164,7 @@ public static class JsonNodeExtensions
 
         foreach (var element in elements)
             if (element is not null)
-                ret &= jsObj.TryAdd(element.Value.Key, element.Value.Value);
+                ret &= jsObj.TryAdd(element.Value.Key, element.Value.Value).Item2;
 
         return (jsObj, ret);
     }
