@@ -48,43 +48,8 @@
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Label, e.g. to jump to with goto or break, etc. (e.g. `goto thePlace; ...; thePlace: ...`)",
-                    "type": "object",
-                    "properties": {
-                        "label": {
-                            "type": "object",
-                            "properties": {
-                                "target": { "$ref": "#/$defs/components/labels/target" }
-                            },
-                            "required": [ "target" ],
-                            "additionalProperties": { "type": "string" }
-                        }
-                    },
-                    "required": [ "label" ],
-                    "additionalProperties": { "type": "string" }
-                },
-                {
                     "title": "Lambda expression (`(int a, int b) => a+b`)",
                     "$ref": "#/$defs/components/expressions/lambda"
-                },
-                {
-                    "title": "Block expression (`{ ...; ...; }`)",
-                    "type": "object",
-                    "properties": {
-                        "block": {
-                            "type": "object",
-                            "properties": {
-                                "variables": { "$ref": "#/$defs/components/parameters/parameterList" },
-                                "expressions": {
-                                    "type": "array",
-                                    "items": { "$ref": "#/$defs/expression" }
-                                }
-                            },
-                            "additionalProperties": { "type": "string" }
-                        }
-                    },
-                    "required": [ "block" ],
-                    "additionalProperties": { "type": "string" }
                 },
                 {
                     "title": "Array length expression (int[] a; ...; a.Length; ...)",
@@ -192,6 +157,60 @@
                         "unbox": { "$ref": "#/$defs/components/expressions/unary" }
                     },
                     "required": [ "unbox" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Subtracts 1 from the operand (a-1)",
+                    "type": "object",
+                    "properties": {
+                        "decrement": { "$ref": "#/$defs/components/expressions/unary" }
+                    },
+                    "required": [ "decrement" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Adds 1 to the operand (a+1)",
+                    "type": "object",
+                    "properties": {
+                        "increment": { "$ref": "#/$defs/components/expressions/unary" }
+                    },
+                    "required": [ "increment" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Subtracts 1 from the operand (--a)",
+                    "type": "object",
+                    "properties": {
+                        "preDecrementAssign": { "$ref": "#/$defs/components/expressions/unary" }
+                    },
+                    "required": [ "preDecrementAssign" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Adds 1 to the operand (++a)",
+                    "type": "object",
+                    "properties": {
+                        "preIncrementAssign": { "$ref": "#/$defs/components/expressions/unary" }
+                    },
+                    "required": [ "preIncrementAssign" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Subtracts 1 from the operand (a--)",
+                    "type": "object",
+                    "properties": {
+                        "postDecrementAssign": { "$ref": "#/$defs/components/expressions/unary" }
+                    },
+                    "required": [ "postDecrementAssign" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Adds 1 to the operand (a++)",
+                    "type": "object",
+                    "properties": {
+                        "postIncrementAssign": { "$ref": "#/$defs/components/expressions/unary" }
+                    },
+                    "required": [ "postIncrementAssign" ],
                     "additionalProperties": { "type": "string" }
                 },
                 {
@@ -429,26 +448,6 @@
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Represents indexing operation on an object with one or more indexes",
-                    "type": "object",
-                    "properties": {
-                        "object": { "$ref": "#/$defs/expression" },
-                        "indexes": {
-                            "type": "array",
-                            "items": { "$ref": "#/$defs/expression" }
-                        },
-                        "indexer": {
-                            "$comment": "Present if the expression represents an indexed property",
-                            "$ref": "#/$defs/components/reflection/property"
-                        }
-                    },
-                    "required": [
-                        "object",
-                        "indexes"
-                    ],
-                    "additionalProperties": { "type": "string" }
-                },
-                {
                     "title": "Assign the value of right to the left (`a=42`)",
                     "type": "object",
                     "properties": {
@@ -584,57 +583,153 @@
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Subtracts 1 from the operand (a-1)",
+                    "title": "Block expression (`{ ...; ...; }`)",
                     "type": "object",
                     "properties": {
-                        "decrement": { "$ref": "#/$defs/components/expressions/unary" }
+                        "block": {
+                            "type": "object",
+                            "properties": {
+                                "variables": { "$ref": "#/$defs/components/parameters/parameterList" },
+                                "expressions": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/expression" }
+                                }
+                            },
+                            "additionalProperties": { "type": "string" }
+                        }
                     },
-                    "required": [ "decrement" ],
+                    "required": [ "block" ],
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Adds 1 to the operand (a+1)",
+                    "title": "Represents indexing operation on an object with one or more indexes",
                     "type": "object",
                     "properties": {
-                        "increment": { "$ref": "#/$defs/components/expressions/unary" }
+                        "index": {
+                            "type": "object",
+                            "properties": {
+                                "instance": { "$ref": "#/$defs/expression" },
+                                "indexes": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/expression" }
+                                },
+                                "indexer": {
+                                    "$comment": "Present if the expression represents an indexed property",
+                                    "$ref": "#/$defs/components/reflection/property"
+                                }
+                            },
+                            "required": [ "instance", "indexes" ],
+                            "additionalProperties": { "type": "string" }
+                        }
                     },
-                    "required": [ "increment" ],
+                    "required": [ "index" ],
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Subtracts 1 from the operand (--a)",
+                    "title": "Represents a method call (`a.Method(x, y)`)",
                     "type": "object",
                     "properties": {
-                        "preDecrementAssign": { "$ref": "#/$defs/components/expressions/unary" }
+                        "call": {
+                            "type": "object",
+                            "properties": {
+                                "object": { "$ref": "#/$defs/expression" },
+                                "method": { "$ref": "#/$defs/components/reflection/method" },
+                                "arguments": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/expression" }
+                                }
+                            },
+                            "required": [ "method", "arguments" ],
+                            "additionalProperties": { "type": "string" }
+                        }
                     },
-                    "required": [ "preDecrementAssign" ],
+                    "required": [ "call" ],
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Adds 1 to the operand (++a)",
+                    "title": "Represents invoking a delegate with one or more arguments(`Func<T1, T2> f; ...; f(42, 1.2);`)",
                     "type": "object",
                     "properties": {
-                        "preIncrementAssign": { "$ref": "#/$defs/components/expressions/unary" }
+                        "invoke": {
+                            "type": "object",
+                            "properties": {
+                                "delegate": { "$ref": "#/$defs/expression" },
+                                "arguments": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/expression" }
+                                }
+                            },
+                            "required": [
+                                "delegate",
+                                "arguments"
+                            ],
+                            "additionalProperties": { "type": "string" }
+                        }
                     },
-                    "required": [ "preIncrementAssign" ],
+                    "required": [ "invoke" ],
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Subtracts 1 from the operand (a--)",
+                    "title": "Represents conditional statement (`if (e0) e1; else e2;`)",
                     "type": "object",
                     "properties": {
-                        "postDecrementAssign": { "$ref": "#/$defs/components/expressions/unary" }
+                        "conditional": {
+                            "type": "object",
+                            "properties": {
+                                "if": { "$ref": "#/$defs/expression" },
+                                "then": { "$ref": "#/$defs/expression" },
+                                "else": { "$ref": "#/$defs/expression" }
+                            },
+                            "required": [
+                                "if",
+                                "then"
+                            ],
+                            "additionalProperties": { "type": "string" }
+                        }
                     },
-                    "required": [ "postDecrementAssign" ],
+                    "required": [ "conditional" ],
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Adds 1 to the operand (a++)",
+                    "title": "Represents a label to jump to.",
                     "type": "object",
                     "properties": {
-                        "postIncrementAssign": { "$ref": "#/$defs/components/expressions/unary" }
+                        "label": {
+                            "type": "object",
+                            "properties": {
+                                "target": { "$ref": "#/$defs/components/labels/target" },
+                                "default": { "$ref": "#/$defs/expression" }
+                            },
+                            "required": [ "target" ],
+                            "additionalProperties": { "type": "string" }
+                        }
                     },
-                    "required": [ "postIncrementAssign" ],
+                    "required": [ "label" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Represents a unconditional jump operation.",
+                    "type": "object",
+                    "properties": {
+                        "goto": {
+                            "type": "object",
+                            "properties": {
+                                "target": { "$ref": "#/$defs/components/labels/target" },
+                                "value": { "$ref": "#/$defs/expression" },
+                                "kind": {
+                                    "enum": [
+                                        "goto",
+                                        "return",
+                                        "break",
+                                        "continue"
+                                    ]
+                                }
+                            },
+                            "required": [ "target", "kind" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "goto" ],
                     "additionalProperties": { "type": "string" }
                 }
             ]

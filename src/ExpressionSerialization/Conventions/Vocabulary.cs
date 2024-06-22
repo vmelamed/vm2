@@ -83,7 +83,6 @@ public static class Vocabulary
     public const string ElementType             = "elementType";
     public const string ReadOnly                = "readOnly";
 
-    public const string Arguments               = "arguments";
     public const string ParameterSpec           = "parameterSpec";             // used in MemberInfo
     public const string Parameter               = "parameter";
     public const string Parameters              = "parameters";
@@ -99,7 +98,10 @@ public static class Vocabulary
     public const string Operands                = "operands";
 
     public const string Body                    = "body";
+    public const string Instance                = "instance";
     public const string Indexes                 = "indexes";
+    public const string Delegate                = "delegate";
+    public const string Arguments               = "arguments";
     public const string Left                    = "left";
     public const string Method                  = "method";
     public const string Right                   = "right";
@@ -197,6 +199,9 @@ public static class Vocabulary
     public const string SubtractAssignChecked   = "subtractAssignChecked";
     public const string SubtractChecked         = "subtractChecked";
     public const string Switch                  = "switch";
+    public const string If                      = "if";
+    public const string Then                    = "then";
+    public const string Else                    = "else";
     public const string LabelTarget             = "target";
     public const string Throw                   = "throw";
     public const string Try                     = "try";

@@ -152,7 +152,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                                         PopWrappedElements(n.Arguments.Count));   // pop the index expressions
 
                 x.Add(
-                    PopElement(),    // pop the object being indexed
+                    new JElement(Vocabulary.Instance, PopElement()),    // pop the object being indexed
                     indexes,
                     VisitMemberInfo(n.Indexer));
             });
@@ -172,4 +172,99 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                                 Vocabulary.Expressions,
                                     PopWrappedElements(node.Expressions.Count))
                     ));
+
+    /// <inheritdoc/>
+    protected override Expression VisitMethodCall(MethodCallExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMethodCall,
+            (n, x) =>
+            {
+                var arguments = new JElement(
+                                        Vocabulary.Arguments,
+                                            PopWrappedElements(n.Arguments.Count));        // pop the argument expressions
+
+                x.Add(
+                    n.Object != null ? new JElement(Vocabulary.Object, PopElement()) : null,
+                    VisitMemberInfo(n.Method),
+                    arguments);
+            });
+
+    /// <inheritdoc/>
+    protected override Expression VisitInvocation(InvocationExpression node)
+        => GenericVisit(
+            node,
+            base.VisitInvocation,
+            (n, x) =>
+            {
+                var arguments = new JElement(
+                                        Vocabulary.Arguments,
+                                            PopWrappedElements(n.Arguments.Count));   // pop the argument expressions
+
+                x.Add(
+                    new JElement(
+                            Vocabulary.Delegate,
+                                PopElement()),        // pop the delegate or lambda
+                    arguments);
+            });
+
+    /// <inheritdoc/>
+    protected override Expression VisitConditional(ConditionalExpression node)
+        => GenericVisit(
+            node,
+            base.VisitConditional,
+            (n, x) =>
+            {
+                JElement? @else = n.IfFalse is not null ? new JElement(Vocabulary.If, PopElement()) : null;
+                JElement? then = n.IfTrue  is not null ? new JElement(Vocabulary.Then, PopElement()) : null;
+                JElement @if = new JElement(Vocabulary.Else, PopElement());
+                x.Add(@if, then, @else);
+            });
+
+
+    /// <inheritdoc/>
+    protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
+    {
+        using var _ = OutputDebugScope(nameof(LabelTarget));
+        var n = base.VisitLabelTarget(node);
+
+        if (n is not null)
+            _elements.Push(GetLabelTarget(n));
+
+        return n;
+    }
+
+    /// <inheritdoc/>
+    protected override Expression VisitLabel(LabelExpression node)
+        => GenericVisit(
+            node,
+            base.VisitLabel,
+            (n, x) =>
+            {
+                JElement? value = n.DefaultValue is not null ? PopElement() : null;   // pop the default result value if present
+
+                x.Add(
+                    PopElement(),   // add the target
+                    value);
+            });
+
+
+    /// <inheritdoc/>
+    protected override Expression VisitGoto(GotoExpression node)
+        => GenericVisit(
+            node,
+            base.VisitGoto,
+            (n, x) =>
+            {
+                JElement? value = n.Value is not null ? PopElement() : null;
+
+                x.Add(
+                    PopElement(),
+                    new JElement(
+                            Vocabulary.Value,
+                                value),
+                    new JElement(
+                            Vocabulary.Kind,
+                                Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
+            });
 }
