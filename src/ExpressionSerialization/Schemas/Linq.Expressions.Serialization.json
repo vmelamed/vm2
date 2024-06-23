@@ -828,6 +828,28 @@
                     },
                     "required": [ "switch" ],
                     "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Represents a try-catch-finally statement",
+                    "type": "object",
+                    "properties": {
+                        "try": {
+                            "type": "object",
+                            "properties": {
+                                "body": { "$ref": "#/$defs/expression" },
+                                "catches": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/components/expressions/catch" }
+                                },
+                                "fault": { "$ref": "#/$defs/expression" },
+                                "finally": { "$ref": "#/$defs/expression" }
+                            },
+                            "required": [ "body" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "try" ],
+                    "additionalProperties": { "type": "string" }
                 }
             ]
         },
@@ -1842,6 +1864,18 @@
                         "body": { "$ref": "#/$defs/expression" }
                     },
                     "required": [ "caseValues", "body" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                "catch": {
+                    "title": "Defines the type of elements that represent a try statement's catch clause'.",
+                    "type": "object",
+                    "properties": {
+                        "type": { "type": "string" },
+                        "exception": { "$ref": "#/$defs/components/parameters/parameter" },
+                        "filter": { "$ref": "#/$defs/expression" },
+                        "body": { "$ref": "#/$defs/expression" }
+                    },
+                    "required": [ "type", "body" ],
                     "additionalProperties": { "type": "string" }
                 }
             }

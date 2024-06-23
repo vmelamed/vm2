@@ -91,7 +91,7 @@ public static class StatementTestData
                     WriteLine1Expression("TryBody"),
                     ThrowException(),
                 }),
-            WriteLine1Expression("catch {}"));
+            WriteLine1Expression("caught {}"));
 
     static Expression _try2 =
         Expression.TryCatch(
@@ -103,7 +103,7 @@ public static class StatementTestData
                 Expression.MakeCatchBlock(
                     typeof(ArgumentException),
                     null,
-                    WriteLine1Expression("catch (ArgumentException) {}"),
+                    WriteLine1Expression("caught (ArgumentException) {}"),
                     null),
             ]);
 
@@ -118,7 +118,7 @@ public static class StatementTestData
                 Expression.MakeCatchBlock(
                     typeof(ArgumentException),
                     null,
-                    WriteLine1Expression("catch (ArgumentException) {}"),
+                    WriteLine1Expression("caught (ArgumentException) {}"),
                     null),
             ]);
 

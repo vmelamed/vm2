@@ -44,13 +44,13 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
         { TestLine(), "return1",                "Return1.json" },
         { TestLine(), "return2",                "Return2.json" },
         { TestLine(), "switch(a){ ... }",       "Switch.json" },
-        //{ TestLine(), "throw",                  "Throw.json" },
-        //{ TestLine(), "try1",                   "TryCatch1.json" },
-        //{ TestLine(), "try2",                   "TryCatch2.json" },
-        //{ TestLine(), "try3",                   "TryCatch3.json" },
-        //{ TestLine(), "try4",                   "TryCatch4.json" },
-        //{ TestLine(), "try5",                   "TryCatch5.json" },
-        //{ TestLine(), "try6",                   "TryCatch6.json" },
+        { TestLine(), "throw",                  "Throw.json" },
+        { TestLine(), "try1",                   "TryCatch1.json" },
+        { TestLine(), "try2",                   "TryCatch2.json" },
+        { TestLine(), "try3",                   "TryCatch3.json" },
+        { TestLine(), "try4",                   "TryCatch4.json" },
+        { TestLine(), "try5",                   "TryCatch5.json" },
+        { TestLine(), "try6",                   "TryCatch6.json" },
     };
 
     protected override Expression Substitute(string id) => StatementTestData.GetExpression(id);

@@ -122,6 +122,7 @@ public static class Vocabulary
     public const string Case                    = "case";
     public const string Cases                   = "cases";
     public const string Catch                   = "catch";
+    public const string Catches                 = "catches";
     public const string Call                    = "call";
     public const string CaseValues              = "caseValues";
     public const string Coalesce                = "coalesce";

@@ -499,9 +499,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         _elements.Push(
             new XElement(
                     ElementNames.Catch,
-                    new XAttribute(
-                            AttributeNames.Type,
-                            Transform.TypeName(node.Test)),
+                    AttributeType(node.Test),
                     exception,
                     filter,
                     body));

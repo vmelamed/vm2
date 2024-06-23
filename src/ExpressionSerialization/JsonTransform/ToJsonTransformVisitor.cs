@@ -336,4 +336,44 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
 
         return n;
     }
+
+    /// <inheritdoc/>
+    protected override Expression VisitTry(TryExpression node)
+        => GenericVisit(
+            node,
+            base.VisitTry,
+            (n, x) =>
+            {
+                var @finally = n.Finally is not null ? new JElement(Vocabulary.Finally, PopWrappedElement()) : (JElement?)null;
+                var @catch = n.Fault is not null ? new JElement(Vocabulary.Fault, PopWrappedElement()) : (JElement?)null;
+                var catches = new JElement(Vocabulary.Catches, PopElementsValues(n.Handlers?.Count ?? 0));
+                var @try = new JElement(Vocabulary.Body, PopWrappedElement());
+
+                x.Add(
+                    @try,
+                    catches,
+                    @catch,
+                    @finally);
+            });
+
+    /// <inheritdoc/>
+    protected override CatchBlock VisitCatchBlock(CatchBlock node)
+    {
+        using var _ = OutputDebugScope(nameof(CatchBlock));
+        var catchBlock = base.VisitCatchBlock(node);
+
+        var body = new JElement(Vocabulary.Body, PopWrappedElement());
+        var filter = catchBlock.Filter is not null ? new JElement(Vocabulary.Filter, PopWrappedElement()) : (JElement?)null;
+        var exception = catchBlock.Variable is not null ? new JElement(Vocabulary.Exception, PopElementValue()) : (JElement?)null;
+
+        _elements.Push(
+            new JElement(
+                    Vocabulary.Catch,
+                        PropertyType(catchBlock.Test),
+                        exception,
+                        filter,
+                        body));
+
+        return catchBlock;
+    }
 }
