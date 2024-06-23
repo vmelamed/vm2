@@ -1,0 +1,158 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "block": {
+      "type": "void",
+      "variables": [
+        {
+          "type": "int",
+          "name": "_result",
+          "id": "P2"
+        }
+      ],
+      "expressions": [
+        {
+          "assign": {
+            "type": "int",
+            "operands": [
+              {
+                "parameter": {
+                  "type": "int",
+                  "name": "_value",
+                  "id": "P1"
+                }
+              },
+              {
+                "constant": {
+                  "int": 5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "assign": {
+            "type": "int",
+            "operands": [
+              {
+                "parameter": {
+                  "type": "int",
+                  "name": "_result",
+                  "id": "P2"
+                }
+              },
+              {
+                "constant": {
+                  "int": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "loop": {
+            "type": "void",
+            "body": {
+              "block": {
+                "type": "void",
+                "expressions": [
+                  {
+                    "conditional": {
+                      "type": "void",
+                      "else": {
+                        "greaterThan": {
+                          "type": "boolean",
+                          "operands": [
+                            {
+                              "parameter": {
+                                "type": "int",
+                                "name": "_value",
+                                "id": "P1"
+                              }
+                            },
+                            {
+                              "constant": {
+                                "int": 1
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "then": {
+                        "block": {
+                          "type": "void",
+                          "expressions": [
+                            {
+                              "multiplyAssign": {
+                                "type": "int",
+                                "operands": [
+                                  {
+                                    "parameter": {
+                                      "type": "int",
+                                      "name": "_result",
+                                      "id": "P2"
+                                    }
+                                  },
+                                  {
+                                    "postDecrementAssign": {
+                                      "type": "int",
+                                      "operands": [
+                                        {
+                                          "parameter": {
+                                            "type": "int",
+                                            "name": "_value",
+                                            "id": "P1"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "goto": {
+                                "type": "void",
+                                "target": {
+                                  "name": "continue",
+                                  "id": "L2"
+                                },
+                                "kind": "continue"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "if": {
+                        "goto": {
+                          "type": "void",
+                          "target": {
+                            "name": "break",
+                            "id": "L1"
+                          },
+                          "kind": "break"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "continueLabel": {
+              "target": {
+                "name": "continue",
+                "id": "L2"
+              }
+            },
+            "breakLabel": {
+              "target": {
+                "name": "break",
+                "id": "L1"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

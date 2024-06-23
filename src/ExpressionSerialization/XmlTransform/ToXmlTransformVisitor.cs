@@ -314,6 +314,35 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             });
 
     /// <inheritdoc/>
+    protected override Expression VisitListInit(ListInitExpression node)
+        => GenericVisit(
+            node,
+            base.VisitListInit,
+            (n, x) =>
+            {
+                var initializers = Pop(n.Initializers.Count);
+
+                x.Add(
+                    Pop(),            // the new n
+                    new XElement(ElementNames.Initializers, initializers));                // the elementsInit n
+            });
+
+    /// <inheritdoc/>
+    protected override ElementInit VisitElementInit(ElementInit node)
+    {
+        using var _ = OutputDebugScope(nameof(ElementInit));
+        var elementInit = base.VisitElementInit(node);
+
+        _elements.Push(
+            new XElement(
+                    ElementNames.ElementInit,
+                        VisitMemberInfo(node.AddMethod),
+                        new XElement(ElementNames.Arguments, Pop(node.Arguments.Count))));  // pop the elements init expressions
+
+        return elementInit;
+    }
+
+    /// <inheritdoc/>
     protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
     {
         using var _ = OutputDebugScope(nameof(LabelTarget));
@@ -478,35 +507,6 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                     body));
 
         return node;
-    }
-
-    /// <inheritdoc/>
-    protected override Expression VisitListInit(ListInitExpression node)
-        => GenericVisit(
-            node,
-            base.VisitListInit,
-            (n, x) =>
-            {
-                var initializers = Pop(n.Initializers.Count);
-
-                x.Add(
-                    Pop(),            // the new n
-                    new XElement(ElementNames.Initializers, initializers));                // the elementsInit n
-            });
-
-    /// <inheritdoc/>
-    protected override ElementInit VisitElementInit(ElementInit node)
-    {
-        using var _ = OutputDebugScope(nameof(ElementInit));
-        var elementInit = base.VisitElementInit(node);
-
-        _elements.Push(
-            new XElement(
-                    ElementNames.ElementInit,
-                        VisitMemberInfo(node.AddMethod),
-                        new XElement(ElementNames.Arguments, Pop(node.Arguments.Count))));  // pop the elements init expressions
-
-        return elementInit;
     }
 
     /////////////////////////////////////////////////////////////////

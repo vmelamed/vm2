@@ -32,7 +32,7 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
         //{ TestLine(), "newHashtableInit",       "NewHashtable.json" },
         //{ TestLine(), "indexMember",            "IndexMember.json" },
         //{ TestLine(), "indexObject1",           "IndexObject1.json" },
-        //{ TestLine(), "loop",                   "Loop.json" },
+        { TestLine(), "loop",                   "Loop.json" },
         { TestLine(), "newArrayBounds",         "NewArrayBounds.json" },
         { TestLine(), "newArrayItems",          "NewArrayInit.json" },
         { TestLine(), "newDictionaryInit",      "NewDictionaryInit.json" },

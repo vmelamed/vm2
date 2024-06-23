@@ -267,8 +267,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                 var initializers = new JElement(Vocabulary.Initializers, PopElementsValues(n.Initializers.Count));
 
                 x.Add(
-                    Pop(),            // the new list()
-                    initializers);   // the elementsInit
+                    Pop(),              // the new list()
+                    initializers);      // the elementsInit
             });
 
     /// <inheritdoc/>
@@ -285,4 +285,18 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
 
         return elementInit;
     }
+
+    /// <inheritdoc/>
+    protected override Expression VisitLoop(LoopExpression node)
+        => GenericVisit(
+            node,
+            base.VisitLoop,
+            (n, x) => x.Add(
+                        new JElement(Vocabulary.Body, Pop()),
+                        n.ContinueLabel is not null
+                            ? new JElement(Vocabulary.ContinueLabel, Pop())
+                            : null,
+                        n.BreakLabel is not null
+                            ? new JElement(Vocabulary.BreakLabel, Pop())
+                            : null));
 }

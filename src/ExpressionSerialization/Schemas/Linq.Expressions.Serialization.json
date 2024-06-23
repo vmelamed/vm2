@@ -782,6 +782,30 @@
                     },
                     "required": [ "listInit" ],
                     "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Represents a loop",
+                    "type": "object",
+                    "properties": {
+                        "loop": {
+                            "type": "object",
+                            "properties": {
+                                "body": { "$ref": "#/$defs/expression" },
+                                "continueLabel": {
+                                    "type": "object",
+                                    "items": { "$ref": "#/$defs/components/labels/target" }
+                                },
+                                "breakLabel": {
+                                    "type": "object",
+                                    "items": { "$ref": "#/$defs/components/labels/target" }
+                                }
+                            },
+                            "required": [ "body" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "loop" ],
+                    "additionalProperties": { "type": "string" }
                 }
             ]
         },
