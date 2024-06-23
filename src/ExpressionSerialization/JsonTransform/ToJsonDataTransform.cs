@@ -94,14 +94,18 @@ public class ToJsonDataTransform(JsonOptions options)
 
     static JsonValue PtrToJson(IntPtr v)
 #pragma warning disable IDE0049 // Simplify Names
-        => Environment.Is64BitProcess
-                ? ((Int64)v is <= MaxJsonInteger and >= MinJsonInteger ? JsonValue.Create((Int64)v) : JsonValue.Create(((Int64)v).ToString()))
-                : JsonValue.Create(checked((Int32)v));
+        => checked(
+                Environment.Is64BitProcess
+                    ? ((Int64)v is <= MaxJsonInteger and >= MinJsonInteger ? JsonValue.Create((Int64)v) : JsonValue.Create(((Int64)v).ToString()))
+                    : JsonValue.Create((Int32)v)
+            );
 
     static JsonValue PtrToJson(UIntPtr v)
-        => Environment.Is64BitProcess
-                ? JsonValue.Create(((UInt64)v).ToString()) // Should be `((UInt64)v is <= MaxJsonInteger ? JsonValue.Create((UInt64)v) : JsonValue.Create(((UInt64)v).ToString()))` but the Json.Schema doesn't like it
-                : JsonValue.Create(checked((UInt32)v));
+        => checked(
+                Environment.Is64BitProcess
+                    ? JsonValue.Create(((UInt64)v).ToString()) // Should be `((UInt64)v is <= MaxJsonInteger ? JsonValue.Create((UInt64)v) : JsonValue.Create(((UInt64)v).ToString()))` but the Json.Schema doesn't like it
+                    : JsonValue.Create((UInt32)v)
+        );
 #pragma warning restore IDE0049 // Simplify Names
 
     static string Duration(TimeSpan ts)

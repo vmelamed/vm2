@@ -46,12 +46,12 @@ class ToXmlDataTransform(XmlOptions options)
 #pragma warning disable IDE0049 // Simplify Names
     static string PtrToXmlString(IntPtr v)
         => Environment.Is64BitProcess
-                ? XmlConvert.ToString(checked(v))
+                ? XmlConvert.ToString(checked((Int64)v))
                 : XmlConvert.ToString(checked((Int32)v));
 
     static string PtrToXmlString(UIntPtr v)
         => Environment.Is64BitProcess
-                ? XmlConvert.ToString(checked(v))
+                ? XmlConvert.ToString(checked((UInt64)v))
                 : XmlConvert.ToString(checked((UInt32)v));
 #pragma warning restore IDE0049 // Simplify Names
     #endregion

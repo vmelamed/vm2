@@ -1,9 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
 
-using System.Diagnostics;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-
 using vm2.ExpressionSerialization.JsonTransform;
 
 public class JsonTestsFixture : IDisposable

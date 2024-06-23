@@ -17,22 +17,10 @@ public partial class JsonOptions : DocumentOptions
 
     static readonly JsonStringEnumConverter _jsonStringEnumConverter = new();
 
-#pragma warning disable IDE0032 // Use auto property
-    static readonly JsonNodeOptions _jsonNodeOptions = new() {
-        PropertyNameCaseInsensitive = false,
-    };
-
-    static readonly JsonDocumentOptions _jsonDocumentOptions = new() {
-        AllowTrailingCommas = true,
-        CommentHandling     = JsonCommentHandling.Skip,
-        MaxDepth            = 1000
-    };
-
     static readonly EvaluationOptions _evaluationOptions = new() {
         OutputFormat            = OutputFormat.Hierarchical,
         RequireFormatValidation = true,
     };
-#pragma warning restore IDE0032 // Use auto property
 
     ReaderWriterLockSlim _syncSchema = new(LockRecursionPolicy.SupportsRecursion);
     JsonSchema? _schema;
@@ -117,7 +105,9 @@ public partial class JsonOptions : DocumentOptions
     /// <summary>
     /// Gets the json node options.
     /// </summary>
-    public static JsonNodeOptions JsonNodeOptions => _jsonNodeOptions;
+    public static JsonNodeOptions JsonNodeOptions { get; } = new() {
+        PropertyNameCaseInsensitive = false,
+    };
 
     /// <summary>
     /// Gets the json writer options based on these options
@@ -131,7 +121,11 @@ public partial class JsonOptions : DocumentOptions
     /// <summary>
     /// Gets the json document options.
     /// </summary>
-    public static JsonDocumentOptions JsonDocumentOptions => _jsonDocumentOptions;
+    public static JsonDocumentOptions JsonDocumentOptions { get; } = new() {
+        AllowTrailingCommas = true,
+        CommentHandling = JsonCommentHandling.Skip,
+        MaxDepth = 1000
+    };
 
     /// <summary>
     /// Evaluates the specified jsonNode against the schema (by default the expressions schema).

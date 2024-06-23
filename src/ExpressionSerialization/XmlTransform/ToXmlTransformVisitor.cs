@@ -1,9 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 /// <summary>
 /// Class ToXmlTransformVisitor.
-/// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
+/// Implements the <see cref="ExpressionTransformVisitor{XElement}" />
 /// </summary>
-/// <seealso cref="ExpressionTransformVisitor{XNode}" />
+/// <seealso cref="ExpressionTransformVisitor{XElement}" />
 public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTransformVisitor<XElement>
 {
     ToXmlDataTransform _dataTransform = new(options);
