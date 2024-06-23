@@ -125,9 +125,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         => GenericVisit(
             node,
             base.VisitTypeBinary,
-            (n, x) => x.Add(
-                        new XAttribute(AttributeNames.TypeOperand, Transform.TypeName(n.TypeOperand)),
-                        Pop()));  // pop the value operand
+            (n, x) => x.Add(new XAttribute(AttributeNames.TypeOperand, Transform.TypeName(n.TypeOperand)), Pop()));  // pop the value operand
 
     /// <inheritdoc/>
     protected override Expression VisitIndex(IndexExpression node)
@@ -136,9 +134,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitIndex,
             (n, x) =>
             {
-                var indexes = new XElement(
-                                    ElementNames.Indexes,
-                                        Pop(n.Arguments.Count));
+                var indexes = new XElement(ElementNames.Indexes, Pop(n.Arguments.Count));
 
                 x.Add(
                     Pop(),    // pop the indexes
@@ -167,9 +163,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                 var bindings = Pop(n.Bindings.Count).ToList();     // pop the expressions to assign to members
                 x.Add(
                     Pop(),        // the new value
-                    new XElement(
-                            ElementNames.Bindings,
-                            bindings));
+                    new XElement(ElementNames.Bindings, bindings));
             });
 
     #region Member Bindings
@@ -182,8 +176,8 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         _elements.Push(
             new XElement(
                     ElementNames.AssignmentBinding,
-                    VisitMemberInfo(node.Member),
-                    Pop()));  // pop the value to assign
+                        VisitMemberInfo(node.Member),
+                        Pop()));  // pop the value to assign
 
         return binding;
     }
@@ -197,8 +191,8 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         _elements.Push(
             new XElement(
                     ElementNames.MemberMemberBinding,
-                    VisitMemberInfo(node.Member),
-                    Pop(node.Bindings.Count)));
+                        VisitMemberInfo(node.Member),
+                        Pop(node.Bindings.Count)));
 
         return binding;
     }
@@ -212,8 +206,8 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         _elements.Push(
             new XElement(
                     ElementNames.MemberListBinding,
-                    VisitMemberInfo(node.Member),
-                    Pop(node.Initializers.Count)));
+                        VisitMemberInfo(node.Member),
+                        Pop(node.Initializers.Count)));
 
         return binding;
     }
@@ -231,9 +225,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitMethodCall,
             (n, x) =>
             {
-                var arguments = new XElement(
-                                        ElementNames.Arguments,
-                                        Pop(n.Arguments.Count));   // pop the argument expressions
+                var arguments = new XElement(ElementNames.Arguments, Pop(n.Arguments.Count));   // pop the argument expressions
                 var instance = n.Object!=null ? Pop() : null; // pop the object
                 var method = VisitMemberInfo(n.Method);
 
@@ -250,9 +242,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitInvocation,
             (n, x) =>
             {
-                var arguments = new XElement(
-                                        ElementNames.Arguments,
-                                        Pop(n.Arguments.Count));   // pop the argument expressions
+                var arguments = new XElement(ElementNames.Arguments, Pop(n.Arguments.Count));   // pop the argument expressions
 
                 x.Add(
                     Pop(),    // pop the delegate or lambda
@@ -267,9 +257,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             (n, x) =>
             {
                 var variables = node.Variables.Count is > 0
-                                        ? new XElement(
-                                                ElementNames.Variables,
-                                                    Pop(node.Variables.Count))
+                                        ? new XElement(ElementNames.Variables, Pop(node.Variables.Count))
                                         : null;
                 var body = Pop(node.Expressions.Count);
 
@@ -298,13 +286,9 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitNew,
             (n, x) => x.Add(
                         VisitMemberInfo(n.Constructor!),
-                        new XElement(
-                                ElementNames.Arguments,
-                                    Pop(n.Arguments.Count)),   // pop the c-tor arguments
+                        new XElement(ElementNames.Arguments, Pop(n.Arguments.Count)),   // pop the c-tor arguments
                         n.Members is not null
-                            ? new XElement(
-                                    ElementNames.Members,
-                                        n.Members.Select(m => VisitMemberInfo(m)))
+                            ? new XElement(ElementNames.Members, n.Members.Select(m => VisitMemberInfo(m)))
                             : null));
 
     /// <inheritdoc/>
@@ -534,9 +518,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 
                 x.Add(
                     Pop(),            // the new n
-                    new XElement(
-                        ElementNames.Initializers,
-                        initializers));                // the elementsInit n
+                    new XElement(ElementNames.Initializers, initializers));                // the elementsInit n
             });
 
     /// <inheritdoc/>
@@ -548,10 +530,8 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         _elements.Push(
             new XElement(
                     ElementNames.ElementInit,
-                    VisitMemberInfo(node.AddMethod),
-                    new XElement(
-                            ElementNames.Arguments,
-                            Pop(node.Arguments.Count))));  // pop the elements init expressions
+                        VisitMemberInfo(node.AddMethod),
+                        new XElement(ElementNames.Arguments, Pop(node.Arguments.Count))));  // pop the elements init expressions
 
         return elementInit;
     }
