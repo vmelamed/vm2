@@ -16,7 +16,7 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
 
     public static readonly TheoryData<string, string, string> StatementData = new ()
     {
-        //{ TestLine(), "() => new StructDataContract1(42, \"don't panic\")", "New.json" },
+        { TestLine(), "() => new StructDataContract1(42, \"don't panic\")", "New.json" },
         { TestLine(), "(a,b) => { ... }",       "Block.json" },
         { TestLine(), "(f,a) => f(a)",          "Invocation.json" },
         //{ TestLine(), "accessMemberMember",     "AccessMemberMember.json" },
