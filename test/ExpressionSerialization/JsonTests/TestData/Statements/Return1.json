@@ -2,7 +2,6 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "block": {
-      "type": "void",
       "variables": [
         {
           "type": "int",
@@ -46,7 +45,6 @@
         },
         {
           "goto": {
-            "type": "void",
             "target": {
               "id": "L1"
             },

@@ -299,4 +299,41 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                         n.BreakLabel is not null
                             ? new JElement(Vocabulary.BreakLabel, Pop())
                             : null));
+
+    /// <inheritdoc/>
+    protected override Expression VisitSwitch(SwitchExpression node)
+        => GenericVisit(
+            node,
+            base.VisitSwitch,
+            (n, x) =>
+            {
+                var @default = n.DefaultBody is not null ? new JElement(Vocabulary.DefaultCase, PopWrappedElement()) : (JElement?)null;    // the body of the default case
+                var cases = new JElement(Vocabulary.Cases, PopElementsValues(n.Cases.Count));                       // the cases
+                var value = new JElement(Vocabulary.Value, PopWrappedElement());  // the value to switch on
+                var comparison = n.Comparison is not null ? new JElement(Vocabulary.Comparison, VisitMemberInfo(n.Comparison)) : (JElement?)null; // get the non-default comparison method
+
+                x.Add(
+                    value,
+                    comparison,
+                    cases,
+                    @default);
+            });
+
+    /// <inheritdoc/>
+    protected override SwitchCase VisitSwitchCase(SwitchCase node)
+    {
+        using var _ = OutputDebugScope(nameof(SwitchCase));
+        var n = base.VisitSwitchCase(node);
+
+        var caseExpression = new JElement(Vocabulary.Body, PopWrappedElement());
+        var caseValues = new JElement(Vocabulary.CaseValues, PopWrappedElements(n.TestValues.Count));
+
+        _elements.Push(
+            new JElement(
+                    Vocabulary.Case,
+                        caseValues,
+                        caseExpression));
+
+        return n;
+    }
 }

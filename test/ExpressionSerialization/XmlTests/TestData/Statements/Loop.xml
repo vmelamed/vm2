@@ -3,8 +3,7 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <block
-        type="void">
+    <block>
         <variables>
             <parameter
                 type="int"
@@ -31,12 +30,9 @@
                 <int>1</int>
             </constant>
         </assign>
-        <loop
-            type="void">
-            <block
-                type="void">
-                <conditional
-                    type="void">
+        <loop>
+            <block>
+                <conditional>
                     <greaterThan
                         type="boolean">
                         <parameter
@@ -47,8 +43,7 @@
                             <int>1</int>
                         </constant>
                     </greaterThan>
-                    <block
-                        type="void">
+                    <block>
                         <multiplyAssign
                             type="int">
                             <parameter
@@ -64,7 +59,6 @@
                             </postDecrementAssign>
                         </multiplyAssign>
                         <goto
-                            type="void"
                             kind="continue">
                             <target
                                 id="L2"
@@ -72,7 +66,6 @@
                         </goto>
                     </block>
                     <goto
-                        type="void"
                         kind="break">
                         <target
                             id="L1"

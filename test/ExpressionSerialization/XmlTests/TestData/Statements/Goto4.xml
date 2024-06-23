@@ -3,8 +3,7 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <block
-        type="void">
+    <block>
         <variables>
             <parameter
                 type="int"
@@ -29,7 +28,6 @@
                 name="a" />
         </increment>
         <goto
-            type="void"
             kind="goto">
             <target
                 id="L1" />

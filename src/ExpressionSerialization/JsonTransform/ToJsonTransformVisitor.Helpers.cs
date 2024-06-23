@@ -113,12 +113,13 @@ public partial class ToJsonTransformVisitor
                 : null;
 
     /// <summary>
-    /// Creates a <see cref="JElement"/> for a property `type` for the given <paramref name="type"/>.
+    /// Creates a <see cref="JElement" /> for a property `type` for the given <paramref name="type" />.
     /// </summary>
     /// <param name="type">The node.</param>
+    /// <param name="force">May the force be with you.</param>
     /// <returns>System.Nullable&lt;JElement&gt;.</returns>
-    static JElement? PropertyType(Type? type)
-        => type is not null
+    static JElement? PropertyType(Type? type, bool force = false)
+        => type is not null && (type != typeof(void) || force)
                 ? new(Vocabulary.Type, Transform.TypeName(type))
                 : null;
 
@@ -212,7 +213,7 @@ public partial class ToJsonTransformVisitor
                                         Vocabulary.Property,
                                             declaringTypeProperty,
                                             visibilityProperty,
-                                            PropertyType(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null.")),
+                                            PropertyType(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null."), true),
                                             nameProperty,
                                             pi.GetIndexParameters().Length != 0
                                                 ? new JElement(Vocabulary.ParameterSpecs, VisitParameters(pi.GetIndexParameters()))
@@ -223,14 +224,14 @@ public partial class ToJsonTransformVisitor
                                             declaringTypeProperty,
                                             mi.IsStatic ? new JElement(Vocabulary.Static, true) : null,
                                             visibilityProperty,
-                                            PropertyType(mi.ReturnType),
+                                            PropertyType(mi.ReturnType, true),
                                             nameProperty,
                                             new JElement(Vocabulary.ParameterSpecs, VisitParameters(mi.GetParameters()))),
 
             EventInfo ei => new JElement(
                                         Vocabulary.Event,
                                             declaringTypeProperty,
-                                            PropertyType(ei.EventHandlerType ?? throw new InternalTransformErrorException("EventInfo's EventHandlerType is null.")),
+                                            PropertyType(ei.EventHandlerType ?? throw new InternalTransformErrorException("EventInfo's EventHandlerType is null."), true),
                                             nameProperty),
 
             FieldInfo fi => new JElement(
@@ -239,7 +240,7 @@ public partial class ToJsonTransformVisitor
                                             fi.IsStatic ? new JElement(Vocabulary.Static, true) : null,
                                             visibilityProperty,
                                             fi.IsInitOnly ? new JElement(Vocabulary.ReadOnly, true) : null,
-                                            PropertyType(fi.FieldType ?? throw new InternalTransformErrorException("GetMethodInfo's DeclaringType is null.")),
+                                            PropertyType(fi.FieldType ?? throw new InternalTransformErrorException("GetMethodInfo's DeclaringType is null."), true),
                                             nameProperty),
 
             _ => throw new InternalTransformErrorException("Unknown MemberInfo.")

@@ -64,8 +64,8 @@ public partial class ToXmlTransformVisitor
                 ? AttributeType(node.Type)
                 : null;
 
-    static XAttribute? AttributeType(Type? type)
-        => type is not null
+    static XAttribute? AttributeType(Type? type, bool force = false)
+        => type is not null && (type != typeof(void) || force)
                 ? new(AttributeNames.Type, Transform.TypeName(type))
                 : null;
 
@@ -145,7 +145,7 @@ public partial class ToXmlTransformVisitor
                                     ElementNames.Property,
                                         declaringType,
                                         visibility,
-                                        AttributeType(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null.")),
+                                        AttributeType(pi.PropertyType ?? throw new InternalTransformErrorException("PropertyInfo's DeclaringType is null."), true),
                                         nameAttribute,
                                         pi.GetIndexParameters().Length != 0
                                             ? new XElement(
@@ -158,14 +158,14 @@ public partial class ToXmlTransformVisitor
                                         declaringType,
                                         mi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
                                         visibility,
-                                        AttributeType(mi.ReturnType),
+                                        AttributeType(mi.ReturnType, true),
                                         nameAttribute,
                                         new XElement(ElementNames.ParameterSpecs, VisitParameters(mi.GetParameters()))),
 
             EventInfo ei => new XElement(
                                     ElementNames.Event,
                                         declaringType,
-                                        AttributeType(ei.EventHandlerType ?? throw new InternalTransformErrorException("EventInfo's EventHandlerType is null.")),
+                                        AttributeType(ei.EventHandlerType ?? throw new InternalTransformErrorException("EventInfo's EventHandlerType is null."), true),
                                         nameAttribute),
 
             FieldInfo fi => new XElement(
@@ -174,7 +174,7 @@ public partial class ToXmlTransformVisitor
                                         fi.IsStatic ? new XAttribute(AttributeNames.Static, true) : null,
                                         visibility,
                                         fi.IsInitOnly ? new XAttribute(AttributeNames.ReadOnly, true) : null,
-                                        AttributeType(fi.FieldType ?? throw new InternalTransformErrorException("GetMethodInfo's DeclaringType is null.")),
+                                        AttributeType(fi.FieldType ?? throw new InternalTransformErrorException("GetMethodInfo's DeclaringType is null."), true),
                                         nameAttribute),
 
             _ => throw new InternalTransformErrorException("Unknown MemberInfo.")

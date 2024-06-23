@@ -806,6 +806,28 @@
                     },
                     "required": [ "loop" ],
                     "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Represents a switch",
+                    "type": "object",
+                    "properties": {
+                        "switch": {
+                            "type": "object",
+                            "properties": {
+                                "value": { "$ref": "#/$defs/expression" },
+                                "comparison": { "$ref": "#/$defs/components/reflection/method" },
+                                "cases": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/components/expressions/switchCase" }
+                                },
+                                "defaultCase": { "$ref": "#/$defs/expression" }
+                            },
+                            "required": [ "value", "cases" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "switch" ],
+                    "additionalProperties": { "type": "string" }
                 }
             ]
         },
@@ -1810,6 +1832,16 @@
                         "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
                     },
                     "required": [ "method", "arguments" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                "switchCase": {
+                    "title": "Defines the type of elements that represent a switch statement's case'.",
+                    "type": "object",
+                    "properties": {
+                        "caseValues": { "$ref": "#/$defs/components/expressions/arrayExpressions" },
+                        "body": { "$ref": "#/$defs/expression" }
+                    },
+                    "required": [ "caseValues", "body" ],
                     "additionalProperties": { "type": "string" }
                 }
             }

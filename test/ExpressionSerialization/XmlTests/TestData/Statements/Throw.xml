@@ -3,8 +3,7 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <block
-        type="void">
+    <block>
         <call
             type="void">
             <method
@@ -24,8 +23,7 @@
                 </constant>
             </arguments>
         </call>
-        <throw
-            type="void">
+        <throw>
             <new>
                 <constructor
                     declaringType="System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">

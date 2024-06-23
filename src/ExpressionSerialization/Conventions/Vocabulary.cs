@@ -120,10 +120,12 @@ public static class Vocabulary
     public const string Bounds                  = "bounds";
     public const string BreakLabel              = "breakLabel";
     public const string Case                    = "case";
+    public const string Cases                   = "cases";
     public const string Catch                   = "catch";
     public const string Call                    = "call";
     public const string CaseValues              = "caseValues";
     public const string Coalesce                = "coalesce";
+    public const string Comparison              = "comparison";
     public const string Conditional             = "conditional";
     public const string Constant                = "constant";
     public const string Constructor             = "constructor";

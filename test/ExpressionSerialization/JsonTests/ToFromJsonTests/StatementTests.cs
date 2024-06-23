@@ -43,7 +43,7 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
         //{ TestLine(), "newMembersInit2",        "NewMembersInit2.json" },
         { TestLine(), "return1",                "Return1.json" },
         { TestLine(), "return2",                "Return2.json" },
-        //{ TestLine(), "switch(a){ ... }",       "Switch.json" },
+        { TestLine(), "switch(a){ ... }",       "Switch.json" },
         //{ TestLine(), "throw",                  "Throw.json" },
         //{ TestLine(), "try1",                   "TryCatch1.json" },
         //{ TestLine(), "try2",                   "TryCatch2.json" },

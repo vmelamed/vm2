@@ -2,7 +2,6 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "block": {
-      "type": "void",
       "variables": [
         {
           "type": "int",
@@ -51,14 +50,11 @@
         },
         {
           "loop": {
-            "type": "void",
             "body": {
               "block": {
-                "type": "void",
                 "expressions": [
                   {
                     "conditional": {
-                      "type": "void",
                       "else": {
                         "greaterThan": {
                           "type": "boolean",
@@ -80,7 +76,6 @@
                       },
                       "then": {
                         "block": {
-                          "type": "void",
                           "expressions": [
                             {
                               "multiplyAssign": {
@@ -112,7 +107,6 @@
                             },
                             {
                               "goto": {
-                                "type": "void",
                                 "target": {
                                   "name": "continue",
                                   "id": "L2"
@@ -125,7 +119,6 @@
                       },
                       "if": {
                         "goto": {
-                          "type": "void",
                           "target": {
                             "name": "break",
                             "id": "L1"
