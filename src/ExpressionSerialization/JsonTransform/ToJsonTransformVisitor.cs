@@ -51,6 +51,13 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
         }
     }
 
+    /// <inheritdoc/>
+    protected override Expression VisitDefault(DefaultExpression node)
+        => GenericVisit(
+            node,
+            base.VisitDefault,
+            (n, x) => x.Add(options.TypeComment(n.Type)));
+
     IEnumerable<JsonNode?> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
         => parameterList.Select(p => !IsDefined(p)
                                         ? GetParameter(p).Value
