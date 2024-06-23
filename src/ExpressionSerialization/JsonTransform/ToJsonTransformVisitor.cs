@@ -81,7 +81,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             (n, x) => x.Add(
                         PropertyDelegateType(node.Type),
                         new JElement(Vocabulary.Parameters, PopElementsValues(n.Parameters.Count)),
-                        new JElement(Vocabulary.Body, PopElement()),
+                        new JElement(Vocabulary.Body, Pop()),
                         PropertyName(node.Name),
                         node.TailCall ? new JElement(Vocabulary.TailCall, node.TailCall) : null));
 
@@ -132,12 +132,10 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitIndex,
             (n, x) =>
             {
-                var indexes = new JElement(
-                                    Vocabulary.Indexes,
-                                        PopWrappedElements(n.Arguments.Count));   // pop the index expressions
+                var indexes = new JElement(Vocabulary.Indexes, PopWrappedElements(n.Arguments.Count));   // pop the index expressions
 
                 x.Add(
-                    new JElement(Vocabulary.Instance, PopElement()),    // pop the object being indexed
+                    new JElement(Vocabulary.Instance, Pop()),    // pop the object being indexed
                     indexes,
                     VisitMemberInfo(n.Indexer));
             });
@@ -161,7 +159,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                 var arguments = new JElement(Vocabulary.Arguments, PopWrappedElements(n.Arguments.Count));        // pop the argument expressions
 
                 x.Add(
-                    n.Object != null ? new JElement(Vocabulary.Object, PopElement()) : null,
+                    n.Object != null ? new JElement(Vocabulary.Object, Pop()) : null,
                     VisitMemberInfo(n.Method),
                     arguments);
             });
@@ -176,7 +174,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                 var arguments = new JElement(Vocabulary.Arguments, PopWrappedElements(n.Arguments.Count));   // pop the argument expressions
 
                 x.Add(
-                    new JElement(Vocabulary.Delegate, PopElement()),        // pop the delegate or lambda
+                    new JElement(Vocabulary.Delegate, Pop()),        // pop the delegate or lambda
                     arguments);
             });
 
@@ -187,9 +185,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitConditional,
             (n, x) =>
             {
-                JElement? @else = n.IfFalse is not null ? new JElement(Vocabulary.If, PopElement()) : null;
-                JElement? then = n.IfTrue  is not null ? new JElement(Vocabulary.Then, PopElement()) : null;
-                JElement @if = new JElement(Vocabulary.Else, PopElement());
+                JElement? @else = n.IfFalse is not null ? new JElement(Vocabulary.If, Pop()) : null;
+                JElement? then = n.IfTrue  is not null ? new JElement(Vocabulary.Then, Pop()) : null;
+                JElement @if = new JElement(Vocabulary.Else, Pop());
                 x.Add(@if, then, @else);
             });
 
@@ -213,10 +211,10 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitLabel,
             (n, x) =>
             {
-                JElement? value = n.DefaultValue is not null ? PopElement() : null;   // pop the default result value if present
+                JElement? value = n.DefaultValue is not null ? Pop() : null;   // pop the default result value if present
 
                 x.Add(
-                    PopElement(),   // add the target
+                    Pop(),   // add the target
                     value);
             });
 
@@ -228,10 +226,10 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitGoto,
             (n, x) =>
             {
-                JElement? value = n.Value is not null ? PopElement() : null;
+                JElement? value = n.Value is not null ? Pop() : null;
 
                 x.Add(
-                    PopElement(),
+                    Pop(),
                     value is not null ? new JElement(Vocabulary.Value, value) : null,
                     new JElement(Vocabulary.Kind, Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
             });
@@ -266,11 +264,11 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitListInit,
             (n, x) =>
             {
-                var initializers = PopWrappedElements(n.Initializers.Count);
+                var initializers = new JElement(Vocabulary.Initializers, PopElementsValues(n.Initializers.Count));
 
                 x.Add(
-                    PopElement(),            // the new n
-                    new JElement(Vocabulary.Initializers, initializers));                // the elementsInit n
+                    Pop(),            // the new list()
+                    initializers);   // the elementsInit
             });
 
     /// <inheritdoc/>
@@ -283,9 +281,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             new JElement(
                     Vocabulary.ElementInit,
                         VisitMemberInfo(node.AddMethod),
-                        new JElement(
-                                Vocabulary.Arguments,
-                                    PopWrappedElements(node.Arguments.Count))));  // pop the elements init expressions
+                        new JElement(Vocabulary.Arguments, PopWrappedElements(node.Arguments.Count))));  // pop the elements init expressions
 
         return elementInit;
     }

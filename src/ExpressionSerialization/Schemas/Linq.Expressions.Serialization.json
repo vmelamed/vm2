@@ -771,9 +771,12 @@
                             "type": "object",
                             "properties": {
                                 "new": { "$ref": "#/$defs/components/expressions/new" },
-                                "elements": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
+                                "initializers": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/components/expressions/elementInit" }
+                                }
                             },
-                            "required": [ "new", "elements" ],
+                            "required": [ "new", "initializers" ],
                             "additionalProperties": { "type": "string" }
                         }
                     },
@@ -1779,20 +1782,10 @@
                     "title": "Defines the type of elements that represent a sequence initializer.",
                     "type": "object",
                     "properties": {
-                        "initializers": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "method": { "$ref": "#/$defs/components/reflection/method" },
-                                    "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
-                                },
-                                "required": [ "method", "arguments" ],
-                                "additionalProperties": { "type": "string" }
-                            }
-                        }
+                        "method": { "$ref": "#/$defs/components/reflection/method" },
+                        "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
                     },
-                    "required": [ "initializers" ],
+                    "required": [ "method", "arguments" ],
                     "additionalProperties": { "type": "string" }
                 }
             }

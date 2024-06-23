@@ -75,7 +75,7 @@ public partial class ToJsonTransformVisitor
     /// <returns>System.Collections.Generic.IEnumerable&lt;JElement&gt;.</returns>
     IEnumerable<JsonNode?> PopElementsValues(int numberOfExpressions)
     {
-        foreach (var e in PopElements(numberOfExpressions))
+        foreach (var e in Pop(numberOfExpressions))
             yield return e.Value;
     }
 
@@ -88,7 +88,7 @@ public partial class ToJsonTransformVisitor
     /// <returns>System.Collections.Generic.IEnumerable&lt;JElement&gt;.</returns>
     IEnumerable<JsonObject> PopWrappedElements(int numberOfExpressions)
     {
-        foreach (var e in PopElements(numberOfExpressions))
+        foreach (var e in Pop(numberOfExpressions))
             yield return new JsonObject() { e };
     }
 

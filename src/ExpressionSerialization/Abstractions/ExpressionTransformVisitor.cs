@@ -60,7 +60,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <returns>XElement.</returns>
-    protected TElement PopElement() => _elements.Pop();
+    protected TElement Pop() => _elements.Pop();
 
     /// <summary>
     /// Pops a number of elements in the order they entered the stack
@@ -68,7 +68,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// </summary>
     /// <param name="numberOfExpressions">The number of expressions.</param>
     /// <returns>System.Collections.Generic.IEnumerable&lt;System.Xml.Linq.XElement&gt;.</returns>
-    protected IEnumerable<TElement> PopElements(int numberOfExpressions)
+    protected IEnumerable<TElement> Pop(int numberOfExpressions)
     {
         // we need this intermediary stack to return the elements in FIFO order
         Stack<TElement> tempElements = new(numberOfExpressions);
