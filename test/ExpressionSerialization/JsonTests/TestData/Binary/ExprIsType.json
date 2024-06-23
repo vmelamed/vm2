@@ -3,7 +3,6 @@
   "expression": {
     "lambda": {
       "type": "boolean",
-      "delegateType": "System.Func\u00602[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
       "parameters": [
         {
           "type": "object",
@@ -14,6 +13,7 @@
       "body": {
         "typeIs": {
           "type": "boolean",
+          "typeOperand": "vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "operands": [
             {
               "parameter": {
@@ -22,8 +22,7 @@
                 "id": "P1"
               }
             }
-          ],
-          "typeOperand": "vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+          ]
         }
       }
     }

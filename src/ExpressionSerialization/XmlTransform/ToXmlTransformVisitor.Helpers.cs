@@ -54,32 +54,7 @@ public partial class ToXmlTransformVisitor
                                     !string.IsNullOrWhiteSpace(labelTarget.Name) ? new XAttribute(AttributeNames.Name, labelTarget.Name) : null,
                                     labelTarget.Type != typeof(void) ? AttributeType(labelTarget.Type) : null);
 
-    /// <summary>
-    /// Pops one element from the stack
-    /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
-    /// </summary>
-    /// <returns>XElement.</returns>
-    XElement PopElement() => _elements.Pop();
-
-    /// <summary>
-    /// Pops a number of elements in the order they entered the stack
-    /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>  (FIFO, not LIFO).
-    /// </summary>
-    /// <param name="numberOfExpressions">The number of expressions.</param>
-    /// <returns>System.Collections.Generic.IEnumerable&lt;System.Xml.Linq.XElement&gt;.</returns>
-    IEnumerable<XElement> PopElements(int numberOfExpressions)
-    {
-        // we need this intermediary stack to return the elements in FIFO order
-        Stack<XElement> tempElements = new(numberOfExpressions);
-
-        // pop the expressions:
-        for (var i = 0; i < numberOfExpressions; i++)
-            tempElements.Push(_elements.Pop());
-
-        return tempElements;
-    }
-
-    XAttribute? AttributeName(string identifier)
+    XAttribute? AttributeName(string? identifier)
         => !string.IsNullOrWhiteSpace(identifier)
                 ? new XAttribute(AttributeNames.Name, Transform.Identifier(identifier, options.Identifiers))
                 : null;
@@ -89,10 +64,17 @@ public partial class ToXmlTransformVisitor
                 ? AttributeType(node.Type)
                 : null;
 
-    static XAttribute? AttributeType(Type type)
+    static XAttribute? AttributeType(Type? type)
         => type is not null
                 ? new(AttributeNames.Type, Transform.TypeName(type))
                 : null;
+
+    XAttribute? AttributeDelegateType(Type? type)
+        => options.AddLambdaTypes && type is not null
+                ? new(AttributeNames.DelegateType, Transform.TypeName(type))
+                : null;
+
+    // Reflection stuff
 
     static XElement? VisitMethodInfo(BinaryExpression node)
         => node.Method is MemberInfo mi

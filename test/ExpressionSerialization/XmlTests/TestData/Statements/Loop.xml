@@ -3,18 +3,19 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <block>
+    <block
+        type="void">
         <variables>
             <parameter
                 type="int"
-                id="P1"
+                id="P2"
                 name="_result" />
         </variables>
         <assign
             type="int">
             <parameter
                 type="int"
-                id="P2"
+                id="P1"
                 name="_value" />
             <constant>
                 <int>5</int>
@@ -24,7 +25,7 @@
             type="int">
             <parameter
                 type="int"
-                id="P1"
+                id="P2"
                 name="_result" />
             <constant>
                 <int>1</int>
@@ -32,31 +33,33 @@
         </assign>
         <loop
             type="void">
-            <block>
+            <block
+                type="void">
                 <conditional
                     type="void">
                     <greaterThan
                         type="boolean">
                         <parameter
                             type="int"
-                            id="P2"
+                            id="P1"
                             name="_value" />
                         <constant>
                             <int>1</int>
                         </constant>
                     </greaterThan>
-                    <block>
+                    <block
+                        type="void">
                         <multiplyAssign
                             type="int">
                             <parameter
                                 type="int"
-                                id="P1"
+                                id="P2"
                                 name="_result" />
                             <postDecrementAssign
                                 type="int">
                                 <parameter
                                     type="int"
-                                    id="P2"
+                                    id="P1"
                                     name="_value" />
                             </postDecrementAssign>
                         </multiplyAssign>

@@ -1150,6 +1150,10 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="indexer"
+                        type="propertyInfoType"
+                        minOccurs="0"
+                        maxOccurs="1"/>
         </xs:sequence>
         <xs:attribute name="type"
                       type="xs:token"

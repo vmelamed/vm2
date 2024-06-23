@@ -51,52 +51,32 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
         }
     }
 
-    /// <inheritdoc/>
-    protected override Expression VisitDefault(DefaultExpression node)
-        => GenericVisit(
-            node,
-            base.VisitDefault,
-            (n, x) => x.Add(options.TypeComment(n.Type)));
-
     IEnumerable<JsonNode?> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
         => parameterList.Select(p => !IsDefined(p)
                                         ? GetParameter(p).Value
-                                        : throw new InternalTransformErrorException($"Parameter with a name {p.Name} is already defined."));
-
-    /// <inheritdoc/>
-    protected override Expression VisitLambda<T>(Expression<T> node)
-    {
-        using var _ = OutputDebugScope(node.NodeType.ToString());
-        // here we do not want the base.Visit to drive the immediate subexpressions - it visits them in the reversed order.
-
-        var paramList = VisitParameterDefinitionList(node.Parameters).ToList();
-
-        Visit(node.Body);
-
-        _elements.Push(
-            GetEmptyNode(node)
-                .Add(
-                    new JElement(Vocabulary.DelegateType, Transform.TypeName(node.Type)),
-                    new JElement(Vocabulary.Parameters, paramList),
-                    new JElement(Vocabulary.Body, PopElement()),
-                    PropertyName(node.Name),
-                    node.TailCall ? new JElement(Vocabulary.TailCall, node.TailCall) : null)
-        );
-
-        return node;
-    }
+                                        : throw new InternalTransformErrorException($"Parameter with a name `{p.Name}` is already defined."));
 
     /// <inheritdoc/>
     protected override Expression VisitParameter(ParameterExpression node)
     {
+        using var _ = OutputDebugScope(node.NodeType.ToString());
         var n = (ParameterExpression)base.VisitParameter(node);
 
-        using var _ = OutputDebugScope(n.NodeType.ToString());
-
         _elements.Push(GetParameter(n));
-
         return node;
     }
+
+    /// <inheritdoc/>
+    protected override Expression VisitLambda<T>(Expression<T> node)
+        => GenericVisit(
+            node,
+            base.VisitLambda,
+            (n, x) => x.Add(
+                        PropertyDelegateType(node.Type),
+                        new JElement(Vocabulary.Parameters, PopElementsValues(n.Parameters.Count)),
+                        new JElement(Vocabulary.Body, PopElement()),
+                        PropertyName(node.Name),
+                        node.TailCall ? new JElement(Vocabulary.TailCall, node.TailCall) : null));
 
     /// <inheritdoc/>
     protected override Expression VisitUnary(UnaryExpression node)
@@ -104,12 +84,10 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             node,
             base.VisitUnary,
             (n, x) => x.Add(
-                            new JElement(
-                                    Vocabulary.Operands,
-                                        new JsonArray(PopWrappedElement())),    // pop the operand
-                            VisitMethodInfo(n),
-                            n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
-                            n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null));
+                        new JElement(Vocabulary.Operands, new JsonArray(PopWrappedElement())),    // pop the operand
+                        VisitMethodInfo(n),
+                        n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
+                        n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null));
 
     /// <inheritdoc/>
     protected override Expression VisitBinary(BinaryExpression node)
@@ -137,9 +115,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             node,
             base.VisitTypeBinary,
             (n, x) => x.Add(
-                        new JElement(Vocabulary.Operands,
-                                        new JsonArray(PopWrappedElement())),
-                        new JElement(Vocabulary.TypeOperand, Transform.TypeName(n.TypeOperand))));
+                        new JElement(Vocabulary.TypeOperand, Transform.TypeName(n.TypeOperand)),
+                        new JElement(Vocabulary.Operands, new JsonArray(PopWrappedElement()))));
 
     /// <inheritdoc/>
     protected override Expression VisitIndex(IndexExpression node)
@@ -164,15 +141,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             node,
             base.VisitBlock,
             (n, x) => x.Add(
-                        node.Variables?.Count is > 0
-                                            ? new JElement(
-                                                    Vocabulary.Variables,
-                                                        PopElementsValues(node.Variables.Count))
-                                            : null,
-                        new JElement(
-                                Vocabulary.Expressions,
-                                    PopWrappedElements(node.Expressions.Count))
-                    ));
+                        node.Variables.Count is > 0 ? new JElement(Vocabulary.Variables, PopElementsValues(node.Variables.Count)) : null,
+                        new JElement(Vocabulary.Expressions, PopWrappedElements(node.Expressions.Count))));
 
     /// <inheritdoc/>
     protected override Expression VisitMethodCall(MethodCallExpression node)
@@ -181,9 +151,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitMethodCall,
             (n, x) =>
             {
-                var arguments = new JElement(
-                                        Vocabulary.Arguments,
-                                            PopWrappedElements(n.Arguments.Count));        // pop the argument expressions
+                var arguments = new JElement(Vocabulary.Arguments, PopWrappedElements(n.Arguments.Count));        // pop the argument expressions
 
                 x.Add(
                     n.Object != null ? new JElement(Vocabulary.Object, PopElement()) : null,
@@ -198,14 +166,10 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitInvocation,
             (n, x) =>
             {
-                var arguments = new JElement(
-                                        Vocabulary.Arguments,
-                                            PopWrappedElements(n.Arguments.Count));   // pop the argument expressions
+                var arguments = new JElement(Vocabulary.Arguments, PopWrappedElements(n.Arguments.Count));   // pop the argument expressions
 
                 x.Add(
-                    new JElement(
-                            Vocabulary.Delegate,
-                                PopElement()),        // pop the delegate or lambda
+                    new JElement(Vocabulary.Delegate, PopElement()),        // pop the delegate or lambda
                     arguments);
             });
 
@@ -261,14 +225,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
 
                 x.Add(
                     PopElement(),
-                    value is not null
-                        ? new JElement(
-                                Vocabulary.Value,
-                                    value)
-                        : null,
-                    new JElement(
-                            Vocabulary.Kind,
-                                Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
+                    value is not null ? new JElement(Vocabulary.Value, value) : null,
+                    new JElement(Vocabulary.Kind, Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
             });
 
     /// <inheritdoc/>
@@ -278,13 +236,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitNew,
             (n, x) => x.Add(
                         VisitMemberInfo(n.Constructor),
-                        new JElement(
-                                Vocabulary.Arguments,
-                                    PopWrappedElements(n.Arguments.Count)),   // pop the c-tor arguments
+                        new JElement(Vocabulary.Arguments, PopWrappedElements(n.Arguments.Count)),   // pop the c-tor arguments
                         n.Members is not null && n.Members.Count > 0
-                            ? new JElement(
-                                    Vocabulary.Members,
-                                        new JsonObject(n.Members.Select(m => (KeyValuePair<string, JsonNode?>)VisitMemberInfo(m)!)))
+                            ? new JElement(Vocabulary.Members, new JsonObject(n.Members.Select(m => (KeyValuePair<string, JsonNode?>)VisitMemberInfo(m)!)))
                             : null));
 
     /// <inheritdoc/>
@@ -292,25 +246,24 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
         => GenericVisit(
             node,
             base.VisitNewArray,
+            (n, x) => x.Add(
+                        PropertyType(n.Type.GetElementType()),
+                        new JElement(
+                                n.NodeType is ExpressionType.NewArrayInit ? Vocabulary.ArrayElements : Vocabulary.Bounds,
+                                PopWrappedElements(n.Expressions.Count))));
+
+    /// <inheritdoc/>
+    protected override Expression VisitListInit(ListInitExpression node)
+        => GenericVisit(
+            node,
+            base.VisitListInit,
             (n, x) =>
             {
-                var elemType = n.Type.GetElementType() ?? throw new InternalTransformErrorException($"Could not get the type of the element.");
-
-                x.Add(new JElement(
-                                Vocabulary.Type,
-                                    Transform.TypeName(elemType)));
-
-                Stack<JsonNode> jNodes = [];
-
-                for (var i = 0; i < n.Expressions.Count; i++)
-                    jNodes.Push(PopWrappedElement());
+                var initializers = PopWrappedElements(n.Initializers.Count);
 
                 x.Add(
-                    new JElement(
-                            n.NodeType is ExpressionType.NewArrayInit
-                                ? Vocabulary.ArrayElements
-                                : Vocabulary.Bounds,
-                                    jNodes));
+                    PopElement(),            // the new n
+                    new JElement(Vocabulary.Initializers, initializers));                // the elementsInit n
             });
 
     /// <inheritdoc/>

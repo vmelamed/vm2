@@ -68,7 +68,7 @@ public partial class JsonOptions : DocumentOptions
     /// Determines whether the expressions schemaUri <see cref="JsonOptions.Exs"/> was added.
     /// </summary>
     /// <returns><c>true</c> if [has expressions schemaUri] [the specified options]; otherwise, <c>false</c>.</returns>
-    internal override bool HasExpressionsSchema
+    internal override bool HasExpressionSchema
     {
         get
         {

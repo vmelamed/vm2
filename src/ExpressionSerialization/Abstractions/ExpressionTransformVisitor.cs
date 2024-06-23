@@ -44,7 +44,7 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
         get
         {
             if (_elements.Count > 1)
-                throw new InternalTransformErrorException($"There must be exactly one x in the queue but there are {_elements.Count}.");
+                throw new InternalTransformErrorException($"There must be exactly one element on the stack but there are {_elements.Count}.");
             if (_elements.Count < 1)
                 throw new NoAvailableResultException();
 
@@ -53,6 +53,31 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
 
             return element;
         }
+    }
+
+    /// <summary>
+    /// Pops one element from the stack
+    /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
+    /// </summary>
+    /// <returns>XElement.</returns>
+    protected TElement PopElement() => _elements.Pop();
+
+    /// <summary>
+    /// Pops a number of elements in the order they entered the stack
+    /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>  (FIFO, not LIFO).
+    /// </summary>
+    /// <param name="numberOfExpressions">The number of expressions.</param>
+    /// <returns>System.Collections.Generic.IEnumerable&lt;System.Xml.Linq.XElement&gt;.</returns>
+    protected IEnumerable<TElement> PopElements(int numberOfExpressions)
+    {
+        // we need this intermediary stack to return the elements in FIFO order
+        Stack<TElement> tempElements = new(numberOfExpressions);
+
+        // pop the expressions:
+        for (var i = 0; i < numberOfExpressions; i++)
+            tempElements.Push(_elements.Pop());
+
+        return tempElements;
     }
 
 #if DEBUG

@@ -53,13 +53,6 @@ public partial class ToJsonTransformVisitor
                                     new JElement(Vocabulary.Id, NewLabelId));
 
     /// <summary>
-    /// Pops one element from the stack
-    /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
-    /// </summary>
-    /// <returns>JElement.</returns>
-    JElement PopElement() => _elements.Pop();
-
-    /// <summary>
     /// Pops one element from the stack and returns its <see cref="JElement.Value"/>
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
@@ -71,25 +64,7 @@ public partial class ToJsonTransformVisitor
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <returns>JsonObject.</returns>
-    JsonObject PopWrappedElement() => new JsonObject().Add(_elements.Pop(), null);
-
-    /// <summary>
-    /// Pops a specified number of elements from the stack in the order they entered (FIFO, nor LIFO).
-    /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
-    /// </summary>
-    /// <param name="numberOfExpressions">The number of expressions.</param>
-    /// <returns>System.Collections.Generic.IEnumerable&lt;JElement&gt;.</returns>
-    IEnumerable<JElement> PopElements(int numberOfExpressions)
-    {
-        // we need this intermediary stack to return the elements in FIFO order
-        Stack<JElement> tempElements = new(numberOfExpressions);
-
-        // pop the expressions:
-        for (var i = 0; i < numberOfExpressions; i++)
-            tempElements.Push(_elements.Pop());
-
-        return tempElements;
-    }
+    JsonObject PopWrappedElement() => new() { _elements.Pop() };
 
     /// <summary>
     /// Pops a specified number of elements from the stack in the order they entered (FIFO, not LIFO) and returns 
@@ -100,14 +75,8 @@ public partial class ToJsonTransformVisitor
     /// <returns>System.Collections.Generic.IEnumerable&lt;JElement&gt;.</returns>
     IEnumerable<JsonNode?> PopElementsValues(int numberOfExpressions)
     {
-        // we need this intermediary stack to return the elements in FIFO order
-        Stack<JsonNode?> tempElements = new(numberOfExpressions);
-
-        // pop the expressions:
-        for (var i = 0; i < numberOfExpressions; i++)
-            tempElements.Push(_elements.Pop().Value);
-
-        return tempElements;
+        foreach (var e in PopElements(numberOfExpressions))
+            yield return e.Value;
     }
 
     /// <summary>
@@ -119,14 +88,8 @@ public partial class ToJsonTransformVisitor
     /// <returns>System.Collections.Generic.IEnumerable&lt;JElement&gt;.</returns>
     IEnumerable<JsonObject> PopWrappedElements(int numberOfExpressions)
     {
-        // we need this intermediary stack to return the elements in FIFO order
-        Stack<JsonObject> tempElements = new(numberOfExpressions);
-
-        // pop the expressions:
-        for (var i = 0; i < numberOfExpressions; i++)
-            tempElements.Push(PopWrappedElement());
-
-        return tempElements;
+        foreach (var e in PopElements(numberOfExpressions))
+            yield return new JsonObject() { e };
     }
 
     /// <summary>
@@ -159,7 +122,12 @@ public partial class ToJsonTransformVisitor
                 ? new(Vocabulary.Type, Transform.TypeName(type))
                 : null;
 
-    // reflection metadata
+    JElement? PropertyDelegateType(Type? type)
+        => options.AddLambdaTypes && type is not null
+                ? new(Vocabulary.DelegateType, Transform.TypeName(type))
+                : null;
+
+    // reflection metadata:
 
     /// <summary>
     /// Visits the binary operation implementing method (if any).

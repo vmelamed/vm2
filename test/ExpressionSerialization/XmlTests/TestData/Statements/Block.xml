@@ -8,26 +8,27 @@
         <parameters>
             <parameter
                 type="int"
-                id="P1"
+                id="P2"
                 name="a" />
             <parameter
                 type="int"
-                id="P2"
+                id="P3"
                 name="b" />
         </parameters>
         <body>
-            <block>
+            <block
+                type="int">
                 <variables>
                     <parameter
                         type="int"
-                        id="P3"
+                        id="P1"
                         name="d" />
                 </variables>
                 <assign
                     type="int">
                     <parameter
                         type="int"
-                        id="P3"
+                        id="P1"
                         name="d" />
                     <constant>
                         <int>42</int>
@@ -37,22 +38,22 @@
                     type="int">
                     <parameter
                         type="int"
-                        id="P1"
+                        id="P2"
                         name="a" />
                     <parameter
                         type="int"
-                        id="P3"
+                        id="P1"
                         name="d" />
                 </addAssign>
                 <subtractAssign
                     type="int">
                     <parameter
                         type="int"
-                        id="P1"
+                        id="P2"
                         name="a" />
                     <parameter
                         type="int"
-                        id="P2"
+                        id="P3"
                         name="b" />
                 </subtractAssign>
                 <parameter
@@ -73,7 +74,7 @@
                     type="int">
                     <parameter
                         type="int"
-                        id="P1"
+                        id="P2"
                         name="a" />
                     <parameter
                         type="int"

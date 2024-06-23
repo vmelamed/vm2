@@ -718,25 +718,16 @@
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Represents calling the specified constructor with the specified arguments.",
+                    "title": "Represents creating a new object with the specified arguments.",
                     "type": "object",
                     "properties": {
-                        "new": {
-                            "type": "object",
-                            "properties": {
-                                "constructor": { "$ref": "#/$defs/components/reflection/constructor" },
-                                "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" },
-                                "members": {
-                                    "type": "array",
-                                    "items": { "$ref": "#/$defs/components/reflection/member" }
-                                }
-                            },
-                            "required": [ "constructor", "arguments" ],
-                            "additionalProperties": { "type": "string" }
-                        }
+                        "new": { "$ref": "#/$defs/components/expressions/new" }
                     },
                     "required": [ "new" ],
                     "additionalProperties": { "type": "string" }
+                },
+                {
+                    "$ref": "#/$defs/components/expressions/new"
                 },
                 {
                     "title": "Represents creating a new array with an expression for each bound (dimension)",
@@ -750,7 +741,7 @@
                             },
                             "required": [ "type", "bounds" ],
                             "additionalProperties": { "type": "string" }
-                        }                            
+                        }
                     },
                     "required": [ "newArrayBounds" ],
                     "additionalProperties": { "type": "string" }
@@ -770,6 +761,23 @@
                         }
                     },
                     "required": [ "newArrayInit" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Represents creating a new, list with a collection initializer",
+                    "type": "object",
+                    "properties": {
+                        "listInit": {
+                            "type": "object",
+                            "properties": {
+                                "new": { "$ref": "#/$defs/components/expressions/new" },
+                                "elements": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
+                            },
+                            "required": [ "new", "elements" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "listInit" ],
                     "additionalProperties": { "type": "string" }
                 }
             ]
@@ -1750,10 +1758,21 @@
                         "typeOperand": { "type": "string" },
                         "type": { "type": "string" }
                     },
-                    "required": [
-                        "operands",
-                        "typeOperand"
-                    ],
+                    "required": [ "operands", "typeOperand" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                "new": {
+                    "title": "Defines constructor call with the specified arguments.",
+                    "type": "object",
+                    "properties": {
+                        "constructor": { "$ref": "#/$defs/components/reflection/constructor" },
+                        "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" },
+                        "members": {
+                            "type": "array",
+                            "items": { "$ref": "#/$defs/components/reflection/member" }
+                        }
+                    },
+                    "required": [ "constructor", "arguments" ],
                     "additionalProperties": { "type": "string" }
                 },
                 "elementInit": {

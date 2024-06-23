@@ -8,17 +8,17 @@
         <parameters>
             <parameter
                 type="int"
-                id="P1"
+                id="P2"
                 name="i" />
             <parameter
                 type="double"
-                id="P2"
+                id="P1"
                 name="j" />
         </parameters>
         <body>
             <parameter
                 type="double"
-                id="P2"
+                id="P1"
                 name="j" />
         </body>
     </lambda>

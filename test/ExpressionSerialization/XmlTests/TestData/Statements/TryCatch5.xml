@@ -5,7 +5,8 @@
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <try
         type="void">
-        <block>
+        <block
+            type="void">
             <call
                 type="void">
                 <method

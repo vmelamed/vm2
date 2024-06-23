@@ -3,7 +3,8 @@
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-    <block>
+    <block
+        type="void">
         <call
             type="void">
             <method

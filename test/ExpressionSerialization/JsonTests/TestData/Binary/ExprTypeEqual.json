@@ -3,7 +3,6 @@
   "expression": {
     "lambda": {
       "type": "boolean",
-      "delegateType": "System.Func\u00602[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
       "parameters": [
         {
           "type": "int",
@@ -14,6 +13,7 @@
       "body": {
         "typeEqual": {
           "type": "boolean",
+          "typeOperand": "int",
           "operands": [
             {
               "parameter": {
@@ -22,8 +22,7 @@
                 "id": "P1"
               }
             }
-          ],
-          "typeOperand": "int"
+          ]
         }
       }
     }

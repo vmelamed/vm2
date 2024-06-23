@@ -194,7 +194,7 @@ public partial class XmlOptions : DocumentOptions
     /// <summary>
     /// Determines whether the expressions schemaUri <see cref="Exs"/> was added.
     /// </summary>
-    internal override bool HasExpressionsSchema
+    internal override bool HasExpressionSchema
     {
         get
         {

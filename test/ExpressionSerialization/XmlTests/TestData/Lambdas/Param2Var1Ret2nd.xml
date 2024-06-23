@@ -8,45 +8,46 @@
         <parameters>
             <parameter
                 type="int"
-                id="P1"
+                id="P2"
                 name="i" />
             <parameter
                 type="double"
-                id="P2"
+                id="P4"
                 name="j" />
         </parameters>
         <body>
-            <block>
+            <block
+                type="double">
                 <variables>
                     <parameter
                         type="int"
-                        id="P3"
+                        id="P1"
                         name="a" />
                     <parameter
                         type="double"
-                        id="P4"
+                        id="P3"
                         name="b" />
                 </variables>
                 <assign
                     type="int">
                     <parameter
                         type="int"
-                        id="P3"
+                        id="P1"
                         name="a" />
                     <parameter
                         type="int"
-                        id="P1"
+                        id="P2"
                         name="i" />
                 </assign>
                 <assign
                     type="double">
                     <parameter
                         type="double"
-                        id="P4"
+                        id="P3"
                         name="b" />
                     <parameter
                         type="double"
-                        id="P2"
+                        id="P4"
                         name="j" />
                 </assign>
                 <add
@@ -55,12 +56,12 @@
                         type="double">
                         <parameter
                             type="int"
-                            id="P3"
+                            id="P1"
                             name="a" />
                     </convert>
                     <parameter
                         type="double"
-                        id="P4"
+                        id="P3"
                         name="b" />
                 </add>
             </block>

@@ -37,6 +37,7 @@ public partial class StatementTests(XmlTestsFixture fixture, ITestOutputHelper o
         { TestLine(), "newArrayBounds",         "NewArrayBounds.xml" },
         { TestLine(), "newArrayItems",          "NewArrayInit.xml" },
         { TestLine(), "newDictionaryInit",      "NewDictionaryInit.xml" },
+        { TestLine(), "newHashtableInit",       "NewHashtableInit.xml" },
         { TestLine(), "newListInit",            "NewListInit.xml" },
         { TestLine(), "newMembersInit",         "NewMembersInit.xml" },
         { TestLine(), "newMembersInit1",        "NewMembersInit1.xml" },

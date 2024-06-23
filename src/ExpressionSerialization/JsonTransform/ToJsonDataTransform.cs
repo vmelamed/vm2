@@ -373,8 +373,7 @@ public class ToJsonDataTransform(JsonOptions options)
                                     (JsonNode)new JsonArray(
                                         enumerable
                                             .Cast<object?>()
-                                            .Select(e => new JsonObject()
-                                                                .Add((JElement?)GetTransform(elementType)(e, elementType)))
+                                            .Select(e => new JsonObject() { GetTransform(elementType)(e, elementType) })
                                             .ToArray())),
                             length.HasValue ? new JElement(Vocabulary.Length, length.Value) : null);
     }
@@ -423,14 +422,14 @@ public class ToJsonDataTransform(JsonOptions options)
 
         foreach (DictionaryEntry kv in dict)
             dictElements.Add(
-                new JsonObject()
-                        .Add(
-                            new JElement(
-                                    Vocabulary.Key,
-                                        GetTransform(kType)(kv.Key, kv.Key.GetType())),
-                            new JElement(
-                                    Vocabulary.Value,
-                                        GetTransform(vType)(kv.Value, kv.Value?.GetType() ?? vType))));
+                new JsonObject() {
+                        new JElement(
+                                Vocabulary.Key,
+                                    GetTransform(kType)(kv.Key, kv.Key.GetType())),
+                        new JElement(
+                                Vocabulary.Value,
+                                    GetTransform(vType)(kv.Value, kv.Value?.GetType() ?? vType))
+                });
 
         return dictionary.Add(Vocabulary.Length, dict.Count);
     }

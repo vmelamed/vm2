@@ -12,6 +12,7 @@ public abstract class DocumentOptions
     bool _indent = true;
     int _indentSize = 2;
     bool _addComments = false;
+    bool _addLambdaTypes = false;
     bool _changed = false;
 
     /// <summary>
@@ -20,8 +21,7 @@ public abstract class DocumentOptions
     protected bool Change(bool compare) => _changed |= compare;
 
     /// <summary>
-    /// Determines whether this instance has changed since the last call to <see cref="Changed"/> and then marks the
-    /// instance as not-changed.
+    /// Determines whether this instance has changed since the last call to <see cref="Changed"/>.
     /// </summary>
     /// <returns><c>true</c> if this instance has changed; otherwise, <c>false</c>.</returns>
     public bool Changed
@@ -105,6 +105,20 @@ public abstract class DocumentOptions
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the lambda types should be serialized to the output document. Typically,
+    /// This is not needed but it may be useful for display purposes.
+    /// </summary>
+    public bool AddLambdaTypes
+    {
+        get => _addLambdaTypes;
+        set
+        {
+            if (Change(_addLambdaTypes != value))
+                _addLambdaTypes = value;
+        }
+    }
+
+    /// <summary>
     /// Gets or sets a value indicating whether to validate the input documents that are to be transformed to <see cref="Expression"/>-s.
     /// </summary>
     public ValidateDocuments ValidateInputDocuments
@@ -120,8 +134,8 @@ public abstract class DocumentOptions
     /// <summary>
     /// Determines whether has expressions schema was added.
     /// </summary>
-    /// <returns><c>true</c> if [has expressions schema] [the specified options]; otherwise, <c>false</c>.</returns>
-    internal abstract bool HasExpressionsSchema { get; }
+    /// <returns><c>true</c> if an expressions schema is present; otherwise, <c>false</c>.</returns>
+    internal abstract bool HasExpressionSchema { get; }
 
     /// <summary>
     /// Transforms the <paramref name="type"/> to a readable string according to the <see cref="DocumentOptions.TypeNames"/> convention.
@@ -150,6 +164,6 @@ public abstract class DocumentOptions
     /// </exception>
     internal bool MustValidate
         => ValidateInputDocuments == ValidateDocuments.Always
-                ? HasExpressionsSchema ? true : throw new InvalidOperationException("The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().")
-                : ValidateInputDocuments == ValidateDocuments.IfSchemaPresent && HasExpressionsSchema;
+                ? HasExpressionSchema ? true : throw new InvalidOperationException("The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().")
+                : ValidateInputDocuments == ValidateDocuments.IfSchemaPresent && HasExpressionSchema;
 }

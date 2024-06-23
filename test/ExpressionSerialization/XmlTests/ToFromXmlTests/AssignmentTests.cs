@@ -32,7 +32,7 @@ public partial class AssignmentTests(XmlTestsFixture fixture, ITestOutputHelper 
         { TestLine(), "a &= b",             "AndAssign.xml" },
         { TestLine(), "a |= b",             "OrAssign.xml" },
         { TestLine(), "a ^= b",             "XorAssign.xml" },
-        { TestLine(), "x **= z",            "PowerAssign.json" },
+        { TestLine(), "x **= z",            "PowerAssign.xml" },
         { TestLine(), "a <<= b",            "LShiftAssign.xml" },
         { TestLine(), "a >>= b",            "RShiftAssign.xml" },
     };
