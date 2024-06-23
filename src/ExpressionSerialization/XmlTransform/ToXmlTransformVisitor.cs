@@ -60,11 +60,6 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitDefault,
             (n, x) => x.Add(options.TypeComment(n.Type)));
 
-    IEnumerable<XElement> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
-        => parameterList.Select(p => !IsDefined(p)
-                                        ? GetParameter(p)
-                                        : throw new InternalTransformErrorException($"Parameter with a name `{p.Name}` is already defined."));
-
     /// <inheritdoc/>
     protected override Expression VisitParameter(ParameterExpression node)
     {
@@ -75,6 +70,12 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         _elements.Push(GetParameter(node));
         return node;
     }
+
+    #region Lambda
+    IEnumerable<XElement> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
+=> parameterList.Select(p => !IsDefined(p)
+                                ? GetParameter(p)
+                                : throw new InternalTransformErrorException($"Parameter with a name `{p.Name}` is already defined."));
 
     /// <inheritdoc/>
     protected override Expression VisitLambda<T>(Expression<T> node)
@@ -87,6 +88,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                         new XElement(ElementNames.Body, Pop()),
                         AttributeName(node.Name),
                         node.TailCall ? new XAttribute(AttributeNames.TailCall, node.TailCall) : null));
+    #endregion
 
     /// <inheritdoc/>
     protected override Expression VisitUnary(UnaryExpression node)
@@ -152,8 +154,8 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                     Pop(),    // pop the expression/value that will give the object whose requested member is being accessed
                     VisitMemberInfo(n.Member)));
 
-    /// <inheritdoc/>
     #region Member initialization
+    /// <inheritdoc/>
     protected override Expression VisitMemberInit(MemberInitExpression node)
         => GenericVisit(
             node,
@@ -166,7 +168,10 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                     new XElement(ElementNames.Bindings, bindings));
             });
 
-    #region Member Bindings
+    ///// <inheritdoc/>
+    //protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
+    // the base is doing exactly what we need - dispatch the call to the concrete binding below:
+
     /// <inheritdoc/>
     protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
     {
@@ -213,11 +218,6 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
     }
     #endregion
 
-    ///// <inheritdoc/>
-    //protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
-    // the base is doing exactly what we need - dispatch the call to the concrete binding below:
-
-    #endregion
     /// <inheritdoc/>
     protected override Expression VisitMethodCall(MethodCallExpression node)
         => GenericVisit(
@@ -313,6 +313,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                                     expressions));
             });
 
+    #region new List with initializers
     /// <inheritdoc/>
     protected override Expression VisitListInit(ListInitExpression node)
         => GenericVisit(
@@ -341,7 +342,9 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 
         return elementInit;
     }
+    #endregion
 
+    #region Label, Target and Goto
     /// <inheritdoc/>
     protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
     {
@@ -388,6 +391,8 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                     new XAttribute(AttributeNames.Kind, Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
             });
 
+    #endregion
+
     /// <inheritdoc/>
     protected override Expression VisitLoop(LoopExpression node)
         => GenericVisit(
@@ -402,6 +407,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                             ? new XElement(ElementNames.BreakLabel, Pop())
                             : null));
 
+    #region Switch statement
     /// <inheritdoc/>
     protected override Expression VisitSwitch(SwitchExpression node)
         => GenericVisit(
@@ -440,7 +446,9 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 
         return switchCase;
     }
+    #endregion
 
+    #region Try-catch
     /// <inheritdoc/>
     protected override Expression VisitTry(TryExpression node)
         => GenericVisit(
@@ -506,36 +514,5 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 
         return node;
     }
-
-    /////////////////////////////////////////////////////////////////
-    // DO NOTHING:
-    /////////////////////////////////////////////////////////////////
-
-    /// <inheritdoc/>
-    protected override Expression VisitDebugInfo(DebugInfoExpression node)
-        => GenericVisit(
-            node,
-            base.VisitDebugInfo,
-            (n, x) => throw new NotImplementedExpressionException(n.GetType().Name));
-
-    /// <inheritdoc/>
-    protected override Expression VisitDynamic(DynamicExpression node)
-        => GenericVisit(
-            node,
-            base.VisitDynamic,
-            (n, x) => throw new NotImplementedExpressionException(n.GetType().Name));
-
-    /// <inheritdoc/>
-    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
-        => GenericVisit(
-            node,
-            base.VisitRuntimeVariables,
-            (n, x) => throw new NotImplementedExpressionException(n.GetType().Name));
-
-    /// <inheritdoc/>
-    protected override Expression VisitExtension(Expression node)
-        => GenericVisit(
-            node,
-            base.VisitExtension,
-            (n, x) => throw new NotImplementedExpressionException($"{nameof(ExpressionVisitor)}.{VisitExtension}(Expression n)"));
+    #endregion
 }

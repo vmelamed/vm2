@@ -58,11 +58,6 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitDefault,
             (n, x) => x.Add(options.TypeComment(n.Type)));
 
-    IEnumerable<JsonNode?> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
-        => parameterList.Select(p => !IsDefined(p)
-                                        ? GetParameter(p).Value
-                                        : throw new InternalTransformErrorException($"Parameter with a name `{p.Name}` is already defined."));
-
     /// <inheritdoc/>
     protected override Expression VisitParameter(ParameterExpression node)
     {
@@ -72,6 +67,12 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
         _elements.Push(GetParameter(n));
         return node;
     }
+
+    #region Lambda
+    IEnumerable<JsonNode?> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
+    => parameterList.Select(p => !IsDefined(p)
+                                    ? GetParameter(p).Value
+                                    : throw new InternalTransformErrorException($"Parameter with a name `{p.Name}` is already defined."));
 
     /// <inheritdoc/>
     protected override Expression VisitLambda<T>(Expression<T> node)
@@ -84,6 +85,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                         new JElement(Vocabulary.Body, Pop()),
                         PropertyName(node.Name),
                         node.TailCall ? new JElement(Vocabulary.TailCall, node.TailCall) : null));
+    #endregion
 
     /// <inheritdoc/>
     protected override Expression VisitUnary(UnaryExpression node)
@@ -141,13 +143,78 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             });
 
     /// <inheritdoc/>
-    protected override Expression VisitBlock(BlockExpression node)
+    protected override Expression VisitMember(MemberExpression node)
         => GenericVisit(
             node,
-            base.VisitBlock,
-            (n, x) => x.Add(
-                        node.Variables.Count is > 0 ? new JElement(Vocabulary.Variables, PopElementsValues(node.Variables.Count)) : null,
-                        new JElement(Vocabulary.Expressions, PopWrappedElements(node.Expressions.Count))));
+            base.VisitMember,
+            (n, x) =>
+                x.Add(
+                    new JElement(Vocabulary.Object, PopWrappedElement()),    // pop the expression/value that will give the object whose requested member is being accessed
+                    new JElement(Vocabulary.Member, VisitMemberInfo(n.Member))));
+
+    #region Member initialization
+    /// <inheritdoc/>
+    protected override Expression VisitMemberInit(MemberInitExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMemberInit,
+            (n, x) =>
+            {
+                var bindings = Pop(n.Bindings.Count).ToList();     // pop the expressions to assign to members
+                x.Add(
+                    Pop(),        // the new value
+                    new JElement(Vocabulary.Bindings, bindings));
+            });
+
+    ///// <inheritdoc/>
+    //protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
+    // the base is doing exactly what we need - dispatch the call to the concrete binding below:
+
+    ///// <inheritdoc/>
+    //protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
+    //{
+    //    using var _ = OutputDebugScope(nameof(MemberAssignment));
+    //    var binding = base.VisitMemberAssignment(node);
+
+    //    _elements.Push(
+    //        new JElement(
+    //                Vocabulary.AssignmentBinding,
+    //                    VisitMemberInfo(node.Member),
+    //                    Pop()));  // pop the value to assign
+
+    //    return binding;
+    //}
+
+    ///// <inheritdoc/>
+    //protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
+    //{
+    //    using var _ = OutputDebugScope(nameof(MemberMemberBinding));
+    //    var binding = base.VisitMemberMemberBinding(node);
+
+    //    _elements.Push(
+    //        new JElement(
+    //                Vocabulary.MemberMemberBinding,
+    //                    VisitMemberInfo(node.Member),
+    //                    Pop(node.Bindings.Count)));
+
+    //    return binding;
+    //}
+
+    ///// <inheritdoc/>
+    //protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
+    //{
+    //    using var _ = OutputDebugScope(nameof(MemberListBinding));
+    //    var binding = base.VisitMemberListBinding(node);
+
+    //    _elements.Push(
+    //        new JElement(
+    //                Vocabulary.MemberListBinding,
+    //                    VisitMemberInfo(node.Member),
+    //                    Pop(node.Initializers.Count)));
+
+    //    return binding;
+    //}
+    #endregion
 
     /// <inheritdoc/>
     protected override Expression VisitMethodCall(MethodCallExpression node)
@@ -179,6 +246,15 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             });
 
     /// <inheritdoc/>
+    protected override Expression VisitBlock(BlockExpression node)
+        => GenericVisit(
+            node,
+            base.VisitBlock,
+            (n, x) => x.Add(
+                        node.Variables.Count is > 0 ? new JElement(Vocabulary.Variables, PopElementsValues(node.Variables.Count)) : null,
+                        new JElement(Vocabulary.Expressions, PopWrappedElements(node.Expressions.Count))));
+
+    /// <inheritdoc/>
     protected override Expression VisitConditional(ConditionalExpression node)
         => GenericVisit(
             node,
@@ -191,48 +267,6 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                 x.Add(@if, then, @else);
             });
 
-
-    /// <inheritdoc/>
-    protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
-    {
-        using var _ = OutputDebugScope(nameof(LabelTarget));
-        var n = base.VisitLabelTarget(node);
-
-        if (n is not null)
-            _elements.Push(GetLabelTarget(n));
-
-        return n;
-    }
-
-    /// <inheritdoc/>
-    protected override Expression VisitLabel(LabelExpression node)
-        => GenericVisit(
-            node,
-            base.VisitLabel,
-            (n, x) =>
-            {
-                JElement? value = n.DefaultValue is not null ? Pop() : null;   // pop the default result value if present
-
-                x.Add(
-                    Pop(),   // add the target
-                    value);
-            });
-
-
-    /// <inheritdoc/>
-    protected override Expression VisitGoto(GotoExpression node)
-        => GenericVisit(
-            node,
-            base.VisitGoto,
-            (n, x) =>
-            {
-                JElement? value = n.Value is not null ? Pop() : null;
-
-                x.Add(
-                    Pop(),
-                    value is not null ? new JElement(Vocabulary.Value, value) : null,
-                    new JElement(Vocabulary.Kind, Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
-            });
 
     /// <inheritdoc/>
     protected override Expression VisitNew(NewExpression node)
@@ -257,6 +291,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                                 n.NodeType is ExpressionType.NewArrayInit ? Vocabulary.ArrayElements : Vocabulary.Bounds,
                                 PopWrappedElements(n.Expressions.Count))));
 
+    #region new list with initializers
     /// <inheritdoc/>
     protected override Expression VisitListInit(ListInitExpression node)
         => GenericVisit(
@@ -285,6 +320,51 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
 
         return elementInit;
     }
+    #endregion
+
+    #region Label, target, goto
+    /// <inheritdoc/>
+    protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
+    {
+        using var _ = OutputDebugScope(nameof(LabelTarget));
+        var n = base.VisitLabelTarget(node);
+
+        if (n is not null)
+            _elements.Push(GetLabelTarget(n));
+
+        return n;
+    }
+
+    /// <inheritdoc/>
+    protected override Expression VisitLabel(LabelExpression node)
+        => GenericVisit(
+            node,
+            base.VisitLabel,
+            (n, x) =>
+            {
+                var value = n.DefaultValue is not null ? new JElement(Vocabulary.Default, PopWrappedElement()) : (JElement?)null;   // pop the default result value if present
+
+                x.Add(
+                    Pop(),   // add the target
+                    value);
+            });
+
+
+    /// <inheritdoc/>
+    protected override Expression VisitGoto(GotoExpression node)
+        => GenericVisit(
+            node,
+            base.VisitGoto,
+            (n, x) =>
+            {
+                JElement? value = n.Value is not null ? Pop() : null;
+
+                x.Add(
+                    Pop(),
+                    value is not null ? new JElement(Vocabulary.Value, value) : null,
+                    new JElement(Vocabulary.Kind, Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
+            });
+    #endregion
 
     /// <inheritdoc/>
     protected override Expression VisitLoop(LoopExpression node)
@@ -300,6 +380,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                             ? new JElement(Vocabulary.BreakLabel, Pop())
                             : null));
 
+    #region Switch
     /// <inheritdoc/>
     protected override Expression VisitSwitch(SwitchExpression node)
         => GenericVisit(
@@ -336,7 +417,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
 
         return n;
     }
+    #endregion
 
+    #region try-catch
     /// <inheritdoc/>
     protected override Expression VisitTry(TryExpression node)
         => GenericVisit(
@@ -376,4 +459,5 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
 
         return catchBlock;
     }
+    #endregion
 }

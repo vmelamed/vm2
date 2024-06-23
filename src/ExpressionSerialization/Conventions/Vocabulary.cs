@@ -167,6 +167,7 @@ public static class Vocabulary
     public const string ListInit                = "listInit";
     public const string Initializers            = "initializers";
     public const string Loop                    = "loop";
+    public const string Member                  = "member";
     public const string MemberAccess            = "memberAccess";
     public const string MemberInit              = "memberInit";
     public const string Members                 = "members";

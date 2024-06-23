@@ -1,0 +1,130 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "lambda": {
+      "type": "System.Collections.Hashtable, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+      "parameters": [],
+      "body": {
+        "listInit": {
+          "new": {
+            "constructor": {
+              "declaringType": "System.Collections.Hashtable, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+              "parameterSpecs": []
+            },
+            "arguments": []
+          },
+          "initializers": [
+            {
+              "method": {
+                "declaringType": "System.Collections.Hashtable, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                "type": "void",
+                "name": "Add",
+                "parameterSpecs": [
+                  {
+                    "type": "object",
+                    "name": "key"
+                  },
+                  {
+                    "type": "object",
+                    "name": "value"
+                  }
+                ]
+              },
+              "arguments": [
+                {
+                  "convert": {
+                    "type": "object",
+                    "operands": [
+                      {
+                        "constant": {
+                          "int": 1
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "constant": {
+                    "string": "one"
+                  }
+                }
+              ]
+            },
+            {
+              "method": {
+                "declaringType": "System.Collections.Hashtable, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                "type": "void",
+                "name": "Add",
+                "parameterSpecs": [
+                  {
+                    "type": "object",
+                    "name": "key"
+                  },
+                  {
+                    "type": "object",
+                    "name": "value"
+                  }
+                ]
+              },
+              "arguments": [
+                {
+                  "convert": {
+                    "type": "object",
+                    "operands": [
+                      {
+                        "constant": {
+                          "int": 2
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "constant": {
+                    "string": "two"
+                  }
+                }
+              ]
+            },
+            {
+              "method": {
+                "declaringType": "System.Collections.Hashtable, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                "type": "void",
+                "name": "Add",
+                "parameterSpecs": [
+                  {
+                    "type": "object",
+                    "name": "key"
+                  },
+                  {
+                    "type": "object",
+                    "name": "value"
+                  }
+                ]
+              },
+              "arguments": [
+                {
+                  "convert": {
+                    "type": "object",
+                    "operands": [
+                      {
+                        "constant": {
+                          "int": 3
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "constant": {
+                    "string": "three"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -137,4 +137,34 @@ public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
     /// Resets this instance.
     /// </summary>
     protected virtual void Reset() => _elements.Clear();
+
+    #region Not implemented:
+    /// <inheritdoc/>
+    protected override Expression VisitDebugInfo(DebugInfoExpression node)
+        => GenericVisit(
+            node,
+            base.VisitDebugInfo,
+            (n, x) => throw new NotImplementedExpressionException(n.GetType().Name));
+
+    /// <inheritdoc/>
+    protected override Expression VisitDynamic(DynamicExpression node)
+        => GenericVisit(
+            node,
+            base.VisitDynamic,
+            (n, x) => throw new NotImplementedExpressionException(n.GetType().Name));
+
+    /// <inheritdoc/>
+    protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
+        => GenericVisit(
+            node,
+            base.VisitRuntimeVariables,
+            (n, x) => throw new NotImplementedExpressionException(n.GetType().Name));
+
+    /// <inheritdoc/>
+    protected override Expression VisitExtension(Expression node)
+        => GenericVisit(
+            node,
+            base.VisitExtension,
+            (n, x) => throw new NotImplementedExpressionException($"{nameof(ExpressionVisitor)}.{VisitExtension}(Expression n)"));
+    #endregion
 }

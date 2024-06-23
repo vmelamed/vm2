@@ -850,6 +850,23 @@
                     },
                     "required": [ "try" ],
                     "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Defines the type of elements that represent access to members of objects and structs.",
+                    "type": "object",
+                    "properties": {
+                        "memberAccess": {
+                            "type": "object",
+                            "properties": {
+                                "object": { "$ref": "#/$defs/expression" },
+                                "member": { "$ref": "#/$defs/components/reflection/member" }
+                            },
+                            "required": [ "object", "member" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "memberAccess" ],
+                    "additionalProperties": { "type": "string" }
                 }
             ]
         },
