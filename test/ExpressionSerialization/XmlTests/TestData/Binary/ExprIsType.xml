@@ -14,7 +14,7 @@
         <body>
             <typeIs
                 type="boolean"
-                typeOperand="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                typeOperand="vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
                 <parameter
                     type="object"
                     id="P1"

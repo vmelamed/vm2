@@ -44,7 +44,7 @@ public partial class TransformOptionsTests(ITestOutputHelper output)
         };
         var input = test.GetType();
 
-        var call = () => Conventions.Transform.TypeName(input, convention);
+        var call = () => Transform.TypeName(input, convention);
         if (throws)
         {
             call.Should().Throw<InternalTransformErrorException>();

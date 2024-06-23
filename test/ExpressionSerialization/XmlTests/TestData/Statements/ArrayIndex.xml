@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- (Array[Index] = (Array[Index] + Value)) -->
+<!-- (Array[Index] = (Array[Index] + _value)) -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
@@ -36,7 +36,7 @@
             <parameter
                 type="int"
                 id="P3"
-                name="Value" />
+                name="_value" />
         </add>
     </assign>
 </expression>

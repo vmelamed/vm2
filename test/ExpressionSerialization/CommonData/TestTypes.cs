@@ -1,9 +1,6 @@
-﻿namespace vm2.ExpressionSerialization.XmlTests;
-using System;
+﻿namespace vm2.ExpressionSerialization.CommonData;
 
-using System.Runtime.Serialization;
-
-enum EnumTest
+public enum EnumTest
 {
     One,
     Two,
@@ -11,7 +8,7 @@ enum EnumTest
 };
 
 [Flags]
-enum EnumFlagsTest
+public enum EnumFlagsTest
 {
     One = 1,
     Two = 2,
@@ -19,7 +16,7 @@ enum EnumFlagsTest
 }
 
 [DataContract(Namespace = "urn:vm.Test.Diagnostics", IsReference = true)]
-class Object1 : IEquatable<Object1>
+public class Object1 : IEquatable<Object1>
 {
     [DataMember]
     public object? ObjectProperty { get; set; }
@@ -162,7 +159,7 @@ class Object1 : IEquatable<Object1>
 }
 
 [DataContract]
-class ClassDataContract1 : IEquatable<ClassDataContract1>
+public class ClassDataContract1 : IEquatable<ClassDataContract1>
 {
     public ClassDataContract1() { }
 
@@ -199,7 +196,7 @@ class ClassDataContract1 : IEquatable<ClassDataContract1>
 
 #pragma warning disable IDE0021 // Use expression body for constructor
 [DataContract]
-class ClassDataContract2 : ClassDataContract1, IEquatable<ClassDataContract2>
+public class ClassDataContract2 : ClassDataContract1, IEquatable<ClassDataContract2>
 {
     public ClassDataContract2()
     {
@@ -240,7 +237,7 @@ class ClassDataContract2 : ClassDataContract1, IEquatable<ClassDataContract2>
 #pragma warning restore IDE0021 // Use expression body for constructor
 
 [Serializable]
-class ClassSerializable1 : IEquatable<ClassSerializable1>
+public class ClassSerializable1 : IEquatable<ClassSerializable1>
 {
     public int IntProperty { get; set; }
 
@@ -265,7 +262,7 @@ class ClassSerializable1 : IEquatable<ClassSerializable1>
     public static bool operator !=(ClassSerializable1 left, ClassSerializable1 right) => !(left == right);
 }
 
-class ClassNonSerializable(int intProperty, string strProperty)
+public class ClassNonSerializable(int intProperty, string strProperty)
 {
     public int IntProperty { get; set; } = intProperty;
 
@@ -275,7 +272,7 @@ class ClassNonSerializable(int intProperty, string strProperty)
 }
 
 [Serializable]
-struct StructSerializable1 : IEquatable<StructSerializable1>
+public struct StructSerializable1 : IEquatable<StructSerializable1>
 {
     public StructSerializable1() { }
 
@@ -299,7 +296,7 @@ struct StructSerializable1 : IEquatable<StructSerializable1>
 }
 
 [DataContract]
-struct StructDataContract1 : IEquatable<StructDataContract1>
+public struct StructDataContract1 : IEquatable<StructDataContract1>
 {
     public StructDataContract1() { }
     public StructDataContract1(int i, string s)
@@ -332,7 +329,7 @@ struct StructDataContract1 : IEquatable<StructDataContract1>
 }
 
 [DataContract]
-class A
+public class A
 {
     [DataMember]
     public int _a;
@@ -343,7 +340,7 @@ class A
 }
 
 [DataContract]
-class B
+public class B
 {
     [DataMember]
     public bool _b;
@@ -353,7 +350,7 @@ class B
 
 #pragma warning disable CS0649
 [DataContract]
-class C : A
+public class C : A
 {
     [DataMember]
     public double _c;
@@ -362,7 +359,7 @@ class C : A
 
 #pragma warning disable IDE0025 // Use expression body for property
 [DataContract]
-class TestMethods
+public class TestMethods
 {
     [DataMember]
     public readonly int _a = 3;
@@ -384,14 +381,14 @@ class TestMethods
 }
 #pragma warning restore IDE0025 // Use expression body for property
 
-class Inner
+public class Inner
 {
     public int IntProperty { get; set; }
 
     public string StringProperty { get; set; } = "";
 }
 
-class TestMembersInitialized
+public class TestMembersInitialized
 {
     public int TheOuterIntProperty { get; set; }
 
@@ -404,7 +401,7 @@ class TestMembersInitialized
     public IEnumerable<string> EnumerableProperty { get; set; } = ["1", "2", "3"];
 }
 
-class TestMembersInitialized1
+public class TestMembersInitialized1
 {
     public int TheOuterIntProperty { get; set; }
 

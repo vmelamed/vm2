@@ -12,7 +12,6 @@ global using System.Text;
 global using System.Threading;
 global using System.Xml;
 global using System.Xml.Linq;
-global using System.Xml.Schema;
 
 global using FluentAssertions;
 
@@ -20,9 +19,9 @@ global using TestUtilities;
 
 global using vm2.ExpressionDeepEquals;
 global using vm2.ExpressionSerialization.Abstractions;
+global using vm2.ExpressionSerialization.CommonData;
 global using vm2.ExpressionSerialization.Conventions;
 global using vm2.ExpressionSerialization.Exceptions;
-global using vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 global using vm2.ExpressionSerialization.XmlTransform;
 
 global using Xunit.Abstractions;

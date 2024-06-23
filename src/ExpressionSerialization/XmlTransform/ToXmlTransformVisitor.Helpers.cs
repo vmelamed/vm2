@@ -110,7 +110,7 @@ public partial class ToXmlTransformVisitor
             return null;
 
         XAttribute? declaringType = member.DeclaringType is Type dt ? new XAttribute(AttributeNames.DeclaringType, Transform.TypeName(dt)) : null;
-        XAttribute? nameAttribute = member.Name is not null ? new XAttribute(AttributeNames.Name, member.Name) : null;
+        XAttribute? nameAttribute = member is not ConstructorInfo && member.Name is not null ? new XAttribute(AttributeNames.Name, member.Name) : null;
         XAttribute? visibility = member switch
             {
                 ConstructorInfo ci => ci.IsPublic

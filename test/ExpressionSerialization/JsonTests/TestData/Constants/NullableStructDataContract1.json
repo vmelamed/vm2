@@ -2,11 +2,11 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "constant": {
-      "$comment": " nullable\u003Cvm2.ExpressionSerialization.JsonTests.StructDataContract1\u003E ",
+      "$comment": " nullable\u003Cvm2.ExpressionSerialization.CommonData.StructDataContract1\u003E ",
       "nullable": {
-        "$comment": " vm2.ExpressionSerialization.JsonTests.StructDataContract1 ",
+        "$comment": " vm2.ExpressionSerialization.CommonData.StructDataContract1 ",
         "object": {
-          "type": "vm2.ExpressionSerialization.JsonTests.StructDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.ExpressionSerialization.CommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "value": {
             "IntProperty": 7,
             "StringProperty": "vm"

@@ -71,7 +71,7 @@ public partial class ToJsonTransformVisitor
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <returns>JsonObject.</returns>
-    JsonObject PopWrappedElements() => new JsonObject().Add(_elements.Pop(), null);
+    JsonObject PopWrappedElement() => new JsonObject().Add(_elements.Pop(), null);
 
     /// <summary>
     /// Pops a specified number of elements from the stack in the order they entered (FIFO, nor LIFO).
@@ -124,7 +124,7 @@ public partial class ToJsonTransformVisitor
 
         // pop the expressions:
         for (var i = 0; i < numberOfExpressions; i++)
-            tempElements.Push(PopWrappedElements());
+            tempElements.Push(PopWrappedElement());
 
         return tempElements;
     }
@@ -192,7 +192,7 @@ public partial class ToJsonTransformVisitor
             return null;
 
         JElement? declaringTypeProperty = member.DeclaringType is Type dt ? new JElement(Vocabulary.DeclaringType, Transform.TypeName(dt)) : null;
-        JElement? nameProperty = PropertyName(member.Name);
+        JElement? nameProperty = member is not ConstructorInfo && member.Name is not null ? new JElement(Vocabulary.Name, member.Name) : null;
         JElement? visibilityProperty = member switch
             {
                 ConstructorInfo ci => ci.IsPublic

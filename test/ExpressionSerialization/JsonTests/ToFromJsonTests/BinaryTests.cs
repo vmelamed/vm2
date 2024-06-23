@@ -5,8 +5,6 @@ public partial class BinaryTests(JsonTestsFixture fixture, ITestOutputHelper out
 {
     protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestFilesPath, "Binary");
 
-    static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
-
     [Theory]
     [MemberData(nameof(BinaryData))]
     public async Task BinaryToJsonTestAsync(string testFileLine, string expressionString, string fileName)
@@ -53,40 +51,6 @@ public partial class BinaryTests(JsonTestsFixture fixture, ITestOutputHelper out
         { TestLine(), "(a, b) => a ** b",             "Power.json" },
     };
 
-    protected override Expression Substitute(string id) => _substitutes[id]();
+    protected override Expression Substitute(string id) => BinaryTestData.GetExpression(id);
 
-    static Dictionary<string, Func<Expression>> _substitutes = new()
-    {
-        ["(a, b) => checked(a - b)"]            = () => (int a, int b) => checked(a - b),
-        ["(a, b) => a - b"]                     = () => (int a, int b) => a - b,
-        ["(a, b) => a >> b"]                    = () => (int a, int b) => a >> b,
-        ["(a, b) => a ^ b"]                     = () => (int a, int b) => a ^ b,
-        ["(a, b) => a || b"]                    = () => (bool a, bool b) => a || b,
-        ["(a, b) => a | b"]                     = () => (int a, int b) => a | b,
-        ["(a, b) => a != b"]                    = () => (int a, int b) => a != b,
-        ["(a, b) => checked(a * b)"]            = () => (int a, int b) => checked(a * b),
-        ["(a, b) => a * b"]                     = () => (int a, int b) => a * b,
-        ["(a, b) => a % b"]                     = () => (int a, int b) => a % b,
-        ["(a, b) => a <= b"]                    = () => (int a, int b) => a <= b,
-        ["(a, b) => a < b"]                     = () => (int a, int b) => a < b,
-        ["(a, b) => a << b"]                    = () => (int a, int b) => a << b,
-        ["(a, b) => a >= b"]                    = () => (int a, int b) => a >= b,
-        ["(a, b) => a > b"]                     = () => (int a, int b) => a > b,
-        ["(a, b) => a == b"]                    = () => (int a, int b) => a == b,
-        ["(a, b) => a / b"]                     = () => (int a, int b) => a / b,
-        ["(a, b) => a ?? b"]                    = () => (int? a, int b) => a ?? b,
-        ["(a, i) => a[i]"]                      = () => (int[] a, int i) => a[i],
-        ["(a, b) => a && b"]                    = () => (bool a, bool b) => a && b,
-        ["(a, b) => a & b"]                     = () => (int a, int b) => a & b,
-        ["(a, b) => (a + b) * 42"]              = () => (int a, int b) => (a + b) * 42,
-        ["(a, b) => a + b * 42"]                = () => (int a, int b) => a + b * 42,
-        ["(a, b) => checked(a + b)"]            = () => (int a, int b) => checked(a + b),
-        ["(a, b) => a + (b + c)"]               = () => (int a, int b, int c) => a + (b + c),
-        ["(a, b) => a + b + c"]                 = () => (int a, int b, int c) => a + b + c,
-        ["(a, b) => a + b"]                     = () => (int a, int b) => a + b,
-        ["a => a as b"]                         = () => (ClassDataContract2 a) => a as ClassDataContract1,
-        ["a => a is b"]                         = () => (object a) => a is ClassDataContract1,
-        ["a => a equals int"]                   = () => Expression.Lambda(Expression.TypeEqual(_paramA, typeof(int)), _paramA),
-        ["(a, b) => a ** b"]                    = () => Expression.Lambda(Expression.Power(Expression.Constant(2.0), Expression.Constant(3.0))),
-    };
 }

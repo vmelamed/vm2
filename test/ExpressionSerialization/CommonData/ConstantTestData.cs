@@ -1,7 +1,36 @@
-﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
+﻿namespace vm2.ExpressionSerialization.CommonData;
 
-public partial class ConstantTests
+public static class ConstantTestData
 {
+    /// <summary>
+    /// The maximum long number that can be expressed as &quot;JSON integer&quot; without loosing fidelity.
+    /// </summary>
+    /// <remarks>
+    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
+    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
+    /// between [-(2^53-1), 2^53 - 1].
+    /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;9007199254740992&quot;</c>.
+    /// </remarks>
+    public static readonly long MaxJsonInteger = (long)Math.Pow(2, 53);
+
+    /// <summary>
+    /// The minimum long number that can be expressed as &quot;JSON integer&quot; without loosing fidelity.
+    /// </summary>
+    /// <remarks>
+    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
+    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
+    /// from the range [-(2^53-1), 2^53-1].
+    /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;-9007199254740992&quot;</c>.
+    /// </remarks>
+    public static readonly long MinJsonInteger = -MaxJsonInteger;
+
+    /// <summary>
+    /// Gets the expression mapped to the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns>Expression.</returns>
+    public static Expression GetExpression(string id) => _substitutes[id];
+
     static Dictionary<string, ConstantExpression> _substitutes = new()
     {
         // bool
@@ -70,12 +99,12 @@ public partial class ConstantTests
         ["5L"]                                                                                  = Expression.Constant(5L),
         ["long.Min"]                                                                            = Expression.Constant(long.MinValue),
         ["long.Max"]                                                                            = Expression.Constant(long.MaxValue),
-        ["long.IntMin"]                                                                         = Expression.Constant(ToJsonDataTransform.MinJsonInteger),
-        ["long.IntMax"]                                                                         = Expression.Constant(ToJsonDataTransform.MaxJsonInteger),
-        ["long.IntMin-1"]                                                                       = Expression.Constant(ToJsonDataTransform.MinJsonInteger-1),
-        ["long.IntMax+1"]                                                                       = Expression.Constant(ToJsonDataTransform.MaxJsonInteger+1),
-        ["long.IntMin+1"]                                                                       = Expression.Constant(ToJsonDataTransform.MinJsonInteger+1),
-        ["long.IntMax-1"]                                                                       = Expression.Constant(ToJsonDataTransform.MaxJsonInteger-1),
+        ["long.IntMin"]                                                                         = Expression.Constant(MinJsonInteger),
+        ["long.IntMax"]                                                                         = Expression.Constant(MaxJsonInteger),
+        ["long.IntMin-1"]                                                                       = Expression.Constant(MinJsonInteger-1),
+        ["long.IntMax+1"]                                                                       = Expression.Constant(MaxJsonInteger+1),
+        ["long.IntMin+1"]                                                                       = Expression.Constant(MinJsonInteger+1),
+        ["long.IntMax-1"]                                                                       = Expression.Constant(MaxJsonInteger-1),
         // sbyte
         ["(sbyte)5"]                                                                            = Expression.Constant((sbyte)5),
         ["(sbyte)-5"]                                                                           = Expression.Constant((sbyte)-5),
@@ -101,9 +130,9 @@ public partial class ConstantTests
         ["(ulong)5"]                                                                            = Expression.Constant((ulong)5),
         ["ulong.Min"]                                                                           = Expression.Constant(ulong.MinValue),
         ["ulong.Max"]                                                                           = Expression.Constant(ulong.MaxValue),
-        ["ulong.IntMax-1"]                                                                      = Expression.Constant((ulong)ToJsonDataTransform.MaxJsonInteger-1),
-        ["ulong.IntMax"]                                                                        = Expression.Constant((ulong)ToJsonDataTransform.MaxJsonInteger),
-        ["ulong.IntMax+1"]                                                                      = Expression.Constant((ulong)ToJsonDataTransform.MaxJsonInteger+1),
+        ["ulong.IntMax-1"]                                                                      = Expression.Constant((ulong)MaxJsonInteger-1),
+        ["ulong.IntMax"]                                                                        = Expression.Constant((ulong)MaxJsonInteger),
+        ["ulong.IntMax+1"]                                                                      = Expression.Constant((ulong)MaxJsonInteger+1),
         // ushort
         ["(ushort)5"]                                                                           = Expression.Constant((ushort)5),
         ["(ushort)443"]                                                                         = Expression.Constant((ushort)443),
@@ -153,12 +182,12 @@ public partial class ConstantTests
         ["(long?)null"]                                                                         = Expression.Constant(null, typeof(long?)),
         ["(long?)long.Min"]                                                                     = Expression.Constant(long.MinValue, typeof(long?)),
         ["(long?)long.Max"]                                                                     = Expression.Constant(long.MaxValue, typeof(long?)),
-        ["(long?)long.IntMin"]                                                                  = Expression.Constant(ToJsonDataTransform.MinJsonInteger, typeof(long?)),
-        ["(long?)long.IntMax"]                                                                  = Expression.Constant(ToJsonDataTransform.MaxJsonInteger, typeof(long?)),
-        ["(long?)long.IntMin-1"]                                                                = Expression.Constant(ToJsonDataTransform.MinJsonInteger-1, typeof(long?)),
-        ["(long?)long.IntMax+1"]                                                                = Expression.Constant(ToJsonDataTransform.MaxJsonInteger+1, typeof(long?)),
-        ["(long?)long.IntMin+1"]                                                                = Expression.Constant(ToJsonDataTransform.MinJsonInteger+1, typeof(long?)),
-        ["(long?)long.IntMax-1"]                                                                = Expression.Constant(ToJsonDataTransform.MaxJsonInteger-1, typeof(long?)),
+        ["(long?)long.IntMin"]                                                                  = Expression.Constant(MinJsonInteger, typeof(long?)),
+        ["(long?)long.IntMax"]                                                                  = Expression.Constant(MaxJsonInteger, typeof(long?)),
+        ["(long?)long.IntMin-1"]                                                                = Expression.Constant(MinJsonInteger-1, typeof(long?)),
+        ["(long?)long.IntMax+1"]                                                                = Expression.Constant(MaxJsonInteger+1, typeof(long?)),
+        ["(long?)long.IntMin+1"]                                                                = Expression.Constant(MinJsonInteger+1, typeof(long?)),
+        ["(long?)long.IntMax-1"]                                                                = Expression.Constant(MaxJsonInteger-1, typeof(long?)),
         // objects
         ["null"]                                                                                = Expression.Constant(null),
         ["object()"]                                                                            = Expression.Constant(new object()),

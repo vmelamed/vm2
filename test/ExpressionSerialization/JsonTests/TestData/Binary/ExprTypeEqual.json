@@ -14,13 +14,15 @@
       "body": {
         "typeEqual": {
           "type": "boolean",
-          "expression": {
-            "parameter": {
-              "type": "int",
-              "name": "a",
-              "id": "P1"
+          "operands": [
+            {
+              "parameter": {
+                "type": "int",
+                "name": "a",
+                "id": "P1"
+              }
             }
-          },
+          ],
           "typeOperand": "int"
         }
       }

@@ -242,6 +242,10 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
     }
     #endregion
 
+    ///// <inheritdoc/>
+    //protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
+    // the base is doing exactly what we need - dispatch the call to the concrete binding below:
+
     #endregion
     /// <inheritdoc/>
     protected override Expression VisitMethodCall(MethodCallExpression node)
@@ -338,6 +342,51 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                                     ElementNames.Members,
                                     n.Members.Select(m => VisitMemberInfo(m)))
                             : null));
+
+    #region New array
+    /// <inheritdoc/>
+    protected override Expression VisitNewArray(NewArrayExpression node)
+        => GenericVisit(
+            node,
+            base.VisitNewArray,
+            (n, x) =>
+            {
+                var elemType = n.Type.GetElementType() ?? throw new InternalTransformErrorException($"Could not get the type of the element.");
+
+                x.Add(new XAttribute(AttributeNames.Type, Transform.TypeName(elemType)));
+
+                if (n.NodeType == ExpressionType.NewArrayInit)
+                    VisitNewArrayInit(n, x);
+                else
+                    VisitNewArrayBounds(n, x);
+            });
+
+    void VisitNewArrayInit(NewArrayExpression n, XElement x)
+    {
+        Stack<XElement> initializers = [];
+
+        for (var i = 0; i < n.Expressions.Count; i++)
+            initializers.Push(PopElement());
+
+        x.Add(
+            new XElement(
+                    ElementNames.ArrayElements,
+                    initializers));
+    }
+
+    void VisitNewArrayBounds(NewArrayExpression n, XElement x)
+    {
+        Stack<XElement> bounds = [];
+
+        for (var i = 0; i < n.Expressions.Count; i++)
+            bounds.Push(PopElement());
+
+        x.Add(
+            new XElement(
+                    ElementNames.Bounds,
+                        bounds));
+    }
+    #endregion
 
     /// <inheritdoc/>
     protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
@@ -543,49 +592,6 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                         ElementNames.Initializers,
                         initializers));                // the elementsInit n
             });
-
-    /// <inheritdoc/>
-    protected override Expression VisitNewArray(NewArrayExpression node)
-        => GenericVisit(
-            node,
-            base.VisitNewArray,
-            (n, x) =>
-            {
-                var elemType = n.Type.GetElementType() ?? throw new InternalTransformErrorException($"Could not get the type of the element.");
-
-                x.Add(new XAttribute(AttributeNames.Type, Transform.TypeName(elemType)));
-
-                if (n.NodeType == ExpressionType.NewArrayInit)
-                    VisitNewArrayInit(n, x);
-                else
-                    VisitNewArrayBounds(n, x);
-            });
-
-    void VisitNewArrayInit(NewArrayExpression n, XElement x)
-    {
-        Stack<XElement> initializers = [];
-
-        for (var i = 0; i < n.Expressions.Count; i++)
-            initializers.Push(PopElement());
-
-        x.Add(
-            new XElement(
-                    ElementNames.ArrayElements,
-                    initializers));
-    }
-
-    void VisitNewArrayBounds(NewArrayExpression n, XElement x)
-    {
-        Stack<XElement> bounds = [];
-
-        for (var i = 0; i < n.Expressions.Count; i++)
-            bounds.Push(PopElement());
-
-        x.Add(
-            new XElement(
-                    ElementNames.Bounds,
-                        bounds));
-    }
 
     /////////////////////////////////////////////////////////////////
     // DO NOTHING:

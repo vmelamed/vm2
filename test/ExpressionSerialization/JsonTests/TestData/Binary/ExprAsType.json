@@ -2,22 +2,22 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "lambda": {
-      "type": "vm2.ExpressionSerialization.JsonTests.ClassDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-      "delegateType": "System.Func\u00602[[vm2.ExpressionSerialization.JsonTests.ClassDataContract2, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f],[vm2.ExpressionSerialization.JsonTests.ClassDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+      "type": "vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "delegateType": "System.Func\u00602[[vm2.ExpressionSerialization.CommonData.ClassDataContract2, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f],[vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
       "parameters": [
         {
-          "type": "vm2.ExpressionSerialization.JsonTests.ClassDataContract2, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.ExpressionSerialization.CommonData.ClassDataContract2, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "name": "a",
           "id": "P1"
         }
       ],
       "body": {
         "typeAs": {
-          "type": "vm2.ExpressionSerialization.JsonTests.ClassDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "operands": [
             {
               "parameter": {
-                "type": "vm2.ExpressionSerialization.JsonTests.ClassDataContract2, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                "type": "vm2.ExpressionSerialization.CommonData.ClassDataContract2, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                 "name": "a",
                 "id": "P1"
               }

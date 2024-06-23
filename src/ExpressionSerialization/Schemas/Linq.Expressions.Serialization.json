@@ -590,10 +590,7 @@
                             "type": "object",
                             "properties": {
                                 "variables": { "$ref": "#/$defs/components/parameters/parameterList" },
-                                "expressions": {
-                                    "type": "array",
-                                    "items": { "$ref": "#/$defs/expression" }
-                                }
+                                "expressions": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
                             },
                             "additionalProperties": { "type": "string" }
                         }
@@ -609,10 +606,7 @@
                             "type": "object",
                             "properties": {
                                 "instance": { "$ref": "#/$defs/expression" },
-                                "indexes": {
-                                    "type": "array",
-                                    "items": { "$ref": "#/$defs/expression" }
-                                },
+                                "indexes": { "$ref": "#/$defs/components/expressions/arrayExpressions" },
                                 "indexer": {
                                     "$comment": "Present if the expression represents an indexed property",
                                     "$ref": "#/$defs/components/reflection/property"
@@ -634,10 +628,7 @@
                             "properties": {
                                 "object": { "$ref": "#/$defs/expression" },
                                 "method": { "$ref": "#/$defs/components/reflection/method" },
-                                "arguments": {
-                                    "type": "array",
-                                    "items": { "$ref": "#/$defs/expression" }
-                                }
+                                "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
                             },
                             "required": [ "method", "arguments" ],
                             "additionalProperties": { "type": "string" }
@@ -654,15 +645,9 @@
                             "type": "object",
                             "properties": {
                                 "delegate": { "$ref": "#/$defs/expression" },
-                                "arguments": {
-                                    "type": "array",
-                                    "items": { "$ref": "#/$defs/expression" }
-                                }
+                                "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
                             },
-                            "required": [
-                                "delegate",
-                                "arguments"
-                            ],
+                            "required": [ "delegate", "arguments" ],
                             "additionalProperties": { "type": "string" }
                         }
                     },
@@ -730,6 +715,61 @@
                         }
                     },
                     "required": [ "goto" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Represents calling the specified constructor with the specified arguments.",
+                    "type": "object",
+                    "properties": {
+                        "new": {
+                            "type": "object",
+                            "properties": {
+                                "constructor": { "$ref": "#/$defs/components/reflection/constructor" },
+                                "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" },
+                                "members": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/components/reflection/member" }
+                                }
+                            },
+                            "required": [ "constructor", "arguments" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "new" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Represents creating a new array with an expression for each bound (dimension)",
+                    "type": "object",
+                    "properties": {
+                        "newArrayBounds": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "bounds": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
+                            },
+                            "required": [ "type", "bounds" ],
+                            "additionalProperties": { "type": "string" }
+                        }                            
+                    },
+                    "required": [ "newArrayBounds" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Represents creating a new, 1-dimensional array with an expression for each element",
+                    "type": "object",
+                    "properties": {
+                        "newArrayInit": {
+                            "type": "object",
+                            "properties": {
+                                "type": { "type": "string" },
+                                "elements": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
+                            },
+                            "required": [ "type", "elements" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "newArrayInit" ],
                     "additionalProperties": { "type": "string" }
                 }
             ]
@@ -1590,11 +1630,50 @@
                         "name"
                     ],
                     "additionalProperties": { "type": "string" }
+                },
+                "member": {
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "constructor": { "$ref": "#/$defs/components/reflection/constructor" }
+                            },
+                            "required": [ "constructor" ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "property": { "$ref": "#/$defs/components/reflection/property" }
+                            },
+                            "required": [ "property" ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "method": { "$ref": "#/$defs/components/reflection/method" }
+                            },
+                            "required": [ "method" ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "event": { "$ref": "#/$defs/components/reflection/event" }
+                            },
+                            "required": [ "event" ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "field": { "$ref": "#/$defs/components/reflection/field" }
+                            },
+                            "required": [ "field" ]
+                        }
+                    ]
                 }
             },
             "expressions": {
                 "lambda": {
-                    "title": "Specifies a lambda expression (`(int a, int b) => a+b`)",
+                    "title": "Defines an expression that defines a lambda function (`(int a, int b) => a+b`)",
                     "type": "object",
                     "properties": {
                         "lambda": {
@@ -1617,8 +1696,12 @@
                     "required": [ "lambda" ],
                     "additionalProperties": { "type": "string" }
                 },
+                "arrayExpressions": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/expression" }
+                },
                 "unary": {
-                    "title": "Specifies a unary expression: Negate, NegateChecked, Not, ArrayLength, Convert, ConvertChecked, Quote, TypeAs, UnaryPlus",
+                    "title": "Defines an operation on single operand (expression): Negate, NegateChecked, Not, ArrayLength, Convert, ConvertChecked, Quote, TypeAs, UnaryPlus",
                     "type": "object",
                     "properties": {
                         "operands": {
@@ -1636,7 +1719,7 @@
                     "additionalProperties": { "type": "string" }
                 },
                 "binary": {
-                    "title": "Specifies a binary expression: Add, Subtract, etc.",
+                    "title": "Defines an operation between two operands (expressions): Add, Subtract, etc.",
                     "type": "object",
                     "properties": {
                         "operands": {
@@ -1655,17 +1738,42 @@
                     "additionalProperties": { "type": "string" }
                 },
                 "typeBinary": {
-                    "title": "Specifies an operation between an expression and a type.",
+                    "title": "Defines an operation between an expression and a type.",
                     "type": "object",
                     "properties": {
-                        "expression": { "$ref": "#/$defs/expression" },
+                        "operands": {
+                            "type": "array",
+                            "items": { "$ref": "#/$defs/expression" },
+                            "minItems": 1,
+                            "maxItems": 1
+                        },
                         "typeOperand": { "type": "string" },
                         "type": { "type": "string" }
                     },
                     "required": [
-                        "expression",
+                        "operands",
                         "typeOperand"
                     ],
+                    "additionalProperties": { "type": "string" }
+                },
+                "elementInit": {
+                    "title": "Defines the type of elements that represent a sequence initializer.",
+                    "type": "object",
+                    "properties": {
+                        "initializers": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "method": { "$ref": "#/$defs/components/reflection/method" },
+                                    "arguments": { "$ref": "#/$defs/components/expressions/arrayExpressions" }
+                                },
+                                "required": [ "method", "arguments" ],
+                                "additionalProperties": { "type": "string" }
+                            }
+                        }
+                    },
+                    "required": [ "initializers" ],
                     "additionalProperties": { "type": "string" }
                 }
             }

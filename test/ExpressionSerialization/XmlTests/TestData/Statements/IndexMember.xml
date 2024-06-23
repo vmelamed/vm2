@@ -7,7 +7,7 @@
         type="int">
         <parameters>
             <parameter
-                type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                type="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                 id="P1"
                 name="m" />
         </parameters>
@@ -21,11 +21,11 @@
                         <memberAccess
                             type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                             <parameter
-                                type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                type="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                                 id="P1"
                                 name="m" />
                             <property
-                                declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                declaringType="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                                 type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                                 name="ArrayProperty" />
                         </memberAccess>
@@ -39,11 +39,11 @@
                     <memberAccess
                         type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                         <parameter
-                            type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            type="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                             id="P1"
                             name="m" />
                         <property
-                            declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                            declaringType="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                             type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                             name="ArrayProperty" />
                     </memberAccess>
@@ -54,11 +54,11 @@
                             <memberAccess
                                 type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
                                 <parameter
-                                    type="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                    type="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                                     id="P1"
                                     name="m" />
                                 <property
-                                    declaringType="vm2.ExpressionSerialization.XmlTests.TestMembersInitialized, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                                    declaringType="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                                     type="System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                                     name="ArrayProperty" />
                             </memberAccess>

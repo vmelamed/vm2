@@ -106,7 +106,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             (n, x) => x.Add(
                             new JElement(
                                     Vocabulary.Operands,
-                                        new JsonArray(PopWrappedElements())),    // pop the operand
+                                        new JsonArray(PopWrappedElement())),    // pop the operand
                             VisitMethodInfo(n),
                             n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
                             n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null));
@@ -118,9 +118,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitBinary,
             (n, x) =>
             {
-                var right = PopWrappedElements();
+                var right = PopWrappedElement();
                 var convert = n.Conversion is not null ? PopElementValue() : null;
-                var left = PopWrappedElements();
+                var left = PopWrappedElement();
 
                 x.Add(
                         new JElement(
@@ -137,7 +137,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             node,
             base.VisitTypeBinary,
             (n, x) => x.Add(
-                        new JElement(Vocabulary.Expression, PopElement()),
+                        new JElement(Vocabulary.Operands,
+                                        new JsonArray(PopWrappedElement())),
                         new JElement(Vocabulary.TypeOperand, Transform.TypeName(n.TypeOperand))));
 
     /// <inheritdoc/>
@@ -260,11 +261,72 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
 
                 x.Add(
                     PopElement(),
-                    new JElement(
-                            Vocabulary.Value,
-                                value),
+                    value is not null
+                        ? new JElement(
+                                Vocabulary.Value,
+                                    value)
+                        : null,
                     new JElement(
                             Vocabulary.Kind,
                                 Transform.Identifier(node.Kind.ToString(), IdentifierConventions.Camel)));
             });
+
+    /// <inheritdoc/>
+    protected override Expression VisitNew(NewExpression node)
+        => GenericVisit(
+            node,
+            base.VisitNew,
+            (n, x) => x.Add(
+                        VisitMemberInfo(n.Constructor),
+                        new JElement(
+                                Vocabulary.Arguments,
+                                    PopWrappedElements(n.Arguments.Count)),   // pop the c-tor arguments
+                        n.Members is not null && n.Members.Count > 0
+                            ? new JElement(
+                                    Vocabulary.Members,
+                                        new JsonObject(n.Members.Select(m => (KeyValuePair<string, JsonNode?>)VisitMemberInfo(m)!)))
+                            : null));
+
+    /// <inheritdoc/>
+    protected override Expression VisitNewArray(NewArrayExpression node)
+        => GenericVisit(
+            node,
+            base.VisitNewArray,
+            (n, x) =>
+            {
+                var elemType = n.Type.GetElementType() ?? throw new InternalTransformErrorException($"Could not get the type of the element.");
+
+                x.Add(new JElement(
+                                Vocabulary.Type,
+                                    Transform.TypeName(elemType)));
+
+                Stack<JsonNode> jNodes = [];
+
+                for (var i = 0; i < n.Expressions.Count; i++)
+                    jNodes.Push(PopWrappedElement());
+
+                x.Add(
+                    new JElement(
+                            n.NodeType is ExpressionType.NewArrayInit
+                                ? Vocabulary.ArrayElements
+                                : Vocabulary.Bounds,
+                                    jNodes));
+            });
+
+    /// <inheritdoc/>
+    protected override ElementInit VisitElementInit(ElementInit node)
+    {
+        using var _ = OutputDebugScope(nameof(ElementInit));
+        var elementInit = base.VisitElementInit(node);
+
+        _elements.Push(
+            new JElement(
+                    Vocabulary.ElementInit,
+                        VisitMemberInfo(node.AddMethod),
+                        new JElement(
+                                Vocabulary.Arguments,
+                                    PopWrappedElements(node.Arguments.Count))));  // pop the elements init expressions
+
+        return elementInit;
+    }
 }

@@ -4,7 +4,7 @@
     "constant": {
       "$comment": " nullable\u003Clong\u003E ",
       "nullable": {
-        "long": "-9007199254740992"
+        "long": "-9007199254740993"
       }
     }
   }

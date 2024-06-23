@@ -4,13 +4,13 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <!-- vm2.ExpressionSerialization.XmlTests.ClassDataContract1 -->
+        <!-- vm2.ExpressionSerialization.CommonData.ClassDataContract1 -->
         <object
-            type="vm2.ExpressionSerialization.XmlTests.ClassDataContract1, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
-            concreteType="vm2.ExpressionSerialization.XmlTests.ClassDataContract2, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+            type="vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+            concreteType="vm2.ExpressionSerialization.CommonData.ClassDataContract2, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
             <ClassDataContract2
                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.XmlTests">
+                xmlns="http://schemas.datacontract.org/2004/07/vm2.ExpressionSerialization.CommonData">
                 <IntProperty>1</IntProperty>
                 <StringProperty>two</StringProperty>
                 <DecimalProperty>3</DecimalProperty>

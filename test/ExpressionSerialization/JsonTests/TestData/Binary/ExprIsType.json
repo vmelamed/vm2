@@ -14,14 +14,16 @@
       "body": {
         "typeIs": {
           "type": "boolean",
-          "expression": {
-            "parameter": {
-              "type": "object",
-              "name": "a",
-              "id": "P1"
+          "operands": [
+            {
+              "parameter": {
+                "type": "object",
+                "name": "a",
+                "id": "P1"
+              }
             }
-          },
-          "typeOperand": "vm2.ExpressionSerialization.JsonTests.ClassDataContract1, JsonTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+          ],
+          "typeOperand": "vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
         }
       }
     }

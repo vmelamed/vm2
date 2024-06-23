@@ -15,5 +15,5 @@ public partial class ConstantTests(JsonTestsFixture fixture, ITestOutputHelper o
     public async Task ConstantFromJsonTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.FromJsonTestAsync(testFileLine, expressionString, fileName);
 
-    protected override Expression Substitute(string id) => _substitutes[id];
+    protected override Expression Substitute(string id) => ConstantTestData.GetExpression(id);
 }

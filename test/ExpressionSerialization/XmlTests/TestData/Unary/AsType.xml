@@ -4,18 +4,18 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <lambda
-        type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+        type="vm2.ExpressionSerialization.CommonData.A, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
         <parameters>
             <parameter
-                type="vm2.ExpressionSerialization.XmlTests.C, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                type="vm2.ExpressionSerialization.CommonData.C, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                 id="P1"
                 name="c" />
         </parameters>
         <body>
             <typeAs
-                type="vm2.ExpressionSerialization.XmlTests.A, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b">
+                type="vm2.ExpressionSerialization.CommonData.A, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
                 <parameter
-                    type="vm2.ExpressionSerialization.XmlTests.C, XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33dd0fdd47b5922b"
+                    type="vm2.ExpressionSerialization.CommonData.C, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                     id="P1"
                     name="c" />
             </typeAs>

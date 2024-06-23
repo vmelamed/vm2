@@ -15,8 +15,6 @@ public partial class ChangeByOneTests(XmlTestsFixture fixture, ITestOutputHelper
     public async Task ChangeByOneFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
-    protected override Expression Substitute(string id) => _substitutes[id];
-
     public static readonly TheoryData<string, string, string> ChangeByOneExpressionData = new ()
     {
         { TestLine(), "a => increment(a)", "Increment.xml" },
@@ -27,15 +25,5 @@ public partial class ChangeByOneTests(XmlTestsFixture fixture, ITestOutputHelper
         { TestLine(), "a => a--",          "PostDecrementAssign.xml" },
     };
 
-    static ParameterExpression _pa = Expression.Parameter(typeof(int), "a");
-
-    static Dictionary<string, Expression> _substitutes = new()
-    {
-        ["a => increment(a)"] = Expression.Lambda(Expression.Increment(_pa), _pa),
-        ["a => decrement(a)"] = Expression.Lambda(Expression.Decrement(_pa), _pa),
-        ["a => ++a"]          = Expression.Lambda(Expression.PreIncrementAssign(_pa), _pa),
-        ["a => a++"]          = Expression.Lambda(Expression.PostIncrementAssign(_pa), _pa),
-        ["a => --a"]          = Expression.Lambda(Expression.PreDecrementAssign(_pa), _pa),
-        ["a => a--"]          = Expression.Lambda(Expression.PostDecrementAssign(_pa), _pa),
-    };
+    protected override Expression Substitute(string id) => ChangeByOneTestData.GetExpression(id);
 }

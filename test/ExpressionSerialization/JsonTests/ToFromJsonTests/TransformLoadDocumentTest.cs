@@ -65,6 +65,9 @@ public class TransformLoadDocumentTest(JsonTestsFixture fixture, ITestOutputHelp
         if (exceptionType == typeof(InvalidOperationException))
             deserialize.Should().Throw<InvalidOperationException>();
         else
+        if (exceptionType == typeof(SchemaValidationErrorsException))
+            deserialize.Should().Throw<SchemaValidationErrorsException>();
+        else
             Assert.Fail("Unexpected exception.");
     }
 }

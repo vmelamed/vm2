@@ -9,9 +9,6 @@
     <IsTestProject>true</IsTestProject>
     <NoWarn>$(NoWarn);CA1861;xUnit1041;xUnit1045</NoWarn>
     <RootNamespace>vm2.ExpressionSerialization.JsonTests</RootNamespace>
-
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\vm2signKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -35,6 +32,7 @@
     <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
     <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
     <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
+    <ProjectReference Include="..\CommonData\CommonData.csproj" />
   </ItemGroup>
 
   <ItemGroup>
