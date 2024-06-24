@@ -11,8 +11,18 @@ public abstract class BaseTests(
 
     protected abstract string XmlTestFilesPath { get; }
 
+    protected bool XmlTestFilesPathExists { get; set; }
+
     public virtual async Task ToXmlTestAsync(string testFileLine, string expressionString, string fileName)
     {
+        if (!XmlTestFilesPathExists)
+        {
+            if (!Directory.Exists(XmlTestFilesPath))
+                Directory.CreateDirectory(XmlTestFilesPath);
+
+            XmlTestFilesPathExists = true;
+        }
+
         var expression = Substitute(expressionString);
         var pathName = Path.Combine(XmlTestFilesPath, fileName);
         var (expectedDoc, expectedStr) = await _fixture.GetXmlDocumentAsync(testFileLine, pathName, "EXPECTED", Out);

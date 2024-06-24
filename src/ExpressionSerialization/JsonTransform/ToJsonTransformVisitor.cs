@@ -152,70 +152,6 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                     new JElement(Vocabulary.Object, PopWrappedElement()),    // pop the expression/value that will give the object whose requested member is being accessed
                     new JElement(Vocabulary.Member, VisitMemberInfo(n.Member))));
 
-    #region Member initialization
-    /// <inheritdoc/>
-    protected override Expression VisitMemberInit(MemberInitExpression node)
-        => GenericVisit(
-            node,
-            base.VisitMemberInit,
-            (n, x) =>
-            {
-                var bindings = Pop(n.Bindings.Count).ToList();     // pop the expressions to assign to members
-                x.Add(
-                    Pop(),        // the new value
-                    new JElement(Vocabulary.Bindings, bindings));
-            });
-
-    ///// <inheritdoc/>
-    //protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
-    // the base is doing exactly what we need - dispatch the call to the concrete binding below:
-
-    ///// <inheritdoc/>
-    //protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
-    //{
-    //    using var _ = OutputDebugScope(nameof(MemberAssignment));
-    //    var binding = base.VisitMemberAssignment(node);
-
-    //    _elements.Push(
-    //        new JElement(
-    //                Vocabulary.AssignmentBinding,
-    //                    VisitMemberInfo(node.Member),
-    //                    Pop()));  // pop the value to assign
-
-    //    return binding;
-    //}
-
-    ///// <inheritdoc/>
-    //protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
-    //{
-    //    using var _ = OutputDebugScope(nameof(MemberMemberBinding));
-    //    var binding = base.VisitMemberMemberBinding(node);
-
-    //    _elements.Push(
-    //        new JElement(
-    //                Vocabulary.MemberMemberBinding,
-    //                    VisitMemberInfo(node.Member),
-    //                    Pop(node.Bindings.Count)));
-
-    //    return binding;
-    //}
-
-    ///// <inheritdoc/>
-    //protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
-    //{
-    //    using var _ = OutputDebugScope(nameof(MemberListBinding));
-    //    var binding = base.VisitMemberListBinding(node);
-
-    //    _elements.Push(
-    //        new JElement(
-    //                Vocabulary.MemberListBinding,
-    //                    VisitMemberInfo(node.Member),
-    //                    Pop(node.Initializers.Count)));
-
-    //    return binding;
-    //}
-    #endregion
-
     /// <inheritdoc/>
     protected override Expression VisitMethodCall(MethodCallExpression node)
         => GenericVisit(
@@ -291,7 +227,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                                 n.NodeType is ExpressionType.NewArrayInit ? Vocabulary.ArrayElements : Vocabulary.Bounds,
                                 PopWrappedElements(n.Expressions.Count))));
 
-    #region new list with initializers
+    #region new list with items initializers
     /// <inheritdoc/>
     protected override Expression VisitListInit(ListInitExpression node)
         => GenericVisit(
@@ -319,6 +255,69 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                         new JElement(Vocabulary.Arguments, PopWrappedElements(node.Arguments.Count))));  // pop the elements init expressions
 
         return elementInit;
+    }
+    #endregion
+
+    #region new object with member initialization
+    /// <inheritdoc/>
+    protected override Expression VisitMemberInit(MemberInitExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMemberInit,
+            (n, x) =>
+            {
+                var bindings = PopWrappedElements(n.Bindings.Count).ToList();   // pop the expressions to assign to members
+                x.Add(
+                    new JElement(Vocabulary.New, PopElementValue()),            // the new value to be initialized
+                    new JElement(Vocabulary.Bindings, bindings));               // bindings for the properties
+            });
+
+    ////protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
+    //                  the base is doing exactly what we need - dispatch the call to the concrete binding below:
+
+    /// <inheritdoc/>
+    protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
+    {
+        using var _ = OutputDebugScope(nameof(MemberAssignment));
+        var binding = base.VisitMemberAssignment(node);
+
+        _elements.Push(
+            new JElement(
+                    Vocabulary.AssignmentBinding,
+                        VisitMemberInfo(binding.Member),
+                        new JElement(Vocabulary.Value, PopWrappedElement())));  // pop the value to assign
+
+        return binding;
+    }
+
+    /// <inheritdoc/>
+    protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
+    {
+        using var _ = OutputDebugScope(nameof(MemberMemberBinding));
+        var binding = base.VisitMemberMemberBinding(node);
+
+        _elements.Push(
+            new JElement(
+                    Vocabulary.MemberMemberBinding,
+                        VisitMemberInfo(binding.Member),
+                        new JElement(Vocabulary.Bindings, PopWrappedElements(binding.Bindings.Count))));
+
+        return binding;
+    }
+
+    /// <inheritdoc/>
+    protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
+    {
+        using var _ = OutputDebugScope(nameof(MemberListBinding));
+        var binding = base.VisitMemberListBinding(node);
+
+        _elements.Push(
+            new JElement(
+                    Vocabulary.MemberListBinding,
+                        VisitMemberInfo(binding.Member),
+                        new JElement(Vocabulary.Initializers, PopWrappedElements(binding.Initializers.Count))));
+
+        return binding;
     }
     #endregion
 

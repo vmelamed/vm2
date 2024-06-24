@@ -4,6 +4,7 @@ namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 public class XmlTestsFixture : IDisposable
 {
     internal const string TestFilesPath = "../../../TestData";
+    internal const string TestLoadPath = "../../../LoadTestData";
 
     internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";
 

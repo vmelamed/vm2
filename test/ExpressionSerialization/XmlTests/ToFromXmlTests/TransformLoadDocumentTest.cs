@@ -1,5 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
+[CollectionDefinition("XML")]
 public class TransformLoadDocumentTest()
 {
     static void ResetReloadSchemas(bool loadSchemas)
@@ -40,7 +41,7 @@ public class TransformLoadDocumentTest()
         ResetReloadSchemas(loadSchemas);
 
         var transform = new ExpressionXmlTransform(options);
-        using var stream = new FileStream(Path.Combine(XmlTestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(Path.Combine(XmlTestsFixture.TestLoadPath, fileName), FileMode.Open, FileAccess.Read);
         var deserialize = () => transform.Deserialize(stream);
 
         if (exceptionType is null)
@@ -67,7 +68,7 @@ public class TransformLoadDocumentTest()
         ResetReloadSchemas(loadSchemas);
 
         var transform = new ExpressionXmlTransform(options);
-        using var stream = new FileStream(Path.Combine(XmlTestsFixture.TestFilesPath, "Constants", fileName), FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(Path.Combine(XmlTestsFixture.TestLoadPath, fileName), FileMode.Open, FileAccess.Read);
         var deserialize = async () => await transform.DeserializeAsync(stream);
 
         if (exceptionType is null)

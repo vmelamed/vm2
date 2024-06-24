@@ -1,4 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
+
 [CollectionDefinition("JSON")]
 public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
@@ -38,9 +39,9 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
         { TestLine(), "newDictionaryInit",      "NewDictionaryInit.json" },
         { TestLine(), "newHashtableInit",       "NewHashtableInit.json" },
         { TestLine(), "newListInit",            "NewListInit.json" },
-        //{ TestLine(), "newMembersInit",         "NewMembersInit.json" },
-        //{ TestLine(), "newMembersInit1",        "NewMembersInit1.json" },
-        //{ TestLine(), "newMembersInit2",        "NewMembersInit2.json" },
+        { TestLine(), "newMembersInit",         "NewMembersInit.json" },
+        { TestLine(), "newMembersInit1",        "NewMembersInit1.json" },
+        { TestLine(), "newMembersInit2",        "NewMembersInit2.json" },
         { TestLine(), "return1",                "Return1.json" },
         { TestLine(), "return2",                "Return2.json" },
         { TestLine(), "switch(a){ ... }",       "Switch.json" },

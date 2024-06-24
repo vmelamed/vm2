@@ -5,6 +5,8 @@ using vm2.ExpressionSerialization.JsonTransform;
 public class JsonTestsFixture : IDisposable
 {
     internal const string TestFilesPath = "../../../TestData";
+    internal const string TestLoadPath = "../../../LoadTestData";
+
     internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";
 
     public FileStreamOptions FileStreamOptions { get; } = new() {

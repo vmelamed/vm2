@@ -1,4 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
+
 public abstract class BaseTests(
         JsonTestsFixture fixture,
         ITestOutputHelper output) : IClassFixture<JsonTestsFixture>
@@ -9,8 +10,18 @@ public abstract class BaseTests(
 
     protected abstract string JsonTestFilesPath { get; }
 
+    protected bool JsonTestFilesPathExists { get; set; }
+
     public virtual async Task ToJsonTestAsync(string testFileLine, string expressionString, string fileName)
     {
+        if (!JsonTestFilesPathExists)
+        {
+            if (!Directory.Exists(JsonTestFilesPath))
+                Directory.CreateDirectory(JsonTestFilesPath);
+
+            JsonTestFilesPathExists = true;
+        }
+
         var expression = Substitute(expressionString);
         var pathName = Path.Combine(JsonTestFilesPath, fileName);
         var (expectedDoc, expectedStr) = await _fixture.GetJsonDocumentAsync(testFileLine, pathName, "EXPECTED", Out);

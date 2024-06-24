@@ -20,13 +20,13 @@ public partial class LambdaTests(JsonTestsFixture fixture, ITestOutputHelper out
         { TestLine(), "i => true",              "Param2BoolConstant.json" },
         { TestLine(), "i => i",                 "Param1Ret1Constant.json" },
         { TestLine(), "(i, j) => j",            "Param2Ret2Constant.json" },
-        //{ TestLine(), "(s,d) => true",          "2ParamsToConstant.json" },
-        //{ TestLine(), "a => a._var",              "MemberField.json" },
-        //{ TestLine(), "a => a.A",               "MemberProperty.json" },
-        //{ TestLine(), "(s,d) => true",          "StaticMember.json" },
-        //{ TestLine(), "a => a.Method3(1,1)",    "InstanceMethod3Params.json" },
-        //{ TestLine(), "a => a.Method4(42,3.14)","InstanceMethod4Params.json" },
-        //{ TestLine(), "(i, j) => (a=i)+(b=j)",  "Param2Var1Ret2nd.xml" },
+        { TestLine(), "(s,d) => true",          "2ParamsToConstant.json" },
+        { TestLine(), "a => a._a",              "MemberField.json" },
+        { TestLine(), "a => a.A",               "MemberProperty.json" },
+        { TestLine(), "(s,d) => true",          "StaticMember.json" },
+        { TestLine(), "a => a.Method3(1,1)",    "InstanceMethod3Params.json" },
+        { TestLine(), "a => a.Method4(42,3.14)","InstanceMethod4Params.json" },
+        { TestLine(), "(i, j) => (a=i)+(b=j)",  "Param2Var1Ret2nd.xml" },
     };
 
     protected override Expression Substitute(string id) => LambdaTestData.GetExpression(id);

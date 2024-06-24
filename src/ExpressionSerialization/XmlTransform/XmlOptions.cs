@@ -235,16 +235,11 @@ public partial class XmlOptions : DocumentOptions
         var exceptions = new List<XmlSchemaException>();
         XmlSchemaObject? schema = null;
 
-        for (var i = 0; i < 5 && schema is null; i++)
+        using (_schemasLock.ReaderLock())
         {
-            using (_schemasLock.ReaderLock())
-            {
-                schema = Schemas.GlobalElements[new XmlQualifiedName(Vocabulary.Expression, Exs)];
-                if (schema is not null)
-                    element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
-            }
-            if (schema is null)
-                Task.Delay(50).Wait();
+            schema = Schemas.GlobalElements[new XmlQualifiedName(Vocabulary.Expression, Exs)];
+            if (schema is not null)
+                element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
         }
 
         if (exceptions.Count is not 0)

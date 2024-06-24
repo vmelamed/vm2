@@ -86,7 +86,7 @@ public partial class DeepEqualsTests
                     WriteLine1Expression("TryBody"),
                     ThrowException(),
                 }),
-            WriteLine1Expression("catch {}"));
+            WriteLine1Expression("caught {}"));
 
     static Expression _try2 =
         Expression.TryCatch(
@@ -98,7 +98,7 @@ public partial class DeepEqualsTests
                 Expression.MakeCatchBlock(
                     typeof(ArgumentException),
                     null,
-                    WriteLine1Expression("catch (ArgumentException) {}"),
+                    WriteLine1Expression("caught (ArgumentException) {}"),
                     null),
             ]);
 
@@ -113,7 +113,7 @@ public partial class DeepEqualsTests
                 Expression.MakeCatchBlock(
                     typeof(ArgumentException),
                     null,
-                    WriteLine1Expression("catch (ArgumentException) {}"),
+                    WriteLine1Expression("caught (ArgumentException) {}"),
                     null),
             ]);
 

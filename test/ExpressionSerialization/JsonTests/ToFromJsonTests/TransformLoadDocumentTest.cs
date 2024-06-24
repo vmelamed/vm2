@@ -4,9 +4,10 @@ using System.Linq.Expressions;
 
 using vm2.ExpressionSerialization.Exceptions;
 
+[CollectionDefinition("JSON")]
 public class TransformLoadDocumentTest(JsonTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
-    protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestFilesPath, "Constants");
+    protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestLoadPath);
 
     protected override Expression Substitute(string id) => throw new NotImplementedException();
 

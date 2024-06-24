@@ -11,7 +11,6 @@
     "$defs": {
         "expression": {
             "title": "Represents a JSON serialized LINQ expression",
-            "type": "object",
             "oneOf": [
                 {
                     "title": "Constant expression (e.g. `42`)",
@@ -867,6 +866,26 @@
                     },
                     "required": [ "memberAccess" ],
                     "additionalProperties": { "type": "string" }
+                },
+                {
+                    "title": "Defines the type of elements that represent access to members of objects and structs.",
+                    "type": "object",
+                    "properties": {
+                        "memberInit": {
+                            "type": "object",
+                            "properties": {
+                                "new": { "$ref": "#/$defs/components/expressions/new" },
+                                "bindings": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/$defs/components/expressions/memberBinding" }
+                                }
+                            },
+                            "required": [ "new", "bindings" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    },
+                    "required": [ "memberInit" ],
+                    "additionalProperties": { "type": "string" }
                 }
             ]
         },
@@ -1028,7 +1047,7 @@
                                 },
                                 {
                                     "type": "string",
-                                    "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$$"
+                                    "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$"
                                 }
                             ]
                         }
@@ -1050,7 +1069,7 @@
                                 },
                                 {
                                     "type": "string",
-                                    "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$$"
+                                    "pattern": "^(-0*9223372036854775808)|([-+]?0*922337203685477580[0-7])|([-+]?0*9223372036854775[0-7][0-9]{2})|([-+]?0*922337203685477[0-4][0-9]{3})|([-+]?0*92233720368547[0-6][0-9]{4})|([-+]?0*9223372036854[0-6][0-9]{5})|([-+]?0*922337203685[0-3][0-9]{6})|([-+]?0*92233720368[0-4][0-9]{7})|([-+]?0*9223372036[0-7][0-9]{8})|([-+]?0*922337203[0-5][0-9]{9})|([-+]?0*92233720[0-2][0-9]{10})|([-+]?0*922337[0-1][0-9]{12})|([-+]?0*92233[0-6][0-9]{13})|([-+]?0*9223[0-2][0-9]{14})|([-+]?0*922[0-2][0-9]{15})|([-+]?0*92[0-1][0-9]{16})|([-+]?0*9[0-1][0-9]{17})|([-+]?0*[0-8][0-9]{18})|([-+]?0*[0-9]{1,18})$"
                                 }
                             ]
                         }
@@ -1728,6 +1747,7 @@
                     "additionalProperties": { "type": "string" }
                 },
                 "member": {
+                    "type": "object",
                     "oneOf": [
                         {
                             "type": "object",
@@ -1894,6 +1914,68 @@
                     },
                     "required": [ "type", "body" ],
                     "additionalProperties": { "type": "string" }
+                },
+                "assignmentBinding": {
+                    "title": "Defines the initializing a member with the value of an expression.",
+                    "type": "object",
+                    "properties": {
+                        "member": { "$ref": "#/$defs/components/reflection/member" },
+                        "value": { "$ref": "#/$defs/expression" }
+                    },
+                    "required": [ "member", "value" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                "memberMemberBinding": {
+                    "title": "Defines the recursively initializing members of a member (the member is a class or struct).",
+                    "type": "object",
+                    "properties": {
+                        "member": { "$ref": "#/$defs/components/reflection/member" },
+                        "bindings": {
+                            "type": "array",
+                            "items": { "$ref": "#/$defs/components/expressions/memberBinding" }
+                        }
+                    },
+                    "required": [ "member", "bindings" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                "memberListBinding": {
+                    "title": "Defines the initializing a member of type `IList` or `ICollection<T>` from a list of elements.",
+                    "type": "object",
+                    "properties": {
+                        "member": { "$ref": "#/$defs/components/reflection/member" },
+                        "initializers": { "$ref": "#/$defs/components/expressions/elementInit" }
+                    },
+                    "required": [ "member", "initializers" ],
+                    "additionalProperties": { "type": "string" }
+                },
+                "memberBinding": {
+                    "title": "Used by 'memberMemberBinding' to recursively initialize the struct or class member's members",
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "assignmentBinding": { "$ref": "#/$defs/components/expressions/assignmentBinding" }
+                            },
+                            "required": [ "assignmentBinding" ],
+                            "additionalProperties": { "type": "string" }
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "memberMemberBinding": { "$ref": "#/$defs/components/expressions/memberMemberBinding" }
+                            },
+                            "required": [ "memberMemberBinding" ],
+                            "additionalProperties": { "type": "string" }
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "memberListBinding": { "$ref": "#/$defs/components/expressions/memberListBinding" }
+                            },
+                            "required": [ "memberListBinding" ],
+                            "additionalProperties": { "type": "string" }
+                        }
+                    ]
                 }
             }
         }

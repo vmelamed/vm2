@@ -50,7 +50,7 @@
                 </method>
                 <arguments>
                     <constant>
-                        <string>catch {}</string>
+                        <string>caught {}</string>
                     </constant>
                 </arguments>
             </call>

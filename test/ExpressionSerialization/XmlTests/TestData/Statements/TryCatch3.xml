@@ -51,7 +51,7 @@
                 </method>
                 <arguments>
                     <constant>
-                        <string>catch (ArgumentException) {}</string>
+                        <string>caught (ArgumentException) {}</string>
                     </constant>
                 </arguments>
             </call>
