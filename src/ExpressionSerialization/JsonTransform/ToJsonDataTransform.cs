@@ -83,11 +83,11 @@ public class ToJsonDataTransform(JsonOptions options)
 
     static JsonValue HalfToJson(Half h)
     {
-        if (h == Half.NaN)
+        if (Half.IsNaN(h))
             return JsonValue.Create(Vocabulary.NaN);
-        if (h == Half.PositiveInfinity)
+        if (Half.IsPositiveInfinity(h))
             return JsonValue.Create(Vocabulary.PosInfinity);
-        if (h == Half.NegativeInfinity)
+        if (Half.IsNegativeInfinity(h))
             return JsonValue.Create(Vocabulary.NegInfinity);
         return JsonValue.Create((float)h);
     }

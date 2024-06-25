@@ -13,13 +13,11 @@
     <AssemblyOriginatorKeyFile>../../vm2signKey.snk</AssemblyOriginatorKeyFile>
     <RootNamespace>vm2.ExpressionSerialization</RootNamespace>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>
+    <!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>
+    <!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">

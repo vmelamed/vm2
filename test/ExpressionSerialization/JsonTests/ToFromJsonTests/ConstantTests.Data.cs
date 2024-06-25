@@ -11,13 +11,15 @@ public partial class ConstantTests
         { TestLine(), "(byte)5",                                                                "Byte.json" },
         // char
         { TestLine(), "'V'",                                                                    "Char.json" },
+#if !JsonSchema
         // double - see https://github.com/gregsdennis/json-everything/issues/747#issuecomment-2171905465
-        //{ TestLine(), "double.MinValue",                                                        "Double.MinValue.json" },
-        //{ TestLine(), "double.MaxValue",                                                        "Double.MaxValue.json" },
-        //{ TestLine(), "double.float.MinValue",                                                  "Double.Float.MinValue.json" },
-        //{ TestLine(), "double.float.MaxValue",                                                  "Double.Float.MaxValue.json" },
-        //{ TestLine(), "double.BigValue",                                                        "Double.BigValue.json" },
-        //{ TestLine(), "double.SmallValue",                                                      "Double.SmallValue.json" },
+        { TestLine(), "double.MinValue",                                                        "Double.MinValue.json" },
+        { TestLine(), "double.MaxValue",                                                        "Double.MaxValue.json" },
+        { TestLine(), "double.float.MinValue",                                                  "Double.Float.MinValue.json" },
+        { TestLine(), "double.float.MaxValue",                                                  "Double.Float.MaxValue.json" },
+        { TestLine(), "double.BigValue",                                                        "Double.BigValue.json" },
+        { TestLine(), "double.SmallValue",                                                      "Double.SmallValue.json" },
+#endif
         { TestLine(), "double.Nan",                                                             "Double.Nan.json" },
         { TestLine(), "double.NegativeInfinity",                                                "Double.NegativeInfinity.json" },
         { TestLine(), "double.PositiveInfinity",                                                "Double.PositiveInfinity.json" },
@@ -28,11 +30,15 @@ public partial class ConstantTests
         { TestLine(), "double.E",                                                               "Double.E.json" },
         { TestLine(), "-2.234567891233658E-123",                                                "Double.-2.23..E-123.json" },
         { TestLine(), "5.1234567891234567E-123",                                                "Double.5.12..E-123.json" },
-        //{ TestLine(), "-3.4028234663852886E+38",                                                "Double.3.40..E38.json" },
-        //{ TestLine(), "3.4028234663852886E+38",                                                 "Double.-3.40..E38.json" },
+#if !JsonSchema
+        { TestLine(), "-3.4028234663852886E+38",                                                "Double.3.40..E38.json" },
+        { TestLine(), "3.4028234663852886E+38",                                                 "Double.-3.40..E38.json" },
+#endif
         // float
-        //{ TestLine(), "float.MinValue",                                                         "Float.MinValue.json" },
-        //{ TestLine(), "float.MaxValue",                                                         "Float.MaxValue.json" },
+#if !JsonSchema
+        { TestLine(), "float.MinValue",                                                         "Float.MinValue.json" },
+        { TestLine(), "float.MaxValue",                                                         "Float.MaxValue.json" },
+#endif
         { TestLine(), "float.Nan",                                                              "Float.Nan.json" },
         { TestLine(), "float.NegativeInfinity",                                                 "Float.NegativeInfinity.json" },
         { TestLine(), "float.PositiveInfinity",                                                 "Float.PositiveInfinity.json" },
@@ -48,7 +54,9 @@ public partial class ConstantTests
         { TestLine(), "Half.MaxValue",                                                          "Half.MaxValue.json" },
         { TestLine(), "Half.Zero",                                                              "Half.Zero.json" },
         { TestLine(), "Half.One",                                                               "Half.One.json" },
-        //{ TestLine(), "Half.NaN",                                                               "Half.NaN.json" },  // Jason.Schema doesn't like this either
+#if !JsonSchema
+        { TestLine(), "Half.NaN",                                                               "Half.NaN.json" },  // Jason.Schema doesn't like this either
+#endif
         { TestLine(), "Half.NegativeInfinity",                                                  "Half.NegativeInfinity.json" },
         { TestLine(), "Half.PositiveInfinity",                                                  "Half.PositiveInfinity.json" },
         { TestLine(), "Half.Pi",                                                                "Half.Pi.json" },
