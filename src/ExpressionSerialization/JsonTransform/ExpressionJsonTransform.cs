@@ -84,7 +84,7 @@ public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionT
                                     new JsonWriterOptions()
                                     {
                                         Indented       = _options.Indent,
-                                        SkipValidation = true,
+                                        SkipValidation = false,
                                     });
 
         document.WriteTo(writer, _options.JsonSerializerOptions);

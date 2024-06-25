@@ -1,8 +1,11 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
-using System;
-
+#if JsonSchema
 using Json.Schema;
+#else
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+#endif
 
 /// <summary>
 /// Class JsonOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to 
@@ -17,13 +20,7 @@ public partial class JsonOptions : DocumentOptions
 
     static readonly JsonStringEnumConverter _jsonStringEnumConverter = new();
 
-    static readonly EvaluationOptions _evaluationOptions = new() {
-        OutputFormat            = OutputFormat.Hierarchical,
-        RequireFormatValidation = true,
-    };
-
     ReaderWriterLockSlim _syncSchema = new(LockRecursionPolicy.SupportsRecursion);
-    JsonSchema? _schema;
     bool _allowTrailingCommas = true;
     JsonSerializerOptions? _jsonSerializerOptions;
 
@@ -40,17 +37,6 @@ public partial class JsonOptions : DocumentOptions
     /// </summary>
     public JsonOptions(string filePath)
         => LoadSchema(filePath);
-
-    /// <summary>
-    /// Loads the schema from the specified URL.
-    /// </summary>
-    /// <param name="schemaFilePath">The location of the schema file.</param>
-    /// <returns>A Task representing the asynchronous operation.</returns>Load
-    public JsonSchema LoadSchema(string schemaFilePath)
-    {
-        using (_syncSchema.WriterLock())
-            return _schema = JsonSchema.FromFile(schemaFilePath);
-    }
 
     /// <summary>
     /// Determines whether the expressions schemaUri <see cref="JsonOptions.Exs"/> was added.
@@ -127,6 +113,33 @@ public partial class JsonOptions : DocumentOptions
         MaxDepth = 1000
     };
 
+#if JsonSchema
+    JsonSchema? _schema;
+
+    static readonly EvaluationOptions _evaluationOptions = new() {
+        OutputFormat            = OutputFormat.Hierarchical,
+        RequireFormatValidation = true,
+    };
+
+    /// <summary>
+    /// Loads the schema from the specified URL.
+    /// </summary>
+    /// <param name="schemaFilePath">The location of the schema file.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>Load
+    public void LoadSchema(string schemaFilePath)
+    {
+        using (_syncSchema.WriterLock())
+            _schema = JsonSchema.FromFile(schemaFilePath);
+    }
+
+    /// <summary>
+    /// Evaluates the specified jsonNode against the schema (by default the expressions schema).
+    /// </summary>
+    /// <param name="json">The JSON text to validate.</param>
+    /// <returns>Json.Schema.EvaluationResults.</returns>
+    public void Validate(string json)
+        => Validate(JsonNode.Parse(json) ?? throw new SchemaValidationErrorsException("Invalid JSON text."));
+
     /// <summary>
     /// Evaluates the specified jsonNode against the schema (by default the expressions schema).
     /// </summary>
@@ -166,6 +179,78 @@ public partial class JsonOptions : DocumentOptions
             foreach (var nestedResults in results.Details)
                 WriteResults(writer, nestedResults, indent + 1);
     }
+#else
+    JSchema? _schema;
+
+    /// <summary>
+    /// Loads the schema from the specified URL.
+    /// </summary>
+    /// <param name="schemaFilePath">The location of the schema file.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>Load
+    public void LoadSchema(string schemaFilePath)
+    {
+        string schemaText;
+
+        using (var file = File.OpenText(schemaFilePath))
+            schemaText = file.ReadToEnd();
+
+        using (_syncSchema.WriterLock())
+            _schema = JSchema.Parse(schemaText);
+
+    }
+
+    /// <summary>
+    /// Evaluates the specified jsonNode against the schema (by default the expressions schema).
+    /// </summary>
+    /// <param name="node">The JSON node.</param>
+    /// <returns>Json.Schema.EvaluationResults.</returns>
+    public void Validate(JsonNode node)
+    {
+        if (!MustValidate)
+            return;
+
+        string json;
+        using (var stream = new MemoryStream())
+        using (var writer = new Utf8JsonWriter(
+                                    stream,
+                                    new JsonWriterOptions() {
+                                        Indented = Indent,
+                                        SkipValidation = false,
+                                    }))
+        {
+            node.WriteTo(writer);
+            writer.Flush();
+
+            json = Encoding.UTF8.GetString(new ArraySegment<byte>(stream.GetBuffer(), 0, (int)stream.Position));
+        }
+
+        Validate(json);
+    }
+
+    /// <summary>
+    /// Evaluates the specified jsonNode against the schema (by default the expressions schema).
+    /// </summary>
+    /// <param name="json">The JSON string.</param>
+    /// <returns>Json.Schema.EvaluationResults.</returns>
+    public void Validate(string json)
+    {
+        if (!MustValidate)
+            return;
+
+        using (_syncSchema.WriterLock())
+        {
+            Debug.Assert(_schema is not null);
+
+            IList<string>? messages;
+
+            JObject.Parse(json).IsValid(_schema, out messages);
+            if (messages.Count == 0)
+                return;
+
+            throw new SchemaValidationErrorsException($"The validation of the JSON/YAML against the schema \"{Exs}\" failed:\n  {string.Join("\n  ", messages)}\n");
+        }
+    }
+#endif
 
     /// <summary>
     /// Builds a JSON comment object with the specified comment text if comments are enabled.

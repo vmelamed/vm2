@@ -1,4 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
+
 /// <summary>
 /// Class ToJsonTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XNode}" />
@@ -93,7 +94,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             node,
             base.VisitUnary,
             (n, x) => x.Add(
-                        new JElement(Vocabulary.Operands, new JsonArray(PopWrappedElement())),    // pop the operand
+                        new JElement(Vocabulary.Operands, new JsonArray() { PopWrappedElement() }),    // pop the operand
                         VisitMethodInfo(n),
                         n.IsLifted ? new JElement(Vocabulary.IsLifted, true) : null,
                         n.IsLiftedToNull ? new JElement(Vocabulary.IsLiftedToNull, true) : null));

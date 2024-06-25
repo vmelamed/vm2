@@ -1,0 +1,37 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "lambda": {
+      "type": "int",
+      "parameters": [
+        {
+          "type": "boolean",
+          "name": "b",
+          "id": "P1"
+        }
+      ],
+      "body": {
+        "conditional": {
+          "type": "int",
+          "else": {
+            "parameter": {
+              "type": "boolean",
+              "name": "b",
+              "id": "P1"
+            }
+          },
+          "then": {
+            "constant": {
+              "int": 1
+            }
+          },
+          "if": {
+            "constant": {
+              "int": 3
+            }
+          }
+        }
+      }
+    }
+  }
+}

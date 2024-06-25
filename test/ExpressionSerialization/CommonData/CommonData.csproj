@@ -8,7 +8,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <NoWarn>$(NoWarn);CA1861;xUnit1041;xUnit1045</NoWarn>
-    <RootNamespace>vm2.ExpressionSerialization.CommonData</RootNamespace>
+    <RootNamespace>vm2.ExpressionSerialization.TestsCommonData</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\vm2signKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

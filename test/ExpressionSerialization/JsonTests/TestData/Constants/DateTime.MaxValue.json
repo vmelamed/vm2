@@ -1,0 +1,8 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "dateTime": "9999-12-31T23:59:59.9999999"
+    }
+  }
+}

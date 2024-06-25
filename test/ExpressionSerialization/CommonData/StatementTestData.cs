@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.CommonData;
+﻿namespace vm2.ExpressionSerialization.TestsCommonData;
 
 using System.Collections;
 using System.Reflection;

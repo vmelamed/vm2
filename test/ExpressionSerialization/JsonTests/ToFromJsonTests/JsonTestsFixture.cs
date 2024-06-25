@@ -27,6 +27,8 @@ public class JsonTestsFixture : IDisposable
 
     public void Validate(JsonNode doc) => Options.Validate(doc);
 
+    public void Validate(string json) => Options.Validate(json);
+
     public async Task<(JsonNode?, string)> GetJsonDocumentAsync(
         string testFileLine,
         string pathName,
@@ -48,6 +50,7 @@ public class JsonTestsFixture : IDisposable
             var read = await streamExpected.ReadAsync(buf, cancellationToken);
             read.Should().Be(length, "should be able to read the whole file");
             var expectedStr = Encoding.UTF8.GetString(buf.Span);
+
             output?.WriteLine($"{expectedOrInput}:\n{expectedStr}\n");
 
             // and parse
@@ -57,10 +60,13 @@ public class JsonTestsFixture : IDisposable
             var expectedDoc = (await parse.Should().NotThrowAsync()).Which;
 
             expectedDoc.Should().NotBeNull();
-
             Debug.Assert(expectedDoc is not null);
 
+#if JsonSchema
             var validate = () => Validate(expectedDoc);
+#else
+            var validate = () => Validate(expectedStr);
+#endif
 
             validate.Should().NotThrow($"the {expectedOrInput} document from {testFileLine} should be valid according to the schema");
 
@@ -154,7 +160,11 @@ public class JsonTestsFixture : IDisposable
         output?.WriteLine($"ACTUAL ({(async ? "async" : "sync")}):\n{actualStr}\n");
 
         // ASSERT: both the strings and the JsonObject-s are valid and equal
+#if JsonSchema
         var validate = () => Validate(actualDoc);
+#else
+        var validate = () => Validate(actualStr);
+#endif
 
         validate.Should().NotThrow($"the ACTUAL document from {testFileLine} should be valid according to the schema `{JsonOptions.Exs}`.");
 

@@ -11,7 +11,7 @@ global using FluentAssertions;
 
 global using vm2.ExpressionDeepEquals;
 global using vm2.ExpressionSerialization.Abstractions;
-global using vm2.ExpressionSerialization.CommonData;
+global using vm2.ExpressionSerialization.TestsCommonData;
 global using vm2.ExpressionSerialization.JsonTransform;
 
 global using Xunit.Abstractions;

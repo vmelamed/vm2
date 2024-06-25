@@ -1,0 +1,29 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "lambda": {
+      "type": "int",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "a",
+          "id": "P1"
+        }
+      ],
+      "body": {
+        "not": {
+          "type": "int",
+          "operands": [
+            {
+              "parameter": {
+                "type": "int",
+                "name": "a",
+                "id": "P1"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

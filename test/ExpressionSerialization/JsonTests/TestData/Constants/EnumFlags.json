@@ -1,0 +1,16 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "constant": {
+      "$comment": " vm2.ExpressionSerialization.CommonData.EnumFlagsTest ",
+      "enum": {
+        "type": "vm2.ExpressionSerialization.CommonData.EnumFlagsTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "value": [
+          "One",
+          "Three"
+        ],
+        "baseValue": 5
+      }
+    }
+  }
+}
