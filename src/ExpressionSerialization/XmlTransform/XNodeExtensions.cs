@@ -1,11 +1,9 @@
-﻿namespace vm2.ExpressionSerialization.Extensions;
+﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
 using System.Xml.Linq;
 
-using vm2.ExpressionSerialization.XmlTransform;
-
 /// <summary>
-/// Class XNodeExtensions defines extension methods to XNode-s.
+/// Class XNodeExtensions defines extension methods to XElement-s.
 /// </summary>
 public static class XNodeExtensions
 {
@@ -139,9 +137,9 @@ public static class XNodeExtensions
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="type">The type.</param>
-    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static bool TryGetETypeFromAttribute(this XElement element, out Type? type, XName? attributeName = null)
+    public static bool TryGetTypeFromAttribute(this XElement element, out Type? type, XName? attributeName = null)
     {
         type = null;
 
@@ -158,10 +156,10 @@ public static class XNodeExtensions
     /// Gets the .NET type of the element only from its attribute (default "type"). If not found - throws Exception.
     /// </summary>
     /// <param name="element">The element.</param>
-    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static Type GetETypeFromAttribute(this XElement element, XName? attributeName = null)
-        => element.TryGetEType(out var type, attributeName)
+    public static Type GetTypeFromAttribute(this XElement element, XName? attributeName = null)
+        => element.TryGetElementType(out var type, attributeName)
                 ? type!
                 : throw new SerializationException($"Could not get the .NET type of element `{element.Name}`.");
 
@@ -174,9 +172,9 @@ public static class XNodeExtensions
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="name">The name.</param>
-    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static bool TryGetETypeName(this XElement element, out string name, XName? attributeName = null)
+    public static bool TryGetTypeName(this XElement element, out string name, XName? attributeName = null)
     {
         name = "";
 
@@ -201,11 +199,11 @@ public static class XNodeExtensions
     /// If it fails, throws exception.
     /// </summary>
     /// <param name="element">The element.</param>
-    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
     /// <exception cref="SerializationException"/>
-    public static string GetETypeName(this XElement element, XName? attributeName = null)
-        => element.TryGetETypeName(out var name, attributeName) && name is not null
+    public static string GetTypeName(this XElement element, XName? attributeName = null)
+        => element.TryGetTypeName(out var name, attributeName) && name is not null
                         ? name
                         : throw new SerializationException($"Could not get the type name of the element `{element.Name}`.");
 
@@ -218,13 +216,13 @@ public static class XNodeExtensions
     /// </summary>
     /// <param name="element">The element.</param>
     /// <param name="type">The type.</param>
-    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static bool TryGetEType(this XElement element, out Type? type, XName? attributeName = null)
+    public static bool TryGetElementType(this XElement element, out Type? type, XName? attributeName = null)
     {
         type = null;
 
-        return element.TryGetETypeFromAttribute(out type, attributeName) ||
+        return element.TryGetTypeFromAttribute(out type, attributeName) ||
                Vocabulary.NamesToTypes.TryGetValue(element.Name.LocalName, out type);
     }
 
@@ -236,10 +234,10 @@ public static class XNodeExtensions
     /// </list>
     /// </summary>
     /// <param name="element">The element.</param>
-    /// <param name="attributeName">Key of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public static Type GetEType(this XElement element, XName? attributeName = null)
-        => element.TryGetEType(out var type, attributeName)
+    public static Type GetElementType(this XElement element, XName? attributeName = null)
+        => element.TryGetElementType(out var type, attributeName)
                 ? type!
                 : throw new SerializationException($"Could not get the .NET type of the element `{element.Name}`.");
 

@@ -1,5 +1,4 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
-
 /// <summary>
 /// struct JElement is a key-value pair, similar to <see cref="XElement"/>. The <paramref name="key"/> is the name of 
 /// the element in the parent JsonObject.
@@ -9,19 +8,19 @@
 /// from it but we have implicit conversions to and from it and instances of this class can be used anywhere where 
 /// <see cref="KeyValuePair{TKey, TValue}"/> is required.
 /// </remarks>
-[DebuggerDisplay("\"{Key}\": {Value}")]
-public struct JElement(string key = "", JsonNode? value = null)
+[DebuggerDisplay("\"{Name}\": {Value}")]
+public partial struct JElement(string key = "", JsonNode? value = null)
 {
     /// <summary>
     /// Gets or sets the key of this JElement. When this JElement is added to a <see cref="JsonObject"/> or 
-    /// <see cref="JsonDocument"/>, the <see cref="Key"/> will become the name of a property in that parent.
+    /// <see cref="JsonDocument"/>, the <see cref="Name"/> will become the name of a property in that parent.
     /// </summary>
-    public string Key { get; set; } = key;
+    public string Name { get; set; } = key;
 
     /// <summary>
     /// Gets or sets the value of this JElement. When this JElement is added to a <see cref="JsonObject"/> or 
     /// <see cref="JsonDocument"/>, the <see cref="Value"/> will become the value of the property with name 
-    /// <see cref="Key"/> in that parent.
+    /// <see cref="Name"/> in that parent.
     /// </summary>
     /// <element>The element.</element>
     public JsonNode? Value { get; set; } = value;
@@ -162,7 +161,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// If the <see cref="Value"/> of this <see cref="JElement"/> is not <see cref="JsonObject"/>
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
     /// already exists in the <see cref="Value"/> of this instance.
     /// </exception>
     public JElement Add(params JElement?[] properties)
@@ -176,7 +175,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="properties"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -195,7 +194,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="properties"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -228,7 +227,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="properties"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -264,7 +263,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// If the <see cref="Value"/> of this <see cref="JElement"/> is not <see cref="JsonObject"/>
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
     /// already exists in the <see cref="Value"/> of this instance.
     /// </exception>
     public JElement Add(IEnumerable<JElement?> properties)
@@ -288,7 +287,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="elements"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -320,7 +319,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// If the <see cref="Value"/> of this <see cref="JElement"/> is not <see cref="JsonObject"/>
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
     /// already exists in the <see cref="Value"/> of this instance.
     /// </exception>
     public JElement Add(IEnumerable<JElement> properties)
@@ -344,7 +343,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="elements"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Key"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -421,19 +420,20 @@ public struct JElement(string key = "", JsonNode? value = null)
         return this;
     }
 
+
     /// <summary>
     /// Deeply clones this element.
     /// </summary>
     /// <returns>vm2.ExpressionSerialization.JsonTransform.JElement.</returns>
     public readonly JElement DeepClone()
-            => new(Key, Value?.DeepClone());
+            => new(Name, Value?.DeepClone());
 
     /// <summary>
     /// Performs an implicit conversion from <see cref="JElement"/> to <see cref="KeyValuePair{String, JsonNode}"/>.
     /// </summary>
     /// <param key="je">The je.</param>
     /// <returns>The result of the conversion.</returns>
-    public static implicit operator KeyValuePair<string, JsonNode?>(JElement je) => new(je.Key, je.Value);
+    public static implicit operator KeyValuePair<string, JsonNode?>(JElement je) => new(je.Name, je.Value);
 
     /// <summary>
     /// Performs an implicit conversion from <see cref="JElement" /> to <see cref="KeyValuePair{String, JsonNode}" />.
@@ -449,7 +449,7 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// <param key="element">The element.</param>
     public readonly void Deconstruct(out string key, out JsonNode? value)
     {
-        key = Key;
+        key = Name;
         value = Value;
     }
 
@@ -457,5 +457,5 @@ public struct JElement(string key = "", JsonNode? value = null)
     /// Returns a <see cref="string" /> that represents this instance.
     /// </summary>
     /// <returns>A <see cref="string" /> that represents this instance.</returns>
-    public override readonly string ToString() => $"[{Key}, {Value}]";
+    public override readonly string ToString() => $"[{Name}, {Value}]";
 }

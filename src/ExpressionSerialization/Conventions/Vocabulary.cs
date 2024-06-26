@@ -55,7 +55,7 @@ public static class Vocabulary
     public const string NegInfinity             = "-INF";
     public const string Type                    = "type";
     public const string DeclaringType           = "declaringType";
-    public const string ConcreteType            = "concreteType";   // e.g. derived from ConstantExpression.GetEType
+    public const string ConcreteType            = "concreteType";   // e.g. derived from ConstantExpression.GetElementType
     public const string BaseType                = "baseType";
     public const string Name                    = "name";
     public const string Key                     = "key";

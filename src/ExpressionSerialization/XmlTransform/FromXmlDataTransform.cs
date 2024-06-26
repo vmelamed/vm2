@@ -1,18 +1,12 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using vm2.ExpressionSerialization.Extensions;
-
 static partial class FromXmlDataTransform
 {
-    delegate object? Transformation(XElement element, ref Type type);
-
     /// <summary>
-    /// Gets the constant value XML to .NET transform delegate corresponding to the XML <paramref name="element"/>.
+    /// Transforms the element to a <see cref="ConstantExpression"/> object.
     /// </summary>
-    /// <param name="element">The element which holds transformed constant value.</param>
-    /// <returns>The transforming delegate corresponding to the <paramref name="element"/>.</returns>
-    static Transformation GetTransformation(XElement element) => _constantTransformations[element.Name.LocalName];
-
+    /// <param name="element">The element.</param>
+    /// <returns>ConstantExpression.</returns>
     internal static ConstantExpression ConstantTransform(XElement element)
     {
         var (value, type) = ValueTransform(element);
@@ -20,9 +14,34 @@ static partial class FromXmlDataTransform
         return Expression.Constant(value, type);
     }
 
+    delegate object? Transformation(XElement element, ref Type type);
+
+    /// <summary>
+    /// Gets the constant value XML to .NET transform delegate corresponding to the XML <paramref name="element"/>.
+    /// </summary>
+    /// <param name="element">The element which holds transformed constant value.</param>
+    /// <returns>The transforming delegate corresponding to the <paramref name="element"/>.</returns>
+    static Transformation GetTransformation(XElement element)
+    {
+        try
+        {
+            return _constantTransformations[element.Name.LocalName];
+        }
+        catch (Exception ex)
+        {
+            throw new SerializationException($"Error deserializing and converting to a strong type the value of the element `{element.Name}`.", ex);
+        }
+    }
+
+    /// <summary>
+    /// Extracts the type and the value of an <see cref="XElement"/>
+    /// </summary>
+    /// <param name="element"></param>
+    /// <returns></returns>
+    /// <exception cref="SerializationException"></exception>
     static (object?, Type) ValueTransform(XElement element)
     {
-        var type = element.GetEType();
+        var type = element.GetElementType();
 
         if (type == typeof(void))
             throw new SerializationException($"Got 'void' type of constant data in the element `{element.Name}`");
@@ -88,7 +107,7 @@ static partial class FromXmlDataTransform
         ref Type type)
     {
         // get the concrete type but do not change the expression type
-        if (!element.TryGetETypeFromAttribute(out var t, AttributeNames.ConcreteType) || t is null)
+        if (!element.TryGetTypeFromAttribute(out var t, AttributeNames.ConcreteType) || t is null)
             t = type;   // the element type IS the concrete type
 
         if (t is null)
@@ -227,7 +246,7 @@ static partial class FromXmlDataTransform
                         .Elements()
                         .Select(e =>
                         {
-                            var t = e.GetEType();
+                            var t = e.GetElementType();
                             return GetTransformation(e)(e, ref t);
                         })
                         ;

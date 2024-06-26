@@ -19,7 +19,7 @@ public partial class FromXmlTransformVisitor
         if (_parameters.TryGetValue(id, out var expression))
             return expression;
 
-        var type = e.GetEType();
+        var type = e.GetElementType();
 
         if (XmlConvert.ToBoolean(e.Attribute(AttributeNames.IsByRef)?.Value ?? "false"))
             type = type.MakeByRefType();
@@ -36,7 +36,7 @@ public partial class FromXmlTransformVisitor
             return target;
 
         e.TryGetName(out var name);
-        e.TryGetEType(out var type);
+        e.TryGetElementType(out var type);
 
         return _labelTargets[id] = type is not null ? Expression.Label(type, name) : Expression.Label(name);
     }
@@ -80,7 +80,7 @@ public partial class FromXmlTransformVisitor
 
         return e.Name.LocalName switch {
             Vocabulary.Constructor => declType.GetConstructor(bindingFlags, null, paramTypes, [modifiers]) as MemberInfo,
-            Vocabulary.Property => declType.GetProperty(name!, bindingFlags, null, e.GetEType(), paramTypes, [modifiers]),
+            Vocabulary.Property => declType.GetProperty(name!, bindingFlags, null, e.GetElementType(), paramTypes, [modifiers]),
             Vocabulary.Method => declType.GetMethod(name!, bindingFlags, null, paramTypes, [modifiers]),
             Vocabulary.Field => declType.GetField(name!, bindingFlags),
             Vocabulary.Event => declType.GetEvent(name!, bindingFlags),
@@ -106,7 +106,7 @@ public partial class FromXmlTransformVisitor
             .Select(
                 p =>
                 {
-                    types[i] = p.GetEType();
+                    types[i] = p.GetElementType();
                     mods[i] = XmlConvert.ToBoolean(p.Attribute(AttributeNames.IsByRef)?.Value ?? "false");
                     i++;
                     return 1;

@@ -18,10 +18,10 @@ public static class JsonNodeExtensions
         if (!element.HasValue)
             return jsObj;
 
-        if (element.Value.Key is "")
+        if (element.Value.Name is "")
             throw new ArgumentException("The key of the elements is an empty string.");
 
-        jsObj.Add(element.Value.Key, element.Value.Value);
+        jsObj.Add(element.Value.Name, element.Value.Value);
         return jsObj;
     }
 
@@ -32,17 +32,17 @@ public static class JsonNodeExtensions
     /// <param name="element">The elements.</param>
     /// <returns>
     /// The <paramref name="jsObj"/> and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Key"/>.
+    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Name"/>.
     /// </returns>
     public static (JsonObject, bool) TryAdd(this JsonObject jsObj, JElement? element)
     {
         if (!element.HasValue)
             return (jsObj, true);
 
-        if (element.Value.Key is "")
+        if (element.Value.Name is "")
             throw new ArgumentException("The key of the elements is an empty string.");
 
-        return (jsObj, jsObj.TryAdd(element.Value.Key, element.Value.Value).Item2);
+        return (jsObj, jsObj.TryAdd(element.Value.Name, element.Value.Value).Item2);
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public static class JsonNodeExtensions
     /// <param name="elements">The elements.</param>
     /// <returns>
     /// The <paramref name="jsObj"/> and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Key"/>.
+    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Name"/>.
     /// </returns>
     /// <exception cref="ArgumentException">
     /// If there is a property with empty key.
@@ -108,7 +108,7 @@ public static class JsonNodeExtensions
     /// <param name="elements">The elements.</param>
     /// <returns>
     /// The <paramref name="jsObj"/> and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Key"/>.
+    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Name"/>.
     /// </returns>
     /// <exception cref="ArgumentException">
     /// If there is a property with empty key.
@@ -141,7 +141,7 @@ public static class JsonNodeExtensions
     {
         foreach (var element in elements)
             if (element is not null)
-                jsObj.Add(element.Value.Key, element.Value.Value);
+                jsObj.Add(element.Value.Name, element.Value.Value);
 
         return jsObj;
     }
@@ -153,7 +153,7 @@ public static class JsonNodeExtensions
     /// <param name="elements">The elements.</param>
     /// <returns>
     /// The <paramref name="jsObj"/> and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Key"/>.
+    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Name"/>.
     /// </returns>
     /// <exception cref="ArgumentException">
     /// If there is a property with empty key.
@@ -164,7 +164,7 @@ public static class JsonNodeExtensions
 
         foreach (var element in elements)
             if (element is not null)
-                ret &= jsObj.TryAdd(element.Value.Key, element.Value.Value).Item2;
+                ret &= jsObj.TryAdd(element.Value.Name, element.Value.Value).Item2;
 
         return (jsObj, ret);
     }
