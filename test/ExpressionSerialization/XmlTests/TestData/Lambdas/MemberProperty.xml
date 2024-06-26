@@ -7,7 +7,7 @@
         type="int">
         <parameters>
             <parameter
-                type="vm2.ExpressionSerialization.CommonData.TestMethods, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                type="vm2.ExpressionSerialization.TestsCommonData.TestMethods, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                 id="P1"
                 name="a" />
         </parameters>
@@ -15,11 +15,11 @@
             <memberAccess
                 type="int">
                 <parameter
-                    type="vm2.ExpressionSerialization.CommonData.TestMethods, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                    type="vm2.ExpressionSerialization.TestsCommonData.TestMethods, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                     id="P1"
                     name="a" />
                 <property
-                    declaringType="vm2.ExpressionSerialization.CommonData.TestMethods, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                    declaringType="vm2.ExpressionSerialization.TestsCommonData.TestMethods, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                     type="int"
                     name="A" />
             </memberAccess>

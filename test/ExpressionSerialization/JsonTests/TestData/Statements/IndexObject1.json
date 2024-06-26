@@ -5,7 +5,7 @@
       "type": "int",
       "parameters": [
         {
-          "type": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "name": "m",
           "id": "P1"
         }
@@ -15,13 +15,13 @@
           "type": "int",
           "object": {
             "parameter": {
-              "type": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "name": "m",
               "id": "P1"
             }
           },
           "method": {
-            "declaringType": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+            "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
             "type": "int",
             "name": "get_Item",
             "parameterSpecs": [

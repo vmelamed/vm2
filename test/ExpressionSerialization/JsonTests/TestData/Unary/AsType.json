@@ -2,21 +2,21 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "lambda": {
-      "type": "vm2.ExpressionSerialization.CommonData.A, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "type": "vm2.ExpressionSerialization.TestsCommonData.A, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
       "parameters": [
         {
-          "type": "vm2.ExpressionSerialization.CommonData.C, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.ExpressionSerialization.TestsCommonData.C, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "name": "c",
           "id": "P1"
         }
       ],
       "body": {
         "typeAs": {
-          "type": "vm2.ExpressionSerialization.CommonData.A, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.ExpressionSerialization.TestsCommonData.A, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "operands": [
             {
               "parameter": {
-                "type": "vm2.ExpressionSerialization.CommonData.C, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                "type": "vm2.ExpressionSerialization.TestsCommonData.C, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                 "name": "c",
                 "id": "P1"
               }

@@ -4,16 +4,16 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <lambda
-        type="System.Func`1[[vm2.ExpressionSerialization.CommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+        type="System.Func`1[[vm2.ExpressionSerialization.TestsCommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
         <parameters />
         <body>
             <lambda
-                type="vm2.ExpressionSerialization.CommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                type="vm2.ExpressionSerialization.TestsCommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
                 <parameters />
                 <body>
                     <new>
                         <constructor
-                            declaringType="vm2.ExpressionSerialization.CommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                            declaringType="vm2.ExpressionSerialization.TestsCommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
                             <parameterSpecs>
                                 <parameterSpec
                                     type="int"

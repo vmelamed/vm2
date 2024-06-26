@@ -159,7 +159,7 @@ public static class XNodeExtensions
     /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
     public static Type GetTypeFromAttribute(this XElement element, XName? attributeName = null)
-        => element.TryGetElementType(out var type, attributeName)
+        => element.TryGetElementType(out var type, attributeName ?? AttributeNames.Type)
                 ? type!
                 : throw new SerializationException($"Could not get the .NET type of element `{element.Name}`.");
 

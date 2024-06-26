@@ -4,14 +4,14 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <lambda
-        type="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+        type="vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
         <parameters />
         <body>
             <memberInit
-                type="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                type="vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
                 <new>
                     <constructor
-                        declaringType="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                        declaringType="vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
                         <parameterSpecs />
                     </constructor>
                     <arguments />
@@ -19,7 +19,7 @@
                 <bindings>
                     <assignmentBinding>
                         <property
-                            declaringType="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                            declaringType="vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                             type="int"
                             name="TheOuterIntProperty" />
                         <constant>
@@ -28,7 +28,7 @@
                     </assignmentBinding>
                     <assignmentBinding>
                         <property
-                            declaringType="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                            declaringType="vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                             type="dateTime"
                             name="Time" />
                         <new>
@@ -61,14 +61,14 @@
                     </assignmentBinding>
                     <assignmentBinding>
                         <property
-                            declaringType="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-                            type="vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                            declaringType="vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                            type="vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                             name="InnerProperty" />
                         <memberInit
-                            type="vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                            type="vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
                             <new>
                                 <constructor
-                                    declaringType="vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                                    declaringType="vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
                                     <parameterSpecs />
                                 </constructor>
                                 <arguments />
@@ -76,7 +76,7 @@
                             <bindings>
                                 <assignmentBinding>
                                     <property
-                                        declaringType="vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                                        declaringType="vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                                         type="int"
                                         name="IntProperty" />
                                     <constant>
@@ -85,7 +85,7 @@
                                 </assignmentBinding>
                                 <assignmentBinding>
                                     <property
-                                        declaringType="vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                                        declaringType="vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                                         type="string"
                                         name="StringProperty" />
                                     <constant>
@@ -97,7 +97,7 @@
                     </assignmentBinding>
                     <assignmentBinding>
                         <property
-                            declaringType="vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                            declaringType="vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                             type="System.Collections.Generic.IEnumerable`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                             name="EnumerableProperty" />
                         <listInit>

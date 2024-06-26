@@ -1,31 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- value(System.Nullable`1[vm2.ExpressionSerialization.CommonData.EnumTest][]) -->
+<!-- value(System.Nullable`1[vm2.ExpressionSerialization.TestsCommonData.EnumTest][]) -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <constant>
-        <!-- System.Nullable`1[[vm2.ExpressionSerialization.CommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]][] -->
+        <!-- System.Nullable`1[[vm2.ExpressionSerialization.TestsCommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]][] -->
         <sequence
-            type="System.Nullable`1[[vm2.ExpressionSerialization.CommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-            elementType="System.Nullable`1[[vm2.ExpressionSerialization.CommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
-            <!-- nullable<vm2.ExpressionSerialization.CommonData.EnumTest> -->
+            type="System.Nullable`1[[vm2.ExpressionSerialization.TestsCommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+            elementType="System.Nullable`1[[vm2.ExpressionSerialization.TestsCommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+            <!-- nullable<vm2.ExpressionSerialization.TestsCommonData.EnumTest> -->
             <nullable>
-                <!-- vm2.ExpressionSerialization.CommonData.EnumTest -->
+                <!-- vm2.ExpressionSerialization.TestsCommonData.EnumTest -->
                 <enum
-                    type="vm2.ExpressionSerialization.CommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                    type="vm2.ExpressionSerialization.TestsCommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                     baseValue="0">One</enum>
             </nullable>
             <nullable>
-                <!-- vm2.ExpressionSerialization.CommonData.EnumTest -->
+                <!-- vm2.ExpressionSerialization.TestsCommonData.EnumTest -->
                 <enum
-                    type="vm2.ExpressionSerialization.CommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                    type="vm2.ExpressionSerialization.TestsCommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                     baseValue="1">Two</enum>
             </nullable>
             <nullable
-                type="vm2.ExpressionSerialization.CommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                type="vm2.ExpressionSerialization.TestsCommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                 i:nil="true" />
             <nullable
-                type="vm2.ExpressionSerialization.CommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                type="vm2.ExpressionSerialization.TestsCommonData.EnumTest, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                 i:nil="true" />
         </sequence>
     </constant>

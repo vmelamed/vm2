@@ -2,14 +2,14 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "lambda": {
-      "type": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
       "parameters": [],
       "body": {
         "memberInit": {
-          "type": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "new": {
             "constructor": {
-              "declaringType": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "parameterSpecs": []
             },
             "arguments": []
@@ -17,10 +17,12 @@
           "bindings": [
             {
               "assignmentBinding": {
-                "property": {
-                  "declaringType": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                  "type": "int",
-                  "name": "TheOuterIntProperty"
+                "member": {
+                  "property": {
+                    "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                    "type": "int",
+                    "name": "TheOuterIntProperty"
+                  }
                 },
                 "value": {
                   "constant": {
@@ -31,10 +33,12 @@
             },
             {
               "assignmentBinding": {
-                "property": {
-                  "declaringType": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                  "type": "dateTime",
-                  "name": "Time"
+                "member": {
+                  "property": {
+                    "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                    "type": "dateTime",
+                    "name": "Time"
+                  }
                 },
                 "value": {
                   "new": {
@@ -78,17 +82,19 @@
             },
             {
               "assignmentBinding": {
-                "property": {
-                  "declaringType": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                  "type": "vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                  "name": "InnerProperty"
+                "member": {
+                  "property": {
+                    "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                    "type": "vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                    "name": "InnerProperty"
+                  }
                 },
                 "value": {
                   "memberInit": {
-                    "type": "vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                    "type": "vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                     "new": {
                       "constructor": {
-                        "declaringType": "vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "declaringType": "vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                         "parameterSpecs": []
                       },
                       "arguments": []
@@ -96,10 +102,12 @@
                     "bindings": [
                       {
                         "assignmentBinding": {
-                          "property": {
-                            "declaringType": "vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                            "type": "int",
-                            "name": "IntProperty"
+                          "member": {
+                            "property": {
+                              "declaringType": "vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "type": "int",
+                              "name": "IntProperty"
+                            }
                           },
                           "value": {
                             "constant": {
@@ -110,10 +118,12 @@
                       },
                       {
                         "assignmentBinding": {
-                          "property": {
-                            "declaringType": "vm2.ExpressionSerialization.CommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                            "type": "string",
-                            "name": "StringProperty"
+                          "member": {
+                            "property": {
+                              "declaringType": "vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "type": "string",
+                              "name": "StringProperty"
+                            }
                           },
                           "value": {
                             "constant": {
@@ -129,10 +139,12 @@
             },
             {
               "assignmentBinding": {
-                "property": {
-                  "declaringType": "vm2.ExpressionSerialization.CommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                  "type": "System.Collections.Generic.IEnumerable\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
-                  "name": "EnumerableProperty"
+                "member": {
+                  "property": {
+                    "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                    "type": "System.Collections.Generic.IEnumerable\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                    "name": "EnumerableProperty"
+                  }
                 },
                 "value": {
                   "listInit": {

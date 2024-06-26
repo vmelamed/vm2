@@ -301,7 +301,18 @@ public static class StatementTestData
                 StringProperty = "inner string"
             },
             ArrayProperty = new[] { 4, 5, 6 },
-            ListProperty = { new Inner() { IntProperty = 23, StringProperty = "inner string" }, new Inner () { IntProperty = 42, StringProperty = "next inner string" } },
+            ListProperty = {
+                new Inner()
+                {
+                    IntProperty = 23,
+                    StringProperty = "inner string"
+                },
+                new Inner ()
+                {
+                    IntProperty = 42,
+                    StringProperty = "next inner string"
+                }
+            },
         },
         ["newMembersInit2"]         = () => () => new TestMembersInitialized1()
         {
@@ -309,7 +320,18 @@ public static class StatementTestData
             Time = new DateTime(1776, 7, 4),
             InnerProperty = { IntProperty = 23, StringProperty = "inner string" },
             ArrayProperty = new int[] { 4, 5, 6 },
-            ListProperty = { new Inner() { IntProperty = 23, StringProperty = "inner string" }, new Inner () { IntProperty = 42, StringProperty = "next inner string" } },
+            ListProperty =
+            {
+                new Inner()
+                {
+                    IntProperty = 23,
+                    StringProperty = "inner string"
+                },
+                new Inner ()
+                {
+                    IntProperty = 42,
+                    StringProperty = "next inner string" }
+            },
         },
 #pragma warning restore IDE0300 // Simplify collection initialization
         ["return1"]                 = _return1,

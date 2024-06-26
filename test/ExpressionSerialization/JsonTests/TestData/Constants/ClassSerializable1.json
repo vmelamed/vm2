@@ -2,9 +2,9 @@
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
   "expression": {
     "constant": {
-      "$comment": " vm2.ExpressionSerialization.CommonData.ClassSerializable1 ",
+      "$comment": " vm2.ExpressionSerialization.TestsCommonData.ClassSerializable1 ",
       "object": {
-        "type": "vm2.ExpressionSerialization.CommonData.ClassSerializable1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "type": "vm2.ExpressionSerialization.TestsCommonData.ClassSerializable1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
         "value": {
           "$id": "1",
           "IntProperty": 0,

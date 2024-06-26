@@ -285,8 +285,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
         _elements.Push(
             new JElement(
                     Vocabulary.AssignmentBinding,
-                        VisitMemberInfo(binding.Member),
-                        new JElement(Vocabulary.Value, PopWrappedElement())));  // pop the value to assign
+                        new JElement(Vocabulary.Member, VisitMemberInfo(binding.Member)),
+                        new JElement(Vocabulary.Value, PopWrappedElement())));  // pop the value (expression) to assign to the member
 
         return binding;
     }
@@ -300,8 +300,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
         _elements.Push(
             new JElement(
                     Vocabulary.MemberMemberBinding,
-                        VisitMemberInfo(binding.Member),
-                        new JElement(Vocabulary.Bindings, PopWrappedElements(binding.Bindings.Count))));
+                        new JElement(Vocabulary.Member, VisitMemberInfo(binding.Member)),
+                        new JElement(Vocabulary.Bindings, PopWrappedElements(binding.Bindings.Count))));    // pop the bindings for the members of the member
 
         return binding;
     }
@@ -315,8 +315,8 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
         _elements.Push(
             new JElement(
                     Vocabulary.MemberListBinding,
-                        VisitMemberInfo(binding.Member),
-                        new JElement(Vocabulary.Initializers, PopWrappedElements(binding.Initializers.Count))));
+                        new JElement(Vocabulary.Member, VisitMemberInfo(binding.Member)),
+                        new JElement(Vocabulary.Initializers, PopWrappedElements(binding.Initializers.Count))));    // pop the initializers for the list in the member
 
         return binding;
     }

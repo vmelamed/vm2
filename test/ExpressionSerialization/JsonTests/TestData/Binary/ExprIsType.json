@@ -13,7 +13,7 @@
       "body": {
         "typeIs": {
           "type": "boolean",
-          "typeOperand": "vm2.ExpressionSerialization.CommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "typeOperand": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "operands": [
             {
               "parameter": {
