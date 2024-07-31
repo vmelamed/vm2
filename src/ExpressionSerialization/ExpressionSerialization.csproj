@@ -1,66 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <WarningLevel>9999</WarningLevel>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);</NoWarn>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../vm2signKey.snk</AssemblyOriginatorKeyFile>
-    <RootNamespace>vm2.ExpressionSerialization</RootNamespace>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"><!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
-  
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'"><!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
-  
-  </PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>vm2.ExpressionSerialization</RootNamespace>
+    </PropertyGroup>
 
-  <PropertyGroup Label="NuGet">
-    <IsPackable>true</IsPackable>
-    <Title>vm2 Linq Expressions Serialization</Title>
-    <Company>vm</Company>
-    <Product>vm2</Product>
-    <ProductName>Val Melamed's packages</ProductName>
-    <Authors>Val Melamed</Authors>
-    <Description>Serialization/deserialization of LINQ Expressions to and from XML and JSON formats.</Description>
-    <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerialization/ExpressionSerialization.csproj</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
-    <PackageTags>C# LINQ expression serialize deserialize XML JSON</PackageTags>
-    <Copyright>Copyright © 2023-2024 vm</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>      
-    <RepositoryType>git</RepositoryType>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <IncludeSymbols>True</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
+    </PropertyGroup>
+    
+    <PropertyGroup Label="NuGet">
+        <Description>Serialization/deserialization of LINQ Expressions to and from XML and JSON formats.</Description>
+        <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.</PackageReleaseNotes>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerialization/ExpressionSerialization.csproj</PackageProjectUrl>
+        <PackageTags>C# LINQ expression serialize deserialize XML JSON</PackageTags>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Update="README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JsonSchema.Net" Version="7.0.4" />
-    <PackageReference Include="Newtonsoft.Json.Schema" Version="4.0.1" />
-    <PackageReference Include="System.Collections" Version="4.3.0" />
-    <PackageReference Include="System.Memory" Version="4.5.5" />
-    <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.0" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="JsonSchema.Net" />
+        <PackageReference Include="Newtonsoft.Json.Schema" />
+        <PackageReference Include="System.Collections" />
+        <PackageReference Include="System.Memory" />
+        <PackageReference Include="System.Security.AccessControl" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" />
+        <PackageReference Include="System.ServiceModel.Primitives" />
+        <PackageReference Include="System.Text.Json" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Threading\Threading.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Threading\Threading.csproj" />
+    </ItemGroup>
     
 </Project>

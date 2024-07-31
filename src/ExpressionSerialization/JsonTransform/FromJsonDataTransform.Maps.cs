@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+#pragma warning disable IDE0049
+
 static partial class FromJsonDataTransform
 {
     static readonly Dictionary<string, Transformation> _constantTransformations_ = new()
@@ -172,7 +174,6 @@ static partial class FromJsonDataTransform
 
     [GeneratedRegex(durationRegex)]
     private static partial Regex DurationRegex();
-
 
     static TimeSpan JsonToTimeSpan(JElement x)
     {

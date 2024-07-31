@@ -39,13 +39,13 @@ public partial struct JElement
     }
 
     /// <summary>
-    /// Gets a <see cref="JElement"/> with a <see cref="Name"/> the <paramref name="childPropertyName"/> and the 
+    /// Gets a <see cref="JElement"/> with a <see cref="Name"/> the <paramref name="childPropertyName"/> and the
     /// <see cref="Value"/> the value of the property <paramref name="childPropertyName"/> in this element's <see cref="Value"/>
     /// which must be <see cref="JsonObject"/>.
     /// </summary>
     /// <param name="childPropertyName">Name of the child property.</param>
     /// <returns>vm2.ExpressionSerialization.JsonTransform.JElement.</returns>
-    public JElement? TryGetChild(string childPropertyName)
+    public readonly JElement? TryGetChild(string childPropertyName)
     {
         if (Value is not JsonObject jObject ||
             !jObject.TryGetValue(childPropertyName, out var node, out var _))
@@ -55,13 +55,13 @@ public partial struct JElement
     }
 
     /// <summary>
-    /// Gets a <see cref="JElement"/> with a <see cref="Name"/> <paramref name="childPropertyName"/> and the 
+    /// Gets a <see cref="JElement"/> with a <see cref="Name"/> <paramref name="childPropertyName"/> and the
     /// <see cref="Value"/> the value of the property <paramref name="childPropertyName"/> in this element's <see cref="Value"/>
     /// which must be <see cref="JsonObject"/>.
     /// </summary>
     /// <param name="childPropertyName">Name of the child property.</param>
     /// <returns>vm2.ExpressionSerialization.JsonTransform.JElement.</returns>
-    public JElement GetChild(string childPropertyName)
+    public readonly JElement GetChild(string childPropertyName)
     {
         if (Value is not JsonObject jObject)
             throw new SerializationException($"The value of the property `{Name}` is not JsonObject and does not have named children.");
@@ -77,10 +77,10 @@ public partial struct JElement
     /// <see cref="Value" /> is the value of the property <paramref name="childIndex" />.
     /// </summary>
     /// <param name="childIndex">Name of the child property.</param>
-    /// <param name="elementName">Name of the returned <see cref="JElement"/> element. 
+    /// <param name="elementName">Name of the returned <see cref="JElement"/> element.
     /// By default it will be the string representation of <paramref name="childIndex"/></param>
     /// <returns>vm2.ExpressionSerialization.JsonTransform.JElement.</returns>
-    public JElement? TryGetChild(int childIndex, string? elementName = null)
+    public readonly JElement? TryGetChild(int childIndex, string? elementName = null)
     {
         if (Value is not JsonArray jArray ||
             (childIndex < 0 || childIndex >= jArray.Count))
@@ -94,10 +94,10 @@ public partial struct JElement
     /// <see cref="Value" /> is the value of the property <paramref name="childIndex" />.
     /// </summary>
     /// <param name="childIndex">Name of the child property.</param>
-    /// <param name="elementName">Name of the returned <see cref="JElement"/> element. 
+    /// <param name="elementName">Name of the returned <see cref="JElement"/> element.
     /// By default it will be the string representation of <paramref name="childIndex"/></param>
     /// <returns>vm2.ExpressionSerialization.JsonTransform.JElement.</returns>
-    public JElement GetChild(int childIndex, string? elementName = null)
+    public readonly JElement GetChild(int childIndex, string? elementName = null)
     {
         if (Value is not JsonArray jArray)
             throw new SerializationException($"The value of the property `{Name}` is not JsonArray and does not have indexable children.");
@@ -112,14 +112,14 @@ public partial struct JElement
     /// Translates an element's name to the enum ExpressionType.
     /// </summary>
     /// <returns>The <see cref="ExpressionType"/> represented by the element.</returns>
-    public bool TryGetExpressionType(out ExpressionType expressionType)
+    public readonly bool TryGetExpressionType(out ExpressionType expressionType)
         => Enum.TryParse(Name, true, out expressionType);
 
     /// <summary>
     /// Translates an element's name to the enum ExpressionType.
     /// </summary>
     /// <returns>The <see cref="ExpressionType"/> represented by the element.</returns>
-    public ExpressionType GetExpressionType()
+    public readonly ExpressionType GetExpressionType()
         => Enum.Parse<ExpressionType>(Name, true);
 
     /// <summary>
@@ -127,7 +127,7 @@ public partial struct JElement
     /// </summary>
     /// <param name="length">The length.</param>
     /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
-    public bool TryGetLength(out int length)
+    public readonly bool TryGetLength(out int length)
     {
         length = 0;
         var child = TryGetChild(Vocabulary.Length);
@@ -145,7 +145,7 @@ public partial struct JElement
     /// </summary>
     /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
     /// <exception cref="SerializationException"/>
-    public int GetLength()
+    public readonly int GetLength()
         => TryGetLength(out var length)
                 ? length
                 : throw new SerializationException($"Could not get the length property of the element `{Name}`.");
@@ -156,7 +156,7 @@ public partial struct JElement
     /// <param name="type">The type.</param>
     /// <param name="propertyName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public bool TryGetTypeFromProperty(out Type? type, string? propertyName = null)
+    public readonly bool TryGetTypeFromProperty(out Type? type, string? propertyName = null)
     {
         type = null;
 
@@ -176,7 +176,7 @@ public partial struct JElement
     /// </summary>
     /// <param name="propertyName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public Type GetTypeFromProperty(string? propertyName = null)
+    public readonly Type GetTypeFromProperty(string? propertyName = null)
         => TryGetTypeFromProperty(out var type, propertyName)
                 ? type!
                 : throw new SerializationException($"Could not get the .NET type of element `{Name}`.");
@@ -191,7 +191,7 @@ public partial struct JElement
     /// <param name="name">The name.</param>
     /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="Vocabulary.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public bool TryGetTypeName(out string name, string? attributeName = null)
+    public readonly bool TryGetTypeName(out string name, string? attributeName = null)
     {
         name = "";
         string? nm = null;
@@ -220,7 +220,7 @@ public partial struct JElement
     /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="Vocabulary.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
     /// <exception cref="SerializationException"/>
-    public string GetTypeName(string? attributeName = null)
+    public readonly string GetTypeName(string? attributeName = null)
         => TryGetTypeName(out var name, attributeName) && name is not null
                         ? name
                         : throw new SerializationException($"Could not get the type name of the element `{Name}`.");
@@ -235,7 +235,7 @@ public partial struct JElement
     /// <param name="type">The type.</param>
     /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public bool TryGetElementType(out Type? type, string? attributeName = null)
+    public readonly bool TryGetElementType(out Type? type, string? attributeName = null)
     {
         type = null;
 
@@ -252,7 +252,7 @@ public partial struct JElement
     /// </summary>
     /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
-    public Type GetElementType(string? attributeName = null)
+    public readonly Type GetElementType(string? attributeName = null)
         => TryGetElementType(out var type, attributeName)
                 ? type!
                 : throw new SerializationException($"Could not get the .NET type of the element `{Name}`.");

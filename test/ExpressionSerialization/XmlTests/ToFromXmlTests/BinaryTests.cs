@@ -5,8 +5,6 @@ public partial class BinaryTests(XmlTestsFixture fixture, ITestOutputHelper outp
 {
     protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "Binary");
 
-    static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
-
     [Theory]
     [MemberData(nameof(BinaryData))]
     public async Task BinaryToXmlTestAsync(string testFileLine, string expressionString, string fileName)

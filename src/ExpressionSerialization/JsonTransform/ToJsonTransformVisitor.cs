@@ -204,7 +204,6 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                 x.Add(@if, then, @else);
             });
 
-
     /// <inheritdoc/>
     protected override Expression VisitNew(NewExpression node)
         => GenericVisit(
@@ -301,7 +300,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             new JElement(
                     Vocabulary.MemberMemberBinding,
                         new JElement(Vocabulary.Member, VisitMemberInfo(binding.Member)),
-                        new JElement(Vocabulary.Bindings, PopWrappedElements(binding.Bindings.Count))));    // pop the bindings for the members of the member
+                        new JElement(Vocabulary.Bindings, PopElementsValues(binding.Bindings.Count))));    // pop the bindings for the members of the member
 
         return binding;
     }
@@ -316,7 +315,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             new JElement(
                     Vocabulary.MemberListBinding,
                         new JElement(Vocabulary.Member, VisitMemberInfo(binding.Member)),
-                        new JElement(Vocabulary.Initializers, PopWrappedElements(binding.Initializers.Count))));    // pop the initializers for the list in the member
+                        new JElement(Vocabulary.Initializers, PopElementsValues(binding.Initializers.Count))));    // pop the initializers for the list in the member
 
         return binding;
     }
@@ -348,7 +347,6 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                     Pop(),   // add the target
                     value);
             });
-
 
     /// <inheritdoc/>
     protected override Expression VisitGoto(GotoExpression node)

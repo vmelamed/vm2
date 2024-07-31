@@ -8,7 +8,7 @@ using Newtonsoft.Json.Schema;
 #endif
 
 /// <summary>
-/// Class JsonOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to 
+/// Class JsonOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to
 /// JSON documents. Consider caching this object.
 /// </summary>
 public partial class JsonOptions : DocumentOptions
@@ -52,7 +52,7 @@ public partial class JsonOptions : DocumentOptions
     }
 
     /// <summary>
-    /// Get or sets a value that indicates whether an extra comma at the end of a list of JSON values in an object or 
+    /// Get or sets a value that indicates whether an extra comma at the end of a list of JSON values in an object or
     /// array is allowed (and ignored) within the JSON payload being deserialized.
     /// </summary>
     /// <value>The allow trailing commas.</value>
@@ -241,9 +241,7 @@ public partial class JsonOptions : DocumentOptions
         {
             Debug.Assert(_schema is not null);
 
-            IList<string>? messages;
-
-            JObject.Parse(json).IsValid(_schema, out messages);
+            JObject.Parse(json).IsValid(_schema, out IList<string>? messages);
             if (messages.Count == 0)
                 return;
 

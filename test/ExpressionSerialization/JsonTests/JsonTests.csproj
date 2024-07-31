@@ -1,66 +1,56 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <PropertyGroup>
+        <RootNamespace>vm2.ExpressionSerialization.JsonTests</RootNamespace>
+    </PropertyGroup>
 
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CA1861;xUnit1041;xUnit1045</NoWarn>
-    <RootNamespace>vm2.ExpressionSerialization.JsonTests</RootNamespace>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\..\vm2signKey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"><!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->    
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"><!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
-  
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'"><!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->    
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'"><!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
-  
-  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="Xunit.Extension" />
+        <PackageReference Include="xunit.extensibility.execution" />
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageReference Include="xunit" Version="2.8.1" />
-    <PackageReference Include="Xunit.Extension" Version="1.0.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="6.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
+        <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
+        <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
+        <ProjectReference Include="..\CommonData\CommonData.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
-    <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
-    <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
-    <ProjectReference Include="..\CommonData\CommonData.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TestData\Assignments\" />
-    <Folder Include="TestData\Binary\" />
-    <Folder Include="TestData\ChangeByOne\" />
-    <Folder Include="TestData\Lambdas\" />
-    <Folder Include="TestData\Lambdas\" />
-    <Folder Include="TestData\Binary\" />
-    <Folder Include="TestData\Assignments\" />
-    <Folder Include="TestData\ChangeByOne\" />
-    <Folder Include="TestData\Statements\" />
-    <Folder Include="TestData\Statements\" />
-    <Folder Include="TestData\Unary\" />
-    <Folder Include="TestData\Statements\" />
-    <Folder Include="TestData\Unary\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="TestData\Assignments\" />
+        <Folder Include="TestData\Binary\" />
+        <Folder Include="TestData\ChangeByOne\" />
+        <Folder Include="TestData\Lambdas\" />
+        <Folder Include="TestData\Lambdas\" />
+        <Folder Include="TestData\Binary\" />
+        <Folder Include="TestData\Assignments\" />
+        <Folder Include="TestData\ChangeByOne\" />
+        <Folder Include="TestData\Statements\" />
+        <Folder Include="TestData\Statements\" />
+        <Folder Include="TestData\Unary\" />
+        <Folder Include="TestData\Statements\" />
+        <Folder Include="TestData\Unary\" />
+    </ItemGroup>
 
 </Project>

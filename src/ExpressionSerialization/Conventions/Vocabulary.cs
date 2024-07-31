@@ -36,7 +36,7 @@ public static class Vocabulary
     public const string String                  = "string";
     public const string Uri                     = "uri";
 
-    // other types and type categories  
+    // other types and type categories
     public const string Object                  = "object";
     public const string Nullable                = "nullable";
     public const string Enum                    = "enum";
@@ -217,8 +217,6 @@ public static class Vocabulary
     public const string AssignmentBinding       = "assignmentBinding";
     public const string MemberMemberBinding     = "memberMemberBinding";
     public const string MemberListBinding       = "memberListBinding";
-
-#pragma warning restore CS1591
 
     static readonly Dictionary<Type, string> _typesToNames_ = new()
     {

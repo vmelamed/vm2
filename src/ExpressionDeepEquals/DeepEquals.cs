@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionDeepEquals;
 
-using System.Linq.Expressions;
-
 /// <summary>
 /// Class ExpressionExtensions.
 /// </summary>

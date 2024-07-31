@@ -1,5 +1,4 @@
 ﻿namespace vm2.ExpressionDeepEqualsTests;
-using System.Reflection;
 
 #pragma warning disable IDE0300 // Simplify collection initialization
 #pragma warning disable IDE0056 // Use index operator
@@ -31,7 +30,7 @@ public partial class DeepEqualsTests
 
     static ParameterExpression _value  = Expression.Parameter(typeof(int), "_value");
     static ParameterExpression _result = Expression.Parameter(typeof(int), "_result");
-    static LabelTarget _labelCont  = Expression.Label("continue");
+    static LabelTarget _labelContinue  = Expression.Label("continue");
     static LabelTarget _labelBreak = Expression.Label("break");
 
     static Expression _lambdaWithLoopContinueBreak =
@@ -47,10 +46,10 @@ public partial class DeepEqualsTests
                         Expression.Block(
                             [],
                             Expression.MultiplyAssign(_result, Expression.PostDecrementAssign(_value)),
-                            Expression.Continue(_labelCont)),
+                            Expression.Continue(_labelContinue)),
                         Expression.Break(_labelBreak))),
                 _labelBreak,
-                _labelCont))
+                _labelContinue))
     ;
 
     static MethodInfo _miWriteLine = typeof(Console).GetMethod("WriteLine", [ typeof(string) ])!;
@@ -278,7 +277,7 @@ public partial class DeepEqualsTests
         TheOuterIntProperty = 42,
         Time = new DateTime(1776, 7, 4),
         InnerProperty = new Inner
-            {
+        {
             IntProperty = 23,
             StringProperty = "inner string"
         },
@@ -387,8 +386,8 @@ public partial class DeepEqualsTests
         ["(IntPtr)5"]                                                                       = () => Expression.Constant((IntPtr)5),
         ["(IntPtr)6"]                                                                       = () => Expression.Constant((IntPtr)6),
         ["(UIntPtr)5"]                                                                      = () => Expression.Constant((UIntPtr)5),
-        ["new Guid(\"00112233-4455-6677-8899-aabbccddeeff\")"]                              = () => Expression.Constant(new Guid("00112233-4455-6677-8899-aabbccddeeff")),
-        ["new Uri(\"http://www.delinea.com\")"]                                             = () => Expression.Constant(new Uri("http://www.delinea.com")),
+        ["new Guid(\"00112233-4455-6677-8899-AABBCCDDEEFF\")"]                              = () => Expression.Constant(new Guid("00112233-4455-6677-8899-AABBCCDDEEFF")),
+        ["new Uri(\"http://www.some.com\")"]                                                = () => Expression.Constant(new Uri("http://www.delinea.com")),
         ["DBNull.Value"]                                                                    = () => Expression.Constant(DBNull.Value, typeof(DBNull)),
 
         ["new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)"]                                     = () => Expression.Constant(new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)),
@@ -541,6 +540,3 @@ public partial class DeepEqualsTests
         ["newMembersInit2"]                                                                 = _newMembersInitialized2,
     };
 }
-
-#pragma warning restore IDE0300 // Simplify collection initialization
-#pragma warning restore IDE0056 // Use index operator

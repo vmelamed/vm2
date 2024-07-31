@@ -1,32 +1,32 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 /// <summary>
-/// struct JElement is a key-value pair, similar to <see cref="XElement"/>. The <paramref name="key"/> is the name of 
+/// struct JElement is a key-value pair, similar to <see cref="XElement"/>. The <paramref name="key"/> is the name of
 /// the element in the parent JsonObject.
 /// </summary>
 /// <remarks>
-/// The <see cref="KeyValuePair{TKey, TValue}"/> is a struct, so we cannot inherit 
-/// from it but we have implicit conversions to and from it and instances of this class can be used anywhere where 
+/// The <see cref="KeyValuePair{TKey, TValue}"/> is a struct, so we cannot inherit
+/// from it but we have implicit conversions to and from it and instances of this class can be used anywhere where
 /// <see cref="KeyValuePair{TKey, TValue}"/> is required.
 /// </remarks>
 [DebuggerDisplay("\"{Name}\": {Value}")]
 public partial struct JElement(string key = "", JsonNode? value = null)
 {
     /// <summary>
-    /// Gets or sets the key of this JElement. When this JElement is added to a <see cref="JsonObject"/> or 
+    /// Gets or sets the key of this JElement. When this JElement is added to a <see cref="JsonObject"/> or
     /// <see cref="JsonDocument"/>, the <see cref="Name"/> will become the name of a property in that parent.
     /// </summary>
     public string Name { get; set; } = key;
 
     /// <summary>
-    /// Gets or sets the value of this JElement. When this JElement is added to a <see cref="JsonObject"/> or 
-    /// <see cref="JsonDocument"/>, the <see cref="Value"/> will become the value of the property with name 
+    /// Gets or sets the value of this JElement. When this JElement is added to a <see cref="JsonObject"/> or
+    /// <see cref="JsonDocument"/>, the <see cref="Value"/> will become the value of the property with name
     /// <see cref="Name"/> in that parent.
     /// </summary>
     /// <element>The element.</element>
     public JsonNode? Value { get; set; } = value;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="JElement" /> struct. Disambiguates the <see cref="JsonArray"/> 
+    /// Initializes a new instance of the <see cref="JElement" /> struct. Disambiguates the <see cref="JsonArray"/>
     /// parameter as a <see cref="JsonNode"/>, instead of <see cref="IEnumerable{JsonNode}"/>.
     /// </summary>
     /// <param name="key">The key.</param>
@@ -125,13 +125,13 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds the <paramref key="key"/> and the <paramref name="value"/> to the current <see cref="Value"/> if its type is 
+    /// Adds the <paramref key="key"/> and the <paramref name="value"/> to the current <see cref="Value"/> if its type is
     /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element).
     /// </summary>
     /// <param name="key">The key.</param>
     /// <param name="value">The object to add.</param>
     /// <returns>
-    /// This instance and a boolean which will be <c>true</c> if the operation was successful, 
+    /// This instance and a boolean which will be <c>true</c> if the operation was successful,
     /// <c>false</c> if the <see cref="Value"/> of this element already has a property with a name <paramref name="key"/>.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -151,7 +151,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds the <see cref="JElement"/> <paramref key="properties"/> to the current <see cref="Value"/> if its type is 
+    /// Adds the <see cref="JElement"/> <paramref key="properties"/> to the current <see cref="Value"/> if its type is
     /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element).
     /// If any of the parameters are <c>null</c> the method quietly skips them.
     /// </summary>
@@ -161,21 +161,21 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// If the <see cref="Value"/> of this <see cref="JElement"/> is not <see cref="JsonObject"/>
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
+    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/>
     /// already exists in the <see cref="Value"/> of this instance.
     /// </exception>
     public JElement Add(params JElement?[] properties)
         => Add(properties.AsEnumerable());
 
     /// <summary>
-    /// Adds a the <paramref key="properties"/> to the current <see cref="Value"/> if the type of the element is 
+    /// Adds a the <paramref key="properties"/> to the current <see cref="Value"/> if the type of the element is
     /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element). If any of the
     /// parameters are <c>null</c> the method quietly skips them.
     /// </summary>
     /// <param key="properties"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/>
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -185,8 +185,8 @@ public partial struct JElement(string key = "", JsonNode? value = null)
         => TryAdd(properties.AsEnumerable());
 
     /// <summary>
-    /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="properties"/> to the 
-    /// current <see cref="Value"/> if its type is <see cref="JsonObject"/> or <c>null</c> (in which case the method 
+    /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="properties"/> to the
+    /// current <see cref="Value"/> if its type is <see cref="JsonObject"/> or <c>null</c> (in which case the method
     /// creates a new JsonObject element).
     /// If any of the parameters are <c>null</c> the method quietly skips them. The <see cref="IEnumerable{JElement}"/>
     /// parameters are added iteratively in the current <see cref="Value"/>.
@@ -194,7 +194,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// <param key="properties"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/>
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -218,8 +218,8 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="properties"/> to the 
-    /// current <see cref="Value"/> if its type is <see cref="JsonObject"/> or <c>null</c> (in which case the method 
+    /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="properties"/> to the
+    /// current <see cref="Value"/> if its type is <see cref="JsonObject"/> or <c>null</c> (in which case the method
     /// creates a new JsonObject element).
     /// If any of the parameters are <c>null</c> the method quietly skips them. The <see cref="IEnumerable{JElement}"/>
     /// parameters are added iteratively in the current <see cref="Value"/>.
@@ -227,7 +227,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// <param key="properties"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/>
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -253,7 +253,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is 
+    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is
     /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element). If any of the
     /// elements in the <paramref key="elements"/> are <c>null</c> the method quietly skips them.
     /// </summary>
@@ -263,7 +263,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// If the <see cref="Value"/> of this <see cref="JElement"/> is not <see cref="JsonObject"/>
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
+    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/>
     /// already exists in the <see cref="Value"/> of this instance.
     /// </exception>
     public JElement Add(IEnumerable<JElement?> properties)
@@ -280,14 +280,14 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is 
+    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is
     /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element). If any of the
     /// elements in the <paramref key="elements"/> are <c>null</c> the method quietly skips them.
     /// </summary>
     /// <param key="elements"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/>
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -309,7 +309,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is 
+    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is
     /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element). If any of the
     /// elements in the <paramref key="elements"/> are <c>null</c> the method quietly skips them.
     /// </summary>
@@ -319,7 +319,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// If the <see cref="Value"/> of this <see cref="JElement"/> is not <see cref="JsonObject"/>
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
+    /// If a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/>
     /// already exists in the <see cref="Value"/> of this instance.
     /// </exception>
     public JElement Add(IEnumerable<JElement> properties)
@@ -336,14 +336,14 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is 
+    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is
     /// <see cref="JsonObject"/> or <c>null</c> (in which case the method creates a new JsonObject element). If any of the
     /// elements in the <paramref key="elements"/> are <c>null</c> the method quietly skips them.
     /// </summary>
     /// <param key="elements"></param>
     /// <returns>
     /// This instance and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/> 
+    /// <c>false</c> if a property with the same name as the <see cref="Name"/> of any of the <paramref name="properties"/>
     /// already exists in the <see cref="Value"/> of this instance.
     /// </returns>
     /// <exception cref="InternalTransformErrorException">
@@ -365,7 +365,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds the <paramref name="element"/> to the current <see cref="Value"/> if its type is 
+    /// Adds the <paramref name="element"/> to the current <see cref="Value"/> if its type is
     /// <see cref="JsonArray"/> or <c>null</c> (in which case the method creates a new JsonArray).
     /// </summary>
     /// <param name="element">The element.</param>
@@ -386,7 +386,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     }
 
     /// <summary>
-    /// Adds the <paramref name="elements"/> to the current <see cref="Value"/> if its type is 
+    /// Adds the <paramref name="elements"/> to the current <see cref="Value"/> if its type is
     /// <see cref="JsonArray"/> or <c>null</c> (in which case the method creates a new JsonArray).
     /// </summary>
     /// <param name="elements">The element.</param>
@@ -398,7 +398,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
         => Add(elements.AsEnumerable());
 
     /// <summary>
-    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is 
+    /// Adds a the elements from the parameter to the current <see cref="Value"/> if the type of the element is
     /// <see cref="JsonArray"/> or <c>null</c> (in which case the method creates a new JsonObject element). If any of the
     /// elements in the <paramref key="elements"/> are <c>null</c> the method quietly skips them.
     /// </summary>
@@ -419,7 +419,6 @@ public partial struct JElement(string key = "", JsonNode? value = null)
 
         return this;
     }
-
 
     /// <summary>
     /// Deeply clones this element.

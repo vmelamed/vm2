@@ -1,7 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.TestsCommonData;
 
-using System.Collections;
-using System.Reflection;
+#pragma warning disable IDE0300 // Simplify collection initialization
+#pragma warning disable IDE0056 // Use index operator
 
 public static class StatementTestData
 {
@@ -268,9 +268,7 @@ public static class StatementTestData
         ["goto2"]                   = _goto2,
         ["goto3"]                   = _goto3,
         ["goto4"]                   = _goto4,
-#pragma warning disable IDE0056 // Use index operator
         ["indexMember"]             = (TestMembersInitialized m) => m.ArrayProperty.Length > 0 ? m.ArrayProperty[m.ArrayProperty.Length - 1] : -1,
-#pragma warning restore IDE0056 // Use index operator
         ["array[index]"]            = _lambdaExpr,
         ["indexObject1"]            = (TestMembersInitialized1 m) => m[1],
         ["loop"]                    = _lambdaWithLoopContinueBreak,
@@ -290,7 +288,6 @@ public static class StatementTestData
             },
             EnumerableProperty = new List<string> { "aaa", "bbb", "ccc", },
         },
-#pragma warning disable IDE0300 // Simplify collection initialization
         ["newMembersInit1"]         = () => () => new TestMembersInitialized1()
         {
             TheOuterIntProperty = 42,
@@ -333,7 +330,6 @@ public static class StatementTestData
                     StringProperty = "next inner string" }
             },
         },
-#pragma warning restore IDE0300 // Simplify collection initialization
         ["return1"]                 = _return1,
         ["return2"]                 = _return2,
         ["switch(a){ ... }"]        = _switch,

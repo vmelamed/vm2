@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		test\Directory.Build.props = test\Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 		README.md = README.md
 		vm2signKey.snk = vm2signKey.snk
 	EndProjectSection
@@ -35,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionDeepEqualsTests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonTests", "test\ExpressionSerialization\JsonTests\JsonTests.csproj", "{5E7184E0-A8E3-479A-9001-F595236C9E3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonData", "test\ExpressionSerialization\CommonData\CommonData.csproj", "{471F4D0C-56E3-4BEA-8094-0AD9E1766CB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonData", "test\ExpressionSerialization\CommonData\CommonData.csproj", "{471F4D0C-56E3-4BEA-8094-0AD9E1766CB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -64,10 +64,10 @@ public partial class ToJsonTransformVisitor
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <returns>JsonObject.</returns>
-    JsonObject PopWrappedElement() => new() { _elements.Pop() };
+    JsonObject PopWrappedElement() => [_elements.Pop()];
 
     /// <summary>
-    /// Pops a specified number of elements from the stack in the order they entered (FIFO, not LIFO) and returns 
+    /// Pops a specified number of elements from the stack in the order they entered (FIFO, not LIFO) and returns
     /// <see cref="IEnumerable{JsonNode}"/> of their <see cref="JElement.Value"/>.
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
@@ -135,7 +135,7 @@ public partial class ToJsonTransformVisitor
     /// </summary>
     /// <param name="node">The node.</param>
     /// <returns>System.Nullable&lt;JElement&gt;.</returns>
-    JElement? VisitMethodInfo(BinaryExpression node)
+    static JElement? VisitMethodInfo(BinaryExpression node)
         => node.Method is MemberInfo mi
                 ? VisitMemberInfo(mi)
                 : null;
@@ -145,7 +145,7 @@ public partial class ToJsonTransformVisitor
     /// </summary>
     /// <param name="node">The node.</param>
     /// <returns>System.Nullable&lt;JElement&gt;.</returns>
-    JElement? VisitMethodInfo(UnaryExpression node)
+    static JElement? VisitMethodInfo(UnaryExpression node)
         => node.Method is MemberInfo mi
                 ? VisitMemberInfo(mi)
                 : null;
@@ -155,7 +155,7 @@ public partial class ToJsonTransformVisitor
     /// </summary>
     /// <param name="member">The member.</param>
     /// <returns>System.Nullable&lt;JElement&gt;.</returns>
-    JElement? VisitMemberInfo(MemberInfo? member)
+    static JElement? VisitMemberInfo(MemberInfo? member)
     {
         if (member is null)
             return null;
