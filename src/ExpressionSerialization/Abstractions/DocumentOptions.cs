@@ -132,7 +132,7 @@ public abstract class DocumentOptions
     }
 
     /// <summary>
-    /// Determines whether has expressions schema was added.
+    /// Determines whether the expression schema was added.
     /// </summary>
     /// <returns><c>true</c> if an expressions schema is present; otherwise, <c>false</c>.</returns>
     internal abstract bool HasExpressionSchema { get; }

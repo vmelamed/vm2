@@ -34,6 +34,12 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
+    <!--
+    Defining JSON_SCHEMA switches JSON validation to be done with Json.Schema from https://docs.json-everything.net/. It has some
+    problems with numbers and with the huge recursive schema in some more complex cases.
+    Otherwise JSON_SCHEMA switches JSON validation to be done with Newtonsoft but it is paid if you want more than 1000 validations per hour.
+    -->
+
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
     </PropertyGroup>

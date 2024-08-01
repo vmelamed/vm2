@@ -41,11 +41,7 @@ public class ExpressionXmlTransform(XmlOptions? options = null) : IExpressionTra
     Expression IExpressionTransform<XElement>.Transform(XElement element)
     {
         _options.Validate(element);
-        if (_xmlVisitor is null)
-            _xmlVisitor = new FromXmlTransformVisitor();
-        else
-            _xmlVisitor.ResetVisitState();
-        return _xmlVisitor.Visit(element);
+        return DoTransform(element);
     }
     #endregion
 
@@ -75,9 +71,18 @@ public class ExpressionXmlTransform(XmlOptions? options = null) : IExpressionTra
         if (root.Name.LocalName != Vocabulary.Expression)
             throw new SerializationException($"Expected document root element with name `{Vocabulary.Expression}`.");
 
-        return me.Transform(root);
+        return DoTransform(root);
     }
     #endregion
+
+    Expression DoTransform(XElement element)
+    {
+        if (_xmlVisitor is null)
+            _xmlVisitor = new FromXmlTransformVisitor();
+        else
+            _xmlVisitor.ResetVisitState();
+        return _xmlVisitor.Visit(element);
+    }
 
     /// <summary>
     /// Serializes the specified expression.

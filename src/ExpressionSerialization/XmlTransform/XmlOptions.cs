@@ -240,8 +240,11 @@ public partial class XmlOptions : DocumentOptions
         using (_schemasLock.ReaderLock())
         {
             schema = Schemas.GlobalElements[new XmlQualifiedName(Vocabulary.Expression, Exs)];
-            if (schema is not null)
-                element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
+
+            if (schema is null)
+                throw new SerializationException($"Could not find schema for element {new XmlQualifiedName(Vocabulary.Expression, Exs)}.");
+
+            element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
         }
 
         if (exceptions.Count is not 0)
