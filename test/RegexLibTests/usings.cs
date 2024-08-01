@@ -1,4 +1,5 @@
 global using System.Text.RegularExpressions;
+global using System.Web;
 
 global using FluentAssertions;
 

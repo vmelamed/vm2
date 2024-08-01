@@ -7,7 +7,7 @@ public abstract class DocumentOptions
 {
     IdentifierConventions _identifiers = IdentifierConventions.Preserve;
     TypeNameConventions _typeNames = TypeNameConventions.FullName;
-    ValidateDocuments _validateInputDocuments = ValidateDocuments.IfSchemaPresent;
+    ValidateExpressionDocuments _validateInputDocuments = ValidateExpressionDocuments.IfSchemaPresent;
 
     bool _indent = true;
     int _indentSize = 2;
@@ -121,7 +121,7 @@ public abstract class DocumentOptions
     /// <summary>
     /// Gets or sets a value indicating whether to validate the input documents that are to be transformed to <see cref="Expression"/>-s.
     /// </summary>
-    public ValidateDocuments ValidateInputDocuments
+    public ValidateExpressionDocuments ValidateInputDocuments
     {
         get => _validateInputDocuments;
         set
@@ -155,7 +155,7 @@ public abstract class DocumentOptions
 
     /// <summary>
     /// Determines whether to validate the input documents against has expressions schema.
-    /// If <see cref="DocumentOptions.ValidateInputDocuments"/> is <c>ValidateDocuments.Always</c> the method will verify
+    /// If <see cref="DocumentOptions.ValidateInputDocuments"/> is <c>ValidateExpressionDocuments.Always</c> the method will verify
     /// that the schema was actually added.
     /// </summary>
     /// <returns><c>true</c> if the documents must be validated against the schema; otherwise, <c>false</c>.</returns>
@@ -163,7 +163,7 @@ public abstract class DocumentOptions
     /// The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().
     /// </exception>
     internal bool MustValidate
-        => ValidateInputDocuments == ValidateDocuments.Always
+        => ValidateInputDocuments == ValidateExpressionDocuments.Always
                 ? HasExpressionSchema ? true : throw new InvalidOperationException("The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().")
-                : ValidateInputDocuments == ValidateDocuments.IfSchemaPresent && HasExpressionSchema;
+                : ValidateInputDocuments == ValidateExpressionDocuments.IfSchemaPresent && HasExpressionSchema;
 }

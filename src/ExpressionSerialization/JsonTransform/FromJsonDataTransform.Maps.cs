@@ -1,8 +1,10 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 #pragma warning disable IDE0049
+
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
 
 static partial class FromJsonDataTransform
 {

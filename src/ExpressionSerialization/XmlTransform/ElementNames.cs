@@ -1,4 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
+
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 static class ElementNames
 {
     public static XName Expression => Namespaces.Exs + Vocabulary.Expression;

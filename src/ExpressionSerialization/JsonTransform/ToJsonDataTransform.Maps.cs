@@ -1,13 +1,17 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 partial class ToJsonDataTransform
 {
     /// <summary>
     /// The maximum long number that can be expressed as &quot;JSON integer&quot; without loosing fidelity.
     /// </summary>
     /// <remarks>
-    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
-    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
+    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses
+    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers
     /// between [-(2^53-1), 2^53 - 1].
     /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;9007199254740992&quot;</c>.
     /// </remarks>
@@ -17,8 +21,8 @@ partial class ToJsonDataTransform
     /// The minimum long number that can be expressed as &quot;JSON integer&quot; without loosing fidelity.
     /// </summary>
     /// <remarks>
-    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
-    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
+    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses
+    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers
     /// from the range [-(2^53-1), 2^53-1].
     /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;-9007199254740992&quot;</c>.
     /// </remarks>

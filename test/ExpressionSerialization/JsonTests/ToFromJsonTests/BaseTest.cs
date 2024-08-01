@@ -24,17 +24,17 @@ public abstract class BaseTests(
 
         var expression = Substitute(expressionString);
         var pathName = Path.Combine(JsonTestFilesPath, fileName);
-        var (expectedDoc, expectedStr) = await _fixture.GetJsonDocumentAsync(testFileLine, pathName, "EXPECTED", Out);
+        var (expectedDoc, expectedStr) = await _fixture.GetJsonDocumentAsync(testFileLine, pathName, "EXPECTED", Out);  // don't validate the expected document - it has been validated already when generated
 
         _fixture.TestExpressionToJson(testFileLine, expression, expectedDoc, expectedStr, pathName, Out);
-        await _fixture.TestExpressionToJsonAsync(testFileLine, expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+        await _fixture.TestExpressionToJsonAsync(testFileLine, expression, expectedDoc, expectedStr, pathName, Out);
     }
 
     public virtual async Task FromJsonTestAsync(string testFileLine, string expressionString, string fileName)
     {
         var expectedExpression = Substitute(expressionString);
         var pathName = Path.Combine(JsonTestFilesPath, fileName);
-        var (inputDoc, _) = await _fixture.GetJsonDocumentAsync(testFileLine, pathName, "INPUT", Out, true);
+        var (inputDoc, _) = await _fixture.GetJsonDocumentAsync(testFileLine, pathName, "INPUT", Out);                  // don't validate the input document - it has been validated already when generated
 
         _fixture.TestJsonToExpression(testFileLine, inputDoc, expectedExpression);
     }

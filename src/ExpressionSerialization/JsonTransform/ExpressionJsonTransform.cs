@@ -1,5 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 /// <summary>
 /// Class ExpressionTransform.
 /// Implements the <see cref="IExpressionTransform{JsonNode}"/>: transforms a Linq expression to/from a JSON document object.

@@ -1,6 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using System.Xml.Linq;
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
 
 /// <summary>
 /// Class that visits the nodes of an XML element to produce a LINQ expression tree.
@@ -274,7 +276,7 @@ public partial class FromXmlTransformVisitor
     /// Visits an XML element representing a `LabelTarget` expression.
     /// </summary>
     /// <param name="e">The element.</param>
-    /// 
+    ///
     /// <returns>System.Linq.Expressions.LabelTarget.</returns>
     /// <exception cref="SerializationException">$"Expected XML attribute `{(isRef.Value ? Vocabulary.IdRef : Vocabulary.Id)}` in the element `{e.Name}`.</exception>
     protected virtual LabelTarget VisitLabelTarget(XElement e)

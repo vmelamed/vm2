@@ -1,12 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
-#if JsonSchema
-using Json.Schema;
-#else
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
-#endif
-
 /// <summary>
 /// Class JsonOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to
 /// JSON documents. Consider caching this object.
@@ -113,7 +106,7 @@ public partial class JsonOptions : DocumentOptions
         MaxDepth = 1000
     };
 
-#if JsonSchema
+#if JSON_SCHEMA
     JsonSchema? _schema;
 
     static readonly EvaluationOptions _evaluationOptions = new() {

@@ -1330,16 +1330,14 @@
                                 {
                                     "type": "string",
                                     "pattern": "^[0-9A-Za-z/+]*={0,2}$",
-                                    "contentEncoding": "base64",
                                     "contentMediaType": "application/octet-stream"
                                 },
                                 {
-                                    "$comment": "when the value is encoded with multiline Base64",
+                                    "$comment": "when the value is encoded with multiline Base64 it should be array of strings",
                                     "type": "array",
                                     "items": {
                                         "type": "string",
                                         "pattern": "^[0-9A-Za-z/+]*={0,2}$",
-                                        "contentEncoding": "base64",
                                         "contentMediaType": "application/octet-stream"
                                     }
                                 }

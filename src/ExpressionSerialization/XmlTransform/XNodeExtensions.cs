@@ -1,6 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using System.Xml.Linq;
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
 
 /// <summary>
 /// Class XNodeExtensions defines extension methods to XElement-s.

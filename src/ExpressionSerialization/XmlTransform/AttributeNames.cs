@@ -1,5 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
 static class AttributeNames
 {
     public static XName Nil => Namespaces.Xsi + "nil";

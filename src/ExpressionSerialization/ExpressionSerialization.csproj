@@ -3,13 +3,6 @@
     <PropertyGroup>
         <RootNamespace>vm2.ExpressionSerialization</RootNamespace>
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->
-    </PropertyGroup>
     
     <PropertyGroup Label="NuGet">
         <Description>Serialization/deserialization of LINQ Expressions to and from XML and JSON formats.</Description>
@@ -26,8 +19,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JsonSchema.Net" />
-        <PackageReference Include="Newtonsoft.Json.Schema" />
+        <PackageReference Include="JsonSchema.Net" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*JSON_SCHEMA(;.*)*$'))" />
+        <PackageReference Include="Newtonsoft.Json.Schema" Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*JSON_SCHEMA(;.*)*$'))" />
         <PackageReference Include="System.Collections" />
         <PackageReference Include="System.Memory" />
         <PackageReference Include="System.Security.AccessControl" />

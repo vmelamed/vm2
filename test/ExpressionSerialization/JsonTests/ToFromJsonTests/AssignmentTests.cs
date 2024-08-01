@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
 
-using System.Linq.Expressions;
-
 [CollectionDefinition("JSON")]
 public partial class AssignmentTests(JsonTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {

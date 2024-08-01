@@ -1,4 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
+
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 public partial class ToJsonTransformVisitor
 {
     ToJsonDataTransform _dataTransform = new(options);

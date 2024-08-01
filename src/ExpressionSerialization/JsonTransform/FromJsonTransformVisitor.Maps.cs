@@ -1,5 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 public partial class FromJsonTransformVisitor
 {
     #region Dispatch map for the concrete XML element Expression transforming visitors

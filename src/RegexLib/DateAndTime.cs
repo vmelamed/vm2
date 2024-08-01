@@ -1,5 +1,4 @@
 ﻿namespace vm2.RegexLib;
-using System.Text.RegularExpressions;
 
 /// <summary>
 /// Class DateAndTime. Regular expressions for validating dates, time, intervals, etc.

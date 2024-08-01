@@ -1,5 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 static partial class FromXmlDataTransform
 {
     /// <summary>
@@ -22,16 +26,9 @@ static partial class FromXmlDataTransform
     /// <param name="element">The element which holds transformed constant value.</param>
     /// <returns>The transforming delegate corresponding to the <paramref name="element"/>.</returns>
     static Transformation GetTransformation(XElement element)
-    {
-        try
-        {
-            return _constantTransformations[element.Name.LocalName];
-        }
-        catch (Exception ex)
-        {
-            throw new SerializationException($"Error deserializing and converting to a strong type the value of the element `{element.Name}`.", ex);
-        }
-    }
+        => _constantTransformations.TryGetValue(element.Name.LocalName, out var transform)
+                ? transform
+                : throw new SerializationException($"Error deserializing and converting to a strong type the value of the element `{element.Name}`.");
 
     /// <summary>
     /// Extracts the type and the value of an <see cref="XElement"/>

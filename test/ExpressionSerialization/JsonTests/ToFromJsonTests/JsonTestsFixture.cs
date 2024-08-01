@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
 
-using vm2.ExpressionSerialization.JsonTransform;
-
 public class JsonTestsFixture : IDisposable
 {
     internal const string TestFilesPath = "../../../TestData";
@@ -20,7 +18,7 @@ public class JsonTestsFixture : IDisposable
         IndentSize = 4,
         AddComments = true,
         AllowTrailingCommas = true,
-        ValidateInputDocuments = ValidateDocuments.Always,
+        ValidateInputDocuments = ValidateExpressionDocuments.Always,
     };
 
     public void Dispose() => GC.SuppressFinalize(this);
@@ -29,11 +27,23 @@ public class JsonTestsFixture : IDisposable
 
     public void Validate(string json) => Options.Validate(json);
 
+    /// <summary>
+    /// Get json document as an asynchronous operation.
+    /// </summary>
+    /// <param name="testFileLine">The file and line of the actual test data.</param>
+    /// <param name="pathName">The pathname of the file to get.</param>
+    /// <param name="expectedOrInput">The string designation of the input file as EXPECTED or INPUT for test output purposes.</param>
+    /// <param name="validate">if set to <c>true</c> validates the read file against athe schema.</param>
+    /// <param name="output">The test output.</param>
+    /// <param name="throwIo">if set to <c>true</c> throws exception on I/O operation failure.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;System.ValueTuple&gt; representing the asynchronous operation.</returns>
     public async Task<(JsonNode?, string)> GetJsonDocumentAsync(
         string testFileLine,
         string pathName,
         string expectedOrInput,
         ITestOutputHelper? output = null,
+        bool validate = false,
         bool throwIo = false,
         CancellationToken cancellationToken = default)
     {
@@ -62,13 +72,12 @@ public class JsonTestsFixture : IDisposable
             expectedDoc.Should().NotBeNull();
             Debug.Assert(expectedDoc is not null);
 
-#if JsonSchema
-            var validate = () => Validate(expectedDoc);
-#else
-            var validate = () => Validate(expectedStr);
-#endif
+            if (validate)
+            {
+                var isValid = () => Validate(expectedStr);
 
-            validate.Should().NotThrow($"the {expectedOrInput} document from {testFileLine} should be valid according to the schema");
+                isValid.Should().NotThrow($"the {expectedOrInput} document from {testFileLine} should be valid according to the schema");
+            }
 
             return (expectedDoc, expectedStr);
         }
@@ -76,22 +85,33 @@ public class JsonTestsFixture : IDisposable
         {
             if (throwIo)
                 throw;
-            output?.WriteLine($"Error getting the {expectedOrInput} document from `{pathName}`:\n{x}\nProceeding with creating the file from the actual document...");
+            output?.WriteLine($"WARNING: error getting the {expectedOrInput} document from `{pathName}`:\n{x}\nProceeding with creating the file from the actual document...");
         }
         catch (Exception x)
         {
-            Assert.Fail($"Error getting the {expectedOrInput} document from `{pathName}`:\n{x}");
+            output?.WriteLine($"ERROR: Error getting the {expectedOrInput} document from `{pathName}`:\n{x}");
         }
         return (null, "");
     }
 
+    /// <summary>
+    /// Tests the expression to json.
+    /// </summary>
+    /// <param name="testFileLine">The file and line of the actual test data.</param>
+    /// <param name="expression">The expression to test.</param>
+    /// <param name="expectedDoc">The expected document.</param>
+    /// <param name="expectedStr">The expected string.</param>
+    /// <param name="fileName">Name of the expected document's file.</param>
+    /// <param name="output">The test output writer.</param>
+    /// <param name="validate">if set to <c>true</c> - validate the produced actual JSON document.</param>
     public void TestExpressionToJson(
         string testFileLine,
         Expression expression,
         JsonNode? expectedDoc,
         string expectedStr,
         string? fileName,
-        ITestOutputHelper? output = null)
+        ITestOutputHelper? output = null,
+        bool validate = true)
     {
         // ACT - get the actual string and XDocument by transforming the expression:
 
@@ -103,9 +123,21 @@ public class JsonTestsFixture : IDisposable
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, false, output);
+        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, false, output, validate);
     }
 
+    /// <summary>
+    /// Test expression to json as an asynchronous operation.
+    /// </summary>
+    /// <param name="testFileLine">The file and line of the actual test data.</param>
+    /// <param name="expression">The expression to test.</param>
+    /// <param name="expectedDoc">The expected document.</param>
+    /// <param name="expectedStr">The expected string.</param>
+    /// <param name="fileName">Name of the expected document's file.</param>
+    /// <param name="output">The test output writer.</param>
+    /// <param name="validate">if set to <c>true</c> - validate the produced actual JSON document.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task TestExpressionToJsonAsync(
         string testFileLine,
         Expression expression,
@@ -113,6 +145,7 @@ public class JsonTestsFixture : IDisposable
         string expectedStr,
         string? fileName,
         ITestOutputHelper? output = null,
+        bool validate = false,                               // by default don't validate the async transform - the sync transform already validated it
         CancellationToken cancellationToken = default)
     {
         // async ACT - get the actual string and XDocument by transforming the expression:
@@ -125,28 +158,21 @@ public class JsonTestsFixture : IDisposable
         var actualStr = Encoding.UTF8.GetString(streamActual.ToArray());
 
         // ASSERT: both the strings and the XDocument-s are valid and equal
-        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, true, output);
+        AssertJsonAsExpectedOrSave(testFileLine, expectedDoc, expectedStr, actualDoc, actualStr, fileName, true, output, validate);
     }
 
-    public void TestJsonToExpression(
-        string testFileLine,
-        JsonNode? inputDoc,
-        Expression expectedExpression)
-    {
-        inputDoc.Should().NotBeNull("The JSON document (JsonNode?) to transform is null");
-        Debug.Assert(inputDoc is not null);
-        inputDoc.GetValueKind().Should().Be(JsonValueKind.Object, "The input JSON document (JsonNode?) is not JsonObject.");
-
-        // ACT - get the actual string and XDocument by transforming the expression:
-        var transform = new ExpressionJsonTransform(Options);
-        var actualExpression = transform.Transform(inputDoc.AsObject());
-
-        expectedExpression
-            .DeepEquals(actualExpression, out var difference)
-            .Should()
-            .BeTrue($"the expression at {testFileLine} should be \"DeepEqual\" to `{expectedExpression}`\n({difference})");
-    }
-
+    /// <summary>
+    /// Asserts that the produced JSON is as expected or if expected is not present - save it in a file for the next tests to use as expected.
+    /// </summary>
+    /// <param name="testFileLine">The file and line of the actual test data.</param>
+    /// <param name="expectedDoc">The expected document.</param>
+    /// <param name="expectedStr">The expected string.</param>
+    /// <param name="actualDoc">The actual document.</param>
+    /// <param name="actualStr">The actual string.</param>
+    /// <param name="fileName">Name of the file where to store the produced JSON document.</param>
+    /// <param name="async">if set to <c>true</c> it is an asynchronous conversion, otherwise synchronous.</param>
+    /// <param name="validate">if set to <c>true</c> - validate the produced actual JSON document.</param>
+    /// <param name="output">The test output writer.</param>
     void AssertJsonAsExpectedOrSave(
         string testFileLine,
         JsonNode? expectedDoc,
@@ -155,18 +181,18 @@ public class JsonTestsFixture : IDisposable
         string actualStr,
         string? fileName,
         bool async,
-        ITestOutputHelper? output)
+        ITestOutputHelper? output,
+        bool validate)
     {
         output?.WriteLine($"ACTUAL ({(async ? "async" : "sync")}):\n{actualStr}\n");
 
-        // ASSERT: both the strings and the JsonObject-s are valid and equal
-#if JsonSchema
-        var validate = () => Validate(actualDoc);
-#else
-        var validate = () => Validate(actualStr);
-#endif
+        if (validate)
+        {
+            // ASSERT: both the strings and the JsonObject-s are valid and equal
+            var isValid = () => Validate(actualStr);
 
-        validate.Should().NotThrow($"the ACTUAL document from {testFileLine} should be valid according to the schema `{JsonOptions.Exs}`.");
+            isValid.Should().NotThrow($"the ACTUAL document from {testFileLine} should be valid according to the schema `{JsonOptions.Exs}`.");
+        }
 
         if (expectedDoc is null)
         {
@@ -192,5 +218,30 @@ public class JsonTestsFixture : IDisposable
                         .Should()
                         .BeTrue($"the expected and the actual top-level JsonObject objects (documents) from {testFileLine} should be deep-equal.")
                         ;
+    }
+
+    /// <summary>
+    /// Tests the json to expression transformation.
+    /// </summary>
+    /// <param name="testFileLine">The file and line of the actual test data.</param>
+    /// <param name="inputDoc">The input document.</param>
+    /// <param name="expectedExpression">The expected expression.</param>
+    public void TestJsonToExpression(
+        string testFileLine,
+        JsonNode? inputDoc,
+        Expression expectedExpression)
+    {
+        inputDoc.Should().NotBeNull("The JSON document (JsonNode?) to transform is null");
+        Debug.Assert(inputDoc is not null);
+        inputDoc.GetValueKind().Should().Be(JsonValueKind.Object, "The input JSON document (JsonNode?) is not JsonObject.");
+
+        // ACT - get the actual string and XDocument by transforming the expression:
+        var transform = new ExpressionJsonTransform(Options);
+        var actualExpression = transform.Transform(inputDoc.AsObject());
+
+        expectedExpression
+            .DeepEquals(actualExpression, out var difference)
+            .Should()
+            .BeTrue($"the expression at {testFileLine} should be \"DeepEqual\" to `{expectedExpression}`\n({difference})");
     }
 }

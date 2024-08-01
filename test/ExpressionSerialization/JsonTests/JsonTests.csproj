@@ -1,15 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <RootNamespace>vm2.ExpressionSerialization.JsonTests</RootNamespace>
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"><!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->    
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'"><!--<DefineConstants>$(DefineConstants);JsonSchema</DefineConstants>-->    
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />

@@ -1,7 +1,4 @@
 ﻿namespace vm2.ExpressionDeepEqualsTests;
-using System;
-
-using System.Runtime.Serialization;
 
 enum EnumTest
 {

@@ -1,5 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 delegate JElement TransformConstant(object? value, Type type);
 
 /// <summary>
@@ -334,7 +338,7 @@ partial class ToJsonDataTransform(JsonOptions options)
     }
 
     /// <summary>
-    /// Transforms objects using <see cref="DataContractSerializer" /> which also works with classes marked with 
+    /// Transforms objects using <see cref="DataContractSerializer" /> which also works with classes marked with
     /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>

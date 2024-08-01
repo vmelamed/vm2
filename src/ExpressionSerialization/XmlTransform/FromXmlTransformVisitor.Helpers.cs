@@ -1,5 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 public partial class FromXmlTransformVisitor
 {
     readonly Dictionary<string, ParameterExpression> _parameters = [];

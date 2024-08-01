@@ -11,7 +11,7 @@ public partial class ConstantTests
         { TestLine(), "(byte)5",                                                                "Byte.json" },
         // char
         { TestLine(), "'V'",                                                                    "Char.json" },
-#if !JsonSchema
+#if !JSON_SCHEMA
         // double - see https://github.com/gregsdennis/json-everything/issues/747#issuecomment-2171905465
         { TestLine(), "double.MinValue",                                                        "Double.MinValue.json" },
         { TestLine(), "double.MaxValue",                                                        "Double.MaxValue.json" },
@@ -30,12 +30,12 @@ public partial class ConstantTests
         { TestLine(), "double.E",                                                               "Double.E.json" },
         { TestLine(), "-2.234567891233658E-123",                                                "Double.-2.23..E-123.json" },
         { TestLine(), "5.1234567891234567E-123",                                                "Double.5.12..E-123.json" },
-#if !JsonSchema
+#if !JSON_SCHEMA
         { TestLine(), "-3.4028234663852886E+38",                                                "Double.3.40..E38.json" },
         { TestLine(), "3.4028234663852886E+38",                                                 "Double.-3.40..E38.json" },
 #endif
         // float
-#if !JsonSchema
+#if !JSON_SCHEMA
         { TestLine(), "float.MinValue",                                                         "Float.MinValue.json" },
         { TestLine(), "float.MaxValue",                                                         "Float.MaxValue.json" },
 #endif
@@ -54,7 +54,7 @@ public partial class ConstantTests
         { TestLine(), "Half.MaxValue",                                                          "Half.MaxValue.json" },
         { TestLine(), "Half.Zero",                                                              "Half.Zero.json" },
         { TestLine(), "Half.One",                                                               "Half.One.json" },
-#if !JsonSchema
+#if !JSON_SCHEMA
         { TestLine(), "Half.NaN",                                                               "Half.NaN.json" },  // Jason.Schema doesn't like this either
 #endif
         { TestLine(), "Half.NegativeInfinity",                                                  "Half.NegativeInfinity.json" },
@@ -188,12 +188,12 @@ public partial class ConstantTests
         // byte sequences
         { TestLine(), "(byte[])null",                                                           "Bytes.Array.Null.json" },
         { TestLine(), "byte[]{}",                                                               "Bytes.Array.Empty.json" },
-        { TestLine(), "byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                                "Bytes.Array.json" },
         { TestLine(), "Memory<byte>()",                                                         "Bytes.Memory.Empty.json" },
-        { TestLine(), "Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                         "Bytes.Memory.json" },
         { TestLine(), "ReadOnlyMemory<byte>()",                                                 "Bytes.ReadOnlyMemory.Empty.json" },
-        { TestLine(), "ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                 "Bytes.ReadOnlyMemory.json" },
         { TestLine(), "ArraySegment<byte>([])",                                                 "Bytes.ArraySegment.Empty.json" },
+        { TestLine(), "byte[]{ 1, 2, 3, 1, 2, 3, 1, 2, 3, 10 }",                                "Bytes.Array.json" },
+        { TestLine(), "Memory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                         "Bytes.Memory.json" },
+        { TestLine(), "ReadOnlyMemory<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10 ])",                 "Bytes.ReadOnlyMemory.json" },
         { TestLine(), "ArraySegment<byte>([1, 2, 3, 1, 2, 3, 1, 2, 3, 10], 1, 8)",              "Bytes.ArraySegment.json" },
         // sequences
         { TestLine(), "(int[])null",                                                            "ArrayOfInt.Null.json" },
@@ -215,7 +215,7 @@ public partial class ConstantTests
         { TestLine(), "List<int?>{ 1, 2, null, null }",                                         "ListOfNullableInt.json" },
         { TestLine(), "(List<int?>)null",                                                       "ListOfNullableInt.Null.json" },
         { TestLine(), "LinkedList<int>([1, 2, 3, 4])",                                          "IntLinkedList.json" },
-        { TestLine(), "Sequence<int>([1, 2, 3, 4])",                                          "IntCollection.json" },
+        { TestLine(), "Sequence<int>([1, 2, 3, 4])",                                            "IntCollection.json" },
         { TestLine(), "ReadOnlyCollection<int>([1, 2, 3, 4])",                                  "IntReadOnlyCollection.json" },
         { TestLine(), "ReadOnlyMemory<int>([ 1, 2, 3, 4 ])",                                    "IntReadOnlyMemory.json" },
         { TestLine(), "HashSet<int>([1, 2, 3, 4])",                                             "IntHashSet.json" },

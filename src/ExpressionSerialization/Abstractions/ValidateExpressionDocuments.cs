@@ -1,8 +1,10 @@
 ﻿namespace vm2.ExpressionSerialization.Abstractions;
+
 /// <summary>
-/// Enum ValidateDocuments specifies whether to validate the input XML documents that are to be transformed to <see cref="Expression"/>-s.
+/// Enum ValidateExpressionDocuments specifies whether to validate the input XML or JSON expression documents that are to be transformed to 
+/// <see cref="Expression"/>-s.
 /// </summary>
-public enum ValidateDocuments
+public enum ValidateExpressionDocuments
 {
     /// <summary>
     /// Do not validate the input - improves performance by skipping the validation. Use only when you are certain that
@@ -17,7 +19,7 @@ public enum ValidateDocuments
     Always,
 
     /// <summary>
-    /// If the schema is present in the respective options, the transform will validate all input documents. 
+    /// If the schema is present in the respective options, the transform will validate all input documents.
     /// Otherwise will quietly proceed with the transform process.
     /// </summary>
     IfSchemaPresent,

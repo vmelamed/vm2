@@ -1,6 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using System.Xml.Linq;
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
 
 /// <summary>
 /// Class that visits the nodes of an XML element to produce a LINQ expression tree.

@@ -1,8 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
-using Json.More;
-
-using vm2.ExpressionSerialization.XmlTransform;
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
 
 public partial struct JElement
 {
@@ -47,11 +47,11 @@ public partial struct JElement
     /// <returns>vm2.ExpressionSerialization.JsonTransform.JElement.</returns>
     public readonly JElement? TryGetChild(string childPropertyName)
     {
-        if (Value is not JsonObject jObject ||
-            !jObject.TryGetValue(childPropertyName, out var node, out var _))
-            return null;
+        if (Value is JsonObject jObject &&
+            jObject.TryGetPropertyValue(childPropertyName, out var node))
+            return new(childPropertyName, node);
 
-        return new(childPropertyName, node);
+        return null;
     }
 
     /// <summary>
@@ -66,8 +66,8 @@ public partial struct JElement
         if (Value is not JsonObject jObject)
             throw new SerializationException($"The value of the property `{Name}` is not JsonObject and does not have named children.");
 
-        if (!jObject.TryGetValue(childPropertyName, out var node, out var exception))
-            throw new SerializationException($"Could not get a child node with a name `{childPropertyName}` from the object in the property `{Name}`.", exception);
+        if (!jObject.TryGetPropertyValue(childPropertyName, out var node))
+            throw new SerializationException($"Could not get a child node with a name `{childPropertyName}` from the object in the property `{Name}`.");
 
         return new(childPropertyName, node);
     }
@@ -123,7 +123,7 @@ public partial struct JElement
         => Enum.Parse<ExpressionType>(Name, true);
 
     /// <summary>
-    /// Tries to get the length of the sub-elements in the element from attribute <see cref="AttributeNames.Length" />
+    /// Tries to get the length of the sub-elements in the element from attribute <see cref="Vocabulary.Length" />
     /// </summary>
     /// <param name="length">The length.</param>
     /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
@@ -141,7 +141,7 @@ public partial struct JElement
     }
 
     /// <summary>
-    /// Gets the length of the sub-elements in the element from attribute <see cref="AttributeNames.Length"/>
+    /// Gets the length of the sub-elements in the element from child <see cref="Vocabulary.Length"/>
     /// </summary>
     /// <returns><c>true</c> if the specified element is nil; otherwise, <c>false</c>.</returns>
     /// <exception cref="SerializationException"/>
@@ -154,7 +154,7 @@ public partial struct JElement
     /// Tries to get the .NET type of the element from its property (default "type").
     /// </summary>
     /// <param name="type">The type.</param>
-    /// <param name="propertyName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="propertyName">Name of the attribute (if null - defaults to <see cref="Vocabulary.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
     public readonly bool TryGetTypeFromProperty(out Type? type, string? propertyName = null)
     {
@@ -174,7 +174,7 @@ public partial struct JElement
     /// <summary>
     /// Gets the .NET type of the element only from its property (default "type"). If not found - throws Exception.
     /// </summary>
-    /// <param name="propertyName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="propertyName">Name of the attribute (if null - defaults to <see cref="Vocabulary.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
     public readonly Type GetTypeFromProperty(string? propertyName = null)
         => TryGetTypeFromProperty(out var type, propertyName)
@@ -233,7 +233,7 @@ public partial struct JElement
     /// </list>
     /// </summary>
     /// <param name="type">The type.</param>
-    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="Vocabulary.Type"/>).</param>
     /// <returns><c>true</c> if getting the type was successful; otherwise, <c>false</c>.</returns>
     public readonly bool TryGetElementType(out Type? type, string? attributeName = null)
     {
@@ -250,7 +250,7 @@ public partial struct JElement
     /// <item>or from the name of the element</item>
     /// </list>
     /// </summary>
-    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="AttributeNames.Type"/>).</param>
+    /// <param name="attributeName">Name of the attribute (if null - defaults to <see cref="Vocabulary.Type"/>).</param>
     /// <returns>The <see cref="Type"/>  if getting the type was successful; otherwise, <c>false</c>.</returns>
     public readonly Type GetElementType(string? attributeName = null)
         => TryGetElementType(out var type, attributeName)

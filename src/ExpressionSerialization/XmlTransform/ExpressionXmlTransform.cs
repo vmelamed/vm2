@@ -1,9 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-using System.Xml;
-using System.Xml.Linq;
-
-using vm2.ExpressionSerialization.Abstractions;
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
 
 /// <summary>
 /// Class ExpressionTransform.

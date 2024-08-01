@@ -1,5 +1,4 @@
 ﻿namespace vm2.RegexLibTests;
-using System.Web;
 
 public class Captures : Dictionary<string, string>, IXunitSerializable
 {
@@ -60,7 +59,7 @@ public abstract partial class RegexTests(ITestOutputHelper output)
     /// </summary>
     /// <param name="regex">The regex object.</param>
     /// <param name="testAt">
-    /// Information about the where the function was invoked from, e.g. file, line, and description provided by the 
+    /// Information about the where the function was invoked from, e.g. file, line, and description provided by the
     /// method <see cref="TestLine(string, string, int)"/>.
     /// </param>
     /// <param name="shouldMatch">The should match.</param>
@@ -79,7 +78,7 @@ public abstract partial class RegexTests(ITestOutputHelper output)
 
         Out.WriteLine($"""
                        Test ID:  {testAt}
-                         Input:   
+                         Input:
                            →{input}←
                          Matches:  {matches?.Count}:
                        """);
@@ -125,7 +124,7 @@ public abstract partial class RegexTests(ITestOutputHelper output)
     /// </summary>
     /// <param name="regex">The regex object.</param>
     /// <param name="testAt">
-    /// Information about the where the function was invoked from, e.g. file, line, and description provided by the 
+    /// Information about the where the function was invoked from, e.g. file, line, and description provided by the
     /// method <see cref="TestLine(string, string, int)"/>.
     /// </param>
     /// <param name="shouldMatch">The should match.</param>

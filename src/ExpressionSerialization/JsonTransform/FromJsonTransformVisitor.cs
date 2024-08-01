@@ -1,5 +1,9 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
+#if JSON_SCHEMA
+using Vocabulary = Conventions.Vocabulary;
+#endif
+
 /// <summary>
 /// Class that visits the nodes of a JSON node to produce a LINQ expression tree.
 /// </summary>
@@ -272,7 +276,7 @@ public partial class FromJsonTransformVisitor
     ///// Visits an Json element representing a `LabelTarget` expression.
     ///// </summary>
     ///// <param name="e">The element.</param>
-    ///// 
+    /////
     ///// <returns>System.Linq.Expressions.LabelTarget.</returns>
     ///// <exception cref="SerializationException">$"Expected Json attribute `{(isRef.Value ? Vocabulary.IdRef : Vocabulary.Id)}` in the element `{e.Name}`.</exception>
     //protected virtual LabelTarget VisitLabelTarget(JElement e)

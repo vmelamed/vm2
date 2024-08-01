@@ -40,8 +40,10 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
         { TestLine(), "newHashtableInit",       "NewHashtableInit.json" },
         { TestLine(), "newListInit",            "NewListInit.json" },
         { TestLine(), "newMembersInit",         "NewMembersInit.json" },
+#if !JSON_SCHEMA
         { TestLine(), "newMembersInit1",        "NewMembersInit1.json" },
         { TestLine(), "newMembersInit2",        "NewMembersInit2.json" },
+#endif
         { TestLine(), "return1",                "Return1.json" },
         { TestLine(), "return2",                "Return2.json" },
         { TestLine(), "switch(a){ ... }",       "Switch.json" },

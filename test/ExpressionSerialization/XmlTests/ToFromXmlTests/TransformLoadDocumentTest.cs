@@ -16,25 +16,25 @@ public class TransformLoadDocumentTest()
             XmlOptions.ResetSchemas();
     }
 
-    public static readonly TheoryData<string, ValidateDocuments, string, bool, Type?> TransformLoadDocumentData = new()
+    public static readonly TheoryData<string, ValidateExpressionDocuments, string, bool, Type?> TransformLoadDocumentData = new()
     {
-        { TestLine(), ValidateDocuments.Always, "__NullObjectInvalid.xml", false, typeof(InvalidOperationException) },
-        { TestLine(), ValidateDocuments.Always, "__NullObjectInvalid.xml", true, typeof(SchemaValidationErrorsException) },
-        { TestLine(), ValidateDocuments.Always, "NullObject.xml", false, typeof(InvalidOperationException) },
-        { TestLine(), ValidateDocuments.Always, "NullObject.xml", true, null },
-        { TestLine(), ValidateDocuments.Never, "__NullObjectInvalid.xml", false, null },
-        { TestLine(), ValidateDocuments.Never, "__NullObjectInvalid.xml", true, null },
-        { TestLine(), ValidateDocuments.Never, "NullObject.xml", false, null },
-        { TestLine(), ValidateDocuments.Never, "NullObject.xml", true, null },
-        { TestLine(), ValidateDocuments.IfSchemaPresent, "__NullObjectInvalid.xml", false, null },
-        { TestLine(), ValidateDocuments.IfSchemaPresent, "__NullObjectInvalid.xml", true, typeof(SchemaValidationErrorsException) },
-        { TestLine(), ValidateDocuments.IfSchemaPresent, "NullObject.xml", false, null },
-        { TestLine(), ValidateDocuments.IfSchemaPresent, "NullObject.xml", true, null },
+        { TestLine(), ValidateExpressionDocuments.Always, "__NullObjectInvalid.xml", false, typeof(InvalidOperationException) },
+        { TestLine(), ValidateExpressionDocuments.Always, "__NullObjectInvalid.xml", true, typeof(SchemaValidationErrorsException) },
+        { TestLine(), ValidateExpressionDocuments.Always, "NullObject.xml", false, typeof(InvalidOperationException) },
+        { TestLine(), ValidateExpressionDocuments.Always, "NullObject.xml", true, null },
+        { TestLine(), ValidateExpressionDocuments.Never, "__NullObjectInvalid.xml", false, null },
+        { TestLine(), ValidateExpressionDocuments.Never, "__NullObjectInvalid.xml", true, null },
+        { TestLine(), ValidateExpressionDocuments.Never, "NullObject.xml", false, null },
+        { TestLine(), ValidateExpressionDocuments.Never, "NullObject.xml", true, null },
+        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "__NullObjectInvalid.xml", false, null },
+        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "__NullObjectInvalid.xml", true, typeof(SchemaValidationErrorsException) },
+        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "NullObject.xml", false, null },
+        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "NullObject.xml", true, null },
     };
 
     [Theory]
     [MemberData(nameof(TransformLoadDocumentData))]
-    public void XmlFileShouldLoadTest(string _, ValidateDocuments validate, string fileName, bool loadSchemas, Type? exceptionType)
+    public void XmlFileShouldLoadTest(string _, ValidateExpressionDocuments validate, string fileName, bool loadSchemas, Type? exceptionType)
     {
         var options = new XmlOptions() { ValidateInputDocuments = validate };
 
@@ -61,7 +61,7 @@ public class TransformLoadDocumentTest()
 
     [Theory]
     [MemberData(nameof(TransformLoadDocumentData))]
-    public async Task XmlFileShouldLoadTestAsync(string _, ValidateDocuments validate, string fileName, bool loadSchemas, Type? exceptionType)
+    public async Task XmlFileShouldLoadTestAsync(string _, ValidateExpressionDocuments validate, string fileName, bool loadSchemas, Type? exceptionType)
     {
         var options = new XmlOptions() { ValidateInputDocuments = validate };
 

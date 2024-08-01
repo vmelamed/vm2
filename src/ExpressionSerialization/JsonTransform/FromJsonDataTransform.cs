@@ -14,6 +14,13 @@ static partial class FromJsonDataTransform
         return Expression.Constant(value, type);
     }
 
+    delegate object? Transformation(JElement element, ref Type type);
+
+    static Transformation GetTransformation(JElement element)
+        => _constantTransformations.TryGetValue(element.Name, out var transform)
+                ? transform
+                : throw new SerializationException($"Error deserializing and converting to a strong type the value of the element `{element.Name}`.");
+
     static (object?, Type) ValueTransform(JElement element)
     {
         var type = element.GetElementType();
@@ -23,8 +30,4 @@ static partial class FromJsonDataTransform
 
         return (GetTransformation(element)(element, ref type), type);
     }
-
-    delegate object? Transformation(JElement element, ref Type type);
-
-    static Transformation GetTransformation(JElement element) => _constantTransformations[element.Name];
 }
