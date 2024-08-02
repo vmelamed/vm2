@@ -8,9 +8,10 @@
 /// from it but we have implicit conversions to and from it and instances of this class can be used anywhere where
 /// <see cref="KeyValuePair{TKey, TValue}"/> is required.
 /// </remarks>
-[DebuggerDisplay("\"{Name}\": {Value}")]
+[DebuggerDisplay("{Name}: {Value}")]
 public partial struct JElement(string key = "", JsonNode? value = null)
 {
+    #region Constructors
     /// <summary>
     /// Gets or sets the key of this JElement. When this JElement is added to a <see cref="JsonObject"/> or
     /// <see cref="JsonDocument"/>, the <see cref="Name"/> will become the name of a property in that parent.
@@ -97,6 +98,14 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// </param>
     public JElement(string key, params JsonNode?[] elements)
         : this(key, (JsonNode)new JsonArray(elements)) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JElement" /> <see langword="struct"/> from a <see cref="KeyValuePair{TKey, TValue}"/>
+    /// </summary>
+    /// <param name="kvp">The key-value pair.</param>
+    public JElement(KeyValuePair<string, JsonNode?> kvp)
+            : this(kvp.Key, kvp.Value) { }
+    #endregion
 
     /// <summary>
     /// Adds the <paramref key="key" /> and the <paramref name="value" /> to the current <see cref="Value" /> if its type is

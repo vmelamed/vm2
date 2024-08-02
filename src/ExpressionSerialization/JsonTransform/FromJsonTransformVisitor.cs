@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
-
 #if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
 #endif
 
 /// <summary>
@@ -21,22 +19,12 @@ public partial class FromJsonTransformVisitor
 
     #region Concrete Json element visitors
     /// <summary>
-    /// Visits the child node with name <paramref name="childName"/> of the element <paramref name="e"/>, where the underlying object is JsonObject.
+    /// Visits the first child that can be visited (you may have arbitrary string nodes, e.g. '$comment' in the node as well).
     /// </summary>
-    /// <param name="e">The parent element.</param>
-    /// <param name="childName">The name of the child.</param>
-    /// <returns>The sub-<see cref="Expression"/> represented by the child element.</returns>
-    protected virtual Expression VisitChild(JElement e, string childName)
-        => Visit(e.GetChild(childName));
-
-    /// <summary>
-    /// Visits the child node with index <paramref name="childIndex"/> of the element <paramref name="e"/>, where the underlying object is JsonArray.
-    /// </summary>
-    /// <param name="e">The element.</param>
-    /// <param name="childIndex">The index of the child.</param>
-    /// <returns>The sub-<see cref="Expression"/> represented by the child element.</returns>
-    protected virtual Expression VisitChild(JElement e, int childIndex)
-        => Visit(e.GetChild(childIndex));
+    /// <param name="e">The J element which value's first JsonObject to visit.</param>
+    /// <returns>Expression.</returns>
+    protected virtual Expression VisitFirstJsonObject(JElement e)
+        => Visit(e.GetChildObject());
 
     /// <summary>
     /// Visits a JSON element representing a constant expression, e.g. `42`.
@@ -44,7 +32,7 @@ public partial class FromJsonTransformVisitor
     /// <param name="e">The element.</param>
     /// <returns>The <see cref="ConstantExpression"/> represented by the element.</returns>
     protected virtual Expression VisitConstant(JElement e)
-        => FromJsonDataTransform.ConstantTransform(e.GetChild(Vocabulary.Constant));
+        => FromJsonDataTransform.ConstantTransform(e);
 
     ///// <summary>
     ///// Visits an JSON element representing a default expression (e.g. <c>default(int)</c>).

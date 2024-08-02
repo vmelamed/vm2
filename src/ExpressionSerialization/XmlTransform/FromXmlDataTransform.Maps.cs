@@ -6,44 +6,45 @@ using Vocabulary = Conventions.Vocabulary;
 
 static partial class FromXmlDataTransform
 {
-    static readonly Dictionary<string, Transformation> _constantTransformations_ = new()
+    static IEnumerable<KeyValuePair<string, Transformation>> ConstantTransformations()
     {
-        { Vocabulary.Boolean,           (XElement x, ref Type t) => XmlConvert.ToBoolean(x.Value)               },
-        { Vocabulary.Byte,              (XElement x, ref Type t) => XmlConvert.ToByte(x.Value)                  },
-        { Vocabulary.Char,              (XElement x, ref Type t) => x.Value[0]                                  },
-        { Vocabulary.Double,            (XElement x, ref Type t) => XmlConvert.ToDouble(x.Value)                },
-        { Vocabulary.Float,             (XElement x, ref Type t) => XmlConvert.ToSingle(x.Value)                },
-        { Vocabulary.Int,               (XElement x, ref Type t) => XmlConvert.ToInt32(x.Value)                 },
-        { Vocabulary.IntPtr,            (XElement x, ref Type t) => XmlStringToPtr(x.Value)                     },
-        { Vocabulary.Long,              (XElement x, ref Type t) => XmlConvert.ToInt64(x.Value)                 },
-        { Vocabulary.SignedByte,        (XElement x, ref Type t) => XmlConvert.ToSByte(x.Value)                 },
-        { Vocabulary.Short,             (XElement x, ref Type t) => XmlConvert.ToInt16(x.Value)                 },
-        { Vocabulary.UnsignedInt,       (XElement x, ref Type t) => XmlConvert.ToUInt32(x.Value)                },
-        { Vocabulary.UnsignedIntPtr,    (XElement x, ref Type t) => XmlStringToUPtr(x.Value)                    },
-        { Vocabulary.UnsignedLong,      (XElement x, ref Type t) => XmlConvert.ToUInt64(x.Value)                },
-        { Vocabulary.UnsignedShort,     (XElement x, ref Type t) => XmlConvert.ToUInt16(x.Value)                },
+        yield return new(Vocabulary.Boolean, (XElement x, ref Type t) => XmlConvert.ToBoolean(x.Value));
+        yield return new(Vocabulary.Byte, (XElement x, ref Type t) => XmlConvert.ToByte(x.Value));
+        yield return new(Vocabulary.Char, (XElement x, ref Type t) => x.Value[0]);
+        yield return new(Vocabulary.Double, (XElement x, ref Type t) => XmlConvert.ToDouble(x.Value));
+        yield return new(Vocabulary.Float, (XElement x, ref Type t) => XmlConvert.ToSingle(x.Value));
+        yield return new(Vocabulary.Int, (XElement x, ref Type t) => XmlConvert.ToInt32(x.Value));
+        yield return new(Vocabulary.IntPtr, (XElement x, ref Type t) => XmlStringToPtr(x.Value));
+        yield return new(Vocabulary.Long, (XElement x, ref Type t) => XmlConvert.ToInt64(x.Value));
+        yield return new(Vocabulary.SignedByte, (XElement x, ref Type t) => XmlConvert.ToSByte(x.Value));
+        yield return new(Vocabulary.Short, (XElement x, ref Type t) => XmlConvert.ToInt16(x.Value));
+        yield return new(Vocabulary.UnsignedInt, (XElement x, ref Type t) => XmlConvert.ToUInt32(x.Value));
+        yield return new(Vocabulary.UnsignedIntPtr, (XElement x, ref Type t) => XmlStringToUPtr(x.Value));
+        yield return new(Vocabulary.UnsignedLong, (XElement x, ref Type t) => XmlConvert.ToUInt64(x.Value));
+        yield return new(Vocabulary.UnsignedShort, (XElement x, ref Type t) => XmlConvert.ToUInt16(x.Value));
 
-        { Vocabulary.DateTime,          (XElement x, ref Type t) => XmlConvert.ToDateTime(x.Value, XmlDateTimeSerializationMode.RoundtripKind) },
-        { Vocabulary.DateTimeOffset,    (XElement x, ref Type t) => XmlConvert.ToDateTimeOffset(x.Value, "O")   },
-        { Vocabulary.Duration,          (XElement x, ref Type t) => XmlConvert.ToTimeSpan(x.Value)              },
-        { Vocabulary.DBNull,            (XElement x, ref Type t) => DBNull.Value                                },
-        { Vocabulary.Decimal,           (XElement x, ref Type t) => XmlConvert.ToDecimal(x.Value)               },
-        { Vocabulary.Guid,              (XElement x, ref Type t) => XmlConvert.ToGuid(x.Value)                  },
-        { Vocabulary.Half,              (XElement x, ref Type t) => (Half)XmlConvert.ToDouble(x.Value)          },
-        { Vocabulary.String,            (XElement x, ref Type t) => x.IsNil() ? null : x.Value                  },
-        { Vocabulary.Uri,               (XElement x, ref Type t) => new Uri(x.Value)                            },
+        yield return new(Vocabulary.DateTime, (XElement x, ref Type t) => XmlConvert.ToDateTime(x.Value, XmlDateTimeSerializationMode.RoundtripKind));
+        yield return new(Vocabulary.DateTimeOffset, (XElement x, ref Type t) => XmlConvert.ToDateTimeOffset(x.Value, "O"));
+        yield return new(Vocabulary.Duration, (XElement x, ref Type t) => XmlConvert.ToTimeSpan(x.Value));
+        yield return new(Vocabulary.DBNull, (XElement x, ref Type t) => DBNull.Value);
+        yield return new(Vocabulary.Decimal, (XElement x, ref Type t) => XmlConvert.ToDecimal(x.Value));
+        yield return new(Vocabulary.Guid, (XElement x, ref Type t) => XmlConvert.ToGuid(x.Value));
+        yield return new(Vocabulary.Half, (XElement x, ref Type t) => (Half)XmlConvert.ToDouble(x.Value));
+        yield return new(Vocabulary.String, (XElement x, ref Type t) => x.IsNil() ? null : x.Value);
+        yield return new(Vocabulary.Uri, (XElement x, ref Type t) => new Uri(x.Value));
 
-        { Vocabulary.Anonymous,         TransformAnonymous                                                      },
-        { Vocabulary.ByteSequence,      TransformByteSequence                                                   },
-        { Vocabulary.Sequence,          TransformCollection                                                     },
-        { Vocabulary.Dictionary,        TransformDictionary                                                     },
-        { Vocabulary.Enum,              TransformEnum                                                           },
-        { Vocabulary.Nullable,          TransformNullable                                                       },
-        { Vocabulary.Object,            TransformObject                                                         },
-        { Vocabulary.Tuple,             TransformTuple                                                          },
-        { Vocabulary.TupleItem,         TransformTuple                                                          },
-    };
-    static readonly FrozenDictionary<string, Transformation> _constantTransformations = _constantTransformations_.ToFrozenDictionary();
+        yield return new(Vocabulary.Anonymous, TransformAnonymous);
+        yield return new(Vocabulary.ByteSequence, TransformByteSequence);
+        yield return new(Vocabulary.Sequence, TransformCollection);
+        yield return new(Vocabulary.Dictionary, TransformDictionary);
+        yield return new(Vocabulary.Enum, TransformEnum);
+        yield return new(Vocabulary.Nullable, TransformNullable);
+        yield return new(Vocabulary.Object, TransformObject);
+        yield return new(Vocabulary.Tuple, TransformTuple);
+        yield return new(Vocabulary.TupleItem, TransformTuple);
+    }
+
+    static readonly FrozenDictionary<string, Transformation> _constantTransformations = ConstantTransformations().ToFrozenDictionary();
 
     static IntPtr XmlStringToPtr(string v)
         => (Environment.Is64BitProcess
@@ -74,30 +75,31 @@ static partial class FromXmlDataTransform
 
     static object? CastSequence(IEnumerable sequence, Type elementType) => _cast.MakeGenericMethod(elementType).Invoke(null, [sequence]);
 
-    static readonly Dictionary<Type, Func<Type, Type, int, IEnumerable, object?>> _sequenceBuilders_ = new ()
+    static IEnumerable<KeyValuePair<Type, Func<Type, Type, int, IEnumerable, object?>>> SequenceBuilders()
     {
-        [typeof(FrozenSet<>)]           = (gt, et, len, seq) => _toFrozenSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et), null]),
-        [typeof(ImmutableArray<>)]      = (gt, et, len, seq) => _toImmutableArray.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
-        [typeof(ImmutableHashSet<>)]    = (gt, et, len, seq) => _toImmutableHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
-        [typeof(ImmutableList<>)]       = (gt, et, len, seq) => _toImmutableList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
-        [typeof(ImmutableSortedSet<>)]  = (gt, et, len, seq) => _toImmutableSortedSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
-        [typeof(ImmutableQueue<>)]      = (gt, et, len, seq) => _toImmutableQueue.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
-        [typeof(ImmutableStack<>)]      = (gt, et, len, seq) => _toImmutableStack.MakeGenericMethod(et).Invoke(null, [CastSequence(seq.Cast<object?>().Reverse(), et)]),
-        [typeof(List<>)]                = (gt, et, len, seq) => _toList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
-        [typeof(HashSet<>)]             = (gt, et, len, seq) => _toHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]),
-        [typeof(ArraySegment<>)]        = (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)),
-        [typeof(Memory<>)]              = (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)),
-        [typeof(ReadOnlyMemory<>)]      = (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)),
-        [typeof(ConcurrentQueue<>)]     = (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq),
-        [typeof(ConcurrentStack<>)]     = (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>().Reverse()),
-        [typeof(Stack<>)]               = (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>().Reverse()),
-        [typeof(Collection<>)]          = (gt, et, len, seq) => BuildCollectionFromList(gt, et, seq.Cast<object?>().ToList()),
-        [typeof(ReadOnlyCollection<>)]  = (gt, et, len, seq) => BuildCollectionFromList(gt, et, seq.Cast<object?>().ToList()),
-        [typeof(LinkedList<>)]          = (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq),
-        [typeof(Queue<>)]               = (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>()),
-        [typeof(SortedSet<>)]           = (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq),
-        [typeof(BlockingCollection<>)]  = BuildBlockingCollection,
-        [typeof(ConcurrentBag<>)]       = BuildConcurrentBag,
-    };
-    static readonly FrozenDictionary<Type, Func<Type, Type, int, IEnumerable, object?>> _sequenceBuilders = _sequenceBuilders_.ToFrozenDictionary();
+        yield return new(typeof(FrozenSet<>), (gt, et, len, seq) => _toFrozenSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et), null]));
+        yield return new(typeof(ImmutableArray<>), (gt, et, len, seq) => _toImmutableArray.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableHashSet<>), (gt, et, len, seq) => _toImmutableHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableList<>), (gt, et, len, seq) => _toImmutableList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableSortedSet<>), (gt, et, len, seq) => _toImmutableSortedSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableQueue<>), (gt, et, len, seq) => _toImmutableQueue.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableStack<>), (gt, et, len, seq) => _toImmutableStack.MakeGenericMethod(et).Invoke(null, [CastSequence(seq.Cast<object?>().Reverse(), et)]));
+        yield return new(typeof(List<>), (gt, et, len, seq) => _toList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(HashSet<>), (gt, et, len, seq) => _toHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ArraySegment<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
+        yield return new(typeof(Memory<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
+        yield return new(typeof(ReadOnlyMemory<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
+        yield return new(typeof(ConcurrentQueue<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq));
+        yield return new(typeof(ConcurrentStack<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>().Reverse()));
+        yield return new(typeof(Stack<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>().Reverse()));
+        yield return new(typeof(Collection<>), (gt, et, len, seq) => BuildCollectionFromList(gt, et, seq.Cast<object?>().ToList()));
+        yield return new(typeof(ReadOnlyCollection<>), (gt, et, len, seq) => BuildCollectionFromList(gt, et, seq.Cast<object?>().ToList()));
+        yield return new(typeof(LinkedList<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq));
+        yield return new(typeof(Queue<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>()));
+        yield return new(typeof(SortedSet<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq));
+        yield return new(typeof(BlockingCollection<>), BuildBlockingCollection);
+        yield return new(typeof(ConcurrentBag<>), BuildConcurrentBag);
+    }
+
+    static readonly FrozenDictionary<Type, Func<Type, Type, int, IEnumerable, object?>> _sequenceBuilders = SequenceBuilders().ToFrozenDictionary();
 }

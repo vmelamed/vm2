@@ -35,34 +35,35 @@ partial class ToJsonDataTransform
         => v is T || (nullable && v is null) ? (T?)v : throw new InternalTransformErrorException($"Expected {typeof(T).Name} v but got {(v is null ? "null" : v.GetType().Name)}");
 
     #region constant ToJson transforms
-    static ReadOnlyDictionary<Type, TransformConstant> _constantTransformsDict = new (new Dictionary<Type, TransformConstant>()
+    static IEnumerable<KeyValuePair<Type, TransformConstant>> ConstantTransformsDict()
     {
-        { typeof(bool),             (v, _) => new JElement(Vocabulary.Boolean,        JsonValue.Create(Is<bool>(v))) },
-        { typeof(byte),             (v, _) => new JElement(Vocabulary.Byte,           JsonValue.Create(Is<byte>(v))) },
-        { typeof(char),             (v, _) => new JElement(Vocabulary.Char,           JsonValue.Create(Is<char>(v).ToString())) },
-        { typeof(double),           (v, _) => new JElement(Vocabulary.Double,         DoubleToJson(Is<double>(v))) },
-        { typeof(float),            (v, _) => new JElement(Vocabulary.Float,          FloatToJson(Is<float>(v))) },
-        { typeof(int),              (v, _) => new JElement(Vocabulary.Int,            JsonValue.Create(Is<int>(v))) },
-        { typeof(IntPtr),           (v, _) => new JElement(Vocabulary.IntPtr,         PtrToJson(Is<IntPtr>(v))) },
-        { typeof(long),             (v, _) => new JElement(Vocabulary.Long,           Is<long>(v) is <= MaxJsonInteger and >= MinJsonInteger ? JsonValue.Create((long)v!) : JsonValue.Create(v!.ToString()) ) },
-        { typeof(sbyte),            (v, _) => new JElement(Vocabulary.SignedByte,     JsonValue.Create(Is<sbyte>(v))) },
-        { typeof(short),            (v, _) => new JElement(Vocabulary.Short,          JsonValue.Create(Is<short>(v))) },
-        { typeof(uint),             (v, _) => new JElement(Vocabulary.UnsignedInt,    JsonValue.Create(Is<uint>(v))) },
-        { typeof(UIntPtr),          (v, _) => new JElement(Vocabulary.UnsignedIntPtr, PtrToJson(Is<UIntPtr>(v))) },
-        { typeof(ulong),            (v, _) => new JElement(Vocabulary.UnsignedLong,   Is<ulong>(v) is <= MaxJsonInteger ? JsonValue.Create((long)(ulong)v!) : JsonValue.Create(v!.ToString()) ) },
-        { typeof(ushort),           (v, _) => new JElement(Vocabulary.UnsignedShort,  JsonValue.Create(Is<ushort>(v))) },
+        yield return new(typeof(bool), (v, _) => new JElement(Vocabulary.Boolean, JsonValue.Create(Is<bool>(v))));
+        yield return new(typeof(byte), (v, _) => new JElement(Vocabulary.Byte, JsonValue.Create(Is<byte>(v))));
+        yield return new(typeof(char), (v, _) => new JElement(Vocabulary.Char, JsonValue.Create(Is<char>(v).ToString())));
+        yield return new(typeof(double), (v, _) => new JElement(Vocabulary.Double, DoubleToJson(Is<double>(v))));
+        yield return new(typeof(float), (v, _) => new JElement(Vocabulary.Float, FloatToJson(Is<float>(v))));
+        yield return new(typeof(int), (v, _) => new JElement(Vocabulary.Int, JsonValue.Create(Is<int>(v))));
+        yield return new(typeof(IntPtr), (v, _) => new JElement(Vocabulary.IntPtr, PtrToJson(Is<IntPtr>(v))));
+        yield return new(typeof(long), (v, _) => new JElement(Vocabulary.Long, Is<long>(v) is <= MaxJsonInteger and >= MinJsonInteger ? JsonValue.Create((long)v!) : JsonValue.Create(v!.ToString())));
+        yield return new(typeof(sbyte), (v, _) => new JElement(Vocabulary.SignedByte, JsonValue.Create(Is<sbyte>(v))));
+        yield return new(typeof(short), (v, _) => new JElement(Vocabulary.Short, JsonValue.Create(Is<short>(v))));
+        yield return new(typeof(uint), (v, _) => new JElement(Vocabulary.UnsignedInt, JsonValue.Create(Is<uint>(v))));
+        yield return new(typeof(UIntPtr), (v, _) => new JElement(Vocabulary.UnsignedIntPtr, PtrToJson(Is<UIntPtr>(v))));
+        yield return new(typeof(ulong), (v, _) => new JElement(Vocabulary.UnsignedLong, Is<ulong>(v) is <= MaxJsonInteger ? JsonValue.Create((long)(ulong)v!) : JsonValue.Create(v!.ToString())));
+        yield return new(typeof(ushort), (v, _) => new JElement(Vocabulary.UnsignedShort, JsonValue.Create(Is<ushort>(v))));
 
-        { typeof(DateTime),         (v, _) => new JElement(Vocabulary.DateTime,       JsonValue.Create(Is<DateTime>(v).ToString("o"))) },
-        { typeof(DateTimeOffset),   (v, _) => new JElement(Vocabulary.DateTimeOffset, JsonValue.Create(Is<DateTimeOffset>(v).ToString("o"))) },
-        { typeof(TimeSpan),         (v, _) => new JElement(Vocabulary.Duration,       JsonValue.Create(Duration(Is<TimeSpan>(v)))) },
-        { typeof(DBNull),           (v, _) => new JElement(Vocabulary.DBNull)         },
-        { typeof(decimal),          (v, _) => new JElement(Vocabulary.Decimal,        JsonValue.Create(Is<decimal>(v).ToString("G", CultureInfo.InvariantCulture))) },
-        { typeof(Guid),             (v, _) => new JElement(Vocabulary.Guid,           JsonValue.Create(Is<Guid>(v).ToString())) },
-        { typeof(Half),             (v, _) => new JElement(Vocabulary.Half,           HalfToJson(Is<Half>(v))) },
-        { typeof(string),           (v, _) => new JElement(Vocabulary.String,         JsonValue.Create(Is<string>(v))) },
-        { typeof(Uri),              (v, _) => new JElement(Vocabulary.Uri,            JsonValue.Create(Is<Uri>(v)?.ToString())) },
-    });
-    static FrozenDictionary<Type, TransformConstant> _constantTransforms = _constantTransformsDict.ToFrozenDictionary();
+        yield return new(typeof(DateTime), (v, _) => new JElement(Vocabulary.DateTime, JsonValue.Create(Is<DateTime>(v).ToString("o"))));
+        yield return new(typeof(DateTimeOffset), (v, _) => new JElement(Vocabulary.DateTimeOffset, JsonValue.Create(Is<DateTimeOffset>(v).ToString("o"))));
+        yield return new(typeof(TimeSpan), (v, _) => new JElement(Vocabulary.Duration, JsonValue.Create(Duration(Is<TimeSpan>(v)))));
+        yield return new(typeof(DBNull), (v, _) => new JElement(Vocabulary.DBNull));
+        yield return new(typeof(decimal), (v, _) => new JElement(Vocabulary.Decimal, JsonValue.Create(Is<decimal>(v).ToString("G", CultureInfo.InvariantCulture))));
+        yield return new(typeof(Guid), (v, _) => new JElement(Vocabulary.Guid, JsonValue.Create(Is<Guid>(v).ToString())));
+        yield return new(typeof(Half), (v, _) => new JElement(Vocabulary.Half, HalfToJson(Is<Half>(v))));
+        yield return new(typeof(string), (v, _) => new JElement(Vocabulary.String, JsonValue.Create(Is<string>(v))));
+        yield return new(typeof(Uri), (v, _) => new JElement(Vocabulary.Uri, JsonValue.Create(Is<Uri>(v)?.ToString())));
+    }
+
+    static FrozenDictionary<Type, TransformConstant> _constantTransforms = ConstantTransformsDict().ToFrozenDictionary();
 
     static JsonValue DoubleToJson(double d)
         => d switch {

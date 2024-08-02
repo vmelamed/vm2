@@ -1,5 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
+
 #if JSON_SCHEMA
 using Vocabulary = Conventions.Vocabulary;
 #endif
@@ -107,6 +108,52 @@ public partial struct JElement
 
         return new(elementName ?? childIndex.ToString(), jArray[childIndex]);
     }
+
+    /// <summary>
+    /// Tries to construct a JElement from the name and value of the first property where the property value is a JsonObject.
+    /// </summary>
+    /// <returns>System.Nullable&lt;JElement&gt;.</returns>
+    public readonly JElement? TryGetChildObject()
+    {
+        var kvp = Value?.AsObject()?.FirstOrDefault(nn => nn.Value is JsonObject);
+
+        if (kvp is null)
+            return null;
+
+        return new JElement(kvp.Value);
+    }
+
+    /// <summary>
+    /// Tries to construct a JElement from the name and value of the first property where the property value is a JsonObject.
+    /// </summary>
+    /// <returns>System.Nullable&lt;JElement&gt;.</returns>
+    public readonly JElement GetChildObject()
+        => new(Value?.AsObject()?.FirstOrDefault(nn => nn.Value is JsonObject)
+                        ?? throw new SerializationException("Could not find a child object."));
+
+    /// <summary>
+    /// Tries to construct a JElement from the name and value of the first property where the property name is one of <paramref name="names"/>.
+    /// </summary>
+    /// <param name="names">The names.</param>
+    /// <returns>System.Nullable&lt;JElement&gt;.</returns>
+    public readonly JElement? TryGetChildFromPropertyNames(IEnumerable<string> names)
+    {
+        var kvp = Value?.AsObject()?.FirstOrDefault(nn => names.Contains(nn.Key));
+
+        if (kvp is null)
+            return null;
+
+        return new JElement(kvp.Value);
+    }
+
+    /// <summary>
+    /// Construct a JElement from the name and value of the first property where the property name is one of <paramref name="names"/>.
+    /// </summary>
+    /// <param name="names">The names.</param>
+    /// <returns>System.Nullable&lt;JElement&gt;.</returns>
+    public readonly JElement GetChildFromPropertyNames(IEnumerable<string> names)
+        => new(Value?.AsObject()?.FirstOrDefault(nn => names.Contains(nn.Key))
+                        ?? throw new SerializationException($"Could not find a property with any of the names: {string.Join(", ", names)}."));
 
     /// <summary>
     /// Translates an element's name to the enum ExpressionType.
@@ -239,8 +286,8 @@ public partial struct JElement
     {
         type = null;
 
-        return TryGetTypeFromProperty(out type, attributeName) ||
-               Vocabulary.NamesToTypes.TryGetValue(Name, out type);
+        return Vocabulary.NamesToTypes.TryGetValue(Name, out type)
+               || TryGetTypeFromProperty(out type, attributeName);
     }
 
     /// <summary>

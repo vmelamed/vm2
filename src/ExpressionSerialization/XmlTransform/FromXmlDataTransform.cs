@@ -334,18 +334,19 @@ static partial class FromXmlDataTransform
         return (dict, kvTypes, d => d);
     }
 
-    static Dictionary<Type, PrepForDict> _typeToPrep_ = new()
+    static IEnumerable<KeyValuePair<Type, PrepForDict>> TypeToPrep()
     {
-        [typeof(Hashtable)]                    = kvTypes => (new Hashtable(), kvTypes, d => d),
-        [typeof(Dictionary<,>)]                = PrepForDictionary,
-        [typeof(ReadOnlyDictionary<,>)]        = PrepForReadOnlyDictionary,
-        [typeof(SortedDictionary<,>)]          = PrepForSortedDictionary,
-        [typeof(ImmutableDictionary<,>)]       = PrepForImmutableDictionary,
-        [typeof(ImmutableSortedDictionary<,>)] = PrepForImmutableSortedDictionary,
-        [typeof(FrozenDictionary<,>)]          = PrepForFrozenDictionary,
-        [typeof(ConcurrentDictionary<,>)]      = PrepForConcurrentDictionary,
-    };
-    static FrozenDictionary<Type, PrepForDict> _typeToPrep = _typeToPrep_.ToFrozenDictionary();
+        yield return new(typeof(Hashtable), kvTypes => (new Hashtable(), kvTypes, d => d));
+        yield return new(typeof(Dictionary<,>), PrepForDictionary);
+        yield return new(typeof(ReadOnlyDictionary<,>), PrepForReadOnlyDictionary);
+        yield return new(typeof(SortedDictionary<,>), PrepForSortedDictionary);
+        yield return new(typeof(ImmutableDictionary<,>), PrepForImmutableDictionary);
+        yield return new(typeof(ImmutableSortedDictionary<,>), PrepForImmutableSortedDictionary);
+        yield return new(typeof(FrozenDictionary<,>), PrepForFrozenDictionary);
+        yield return new(typeof(ConcurrentDictionary<,>), PrepForConcurrentDictionary);
+    }
+
+    static FrozenDictionary<Type, PrepForDict> _typeToPrep = TypeToPrep().ToFrozenDictionary();
 
     static (IDictionary, Type[], Func<IDictionary, object?>) PrepForDictionary(Type dictType)
     {

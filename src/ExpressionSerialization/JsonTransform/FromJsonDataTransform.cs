@@ -9,7 +9,7 @@ static partial class FromJsonDataTransform
     /// <returns>ConstantExpression.</returns>
     internal static ConstantExpression ConstantTransform(JElement element)
     {
-        var (value, type) = ValueTransform(element);
+        var (value, type) = ValueTransform(element.GetChildFromPropertyNames(_constantTypes));
 
         return Expression.Constant(value, type);
     }

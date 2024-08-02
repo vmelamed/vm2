@@ -14,6 +14,7 @@ public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionT
     JsonOptions _options = options ?? new();
     JsonNodeOptions _nodeOptions = new() { PropertyNameCaseInsensitive = false };
     ToJsonTransformVisitor? _expressionVisitor;
+    FromJsonTransformVisitor? _jsonVisitor;
 
     #region IExpressionTransform<JsonObject>
     /// <summary>
@@ -44,9 +45,20 @@ public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionT
     public Expression Transform(JsonObject document)
     {
         _options.Validate(document);
-        throw new NotImplementedException();
+        return DoTransform(document);
     }
     #endregion
+
+    Expression DoTransform(JsonObject document)
+    {
+        if (_jsonVisitor is null)
+            _jsonVisitor = new FromJsonTransformVisitor();
+        else
+            _jsonVisitor.ResetVisitState();
+        if (!document.TryGetPropertyValue(Vocabulary.Expression, out var expression))
+            throw new SerializationException($"The JSON document does not have property {Vocabulary.Expression} at the root.");
+        return _jsonVisitor.Visit(new JElement(Vocabulary.Expression, expression));
+    }
 
     /// <summary>
     /// Serializes the specified expression.

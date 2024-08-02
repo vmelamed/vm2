@@ -218,74 +218,74 @@ public static class Vocabulary
     public const string MemberMemberBinding     = "memberMemberBinding";
     public const string MemberListBinding       = "memberListBinding";
 
-    static readonly Dictionary<Type, string> _typesToNames_ = new()
+    static IEnumerable<KeyValuePair<Type, string>> EnumTypesToNames()
     {
-        [typeof(void)]                          = Void, // used only for method return values!
-        [typeof(bool)]                          = Boolean,
-        [typeof(byte)]                          = Byte,
-        [typeof(char)]                          = Char,
-        [typeof(DateTime)]                      = DateTime,
-        [typeof(DateTimeOffset)]                = DateTimeOffset,
-        [typeof(DBNull)]                        = DBNull,
-        [typeof(decimal)]                       = Decimal,
-        [typeof(double)]                        = Double,
-        [typeof(float)]                         = Float,
-        [typeof(Guid)]                          = Guid,
-        [typeof(Half)]                          = Half,
-        [typeof(int)]                           = Int,
-        [typeof(IntPtr)]                        = IntPtr,
-        [typeof(long)]                          = Long,
-        [typeof(sbyte)]                         = SignedByte,
-        [typeof(short)]                         = Short,
-        [typeof(string)]                        = String,
-        [typeof(TimeSpan)]                      = Duration,
-        [typeof(uint)]                          = UnsignedInt,
-        [typeof(UIntPtr)]                       = UnsignedIntPtr,
-        [typeof(ulong)]                         = UnsignedLong,
-        [typeof(Uri)]                           = Uri,
-        [typeof(ushort)]                        = UnsignedShort,
-        [typeof(Enum)]                          = Enum,
-        [typeof(Nullable<>)]                    = Nullable,
-        [typeof(object)]                        = Object,
-    };
+        yield return new(typeof(void), Void); // used only for method return values!
+        yield return new(typeof(bool), Boolean);
+        yield return new(typeof(byte), Byte);
+        yield return new(typeof(char), Char);
+        yield return new(typeof(DateTime), DateTime);
+        yield return new(typeof(DateTimeOffset), DateTimeOffset);
+        yield return new(typeof(DBNull), DBNull);
+        yield return new(typeof(decimal), Decimal);
+        yield return new(typeof(double), Double);
+        yield return new(typeof(float), Float);
+        yield return new(typeof(Guid), Guid);
+        yield return new(typeof(Half), Half);
+        yield return new(typeof(int), Int);
+        yield return new(typeof(IntPtr), IntPtr);
+        yield return new(typeof(long), Long);
+        yield return new(typeof(sbyte), SignedByte);
+        yield return new(typeof(short), Short);
+        yield return new(typeof(string), String);
+        yield return new(typeof(TimeSpan), Duration);
+        yield return new(typeof(uint), UnsignedInt);
+        yield return new(typeof(UIntPtr), UnsignedIntPtr);
+        yield return new(typeof(ulong), UnsignedLong);
+        yield return new(typeof(Uri), Uri);
+        yield return new(typeof(ushort), UnsignedShort);
+        yield return new(typeof(Enum), Enum);
+        yield return new(typeof(Nullable<>), Nullable);
+        yield return new(typeof(object), Object);
+    }
 
     /// <summary>
     /// Maps basic types to names used in text documents.
     /// </summary>
-    public static readonly FrozenDictionary<Type, string> TypesToNames = _typesToNames_.ToFrozenDictionary();
+    public static readonly FrozenDictionary<Type, string> TypesToNames = EnumTypesToNames().ToFrozenDictionary();
 
-    static readonly Dictionary<string, Type> _namesToTypes_ = new ()
+    static IEnumerable<KeyValuePair<string, Type>> EnumNamesToTypes()
     {
-        [Void]                                  = typeof(void), // used only for method return values!
-        [Boolean]                               = typeof(bool),
-        [Byte]                                  = typeof(byte),
-        [Char]                                  = typeof(char),
-        [DateTime]                              = typeof(DateTime),
-        [DateTimeOffset]                        = typeof(DateTimeOffset),
-        [DBNull]                                = typeof(DBNull),
-        [Decimal]                               = typeof(decimal),
-        [Double]                                = typeof(double),
-        [Float]                                 = typeof(float),
-        [Guid]                                  = typeof(Guid),
-        [Half]                                  = typeof(Half),
-        [Int]                                   = typeof(int),
-        [IntPtr]                                = typeof(IntPtr),
-        [Long]                                  = typeof(long),
-        [SignedByte]                            = typeof(sbyte),
-        [Short]                                 = typeof(short),
-        [String]                                = typeof(string),
-        [Duration]                              = typeof(TimeSpan),
-        [UnsignedInt]                           = typeof(uint),
-        [UnsignedIntPtr]                        = typeof(UIntPtr),
-        [UnsignedLong]                          = typeof(ulong),
-        [Uri]                                   = typeof(Uri),
-        [UnsignedShort]                         = typeof(ushort),
-        [Enum]                                  = typeof(Enum),
-        [Nullable]                              = typeof(Nullable<>),
-        [Object]                                = typeof(object),
-    };
+        yield return new(Void, typeof(void)); // used only for method return values!
+        yield return new(Boolean, typeof(bool));
+        yield return new(Byte, typeof(byte));
+        yield return new(Char, typeof(char));
+        yield return new(DateTime, typeof(DateTime));
+        yield return new(DateTimeOffset, typeof(DateTimeOffset));
+        yield return new(DBNull, typeof(DBNull));
+        yield return new(Decimal, typeof(decimal));
+        yield return new(Double, typeof(double));
+        yield return new(Float, typeof(float));
+        yield return new(Guid, typeof(Guid));
+        yield return new(Half, typeof(Half));
+        yield return new(Int, typeof(int));
+        yield return new(IntPtr, typeof(IntPtr));
+        yield return new(Long, typeof(long));
+        yield return new(SignedByte, typeof(sbyte));
+        yield return new(Short, typeof(short));
+        yield return new(String, typeof(string));
+        yield return new(Duration, typeof(TimeSpan));
+        yield return new(UnsignedInt, typeof(uint));
+        yield return new(UnsignedIntPtr, typeof(UIntPtr));
+        yield return new(UnsignedLong, typeof(ulong));
+        yield return new(Uri, typeof(Uri));
+        yield return new(UnsignedShort, typeof(ushort));
+        yield return new(Enum, typeof(Enum));
+        yield return new(Nullable, typeof(Nullable<>));
+        yield return new(Object, typeof(object));
+    }
     /// <summary>
     /// Maps names used in text documents to basic types.
     /// </summary>
-    public static readonly FrozenDictionary<string, Type> NamesToTypes = _namesToTypes_.ToFrozenDictionary();
+    public static readonly FrozenDictionary<string, Type> NamesToTypes = EnumNamesToTypes().ToFrozenDictionary();
 }

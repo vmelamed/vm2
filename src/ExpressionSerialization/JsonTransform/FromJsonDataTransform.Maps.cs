@@ -8,45 +8,46 @@ using Vocabulary = Conventions.Vocabulary;
 
 static partial class FromJsonDataTransform
 {
-    static readonly Dictionary<string, Transformation> _constantTransformations_ = new()
+    static IEnumerable<KeyValuePair<string, Transformation>> ConstantTransformations()
     {
-        { Vocabulary.Boolean,           (JElement x, ref Type t) => x.GetValue<bool>()          },
-        { Vocabulary.Boolean,           (JElement x, ref Type t) => x.GetValue<byte>()          },
-        { Vocabulary.Byte,              (JElement x, ref Type t) => x.GetValue<byte>()          },
-        { Vocabulary.Char,              (JElement x, ref Type t) => JsonToChar(x)               },
-        { Vocabulary.Double,            (JElement x, ref Type t) => JsonToDouble(x)             },
-        { Vocabulary.Float,             (JElement x, ref Type t) => x.GetValue<float>()         },
-        { Vocabulary.Int,               (JElement x, ref Type t) => x.GetValue<int>()           },
-        { Vocabulary.IntPtr,            (JElement x, ref Type t) => JsonToIntPtr(x)             },
-        { Vocabulary.Long,              (JElement x, ref Type t) => x.GetValue<long>()          },
-        { Vocabulary.SignedByte,        (JElement x, ref Type t) => x.GetValue<sbyte>()         },
-        { Vocabulary.Short,             (JElement x, ref Type t) => x.GetValue<short>()         },
-        { Vocabulary.UnsignedInt,       (JElement x, ref Type t) => x.GetValue<uint>()          },
-        { Vocabulary.UnsignedIntPtr,    (JElement x, ref Type t) => JsonToUIntPtr(x)            },
-        { Vocabulary.UnsignedLong,      (JElement x, ref Type t) => x.GetValue<ulong>()         },
-        { Vocabulary.UnsignedShort,     (JElement x, ref Type t) => x.GetValue<ushort>()        },
+        yield return new(Vocabulary.Boolean, (JElement x, ref Type t) => x.GetValue<bool>());
+        yield return new(Vocabulary.Byte, (JElement x, ref Type t) => x.GetValue<byte>());
+        yield return new(Vocabulary.Char, (JElement x, ref Type t) => JsonToChar(x));
+        yield return new(Vocabulary.Double, (JElement x, ref Type t) => JsonToDouble(x));
+        yield return new(Vocabulary.Float, (JElement x, ref Type t) => JsonToFloat(x));
+        yield return new(Vocabulary.Int, (JElement x, ref Type t) => x.GetValue<int>());
+        yield return new(Vocabulary.IntPtr, (JElement x, ref Type t) => JsonToIntPtr(x));
+        yield return new(Vocabulary.Long, (JElement x, ref Type t) => JsonToLong(x));
+        yield return new(Vocabulary.SignedByte, (JElement x, ref Type t) => x.GetValue<sbyte>());
+        yield return new(Vocabulary.Short, (JElement x, ref Type t) => x.GetValue<short>());
+        yield return new(Vocabulary.UnsignedInt, (JElement x, ref Type t) => x.GetValue<uint>());
+        yield return new(Vocabulary.UnsignedIntPtr, (JElement x, ref Type t) => JsonToUIntPtr(x));
+        yield return new(Vocabulary.UnsignedLong, (JElement x, ref Type t) => JsonToULong(x));
+        yield return new(Vocabulary.UnsignedShort, (JElement x, ref Type t) => x.GetValue<ushort>());
 
-        { Vocabulary.DateTime,          (JElement x, ref Type t) => JsonToDateTime(x)           },
-        { Vocabulary.DateTimeOffset,    (JElement x, ref Type t) => JsonToDateTimeOffset(x)     },
-        { Vocabulary.Duration,          (JElement x, ref Type t) => JsonToTimeSpan(x)           },
-        { Vocabulary.DBNull,            (JElement x, ref Type t) => DBNull.Value                },
-        { Vocabulary.Decimal,           (JElement x, ref Type t) => JsonToDecimal(x)            },
-        { Vocabulary.Guid,              (JElement x, ref Type t) => JsonToGuid(x)               },
-        { Vocabulary.Half,              (JElement x, ref Type t) => JsonToHalf(x)               },
-        { Vocabulary.String,            (JElement x, ref Type t) => x.GetValue<string>()        },
-        { Vocabulary.Uri,               (JElement x, ref Type t) => JsonToUri(x)                },
+        yield return new(Vocabulary.DateTime, (JElement x, ref Type t) => JsonToDateTime(x));
+        yield return new(Vocabulary.DateTimeOffset, (JElement x, ref Type t) => JsonToDateTimeOffset(x));
+        yield return new(Vocabulary.Duration, (JElement x, ref Type t) => JsonToTimeSpan(x));
+        yield return new(Vocabulary.DBNull, (JElement x, ref Type t) => DBNull.Value);
+        yield return new(Vocabulary.Decimal, (JElement x, ref Type t) => JsonToDecimal(x));
+        yield return new(Vocabulary.Guid, (JElement x, ref Type t) => JsonToGuid(x));
+        yield return new(Vocabulary.Half, (JElement x, ref Type t) => JsonToHalf(x));
+        yield return new(Vocabulary.String, (JElement x, ref Type t) => x.GetValue<string>());
+        yield return new(Vocabulary.Uri, (JElement x, ref Type t) => JsonToUri(x));
 
-        //{ Vocabulary.Anonymous,         TransformAnonymous                                      },
-        //{ Vocabulary.ByteSequence,      TransformByteSequence                                   },
-        //{ Vocabulary.Sequence,          TransformCollection                                     },
-        //{ Vocabulary.Dictionary,        TransformDictionary                                     },
-        //{ Vocabulary.Enum,              TransformEnum                                           },
-        //{ Vocabulary.Nullable,          TransformNullable                                       },
-        //{ Vocabulary.Object,            TransformObject                                         },
-        //{ Vocabulary.Tuple,             TransformTuple                                          },
-        //{ Vocabulary.TupleItem,         TransformTuple                                          },
-    };
-    static readonly FrozenDictionary<string, Transformation> _constantTransformations = _constantTransformations_.ToFrozenDictionary();
+        //yield return new(Vocabulary.Anonymous,         TransformAnonymous                                      );
+        //yield return new(Vocabulary.ByteSequence,      TransformByteSequence                                   );
+        //yield return new(Vocabulary.Sequence,          TransformCollection                                     );
+        //yield return new(Vocabulary.Dictionary,        TransformDictionary                                     );
+        //yield return new(Vocabulary.Enum,              TransformEnum                                           );
+        //yield return new(Vocabulary.Nullable,          TransformNullable                                       );
+        //yield return new(Vocabulary.Object,            TransformObject                                         );
+        //yield return new(Vocabulary.Tuple,             TransformTuple                                          );
+        //yield return new(Vocabulary.TupleItem,         TransformTuple                                          );
+    }
+
+    static readonly FrozenDictionary<string, Transformation> _constantTransformations = ConstantTransformations().ToFrozenDictionary();
+    static readonly FrozenSet<string> _constantTypes = _constantTransformations.Keys.ToFrozenSet();
 
     static char JsonToChar(JElement x)
     {
@@ -107,6 +108,32 @@ static partial class FromJsonDataTransform
         }
 
         return (Half)x.GetValue<float>();
+    }
+
+    static long JsonToLong(JElement x)
+    {
+        var value = x.Value ?? throw new SerializationException($"Could not convert the value of property `{x.Name}` to `long` - the value is `null`.");
+
+        if (value.GetValueKind() == JsonValueKind.Number)
+            return x.Value.GetValue<long>();
+        else
+        if (value.GetValueKind() == JsonValueKind.String)
+            return long.Parse(x.Value.GetValue<string>());
+        else
+            throw new SerializationException($"Could not convert the value of property `{x.Name}` to `long` - unexpected JSON type {value.GetValueKind()}.");
+    }
+
+    static ulong JsonToULong(JElement x)
+    {
+        var value = x.Value ?? throw new SerializationException($"Could not convert the value of property `{x.Name}` to `ulong` - the value is `null`.");
+
+        if (value.GetValueKind() == JsonValueKind.Number)
+            return x.Value.GetValue<ulong>();
+        else
+        if (value.GetValueKind() == JsonValueKind.String)
+            return ulong.Parse(x.Value.GetValue<string>());
+        else
+            throw new SerializationException($"Could not convert the value of property `{x.Name}` to `ulong` - unexpected JSON type {value.GetValueKind()}.");
     }
 
     static IntPtr JsonToIntPtr(JElement x)
