@@ -26,11 +26,3 @@ global using vm2.ExpressionSerialization.Extensions;
 global using vm2.Threading;
 
 global using static vm2.ExpressionSerialization.Extensions.DebugExtensions;
-
-#if JSON_SCHEMA
-global using Json.Schema;
-#else
-global using Newtonsoft.Json.Linq;
-global using Newtonsoft.Json.Schema;
-#endif
-

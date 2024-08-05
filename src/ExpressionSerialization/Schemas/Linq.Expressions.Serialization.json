@@ -1395,18 +1395,7 @@
                                 {
                                     "type": "object",
                                     "patternProperties": {
-                                        "^Item[1-8]$": {
-                                            "type": "object",
-                                            "properties": {
-                                                "type": { "type": "string" },
-                                                "value": { "$ref": "#/$defs/constant" }
-                                            },
-                                            "required": [
-                                                "type",
-                                                "value"
-                                            ],
-                                            "additionalProperties": { "type": "string" }
-                                        }
+                                        "^Item[1-8]$": { "$ref": "#/$defs/constant" }
                                     },
                                     "minProperties": 1,
                                     "maxProperties": 8,

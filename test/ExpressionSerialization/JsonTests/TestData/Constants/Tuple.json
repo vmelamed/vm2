@@ -7,16 +7,10 @@
         "type": "System.Tuple\u00602[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
         "value": {
           "Item1": {
-            "type": "int",
-            "value": {
-              "int": 1
-            }
+            "int": 1
           },
           "Item2": {
-            "type": "string",
-            "value": {
-              "string": "one"
-            }
+            "string": "one"
           }
         }
       }

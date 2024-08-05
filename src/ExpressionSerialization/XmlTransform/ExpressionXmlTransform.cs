@@ -1,9 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-#if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
-#endif
-
 /// <summary>
 /// Class ExpressionTransform.
 /// Implements the <see cref="IExpressionTransform{XNode}"/>: transforms a Linq expression to an XML Node object.

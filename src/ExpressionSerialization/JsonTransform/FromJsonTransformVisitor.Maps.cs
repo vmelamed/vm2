@@ -1,9 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
-#if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
-#endif
-
 public partial class FromJsonTransformVisitor
 {
     delegate Expression VisitJElement(FromJsonTransformVisitor visitor, JElement e);

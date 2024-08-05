@@ -246,6 +246,8 @@ public partial class ConstantTests
         { TestLine(), "(Tuple<int, string>)null",                                               "Tuple.Null.json" },
         { TestLine(), "Tuple<int, string>",                                                     "Tuple.json" },
         { TestLine(), "ValueTuple<int, string>",                                                "TupleValue.json" },
+        { TestLine(), "Tuple<int, String, StructDataContract1>",                                "TupleIntStringStruct.json" },
+        { TestLine(), "ValueTuple<int, String, StructDataContract1>",                           "TupleValueIntStringStruct.json" },
         // dictionaries
         { TestLine(), "Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\"...",              "DictionaryIntNullableString.json" },
         { TestLine(), "Dictionary<int, string>{ [1] = \"one\", [2] = \"two\" }",                "DictionaryIntString.json" },

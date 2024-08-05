@@ -1,9 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-#if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
-#endif
-
 /// <summary>
 /// Class ToXmlTransformVisitor.
 /// Implements the <see cref="ExpressionTransformVisitor{XElement}" />

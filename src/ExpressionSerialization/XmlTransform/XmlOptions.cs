@@ -1,9 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-#if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
-#endif
-
 /// <summary>
 /// Class XmlOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to
 /// XML documents.

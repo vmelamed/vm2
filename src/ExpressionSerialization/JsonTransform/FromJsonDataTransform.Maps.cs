@@ -2,10 +2,6 @@
 
 #pragma warning disable IDE0049
 
-#if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
-#endif
-
 static partial class FromJsonDataTransform
 {
     static IEnumerable<KeyValuePair<string, Transformation>> ConstantTransformations()
@@ -35,26 +31,26 @@ static partial class FromJsonDataTransform
         yield return new(Vocabulary.String, (JElement x, ref Type t) => x.GetValue<string>());
         yield return new(Vocabulary.Uri, (JElement x, ref Type t) => JsonToUri(x));
 
-        //yield return new(Vocabulary.Anonymous,         TransformAnonymous                                      );
-        //yield return new(Vocabulary.ByteSequence,      TransformByteSequence                                   );
-        //yield return new(Vocabulary.Sequence,          TransformCollection                                     );
-        //yield return new(Vocabulary.Dictionary,        TransformDictionary                                     );
-        //yield return new(Vocabulary.Enum,              TransformEnum                                           );
-        //yield return new(Vocabulary.Nullable,          TransformNullable                                       );
-        //yield return new(Vocabulary.Object,            TransformObject                                         );
-        //yield return new(Vocabulary.Tuple,             TransformTuple                                          );
-        //yield return new(Vocabulary.TupleItem,         TransformTuple                                          );
+        yield return new(Vocabulary.Anonymous, TransformAnonymous);
+        yield return new(Vocabulary.ByteSequence, TransformByteSequence);
+        yield return new(Vocabulary.Sequence, TransformCollection);
+        yield return new(Vocabulary.Dictionary, TransformDictionary);
+        yield return new(Vocabulary.Enum, TransformEnum);
+        yield return new(Vocabulary.Nullable, TransformNullable);
+        yield return new(Vocabulary.Object, TransformObject);
+        yield return new(Vocabulary.Tuple, TransformTuple);
+        yield return new(Vocabulary.TupleItem, TransformTuple);
     }
 
     static readonly FrozenDictionary<string, Transformation> _constantTransformations = ConstantTransformations().ToFrozenDictionary();
-    static readonly FrozenSet<string> _constantTypes = _constantTransformations.Keys.ToFrozenSet();
+    internal static readonly FrozenSet<string> ConstantTypes = _constantTransformations.Keys.ToFrozenSet();
 
     static char JsonToChar(JElement x)
     {
         var s = x.GetValue<string>();
 
         if (string.IsNullOrEmpty(s))
-            throw new SerializationException($"Could not convert the value of property `{x.Name}` to `char` - the string is `null` or empty.");
+            throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `char` - the string is `null` or empty.");
 
         return s[0];
     }
@@ -112,7 +108,7 @@ static partial class FromJsonDataTransform
 
     static long JsonToLong(JElement x)
     {
-        var value = x.Value ?? throw new SerializationException($"Could not convert the value of property `{x.Name}` to `long` - the value is `null`.");
+        var value = x.Value ?? throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `long` - the valueElement is `null`.");
 
         if (value.GetValueKind() == JsonValueKind.Number)
             return x.Value.GetValue<long>();
@@ -120,12 +116,12 @@ static partial class FromJsonDataTransform
         if (value.GetValueKind() == JsonValueKind.String)
             return long.Parse(x.Value.GetValue<string>());
         else
-            throw new SerializationException($"Could not convert the value of property `{x.Name}` to `long` - unexpected JSON type {value.GetValueKind()}.");
+            throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `long` - unexpected JSON type {value.GetValueKind()}.");
     }
 
     static ulong JsonToULong(JElement x)
     {
-        var value = x.Value ?? throw new SerializationException($"Could not convert the value of property `{x.Name}` to `ulong` - the value is `null`.");
+        var value = x.Value ?? throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `ulong` - the valueElement is `null`.");
 
         if (value.GetValueKind() == JsonValueKind.Number)
             return x.Value.GetValue<ulong>();
@@ -133,7 +129,7 @@ static partial class FromJsonDataTransform
         if (value.GetValueKind() == JsonValueKind.String)
             return ulong.Parse(x.Value.GetValue<string>());
         else
-            throw new SerializationException($"Could not convert the value of property `{x.Name}` to `ulong` - unexpected JSON type {value.GetValueKind()}.");
+            throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `ulong` - unexpected JSON type {value.GetValueKind()}.");
     }
 
     static IntPtr JsonToIntPtr(JElement x)
@@ -143,7 +139,7 @@ static partial class FromJsonDataTransform
             var ptrStr = x.Value.AsValue().GetValue<string>();
 
             if (string.IsNullOrWhiteSpace(ptrStr))
-                throw new SerializationException($"Could not convert the value of property `{x.Name}` to `IntPtr` - the string is `null`, or empty, or consists of whitespaces only.");
+                throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `IntPtr` - the string is `null`, or empty, or consists of whitespaces only.");
 
             return checked(
                 Environment.Is64BitProcess
@@ -164,7 +160,7 @@ static partial class FromJsonDataTransform
             var ptrStr = x.Value?.AsValue()?.GetValue<string>();
 
             if (string.IsNullOrWhiteSpace(ptrStr))
-                throw new SerializationException($"Could not convert the value of property `{x.Name}` to `IntPtr` - the string is `null`, or empty, or consists of whitespaces only.");
+                throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `IntPtr` - the string is `null`, or empty, or consists of whitespaces only.");
 
             return checked(
                 Environment.Is64BitProcess
@@ -181,12 +177,12 @@ static partial class FromJsonDataTransform
     static string GetJsonStringToParse(JElement x, string typeName)
     {
         if (x.Value?.AsValue()?.GetValueKind() is not JsonValueKind.String)
-            throw new SerializationException($"Could not convert the value of property `{x.Name}` to `{typeName}` - the JSON value is not string.");
+            throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `{typeName}` - the JSON valueElement is not string.");
 
         var str = x.Value?.AsValue()?.GetValue<string>();
 
         if (string.IsNullOrWhiteSpace(str))
-            throw new SerializationException($"Could not convert the value of property `{x.Name}` to `{typeName}` - the JSON string is a null, empty, or consists of whitespace characters only.");
+            throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `{typeName}` - the JSON string is a null, empty, or consists of whitespace characters only.");
 
         return str;
     }
@@ -197,9 +193,9 @@ static partial class FromJsonDataTransform
     static DateTimeOffset JsonToDateTimeOffset(JElement x)
         => DateTimeOffset.Parse(GetJsonStringToParse(x, nameof(DateTimeOffset)), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 
-    const string durationRegex = @"^-?P(((?<days3>[0-9]+D)|(?<months2>[0-9]+M)((?<days2>[0-9]+D))?|(?<years1>[0-9]+Y)((?<months1>[0-9]+M)((?<days1>[0-9]+D))?)?)"+
-                                 @"(T(((?<hours2>[0-9]+H)((?<minutes4>[0-9]+M)((?<seconds6>[0-9]+S))?)?|(?<minutes3>[0-9]+M)((?<seconds5>[0-9]+S))?|(?<seconds4>[0-9]+S))))?|"+
-                                 @"T(((?<hours1>[0-9]+H)((?<minutes2>[0-9]+M)((?<seconds3>[0-9]+S))?)?|(?<minutes1>[0-9]+M)((?<seconds2>[0-9]+S))?|(?<seconds1>[0-9]+S)))|(?<weeks>[0-9]+W))$";
+    const string durationRegex = @"^(?<neg>-)?P(((?<days3>[0-9]+)D|(?<months2>[0-9]+)M((?<days2>[0-9]+)D)?|(?<years1>[0-9]+)Y((?<months1>[0-9]+)M((?<days1>[0-9]+)D)?)?)"+
+                                 @"(T(((?<hours2>[0-9]+)H((?<minutes4>[0-9]+)M((?<seconds6>[0-9]+)S)?)?|(?<minutes3>[0-9]+)M((?<seconds5>[0-9]+)S)?|(?<seconds4>[0-9]+)S)))?|"+
+                                 @"T(((?<hours1>[0-9]+)H((?<minutes2>[0-9]+)M((?<seconds3>[0-9]+)S)?)?|(?<minutes1>[0-9]+)M((?<seconds2>[0-9]+)S)?|(?<seconds1>[0-9]+)S))|(?<weeks>[0-9]+)W)$";
 
     [GeneratedRegex(durationRegex)]
     private static partial Regex DurationRegex();
@@ -210,7 +206,9 @@ static partial class FromJsonDataTransform
         var match = DurationRegex().Match(str);
 
         if (!match.Success)
-            throw new SerializationException($"Could not convert the value of property `{x.Name}` to `{nameof(TimeSpan)}` - the JSON string does not represent a valid ISO8601 duration of time.");
+            throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `{nameof(TimeSpan)}` - the JSON string does not represent a valid ISO8601 duration of time.");
+
+        var negative =  match.Groups["neg"].Success && match.Groups["neg"].Value == "-";
 
         var seconds =   match.Groups["seconds1"].Success ? match.Groups["seconds1"].Value :
                         match.Groups["seconds2"].Success ? match.Groups["seconds2"].Value :
@@ -240,7 +238,9 @@ static partial class FromJsonDataTransform
 
         // having years and months in the duration is clearly gray area for ISO8601. Some suggest to use the banking loan depreciation type of cycle of 360/30.
         // Our serialization counterpart never puts years and months - just days, etc.
-        return new TimeSpan(int.Parse(years) * 360 + int.Parse(months) * 30 + int.Parse(weeks) + int.Parse(days), int.Parse(hours), int.Parse(minutes), int.Parse(seconds));
+        var ts = new TimeSpan(int.Parse(years) * 360 + int.Parse(months) * 30 + int.Parse(weeks) + int.Parse(days), int.Parse(hours), int.Parse(minutes), int.Parse(seconds));
+
+        return negative ? ts.Negate() : ts;
     }
 
     static decimal JsonToDecimal(JElement x)
@@ -251,4 +251,51 @@ static partial class FromJsonDataTransform
 
     static Uri JsonToUri(JElement x)
         => new UriBuilder(GetJsonStringToParse(x, nameof(Uri))).Uri;
+
+    #region cache some method info-s used in deserialization
+    static MethodInfo _toFrozenSet                  = typeof(FrozenSet).GetMethod("ToFrozenSet") ?? throw new InternalTransformErrorException($"Could not get reflection of the method FrozenSet.ToFrozenSet");
+    static MethodInfo _toImmutableArray             = typeof(ImmutableArray).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(ImmutableArray.ToImmutableArray))).Single();
+    static MethodInfo _toImmutableHashSet           = typeof(ImmutableHashSet).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(ImmutableHashSet.ToImmutableHashSet))).Single();
+    static MethodInfo _toImmutableSortedSet         = typeof(ImmutableSortedSet).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(ImmutableSortedSet.ToImmutableSortedSet))).Single();
+    static MethodInfo _toImmutableList              = typeof(ImmutableList).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(ImmutableList.ToImmutableList))).Single();
+    static MethodInfo _toImmutableQueue             = typeof(ImmutableQueue).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(ImmutableQueue.CreateRange))).Single();
+    static MethodInfo _toImmutableStack             = typeof(ImmutableStack).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(ImmutableStack.CreateRange))).Single();
+    static MethodInfo _toList                       = typeof(Enumerable).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(Enumerable.ToList))).Single();
+    static MethodInfo _toHashSet                    = typeof(Enumerable).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(Enumerable.ToHashSet))).Single();
+    static MethodInfo _cast                         = typeof(Enumerable).GetMethod("Cast")!;
+    static MethodInfo _reverse                      = typeof(Enumerable).GetMethod(nameof(Enumerable.Reverse)) ?? throw new InternalTransformErrorException($"Could not get reflection of the method Enumerable.Reverse");
+    static MethodInfo _toImmutableDictionary        = typeof(ImmutableDictionary).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(ImmutableDictionary.CreateRange))).Single();
+    static MethodInfo _toImmutableSortedDictionary  = typeof(ImmutableSortedDictionary).GetMethods().Where(mi => mi.MethodHas1EnumerableParameter(nameof(ImmutableDictionary.CreateRange))).Single();
+    static MethodInfo _toFrozenDictionary           = typeof(FrozenDictionary).GetMethods().Where(mi => mi.Name == nameof(FrozenDictionary.ToFrozenDictionary) && mi.GetParameters().Length == 2).Single();
+    #endregion
+
+    static object? CastSequence(IEnumerable sequence, Type elementType) => _cast.MakeGenericMethod(elementType).Invoke(null, [sequence]);
+
+    static IEnumerable<KeyValuePair<Type, Func<Type, Type, int, IEnumerable, object?>>> SequenceBuilders()
+    {
+        yield return new(typeof(FrozenSet<>), (gt, et, len, seq) => _toFrozenSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et), null]));
+        yield return new(typeof(ImmutableArray<>), (gt, et, len, seq) => _toImmutableArray.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableHashSet<>), (gt, et, len, seq) => _toImmutableHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableList<>), (gt, et, len, seq) => _toImmutableList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableSortedSet<>), (gt, et, len, seq) => _toImmutableSortedSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableQueue<>), (gt, et, len, seq) => _toImmutableQueue.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ImmutableStack<>), (gt, et, len, seq) => _toImmutableStack.MakeGenericMethod(et).Invoke(null, [CastSequence(seq.Cast<object?>().Reverse(), et)]));
+        yield return new(typeof(List<>), (gt, et, len, seq) => _toList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(HashSet<>), (gt, et, len, seq) => _toHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
+        yield return new(typeof(ArraySegment<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
+        yield return new(typeof(Memory<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
+        yield return new(typeof(ReadOnlyMemory<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
+        yield return new(typeof(ConcurrentQueue<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq));
+        yield return new(typeof(ConcurrentStack<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>().Reverse()));
+        yield return new(typeof(Stack<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>().Reverse()));
+        yield return new(typeof(Collection<>), (gt, et, len, seq) => BuildCollectionFromList(gt, et, seq.Cast<object?>().ToList()));
+        yield return new(typeof(ReadOnlyCollection<>), (gt, et, len, seq) => BuildCollectionFromList(gt, et, seq.Cast<object?>().ToList()));
+        yield return new(typeof(LinkedList<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq));
+        yield return new(typeof(Queue<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>()));
+        yield return new(typeof(SortedSet<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq));
+        yield return new(typeof(BlockingCollection<>), BuildBlockingCollection);
+        yield return new(typeof(ConcurrentBag<>), BuildConcurrentBag);
+    }
+
+    static readonly FrozenDictionary<Type, Func<Type, Type, int, IEnumerable, object?>> _sequenceBuilders = SequenceBuilders().ToFrozenDictionary();
 }

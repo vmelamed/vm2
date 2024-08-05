@@ -1,8 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTransform;
 
-#if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
-#endif
 static class AttributeNames
 {
     public static XName Nil => Namespaces.Xsi + "nil";
@@ -24,7 +21,7 @@ static class AttributeNames
     public static XName Type => Vocabulary.Type;
     public static XName DeclaringType => Vocabulary.DeclaringType;
     public static XName TypeOperand => Vocabulary.TypeOperand;
-    public static XName ConcreteType => Vocabulary.ConcreteType;   // e.g. derived from ConstantExpression.GetElementType
+    public static XName ConcreteType => Vocabulary.ConcreteType;   // e.g. derived from ConstantExpression.GetType
     public static XName BaseType => Vocabulary.BaseType;
     public static XName Id => Vocabulary.Id;
     public static XName Value => Vocabulary.Value;

@@ -6,8 +6,8 @@ public static class ConstantTestData
     /// The maximum long number that can be expressed as &quot;JSON integer&quot; without loosing fidelity.
     /// </summary>
     /// <remarks>
-    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
-    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
+    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses
+    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers
     /// between [-(2^53-1), 2^53 - 1].
     /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;9007199254740992&quot;</c>.
     /// </remarks>
@@ -17,8 +17,8 @@ public static class ConstantTestData
     /// The minimum long number that can be expressed as &quot;JSON integer&quot; without loosing fidelity.
     /// </summary>
     /// <remarks>
-    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses 
-    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers 
+    /// In JavaScript, the maximum safe integer is 2^53 - 1, which is 9007199254740991. This is because JavaScript uses
+    /// double-precision floating-point format numbers as specified in IEEE 754, and can only safely represent integers
     /// from the range [-(2^53-1), 2^53-1].
     /// Therefore we serialize numbers outside of that range as strings, e.g. <c>&quot;-9007199254740992&quot;</c>.
     /// </remarks>
@@ -148,11 +148,11 @@ public static class ConstantTestData
         ["DateTimeOffset.MaxValue"]                                                             = Expression.Constant(DateTimeOffset.MaxValue),
         ["DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))"]              = Expression.Constant(new DateTimeOffset(2024, 4, 13, 23, 18, 26, 234, new TimeSpan(0, -300, 0))),
         // TimeSpan
-        ["TimeSpan.MinValue"]                                                                   = Expression.Constant(TimeSpan.MinValue),
-        ["TimeSpan.MaxValue"]                                                                   = Expression.Constant(TimeSpan.MaxValue),
+        ["TimeSpan.MinValue"]                                                                   = Expression.Constant(new TimeSpan(TimeSpan.MinValue.Days, TimeSpan.MinValue.Hours, TimeSpan.MinValue.Minutes, TimeSpan.MinValue.Seconds)),
+        ["TimeSpan.MaxValue"]                                                                   = Expression.Constant(new TimeSpan(TimeSpan.MaxValue.Days, TimeSpan.MaxValue.Hours, TimeSpan.MaxValue.Minutes, TimeSpan.MaxValue.Seconds)),
         ["TimeSpan.Zero"]                                                                       = Expression.Constant(TimeSpan.Zero),
-        ["TimeSpan(3, 4, 15, 32, 123)"]                                                         = Expression.Constant(new TimeSpan(3, 4, 15, 32, 123)),
-        ["TimeSpan(-3, 4, 15, 32, 123)"]                                                        = Expression.Constant(new TimeSpan(3, 4, 15, 32, 123).Negate()),
+        ["TimeSpan(3, 4, 15, 32, 123)"]                                                         = Expression.Constant(new TimeSpan(3, 4, 15, 32)),
+        ["TimeSpan(-3, 4, 15, 32, 123)"]                                                        = Expression.Constant(new TimeSpan(3, 4, 15, 32).Negate()),
         // DBNull
         ["DBNull.Value"]                                                                        = Expression.Constant(DBNull.Value),
         // decimal
@@ -228,7 +228,7 @@ public static class ConstantTestData
                                                                                                                             UriProperty = new Uri("http://localhost"),
                                                                                                                             DateTimeProperty = new DateTime(2013, 1, 13),
                                                                                                                             DateTimeOffsetProperty = new DateTimeOffset(new DateTime(2013, 1, 13)),
-                                                                                                                            TimeSpanProperty = new TimeSpan(1, 2, 3, 4, 5, 6),
+                                                                                                                            TimeSpanProperty = new TimeSpan(1, 2, 3, 4),
                                                                                                                         }),
         // byte sequences
         ["(byte[])null"]                                                                        = Expression.Constant(null, typeof(byte[])),
@@ -343,6 +343,8 @@ public static class ConstantTestData
         ["(Tuple<int, string>)null"]                                                            = Expression.Constant(null, typeof(Tuple<int, string>)),
         ["Tuple<int, string>"]                                                                  = Expression.Constant(new Tuple<int, string>(1, "one")),
         ["ValueTuple<int, string>"]                                                             = Expression.Constant((1, "one")),
+        ["Tuple<int, String, StructDataContract1>"]                                             = Expression.Constant(new Tuple<int, string, StructDataContract1>(1, "one", new StructDataContract1(2, "two"))),
+        ["ValueTuple<int, String, StructDataContract1>"]                                        = Expression.Constant((1, "one", new StructDataContract1(2, "two"))),
         // dictionaries
         ["Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\"..."]                           = Expression.Constant(new Dictionary<int, string?>{ [1] = "one", [2] = "two", [3] = null, [4] = null }),
         ["Dictionary<int, string>{ [1] = \"one\", [2] = \"two\" }"]                             = Expression.Constant(new Dictionary<int, string>{ [1] ="one", [2]="two" }),

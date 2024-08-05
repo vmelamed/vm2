@@ -56,7 +56,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     /// Transforms enum values.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     XElement EnumTransform(
         object? nodeValue,
         Type nodeType)
@@ -77,7 +77,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     /// Transforms a nullable nullable.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     XElement NullableTransform(
         object? nodeValue,
         Type nodeType)
@@ -108,7 +108,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     /// Transforms an anonymous object.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     XElement AnonymousTransform(
         object? nodeValue,
         Type nodeType)
@@ -134,7 +134,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     /// Transforms sequences of bytes.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     /// <exception cref="InternalTransformErrorException"></exception>
     XElement ByteSequenceTransform(
         object? nodeValue,
@@ -185,7 +185,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     /// Transforms sequences of objects.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     XElement SequenceTransform(
         object? nodeValue,
         Type nodeType)
@@ -251,7 +251,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     /// Transforms v tuples.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     XElement TupleTransform(
         object? nodeValue,
         Type nodeType)
@@ -294,7 +294,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     /// Transforms dictionaries.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     XElement DictionaryTransform(
         object? nodeValue,
         Type nodeType)
@@ -348,7 +348,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     XElement ObjectTransform(
         object? nodeValue,
         Type nodeType)

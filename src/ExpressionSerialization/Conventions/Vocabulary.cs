@@ -55,7 +55,7 @@ public static class Vocabulary
     public const string NegInfinity             = "-INF";
     public const string Type                    = "type";
     public const string DeclaringType           = "declaringType";
-    public const string ConcreteType            = "concreteType";   // e.g. derived from ConstantExpression.GetElementType
+    public const string ConcreteType            = "concreteType";   // e.g. derived from ConstantExpression.GetType
     public const string BaseType                = "baseType";
     public const string Name                    = "name";
     public const string Key                     = "key";
@@ -288,4 +288,6 @@ public static class Vocabulary
     /// Maps names used in text documents to basic types.
     /// </summary>
     public static readonly FrozenDictionary<string, Type> NamesToTypes = EnumNamesToTypes().ToFrozenDictionary();
+
+    public static readonly FrozenSet<string> BasicTypeNames = NamesToTypes.Keys.ToFrozenSet();
 }

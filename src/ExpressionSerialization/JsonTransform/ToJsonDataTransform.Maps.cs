@@ -1,9 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
-#if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
-#endif
-
 partial class ToJsonDataTransform
 {
     /// <summary>

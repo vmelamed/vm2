@@ -1,9 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTransform;
 
-#if JSON_SCHEMA
-using Vocabulary = Conventions.Vocabulary;
-#endif
-
 delegate JElement TransformConstant(object? value, Type type);
 
 /// <summary>
@@ -63,7 +59,7 @@ partial class ToJsonDataTransform(JsonOptions options)
     /// Transforms enum values.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     JElement EnumTransform(
         object? nodeValue,
         Type nodeType)
@@ -98,7 +94,7 @@ partial class ToJsonDataTransform(JsonOptions options)
     /// Transforms a nodeValue nodeValue.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     JElement NullableTransform(
         object? nodeValue,
         Type nodeType)
@@ -124,7 +120,7 @@ partial class ToJsonDataTransform(JsonOptions options)
     /// Transforms sequences of bytes.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     /// <exception cref="InternalTransformErrorException"></exception>
     JElement ByteSequenceTransform(
         object? nodeValue,
@@ -175,7 +171,7 @@ partial class ToJsonDataTransform(JsonOptions options)
     /// Transforms an anonymous object.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     JElement AnonymousTransform(
         object? nodeValue,
         Type nodeType)
@@ -219,13 +215,11 @@ partial class ToJsonDataTransform(JsonOptions options)
         {
             var propValue = tuple[i];
             var declaredType = types[i];
-            var concreteType = propValue?.GetType() ?? declaredType;
 
             value.Add(
                 new JElement(
                         $"Item{i + 1}",
-                            new JElement(Vocabulary.Type, Transform.TypeName(declaredType)),
-                            new JElement(Vocabulary.Value, GetTransform(declaredType)(propValue, propValue?.GetType() ?? declaredType))
+                        GetTransform(declaredType)(propValue, propValue?.GetType() ?? declaredType)
                         ));
         }
 
@@ -236,7 +230,7 @@ partial class ToJsonDataTransform(JsonOptions options)
     /// Transforms sequences of objects.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     JElement SequenceTransform(
         object? nodeValue,
         Type nodeType)
@@ -285,7 +279,7 @@ partial class ToJsonDataTransform(JsonOptions options)
     /// Transforms dictionaries.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     JElement DictionaryTransform(
         object? nodeValue,
         Type nodeType)
@@ -342,7 +336,7 @@ partial class ToJsonDataTransform(JsonOptions options)
     /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>
-    /// <param name="nodeType">GetElementType of the node v.</param>
+    /// <param name="nodeType">GetType of the node v.</param>
     JElement ObjectTransform(
         object? nodeValue,
         Type nodeType)

@@ -237,6 +237,8 @@ public partial class ConstantTests
         { TestLine(), "(Tuple<int, string>)null",                                               "Tuple.Null.xml" },
         { TestLine(), "Tuple<int, string>",                                                     "Tuple.xml" },
         { TestLine(), "ValueTuple<int, string>",                                                "TupleValue.xml" },
+        { TestLine(), "Tuple<int, String, StructDataContract1>",                                "TupleWithStruct.xml" },
+        { TestLine(), "ValueTuple<int, String, StructDataContract1>",                           "TupleValueWithStruct.xml" },
         // dictionaries
         { TestLine(), "Dictionary<int, string?>{ [1] = \"one\", [2] = \"two\"...",              "DictionaryIntNullableString.xml" },
         { TestLine(), "Dictionary<int, string>{ [1] = \"one\", [2] = \"two\" }",                "DictionaryIntString.xml" },
