@@ -254,7 +254,7 @@ static partial class FromJsonDataTransform
         throw new SerializationException($"Don't know how to deserialize '{type.FullName}'.");
     }
 
-    struct DictBuildData(IDictionary dictionary, Type[] keyValueTypes, Func<IDictionary, object?> convert)
+    readonly struct DictBuildData(IDictionary dictionary, Type[] keyValueTypes, Func<IDictionary, object?> convert)
     {
         /// <summary>
         /// Gets or sets the initial dictionary to build.
