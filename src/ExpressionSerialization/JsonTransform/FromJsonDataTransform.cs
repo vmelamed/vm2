@@ -20,7 +20,7 @@ static partial class FromJsonDataTransform
         var type = element.GetType();
 
         if (type == typeof(void))
-            throw new SerializationException($"Got 'void' type of constant data in the element '{element.Name}'");
+            throw new SerializationException($"Got 'void' type of constant data in the element at '{element.GetPath()}'");
 
         var transform = GetTransformation(element);
         return (transform(element, ref type), type);
@@ -29,7 +29,7 @@ static partial class FromJsonDataTransform
     static Transformation GetTransformation(JElement element)
         => _constantTransformations.TryGetValue(element.Name, out var transform)
                 ? transform
-                : throw new SerializationException($"Error deserializing and converting to a strong type the value of the element '{element.Name}'.");
+                : throw new SerializationException($"Error deserializing and converting to a strong type the value at '{element.GetPath()}'.");
 
     static object? TransformEnum(
         JElement element,
@@ -39,28 +39,25 @@ static partial class FromJsonDataTransform
         {
             type = element.GetTypeFromProperty();
 
-            var value = element.GetChild(Vocabulary.Value).Value;
+            if (element.TryGetPropertyValue<string>(out var value)
+                && !string.IsNullOrWhiteSpace(value))
+                return Enum.Parse(type, value);
 
-            if (value is not null)
-            {
-                if (value.GetValueKind() == JsonValueKind.String)
-                    return Enum.Parse(type, value.AsValue().GetValue<string>());
-
-                if (value.GetValueKind() == JsonValueKind.Array &&
-                    value.AsArray().All(n => n?.GetValueKind() == JsonValueKind.String))
-                    return Enum.Parse(type, string.Join(", ", value.AsArray().Select(n => n?.GetValue<string>())));
-            }
+            if (element.TryGetArray(out var array)
+                && array is not null &&
+                array.All(n => n?.GetValueKind() == JsonValueKind.String))
+                return Enum.Parse(type, string.Join(", ", array.Select(n => n?.GetValue<string>())));
         }
         catch (ArgumentException ex)
         {
-            throw new SerializationException($"Cannot transform '{element.Value}' to '{type.FullName}' valueElement.", ex);
+            throw new SerializationException($"Cannot transform '{element.GetPath()}' to '{type.FullName}' valueElement.", ex);
         }
         catch (OverflowException ex)
         {
-            throw new SerializationException($"Cannot transform '{element.Value}' to '{type.FullName}' valueElement.", ex);
+            throw new SerializationException($"Cannot transform '{element.GetPath()}' to '{type.FullName}' valueElement.", ex);
         }
 
-        throw new SerializationException($"Could not convert the valueElement of property {element.Name} to '{type.FullName}'");
+        throw new SerializationException($"Could not convert the valueElement at '{element.GetPath()}' to '{type.FullName}'");
     }
 
     static object? TransformNullable(
@@ -108,9 +105,9 @@ static partial class FromJsonDataTransform
             concreteType = type;   // the element type IS the concrete type
 
         if (concreteType is null)
-            throw new SerializationException($"Unknown type at the element {element.Name}.");
+            throw new SerializationException($"Unknown type at '{element.GetPath()}'.");
 
-        var valueElement = element.GetChild(Vocabulary.Value);
+        var valueElement = element.GetElement(Vocabulary.Value);
 
         if (valueElement.IsNil())
             return null;
@@ -132,22 +129,22 @@ static partial class FromJsonDataTransform
 
         var constructor = type.GetConstructors()[0];
         var constructorParameters = constructor.GetParameters();
-        var valueElement = element.GetChild(Vocabulary.Value);
+        var valueElement = element.GetElement(Vocabulary.Value);
 
         if (valueElement.Value is null || valueElement.Value.GetValueKind() != JsonValueKind.Object)
-            throw new SerializationException($"Invalid value of element {element.Name}.");
+            throw new SerializationException($"Invalid value at '{element.GetPath()}'.");
 
         var value = valueElement.Value.AsObject();
 
         if (value.Count != constructorParameters.Length)
-            throw new SerializationException("The number of properties and the number of initialization parameters do not match for anonymous type.");
+            throw new SerializationException($"The number of properties and the number of initialization parameters do not match for anonymous type at '{element.GetPath()}'.");
 
         var parameters = new object?[constructorParameters.Length];
 
         for (var i = 0; i < constructorParameters.Length; i++)
         {
             var paramName = constructorParameters[i].Name ?? "";
-            var propElement = valueElement.GetChild(paramName).GetOneOf(ConstantTypes);
+            var propElement = valueElement.GetElement(paramName).GetOneOf(ConstantTypes);
             parameters[i] = ValueTransform(propElement).Item1;
         }
 
@@ -157,15 +154,21 @@ static partial class FromJsonDataTransform
     static object? TransformTuple(
         JElement element,
         ref Type type)
-        => Activator.CreateInstance(
+    {
+        if (element.IsNil())
+            return null;
+
+        return Activator.CreateInstance(
                     type,
                     element
-                        .GetChild(Vocabulary.Value)
+                        .GetElement()
                         .Value!
                         .AsObject()
                         .Where(kvp => kvp.Value is JsonObject)
-                        .Select(kvp => ValueTransform(new JElement(kvp).GetOneOf(ConstantTypes)).Item1)
+                        .Select(kvp => ValueTransform(kvp.Value?.AsObject()?.GetOneOf(ConstantTypes)
+                                                                ?? throw new SerializationException(kvp.Value?.AsObject().GetPath())).Item1)
                         .ToArray());
+    }
 
     static IEnumerable TransformToArray(
         Type elementType,
@@ -189,10 +192,11 @@ static partial class FromJsonDataTransform
         if (element.IsNil())
             return null;
 
-        var bytes = Convert.FromBase64String(element.Value?.GetValue<string>() ?? throw new SerializationException($"Could not find the Base64 string representation of the value for property {element.Name}"));
+        var bytes = Convert.FromBase64String(element.GetPropertyValue<string>()
+                        ?? throw new SerializationException($"Could not find the Base64 string representation of the value at '{element.GetPath()}'."));
 
         if (element.TryGetLength(out var length) && length != bytes.Length)
-            throw new SerializationException($"The actual length of byte sequence is different from the one specified in the element '{element.Name}'.");
+            throw new SerializationException($"The actual length of byte sequence is different from the one specified at '{element.GetPath()}'.");
 
         if (type == typeof(byte[]))
             return bytes;
@@ -215,36 +219,45 @@ static partial class FromJsonDataTransform
         if (element.IsNil())
             return null;
 
-        var collectionObj = element.GetChild(Vocabulary.Value);
-        var jArray = collectionObj.Value?.AsArray() ?? throw new SerializationException($"Could not get the array object at the property '{element.Name}'.");
-        int length = jArray.Count;
+        var jsArray = element.GetArray(Vocabulary.Value);
+        int length = jsArray.Count;
 
         if (element.TryGetLength(out var len) && len != length)
-            throw new SerializationException($"The actual length of a collection is different from the one specified in the element '{element.Name}'.");
+            throw new SerializationException($"The actual length of a collection is different from the one specified at '{element.GetPath()}'.");
 
         Type elementType = type.IsArray
-                                ? type.GetElementType() ?? throw new SerializationException($"Could not get the type of the array elements in the property '{element.Name}'.")
+                                ? type.GetElementType() ?? throw new SerializationException($"Could not get the type of the array elements at '{element.GetPath()}'.")
                                 : type.IsGenericType
                                     ? type.GetGenericArguments()[0]
-                                    : throw new SerializationException($"Could not get the type of the array elements in the property '{element.Name}'.");
+                                    : throw new SerializationException($"Could not get the type of the array elements at '{element.GetPath()}'.");
 
         if (elementType == typeof(void))
-            throw new SerializationException($"Constant expression's type specified as type 'void' '{element.Name}'.");
+            throw new SerializationException($"Constant expression's type specified as type 'void' at '{element.GetPath()}'.");
 
-        var elements = jArray
+        var elements = jsArray
                         .Select(
                             (e, i) =>
                             {
-                                var (elem, t) = ValueTransform(new JElement($"Item{i}", e));
+                                if (e is null)
+                                    return null;
+
+                                var (elem, t) = ValueTransform(e.AsObject()?.GetOneOf(ConstantTypes)
+                                                                    ?? throw new SerializationException($"Expected a JsonObject for each array item at '{e.GetPath()}'."));
 
                                 if (!elementType.IsAssignableFrom(t))
-                                    throw new SerializationException($"The actual type of the element at {element.Name}/{Vocabulary.Value}/[{i}] is not compatible with the array element type {elementType.FullName}");
+                                    throw new SerializationException($"The actual type of the element at '{e.GetPath()}' is not compatible with the array element type '{elementType.FullName}'");
 
                                 return elem;
                             });
 
-        // TODO: this is pretty wonky but I don't know how to detect the internal "SmallValueTypeComparableFrozenSet'1" or "SmallFrozenSet'1"
-        var genericType = type.Name.EndsWith("FrozenSet'1")
+        if (type.IsArray)
+            return TransformToArray(elementType, length, elements);
+
+        if (!type.IsGenericType)
+            throw new SerializationException($"The collection in `{element.Name}` must be either array or a generic collection.");
+
+        // TODO: this is pretty wonky but I don't know how to detect the internal "SmallValueTypeComparableFrozenSet`1" or "SmallFrozenSet`1"
+        var genericType = type.Name.EndsWith("FrozenSet`1")
                                 ? typeof(FrozenSet<>)
                                 : type.GetGenericTypeDefinition();
 
@@ -389,8 +402,8 @@ static partial class FromJsonDataTransform
         if (_typeToPrep.TryGetValue(genericType, out var prep))
             return prep(kvTypes);
         else
-        // TODO: this is pretty wonky but I don't know how to detect the internal "SmallValueTypeComparableFrozenDictionary'1" or "SmallFrozenDictionary'1"
-        if (dictType.Name.EndsWith("FrozenDictionary'2"))
+        // TODO: this is pretty wonky but I don't know how to detect the internal "SmallValueTypeComparableFrozenDictionary`2" or "SmallFrozenDictionary`2"
+        if (dictType.Name.EndsWith("FrozenDictionary`2"))
             return PrepForFrozenDictionary(kvTypes);
 
         throw new InternalTransformErrorException($"Don't know how to deserialize '{dictType}'.");
@@ -403,34 +416,33 @@ static partial class FromJsonDataTransform
         if (element.IsNil())
             return null;
 
-        var dictValue = element.GetValue()?.AsArray()
-                            ?? throw new SerializationException($"Could not get the dictionary at property '{element.Name}/{Vocabulary.Value}'");
+        var kvpArray = element.GetArray()
+                            ?? throw new SerializationException($"Could not get the dictionary at '{element.GetPath()}'.");
 
         var (dict, kvTypes, convertToFinal) = PrepForDictionary(type);
-        var i = -1;
-
-        foreach (JsonNode? kvElement in dictValue)
+        foreach (JsonObject? kvElement in kvpArray)
         {
-            i++;
+            if (kvElement is null)
+                throw new SerializationException($"Expected array of key-value objects at '{element.GetPath()}'.");
 
             var (key, kt) = ValueTransform(
                                 new JElement(
-                                    Vocabulary.Key,
-                                    kvElement?.AsObject().GetChildObject(Vocabulary.Key, $"at '{element.Name}/{Vocabulary.Value}/[{i}]/{Vocabulary.Key}'.")));
+                                        kvElement
+                                            .GetObject(Vocabulary.Key)
+                                            .GetOneOf(ConstantTypes)));
 
             if (key is null)
-                throw new SerializationException($"Could not transform a value of a key at '{element.Name}/{Vocabulary.Value}/[{i}]/{Vocabulary.Key}'.");
+                throw new SerializationException($"Could not transform a value of a key at '{kvElement.GetPath()}'.");
 
             if (!kt.IsAssignableTo(kvTypes[0]))
-                throw new SerializationException($"Invalid type of a key in '{element.Name}'.");
+                throw new SerializationException($"Invalid type of a key at '{kvElement.GetPath()}'.");
 
             var (value, vt) = ValueTransform(
                                 new JElement(
-                                    Vocabulary.Value,
-                                    kvElement?.AsObject().GetChildObject(Vocabulary.Value, $"at '{element.Name}/{Vocabulary.Value}/[{i}]/{Vocabulary.Value}'.")));
+                                        kvElement.GetObject(Vocabulary.Value).GetOneOf(ConstantTypes)));
 
             if (!vt.IsAssignableTo(kvTypes[1]))
-                throw new SerializationException($"Invalid type of a value in '{element.Name}'.");
+                throw new SerializationException($"Invalid type of a value at '{kvElement.GetPath()}'.");
 
             dict[key] = value;
         }

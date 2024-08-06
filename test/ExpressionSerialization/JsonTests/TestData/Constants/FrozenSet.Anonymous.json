@@ -76,7 +76,7 @@
                   "dateTime": "2013-01-13T00:00:00.0000000"
                 },
                 "TimeSpanProperty": {
-                  "duration": "PT0H0M0S"
+                  "duration": "P1DT2H3M4S"
                 },
                 "DateTimeOffsetProperty": {
                   "dateTimeOffset": "2013-01-13T00:00:00.0000000-05:00"
@@ -154,7 +154,7 @@
                   "dateTime": "2013-02-13T00:00:00.0000000"
                 },
                 "TimeSpanProperty": {
-                  "duration": "PT0H0M0S"
+                  "duration": "P1DT2H3M4S"
                 },
                 "DateTimeOffsetProperty": {
                   "dateTimeOffset": "2013-02-13T00:00:00.0000000-05:00"

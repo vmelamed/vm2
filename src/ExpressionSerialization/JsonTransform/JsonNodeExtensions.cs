@@ -189,28 +189,33 @@ public static class JsonNodeExtensions
     #endregion
 
     #region Get methods
+    // <summary>
+    //   Returns the value of a property with the specified name.
+    // </summary>
+    // <param name="propertyName">The name of the property to return.</param>
+    // <param name="jsonNode">The JSON value of the property with the specified name.</param>
+    // <returns>
+    //   <see langword="true"/> if a property with the specified name was found; otherwise, <see langword="false"/>.
+    // </returns>
+    // public bool TryGetPropertyValue(string propertyName, out JsonNode? jsonNode) => provided by the JsonObject class
+
     /// <summary>
     /// Gets the node of a property with the specified name <paramref name="propertyName"/>.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyName">The name of the property.</param>
-    /// <param name="failedNode">
-    /// Short text describing the node (e.g. parent node and property name) for which the method failed, and that will
-    /// be inserted in the exception message.
-    /// </param>
     /// <returns>JsonNode?.</returns>
     public static JsonNode? GetPropertyValue(
         this JsonObject jsObj,
-        string propertyName,
-        string failedNode = "")
+        string propertyName)
         => jsObj.TryGetPropertyValue(propertyName, out var node)
                 ? node
-                : throw new InternalTransformErrorException($"Could not find a property by name '{propertyName}'{failedNode}.");
+                : throw new InternalTransformErrorException($"Could not find a property by name '{propertyName}' at '{jsObj.GetPath()}'.");
 
     /// <summary>
     /// Gets the value of type <typeparamref name="T"/> of a property with the specified name <paramref name="propertyName"/>.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyName">The name of the property.</param>
     /// <param name="value">The output value.</param>
     /// <returns><c>true</c> if a property name and type was found, <c>false</c> otherwise.</returns>
@@ -228,25 +233,20 @@ public static class JsonNodeExtensions
     /// <summary>
     /// Gets the value of type <typeparamref name="T"/> of a property with the specified name <paramref name="propertyName"/>.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyName">The name of the property.</param>
-    /// <param name="failedNode">
-    /// Short text describing the node (e.g. parent node and property name) for which the method failed, and that will
-    /// be inserted in the exception message.
-    /// </param>
     /// <returns>JsonNode?.</returns>
     public static T? GetPropertyValue<T>(
         this JsonObject jsObj,
-        string propertyName,
-        string failedNode = "")
+        string propertyName)
         => jsObj.TryGetPropertyValue<T>(propertyName, out var value)
                 ? value
-                : throw new InternalTransformErrorException($"Could not find a property by name '{propertyName}'{failedNode}.");
+                : throw new InternalTransformErrorException($"Could not find a property by name '{propertyName}' at '{jsObj.GetPath()}'.");
 
     /// <summary>
     /// Tries to find a property with one of the names in the sequence <paramref name="names"/>.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="names">The names of the sought properties.</param>
     /// <param name="propertyName">Name of the found property.</param>
     /// <param name="node">The found node.</param>
@@ -268,29 +268,34 @@ public static class JsonNodeExtensions
     /// <summary>
     /// Gets a property with a name one of the names in <paramref name="names"/>.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="names">The names of the sought properties.</param>
-    /// <param name="failedNode">
-    /// Short text describing the node (e.g. parent node and property name) for which the method failed, and that will
-    /// be inserted in the exception message.
-    /// </param>
     /// <returns><c>true</c> if a property was found, <c>false</c> otherwise.</returns>
     public static (string, JsonNode?) GetOneOf(
         this JsonObject jsObj,
-        IEnumerable<string> names,
-        string failedNode = "")
+        IEnumerable<string> names)
         => jsObj.TryGetOneOf(names, out var propertyName, out var node)
                 ? (propertyName!, node)
-                : throw new SerializationException($"Could not find any of the properties '{string.Join("', '", names)}'{failedNode}.");
+                : throw new SerializationException($"Could not find any of the properties '{string.Join("', '", names)}' at '{jsObj.GetPath()}'.");
+
+    /// <summary>
+    /// Determines whether the js object was marked to have a <see langword="null"/> value.
+    /// </summary>
+    /// <param name="jsObj">The extended JsonObject.</param>
+    /// <returns><c>true</c> if the .NET node of the specified js object is <see langword="null"/>; otherwise, <c>false</c>.</returns>
+    public static bool IsNil(this JsonObject jsObj)
+        => TryGetValue(jsObj, out var value)
+            && (value is null
+                || value.GetValueKind() == JsonValueKind.Null);
 
     /// <summary>
     /// Tries to get the node of the JSON property 'Value'.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="node">The node.</param>
     /// <param name="propertyValueName">The name of the 'Value' property.</param>
     /// <returns><c>true</c> if property exists, <c>false</c> otherwise.</returns>
-    public static bool TryGetNode(
+    public static bool TryGetValue(
         this JsonObject jsObj,
         out JsonNode? node,
         string propertyValueName = Vocabulary.Value)
@@ -299,34 +304,19 @@ public static class JsonNodeExtensions
     /// <summary>
     /// Gets the node of the JSON property 'Value'.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
-    /// <param name="failedNode">
-    /// Short text describing the node (e.g. parent node and property name) for which the method failed, and that will
-    /// be inserted in the exception message.
-    /// </param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyValueName">The name of the 'Value' property.</param>
-    public static JsonNode? GetNode(
+    public static JsonNode? GetValue(
         this JsonObject jsObj,
-        string failedNode = "",
         string propertyValueName = Vocabulary.Value)
         => jsObj.TryGetPropertyValue(propertyValueName, out var value)
                 ? value
-                : throw new SerializationException($"Could not find the property '{propertyValueName}'{failedNode}.");
-
-    /// <summary>
-    /// Determines whether the js object was marked to have a <see langword="null"/> value.
-    /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
-    /// <returns><c>true</c> if the .NET node of the specified js object is <see langword="null"/>; otherwise, <c>false</c>.</returns>
-    public static bool IsNil(this JsonObject jsObj)
-        => !TryGetNode(jsObj, out var value)
-            || value is null
-            || value.GetValueKind() == JsonValueKind.Null;
+                : throw new SerializationException($"Could not find the property '{propertyValueName}' at '{jsObj.GetPath()}'.");
 
     /// <summary>
     /// Tries to get the node of the JSON property 'Length'.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="length">The obtained node.</param>
     /// <param name="propertyLengthName">The name of the property length.</param>
     /// <returns><c>true</c> if property exists, <c>false</c> otherwise.</returns>
@@ -335,38 +325,34 @@ public static class JsonNodeExtensions
         out int length,
         string propertyLengthName = Vocabulary.Length)
     {
+        if (jsObj.TryGetPropertyValue(propertyLengthName, out var len)
+            && len is not null)
+        {
+            length = len.AsValue().GetValue<int>();
+            return true;
+        }
+
         length = default;
-
-        if (!jsObj.TryGetPropertyValue(propertyLengthName, out var len)
-            || len is null)
-            return false;
-
-        length = len.AsValue().GetValue<int>();
-        return true;
+        return false;
     }
 
     /// <summary>
     /// Gets the node of the JSON property 'Length'.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyLengthName">The name of the property length.</param>
-    /// <param name="failedNode">
-    /// Short text describing the node (e.g. parent node and property name) for which the method failed, and that will
-    /// be inserted in the exception message.
-    /// </param>
     public static int GetLength(
         this JsonObject jsObj,
-        string failedNode = "",
         string propertyLengthName = Vocabulary.Length)
         => jsObj.TryGetLength(out var length, propertyLengthName)
                 ? length
-                : throw new SerializationException($"Could not find the property '{propertyLengthName}'{failedNode}.");
+                : throw new SerializationException($"Could not find the property '{propertyLengthName}' at '{jsObj.GetPath()}'.");
 
     /// <summary>
     /// Tries to get the type of the object, either from a property with a basic type name (e.g. 'int') or
     /// from a property with name 'Type'.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="type">The type.</param>
     /// <param name="propertyTypeName">Name of the property type.</param>
     /// <returns><c>true</c> if successfully determined the type of this JsonObject, <c>false</c> otherwise.</returns>
@@ -395,60 +381,95 @@ public static class JsonNodeExtensions
     /// Gets the type of the object, either from a property with a basic type name (e.g. 'int') or
     /// from a property with name 'Type'.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
-    /// <param name="failedNode">
-    /// Short text describing the node (e.g. parent node and property name) for which the method failed, and that will
-    /// be inserted in the exception message.
-    /// </param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyTypeName">Name of the property type.</param>
     /// <returns>Type.</returns>
     public static Type GetType(
         this JsonObject jsObj,
-        string failedNode = "",
         string propertyTypeName = Vocabulary.Type)
         => jsObj.TryGetType(out var type, propertyTypeName) && type is not null
                 ? type
-                : throw new SerializationException($"Could not find a property that defines the type of the object{failedNode}.");
+                : throw new SerializationException($"Could not find a property that defines the type of the object at '{jsObj.GetPath()}'.");
 
     /// <summary>
-    /// Tries to get a child JsonObject node from property <paramref name="propertyName"/>.
+    /// Tries to get a array JsonObject node from property <paramref name="propertyName"/>.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
-    /// <param name="propertyName">Name of the child.</param>
-    /// <param name="child">The found child.</param>
-    /// <returns><c>true</c> if JsonObject child node was found, <c>false</c> otherwise.</returns>
-    public static bool TryGetChildObject(
+    /// <param name="jsObj">The extended JsonObject.</param>
+    /// <param name="propertyName">Name of the property holding the JsonObject.</param>
+    /// <param name="child">The found array.</param>
+    /// <returns><c>true</c> if JsonObject array node was found, <c>false</c> otherwise.</returns>
+    public static bool TryGetObject(
         this JsonObject jsObj,
         string propertyName,
         out JsonObject? child)
-        => jsObj.TryGetPropertyValue<JsonObject>(propertyName, out child);
+    {
+        if (jsObj.TryGetPropertyValue(propertyName, out var node)
+            && node is JsonObject or null)
+        {
+            child = node as JsonObject;
+            return true;
+        }
+        child = null;
+        return false;
+    }
 
     /// <summary>
-    /// Gets a child JsonObject node from property <paramref name="propertyName"/>.
+    /// Gets a array JsonObject node from property <paramref name="propertyName"/>.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
-    /// <param name="propertyName">Name of the child.</param>
-    /// <param name="failedNode">
-    /// Short text describing the node (e.g. parent node and property name) for which the method failed, and that will
-    /// be inserted in the exception message.
-    /// </param>
+    /// <param name="jsObj">The extended JsonObject.</param>
+    /// <param name="propertyName">Name of the property holding the JsonObject.</param>
     /// <returns>JsonObject</returns>
-    public static JsonObject GetChildObject(
+    public static JsonObject GetObject(
+        this JsonObject jsObj,
+        string propertyName)
+        => jsObj.TryGetObject(propertyName, out var child) && child is not null
+                ? child
+                : throw new SerializationException($"Could not find a JsonObject property '{propertyName}' at '{jsObj.GetPath()}'.");
+
+    /// <summary>
+    /// Tries to get a JsonArray node from property <paramref name="propertyName"/>.
+    /// </summary>
+    /// <param name="jsObj">The extended JsonObject.</param>
+    /// <param name="propertyName">Name of the array.</param>
+    /// <param name="array">The found array.</param>
+    /// <returns><c>true</c> if JsonArray node was found, <c>false</c> otherwise.</returns>
+    public static bool TryGetArray(
         this JsonObject jsObj,
         string propertyName,
-        string failedNode = "")
-        => jsObj.TryGetChildObject(propertyName, out var child) && child is not null
-                ? child
-                : throw new SerializationException($"Could not find a JsonObject property '{propertyName}'{failedNode}.");
+        out JsonArray? array)
+    {
+        if (jsObj.TryGetPropertyValue(propertyName, out var node)
+            && node is JsonArray or null)
+        {
+            array = node as JsonArray;
+            return true;
+        }
+
+        array = default;
+        return false;
+    }
 
     /// <summary>
-    /// Tries to get the first JsonObject child node.
+    /// Gets a JsonArray node from property <paramref name="propertyName"/>.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
-    /// <param name="propertyName">Name of the property where the found child is.</param>
-    /// <param name="child">The found child.</param>
-    /// <returns><c>true</c> if JsonObject child node was found, <c>false</c> otherwise.</returns>
-    public static bool TryGetChildObject(
+    /// <param name="jsObj">The extended JsonObject.</param>
+    /// <param name="propertyName">Name of the property holding the array.</param>
+    /// <returns>JsonObject</returns>
+    public static JsonArray GetArray(
+        this JsonObject jsObj,
+        string propertyName)
+        => jsObj.TryGetArray(propertyName, out var array) && array is not null
+                ? array
+                : throw new SerializationException($"Could not find a JsonArray property '{propertyName}' at '{jsObj.GetPath()}'.");
+
+    /// <summary>
+    /// Tries to get the first JsonObject array node.
+    /// </summary>
+    /// <param name="jsObj">The extended JsonObject.</param>
+    /// <param name="propertyName">Name of the property where the found array is.</param>
+    /// <param name="child">The found array.</param>
+    /// <returns><c>true</c> if JsonObject array node was found, <c>false</c> otherwise.</returns>
+    public static bool TryGetFirstObject(
         this JsonObject jsObj,
         out string? propertyName,
         out JsonObject? child)
@@ -461,21 +482,16 @@ public static class JsonNodeExtensions
     }
 
     /// <summary>
-    /// Gets the first JsonObject child node.
+    /// Gets the first JsonObject array node.
     /// </summary>
-    /// <param name="jsObj">The JsonObject.</param>
-    /// <param name="failedNode">
-    /// Short text describing the node (e.g. parent node and property name) for which the method failed, and that will
-    /// be inserted in the exception message.
-    /// </param>
+    /// <param name="jsObj">The extended JsonObject.</param>
     /// <returns>JsonObject</returns>
-    public static (string, JsonObject) GetChildObject(
-        this JsonObject jsObj,
-        string failedNode = "")
-        => jsObj.TryGetChildObject(out var name, out var obj) &&
+    public static (string, JsonObject) GetFirstObject(
+        this JsonObject jsObj)
+        => jsObj.TryGetFirstObject(out var name, out var obj) &&
            name is not null
             && obj is not null
                 ? (name, obj)
-                : throw new SerializationException($"Could not find a child JsonObject property{failedNode}");
+                : throw new SerializationException($"Could not find a JsonObject property at '{jsObj.GetPath()}'");
     #endregion
 }

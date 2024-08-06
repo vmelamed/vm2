@@ -56,87 +56,54 @@ static partial class FromJsonDataTransform
     }
 
     static double JsonToDouble(JElement x)
-    {
-        if (x.Value?.AsValue()?.GetValueKind() is JsonValueKind.String)
-        {
-            var fpStr = x.Value.AsValue().GetValue<string>();
-
-            return fpStr switch {
-                Vocabulary.NaN => double.NaN,
-                Vocabulary.NegInfinity => double.NegativeInfinity,
-                Vocabulary.PosInfinity => double.PositiveInfinity,
-                _ => double.Parse(fpStr)
-            };
-        }
-
-        return x.GetValue<double>();
-    }
+        => x.TryGetValue<string>(out var fpStr)
+                ? fpStr switch {
+                    Vocabulary.NaN => double.NaN,
+                    Vocabulary.NegInfinity => double.NegativeInfinity,
+                    Vocabulary.PosInfinity => double.PositiveInfinity,
+                    _ => double.Parse(fpStr!)
+                }
+                : x.GetValue<double>();
 
     static float JsonToFloat(JElement x)
-    {
-        if (x.Value?.AsValue()?.GetValueKind() is JsonValueKind.String)
-        {
-            var fpStr = x.Value.AsValue().GetValue<string>();
-
-            return fpStr switch {
+        => x.TryGetValue<string>(out var fpStr)
+            ? fpStr switch {
                 Vocabulary.NaN => float.NaN,
                 Vocabulary.NegInfinity => float.NegativeInfinity,
                 Vocabulary.PosInfinity => float.PositiveInfinity,
-                _ => float.Parse(fpStr)
-            };
-        }
-
-        return x.GetValue<float>();
-    }
+                _ => float.Parse(fpStr!)
+            }
+            : x.GetValue<float>();
 
     static Half JsonToHalf(JElement x)
-    {
-        if (x.Value?.AsValue()?.GetValueKind() is JsonValueKind.String)
-        {
-            var fpStr = x.Value.AsValue().GetValue<string>();
-
-            return fpStr switch {
+        => x.TryGetValue<string>(out var fpStr)
+            ? fpStr switch {
                 Vocabulary.NaN => Half.NaN,
                 Vocabulary.NegInfinity => Half.NegativeInfinity,
                 Vocabulary.PosInfinity => Half.PositiveInfinity,
-                _ => Half.Parse(fpStr)
-            };
-        }
-
-        return (Half)x.GetValue<float>();
-    }
+                _ => Half.Parse(fpStr!)
+            }
+            : (Half)x.GetValue<float>();
 
     static long JsonToLong(JElement x)
-    {
-        var value = x.Value ?? throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `long` - the valueElement is `null`.");
-
-        if (value.GetValueKind() == JsonValueKind.Number)
-            return x.Value.GetValue<long>();
-        else
-        if (value.GetValueKind() == JsonValueKind.String)
-            return long.Parse(x.Value.GetValue<string>());
-        else
-            throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `long` - unexpected JSON type {value.GetValueKind()}.");
-    }
+        => x.Value?.GetValueKind() switch {
+            JsonValueKind.Number => x.GetValue<long>(),
+            JsonValueKind.String => long.Parse(x.GetValue<string>()!),
+            _ => throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `long` - unexpected JSON type {x.Value?.GetValueKind()}."),
+        };
 
     static ulong JsonToULong(JElement x)
-    {
-        var value = x.Value ?? throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `ulong` - the valueElement is `null`.");
-
-        if (value.GetValueKind() == JsonValueKind.Number)
-            return x.Value.GetValue<ulong>();
-        else
-        if (value.GetValueKind() == JsonValueKind.String)
-            return ulong.Parse(x.Value.GetValue<string>());
-        else
-            throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `ulong` - unexpected JSON type {value.GetValueKind()}.");
-    }
+        => x.Value?.GetValueKind() switch {
+            JsonValueKind.Number => x.GetValue<ulong>(),
+            JsonValueKind.String => ulong.Parse(x.GetValue<string>()!),
+            _ => throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `unsigned long` - unexpected JSON type {x.Value?.GetValueKind()}."),
+        };
 
     static IntPtr JsonToIntPtr(JElement x)
     {
-        if (x.Value?.AsValue()?.GetValueKind() is JsonValueKind.String)
+        if (x.GetValueKind() is JsonValueKind.String)
         {
-            var ptrStr = x.Value.AsValue().GetValue<string>();
+            var ptrStr = x.GetValue<string>();
 
             if (string.IsNullOrWhiteSpace(ptrStr))
                 throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `IntPtr` - the string is `null`, or empty, or consists of whitespaces only.");
@@ -155,9 +122,9 @@ static partial class FromJsonDataTransform
 
     static UIntPtr JsonToUIntPtr(JElement x)
     {
-        if (x.Value?.AsValue()?.GetValueKind() is JsonValueKind.String)
+        if (x.GetValueKind() is JsonValueKind.String)
         {
-            var ptrStr = x.Value?.AsValue()?.GetValue<string>();
+            var ptrStr = x.GetValue<string>();
 
             if (string.IsNullOrWhiteSpace(ptrStr))
                 throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `IntPtr` - the string is `null`, or empty, or consists of whitespaces only.");
@@ -176,10 +143,8 @@ static partial class FromJsonDataTransform
 
     static string GetJsonStringToParse(JElement x, string typeName)
     {
-        if (x.Value?.AsValue()?.GetValueKind() is not JsonValueKind.String)
+        if (!x.TryGetValue<string>(out var str))
             throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `{typeName}` - the JSON valueElement is not string.");
-
-        var str = x.Value?.AsValue()?.GetValue<string>();
 
         if (string.IsNullOrWhiteSpace(str))
             throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `{typeName}` - the JSON string is a null, empty, or consists of whitespace characters only.");

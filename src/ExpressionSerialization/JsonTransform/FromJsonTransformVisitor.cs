@@ -22,7 +22,7 @@ public partial class FromJsonTransformVisitor
     /// <param name="e">The J element which value's first JsonObject to visit.</param>
     /// <returns>Expression.</returns>
     protected virtual Expression VisitFirstJsonObject(JElement e)
-        => Visit(e.GetChildObject());
+        => Visit(e.GetFirstElement());
 
     /// <summary>
     /// Visits a JSON element representing a constant expression, e.g. `42`.
@@ -71,9 +71,9 @@ public partial class FromJsonTransformVisitor
     ///// <returns>The <see cref="LambdaExpression"/> represented by the element.</returns>
     //protected virtual LambdaExpression VisitLambda(JElement e)
     //    => Expression.Lambda(
-    //                        VisitChild(e.GetChild(Vocabulary.Body)),
+    //                        VisitChild(e.GetElement(Vocabulary.Body)),
     //                        JsonConvert.ToBoolean(e.Attribute(AttributeNames.TailCall)?.Value ?? "false"),
-    //                        VisitParameterList(e.GetChild(Vocabulary.Parameters)));
+    //                        VisitParameterList(e.GetElement(Vocabulary.Parameters)));
 
     ///// <summary>
     ///// Visits an Json element representing a unary expression, e.g. `-a`.
@@ -85,7 +85,7 @@ public partial class FromJsonTransformVisitor
     //                        e.ExpressionType(),
     //                        VisitChild(e),
     //                        e.GetETypeFromAttribute(),
-    //                        e.TryGetChildObject(Vocabulary.Method, out var method) ? VisitMemberInfo(method) as MethodInfo : null);
+    //                        e.TryGetFirstElement(Vocabulary.Method, out var method) ? VisitMemberInfo(method) as MethodInfo : null);
 
     ///// <summary>
     ///// Visits an Json element representing a binary expression, e.g. `a + b`.
@@ -98,7 +98,7 @@ public partial class FromJsonTransformVisitor
     //                        VisitChild(e, 0),
     //                        VisitChild(e, 1),
     //                        JsonConvert.ToBoolean(e.Attribute(AttributeNames.IsLiftedToNull)?.Value ?? "false"),
-    //                        e.TryGetChildObject(Vocabulary.Method, out var method) ? VisitMemberInfo(method) as MethodInfo : null,
+    //                        e.TryGetFirstElement(Vocabulary.Method, out var method) ? VisitMemberInfo(method) as MethodInfo : null,
     //                        e.Element(ElementNames.Convert) is JElement convert ? Visit(convert) as LambdaExpression : null);
 
     ///// <summary>
@@ -135,7 +135,7 @@ public partial class FromJsonTransformVisitor
     ///// <param name="e">The e.</param>
     ///// <returns>System.Collections.Generic.IEnumerable&lt;System.Linq.Expressions.Expression&gt;.</returns>
     //protected virtual IEnumerable<Expression> VisitIndexes(JElement e)
-    //    => e.GetChild(Vocabulary.Indexes)
+    //    => e.GetElement(Vocabulary.Indexes)
     //                        .Elements()
     //                        .Select(Visit);
 
@@ -146,7 +146,7 @@ public partial class FromJsonTransformVisitor
     ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
     //protected virtual BlockExpression VisitBlock(JElement e)
     //    => Expression.Block(
-    //                        (e.TryGetChildObject(Vocabulary.Variables, out var vars) ? vars : null)?
+    //                        (e.TryGetFirstElement(Vocabulary.Variables, out var vars) ? vars : null)?
     //                         .Elements()?
     //                         .Select(v => VisitParameter(v, Vocabulary.Parameter)),
     //                        e.Elements()
@@ -214,8 +214,8 @@ public partial class FromJsonTransformVisitor
     //    => Expression.MakeMemberAccess(
     //                        VisitChild(e, 0),
     //                        VisitMemberInfo(
-    //                            e.TryGetChildObject(Vocabulary.Property, out var mem) ||
-    //                            e.TryGetChildObject(Vocabulary.Field, out mem) ? mem : throw new SerializationException($"Could not deserialize `property` or `field` in `{e.Name}`"))
+    //                            e.TryGetFirstElement(Vocabulary.Property, out var mem) ||
+    //                            e.TryGetFirstElement(Vocabulary.Field, out mem) ? mem : throw new SerializationException($"Could not deserialize `property` or `field` in `{e.Name}`"))
     //                                    ?? throw new SerializationException($"Could not deserialize `MemberInfo` in `{e.Name}`"));
 
     ///// <summary>
@@ -225,16 +225,16 @@ public partial class FromJsonTransformVisitor
     ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
     //protected virtual MethodCallExpression VisitMethodCall(JElement e)
     //{
-    //    var child = e.GetChild(0);
+    //    var child = e.GetElement(0);
 
     //    return child.Name.LocalName == Vocabulary.Method
     //                ? Expression.Call(
     //                        VisitMemberInfo(child) as MethodInfo ?? throw new SerializationException($"Could not deserialize `MethodInfo` from `{e.Name}`"),
-    //                        e.GetChild(Vocabulary.Arguments).Elements().Select(Visit))
+    //                        e.GetElement(Vocabulary.Arguments).Elements().Select(Visit))
     //                : Expression.Call(
     //                        Visit(child),
-    //                        VisitMemberInfo(e.GetChild(Vocabulary.Method)) as MethodInfo ?? throw new SerializationException($"Could not deserialize `MethodInfo` from `{e.Name}`"),
-    //                        e.GetChild(Vocabulary.Arguments).Elements().Select(Visit));
+    //                        VisitMemberInfo(e.GetElement(Vocabulary.Method)) as MethodInfo ?? throw new SerializationException($"Could not deserialize `MethodInfo` from `{e.Name}`"),
+    //                        e.GetElement(Vocabulary.Arguments).Elements().Select(Visit));
     //}
 
     ///// <summary>
@@ -255,8 +255,8 @@ public partial class FromJsonTransformVisitor
     ///// <exception cref="SerializationException">$"Expected element with name `{expectedName}` but got `{e.Name.LocalName}`.</exception>
     //protected virtual LabelExpression VisitLabel(JElement e)
     //    => Expression.Label(
-    //                        VisitLabelTarget(e.GetChild(Vocabulary.LabelTarget)),
-    //                        e.TryGetChildObject(1, out var value) && value != null ? Visit(value) : null);
+    //                        VisitLabelTarget(e.GetElement(Vocabulary.LabelTarget)),
+    //                        e.TryGetFirstElement(1, out var value) && value != null ? Visit(value) : null);
 
     ///// <summary>
     ///// Visits an Json element representing a `LabelTarget` expression.
@@ -275,14 +275,14 @@ public partial class FromJsonTransformVisitor
     ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
     //protected virtual GotoExpression VisitGoto(JElement e)
     //{
-    //    var target = VisitLabelTarget(e.GetChild(Vocabulary.LabelTarget));
+    //    var target = VisitLabelTarget(e.GetElement(Vocabulary.LabelTarget));
 
     //    return Expression.MakeGoto(
     //                        Enum.Parse<GotoExpressionKind>(
     //                                e.Attribute(AttributeNames.Kind)?.Value ?? throw new SerializationException($"Could not get the kind of the goto expression from `{e.Name}`."),
     //                                true),
     //                        target,
-    //                        e.TryGetChildObject(1, out var ve) && ve is not null ? Visit(ve) : null,
+    //                        e.TryGetFirstElement(1, out var ve) && ve is not null ? Visit(ve) : null,
     //                        target.Type);
     //}
 
@@ -294,10 +294,10 @@ public partial class FromJsonTransformVisitor
     //protected virtual Expression VisitLoop(JElement e)
     //    => Expression.Loop(
     //                        VisitChild(e, 0),
-    //                        e.TryGetChildObject(Vocabulary.BreakLabel, out var breakLabel) && breakLabel is not null
+    //                        e.TryGetFirstElement(Vocabulary.BreakLabel, out var breakLabel) && breakLabel is not null
     //                                    ? VisitLabel(breakLabel).Target
     //                                    : null,
-    //                        e.TryGetChildObject(Vocabulary.ContinueLabel, out var continueLabel) && continueLabel is not null
+    //                        e.TryGetFirstElement(Vocabulary.ContinueLabel, out var continueLabel) && continueLabel is not null
     //                                    ? VisitLabel(continueLabel).Target
     //                                    : null);
 
@@ -310,8 +310,8 @@ public partial class FromJsonTransformVisitor
     //    => Expression.Switch(
     //                        e.TryGetETypeFromAttribute(out var type) ? type : null,
     //                        VisitChild(e, 0),
-    //                        e.TryGetChildObject(Vocabulary.DefaultCase, out var elem) && elem is not null ? Visit(elem.GetChild(0)) : null,
-    //                        e.TryGetChildObject(Vocabulary.Method, out var comp) ? VisitMemberInfo(comp) as MethodInfo : null,
+    //                        e.TryGetFirstElement(Vocabulary.DefaultCase, out var elem) && elem is not null ? Visit(elem.GetElement(0)) : null,
+    //                        e.TryGetFirstElement(Vocabulary.Method, out var comp) ? VisitMemberInfo(comp) as MethodInfo : null,
     //                        e.Elements(ElementNames.Case).Select(VisitSwitchCase));
 
     ///// <summary>
@@ -333,8 +333,8 @@ public partial class FromJsonTransformVisitor
     //    => Expression.MakeTry(
     //                        e.TryGetETypeFromAttribute(out var type) ? type : null,
     //                        VisitChild(e, 0),
-    //                        e.TryGetChildObject(Vocabulary.Finally, out var final) && final is not null ? Visit(final.GetChild(0)) : null,
-    //                        e.TryGetChildObject(Vocabulary.Fault, out var catchAll) && catchAll is not null ? Visit(catchAll.GetChild(0)) : null,
+    //                        e.TryGetFirstElement(Vocabulary.Finally, out var final) && final is not null ? Visit(final.GetElement(0)) : null,
+    //                        e.TryGetFirstElement(Vocabulary.Fault, out var catchAll) && catchAll is not null ? Visit(catchAll.GetElement(0)) : null,
     //                        e.Elements(ElementNames.Catch).Select(VisitCatchBlock));
 
     ///// <summary>
@@ -345,13 +345,13 @@ public partial class FromJsonTransformVisitor
     //protected virtual CatchBlock VisitCatchBlock(JElement e)
     //    => Expression.MakeCatchBlock(
     //                        e.GetETypeFromAttribute(),
-    //                        e.TryGetChildObject(Vocabulary.Exception, out var exc) && exc is not null ? VisitParameter(exc) : null,
+    //                        e.TryGetFirstElement(Vocabulary.Exception, out var exc) && exc is not null ? VisitParameter(exc) : null,
     //                        e.Elements()
     //                         .Where(e => e.Name.LocalName is not Vocabulary.Exception
     //                                                     and not Vocabulary.Filter)
     //                         .Select(Visit)
     //                         .Single(),
-    //                        e.TryGetChildObject(Vocabulary.Filter, out var f) && f is not null ? Visit(f.GetChild(0)) : null);
+    //                        e.TryGetFirstElement(Vocabulary.Filter, out var f) && f is not null ? Visit(f.GetElement(0)) : null);
 
     ///// <summary>
     ///// Visits an Json element representing a member init expression, e.g. the part `Name = "abc"` or `List = new() { 1, 2, 3 }` from the
@@ -361,8 +361,8 @@ public partial class FromJsonTransformVisitor
     ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
     //protected virtual MemberInitExpression VisitMemberInit(JElement e)
     //    => Expression.MemberInit(
-    //                        VisitNew(e.GetChild(0)),
-    //                        e.GetChild(Vocabulary.Bindings).Elements().Select(VisitBinding));
+    //                        VisitNew(e.GetElement(0)),
+    //                        e.GetElement(Vocabulary.Bindings).Elements().Select(VisitBinding));
 
     //#region MemberBindings
     ///// <summary>
@@ -372,8 +372,8 @@ public partial class FromJsonTransformVisitor
     ///// <returns>System.Linq.Expressions.MemberBinding.</returns>
     //protected virtual MemberBinding VisitBinding(JElement e)
     //{
-    //    if (!e.TryGetChildObject(Vocabulary.Property, out var mi) &&
-    //        !e.TryGetChildObject(Vocabulary.Field, out mi))
+    //    if (!e.TryGetFirstElement(Vocabulary.Property, out var mi) &&
+    //        !e.TryGetFirstElement(Vocabulary.Field, out mi))
     //        throw new SerializationException($"Could not deserialize member info from `{e.Name}`");
 
     //    return e.Name.LocalName switch {
@@ -401,8 +401,8 @@ public partial class FromJsonTransformVisitor
     ///// <returns>System.Linq.Expressions.ElementInit.</returns>
     //protected virtual ElementInit VisitElementInit(JElement e)
     //    => Expression.ElementInit(
-    //                VisitMemberInfo(e.GetChild(0)) as MethodInfo ?? throw new SerializationException($"Could not deserialize member info from `{e.Name}`"),
-    //                e.GetChild(Vocabulary.Arguments)
+    //                VisitMemberInfo(e.GetElement(0)) as MethodInfo ?? throw new SerializationException($"Could not deserialize member info from `{e.Name}`"),
+    //                e.GetElement(Vocabulary.Arguments)
     //                 .Elements()
     //                 .Select(Visit));
 
@@ -413,8 +413,8 @@ public partial class FromJsonTransformVisitor
     ///// <returns>System.Linq.Expressions.ListInitExpression.</returns>
     //protected virtual ListInitExpression VisitListInit(JElement e)
     //    => Expression.ListInit(
-    //            VisitNew(e.GetChild(Vocabulary.New)),
-    //            e.GetChild(Vocabulary.Initializers)
+    //            VisitNew(e.GetElement(Vocabulary.New)),
+    //            e.GetElement(Vocabulary.Initializers)
     //             .Elements()
     //             .Select(VisitElementInit));
 
@@ -426,7 +426,7 @@ public partial class FromJsonTransformVisitor
     //protected virtual NewArrayExpression VisitNewArrayInit(JElement e)
     //    => Expression.NewArrayInit(
     //            e.GetEType(),
-    //            e.GetChild(Vocabulary.ArrayElements)
+    //            e.GetElement(Vocabulary.ArrayElements)
     //             .Elements()
     //             .Select(Visit));
 
@@ -438,7 +438,7 @@ public partial class FromJsonTransformVisitor
     //protected virtual NewArrayExpression VisitNewArrayBounds(JElement e)
     //    => Expression.NewArrayBounds(
     //            e.GetEType(),
-    //            e.GetChild(Vocabulary.Bounds)
+    //            e.GetElement(Vocabulary.Bounds)
     //             .Elements()
     //             .Select(Visit));
     #endregion
