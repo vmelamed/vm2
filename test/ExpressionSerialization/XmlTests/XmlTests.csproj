@@ -5,8 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Remove="TestData\**" />
         <Compile Remove="ToExpressionTests\**" />
+        <EmbeddedResource Remove="TestData\**" />
         <EmbeddedResource Remove="ToExpressionTests\**" />
+        <None Remove="TestData\**" />
         <None Remove="ToExpressionTests\**" />
     </ItemGroup>
 
@@ -35,16 +38,6 @@
 
     <ItemGroup>
         <Using Include="Xunit" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="TestData\Assignments\" />
-        <Folder Include="TestData\Binary\" />
-        <Folder Include="TestData\ChangeByOne\" />
-        <Folder Include="TestData\Constants\" />
-        <Folder Include="TestData\Lambdas\" />
-        <Folder Include="TestData\Statements\" />
-        <Folder Include="TestData\Unary\" />
     </ItemGroup>
 
 </Project>

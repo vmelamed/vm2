@@ -7,11 +7,13 @@ public partial class ConstantTests(XmlTestsFixture fixture, ITestOutputHelper ou
 
     [Theory]
     [MemberData(nameof(ConstantsData))]
-    public async Task ConstantToXmlTestAsync(string testFileLine, string expressionString, string fileName) => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
+    public async Task ConstantToXmlTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
 
     [Theory]
     [MemberData(nameof(ConstantsData))]
-    public async Task ConstantFromXmlTestAsync(string testFileLine, string expressionString, string fileName) => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
+    public async Task ConstantFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
+        => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
     [Fact]
     public async Task TestConstantToXmlClassNonSerializableAsync()

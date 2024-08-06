@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
-using System.Linq.Expressions;
-
 [CollectionDefinition("XML")]
 public partial class AssignmentTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)
 {
@@ -19,22 +17,22 @@ public partial class AssignmentTests(XmlTestsFixture fixture, ITestOutputHelper 
 
     public static readonly TheoryData<string, string, string> AssignmentsData = new ()
     {
-        { TestLine(), "a = 1",              "AssignConstant.xml" },
-        { TestLine(), "a = b",              "AssignVariable.xml" },
-        { TestLine(), "a += b",             "AddAssign.xml" },
-        { TestLine(), "checked(a += b)",    "AddAssignChecked.xml" },
-        { TestLine(), "a -= b",             "SubtractAssign.xml" },
-        { TestLine(), "checked(a -= b)",    "SubtractAssignChecked.xml" },
-        { TestLine(), "a *= b",             "MultiplyAssign.xml" },
-        { TestLine(), "checked(a *= b)",    "MultiplyAssignChecked.xml" },
-        { TestLine(), "a /= b",             "DivideAssign.xml" },
-        { TestLine(), "a %= b",             "ModuloAssign.xml" },
-        { TestLine(), "a &= b",             "AndAssign.xml" },
-        { TestLine(), "a |= b",             "OrAssign.xml" },
-        { TestLine(), "a ^= b",             "XorAssign.xml" },
-        { TestLine(), "x **= z",            "PowerAssign.xml" },
-        { TestLine(), "a <<= b",            "LShiftAssign.xml" },
-        { TestLine(), "a >>= b",            "RShiftAssign.xml" },
+        { TestLine(), "a = 1",              "AssignConstant.json" },
+        { TestLine(), "a = b",              "AssignVariable.json" },
+        { TestLine(), "a += b",             "AddAssign.json" },
+        { TestLine(), "checked(a += b)",    "AddAssignChecked.json" },
+        { TestLine(), "a -= b",             "SubtractAssign.json" },
+        { TestLine(), "checked(a -= b)",    "SubtractAssignChecked.json" },
+        { TestLine(), "a *= b",             "MultiplyAssign.json" },
+        { TestLine(), "checked(a *= b)",    "MultiplyAssignChecked.json" },
+        { TestLine(), "a /= b",             "DivideAssign.json" },
+        { TestLine(), "a %= b",             "ModuloAssign.json" },
+        { TestLine(), "a &= b",             "AndAssign.json" },
+        { TestLine(), "a |= b",             "OrAssign.json" },
+        { TestLine(), "a ^= b",             "XorAssign.json" },
+        { TestLine(), "x **= z",            "PowerAssign.json" },
+        { TestLine(), "a <<= b",            "LShiftAssign.json" },
+        { TestLine(), "a >>= b",            "RShiftAssign.json" },
     };
 
     protected override Expression Substitute(string id) => AssignmentTestData.GetExpression(id);

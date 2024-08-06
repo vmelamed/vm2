@@ -17,12 +17,12 @@ public partial class ChangeByOneTests(JsonTestsFixture fixture, ITestOutputHelpe
 
     public static readonly TheoryData<string, string, string> ChangeByOneExpressionData = new ()
     {
-        { TestLine(), "a => increment(a)", "Increment.json" },
-        { TestLine(), "a => decrement(a)", "Decrement.json" },
-        { TestLine(), "a => ++a",          "PreIncrementAssign.json" },
-        { TestLine(), "a => a++",          "PostIncrementAssign.json" },
-        { TestLine(), "a => --a",          "PreDecrementAssign.json" },
-        { TestLine(), "a => a--",          "PostDecrementAssign.json" },
+        { TestLine(), "a => increment(a)", "Increment" },
+        { TestLine(), "a => decrement(a)", "Decrement" },
+        { TestLine(), "a => ++a",          "PreIncrementAssign" },
+        { TestLine(), "a => a++",          "PostIncrementAssign" },
+        { TestLine(), "a => --a",          "PreDecrementAssign" },
+        { TestLine(), "a => a--",          "PostDecrementAssign" },
     };
 
     protected override Expression Substitute(string id) => ChangeByOneTestData.GetExpression(id);

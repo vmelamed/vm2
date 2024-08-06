@@ -17,12 +17,12 @@ public partial class ChangeByOneTests(XmlTestsFixture fixture, ITestOutputHelper
 
     public static readonly TheoryData<string, string, string> ChangeByOneExpressionData = new ()
     {
-        { TestLine(), "a => increment(a)", "Increment.xml" },
-        { TestLine(), "a => decrement(a)", "Decrement.xml" },
-        { TestLine(), "a => ++a",          "PreIncrementAssign.xml" },
-        { TestLine(), "a => a++",          "PostIncrementAssign.xml" },
-        { TestLine(), "a => --a",          "PreDecrementAssign.xml" },
-        { TestLine(), "a => a--",          "PostDecrementAssign.xml" },
+        { TestLine(), "a => increment(a)", "Increment" },
+        { TestLine(), "a => decrement(a)", "Decrement" },
+        { TestLine(), "a => ++a",          "PreIncrementAssign" },
+        { TestLine(), "a => a++",          "PostIncrementAssign" },
+        { TestLine(), "a => --a",          "PreDecrementAssign" },
+        { TestLine(), "a => a--",          "PostDecrementAssign" },
     };
 
     protected override Expression Substitute(string id) => ChangeByOneTestData.GetExpression(id);

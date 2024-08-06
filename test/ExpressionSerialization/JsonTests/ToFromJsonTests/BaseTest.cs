@@ -1,5 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests.ToFromJsonTests;
 
+[CollectionDefinition("JSON")]
 public abstract class BaseTests(
         JsonTestsFixture fixture,
         ITestOutputHelper output) : IClassFixture<JsonTestsFixture>
@@ -39,5 +40,5 @@ public abstract class BaseTests(
         _fixture.TestJsonToExpression(testFileLine, inputDoc, expectedExpression);
     }
 
-    protected abstract Expression Substitute(string id);
+    protected virtual Expression Substitute(string id) => Expression.Constant(null);
 }

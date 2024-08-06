@@ -1,5 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests.ToFromXmlTests;
 
+using System.Linq.Expressions;
+
 [CollectionDefinition("XML")]
 public abstract class BaseTests(
         XmlTestsFixture fixture,
@@ -42,5 +44,5 @@ public abstract class BaseTests(
         _fixture.TestXmlToExpression(testFileLine, inputDoc!, expectedExpression);
     }
 
-    protected abstract Expression Substitute(string id);
+    protected virtual Expression Substitute(string id) => Expression.Constant(null);
 }

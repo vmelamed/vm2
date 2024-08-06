@@ -387,7 +387,7 @@ public partial class DeepEqualsTests
         ["(IntPtr)6"]                                                                       = () => Expression.Constant((IntPtr)6),
         ["(UIntPtr)5"]                                                                      = () => Expression.Constant((UIntPtr)5),
         ["new Guid(\"00112233-4455-6677-8899-AABBCCDDEEFF\")"]                              = () => Expression.Constant(new Guid("00112233-4455-6677-8899-AABBCCDDEEFF")),
-        ["new Uri(\"http://www.some.com\")"]                                                = () => Expression.Constant(new Uri("http://www.delinea.com")),
+        ["new Uri(\"http://www.some.com\")"]                                                = () => Expression.Constant(new Uri("http://www.acme.com")),
         ["DBNull.Value"]                                                                    = () => Expression.Constant(DBNull.Value, typeof(DBNull)),
 
         ["new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)"]                                     = () => Expression.Constant(new ArraySegment<int>([ 1, 2, 3, 4 ], 1, 2)),

@@ -171,7 +171,7 @@ public static class ConstantTestData
         ["String.abrah-cadabrah"]                                                               = Expression.Constant("abrah-cadabrah"),
         ["String.ала-бала"]                                                                     = Expression.Constant("ала-бала"),
         // Uri
-        ["Uri(\"http://www.delinea.com\")"]                                                     = Expression.Constant(new Uri("http://www.delinea.com")),
+        ["Uri(\"http://www.acme.com\")"]                                                        = Expression.Constant(new Uri("http://www.acme.com")),
         // enum
         ["EnumFlagsTest.One | EnumFlagsTest.Three"]                                             = Expression.Constant(EnumFlagsTest.One | EnumFlagsTest.Three),
         ["EnumTest.Three"]                                                                      = Expression.Constant(EnumTest.Three),

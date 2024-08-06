@@ -26,18 +26,18 @@ public class TransformLoadDocumentTest(JsonTestsFixture fixture, ITestOutputHelp
 
     public static readonly TheoryData<string, ValidateExpressionDocuments, string, bool, Type?> TransformLoadDocumentData = new()
     {
-        { TestLine(), ValidateExpressionDocuments.Always, "__NullObjectInvalid.json", false, typeof(InvalidOperationException) },
-        { TestLine(), ValidateExpressionDocuments.Always, "__NullObjectInvalid.json", true, typeof(SchemaValidationErrorsException) },
-        { TestLine(), ValidateExpressionDocuments.Always, "NullObject.json", false, typeof(InvalidOperationException) },
-        { TestLine(), ValidateExpressionDocuments.Always, "NullObject.json", true, null },
-        { TestLine(), ValidateExpressionDocuments.Never, "__NullObjectInvalid.json", false, null },
-        { TestLine(), ValidateExpressionDocuments.Never, "__NullObjectInvalid.json", true, null },
-        { TestLine(), ValidateExpressionDocuments.Never, "NullObject.json", false, null },
-        { TestLine(), ValidateExpressionDocuments.Never, "NullObject.json", true, null },
-        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "__NullObjectInvalid.json", false, null },
-        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "__NullObjectInvalid.json", true, typeof(SchemaValidationErrorsException) },
-        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "NullObject.json", false, null },
-        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "NullObject.json", true, null },
+        { TestLine(), ValidateExpressionDocuments.Always, "__NullObjectInvalid", false, typeof(InvalidOperationException) },
+        { TestLine(), ValidateExpressionDocuments.Always, "__NullObjectInvalid", true, typeof(SchemaValidationErrorsException) },
+        { TestLine(), ValidateExpressionDocuments.Always, "NullObject", false, typeof(InvalidOperationException) },
+        { TestLine(), ValidateExpressionDocuments.Always, "NullObject", true, null },
+        { TestLine(), ValidateExpressionDocuments.Never, "__NullObjectInvalid", false, null },
+        { TestLine(), ValidateExpressionDocuments.Never, "__NullObjectInvalid", true, null },
+        { TestLine(), ValidateExpressionDocuments.Never, "NullObject", false, null },
+        { TestLine(), ValidateExpressionDocuments.Never, "NullObject", true, null },
+        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "__NullObjectInvalid", false, null },
+        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "__NullObjectInvalid", true, typeof(SchemaValidationErrorsException) },
+        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "NullObject", false, null },
+        { TestLine(), ValidateExpressionDocuments.IfSchemaPresent, "NullObject", true, null },
     };
 
     [Theory]
@@ -47,7 +47,7 @@ public class TransformLoadDocumentTest(JsonTestsFixture fixture, ITestOutputHelp
         ResetReloadSchemas(reloadSchema, validate);
 
         var transform = new ExpressionJsonTransform(_fixture.Options);
-        using var stream = new FileStream(Path.Combine(JsonTestFilesPath, fileName), FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(Path.Combine(JsonTestFilesPath, fileName+""), FileMode.Open, FileAccess.Read);
         var deserialize = () => transform.Deserialize(stream);
 
         if (exceptionType is null)

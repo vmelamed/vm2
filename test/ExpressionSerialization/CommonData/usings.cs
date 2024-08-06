@@ -7,3 +7,6 @@ global using System.Linq.Expressions;
 global using System.Reflection;
 global using System.Runtime.Serialization;
 
+global using Xunit;
+
+global using static TestUtilities.Utilities;

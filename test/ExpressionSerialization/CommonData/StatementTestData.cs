@@ -256,7 +256,7 @@ public static class StatementTestData
 
     static Dictionary<string, Expression> _substitutes = new()
     {
-        ["() => new StructDataContract1(42, \"don't panic\")"] = () => () => new StructDataContract1(42, "don't panic"),
+        ["() => new"]               = () => () => new StructDataContract1(42, "don't panic"),
         ["(a,b) => { ... }"]        = _block,
         ["(f,a) => f(a)"]           = (Func<int, int> f, int a) => f(a),
         ["accessMemberMember"]      = (TestMembersInitialized m) => m.InnerProperty.IntProperty,

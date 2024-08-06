@@ -17,16 +17,16 @@ public partial class LambdaTests(XmlTestsFixture fixture, ITestOutputHelper outp
 
     public static readonly TheoryData<string, string, string> LambdaData = new ()
     {
-        { TestLine(), "i => true",              "Param2BoolConstant.xml" },
-        { TestLine(), "i => i",                 "Param1Ret1.xml" },
-        { TestLine(), "(i, j) => j",            "Param2Ret2nd.xml" },
-        { TestLine(), "(s,d) => true",          "2ParamsToConstant.xml" },
-        { TestLine(), "a => a._a",              "MemberField.xml" },
-        { TestLine(), "a => a.A",               "MemberProperty.xml" },
-        { TestLine(), "(s,d) => true",          "StaticMember.xml" },
-        { TestLine(), "a => a.Method3(1,1)",    "InstanceMethod3Params.xml" },
-        { TestLine(), "a => a.Method4(42,3.14)","InstanceMethod4Params.xml" },
-        { TestLine(), "(i, j) => (a=i)+(b=j)",  "Param2Var1Ret2nd.xml" },
+        { TestLine(), "i => true",              "Param2BoolConstant" },
+        { TestLine(), "i => i",                 "Param1Ret1" },
+        { TestLine(), "(i, j) => j",            "Param2Ret2nd" },
+        { TestLine(), "(s,d) => true",          "2ParamsToConstant" },
+        { TestLine(), "a => a._a",              "MemberField" },
+        { TestLine(), "a => a.A",               "MemberProperty" },
+        { TestLine(), "(s,d) => true",          "StaticMember" },
+        { TestLine(), "a => a.Method3(1,1)",    "InstanceMethod3Params" },
+        { TestLine(), "a => a.Method4(42,3.14)","InstanceMethod4Params" },
+        { TestLine(), "(i, j) => (a=i)+(b=j)",  "Param2Var1Ret2nd" },
     };
 
     protected override Expression Substitute(string id) => LambdaTestData.GetExpression(id);

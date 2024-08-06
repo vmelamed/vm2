@@ -22,6 +22,11 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
+        <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="TestData\Xml\Assignments\" />
     </ItemGroup>
 
 </Project>
