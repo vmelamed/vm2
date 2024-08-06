@@ -247,9 +247,9 @@ static partial class FromJsonDataTransform
         yield return new(typeof(ImmutableStack<>), (gt, et, len, seq) => _toImmutableStack.MakeGenericMethod(et).Invoke(null, [CastSequence(seq.Cast<object?>().Reverse(), et)]));
         yield return new(typeof(List<>), (gt, et, len, seq) => _toList.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
         yield return new(typeof(HashSet<>), (gt, et, len, seq) => _toHashSet.MakeGenericMethod(et).Invoke(null, [CastSequence(seq, et)]));
-        yield return new(typeof(ArraySegment<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
-        yield return new(typeof(Memory<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
-        yield return new(typeof(ReadOnlyMemory<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformToArray(et, len, seq)));
+        yield return new(typeof(ArraySegment<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformArray(et, len, seq)));
+        yield return new(typeof(Memory<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformArray(et, len, seq)));
+        yield return new(typeof(ReadOnlyMemory<>), (gt, et, len, seq) => BuildCollectionFromArray(gt, et, TransformArray(et, len, seq)));
         yield return new(typeof(ConcurrentQueue<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq));
         yield return new(typeof(ConcurrentStack<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>().Reverse()));
         yield return new(typeof(Stack<>), (gt, et, len, seq) => BuildCollectionFromEnumerable(gt, et, seq.Cast<object?>().Reverse()));

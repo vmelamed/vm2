@@ -22,14 +22,11 @@ static partial class FromJsonDataTransform
         if (type == typeof(void))
             throw new SerializationException($"Got 'void' type of constant data in the element at '{element.GetPath()}'");
 
-        var transform = GetTransformation(element);
+        if (!_constantTransformations.TryGetValue(element.Name, out var transform))
+            throw new SerializationException($"Error deserializing and converting to a strong type the value at '{element.GetPath()}'.");
+
         return (transform(element, ref type), type);
     }
-
-    static Transformation GetTransformation(JElement element)
-        => _constantTransformations.TryGetValue(element.Name, out var transform)
-                ? transform
-                : throw new SerializationException($"Error deserializing and converting to a strong type the value at '{element.GetPath()}'.");
 
     static object? TransformEnum(
         JElement element,
@@ -43,10 +40,12 @@ static partial class FromJsonDataTransform
                 && !string.IsNullOrWhiteSpace(value))
                 return Enum.Parse(type, value);
 
-            if (element.TryGetArray(out var array)
-                && array is not null &&
-                array.All(n => n?.GetValueKind() == JsonValueKind.String))
-                return Enum.Parse(type, string.Join(", ", array.Select(n => n?.GetValue<string>())));
+            if (element.TryGetArray(out var arrayFlags)
+                && arrayFlags is not null
+                && arrayFlags.All(n => n?.GetValueKind() == JsonValueKind.String))
+                return Enum.Parse(type, string.Join(", ", arrayFlags.Select(n => n?.GetValue<string>())));
+
+            throw new SerializationException($"Could not convert the valueElement at '{element.GetPath()}' to '{type.FullName}'");
         }
         catch (ArgumentException ex)
         {
@@ -56,8 +55,6 @@ static partial class FromJsonDataTransform
         {
             throw new SerializationException($"Cannot transform '{element.GetPath()}' to '{type.FullName}' valueElement.", ex);
         }
-
-        throw new SerializationException($"Could not convert the valueElement at '{element.GetPath()}' to '{type.FullName}'");
     }
 
     static object? TransformNullable(
@@ -102,7 +99,7 @@ static partial class FromJsonDataTransform
 
         // get the concrete type but do not change the expression type
         if (!element.TryGetTypeFromProperty(out var concreteType, Vocabulary.ConcreteType) || concreteType is null)
-            concreteType = type;   // the element type IS the concrete type
+            concreteType = type;   // the element type IS the concrete type too
 
         if (concreteType is null)
             throw new SerializationException($"Unknown type at '{element.GetPath()}'.");
@@ -165,12 +162,11 @@ static partial class FromJsonDataTransform
                         .Value!
                         .AsObject()
                         .Where(kvp => kvp.Value is JsonObject)
-                        .Select(kvp => ValueTransform(kvp.Value?.AsObject()?.GetOneOf(ConstantTypes)
-                                                                ?? throw new SerializationException(kvp.Value?.AsObject().GetPath())).Item1)
+                        .Select(kvp => ValueTransform(kvp.Value?.AsObject()?.GetOneOf(ConstantTypes) ?? throw new SerializationException(kvp.Value?.AsObject().GetPath())).Item1)
                         .ToArray());
     }
 
-    static IEnumerable TransformToArray(
+    static IEnumerable TransformArray(
         Type elementType,
         int length,
         IEnumerable elements)
@@ -226,10 +222,10 @@ static partial class FromJsonDataTransform
             throw new SerializationException($"The actual length of a collection is different from the one specified at '{element.GetPath()}'.");
 
         Type elementType = type.IsArray
-                                ? type.GetElementType() ?? throw new SerializationException($"Could not get the type of the array elements at '{element.GetPath()}'.")
+                                ? type.GetElementType() ?? throw new SerializationException($"Could not get the type of the arrayFlags elements at '{element.GetPath()}'.")
                                 : type.IsGenericType
                                     ? type.GetGenericArguments()[0]
-                                    : throw new SerializationException($"Could not get the type of the array elements at '{element.GetPath()}'.");
+                                    : throw new SerializationException($"Could not get the type of the arrayFlags elements at '{element.GetPath()}'.");
 
         if (elementType == typeof(void))
             throw new SerializationException($"Constant expression's type specified as type 'void' at '{element.GetPath()}'.");
@@ -242,19 +238,19 @@ static partial class FromJsonDataTransform
                                     return null;
 
                                 var (elem, t) = ValueTransform(e.AsObject()?.GetOneOf(ConstantTypes)
-                                                                    ?? throw new SerializationException($"Expected a JsonObject for each array item at '{e.GetPath()}'."));
+                                                                    ?? throw new SerializationException($"Expected a JsonObject for each arrayFlags item at '{e.GetPath()}'."));
 
                                 if (!elementType.IsAssignableFrom(t))
-                                    throw new SerializationException($"The actual type of the element at '{e.GetPath()}' is not compatible with the array element type '{elementType.FullName}'");
+                                    throw new SerializationException($"The actual type of the element at '{e.GetPath()}' is not compatible with the arrayFlags element type '{elementType.FullName}'");
 
                                 return elem;
                             });
 
         if (type.IsArray)
-            return TransformToArray(elementType, length, elements);
+            return TransformArray(elementType, length, elements);
 
         if (!type.IsGenericType)
-            throw new SerializationException($"The collection in `{element.Name}` must be either array or a generic collection.");
+            throw new SerializationException($"The collection in `{element.Name}` must be either arrayFlags or a generic collection.");
 
         // TODO: this is pretty wonky but I don't know how to detect the internal "SmallValueTypeComparableFrozenSet`1" or "SmallFrozenSet`1"
         var genericType = type.Name.EndsWith("FrozenSet`1")
@@ -423,7 +419,7 @@ static partial class FromJsonDataTransform
         foreach (JsonObject? kvElement in kvpArray)
         {
             if (kvElement is null)
-                throw new SerializationException($"Expected array of key-value objects at '{element.GetPath()}'.");
+                throw new SerializationException($"Expected arrayFlags of key-value objects at '{element.GetPath()}'.");
 
             var (key, kt) = ValueTransform(
                                 new JElement(
