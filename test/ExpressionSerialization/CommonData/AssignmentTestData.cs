@@ -9,6 +9,26 @@ public static class AssignmentTestData
     /// <returns>Expression.</returns>
     public static Expression GetExpression(string id) => _substitutes[id];
 
+    public static readonly TheoryData<string, string, string> Data = new ()
+    {
+        { TestLine(), "a = 1",              "AssignConstant.json" },
+        { TestLine(), "a = b",              "AssignVariable.json" },
+        { TestLine(), "a += b",             "AddAssign.json" },
+        { TestLine(), "checked(a += b)",    "AddAssignChecked.json" },
+        { TestLine(), "a -= b",             "SubtractAssign.json" },
+        { TestLine(), "checked(a -= b)",    "SubtractAssignChecked.json" },
+        { TestLine(), "a *= b",             "MultiplyAssign.json" },
+        { TestLine(), "checked(a *= b)",    "MultiplyAssignChecked.json" },
+        { TestLine(), "a /= b",             "DivideAssign.json" },
+        { TestLine(), "a %= b",             "ModuloAssign.json" },
+        { TestLine(), "a &= b",             "AndAssign.json" },
+        { TestLine(), "a |= b",             "OrAssign.json" },
+        { TestLine(), "a ^= b",             "XorAssign.json" },
+        { TestLine(), "x **= z",            "PowerAssign.json" },
+        { TestLine(), "a <<= b",            "LShiftAssign.json" },
+        { TestLine(), "a >>= b",            "RShiftAssign.json" },
+    };
+
     static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");
     static ParameterExpression _paramB = Expression.Parameter(typeof(int), "b");
     static ParameterExpression _paramX = Expression.Parameter(typeof(double), "x");

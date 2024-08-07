@@ -9,6 +9,20 @@ public static class LambdaTestData
     /// <returns>Expression.</returns>
     public static Expression GetExpression(string id) => _substitutes[id];
 
+    public static readonly TheoryData<string, string, string> Data = new ()
+    {
+        { TestLine(), "i => true",              "Param2BoolConstant" },
+        { TestLine(), "i => i",                 "Param1Ret1" },
+        { TestLine(), "(i, j) => j",            "Param2Ret2nd" },
+        { TestLine(), "(s,d) => true",          "2ParamsToConstant" },
+        { TestLine(), "a => a._a",              "MemberField" },
+        { TestLine(), "a => a.A",               "MemberProperty" },
+        { TestLine(), "(s,d) => true",          "StaticMember" },
+        { TestLine(), "a => a.Method3(1,1)",    "InstanceMethod3Params" },
+        { TestLine(), "a => a.Method4(42,3.14)","InstanceMethod4Params" },
+        { TestLine(), "(i, j) => (a=i)+(b=j)",  "Param2Var1Ret2nd" },
+    };
+
     static ParameterExpression _paramI = Expression.Parameter(typeof(int), "i");
     static ParameterExpression _paramJ = Expression.Parameter(typeof(double), "j");
     static ParameterExpression _varA = Expression.Parameter(typeof(int), "a");
@@ -32,6 +46,6 @@ public static class LambdaTestData
                                                                 Expression.Assign( _varA, _paramI ),
                                                                 Expression.Assign( _varB, _paramJ ),
                                                                 Expression.Add(Expression.Convert(_varA, typeof(double)), _varB)),
-                                                            _paramI, _paramJ),  // (int i, double j) => { int a; double b; a = i; b = j; return a + b },                                                  
+                                                            _paramI, _paramJ),  // (int i, double j) => { int a; double b; a = i; b = j; return a + b },
     };
 }

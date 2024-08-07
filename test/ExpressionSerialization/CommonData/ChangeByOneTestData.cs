@@ -9,6 +9,16 @@ public static class ChangeByOneTestData
     /// <returns>Expression.</returns>
     public static Expression GetExpression(string id) => _substitutes[id];
 
+    public static readonly TheoryData<string, string, string> Data = new ()
+    {
+        { TestLine(), "a => increment(a)", "Increment" },
+        { TestLine(), "a => decrement(a)", "Decrement" },
+        { TestLine(), "a => ++a",          "PreIncrementAssign" },
+        { TestLine(), "a => a++",          "PostIncrementAssign" },
+        { TestLine(), "a => --a",          "PreDecrementAssign" },
+        { TestLine(), "a => a--",          "PostDecrementAssign" },
+    };
+
     static ParameterExpression _pa = Expression.Parameter(typeof(int), "a");
 
     static Dictionary<string, Expression> _substitutes = new()

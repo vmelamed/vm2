@@ -6,24 +6,14 @@ public partial class ChangeByOneTests(JsonTestsFixture fixture, ITestOutputHelpe
     protected override string JsonTestFilesPath => Path.Combine(JsonTestsFixture.TestFilesPath, "ChangeByOne");
 
     [Theory]
-    [MemberData(nameof(ChangeByOneExpressionData))]
+    [MemberData(nameof(ChangeByOneTestData.Data), MemberType = typeof(ChangeByOneTestData))]
     public async Task ChangeByOneToJsonTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.ToJsonTestAsync(testFileLine, expressionString, fileName);
 
     [Theory]
-    [MemberData(nameof(ChangeByOneExpressionData))]
+    [MemberData(nameof(ChangeByOneTestData.Data), MemberType = typeof(ChangeByOneTestData))]
     public async Task ChangeByOneFromJsonTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.FromJsonTestAsync(testFileLine, expressionString, fileName);
-
-    public static readonly TheoryData<string, string, string> ChangeByOneExpressionData = new ()
-    {
-        { TestLine(), "a => increment(a)", "Increment" },
-        { TestLine(), "a => decrement(a)", "Decrement" },
-        { TestLine(), "a => ++a",          "PreIncrementAssign" },
-        { TestLine(), "a => a++",          "PostIncrementAssign" },
-        { TestLine(), "a => --a",          "PreDecrementAssign" },
-        { TestLine(), "a => a--",          "PostDecrementAssign" },
-    };
 
     protected override Expression Substitute(string id) => ChangeByOneTestData.GetExpression(id);
 }

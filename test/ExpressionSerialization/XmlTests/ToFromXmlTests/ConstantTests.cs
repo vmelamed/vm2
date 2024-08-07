@@ -6,12 +6,12 @@ public partial class ConstantTests(XmlTestsFixture fixture, ITestOutputHelper ou
     protected override string XmlTestFilesPath => Path.Combine(XmlTestsFixture.TestFilesPath, "Constants");
 
     [Theory]
-    [MemberData(nameof(ConstantsData))]
+    [MemberData(nameof(ConstantTestData.Data), MemberType = typeof(ConstantTestData))]
     public async Task ConstantToXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
 
     [Theory]
-    [MemberData(nameof(ConstantsData))]
+    [MemberData(nameof(ConstantTestData.Data), MemberType = typeof(ConstantTestData))]
     public async Task ConstantFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
