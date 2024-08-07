@@ -10,29 +10,29 @@ public partial class FromJsonTransformVisitor
     /// </summary>
     static IEnumerable<KeyValuePair<string, VisitJElement>> Transforms()
     {
-        yield return new(Vocabulary.Expression, (v, e) => v.VisitFirstChild(e));
+        yield return new(Vocabulary.Expression, (v, e) => v.VisitChild(e));
         yield return new(Vocabulary.Constant, (v, e) => v.VisitConstant(e));
-        //    yield return new(Vocabulary.ParameterSpec,        (v, e) => v.VisitParameter(e)          );
-        //    yield return new(Vocabulary.Parameter,            (v, e) => v.VisitParameter(e)          );
-        //    yield return new(Vocabulary.Lambda,               (v, e) => v.VisitLambda(e)             );
-        //// unary
-        //    yield return new(Vocabulary.ArrayLength,          (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.Convert,              (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.ConvertChecked,       (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.Negate,               (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.NegateChecked,        (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.Not,                  (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.OnesComplement,       (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.Quote,                (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.TypeAs,               (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.UnaryPlus,            (v, e) => v.VisitUnary(e)              );
-        //// change by one
-        //    yield return new(Vocabulary.Decrement,            (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.Increment,            (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.PostDecrementAssign,  (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.PostIncrementAssign,  (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.PreDecrementAssign,   (v, e) => v.VisitUnary(e)              );
-        //    yield return new(Vocabulary.PreIncrementAssign,   (v, e) => v.VisitUnary(e)              );
+        yield return new(Vocabulary.ParameterSpec, (v, e) => v.VisitParameter(e));
+        yield return new(Vocabulary.Parameter, (v, e) => v.VisitParameter(e));
+        yield return new(Vocabulary.Lambda, (v, e) => v.VisitLambda(e));
+        // unary
+        yield return new(Vocabulary.ArrayLength, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.Convert, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.ConvertChecked, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.Negate, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.NegateChecked, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.Not, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.OnesComplement, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.Quote, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.TypeAs, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.UnaryPlus, (v, e) => v.VisitUnary(e));
+        // change by one
+        yield return new(Vocabulary.Decrement, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.Increment, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.PostDecrementAssign, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.PostIncrementAssign, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.PreDecrementAssign, (v, e) => v.VisitUnary(e));
+        yield return new(Vocabulary.PreIncrementAssign, (v, e) => v.VisitUnary(e));
         //// binary
         //    yield return new(Vocabulary.Add,                  (v, e) => v.VisitBinary(e)             );
         //    yield return new(Vocabulary.AddChecked,           (v, e) => v.VisitBinary(e)             );
@@ -82,7 +82,7 @@ public partial class FromJsonTransformVisitor
         //    yield return new(Vocabulary.Index,                (v, e) => v.VisitIndex(e)              );
         //    yield return new(Vocabulary.New,                  (v, e) => v.VisitNew(e)                );
         //    yield return new(Vocabulary.Throw,                (v, e) => v.VisitThrow(e)              );
-        //    yield return new(Vocabulary.Default,              (v, e) => v.VisitDefault(e)            );
+        yield return new(Vocabulary.Default, (v, e) => v.VisitDefault(e));
         //    yield return new(Vocabulary.MemberAccess,         (v, e) => v.VisitMember(e)             );
         //    yield return new(Vocabulary.Call,                 (v, e) => v.VisitMethodCall(e)         );
         //    yield return new(Vocabulary.Invoke,               (v, e) => v.VisitInvocation(e)         );

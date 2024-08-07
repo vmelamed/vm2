@@ -392,7 +392,7 @@ public static class JsonNodeExtensions
                 : throw new SerializationException($"Could not find a property that defines the type of the object at '{jsObj.GetPath()}'.");
 
     /// <summary>
-    /// Tries to get a array JsonObject node from property <paramref name="propertyName"/>.
+    /// Tries to get a JsonObject node from property <paramref name="propertyName"/>.
     /// </summary>
     /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyName">Name of the property holding the JsonObject.</param>
@@ -414,7 +414,7 @@ public static class JsonNodeExtensions
     }
 
     /// <summary>
-    /// Gets a array JsonObject node from property <paramref name="propertyName"/>.
+    /// Gets a JsonObject node from property <paramref name="propertyName"/>.
     /// </summary>
     /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyName">Name of the property holding the JsonObject.</param>
