@@ -1,0 +1,41 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "lambda": {
+      "type": "vm2.ExpressionSerialization.TestsCommonData.B, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "parameters": [
+        {
+          "type": "vm2.ExpressionSerialization.TestsCommonData.B, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "name": "b",
+          "id": "P1"
+        }
+      ],
+      "body": {
+        "not": {
+          "type": "vm2.ExpressionSerialization.TestsCommonData.B, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "operands": [
+            {
+              "parameter": {
+                "type": "vm2.ExpressionSerialization.TestsCommonData.B, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                "name": "b",
+                "id": "P1"
+              }
+            }
+          ],
+          "method": {
+            "declaringType": "vm2.ExpressionSerialization.TestsCommonData.B, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+            "static": true,
+            "type": "vm2.ExpressionSerialization.TestsCommonData.B, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+            "name": "op_LogicalNot",
+            "parameterSpecs": [
+              {
+                "type": "vm2.ExpressionSerialization.TestsCommonData.B, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                "name": "x"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

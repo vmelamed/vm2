@@ -3,14 +3,14 @@
 public partial struct JElement
 {
     /// <summary>
-    /// Gets the JSON kind of the value in <see cref="Value"/>.
+    /// Gets the JSON kind of the name in <see cref="Value"/>.
     /// </summary>
     /// <returns>JsonValueKind.</returns>
     public readonly JsonValueKind GetValueKind()
         => Value?.GetValueKind() ?? JsonValueKind.Undefined;
 
     /// <summary>
-    /// Gets the JSON kind of the value in <see cref="Value"/>.
+    /// Gets the JSON kind of the name in <see cref="Value"/>.
     /// </summary>
     /// <returns>JsonValueKind.</returns>
     public readonly string GetPath()
@@ -18,7 +18,7 @@ public partial struct JElement
 
     /// <summary>
     /// Determines whether this element's <see cref="Value"/> is <see langword="null"/>, or
-    /// if it has a property called 'value' and its value is <see langword="null"/>.
+    /// if it has a property called 'name' and its name is <see langword="null"/>.
     /// </summary>
     /// <returns><c>true</c> if this instance represents a nil element; otherwise, <c>false</c>.</returns>
     public readonly bool IsNil()
@@ -30,10 +30,10 @@ public partial struct JElement
         };
 
     /// <summary>
-    /// Tries to convert the <see cref="Value"/> of this element to a simple (non-object or array) value.
+    /// Tries to convert the <see cref="Value"/> of this element to a simple (non-object or array) name.
     /// </summary>
-    /// <typeparam name="T">The type of the value.</typeparam>
-    /// <param name="value">The value.</param>
+    /// <typeparam name="T">The type of the name.</typeparam>
+    /// <param name="value">The name.</param>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
     public readonly bool TryGetValue<T>(out T? value)
     {
@@ -46,18 +46,18 @@ public partial struct JElement
     }
 
     /// <summary>
-    /// Converts the <see cref="Value"/> of this element to a simple (non-object or array) value.
+    /// Converts the <see cref="Value"/> of this element to a simple (non-object or array) name.
     /// </summary>
     /// <returns><see cref="JsonNode"/>?</returns>
     public readonly T? GetValue<T>()
         => TryGetValue<T>(out var value)
                 ? value
-                : throw new NotImplementedException($"Could not get the integer, string, boolean, or null value at '{GetPath()}'.");
+                : throw new NotImplementedException($"Could not get the integer, string, boolean, or null name at '{GetPath()}'.");
 
     /// <summary>
-    /// Tries to get the value of the property with name <paramref name="propertyValueName"/>.
+    /// Tries to get the name of the property with name <paramref name="propertyValueName"/>.
     /// </summary>
-    /// <param name="node">The property value.</param>
+    /// <param name="node">The property name.</param>
     /// <param name="propertyValueName">Name of the property.</param>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
     public readonly bool TryGetPropertyValue(
@@ -69,7 +69,7 @@ public partial struct JElement
     }
 
     /// <summary>
-    /// Gets the value of property <paramref name="propertyValueName"/>.
+    /// Gets the name of property <paramref name="propertyValueName"/>.
     /// </summary>
     /// <param name="propertyValueName">Name of the property.</param>
     /// <returns><see cref="JsonNode"/>?</returns>
@@ -77,12 +77,12 @@ public partial struct JElement
         string propertyValueName = Vocabulary.Value)
         => TryGetPropertyValue(out var node, propertyValueName)
             ? node
-            : throw new SerializationException($"Could not get the value at '{GetPath()}'.");
+            : throw new SerializationException($"Could not get the name at '{GetPath()}'.");
 
     /// <summary>
-    /// Tries to get the strongly typed value of the property with name <paramref name="propertyValueName"/>.
+    /// Tries to get the strongly typed name of the property with name <paramref name="propertyValueName"/>.
     /// </summary>
-    /// <param name="value">The property value.</param>
+    /// <param name="value">The property name.</param>
     /// <param name="propertyValueName">Name of the property.</param>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
     public readonly bool TryGetPropertyValue<T>(
@@ -97,11 +97,11 @@ public partial struct JElement
     }
 
     /// <summary>
-    /// Gets the strongly typed value of the property with name <paramref name="propertyValueName"/>.
+    /// Gets the strongly typed name of the property with name <paramref name="propertyValueName"/>.
     /// </summary>
     /// <typeparam name="T">The type of the property.</typeparam>
     /// <param name="propertyValueName">Name of the property.</param>
-    /// <returns>The value of the property.</returns>
+    /// <returns>The name of the property.</returns>
     public readonly T GetPropertyValue<T>(
         string propertyValueName = Vocabulary.Value)
         => (Value is JsonObject jsObj
@@ -109,10 +109,50 @@ public partial struct JElement
             && node?.AsValue()?.TryGetValue<T>(out var value) is true)
             && value is not null
                 ? value
-                : throw new SerializationException($"Could not get '{nameof(T)}' property value at '{GetPath()}'.");
+                : throw new SerializationException($"Could not get '{nameof(T)}' property name at '{GetPath()}'.");
 
     /// <summary>
-    /// Tries to get the integer value from a property <paramref name="propertyLengthName"/> representing the length of the object.
+    /// Tries to get the strongly typed name of the property with name <paramref name="propertyNameName"/>.
+    /// </summary>
+    /// <param name="name">The property name.</param>
+    /// <param name="propertyNameName">Name of the property Name.</param>
+    /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
+    public readonly bool TryGetPropertyName(
+        out string? name,
+        string propertyNameName = Vocabulary.Name)
+        => TryGetPropertyValue(out name, propertyNameName);
+
+    /// <summary>
+    /// Gets the strongly typed name of the property with name <paramref name="propertyNameName"/>.
+    /// </summary>
+    /// <param name="propertyNameName">Name of the property.</param>
+    /// <returns>The value of the property.</returns>
+    public readonly string GetPropertyName(
+        string propertyNameName = Vocabulary.Name)
+        => GetPropertyValue<string>(propertyNameName);
+
+    /// <summary>
+    /// Tries to get the strongly typed id of the property with id <paramref id="propertyIdName"/>.
+    /// </summary>
+    /// <param id="id">The property id.</param>
+    /// <param id="propertyIdName">Name of the property Id.</param>
+    /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
+    public readonly bool TryGetPropertyId(
+        out string? id,
+        string propertyIdName = Vocabulary.Id)
+        => TryGetPropertyValue(out id, propertyIdName);
+
+    /// <summary>
+    /// Gets the strongly typed id of the property with id <paramref id="propertyIdName"/>.
+    /// </summary>
+    /// <param id="propertyIdName">Id of the property.</param>
+    /// <returns>The value of the property.</returns>
+    public readonly string GetPropertyId(
+        string propertyIdName = Vocabulary.Id)
+        => GetPropertyValue<string>(propertyIdName);
+
+    /// <summary>
+    /// Tries to get the integer name from a property <paramref name="propertyLengthName"/> representing the length of the object.
     /// </summary>
     /// <param name="length">The length.</param>
     /// <param name="propertyLengthName">Name of the property length.</param>
@@ -120,11 +160,7 @@ public partial struct JElement
     public readonly bool TryGetLength(
         out int length,
         string propertyLengthName = Vocabulary.Length)
-    {
-        length = default;
-        return Value is JsonObject jsObj
-                && jsObj.TryGetLength(out length, propertyLengthName);
-    }
+        => TryGetPropertyValue(out length, propertyLengthName);
 
     /// <summary>
     /// Gets the length of the sub-elements in the element from element <see cref="Vocabulary.Length"/>
@@ -133,9 +169,7 @@ public partial struct JElement
     /// <returns>The <see cref="int"/> length.</returns>
     public readonly int GetLength(
         string propertyLengthName = Vocabulary.Length)
-        => Value is JsonObject jsObj
-                ? jsObj.GetLength(propertyLengthName)
-                : throw new SerializationException($"Could not get the property 'Length' from the element at '{GetPath()}'.");
+        => GetPropertyValue<int>(propertyLengthName);
 
     /// <summary>
     /// Tries to translate this element's name to the enum <see cref="ExpressionType" />.
@@ -216,7 +250,7 @@ public partial struct JElement
                 : throw new SerializationException($"Could not get the .NET type at '{GetPath()}'.");
 
     /// <summary>
-    /// Tries to construct a JElement from the name and the value of a property with one of the names in <paramref name="names"/>.
+    /// Tries to construct a JElement from the name and the name of a property with one of the names in <paramref name="names"/>.
     /// </summary>
     /// <param name="names">The names of properties to search for.</param>
     /// <param name="element">The element.</param>
@@ -238,7 +272,7 @@ public partial struct JElement
     }
 
     /// <summary>
-    /// Constructs a JElement from the name and the value of a property with one of the names in <paramref name="names"/>.
+    /// Constructs a JElement from the name and the name of a property with one of the names in <paramref name="names"/>.
     /// </summary>
     /// <param name="names">The names.</param>
     /// <returns>JElement.</returns>
@@ -250,7 +284,7 @@ public partial struct JElement
 
     /// <summary>
     /// Tries to construct a <see cref="JElement" /> from this <see cref="Value"/>'s property <paramref name="childPropertyName" /> and
-    /// its JsonObject value.
+    /// its JsonObject name.
     /// </summary>
     /// <param name="childPropertyName">Name of the element property.</param>
     /// <param name="element">The element.</param>
@@ -272,7 +306,7 @@ public partial struct JElement
 
     /// <summary>
     /// Constructs a <see cref="JElement" /> from this <see cref="Value"/>'s property <paramref name="childPropertyName" /> and
-    /// its JsonObject value.
+    /// its JsonObject name.
     /// </summary>
     /// <param name="childPropertyName">Name of the element property.</param>
     public readonly JElement GetElement(
@@ -284,7 +318,7 @@ public partial struct JElement
 
     /// <summary>
     /// Tries to construct a <see cref="JElement" /> from this <see cref="Value"/>'s property <paramref name="childPropertyName" /> and
-    /// its JsonObject value.
+    /// its JsonObject name.
     /// </summary>
     /// <param name="childPropertyName">Name of the element property.</param>
     /// <param name="array">The element.</param>
@@ -303,7 +337,7 @@ public partial struct JElement
 
     /// <summary>
     /// Constructs a <see cref="JElement" /> from this <see cref="Value"/>'s property <paramref name="childPropertyName" /> and
-    /// its JsonObject value.
+    /// its JsonObject name.
     /// </summary>
     /// <param name="childPropertyName">Name of the element property.</param>
     public readonly JsonArray GetArray(
@@ -314,7 +348,7 @@ public partial struct JElement
             : throw new SerializationException($"Could not get JsonObject at '{GetPath()}'.");
 
     /// <summary>
-    /// Tries to construct a JElement from the name and value of the first property where the property value is a JsonObject.
+    /// Tries to construct a JElement from the name and name of the first property where the property name is a JsonObject.
     /// </summary>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
     public readonly bool TryGetFirstElement(out JElement? element)
@@ -333,7 +367,7 @@ public partial struct JElement
     }
 
     /// <summary>
-    /// Tries to construct a JElement from the name and value of the first property where the property value is a JsonObject.
+    /// Tries to construct a JElement from the name and name of the first property where the property name is a JsonObject.
     /// </summary>
     /// <returns>System.Nullable&lt;JElement&gt;.</returns>
     public readonly JElement GetFirstElement()

@@ -463,7 +463,7 @@ public static class JsonNodeExtensions
                 : throw new SerializationException($"Could not find a JsonArray property '{propertyName}' at '{jsObj.GetPath()}'.");
 
     /// <summary>
-    /// Tries to get the first JsonObject array node.
+    /// Tries to get the first JsonObject node.
     /// </summary>
     /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="propertyName">Name of the property where the found array is.</param>
@@ -482,7 +482,7 @@ public static class JsonNodeExtensions
     }
 
     /// <summary>
-    /// Gets the first JsonObject array node.
+    /// Gets the first JsonObject node.
     /// </summary>
     /// <param name="jsObj">The extended JsonObject.</param>
     /// <returns>JsonObject</returns>

@@ -10,7 +10,7 @@ public partial class FromJsonTransformVisitor
     /// </summary>
     static IEnumerable<KeyValuePair<string, VisitJElement>> Transforms()
     {
-        yield return new(Vocabulary.Expression, (v, e) => v.VisitFirstJsonObject(e));
+        yield return new(Vocabulary.Expression, (v, e) => v.VisitFirstChild(e));
         yield return new(Vocabulary.Constant, (v, e) => v.VisitConstant(e));
         //    yield return new(Vocabulary.ParameterSpec,        (v, e) => v.VisitParameter(e)          );
         //    yield return new(Vocabulary.Parameter,            (v, e) => v.VisitParameter(e)          );

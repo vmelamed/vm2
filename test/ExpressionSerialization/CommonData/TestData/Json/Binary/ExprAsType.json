@@ -1,0 +1,29 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "lambda": {
+      "type": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "parameters": [
+        {
+          "type": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract2, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "name": "a",
+          "id": "P1"
+        }
+      ],
+      "body": {
+        "typeAs": {
+          "type": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "operands": [
+            {
+              "parameter": {
+                "type": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract2, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                "name": "a",
+                "id": "P1"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

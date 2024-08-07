@@ -1,0 +1,120 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "expression": {
+    "block": {
+      "type": "int",
+      "variables": [
+        {
+          "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "name": "m",
+          "id": "P1"
+        }
+      ],
+      "expressions": [
+        {
+          "assign": {
+            "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+            "operands": [
+              {
+                "parameter": {
+                  "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                  "name": "m",
+                  "id": "P1"
+                }
+              },
+              {
+                "new": {
+                  "constructor": {
+                    "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                    "parameterSpecs": []
+                  },
+                  "arguments": []
+                }
+              }
+            ]
+          }
+        },
+        {
+          "goto": {
+            "type": "int",
+            "target": {
+              "type": "int",
+              "id": "L1"
+            },
+            "value": {
+              "add": {
+                "type": "int",
+                "operands": [
+                  {
+                    "memberAccess": {
+                      "type": "int",
+                      "object": {
+                        "parameter": {
+                          "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                          "name": "m",
+                          "id": "P1"
+                        }
+                      },
+                      "member": {
+                        "property": {
+                          "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                          "type": "int",
+                          "name": "TheOuterIntProperty"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "memberAccess": {
+                      "type": "int",
+                      "object": {
+                        "memberAccess": {
+                          "type": "vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                          "object": {
+                            "parameter": {
+                              "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "name": "m",
+                              "id": "P1"
+                            }
+                          },
+                          "member": {
+                            "property": {
+                              "declaringType": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "type": "vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "name": "InnerProperty"
+                            }
+                          }
+                        }
+                      },
+                      "member": {
+                        "property": {
+                          "declaringType": "vm2.ExpressionSerialization.TestsCommonData.Inner, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                          "type": "int",
+                          "name": "IntProperty"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "kind": "return"
+          }
+        },
+        {
+          "label": {
+            "target": {
+              "type": "int",
+              "id": "L1"
+            },
+            "default": {
+              "constant": {
+                "int": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
