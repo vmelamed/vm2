@@ -416,9 +416,9 @@ static partial class FromJsonDataTransform
                             ?? throw new SerializationException($"Could not get the dictionary at '{element.GetPath()}'.");
 
         var (dict, kvTypes, convertToFinal) = PrepForDictionary(type);
-        foreach (JsonObject? kvElement in kvpArray)
+        foreach (var kve in kvpArray)
         {
-            if (kvElement is null)
+            if (kve is not JsonObject kvElement)
                 throw new SerializationException($"Expected arrayFlags of key-value objects at '{element.GetPath()}'.");
 
             var (key, kt) = ValueTransform(
