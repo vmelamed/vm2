@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " value(System.Collections.Concurrent.BlockingCollection\u00601[System.Double]) ",
   "expression": {
     "constant": {
       "$comment": " System.Collections.Concurrent.BlockingCollection\u003Cdouble\u003E ",

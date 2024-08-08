@@ -11,6 +11,28 @@ public static class JsonNodeExtensions
     /// </summary>
     /// <param name="jsObj">The JSON object.</param>
     /// <param name="element">The elements.</param>
+    /// <returns>
+    /// The <paramref name="jsObj"/> and a boolean which will be <c>true</c> if the operation was successful, or
+    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Name"/>.
+    /// </returns>
+    public static bool TryAdd(
+        this JsonObject jsObj,
+        JElement? element)
+    {
+        if (!element.HasValue)
+            return true;
+
+        if (element.Value.Name is "")
+            throw new ArgumentException("The key of the elements is an empty string.");
+
+        return jsObj.TryAdd(element.Value.Name, element.Value.Value);
+    }
+
+    /// <summary>
+    /// Adds the specified elements (key, JsonNode) to the object.
+    /// </summary>
+    /// <param name="jsObj">The JSON object.</param>
+    /// <param name="element">The elements.</param>
     /// <returns>The <see cref="JsonObject"/>.</returns>
     /// <exception cref="ArgumentException">
     /// If a property with the key of the <paramref name="element"/> already exists in the <paramref name="jsObj"/>.
@@ -33,23 +55,18 @@ public static class JsonNodeExtensions
     /// Adds the specified elements (key, JsonNode) to the object.
     /// </summary>
     /// <param name="jsObj">The JSON object.</param>
-    /// <param name="element">The elements.</param>
+    /// <param name="elements">The elements.</param>
     /// <returns>
     /// The <paramref name="jsObj"/> and a boolean which will be <c>true</c> if the operation was successful, or
     /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Name"/>.
     /// </returns>
-    public static (JsonObject, bool) TryAdd(
+    /// <exception cref="ArgumentException">
+    /// If there is a property with empty key.
+    /// </exception>
+    public static bool TryAdd(
         this JsonObject jsObj,
-        JElement? element)
-    {
-        if (!element.HasValue)
-            return (jsObj, true);
-
-        if (element.Value.Name is "")
-            throw new ArgumentException("The key of the elements is an empty string.");
-
-        return (jsObj, jsObj.TryAdd(element.Value.Name, element.Value.Value).Item2);
-    }
+        params JElement?[] elements)
+        => jsObj.TryAdd(elements.AsEnumerable());
 
     /// <summary>
     /// Adds the specified elements (key, JsonNode) to the object.
@@ -67,7 +84,10 @@ public static class JsonNodeExtensions
         => jsObj.Add(elements.AsEnumerable());
 
     /// <summary>
-    /// Adds the specified elements (key, JsonNode) to the object.
+    /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="elements"/> to the
+    /// current <paramref name="jsObj"/>.
+    /// If any of the parameters are <c>null</c> the method quietly skips them. The <see cref="IEnumerable{JElement}"/>
+    /// parameters are added iteratively in the current <paramref name="jsObj"/>.
     /// </summary>
     /// <param name="jsObj">The JSON object.</param>
     /// <param name="elements">The elements.</param>
@@ -78,10 +98,22 @@ public static class JsonNodeExtensions
     /// <exception cref="ArgumentException">
     /// If there is a property with empty key.
     /// </exception>
-    public static (JsonObject, bool) TryAdd(
+    public static bool TryAdd(
         this JsonObject jsObj,
-        params JElement?[] elements)
-        => jsObj.TryAdd(elements.AsEnumerable());
+        params object?[] elements)
+    {
+        bool ret = true;
+
+        foreach (var prop in elements)
+            ret &= prop switch {
+                IEnumerable<JElement?> jes => jsObj.TryAdd(jes),
+                JElement je => jsObj.TryAdd(je),
+                null => true,
+                _ => throw new InternalTransformErrorException($"Don't know how to add {prop.GetType().Name} to a JElement")
+            };
+
+        return ret;
+    }
 
     /// <summary>
     /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="elements"/> to the
@@ -102,19 +134,17 @@ public static class JsonNodeExtensions
     {
         foreach (var prop in elements)
             _ = prop switch {
-                IEnumerable<JElement?> p => jsObj.Add(p),
-                JElement p => jsObj.Add(p, null),
+                IEnumerable<JElement?> jes => jsObj.Add(jes),
+                JElement je => jsObj.Add(je, null),
                 null => jsObj,
                 _ => throw new InternalTransformErrorException($"Don't know how to add {prop.GetType().Name} to a JElement")
             };
+
         return jsObj;
     }
 
     /// <summary>
-    /// Adds the <see cref="JElement"/> and <see cref="IEnumerable{JElement}"/> <paramref key="elements"/> to the
-    /// current <paramref name="jsObj"/>.
-    /// If any of the parameters are <c>null</c> the method quietly skips them. The <see cref="IEnumerable{JElement}"/>
-    /// parameters are added iteratively in the current <paramref name="jsObj"/>.
+    /// Adds the specified elements (key, JsonNode) to the object.
     /// </summary>
     /// <param name="jsObj">The JSON object.</param>
     /// <param name="elements">The elements.</param>
@@ -125,20 +155,17 @@ public static class JsonNodeExtensions
     /// <exception cref="ArgumentException">
     /// If there is a property with empty key.
     /// </exception>
-    public static (JsonObject, bool) TryAdd(
+    public static bool TryAdd(
         this JsonObject jsObj,
-        params object?[] elements)
+        IEnumerable<JElement?> elements)
     {
-        bool ret = true;
+        var ret = true;
 
-        foreach (var prop in elements)
-            ret &= prop switch {
-                IEnumerable<JElement?> p => jsObj.TryAdd(p).Item2,
-                JElement p => jsObj.TryAdd(p).Item2,
-                null => true,
-                _ => throw new InternalTransformErrorException($"Don't know how to add {prop.GetType().Name} to a JElement")
-            };
-        return (jsObj, ret);
+        foreach (var element in elements)
+            if (element is not null)
+                ret &= jsObj.TryAdd(element.Value.Name, element.Value.Value);
+
+        return ret;
     }
 
     /// <summary>
@@ -160,31 +187,6 @@ public static class JsonNodeExtensions
                 jsObj.Add(element.Value.Name, element.Value.Value);
 
         return jsObj;
-    }
-
-    /// <summary>
-    /// Adds the specified elements (key, JsonNode) to the object.
-    /// </summary>
-    /// <param name="jsObj">The JSON object.</param>
-    /// <param name="elements">The elements.</param>
-    /// <returns>
-    /// The <paramref name="jsObj"/> and a boolean which will be <c>true</c> if the operation was successful, or
-    /// <c>false</c> if the <paramref name="jsObj"/> already has a property with the elements' <see cref="JElement.Name"/>.
-    /// </returns>
-    /// <exception cref="ArgumentException">
-    /// If there is a property with empty key.
-    /// </exception>
-    public static (JsonObject, bool) TryAdd(
-        this JsonObject jsObj,
-        IEnumerable<JElement?> elements)
-    {
-        var ret = true;
-
-        foreach (var element in elements)
-            if (element is not null)
-                ret &= jsObj.TryAdd(element.Value.Name, element.Value.Value).Item2;
-
-        return (jsObj, ret);
     }
     #endregion
 

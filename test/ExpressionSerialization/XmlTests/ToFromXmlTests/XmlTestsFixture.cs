@@ -170,10 +170,11 @@ public class XmlTestsFixture : IDisposable
 
         actualStr.Should().Be(expectedStr, "the expected and the actual XML texts should be the same");
 
-        var comparer = new XNodeDeepEquals();
+        var ignoreComments = false;
+        var comparer = new XNodeDeepEquals(ignoreComments);
         var myEquals = comparer.AreEqual(actualDoc, expectedDoc);
 
-        if (!myEquals)
+        if (!myEquals || (ignoreComments && comparer.LastResult != ""))
             output?.WriteLine(comparer.LastResult);
 
         var deepEquals = XNode.DeepEquals(actualDoc, expectedDoc);

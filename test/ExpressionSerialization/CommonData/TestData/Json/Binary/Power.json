@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " () =\u003E (2 ** 3) ",
   "expression": {
     "lambda": {
       "type": "double",

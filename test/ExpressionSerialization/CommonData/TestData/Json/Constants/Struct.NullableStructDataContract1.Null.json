@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " null ",
   "expression": {
     "constant": {
       "$comment": " nullable\u003Cvm2.ExpressionSerialization.TestsCommonData.StructDataContract1\u003E ",

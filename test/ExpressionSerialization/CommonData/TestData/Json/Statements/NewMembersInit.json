@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " () =\u003E new TestMembersInitialized() {TheOuterIntProperty = 42, Time = new DateTime(1776, 7, 4), InnerProperty = new Inner() {IntProperty = 23, StringProperty = \u0022inner string\u0022}, EnumerableProperty = new List\u00601() {Void Add(System.String)(\u0022aaa\u0022), Void Add(System.String)(\u0022bbb\u0022), Void Add(System.String)(\u0022ccc\u0022)}} ",
   "expression": {
     "lambda": {
       "type": "vm2.ExpressionSerialization.TestsCommonData.TestMembersInitialized, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",

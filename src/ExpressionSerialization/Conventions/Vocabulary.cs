@@ -1,7 +1,7 @@
 ﻿namespace vm2.ExpressionSerialization.Conventions;
 
-#pragma warning disable CS1591
 #pragma warning disable IDE0079
+#pragma warning disable CS1591
 
 /// <summary>
 /// Class Vocabulary contains declaration of all words used in LINQ serialization, either as XML or JSON tokens.

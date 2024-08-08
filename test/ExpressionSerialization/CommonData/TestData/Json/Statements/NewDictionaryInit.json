@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " () =\u003E new Dictionary\u00602() {Void Add(Int32, System.String)(1, \u0022one\u0022), Void Add(Int32, System.String)(2, \u0022two\u0022), Void Add(Int32, System.String)(3, \u0022three\u0022)} ",
   "expression": {
     "lambda": {
       "type": "System.Collections.Generic.Dictionary\u00602[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",

@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " {var _result; ... } ",
   "expression": {
     "block": {
       "variables": [

@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " value(System.ArraySegment\u00601[System.Byte]) ",
   "expression": {
     "constant": {
       "$comment": " System.ArraySegment\u003Cbyte\u003E ",

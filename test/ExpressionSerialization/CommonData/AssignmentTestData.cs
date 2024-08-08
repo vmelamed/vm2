@@ -11,22 +11,22 @@ public static class AssignmentTestData
 
     public static readonly TheoryData<string, string, string> Data = new ()
     {
-        { TestLine(), "a = 1",              "AssignConstant.json" },
-        { TestLine(), "a = b",              "AssignVariable.json" },
-        { TestLine(), "a += b",             "AddAssign.json" },
-        { TestLine(), "checked(a += b)",    "AddAssignChecked.json" },
-        { TestLine(), "a -= b",             "SubtractAssign.json" },
-        { TestLine(), "checked(a -= b)",    "SubtractAssignChecked.json" },
-        { TestLine(), "a *= b",             "MultiplyAssign.json" },
-        { TestLine(), "checked(a *= b)",    "MultiplyAssignChecked.json" },
-        { TestLine(), "a /= b",             "DivideAssign.json" },
-        { TestLine(), "a %= b",             "ModuloAssign.json" },
-        { TestLine(), "a &= b",             "AndAssign.json" },
-        { TestLine(), "a |= b",             "OrAssign.json" },
-        { TestLine(), "a ^= b",             "XorAssign.json" },
-        { TestLine(), "x **= z",            "PowerAssign.json" },
-        { TestLine(), "a <<= b",            "LShiftAssign.json" },
-        { TestLine(), "a >>= b",            "RShiftAssign.json" },
+        { TestLine(), "a = 1",              "AssignConstant" },
+        { TestLine(), "a = b",              "AssignVariable" },
+        { TestLine(), "a += b",             "AddAssign" },
+        { TestLine(), "checked(a += b)",    "AddAssignChecked" },
+        { TestLine(), "a -= b",             "SubtractAssign" },
+        { TestLine(), "checked(a -= b)",    "SubtractAssignChecked" },
+        { TestLine(), "a *= b",             "MultiplyAssign" },
+        { TestLine(), "checked(a *= b)",    "MultiplyAssignChecked" },
+        { TestLine(), "a /= b",             "DivideAssign" },
+        { TestLine(), "a %= b",             "ModuloAssign" },
+        { TestLine(), "a &= b",             "AndAssign" },
+        { TestLine(), "a |= b",             "OrAssign" },
+        { TestLine(), "a ^= b",             "XorAssign" },
+        { TestLine(), "x **= z",            "PowerAssign" },
+        { TestLine(), "a <<= b",            "LShiftAssign" },
+        { TestLine(), "a >>= b",            "RShiftAssign" },
     };
 
     static ParameterExpression _paramA = Expression.Parameter(typeof(int), "a");

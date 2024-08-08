@@ -1,5 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
-public class XNodeDeepEquals
+
+public class XNodeDeepEquals(bool ignoreComments = false)
 {
     Queue<string> _path = new(new string[] { "." });
 
@@ -12,7 +13,7 @@ public class XNodeDeepEquals
         return false;
     }
 
-    public bool AreEqual(XNode? left, XNode? right) => Equals(left, right);
+    public bool AreEqual(XNode? left, XNode? right, bool ignoreComments = false) => Equals(left, right);
 
     bool Equals(XNode? left, XNode? right)
     {
@@ -40,9 +41,9 @@ public class XNodeDeepEquals
     bool Equals(XComment left, XComment right)
     {
         if (left.BaseUri != right.BaseUri)
-            return False($"comments base URI: \"{left.BaseUri}\" != \"{right.BaseUri}\"");
+            return False($"comments base URI: \"{left.BaseUri}\" != \"{right.BaseUri}\"") || ignoreComments;
         if (left.Value != right.Value)
-            return False($"comments: \"{left.Value}\" != \"{right.Value}\"");
+            return False($"comments: \"{left.Value}\" != \"{right.Value}\"") || ignoreComments;
 
         return true;
     }

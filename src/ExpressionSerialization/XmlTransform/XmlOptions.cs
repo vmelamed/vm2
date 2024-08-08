@@ -91,12 +91,12 @@ public partial class XmlOptions : DocumentOptions
         }
     }
 
-    string _characterEncoding = "utf-8";
-    bool _byteOrderMark = false;
-    bool _bigEndian = false;
-    bool _addDocumentDeclaration = true;
+    string _characterEncoding     = "utf-8";
+    bool _byteOrderMark           = false;
+    bool _bigEndian               = false;
+    bool _addDocumentDeclaration  = true;
     bool _omitDuplicateNamespaces = true;
-    bool _attributesOnNewLine = false;
+    bool _attributesOnNewLine     = false;
     XmlWriterSettings? _xmlWriterSettings;
 
     /// <summary>
@@ -277,7 +277,7 @@ public partial class XmlOptions : DocumentOptions
     /// <param name="comment">The comment.</param>
     /// <returns>The comment object System.Nullable&lt;XComment&gt;.</returns>
     internal XComment? Comment(string comment)
-        => AddComments ? new XComment(comment) : null;
+        => AddComments ? new XComment($" {comment} ") : null;
 
     /// <summary>
     /// Builds an XML comment object with the text of the expression if comments are enabled.
@@ -285,18 +285,7 @@ public partial class XmlOptions : DocumentOptions
     /// <param name="expression">The expression.</param>
     /// <returns>System.Nullable&lt;XComment&gt;.</returns>
     internal XComment? Comment(Expression expression)
-        => AddComments ? Comment($" {expression} ") : null;
-
-    /// <summary>
-    /// Adds the expression comment to the specified XML container if comments are enabled.
-    /// </summary>
-    /// <param name="parent">The parent.</param>
-    /// <param name="expression">The expression.</param>
-    internal void AddComment(XContainer parent, Expression expression)
-    {
-        if (AddComments)
-            parent.Add(Comment($" {expression} "));
-    }
+        => AddComments ? new XComment($" {expression} ") : null;
 
     /// <summary>
     /// Adds the comment to the specified XML container if comments are enabled.
@@ -306,7 +295,18 @@ public partial class XmlOptions : DocumentOptions
     internal void AddComment(XContainer parent, string comment)
     {
         if (AddComments)
-            parent.Add(Comment($" {comment} "));
+            parent.Add(new XComment($" {comment} "));
+    }
+
+    /// <summary>
+    /// Adds the expression comment to the specified XML container if comments are enabled.
+    /// </summary>
+    /// <param name="parent">The parent.</param>
+    /// <param name="expression">The expression.</param>
+    internal void AddComment(XContainer parent, Expression expression)
+    {
+        if (AddComments)
+            parent.Add(new XComment($" {expression} "));
     }
 
     /// <summary>
@@ -316,7 +316,8 @@ public partial class XmlOptions : DocumentOptions
     /// <param name="type">The type.</param>
     /// <returns>The comment as System.Nullable&lt;XComment&gt;.</returns>
     internal XComment? TypeComment(Type type)
-        => TypeNames != TypeNameConventions.AssemblyQualifiedName &&
+        => AddComments &&
+           TypeNames != TypeNameConventions.AssemblyQualifiedName &&
            (!type.IsBasicType() && type != typeof(object) || type.IsEnum)
                 ? Comment($" {Transform.TypeName(type, TypeNames)} ")
                 : null;
@@ -324,7 +325,7 @@ public partial class XmlOptions : DocumentOptions
     internal XmlWriterSettings XmlWriterSettings
         => _xmlWriterSettings is not null && !Changed
                 ? _xmlWriterSettings
-                : (_xmlWriterSettings = new() {
+                : _xmlWriterSettings = new() {
                     Encoding = Encoding,
                     Indent = Indent,
                     IndentChars = new(' ', IndentSize),
@@ -332,6 +333,6 @@ public partial class XmlOptions : DocumentOptions
                     NewLineOnAttributes = AttributesOnNewLine,
                     OmitXmlDeclaration = !AddDocumentDeclaration,
                     WriteEndDocumentOnClose = true,
-                });
+                };
 
 }

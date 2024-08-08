@@ -179,16 +179,16 @@ partial class ToJsonDataTransform(JsonOptions options)
             Vocabulary.Anonymous,
                 new JElement(
                         Vocabulary.Type,
-                            Transform.TypeName(nodeType)),
+                        Transform.TypeName(nodeType)),
                 new JElement(
                         Vocabulary.Value,
-                            nodeType
-                                .GetProperties()
-                                .Select(pi => new JElement(
-                                                        pi.Name,
-                                                        GetTransform(pi.PropertyType)(
-                                                            pi.GetValue(nodeValue, null),
-                                                            pi.PropertyType)))));
+                        nodeType
+                            .GetProperties()
+                            .Select(pi => new JElement(
+                                                    pi.Name,
+                                                    GetTransform(pi.PropertyType)(
+                                                        pi.GetValue(nodeValue, null),
+                                                        pi.PropertyType)))));
 
     JElement TupleTransform(
         object? nodeValue,

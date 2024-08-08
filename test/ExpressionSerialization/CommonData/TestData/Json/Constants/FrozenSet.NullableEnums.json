@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " value(System.Collections.Frozen.SmallValueTypeDefaultComparerFrozenSet\u00601[System.Nullable\u00601[vm2.ExpressionSerialization.TestsCommonData.EnumTest]]) ",
   "expression": {
     "constant": {
       "$comment": " System.Collections.Frozen.SmallValueTypeDefaultComparerFrozenSet\u003Cnullable\u003Cvm2.ExpressionSerialization.TestsCommonData.EnumTest\u003E\u003E ",

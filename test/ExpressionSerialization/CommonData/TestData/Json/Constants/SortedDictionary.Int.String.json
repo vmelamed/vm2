@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " value(System.Collections.Generic.SortedDictionary\u00602[System.Int32,System.String]) ",
   "expression": {
     "constant": {
       "$comment": " System.Collections.Generic.SortedDictionary\u003Cint, string\u003E ",

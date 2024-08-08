@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " m =\u003E m.InnerProperty.IntProperty ",
   "expression": {
     "lambda": {
       "type": "int",

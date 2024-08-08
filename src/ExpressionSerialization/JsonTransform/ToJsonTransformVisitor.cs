@@ -38,13 +38,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             return GenericVisit(
                      node,
                      base.VisitConstant,
-                     (n, x) =>
-                     {
-                         // options.AddComment(x, n);
-                         x.Add(
-                            options.TypeComment(n.Type),
-                            _dataTransform.TransformNode(n));
-                     });
+                     (n, x) => x.Add(
+                                    options.TypeComment(n.Type),
+                                    _dataTransform.TransformNode(n)));
         }
         catch (Exception x)
         {

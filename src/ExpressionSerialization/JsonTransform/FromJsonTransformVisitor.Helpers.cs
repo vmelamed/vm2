@@ -38,7 +38,7 @@ public partial class FromJsonTransformVisitor
         return _labelTargets[id] = type is not null ? Expression.Label(type, name) : Expression.Label(name);
     }
 
-    MemberInfo? GetMemberInfo(JElement e, string memberInfoName)
+    static MemberInfo? GetMemberInfo(JElement e, string memberInfoName)
         => e.TryGetElement(out var member, memberInfoName) && member.HasValue
                 ? VisitMemberInfo(member.Value)
                 : null;

@@ -26,10 +26,8 @@ public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionT
         return new JsonObject(_nodeOptions)
         {
             { Vocabulary.Schema, JsonOptions.Exs },
-            { Vocabulary.Expression, new JsonObject(_nodeOptions)
-                                     {
-                                        _expressionVisitor.Result
-                                     } }
+            _options.Comment(expression),
+            { Vocabulary.Expression, new JsonObject(_nodeOptions) { _expressionVisitor.Result} }
         };
     }
 

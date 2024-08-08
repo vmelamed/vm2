@@ -272,10 +272,7 @@ public partial class JsonOptions : DocumentOptions
     /// <param name="parent">The parent.</param>
     /// <param name="expression">The expression.</param>
     internal void AddComment(JsonObject parent, Expression expression)
-    {
-        if (AddComments)
-            parent.Add(Conventions.Vocabulary.Comment, $" {expression} ");
-    }
+        => parent.Add(AddComments ? new JElement(Conventions.Vocabulary.Comment, $" {expression} ") : null);
 
     /// <summary>
     /// Adds the comment to the specified JSON container if comments are enabled.
@@ -283,10 +280,7 @@ public partial class JsonOptions : DocumentOptions
     /// <param name="parent">The parent.</param>
     /// <param name="comment">The comment.</param>
     internal void AddComment(JElement parent, string comment)
-    {
-        if (AddComments)
-            parent.Add(Comment($" {comment} ")!);
-    }
+        => parent.Add(Comment($" {comment} "));
 
     /// <summary>
     /// Adds the expression comment to the specified JSON container if comments are enabled.
@@ -294,10 +288,7 @@ public partial class JsonOptions : DocumentOptions
     /// <param name="parent">The parent.</param>
     /// <param name="expression">The expression.</param>
     internal void AddComment(JElement parent, Expression expression)
-    {
-        if (AddComments)
-            parent.Add(Comment($" {expression} ")!);
-    }
+        => parent.Add(AddComments ? Comment($" {expression} ") : null);
 
     /// <summary>
     /// Creates an <see cref="XComment" /> with the human readable name of the <paramref name="type" /> if comments are enabled.
@@ -306,7 +297,8 @@ public partial class JsonOptions : DocumentOptions
     /// <param name="type">The type.</param>
     /// <returns>The comment as System.Nullable&lt;XComment&gt;.</returns>
     internal JElement? TypeComment(Type type)
-    => TypeNames != TypeNameConventions.AssemblyQualifiedName &&
+    => AddComments &&
+       TypeNames != TypeNameConventions.AssemblyQualifiedName &&
        (!type.IsBasicType() && type != typeof(object) || type.IsEnum)
                 ? Comment($" {Transform.TypeName(type, TypeNames)} ")
                 : null;

@@ -1,5 +1,6 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " System.Memory\u003CInt32\u003E[0] ",
   "expression": {
     "constant": {
       "$comment": " System.Memory\u003Cint\u003E ",
