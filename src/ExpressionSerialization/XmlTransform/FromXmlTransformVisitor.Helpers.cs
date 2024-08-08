@@ -53,18 +53,18 @@ public partial class FromXmlTransformVisitor
 
         // get the declaring type - where to get the member info from
         var declTypeName = e.Attribute(AttributeNames.DeclaringType)?.Value
-                ?? throw new SerializationException($"Could not get the declaring type of the member info of the e `{e.Name}`");
+                ?? throw new SerializationException($"Could not get the declaring type of the member info of the element '{e.Name}'.");
 
         if (!Vocabulary.NamesToTypes.TryGetValue(declTypeName, out var declType))
             declType = Type.GetType(declTypeName);
 
         if (declType is null)
-            throw new SerializationException($"Could not get the required declaring type of the member info of the e `{e.Name}`");
+            throw new SerializationException($"Could not get the required declaring type of the member info of the element '{e.Name}'.");
 
         // get the name of the member
         e.TryGetName(out var name);
         if (name is null && e.Name.LocalName != Vocabulary.Constructor)
-            throw new SerializationException($"Could not get the name in the member info of the e `{e.Name}`");
+            throw new SerializationException($"Could not get the name in the member info of the element '{e.Name}'");
 
         // get the visibility flags into BindingFlags
         var isStatic = XmlConvert.ToBoolean(e.Attribute(AttributeNames.Static)?.Value ?? "false");
@@ -84,9 +84,9 @@ public partial class FromXmlTransformVisitor
             Vocabulary.Method => declType.GetMethod(name!, bindingFlags, null, paramTypes, [modifiers]),
             Vocabulary.Field => declType.GetField(name!, bindingFlags),
             Vocabulary.Event => declType.GetEvent(name!, bindingFlags),
-            _ => throw new SerializationException($"Could not get the member info type represented by the e `{e.Name}`"),
+            _ => throw new SerializationException($"Could not get the member info type represented by the element '{e.Name}'"),
         }
-        ?? throw new SerializationException($"Could not get the member info type represented by the e `{e.Name}`");
+        ?? throw new SerializationException($"Could not get the member info type represented by the element '{e.Name}'");
     }
 
     static (Type[], ParameterModifier) GetParameterSpecs(XElement element)

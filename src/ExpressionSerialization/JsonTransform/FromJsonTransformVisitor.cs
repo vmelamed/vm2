@@ -88,7 +88,7 @@ public partial class FromJsonTransformVisitor
     protected virtual IEnumerable<ParameterExpression> VisitParameterList(JElement e)
         => e.Value?
             .AsArray()?
-            .Select(pe => VisitParameter(("", pe)))
+            .Select((pe, i) => VisitParameter(($"param{i}", pe)))
                 ?? throw new SerializationException($"Expected array of parameters at '{e.GetPath()}'.");
 
     /// <summary>
@@ -119,22 +119,32 @@ public partial class FromJsonTransformVisitor
                         e.GetExpressionType(),
                         Visit(operands[0]!.AsObject()!.GetFirstObject()),
                         e.GetTypeFromProperty(),
-                        null /*e.TryGetElement(out var method, Vocabulary.Method) ? VisitMemberInfo(method) as MethodInfo : null*/);
+                        GetMemberInfo(e, Vocabulary.Method) as MethodInfo);
     }
 
-    ///// <summary>
-    ///// Visits an Json e representing a binary expression, e.g. `a + b`.
-    ///// </summary>
-    ///// <param name="e">The e.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the e.</returns>
-    //protected virtual BinaryExpression VisitBinary(JElement e)
-    //    => Expression.MakeBinary(
-    //                        e.ExpressionType(),
-    //                        VisitChild(e, 0),
-    //                        VisitChild(e, 1),
-    //                        JsonConvert.ToBoolean(e.Attribute(AttributeNames.IsLiftedToNull)?.Value ?? "false"),
-    //                        e.TryGetFirstElement(Vocabulary.Method, out var method) ? VisitMemberInfo(method) as MethodInfo : null,
-    //                        e.Element(ElementNames.Convert) is JElement convert ? Visit(convert) as LambdaExpression : null);
+    /// <summary>
+    /// Visits an Json e representing a binary expression, e.g. `a + b`.
+    /// </summary>
+    /// <param name="e">The e.</param>
+    /// <returns>The <see cref="Expression"/> represented by the e.</returns>
+    protected virtual BinaryExpression VisitBinary(JElement e)
+    {
+        var operands = e.GetArray(Vocabulary.Operands);
+
+        if (operands.Count != 2 ||
+            operands[0]?.AsObject() is null)
+            throw new SerializationException($"Expected exactly two operands to binary expression at '{e.GetPath()}'");
+
+        return Expression.MakeBinary(
+                            e.GetExpressionType(),
+                            Visit(operands[0]!.AsObject()!.GetFirstObject()),
+                            Visit(operands[1]!.AsObject()!.GetFirstObject()),
+                            e.TryGetPropertyValue<bool>(out var isLiftedToNull, Vocabulary.IsLiftedToNull) && isLiftedToNull,
+                            GetMemberInfo(e, Vocabulary.Method) as MethodInfo,
+                            e.TryGetElement(out var convert, Vocabulary.Convert) && convert.HasValue
+                                ? Visit(convert.Value) as LambdaExpression
+                                : null);
+    }
 
     ///// <summary>
     ///// Visits an Json e representing a type binary expression, e.g. `x is Type`.

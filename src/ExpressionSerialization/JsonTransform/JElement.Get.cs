@@ -90,10 +90,21 @@ public partial struct JElement
         string propertyValueName = Vocabulary.Value)
     {
         value = default;
-        return Value is JsonObject jsObj
-                && jsObj.TryGetValue(out var node, propertyValueName) is true
-                && node is JsonValue jsVal
-                && jsVal.TryGetValue<T>(out value) is true;
+
+        if (Value is not JsonObject jsObj
+            || jsObj.TryGetValue(out var node, propertyValueName) is false
+            || node is not JsonValue jsVal)
+            return false;
+
+        if (typeof(T).IsEnum
+            && jsVal.TryGetValue<string>(out var str) is true
+            && Enum.TryParse(typeof(T), str, true, out var obj))
+        {
+            value = (T)obj;
+            return true;
+        }
+
+        return jsVal.TryGetValue<T>(out value);
     }
 
     /// <summary>
@@ -104,9 +115,7 @@ public partial struct JElement
     /// <returns>The name of the property.</returns>
     public readonly T GetPropertyValue<T>(
         string propertyValueName = Vocabulary.Value)
-        => (Value is JsonObject jsObj
-            && jsObj.TryGetValue(out var node, propertyValueName) is true
-            && node?.AsValue()?.TryGetValue<T>(out var value) is true)
+        => TryGetPropertyValue<T>(out var value, propertyValueName)
             && value is not null
                 ? value
                 : throw new SerializationException($"Could not get '{nameof(T)}' property name at '{GetPath()}'.");
@@ -117,7 +126,7 @@ public partial struct JElement
     /// <param name="name">The property name.</param>
     /// <param name="propertyNameName">Name of the property Name.</param>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
-    public readonly bool TryGetPropertyName(
+    public readonly bool TryGetName(
         out string? name,
         string propertyNameName = Vocabulary.Name)
         => TryGetPropertyValue(out name, propertyNameName);
@@ -127,7 +136,7 @@ public partial struct JElement
     /// </summary>
     /// <param name="propertyNameName">Name of the property.</param>
     /// <returns>The value of the property.</returns>
-    public readonly string GetPropertyName(
+    public readonly string GetName(
         string propertyNameName = Vocabulary.Name)
         => GetPropertyValue<string>(propertyNameName);
 
@@ -137,7 +146,7 @@ public partial struct JElement
     /// <param id="id">The property id.</param>
     /// <param id="propertyIdName">Name of the property Id.</param>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
-    public readonly bool TryGetPropertyId(
+    public readonly bool TryGetId(
         out string? id,
         string propertyIdName = Vocabulary.Id)
         => TryGetPropertyValue(out id, propertyIdName);
@@ -147,7 +156,7 @@ public partial struct JElement
     /// </summary>
     /// <param id="propertyIdName">Id of the property.</param>
     /// <returns>The value of the property.</returns>
-    public readonly string GetPropertyId(
+    public readonly string GetId(
         string propertyIdName = Vocabulary.Id)
         => GetPropertyValue<string>(propertyIdName);
 
