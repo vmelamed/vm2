@@ -77,7 +77,7 @@ public partial class FromJsonTransformVisitor
 
         yield return new(Vocabulary.TypeEqual, (v, e) => v.VisitTypeBinary(e));
         yield return new(Vocabulary.TypeIs, (v, e) => v.VisitTypeBinary(e));
-        //    yield return new(Vocabulary.Block,                (v, e) => v.VisitBlock(e)              );
+        yield return new(Vocabulary.Block, (v, e) => v.VisitBlock(e));
         //    yield return new(Vocabulary.Conditional,          (v, e) => v.VisitConditional(e)        );
         //    yield return new(Vocabulary.Index,                (v, e) => v.VisitIndex(e)              );
         //    yield return new(Vocabulary.New,                  (v, e) => v.VisitNew(e)                );

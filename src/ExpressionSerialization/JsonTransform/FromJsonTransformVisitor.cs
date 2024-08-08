@@ -175,39 +175,47 @@ public partial class FromJsonTransformVisitor
         };
     }
 
-    ///// <summary>
-    ///// Visits an Json e representing an index expression.
-    ///// </summary>
-    ///// <param name="e">The e.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the e.</returns>
-    //protected virtual Expression VisitIndex(JElement e)
-    //    => Expression.ArrayAccess(
-    //            VisitChild(e),
-    //            VisitIndexes(e));
+    /// <summary>
+    /// Visits an Json e representing an index expression.
+    /// </summary>
+    /// <param name="e">The e.</param>
+    /// <returns>The <see cref="Expression"/> represented by the e.</returns>
+    protected virtual Expression VisitIndex(JElement e)
+        => Expression.ArrayAccess(
+                VisitChild(e),
+                VisitIndexes(e));
 
-    ///// <summary>
-    ///// Visits the indexes e of an index operation.
-    ///// </summary>
-    ///// <param name="e">The e.</param>
-    ///// <returns>System.Collections.Generic.IEnumerable&lt;System.Linq.Expressions.Expression&gt;.</returns>
-    //protected virtual IEnumerable<Expression> VisitIndexes(JElement e)
-    //    => e.GetElement(Vocabulary.Indexes)
-    //                        .Elements()
-    //                        .Select(Visit);
+    /// <summary>
+    /// Visits the indexes e of an index operation.
+    /// </summary>
+    /// <param name="e">The e.</param>
+    /// <returns>System.Collections.Generic.IEnumerable&lt;System.Linq.Expressions.Expression&gt;.</returns>
+    protected virtual IEnumerable<Expression> VisitIndexes(JElement e)
+        => e.GetArray(Vocabulary.Indexes)
+                .Select(
+                    i =>
+                    {
+                        var ndx = i?.AsObject() ?? e.ThrowSerializationException<JsonObject>($"Expected index expression");
+                        return Visit(ndx.GetFirstObject());
+                    });
 
-    ///// <summary>
-    ///// Visits an Json e representing a block expression.
-    ///// </summary>
-    ///// <param name="e">The e.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the e.</returns>
-    //protected virtual BlockExpression VisitBlock(JElement e)
-    //    => Expression.Block(
-    //                        (e.TryGetFirstElement(Vocabulary.Variables, out var vars) ? vars : null)?
-    //                         .Elements()?
-    //                         .Select(v => VisitParameter(v, Vocabulary.Parameter)),
-    //                        e.Elements()
-    //                         .Where(e => e.Name != Vocabulary.Variables)
-    //                         .Select(Visit));
+    /// <summary>
+    /// Visits an Json e representing a block expression.
+    /// </summary>
+    /// <param name="e">The e.</param>
+    /// <returns>The <see cref="Expression"/> represented by the e.</returns>
+    protected virtual BlockExpression VisitBlock(JElement e)
+        => Expression.Block(
+                    (e.TryGetArray(out var vars, Vocabulary.Variables) ? vars : null)?
+                      .Select((v, i) => VisitParameter(($"var{i}", v))),
+                     e.GetArray(Vocabulary.Expressions)
+                      .Select(
+                        x =>
+                        {
+                            var expr = x?.AsObject() ?? e.ThrowSerializationException<JsonObject>($"Expected expression");
+                            return Visit(expr.GetFirstObject());
+                        })
+            );
 
     ///// <summary>
     ///// Visits an Json e representing a conditional expression.
