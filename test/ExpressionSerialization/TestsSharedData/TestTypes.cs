@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.TestsCommonData;
+﻿namespace vm2.ExpressionSerialization.TestsSharedData;
 
 public enum EnumTest
 {

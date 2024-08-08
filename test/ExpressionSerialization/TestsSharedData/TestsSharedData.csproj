@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>vm2.ExpressionSerialization.TestsCommonData</RootNamespace>
+        <RootNamespace>vm2.ExpressionSerialization.TestsSharedData</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

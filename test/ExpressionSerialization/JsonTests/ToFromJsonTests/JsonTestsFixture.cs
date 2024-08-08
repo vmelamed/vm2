@@ -2,8 +2,8 @@
 
 public class JsonTestsFixture : IDisposable
 {
-    internal const string TestFilesPath = "../../../../CommonData/TestData/Json";
-    internal const string TestLoadPath  = "../../../../CommonData/TestData/Json/LoadTestData";
+    internal const string TestFilesPath = "../../../../TestsSharedData/TestData/Json";
+    internal const string TestLoadPath  = "../../../../TestsSharedData/TestData/Json/LoadTestData";
 
     internal const string SchemasPath = "../../../../../../src/ExpressionSerialization/Schemas";
 

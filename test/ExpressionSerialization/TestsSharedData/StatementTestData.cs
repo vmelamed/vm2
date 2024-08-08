@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.TestsCommonData;
+﻿namespace vm2.ExpressionSerialization.TestsSharedData;
 
 #pragma warning disable IDE0300 // Simplify collection initialization
 #pragma warning disable IDE0056 // Use index operator

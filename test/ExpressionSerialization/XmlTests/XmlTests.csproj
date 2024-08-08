@@ -5,15 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="TestData\**" />
-        <Compile Remove="ToExpressionTests\**" />
-        <EmbeddedResource Remove="TestData\**" />
-        <EmbeddedResource Remove="ToExpressionTests\**" />
-        <None Remove="TestData\**" />
-        <None Remove="ToExpressionTests\**" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="xunit" />
@@ -33,7 +24,7 @@
         <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
         <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
         <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
-        <ProjectReference Include="..\CommonData\CommonData.csproj" />
+        <ProjectReference Include="..\TestsSharedData\TestsSharedData.csproj" />
     </ItemGroup>
 
     <ItemGroup>

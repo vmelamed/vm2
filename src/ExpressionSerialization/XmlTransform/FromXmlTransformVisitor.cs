@@ -142,7 +142,7 @@ public partial class FromXmlTransformVisitor
     /// <summary>
     /// Visits the indexes element of an index operation.
     /// </summary>
-    /// <param name="e">The e.</param>
+    /// <param name="e">The element.</param>
     /// <returns>System.Collections.Generic.IEnumerable&lt;System.Linq.Expressions.Expression&gt;.</returns>
     protected virtual IEnumerable<Expression> VisitIndexes(XElement e)
         => e.GetChild(Vocabulary.Indexes)
@@ -419,7 +419,7 @@ public partial class FromXmlTransformVisitor
     /// <summary>
     /// Visits a new list with initializers, e.g. 'new() { 1, a++, b+c }'.
     /// </summary>
-    /// <param name="e">The e.</param>
+    /// <param name="e">The element.</param>
     /// <returns>System.Linq.Expressions.ListInitExpression.</returns>
     protected virtual ListInitExpression VisitListInit(XElement e)
         => Expression.ListInit(

@@ -46,7 +46,7 @@ public partial class FromJsonTransformVisitor
     /// <summary>
     /// Gets the member information that may be attached to the expression.
     /// </summary>
-    /// <param name="e">The e representing the member info.</param>
+    /// <param name="e">The element representing the member info.</param>
     /// <returns>System.Reflection.MemberInfo.</returns>
     internal static MemberInfo? VisitMemberInfo(JElement e)
     {

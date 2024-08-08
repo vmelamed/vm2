@@ -2,11 +2,7 @@
     <PropertyGroup>
         <RootNamespace>vm2.ExpressionSerialization.JsonTests</RootNamespace>
     </PropertyGroup>
-    <ItemGroup>
-      <Compile Remove="TestData\**" />
-      <EmbeddedResource Remove="TestData\**" />
-      <None Remove="TestData\**" />
-    </ItemGroup>
+
     <ItemGroup>
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -27,7 +23,7 @@
         <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
         <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
         <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
-        <ProjectReference Include="..\CommonData\CommonData.csproj" />
+        <ProjectReference Include="..\TestsSharedData\TestsSharedData.csproj" />
     </ItemGroup>
 
     <ItemGroup>
