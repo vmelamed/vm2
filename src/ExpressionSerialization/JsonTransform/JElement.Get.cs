@@ -52,7 +52,7 @@ public partial struct JElement
     public readonly T? GetValue<T>()
         => TryGetValue<T>(out var value)
                 ? value
-                : throw new NotImplementedException($"Could not get the integer, string, boolean, or null name at '{GetPath()}'.");
+                : ThrowSerializationException<T?>($"Could not get the value of the element");
 
     /// <summary>
     /// Tries to get the name of the property with name <paramref name="propertyValueName"/>.
@@ -77,7 +77,7 @@ public partial struct JElement
         string propertyValueName = Vocabulary.Value)
         => TryGetPropertyValue(out var node, propertyValueName)
             ? node
-            : throw new SerializationException($"Could not get the name at '{GetPath()}'.");
+            : ThrowSerializationException<JsonNode?>($"Could not get the value of a property '{propertyValueName}'");
 
     /// <summary>
     /// Tries to get the strongly typed name of the property with name <paramref name="propertyValueName"/>.
@@ -118,7 +118,7 @@ public partial struct JElement
         => TryGetPropertyValue<T>(out var value, propertyValueName)
             && value is not null
                 ? value
-                : throw new SerializationException($"Could not get '{nameof(T)}' property name at '{GetPath()}'.");
+                : ThrowSerializationException<T>($"Could not get '{nameof(T)}' value of property '{propertyValueName}'");
 
     /// <summary>
     /// Tries to get the strongly typed name of the property with name <paramref name="propertyNameName"/>.
@@ -196,7 +196,7 @@ public partial struct JElement
     public readonly ExpressionType GetExpressionType()
         => TryGetExpressionType(out var expressionType)
             ? expressionType
-            : throw new SerializationException($"The name of the element '{Name}' is not from the 'enum ExpressionType' at {GetPath()}.");
+            : ThrowSerializationException<ExpressionType>($"The name of the element '{Name}' is not from the 'enum ExpressionType'");
 
     /// <summary>
     /// Tries to get the .NET type of this element from its <see cref="Value"/>'s property <paramref name="propertyTypeName"/>.
@@ -222,7 +222,7 @@ public partial struct JElement
         string propertyTypeName = Vocabulary.Type)
         => TryGetTypeFromProperty(out var type, propertyTypeName) && type is not null
                 ? type
-                : throw new SerializationException($"Could not get the .NET type at '{GetPath()}'.");
+                : ThrowSerializationException<Type>($"Could not get the .NET type from property '{propertyTypeName}'");
 
     /// <summary>
     /// Tries to get the .NET type of the element
@@ -256,7 +256,7 @@ public partial struct JElement
         string propertyTypeName = Vocabulary.Type)
         => TryGetType(out var type, propertyTypeName) && type is not null
                 ? type
-                : throw new SerializationException($"Could not get the .NET type at '{GetPath()}'.");
+                : ThrowSerializationException<Type>($"Could not get the .NET type from an element - neither from the its name '{Name}' nor from its property '{propertyTypeName}'");
 
     /// <summary>
     /// Tries to construct a JElement from the name and the name of a property with one of the names in <paramref name="names"/>.
@@ -289,7 +289,7 @@ public partial struct JElement
         IEnumerable<string> names)
         => TryGetOneOf(names, out var element) && element.HasValue
                 ? element.Value
-                : throw new SerializationException($"Could not find a property with one of the names '{string.Join("', '", names)}' at '{GetPath()}'.");
+                : ThrowSerializationException<JElement>($"Could not find a property with any of the names '{string.Join("', '", names)}'");
 
     /// <summary>
     /// Tries to construct a <see cref="JElement" /> from this <see cref="Value"/>'s property <paramref name="childPropertyName" /> and
@@ -323,7 +323,7 @@ public partial struct JElement
         => TryGetElement(out var element, childPropertyName)
             && element.HasValue
                 ? element.Value
-                : throw new SerializationException($"Could not get JsonObject at '{GetPath()}'.");
+                : ThrowSerializationException<JElement>($"Could not get a child 'JsonObject' with name {childPropertyName}");
 
     /// <summary>
     /// Tries to construct a <see cref="JElement" /> from this <see cref="Value"/>'s property <paramref name="childPropertyName" /> and
@@ -354,7 +354,7 @@ public partial struct JElement
         => TryGetArray(out var array, childPropertyName)
             && array is not null
             ? array
-            : throw new SerializationException($"Could not get JsonObject at '{GetPath()}'.");
+            : throw new SerializationException($"Could not get a child 'JsonArray' with name {childPropertyName}");
 
     /// <summary>
     /// Tries to construct a JElement from the name and name of the first property where the property name is a JsonObject.
@@ -382,5 +382,5 @@ public partial struct JElement
     public readonly JElement GetFirstElement()
         => TryGetFirstElement(out var element) && element.HasValue
                 ? element.Value
-                : throw new SerializationException($"Could not find a JsonObject at '{GetPath()}'.");
+                : ThrowSerializationException<JElement>($"Could not find a single child 'JsonObject'");
 }

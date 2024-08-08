@@ -55,12 +55,14 @@ public partial class FromJsonTransformVisitor
 
         if (!Vocabulary.NamesToTypes.TryGetValue(declTypeName, out var declType))
             declType = Type.GetType(declTypeName)
-                                ?? throw new SerializationException($"Could not get the required declaring type of the member info of the e '{e.Name}' at '{e.GetPath()}'");
+                                ?? e.ThrowSerializationException<Type?>($"Could not get the required declaring type of the member for a member info");
+
+        Debug.Assert(declType is not null);
 
         // get the name of the member
         e.TryGetName(out var name);
         if (name is null && e.Name != Vocabulary.Constructor)
-            throw new SerializationException($"Could not get the name in the member info of the e '{e.Name}' at '{e.GetPath()}'");
+            e.ThrowSerializationException<MemberInfo?>($"Could not get the name of the member for a member info");
 
         // get the visibility flags into BindingFlags
         var isStatic = e.TryGetPropertyValue<bool>(out var stat, Vocabulary.Static) && stat;
@@ -80,7 +82,7 @@ public partial class FromJsonTransformVisitor
             Vocabulary.Field => declType.GetField(name!, bindingFlags),
             Vocabulary.Event => declType.GetEvent(name!, bindingFlags),
             _ => null,
-        } ?? throw new SerializationException($"Could not get the member info type represented by the e '{e.Name}' at {e.GetPath()}");
+        } ?? e.ThrowSerializationException<MemberInfo?>($"Could not create the member info");
     }
 
     internal static (Type[], ParameterModifier) GetParameterSpecs(JElement e)
@@ -101,9 +103,9 @@ public partial class FromJsonTransformVisitor
             .Select(
                 (n, i) =>
                 {
-                    var jsObj = n?.GetValueKind() is JsonValueKind.Object ? n.AsObject() : throw new SerializationException($"Invalid parameter info at '{parameters.GetPath()}'.");
+                    var jsObj = n?.GetValueKind() is JsonValueKind.Object ? n.AsObject() : parameters.ThrowSerializationException<JsonObject>($"Invalid parameter info");
 
-                    types[i] = jsObj.TryGetType(out var type) && type is not null ? type : throw new SerializationException($"Could not get the type of a parameter info at {n.GetPath()}");
+                    types[i] = jsObj.TryGetType(out var type) && type is not null ? type : parameters.ThrowSerializationException<Type>($"Could not get the type for a parameter info");
                     mods[i] = jsObj.TryGetPropertyValue<bool>(Vocabulary.IsByRef, out var isByRef) && isByRef;
                     return 1;
                 })

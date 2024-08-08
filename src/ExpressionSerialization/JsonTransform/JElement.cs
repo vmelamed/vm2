@@ -185,4 +185,12 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// </summary>
     /// <returns>A <see cref="string" /> that represents this instance.</returns>
     public override readonly string ToString() => $"[{Name}, {Value}]";
+
+    /// <summary>
+    /// Throws a (de)serialization exception.
+    /// </summary>
+    /// <param name="message">The exception message will be appended with &quot; -- &apos;&lt;the element path&gt;&apos;.&quot;.</param>
+    /// <exception cref="SerializationException"></exception>
+    public readonly T ThrowSerializationException<T>(string message = "Invalid JSON")
+        => throw new SerializationException($"{message} -- at '{GetPath()}'.");
 }

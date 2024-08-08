@@ -13,7 +13,7 @@ public partial class FromJsonTransformVisitor
     public virtual Expression Visit(JElement e)
         => _transforms.TryGetValue(e.Name, out var visit)
                 ? visit(this, e)
-                : throw new SerializationException($"Don't know how to deserialize the e '{e.Name}' at {e.GetPath()}.");
+                : e.ThrowSerializationException<Expression>($"Don't know how to deserialize the element");
 
     #region Concrete Json element visitors
     /// <summary>
@@ -22,19 +22,19 @@ public partial class FromJsonTransformVisitor
     /// <param name="e">The element whose child must be visited.</param>
     /// <param name="childIndex">Index of the child.</param>
     /// <returns>Expression.</returns>
-    /// <exception cref="System.Runtime.Serialization.SerializationException">Could not find object with children at {e.GetPath()}</exception>
+    /// <exception cref="System.Runtime.Serialization.SerializationException">Could not find object with children</exception>
     public virtual Expression VisitChild(JElement e, int childIndex = 0)
     {
         var jsObj = e.Value?.AsObject();
 
         if (jsObj is null)
-            throw new SerializationException($"Could not find object with children at {e.GetPath()}");
+            return e.ThrowSerializationException<Expression>($"Could not find object with children");
 
         foreach (var child in jsObj.Where(c => c.Value is JsonObject))
             if (childIndex-- == 0)
                 return Visit(child);
 
-        throw new SerializationException($"Could not find child #{childIndex} at {e.GetPath()}");
+        return jsObj.ThrowSerializationException<Expression>($"Could not find child 'JsonObject' #{childIndex}");
     }
 
     /// <summary>
@@ -63,10 +63,10 @@ public partial class FromJsonTransformVisitor
         => Expression.Default(e.GetTypeFromProperty());
 
     /// <summary>
-    /// Visits an Json e representing a parameter expression.
+    /// Visits an Json element representing a parameter expression.
     /// </summary>
     /// <param name="e">The e.</param>
-    /// <param name="expectedName">The expected name of the e, e.g. 'variable' or `parameter`.</param>
+    /// <param name="expectedName">The expected name of the element, e.g. 'variable' or `parameter`.</param>
     /// <returns>The <see cref="ParameterExpression" /> represented by the e.</returns>
     /// <exception cref="SerializationException">$</exception>
     protected virtual ParameterExpression VisitParameter(
@@ -75,7 +75,7 @@ public partial class FromJsonTransformVisitor
     {
         if (expectedName is not null
             && e.Name != expectedName)
-            throw new SerializationException($"Expected e {(string.IsNullOrWhiteSpace(expectedName) ? "" : $" with name '{expectedName}' but got '{e.Name}'")} at '{e.GetPath()}'.");
+            e.ThrowSerializationException<ParameterExpression>($"Expected element {(string.IsNullOrWhiteSpace(expectedName) ? "" : $"with name '{expectedName}' but got '{e.Name}'")}");
 
         return GetParameter(e);
     }
@@ -89,7 +89,7 @@ public partial class FromJsonTransformVisitor
         => e.Value?
             .AsArray()?
             .Select((pe, i) => VisitParameter(($"param{i}", pe)))
-                ?? throw new SerializationException($"Expected array of parameters at '{e.GetPath()}'.");
+                ?? e.ThrowSerializationException<IEnumerable<ParameterExpression>>($"Expected array of parameters");
 
     /// <summary>
     /// Visits an Json e representing a lambda expression, e.g. `a => a.Abc + 42`.
@@ -113,7 +113,7 @@ public partial class FromJsonTransformVisitor
 
         if (operands.Count != 1 ||
             operands[0]?.AsObject() is null)
-            throw new SerializationException($"Expected exactly one operand to unary expression at '{e.GetPath()}'");
+            e.ThrowSerializationException<UnaryExpression>($"Expected exactly one operand to unary expression");
 
         return Expression.MakeUnary(
                         e.GetExpressionType(),
@@ -131,14 +131,16 @@ public partial class FromJsonTransformVisitor
     {
         var operands = e.GetArray(Vocabulary.Operands);
 
-        if (operands.Count != 2 ||
-            operands[0]?.AsObject() is null)
-            throw new SerializationException($"Expected exactly two operands to binary expression at '{e.GetPath()}'");
+        if (operands.Count != 2)
+            e.ThrowSerializationException<int>($"Expected exactly two JsonObject operands of the binary expression");
+
+        var operandL = operands[0]?.AsObject() ?? operands.ThrowSerializationException<JsonObject>($"Expected exactly two JsonObject operands of the binary expression");
+        var operandR = operands[1]?.AsObject() ?? operands.ThrowSerializationException<JsonObject>($"Expected exactly two JsonObject operands of the binary expression");
 
         return Expression.MakeBinary(
                             e.GetExpressionType(),
-                            Visit(operands[0]!.AsObject()!.GetFirstObject()),
-                            Visit(operands[1]!.AsObject()!.GetFirstObject()),
+                            Visit(operandL.GetFirstObject()),
+                            Visit(operandR.GetFirstObject()),
                             e.TryGetPropertyValue<bool>(out var isLiftedToNull, Vocabulary.IsLiftedToNull) && isLiftedToNull,
                             GetMemberInfo(e, Vocabulary.Method) as MethodInfo,
                             e.TryGetElement(out var convert, Vocabulary.Convert) && convert.HasValue
@@ -146,23 +148,32 @@ public partial class FromJsonTransformVisitor
                                 : null);
     }
 
-    ///// <summary>
-    ///// Visits an Json e representing a type binary expression, e.g. `x is Type`.
-    ///// </summary>
-    ///// <param name="e">The e.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the e.</returns>
-    //protected virtual TypeBinaryExpression VisitTypeBinary(JElement e)
-    //    => e.Name switch {
-    //        "typeIs" => Expression.TypeIs(
-    //                        VisitChild(e),
-    //                        e.GetTypeFromProperty(AttributeNames.TypeOperand)),
+    /// <summary>
+    /// Visits an Json e representing a type binary expression, e.g. `x is Type`.
+    /// </summary>
+    /// <param name="e">The e.</param>
+    /// <returns>The <see cref="Expression"/> represented by the e.</returns>
+    protected virtual TypeBinaryExpression VisitTypeBinary(JElement e)
+    {
+        var operands = e.GetArray(Vocabulary.Operands);
 
-    //        "typeEqual" => Expression.TypeEqual(
-    //                        VisitChild(e),
-    //                        e.GetTypeFromProperty(AttributeNames.TypeOperand)),
+        if (operands.Count != 1)
+            e.ThrowSerializationException<JElement>($"Expected exactly one JsonObject operand to a binary type expression");
 
-    //        _ => throw new SerializationException($"Don't know how to transform {e.Name} to a `TypeBinaryExpression`."),
-    //    };
+        var operand = operands[0]?.AsObject() ?? operands.ThrowSerializationException<JsonObject>($"Expected exactly one JsonObject operand to a binary type expression");
+
+        return e.Name switch {
+            "typeIs" => Expression.TypeIs(
+                            Visit(operand.GetFirstObject()),
+                            e.GetTypeFromProperty(Vocabulary.TypeOperand)),
+
+            "typeEqual" => Expression.TypeEqual(
+                            Visit(operand.GetFirstObject()),
+                            e.GetTypeFromProperty(Vocabulary.TypeOperand)),
+
+            _ => e.ThrowSerializationException<TypeBinaryExpression>($"Don't know how to transform {e.Name} to a `TypeBinaryExpression`"),
+        };
+    }
 
     ///// <summary>
     ///// Visits an Json e representing an index expression.

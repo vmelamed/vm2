@@ -210,7 +210,7 @@ public static class JsonNodeExtensions
         string propertyName)
         => jsObj.TryGetPropertyValue(propertyName, out var node)
                 ? node
-                : throw new InternalTransformErrorException($"Could not find a property by name '{propertyName}' at '{jsObj.GetPath()}'.");
+                : jsObj.ThrowSerializationException<JsonNode?>($"Could not find a property by name '{propertyName}'");
 
     /// <summary>
     /// Gets the value of type <typeparamref name="T"/> of a property with the specified name <paramref name="propertyName"/>.
@@ -241,7 +241,7 @@ public static class JsonNodeExtensions
         string propertyName)
         => jsObj.TryGetPropertyValue<T>(propertyName, out var value)
                 ? value
-                : throw new InternalTransformErrorException($"Could not find a property by name '{propertyName}' at '{jsObj.GetPath()}'.");
+                : jsObj.ThrowSerializationException<T?>($"Could not find a property by name '{propertyName}'");
 
     /// <summary>
     /// Tries to find a property with one of the names in the sequence <paramref name="names"/>.
@@ -276,7 +276,7 @@ public static class JsonNodeExtensions
         IEnumerable<string> names)
         => jsObj.TryGetOneOf(names, out var propertyName, out var node)
                 ? (propertyName!, node)
-                : throw new SerializationException($"Could not find any of the properties '{string.Join("', '", names)}' at '{jsObj.GetPath()}'.");
+                : jsObj.ThrowSerializationException<(string, JsonNode?)>($"Could not find any of the properties '{string.Join("', '", names)}'");
 
     /// <summary>
     /// Determines whether the js object was marked to have a <see langword="null"/> value.
@@ -311,7 +311,7 @@ public static class JsonNodeExtensions
         string propertyValueName = Vocabulary.Value)
         => jsObj.TryGetPropertyValue(propertyValueName, out var value)
                 ? value
-                : throw new SerializationException($"Could not find the property '{propertyValueName}' at '{jsObj.GetPath()}'.");
+                : jsObj.ThrowSerializationException<JsonNode?>($"Could not find the property '{propertyValueName}'");
 
     /// <summary>
     /// Tries to get the node of the JSON property 'Length'.
@@ -346,7 +346,7 @@ public static class JsonNodeExtensions
         string propertyLengthName = Vocabulary.Length)
         => jsObj.TryGetLength(out var length, propertyLengthName)
                 ? length
-                : throw new SerializationException($"Could not find the property '{propertyLengthName}' at '{jsObj.GetPath()}'.");
+                : jsObj.ThrowSerializationException<int>($"Could not find the property '{propertyLengthName}'");
 
     /// <summary>
     /// Tries to get the type of the object, either from a property with a basic type name (e.g. 'int') or
@@ -389,7 +389,7 @@ public static class JsonNodeExtensions
         string propertyTypeName = Vocabulary.Type)
         => jsObj.TryGetType(out var type, propertyTypeName) && type is not null
                 ? type
-                : throw new SerializationException($"Could not find a property that defines the type of the object at '{jsObj.GetPath()}'.");
+                : jsObj.ThrowSerializationException<Type>($"Could not find a property '{propertyTypeName}' that defines the type of the object");
 
     /// <summary>
     /// Tries to get a JsonObject node from property <paramref name="propertyName"/>.
@@ -424,7 +424,7 @@ public static class JsonNodeExtensions
         string propertyName)
         => jsObj.TryGetObject(propertyName, out var child) && child is not null
                 ? child
-                : throw new SerializationException($"Could not find a JsonObject property '{propertyName}' at '{jsObj.GetPath()}'.");
+                : jsObj.ThrowSerializationException<JsonObject>($"Could not find a JsonObject property '{propertyName}'");
 
     /// <summary>
     /// Tries to get a JsonArray node from property <paramref name="propertyName"/>.
@@ -460,7 +460,7 @@ public static class JsonNodeExtensions
         string propertyName)
         => jsObj.TryGetArray(propertyName, out var array) && array is not null
                 ? array
-                : throw new SerializationException($"Could not find a JsonArray property '{propertyName}' at '{jsObj.GetPath()}'.");
+                : jsObj.ThrowSerializationException<JsonArray>($"Could not find a JsonArray property '{propertyName}'");
 
     /// <summary>
     /// Tries to get the first JsonObject node.
@@ -492,6 +492,15 @@ public static class JsonNodeExtensions
            name is not null
             && obj is not null
                 ? (name, obj)
-                : throw new SerializationException($"Could not find a JsonObject property at '{jsObj.GetPath()}'");
+                : jsObj.ThrowSerializationException<(string, JsonObject)>($"Could not find a property of type 'JsonObject'");
     #endregion
+
+    /// <summary>
+    /// Throws a (de)serialization exception at the specified node.
+    /// </summary>
+    /// <param name="node">The node where the problem was encountered.</param>
+    /// <param name="message">The exception message will be appended with &quot; -- &apos;&lt;the node path&gt;&apos;.&quot;.</param>
+    /// <exception cref="System.Runtime.Serialization.SerializationException"></exception>
+    public static T ThrowSerializationException<T>(this JsonNode node, string message = "Invalid JSON")
+        => throw new SerializationException($"{message} -- at '{node.GetPath()}'.");
 }
