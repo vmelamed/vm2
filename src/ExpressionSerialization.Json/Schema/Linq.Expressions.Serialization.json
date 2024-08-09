@@ -1797,18 +1797,13 @@
             "title": "Defines an operation on single operand (expression): Negate, NegateChecked, Not, ArrayLength, Convert, ConvertChecked, Quote, TypeAs, UnaryPlus",
             "type": "object",
             "properties": {
-                "operands": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/expression" },
-                    "minItems": 1,
-                    "maxItems": 1
-                },
+                "operand": { "$ref": "#/$defs/expression" },
                 "method": { "$ref": "#/$defs/method" },
                 "type": { "type": "string" },
                 "lifted": { "type": "boolean" },
                 "liftedToNull": { "type": "boolean" }
             },
-            "required": [ "operands" ],
+            "required": [ "operand" ],
             "additionalProperties": { "type": "string" }
         },
         "binary": {

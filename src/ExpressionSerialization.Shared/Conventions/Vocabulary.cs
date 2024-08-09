@@ -97,6 +97,7 @@ public static class Vocabulary
 
     public const string Expression              = "expression";
     public const string Operands                = "operands";
+    public const string Operand                 = "operand";
 
     public const string Body                    = "body";
     public const string Instance                = "instance";

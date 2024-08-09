@@ -14,15 +14,13 @@
       "body": {
         "convertChecked": {
           "type": "int",
-          "operands": [
-            {
-              "parameter": {
-                "type": "double",
-                "name": "a",
-                "id": "P1"
-              }
+          "operand": {
+            "parameter": {
+              "type": "double",
+              "name": "a",
+              "id": "P1"
             }
-          ]
+          }
         }
       }
     }

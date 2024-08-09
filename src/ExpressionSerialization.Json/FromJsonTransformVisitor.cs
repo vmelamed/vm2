@@ -108,19 +108,11 @@ public partial class FromJsonTransformVisitor
     /// <param name="e">The element.</param>
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual UnaryExpression VisitUnary(JElement e)
-    {
-        var operands = e.GetArray(Vocabulary.Operands);
-
-        if (operands.Count != 1 ||
-            operands[0]?.AsObject() is null)
-            e.ThrowSerializationException<UnaryExpression>($"Expected exactly one operand to unary expression");
-
-        return Expression.MakeUnary(
+        => Expression.MakeUnary(
                         e.GetExpressionType(),
-                        Visit(operands[0]!.AsObject()!.GetFirstObject()),
+                        VisitChild(e.GetElement(Vocabulary.Operand)),
                         e.GetTypeFromProperty(),
                         GetMemberInfo(e, Vocabulary.Method) as MethodInfo);
-    }
 
     /// <summary>
     /// Visits a Json element representing a binary expression, e.g. `a + b`.
@@ -164,12 +156,12 @@ public partial class FromJsonTransformVisitor
 
         return e.Name switch {
             "typeIs" => Expression.TypeIs(
-                            Visit(operand.GetFirstObject()),
-                            e.GetTypeFromProperty(Vocabulary.TypeOperand)),
+                                Visit(operand.GetFirstObject()),
+                                e.GetTypeFromProperty(Vocabulary.TypeOperand)),
 
             "typeEqual" => Expression.TypeEqual(
-                            Visit(operand.GetFirstObject()),
-                            e.GetTypeFromProperty(Vocabulary.TypeOperand)),
+                                Visit(operand.GetFirstObject()),
+                                e.GetTypeFromProperty(Vocabulary.TypeOperand)),
 
             _ => e.ThrowSerializationException<TypeBinaryExpression>($"Don't know how to transform {e.Name} to a `TypeBinaryExpression`"),
         };
@@ -192,12 +184,7 @@ public partial class FromJsonTransformVisitor
     /// <returns>System.Collections.Generic.IEnumerable&lt;System.Linq.Expressions.Expression&gt;.</returns>
     protected virtual IEnumerable<Expression> VisitIndexes(JElement e)
         => e.GetArray(Vocabulary.Indexes)
-                .Select(
-                    i =>
-                    {
-                        var ndx = i?.AsObject() ?? e.ThrowSerializationException<JsonObject>($"Expected index expression");
-                        return Visit(ndx.GetFirstObject());
-                    });
+            .Select(i => Visit(i.ToObject("Expected index expression").GetFirstObject()));
 
     /// <summary>
     /// Visits a Json element representing a block expression.
@@ -205,17 +192,18 @@ public partial class FromJsonTransformVisitor
     /// <param name="e">The element.</param>
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual BlockExpression VisitBlock(JElement e)
-        => Expression.Block(
+        => e.TryGetTypeFromProperty(out var type) && type is not null
+            ? Expression.Block(
+                    type,
                     (e.TryGetArray(out var vars, Vocabulary.Variables) ? vars : null)?
-                      .Select((v, i) => VisitParameter(($"var{i}", v))),
-                     e.GetArray(Vocabulary.Expressions)
-                      .Select(
-                        x =>
-                        {
-                            var expr = x?.AsObject() ?? e.ThrowSerializationException<JsonObject>($"Expected expression");
-                            return Visit(expr.GetFirstObject());
-                        })
-            );
+                        .Select((v, i) => VisitParameter(new($"var{i}", v))),
+                    e.GetArray(Vocabulary.Expressions)
+                        .Select(x => Visit(x.ToObject("Expected expression").GetFirstObject())))
+            : Expression.Block(
+                    (e.TryGetArray(out vars, Vocabulary.Variables) ? vars : null)?
+                        .Select((v, i) => VisitParameter(new($"var{i}", v))),
+                    e.GetArray(Vocabulary.Expressions)
+                        .Select(x => Visit(x.ToObject("Expected expression").GetFirstObject())));
 
     ///// <summary>
     ///// Visits a Json element representing a conditional expression.
@@ -261,13 +249,15 @@ public partial class FromJsonTransformVisitor
     //    return mems is null ? Expression.New(ci, args) : Expression.New(ci, args, mems);
     //}
 
-    ///// <summary>
-    ///// Visits a Json element representing a `throw` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual UnaryExpression VisitThrow(JElement e)
-    //    => Expression.Throw(VisitChild(e, 0));
+    /// <summary>
+    /// Visits a Json element representing a `throw` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual UnaryExpression VisitThrow(JElement e)
+        => e.TryGetTypeFromProperty(out var type) && type is not null
+                ? Expression.Throw(VisitChild(e.GetElement(Vocabulary.Operand)), type)
+                : Expression.Throw(VisitChild(e.GetElement(Vocabulary.Operand)));
 
     ///// <summary>
     ///// Visits a Json element representing a `Member` access expression, e.g. `a.Abc`.
@@ -276,7 +266,7 @@ public partial class FromJsonTransformVisitor
     ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
     //protected virtual Expression VisitMember(JElement e)
     //    => Expression.MakeMemberAccess(
-    //                        VisitChild(e, 0),
+    //                        VisitChild(e),
     //                        VisitMemberInfo(
     //                            e.TryGetFirstElement(Vocabulary.Property, out var mem) ||
     //                            e.TryGetFirstElement(Vocabulary.Field, out mem) ? mem : throw new SerializationException($"Could not deserialize `property` or `field` in `{e.Name}`"))

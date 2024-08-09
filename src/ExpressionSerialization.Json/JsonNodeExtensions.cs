@@ -502,7 +502,42 @@ public static class JsonNodeExtensions
     /// </summary>
     /// <param name="node">The node where the problem was encountered.</param>
     /// <param name="message">The exception message will be appended with &quot; -- &apos;&lt;the node path&gt;&apos;.&quot;.</param>
-    /// <exception cref="System.Runtime.Serialization.SerializationException"></exception>
+    /// <exception cref="SerializationException"></exception>
     public static T ThrowSerializationException<T>(this JsonNode node, string message = "Invalid JSON")
         => throw new SerializationException($"{message} -- at '{node.GetPath()}'.");
+
+    /// <summary>
+    /// Casts the <paramref name="node"/> to object or throws an exception.
+    /// </summary>
+    /// <param name="node">The node to cast.</param>
+    /// <param name="parent">The optional parent of the node.</param>
+    /// <param name="message">The message of the exception.</param>
+    /// <returns>JsonObject.</returns>
+    /// <exception cref="SerializationException"></exception>
+    public static JsonObject ToObject(
+        this JsonNode? node,
+        JsonNode? parent = null,
+        string message = "Expected child JsonObject")
+    {
+        if (node is JsonObject jsObject)
+            return jsObject;
+
+        node?.ThrowSerializationException<JsonObject>(message);
+
+        parent?.ThrowSerializationException<JsonObject>(message);
+
+        throw new SerializationException(message);
+    }
+
+    /// <summary>
+    /// Casts the <paramref name="node"/> to object or throws an exception.
+    /// </summary>
+    /// <param name="node">The node to cast.</param>
+    /// <param name="message">The message of the exception.</param>
+    /// <returns>JsonObject.</returns>
+    /// <exception cref="SerializationException"></exception>
+    public static JsonObject ToObject(
+        this JsonNode? node,
+        string message)
+        => node.ToObject(null, message);
 }

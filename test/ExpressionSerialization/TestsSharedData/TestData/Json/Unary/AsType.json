@@ -14,15 +14,13 @@
       "body": {
         "typeAs": {
           "type": "vm2.ExpressionSerialization.TestsSharedData.A, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-          "operands": [
-            {
-              "parameter": {
-                "type": "vm2.ExpressionSerialization.TestsSharedData.C, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                "name": "c",
-                "id": "P1"
-              }
+          "operand": {
+            "parameter": {
+              "type": "vm2.ExpressionSerialization.TestsSharedData.C, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "name": "c",
+              "id": "P1"
             }
-          ]
+          }
         }
       }
     }

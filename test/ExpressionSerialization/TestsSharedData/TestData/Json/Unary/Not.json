@@ -14,15 +14,13 @@
       "body": {
         "not": {
           "type": "boolean",
-          "operands": [
-            {
-              "parameter": {
-                "type": "boolean",
-                "name": "a",
-                "id": "P1"
-              }
+          "operand": {
+            "parameter": {
+              "type": "boolean",
+              "name": "a",
+              "id": "P1"
             }
-          ]
+          }
         }
       }
     }
