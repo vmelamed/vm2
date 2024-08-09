@@ -1,16 +1,16 @@
 {
   "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
-  "$comment": " value(vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1[]) ",
+  "$comment": " value(vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1[]) ",
   "expression": {
     "constant": {
-      "$comment": " vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1[] ",
+      "$comment": " vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1[] ",
       "sequence": {
-        "type": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1[], CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-        "$comment": " vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1 ",
+        "type": "vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1[], TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "$comment": " vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1 ",
         "value": [
           {
             "object": {
-              "type": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "value": {
                 "$id": "1",
                 "IntProperty": 7,
@@ -20,8 +20,8 @@
           },
           {
             "object": {
-              "type": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-              "concreteType": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract2, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "concreteType": "vm2.ExpressionSerialization.TestsSharedData.ClassDataContract2, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "value": {
                 "$id": "1",
                 "DecimalProperty": 17,
@@ -32,7 +32,7 @@
           },
           {
             "object": {
-              "type": "vm2.ExpressionSerialization.TestsCommonData.ClassDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "value": null
             }
           }

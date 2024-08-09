@@ -5,38 +5,23 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="TestData\Xml\Assignments\**" />
-      <Compile Remove="TestData\Xml\ChangeByOne\**" />
-      <EmbeddedResource Remove="TestData\Xml\Assignments\**" />
-      <EmbeddedResource Remove="TestData\Xml\ChangeByOne\**" />
-      <None Remove="TestData\Xml\Assignments\**" />
-      <None Remove="TestData\Xml\ChangeByOne\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="FluentAssertions" />
+        <!--<PackageReference Include="FluentAssertions" />-->
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="xunit" />
         <PackageReference Include="Xunit.Extension" />
-        <PackageReference Include="xunit.extensibility.execution" />
-        <PackageReference Include="xunit.runner.visualstudio">
+        <!--<PackageReference Include="xunit.extensibility.execution" />-->
+<!--        <PackageReference Include="xunit.runner.visualstudio">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="coverlet.collector">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        </PackageReference>-->
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
         <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="TestData\Json\Assignments\" />
-      <Folder Include="TestData\Json\ChangeByOne\" />
     </ItemGroup>
 
 </Project>

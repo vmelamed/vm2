@@ -3,9 +3,9 @@
   "$comment": " null ",
   "expression": {
     "constant": {
-      "$comment": " vm2.ExpressionSerialization.TestsCommonData.Object1 ",
+      "$comment": " vm2.ExpressionSerialization.TestsSharedData.Object1 ",
       "object": {
-        "type": "vm2.ExpressionSerialization.TestsCommonData.Object1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "type": "vm2.ExpressionSerialization.TestsSharedData.Object1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
         "value": null
       }
     }

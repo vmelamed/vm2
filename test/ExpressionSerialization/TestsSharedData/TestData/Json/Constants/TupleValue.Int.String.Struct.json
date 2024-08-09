@@ -3,9 +3,9 @@
   "$comment": " (1, one, StructDataContract1) ",
   "expression": {
     "constant": {
-      "$comment": " System.ValueTuple\u003Cint, string, vm2.ExpressionSerialization.TestsCommonData.StructDataContract1\u003E ",
+      "$comment": " System.ValueTuple\u003Cint, string, vm2.ExpressionSerialization.TestsSharedData.StructDataContract1\u003E ",
       "tuple": {
-        "type": "System.ValueTuple\u00603[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[vm2.ExpressionSerialization.TestsCommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+        "type": "System.ValueTuple\u00603[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
         "value": {
           "Item1": {
             "int": 1
@@ -15,7 +15,7 @@
           },
           "Item3": {
             "object": {
-              "type": "vm2.ExpressionSerialization.TestsCommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "value": {
                 "IntProperty": 2,
                 "StringProperty": "two"

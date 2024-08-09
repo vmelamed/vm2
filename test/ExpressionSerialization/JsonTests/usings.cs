@@ -10,9 +10,10 @@ global using System.Threading;
 global using FluentAssertions;
 
 global using vm2.ExpressionDeepEquals;
-global using vm2.ExpressionSerialization.Abstractions;
-global using vm2.ExpressionSerialization.Exceptions;
-global using vm2.ExpressionSerialization.JsonTransform;
+global using vm2.ExpressionSerialization.Json;
+global using vm2.ExpressionSerialization.Shared.Abstractions;
+global using vm2.ExpressionSerialization.Shared.Exceptions;
+
 global using vm2.ExpressionSerialization.TestsSharedData;
 
 global using Xunit.Abstractions;

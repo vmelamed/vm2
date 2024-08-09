@@ -9,7 +9,7 @@ public partial class TransformOptionsTests(ITestOutputHelper output)
     [MemberData(nameof(TransformIdentifiersData))]
     public void TransformIdentifiersTest(string _, string input, string expected, IdentifierConventions convention, bool throws)
     {
-        var call = () => Conventions.Transform.Identifier(input, convention);
+        var call = () => Transform.Identifier(input, convention);
         if (throws)
         {
             call.Should().Throw<InternalTransformErrorException>();
@@ -23,7 +23,7 @@ public partial class TransformOptionsTests(ITestOutputHelper output)
     [MemberData(nameof(TransformTypeNamesData))]
     public void TransformTypeNamesTest(string _, Type input, string expected, TypeNameConventions convention, bool throws)
     {
-        var call = () => Conventions.Transform.TypeName(input, convention);
+        var call = () => Transform.TypeName(input, convention);
         if (throws)
         {
             call.Should().Throw<InternalTransformErrorException>();
@@ -60,7 +60,7 @@ public partial class TransformOptionsTests(ITestOutputHelper output)
     {
         var input = typeof(Dictionary<int, string>);
 
-        var call = () => Conventions.Transform.TypeName(input, convention);
+        var call = () => Transform.TypeName(input, convention);
         if (throws)
         {
             call.Should().Throw<InternalTransformErrorException>();

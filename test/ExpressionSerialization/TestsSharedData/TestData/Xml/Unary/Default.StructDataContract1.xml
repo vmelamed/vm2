@@ -4,7 +4,7 @@
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <default
-        type="vm2.ExpressionSerialization.TestsCommonData.StructDataContract1, CommonData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
-        <!--  vm2.ExpressionSerialization.TestsCommonData.StructDataContract1  -->
+        type="vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+        <!--  vm2.ExpressionSerialization.TestsSharedData.StructDataContract1  -->
     </default>
 </expression>

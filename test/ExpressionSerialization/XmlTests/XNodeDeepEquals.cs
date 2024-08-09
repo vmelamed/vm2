@@ -13,7 +13,7 @@ public class XNodeDeepEquals(bool ignoreComments = false)
         return false;
     }
 
-    public bool AreEqual(XNode? left, XNode? right, bool ignoreComments = false) => Equals(left, right);
+    public bool AreEqual(XNode? left, XNode? right) => Equals(left, right);
 
     bool Equals(XNode? left, XNode? right)
     {

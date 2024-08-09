@@ -22,7 +22,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
-        <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.csproj" />
+        <ProjectReference Include="..\..\..\src\ExpressionSerialization.Xml\ExpressionSerialization.Xml.csproj" />
         <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
         <ProjectReference Include="..\TestsSharedData\TestsSharedData.csproj" />
     </ItemGroup>
