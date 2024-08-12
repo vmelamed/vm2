@@ -323,7 +323,7 @@ public partial struct JElement
         => TryGetElement(out var element, childPropertyName)
             && element.HasValue
                 ? element.Value
-                : ThrowSerializationException<JElement>($"Could not get a child 'JsonObject' with name {childPropertyName}");
+                : ThrowSerializationException<JElement>($"Could not get a child 'JsonObject' with name '{childPropertyName}'");
 
     /// <summary>
     /// Tries to construct a <see cref="JElement" /> from this <see cref="Value"/>'s property <paramref name="childPropertyName" /> and
@@ -354,7 +354,7 @@ public partial struct JElement
         => TryGetArray(out var array, childPropertyName)
             && array is not null
             ? array
-            : throw new SerializationException($"Could not get a child 'JsonArray' with name {childPropertyName}");
+            : throw new SerializationException($"Could not get a child 'JsonArray' with name '{childPropertyName}'");
 
     /// <summary>
     /// Tries to construct a JElement from the name and name of the first property where the property name is a JsonObject.

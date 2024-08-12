@@ -1872,7 +1872,11 @@
                         <xs:element name="filter"
                                     type="expressionType"
                                     minOccurs="0" />
-                        <xs:group ref="expressionBaseGroup" />
+                        <xs:element name="body">
+                            <xs:complexType>
+                                <xs:group ref="expressionBaseGroup" />
+                            </xs:complexType>
+                        </xs:element>
                     </xs:sequence>
                     <xs:attribute name="type"
                                   type="xs:token"

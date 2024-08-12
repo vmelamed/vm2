@@ -1,5 +1,4 @@
 ﻿namespace vm2.ExpressionSerialization.Json;
-
 /// <summary>
 /// Class that visits the nodes of a JSON node to produce a LINQ expression tree.
 /// </summary>
@@ -166,12 +165,12 @@ public partial class FromJsonTransformVisitor
 
         return e.Name switch {
             "typeIs" => Expression.TypeIs(
-                                Visit(operand.GetFirstObject()),
-                                e.GetTypeFromProperty(Vocabulary.TypeOperand)),
+                            Visit(operand.GetFirstObject()),
+                            e.GetTypeFromProperty(Vocabulary.TypeOperand)),
 
             "typeEqual" => Expression.TypeEqual(
-                                Visit(operand.GetFirstObject()),
-                                e.GetTypeFromProperty(Vocabulary.TypeOperand)),
+                            Visit(operand.GetFirstObject()),
+                            e.GetTypeFromProperty(Vocabulary.TypeOperand)),
 
             _ => e.ThrowSerializationException<TypeBinaryExpression>($"Don't know how to transform {e.Name} to a `TypeBinaryExpression`"),
         };
@@ -233,7 +232,7 @@ public partial class FromJsonTransformVisitor
 
         return Expression.MakeMemberAccess(
                 e.TryGetElement(out var obj, Vocabulary.Object) && obj.HasValue
-                && obj.Value.Value is JsonObject
+                  && obj.Value.Value is JsonObject
                     ? VisitChild(obj.Value)
                     : null,
                 memberInfo);
@@ -314,11 +313,11 @@ public partial class FromJsonTransformVisitor
         => Expression.Loop(
             VisitChild(e.GetElement(Vocabulary.Body)),
             e.TryGetElement(out var breakLabel, Vocabulary.BreakLabel)
-            && breakLabel.HasValue
+              && breakLabel.HasValue
                 ? VisitLabel(breakLabel.Value).Target
                 : null,
             e.TryGetElement(out var continueLabel, Vocabulary.ContinueLabel)
-            && continueLabel.HasValue
+              && continueLabel.HasValue
                 ? VisitLabel(continueLabel.Value).Target
                 : null);
 
@@ -334,11 +333,11 @@ public partial class FromJsonTransformVisitor
                 : null,
             VisitChild(e.GetElement(Vocabulary.Value)),
             e.TryGetElement(out var elem, Vocabulary.DefaultCase)
-            && elem.HasValue
+              && elem.HasValue
                 ? Visit(elem.Value.GetFirstElement())
                 : null,
             e.TryGetElement(out var comp, Vocabulary.Method)
-            && comp.HasValue
+              && comp.HasValue
                 ? VisitMemberInfo(comp.Value.GetFirstElement()) as MethodInfo
                 : null,
             e.GetArray(Vocabulary.Cases).Select((c, i) => VisitSwitchCase(new($"cases{i}", c))));
@@ -375,57 +374,62 @@ public partial class FromJsonTransformVisitor
                     VisitChild(e.GetElement(Vocabulary.If)),
                     VisitChild(e.GetElement(Vocabulary.Then)));
 
-    ///// <summary>
-    ///// Visits a Json element representing a `new` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual NewExpression VisitNew(JElement e)
-    //{
-    //    var ciElement = e.Element(ElementNames.Constructor);
+    /// <summary>
+    /// Visits a Json element representing a `try...catch(x)...catch...finally` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual TryExpression VisitTry(JElement e)
+        => Expression.MakeTry(
+                e.TryGetTypeFromProperty(out var type) ? type : null,
+                VisitChild(e.GetElement(Vocabulary.Body)),
+                e.TryGetElement(out var final, Vocabulary.Finally) && final is not null
+                    ? VisitChild(final.Value) : null,
+                e.TryGetElement(out var catchAll, Vocabulary.Fault) && catchAll is not null
+                    ? VisitChild(catchAll.Value)
+                    : null,
+                e.GetArray(Vocabulary.Catches)
+                 .Select((c, i) => VisitCatchBlock(new($"catch{i}", c))));
 
-    //    if (ciElement is null)
-    //        return Expression.New(e.GetTypeFromProperty());
+    /// <summary>
+    /// Visits a Json element representing a `catch(x) where filter {}` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="CatchBlock"/> represented by the element.</returns>
+    protected virtual CatchBlock VisitCatchBlock(JElement e)
+        => Expression.MakeCatchBlock(
+                e.GetTypeFromProperty(),
+                e.TryGetElement(out var exc, Vocabulary.Exception)
+                  && exc.HasValue
+                    ? VisitParameter(exc.Value)
+                    : null,
+                VisitChild(e.GetElement(Vocabulary.Body)),
+                e.TryGetElement(out var f, Vocabulary.Filter)
+                  && f.HasValue
+                    ? VisitChild(f.Value)
+                    : null);
 
-    //    var ci = VisitMemberInfo(ciElement) as ConstructorInfo ?? throw new SerializationException($"Could not deserialize ConstructorInfo from `{e.Name}`");
-    //    var args = e.Element(ElementNames.Arguments)?
-    //                .Elements()
-    //                .Select(Visit);
-    //    var mems = e.Element(ElementNames.Members)?
-    //                .Elements()
-    //                .Select(me => VisitMemberInfo(me) ?? throw new SerializationException($"Could not deserialize MemberInfo from `{e.Name}`"));
+    /// <summary>
+    /// Visits a Json element representing a `new` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual NewExpression VisitNew(JElement e)
+    {
+        if (!e.TryGetElement(out var ciElement, Vocabulary.Constructor)
+            || !ciElement.HasValue)
+            return Expression.New(e.GetTypeFromProperty());
 
-    //    return mems is null ? Expression.New(ci, args) : Expression.New(ci, args, mems);
-    //}
+        var ci = VisitMemberInfo(ciElement.Value) as ConstructorInfo
+                    ?? ciElement.Value.ThrowSerializationException<ConstructorInfo>($"Could not deserialize ConstructorInfo");
+        var args = e.GetArray(Vocabulary.Arguments)
+                    .Select((a,i) => VisitChild(new($"arg{i}", a)));
+        var mems = e.TryGetArray(out var arrMem, Vocabulary.Members) && arrMem is not null
+                        ? arrMem.Select((m,i) => VisitMemberInfo(new($"member{i}", m)) ?? throw new SerializationException($"Could not deserialize member 'member{i}' -- at '{arrMem[i]?.GetPath()}'."))
+                        : null;
 
-    ///// <summary>
-    ///// Visits a Json element representing a `try...catch(x)...catch...finally` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual TryExpression VisitTry(JElement e)
-    //    => Expression.MakeTry(
-    //                        e.TryGetETypeFromAttribute(out var type) ? type : null,
-    //                        VisitChild(e, 0),
-    //                        e.TryGetFirstElement(Vocabulary.Finally, out var final) && final is not null ? Visit(final.GetElement(0)) : null,
-    //                        e.TryGetFirstElement(Vocabulary.Fault, out var catchAll) && catchAll is not null ? Visit(catchAll.GetElement(0)) : null,
-    //                        e.Elements(ElementNames.Catch).Select(VisitCatchBlock));
-
-    ///// <summary>
-    ///// Visits a Json element representing a `catch(x) where filter {}` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="CatchBlock"/> represented by the element.</returns>
-    //protected virtual CatchBlock VisitCatchBlock(JElement e)
-    //    => Expression.MakeCatchBlock(
-    //                        e.GetTypeFromProperty(),
-    //                        e.TryGetFirstElement(Vocabulary.Exception, out var exc) && exc is not null ? VisitParameter(exc) : null,
-    //                        e.Elements()
-    //                         .Where(e => e.Name is not Vocabulary.Exception
-    //                                                     and not Vocabulary.Filter)
-    //                         .Select(Visit)
-    //                         .Single(),
-    //                        e.TryGetFirstElement(Vocabulary.Filter, out var f) && f is not null ? Visit(f.GetElement(0)) : null);
+        return mems is null ? Expression.New(ci, args) : Expression.New(ci, args, mems);
+    }
 
     ///// <summary>
     ///// Visits a Json element representing a member init expression, e.g. the part `Name = "abc"` or `List = new() { 1, 2, 3 }` from the

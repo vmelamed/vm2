@@ -509,7 +509,9 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
 
         base.Visit(node.Body);
 
-        var body = Pop();
+        var body = new XElement(
+                            ElementNames.Body,
+                            Pop());
 
         _elements.Push(
             new XElement(

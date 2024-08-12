@@ -358,12 +358,8 @@ public partial class FromXmlTransformVisitor
         => Expression.MakeCatchBlock(
                 e.GetTypeFromAttribute(),
                 e.TryGetChild(Vocabulary.Exception, out var exc) && exc is not null ? VisitParameter(exc) : null,
-                e.Elements()
-                    .Where(e => e.Name.LocalName is not Vocabulary.Exception
-                                                and not Vocabulary.Filter)
-                    .Select(Visit)
-                    .Single(),
-                e.TryGetChild(Vocabulary.Filter, out var f) && f is not null ? Visit(f.GetChild(0)) : null);
+                VisitChild(e.GetChild(Vocabulary.Body)),
+                e.TryGetChild(Vocabulary.Filter, out var f) && f is not null ? Visit(f.GetChild()) : null);
 
     /// <summary>
     /// Visits an XML element representing a member init expression, e.g. the part 'Name = "abc"' or 'List = new() { 1, 2, 3 }' from the
