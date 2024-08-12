@@ -14,7 +14,7 @@
       "body": {
         "conditional": {
           "type": "int",
-          "else": {
+          "if": {
             "parameter": {
               "type": "boolean",
               "name": "b",
@@ -26,7 +26,7 @@
               "int": 1
             }
           },
-          "if": {
+          "else": {
             "constant": {
               "int": 3
             }

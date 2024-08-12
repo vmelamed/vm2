@@ -56,7 +56,7 @@
                 "expressions": [
                   {
                     "conditional": {
-                      "else": {
+                      "if": {
                         "greaterThan": {
                           "type": "boolean",
                           "operands": [
@@ -116,7 +116,7 @@
                           ]
                         }
                       },
-                      "if": {
+                      "else": {
                         "goto": {
                           "target": {
                             "name": "break",

@@ -198,9 +198,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitConditional,
             (n, x) =>
             {
-                JElement? @else = n.IfFalse is not null ? new JElement(Vocabulary.If, Pop()) : null;
-                JElement? then = n.IfTrue  is not null ? new JElement(Vocabulary.Then, Pop()) : null;
-                JElement @if = new JElement(Vocabulary.Else, Pop());
+                JElement? @else = n.IfFalse is not null ? new JElement(Vocabulary.Else, Pop()) : null;
+                JElement? then = n.IfTrue   is not null ? new JElement(Vocabulary.Then, Pop()) : null;
+                JElement @if = new JElement(Vocabulary.If, Pop());
                 x.Add(@if, then, @else);
             });
 

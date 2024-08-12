@@ -78,7 +78,7 @@ public partial class FromJsonTransformVisitor
         yield return new(Vocabulary.TypeEqual, (v, e) => v.VisitTypeBinary(e));
         yield return new(Vocabulary.TypeIs, (v, e) => v.VisitTypeBinary(e));
         yield return new(Vocabulary.Block, (v, e) => v.VisitBlock(e));
-        //    yield return new(Vocabulary.Conditional,          (v, e) => v.VisitConditional(e)        );
+        yield return new(Vocabulary.Conditional, (v, e) => v.VisitConditional(e));
         //    yield return new(Vocabulary.Index,                (v, e) => v.VisitIndex(e)              );
         //    yield return new(Vocabulary.New,                  (v, e) => v.VisitNew(e)                );
         yield return new(Vocabulary.Throw, (v, e) => v.VisitThrow(e));
@@ -89,8 +89,8 @@ public partial class FromJsonTransformVisitor
         //    yield return new(Vocabulary.Exception,            (v, e) => v.VisitParameter(e)          );
         yield return new(Vocabulary.Label, (v, e) => v.VisitLabel(e));
         yield return new(Vocabulary.Goto, (v, e) => v.VisitGoto(e));
-        //    yield return new(Vocabulary.Loop,                 (v, e) => v.VisitLoop(e)               );
-        //    yield return new(Vocabulary.Switch,               (v, e) => v.VisitSwitch(e)             );
+        yield return new(Vocabulary.Loop, (v, e) => v.VisitLoop(e));
+        yield return new(Vocabulary.Switch, (v, e) => v.VisitSwitch(e));
         //    yield return new(Vocabulary.Try,                  (v, e) => v.VisitTry(e)                );
         //    yield return new(Vocabulary.MemberInit,           (v, e) => v.VisitMemberInit(e)         );
         //    yield return new(Vocabulary.ListInit,             (v, e) => v.VisitListInit(e)           );

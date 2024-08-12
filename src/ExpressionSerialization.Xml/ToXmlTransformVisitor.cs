@@ -449,7 +449,7 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
         _elements.Push(new XElement(
                                 ElementNames.Case,
                                     new XElement(ElementNames.CaseValues, tempElements),
-                                    caseExpression));
+                                    new XElement(ElementNames.Body, caseExpression)));
 
         return switchCase;
     }

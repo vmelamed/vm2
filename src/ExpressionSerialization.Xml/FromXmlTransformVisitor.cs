@@ -146,8 +146,8 @@ public partial class FromXmlTransformVisitor
     /// <returns>System.Collections.Generic.IEnumerable&lt;System.Linq.Expressions.Expression&gt;.</returns>
     protected virtual IEnumerable<Expression> VisitIndexes(XElement e)
         => e.GetChild(Vocabulary.Indexes)
-                            .Elements()
-                            .Select(Visit);
+                .Elements()
+                .Select(Visit);
 
     /// <summary>
     /// Visits an XML element representing a block expression.
@@ -156,12 +156,12 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual BlockExpression VisitBlock(XElement e)
         => Expression.Block(
-                            (e.TryGetChild(Vocabulary.Variables, out var vars) ? vars : null)?
-                             .Elements()?
-                             .Select(v => VisitParameter(v, Vocabulary.Parameter)),
-                            e.Elements()
-                             .Where(e => e.Name.LocalName != Vocabulary.Variables)
-                             .Select(Visit));
+                (e.TryGetChild(Vocabulary.Variables, out var vars) ? vars : null)?
+                    .Elements()?
+                    .Select(v => VisitParameter(v, Vocabulary.Parameter)),
+                e.Elements()
+                    .Where(e => e.Name.LocalName != Vocabulary.Variables)
+                    .Select(Visit));
 
     /// <summary>
     /// Visits an XML element representing a conditional expression.
@@ -255,7 +255,9 @@ public partial class FromXmlTransformVisitor
     protected virtual InvocationExpression VisitInvocation(XElement e)
         => Expression.Invoke(
                 VisitChild(e, 0),
-                e.Elements(ElementNames.Arguments).Elements().Select(Visit));
+                e.Elements(ElementNames.Arguments)
+                 .Elements()
+                 .Select(Visit));
 
     /// <summary>
     /// Visits an XML element representing a 'Label' expression.
@@ -331,8 +333,8 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="SwitchExpression"/> represented by the element.</returns>
     protected virtual SwitchCase VisitSwitchCase(XElement e)
         => Expression.SwitchCase(
-                e.Elements().Where(e => e.Name.LocalName is not Vocabulary.CaseValues).Select(Visit).Single(),
-                e.Element(ElementNames.CaseValues)?.Elements().Select(Visit) ?? throw new SerializationException($"Could not get a switch case's test values in '{e.Name}'"));
+                Visit(e.GetChild(Vocabulary.Body).GetChild()),
+                e.GetChild(Vocabulary.CaseValues).Elements().Select(Visit));
 
     /// <summary>
     /// Visits an XML element representing a 'try...catch(x)...catch...finally' expression.

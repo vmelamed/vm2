@@ -305,26 +305,75 @@ public partial class FromJsonTransformVisitor
                 target.Type);
     }
 
-    ///// <summary>
-    ///// Visits a Json element representing a conditional expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual ConditionalExpression VisitConditional(JElement e)
-    //    => e.Elements().Count() == 2
-    //            ? Expression.IfThen(
-    //                            VisitChild(e, 0),
-    //                            VisitChild(e, 1))
-    //            : e.TryGetEType(out var type) && type != typeof(void)
-    //                    ? Expression.Condition(
-    //                                VisitChild(e, 0),
-    //                                VisitChild(e, 1),
-    //                                VisitChild(e, 2),
-    //                                type!)
-    //                    : Expression.IfThenElse(
-    //                                VisitChild(e, 0),
-    //                                VisitChild(e, 1),
-    //                                VisitChild(e, 2));
+    /// <summary>
+    /// Visits a Json element representing a `loop` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual Expression VisitLoop(JElement e)
+        => Expression.Loop(
+            VisitChild(e.GetElement(Vocabulary.Body)),
+            e.TryGetElement(out var breakLabel, Vocabulary.BreakLabel)
+            && breakLabel.HasValue
+                ? VisitLabel(breakLabel.Value).Target
+                : null,
+            e.TryGetElement(out var continueLabel, Vocabulary.ContinueLabel)
+            && continueLabel.HasValue
+                ? VisitLabel(continueLabel.Value).Target
+                : null);
+
+    /// <summary>
+    /// Visits a Json element representing a `switch` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual SwitchExpression VisitSwitch(JElement e)
+        => Expression.Switch(
+            e.TryGetTypeFromProperty(out var type)
+                ? type
+                : null,
+            VisitChild(e.GetElement(Vocabulary.Value)),
+            e.TryGetElement(out var elem, Vocabulary.DefaultCase)
+            && elem.HasValue
+                ? Visit(elem.Value.GetFirstElement())
+                : null,
+            e.TryGetElement(out var comp, Vocabulary.Method)
+            && comp.HasValue
+                ? VisitMemberInfo(comp.Value.GetFirstElement()) as MethodInfo
+                : null,
+            e.GetArray(Vocabulary.Cases).Select((c, i) => VisitSwitchCase(new($"cases{i}", c))));
+
+    /// <summary>
+    /// Visits a Json element representing a `switch case` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="SwitchExpression"/> represented by the element.</returns>
+    protected virtual SwitchCase VisitSwitchCase(JElement e)
+        => Expression.SwitchCase(
+            VisitChild(e.GetElement(Vocabulary.Body)),
+            e.GetArray(Vocabulary.CaseValues)
+             .Select((e, i) => VisitChild(new($"case{i}", e))));
+
+    /// <summary>
+    /// Visits a Json element representing a conditional expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual ConditionalExpression VisitConditional(JElement e)
+        => e.TryGetElement(out var eElse, Vocabulary.Else) && eElse.HasValue
+            ? e.TryGetTypeFromProperty(out var type) && type is not null
+                ? Expression.Condition(
+                    VisitChild(e.GetElement(Vocabulary.If)),
+                    VisitChild(e.GetElement(Vocabulary.Then)),
+                    VisitChild(eElse!.Value),
+                    type)
+                : Expression.Condition(
+                    VisitChild(e.GetElement(Vocabulary.If)),
+                    VisitChild(e.GetElement(Vocabulary.Then)),
+                    VisitChild(eElse!.Value))
+            : Expression.IfThen(
+                    VisitChild(e.GetElement(Vocabulary.If)),
+                    VisitChild(e.GetElement(Vocabulary.Then)));
 
     ///// <summary>
     ///// Visits a Json element representing a `new` expression.
@@ -348,44 +397,6 @@ public partial class FromJsonTransformVisitor
 
     //    return mems is null ? Expression.New(ci, args) : Expression.New(ci, args, mems);
     //}
-
-    ///// <summary>
-    ///// Visits a Json element representing a `loop` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual Expression VisitLoop(JElement e)
-    //    => Expression.Loop(
-    //                        VisitChild(e, 0),
-    //                        e.TryGetFirstElement(Vocabulary.BreakLabel, out var breakLabel) && breakLabel is not null
-    //                                    ? VisitLabel(breakLabel).Target
-    //                                    : null,
-    //                        e.TryGetFirstElement(Vocabulary.ContinueLabel, out var continueLabel) && continueLabel is not null
-    //                                    ? VisitLabel(continueLabel).Target
-    //                                    : null);
-
-    ///// <summary>
-    ///// Visits a Json element representing a `switch` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual SwitchExpression VisitSwitch(JElement e)
-    //    => Expression.Switch(
-    //                        e.TryGetETypeFromAttribute(out var type) ? type : null,
-    //                        VisitChild(e, 0),
-    //                        e.TryGetFirstElement(Vocabulary.DefaultCase, out var elem) && elem is not null ? Visit(elem.GetElement(0)) : null,
-    //                        e.TryGetFirstElement(Vocabulary.Method, out var comp) ? VisitMemberInfo(comp) as MethodInfo : null,
-    //                        e.Elements(ElementNames.Case).Select(VisitSwitchCase));
-
-    ///// <summary>
-    ///// Visits a Json element representing a `switch case` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="SwitchExpression"/> represented by the element.</returns>
-    //protected virtual SwitchCase VisitSwitchCase(JElement e)
-    //    => Expression.SwitchCase(
-    //                        e.Elements().Where(e => e.Name is not Vocabulary.CaseValues).Select(Visit).Single(),
-    //                        e.Element(ElementNames.CaseValues)?.Elements().Select(Visit) ?? throw new SerializationException($"Could not get a switch case's test values in `{e.Name}`"));
 
     ///// <summary>
     ///// Visits a Json element representing a `try...catch(x)...catch...finally` expression.
