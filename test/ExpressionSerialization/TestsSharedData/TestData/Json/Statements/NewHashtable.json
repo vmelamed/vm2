@@ -35,13 +35,11 @@
                 {
                   "convert": {
                     "type": "object",
-                    "operands": [
-                      {
-                        "constant": {
-                          "int": 1
-                        }
+                    "operand": {
+                      "constant": {
+                        "int": 1
                       }
-                    ]
+                    }
                   }
                 },
                 {
@@ -71,13 +69,11 @@
                 {
                   "convert": {
                     "type": "object",
-                    "operands": [
-                      {
-                        "constant": {
-                          "int": 2
-                        }
+                    "operand": {
+                      "constant": {
+                        "int": 2
                       }
-                    ]
+                    }
                   }
                 },
                 {
@@ -107,13 +103,11 @@
                 {
                   "convert": {
                     "type": "object",
-                    "operands": [
-                      {
-                        "constant": {
-                          "int": 3
-                        }
+                    "operand": {
+                      "constant": {
+                        "int": 3
                       }
-                    ]
+                    }
                   }
                 },
                 {

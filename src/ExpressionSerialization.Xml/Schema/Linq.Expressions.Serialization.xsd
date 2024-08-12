@@ -296,7 +296,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
+
             <xs:element name="long"
                         type="xs:long">
                 <xs:annotation>
@@ -1101,13 +1101,22 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:group ref="expressionBaseGroup">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en-us">
-                        Represents the expression which evaluates to the instance whose member is being accessed.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:group>
+            <xs:element
+                    name="object"
+                    minOccurs="0"
+                    maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="expressionBaseGroup">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en-us">
+                                    Represents the expression which evaluates to the instance whose member is being accessed.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:group>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:choice>
                 <xs:element name="property"
                             type="propertyInfoType"/>
@@ -1167,8 +1176,22 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:group ref="expressionBaseGroup"
-                      minOccurs="0" />
+            <xs:element
+                    name="object"
+                    minOccurs="0"
+                    maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="expressionBaseGroup">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en-us">
+                                    Represents the expression which evaluates to the instance whose member is being accessed.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:group>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="method"
                         type="methodInfoType"/>
             <xs:element name="arguments"

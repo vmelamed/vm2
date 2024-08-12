@@ -92,15 +92,13 @@
                                   {
                                     "postDecrementAssign": {
                                       "type": "int",
-                                      "operands": [
-                                        {
-                                          "parameter": {
-                                            "type": "int",
-                                            "name": "_value",
-                                            "id": "P1"
-                                          }
+                                      "operand": {
+                                        "parameter": {
+                                          "type": "int",
+                                          "name": "_value",
+                                          "id": "P1"
                                         }
-                                      ]
+                                      }
                                     }
                                   }
                                 ]

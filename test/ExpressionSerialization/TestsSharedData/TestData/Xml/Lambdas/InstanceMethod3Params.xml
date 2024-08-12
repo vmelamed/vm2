@@ -14,10 +14,12 @@
         <body>
             <call
                 type="int">
-                <parameter
-                    type="vm2.ExpressionSerialization.TestsSharedData.TestMethods, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-                    id="P1"
-                    name="a" />
+                <object>
+                    <parameter
+                        type="vm2.ExpressionSerialization.TestsSharedData.TestMethods, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                        id="P1"
+                        name="a" />
+                </object>
                 <method
                     declaringType="vm2.ExpressionSerialization.TestsSharedData.TestMethods, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                     type="int"

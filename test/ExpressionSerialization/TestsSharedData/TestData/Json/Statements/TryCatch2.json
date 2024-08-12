@@ -32,17 +32,15 @@
             },
             {
               "throw": {
-                "operands": [
-                  {
-                    "new": {
-                      "constructor": {
-                        "declaringType": "System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
-                        "parameterSpecs": []
-                      },
-                      "arguments": []
-                    }
+                "operand": {
+                  "new": {
+                    "constructor": {
+                      "declaringType": "System.Exception, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                      "parameterSpecs": []
+                    },
+                    "arguments": []
                   }
-                ]
+                }
               }
             }
           ]

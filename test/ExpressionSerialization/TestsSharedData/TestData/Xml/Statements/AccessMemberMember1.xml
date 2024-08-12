@@ -35,10 +35,12 @@
                 type="int">
                 <memberAccess
                     type="int">
-                    <parameter
-                        type="vm2.ExpressionSerialization.TestsSharedData.TestMembersInitialized, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-                        id="P1"
-                        name="m" />
+                    <object>
+                        <parameter
+                            type="vm2.ExpressionSerialization.TestsSharedData.TestMembersInitialized, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                            id="P1"
+                            name="m" />
+                    </object>
                     <property
                         declaringType="vm2.ExpressionSerialization.TestsSharedData.TestMembersInitialized, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                         type="int"
@@ -46,17 +48,21 @@
                 </memberAccess>
                 <memberAccess
                     type="int">
-                    <memberAccess
-                        type="vm2.ExpressionSerialization.TestsSharedData.Inner, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
-                        <parameter
-                            type="vm2.ExpressionSerialization.TestsSharedData.TestMembersInitialized, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-                            id="P1"
-                            name="m" />
-                        <property
-                            declaringType="vm2.ExpressionSerialization.TestsSharedData.TestMembersInitialized, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-                            type="vm2.ExpressionSerialization.TestsSharedData.Inner, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-                            name="InnerProperty" />
-                    </memberAccess>
+                    <object>
+                        <memberAccess
+                            type="vm2.ExpressionSerialization.TestsSharedData.Inner, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                            <object>
+                                <parameter
+                                    type="vm2.ExpressionSerialization.TestsSharedData.TestMembersInitialized, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                                    id="P1"
+                                    name="m" />
+                            </object>
+                            <property
+                                declaringType="vm2.ExpressionSerialization.TestsSharedData.TestMembersInitialized, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                                type="vm2.ExpressionSerialization.TestsSharedData.Inner, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                                name="InnerProperty" />
+                        </memberAccess>
+                    </object>
                     <property
                         declaringType="vm2.ExpressionSerialization.TestsSharedData.Inner, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
                         type="int"

@@ -146,7 +146,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
             base.VisitMember,
             (n, x) =>
                 x.Add(
-                    new JElement(Vocabulary.Object, PopWrappedElement()),    // pop the expression/value that will give the object whose requested member is being accessed
+                    node.Expression is not null
+                        ? new JElement(Vocabulary.Object, PopWrappedElement())  // pop the expression/value that will give the object whose requested member is being accessed
+                        : null,                                                 // or null if the property/field is static
                     new JElement(Vocabulary.Member, VisitMemberInfo(n.Member))));
 
     /// <inheritdoc/>
@@ -159,7 +161,9 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                 var arguments = new JElement(Vocabulary.Arguments, PopWrappedElements(n.Arguments.Count));        // pop the argument expressions
 
                 x.Add(
-                    n.Object != null ? new JElement(Vocabulary.Object, Pop()) : null,
+                    n.Object != null
+                        ? new JElement(Vocabulary.Object, Pop())
+                        : null,
                     VisitMemberInfo(n.Method),
                     arguments);
             });

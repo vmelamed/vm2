@@ -45,10 +45,12 @@
                     type="boolean">
                     <memberAccess
                         type="string">
-                        <parameter
-                            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                            id="P1"
-                            name="x" />
+                        <object>
+                            <parameter
+                                type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                                id="P1"
+                                name="x" />
+                        </object>
                         <property
                             declaringType="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                             type="string"
@@ -89,10 +91,12 @@
                 <arguments>
                     <memberAccess
                         type="string">
-                        <parameter
-                            type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-                            id="P1"
-                            name="x" />
+                        <object>
+                            <parameter
+                                type="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+                                id="P1"
+                                name="x" />
+                        </object>
                         <property
                             declaringType="System.ArgumentException, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
                             type="string"

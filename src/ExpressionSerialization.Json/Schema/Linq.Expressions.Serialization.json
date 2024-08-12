@@ -858,9 +858,9 @@
                             "type": "object",
                             "properties": {
                                 "object": { "$ref": "#/$defs/expression" },
-                                "member": { "$ref": "#/$defs/member" }
+                                "member": { "$ref": "#/$defs/propertyOrField" }
                             },
-                            "required": [ "object", "member" ],
+                            "required": [ "member" ],
                             "additionalProperties": { "type": "string" }
                         }
                     },
@@ -868,7 +868,7 @@
                     "additionalProperties": { "type": "string" }
                 },
                 {
-                    "title": "Defines the type of elements that represent access to members of objects and structs.",
+                    "title": "Defines the type of elements that represent initialization of members of objects and structs.",
                     "type": "object",
                     "properties": {
                         "memberInit": {
@@ -1738,13 +1738,6 @@
                 {
                     "type": "object",
                     "properties": {
-                        "property": { "$ref": "#/$defs/property" }
-                    },
-                    "required": [ "property" ]
-                },
-                {
-                    "type": "object",
-                    "properties": {
                         "method": { "$ref": "#/$defs/method" }
                     },
                     "required": [ "method" ]
@@ -1752,9 +1745,35 @@
                 {
                     "type": "object",
                     "properties": {
+                        "property": { "$ref": "#/$defs/property" }
+                    },
+                    "required": [ "property" ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "field": { "$ref": "#/$defs/field" }
+                    },
+                    "required": [ "field" ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
                         "event": { "$ref": "#/$defs/event" }
                     },
                     "required": [ "event" ]
+                }
+            ]
+        },
+        "propertyOrField": {
+            "type": "object",
+            "oneOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "property": { "$ref": "#/$defs/property" }
+                    },
+                    "required": [ "property" ]
                 },
                 {
                     "type": "object",

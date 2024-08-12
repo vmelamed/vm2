@@ -1,44 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- a => a.Method4(42, 3.14) -->
+<!-- i => Method2(i, "") -->
 <expression
     xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
     xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
     <lambda
-        type="void">
+        type="int">
         <parameters>
             <parameter
-                type="vm2.ExpressionSerialization.TestsSharedData.TestMethods, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                type="int"
                 id="P1"
-                name="a" />
+                name="i" />
         </parameters>
         <body>
             <call
-                type="void">
-                <object>
-                    <parameter
-                        type="vm2.ExpressionSerialization.TestsSharedData.TestMethods, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-                        id="P1"
-                        name="a" />
-                </object>
+                type="int">
                 <method
                     declaringType="vm2.ExpressionSerialization.TestsSharedData.TestMethods, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-                    type="void"
-                    name="Method4">
+                    static="true"
+                    type="int"
+                    name="Method2">
                     <parameterSpecs>
                         <parameterSpec
                             type="int"
                             name="i" />
                         <parameterSpec
-                            type="double"
-                            name="d" />
+                            type="string"
+                            name="_" />
                     </parameterSpecs>
                 </method>
                 <arguments>
+                    <parameter
+                        type="int"
+                        id="P1"
+                        name="i" />
                     <constant>
-                        <int>42</int>
-                    </constant>
-                    <constant>
-                        <double>3.14</double>
+                        <string></string>
                     </constant>
                 </arguments>
             </call>

@@ -361,6 +361,8 @@ public class C : A
 [DataContract]
 public class TestMethods
 {
+    public static readonly int S = 42;
+
     [DataMember]
     public readonly int _a = 3;
 

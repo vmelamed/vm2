@@ -222,30 +222,30 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual Expression VisitMember(XElement e)
         => Expression.MakeMemberAccess(
-                            VisitChild(e, 0),
-                            VisitMemberInfo(
-                                e.TryGetChild(Vocabulary.Property, out var mem) ||
-                                e.TryGetChild(Vocabulary.Field, out mem) ? mem : throw new SerializationException($"Could not deserialize 'property' or 'field' in '{e.Name}'"))
-                                        ?? throw new SerializationException($"Could not deserialize 'MemberInfo' in '{e.Name}'"));
+                    e.TryGetChild(Vocabulary.Object, out var obj) && obj is not null
+                    && obj.TryGetChild(0, out var objExpr) && objExpr is not null
+                        ? Visit(objExpr)
+                        : null,
+                    VisitMemberInfo(
+                        e.TryGetChild(Vocabulary.Property, out var mem) && mem is not null
+                        || e.TryGetChild(Vocabulary.Field, out mem) && mem is not null
+                            ? mem
+                            : throw new SerializationException($"Could not deserialize 'property' or 'field' in '{e.Name}'"))
+                                ?? throw new SerializationException($"Could not deserialize 'MemberInfo' in '{e.Name}'"));
 
     /// <summary>
-    /// Visits an XML element representing a 'XXXX' expression.
+    /// Visits an XML element representing a 'Call' expression.
     /// </summary>
     /// <param name="e">The element.</param>
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual MethodCallExpression VisitMethodCall(XElement e)
-    {
-        var child = e.GetChild(0);
-
-        return child.Name.LocalName == Vocabulary.Method
-                    ? Expression.Call(
-                            VisitMemberInfo(child) as MethodInfo ?? throw new SerializationException($"Could not deserialize 'MethodInfo' from '{e.Name}'"),
-                            e.GetChild(Vocabulary.Arguments).Elements().Select(Visit))
-                    : Expression.Call(
-                            Visit(child),
-                            VisitMemberInfo(e.GetChild(Vocabulary.Method)) as MethodInfo ?? throw new SerializationException($"Could not deserialize 'MethodInfo' from '{e.Name}'"),
-                            e.GetChild(Vocabulary.Arguments).Elements().Select(Visit));
-    }
+        => Expression.Call(
+                e.TryGetChild(Vocabulary.Object, out var obj) && obj is not null
+                && obj.TryGetChild(0, out var objExpr) && objExpr is not null
+                    ? Visit(objExpr)
+                    : null,
+                VisitMemberInfo(e.GetChild(Vocabulary.Method)) as MethodInfo ?? throw new SerializationException($"Could not deserialize 'MethodInfo' from '{e.Name}'"),
+                e.GetChild(Vocabulary.Arguments).Elements().Select(Visit));
 
     /// <summary>
     /// Visits an XML element representing a 'delegate' or lambda invocation expression.
@@ -254,19 +254,19 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual InvocationExpression VisitInvocation(XElement e)
         => Expression.Invoke(
-                            VisitChild(e, 0),
-                            e.Elements(ElementNames.Arguments).Elements().Select(Visit));
+                VisitChild(e, 0),
+                e.Elements(ElementNames.Arguments).Elements().Select(Visit));
 
     /// <summary>
-    /// Visits an XML element representing a 'XXXX' expression.
+    /// Visits an XML element representing a 'Label' expression.
     /// </summary>
     /// <param name="e">The element.</param>
     /// <returns>The <see cref="Expression" /> represented by the element.</returns>
     /// <exception cref="SerializationException">$"Expected element with name '{expectedName}' but got '{e.Name.LocalName}'.</exception>
     protected virtual LabelExpression VisitLabel(XElement e)
         => Expression.Label(
-                            VisitLabelTarget(e.GetChild(Vocabulary.LabelTarget)),
-                            e.TryGetChild(1, out var value) && value != null ? Visit(value) : null);
+                VisitLabelTarget(e.GetChild(Vocabulary.LabelTarget)),
+                e.TryGetChild(1, out var value) && value != null ? Visit(value) : null);
 
     /// <summary>
     /// Visits an XML element representing a 'LabelTarget' expression.
@@ -288,12 +288,12 @@ public partial class FromXmlTransformVisitor
         var target = VisitLabelTarget(e.GetChild(Vocabulary.LabelTarget));
 
         return Expression.MakeGoto(
-                            Enum.Parse<GotoExpressionKind>(
-                                    e.Attribute(AttributeNames.Kind)?.Value ?? throw new SerializationException($"Could not get the kind of the goto expression from '{e.Name}'."),
-                                    true),
-                            target,
-                            e.TryGetChild(1, out var ve) && ve is not null ? Visit(ve) : null,
-                            target.Type);
+                Enum.Parse<GotoExpressionKind>(
+                        e.Attribute(AttributeNames.Kind)?.Value ?? throw new SerializationException($"Could not get the kind of the goto expression from '{e.Name}'."),
+                        true),
+                target,
+                e.TryGetChild(1, out var ve) && ve is not null ? Visit(ve) : null,
+                target.Type);
     }
 
     /// <summary>
@@ -303,13 +303,13 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual Expression VisitLoop(XElement e)
         => Expression.Loop(
-                            VisitChild(e, 0),
-                            e.TryGetChild(Vocabulary.BreakLabel, out var breakLabel) && breakLabel is not null
-                                        ? VisitLabel(breakLabel).Target
-                                        : null,
-                            e.TryGetChild(Vocabulary.ContinueLabel, out var continueLabel) && continueLabel is not null
-                                        ? VisitLabel(continueLabel).Target
-                                        : null);
+                VisitChild(e, 0),
+                e.TryGetChild(Vocabulary.BreakLabel, out var breakLabel) && breakLabel is not null
+                            ? VisitLabel(breakLabel).Target
+                            : null,
+                e.TryGetChild(Vocabulary.ContinueLabel, out var continueLabel) && continueLabel is not null
+                            ? VisitLabel(continueLabel).Target
+                            : null);
 
     /// <summary>
     /// Visits an XML element representing a 'switch' expression.
@@ -318,11 +318,11 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual SwitchExpression VisitSwitch(XElement e)
         => Expression.Switch(
-                            e.TryGetTypeFromAttribute(out var type) ? type : null,
-                            VisitChild(e, 0),
-                            e.TryGetChild(Vocabulary.DefaultCase, out var elem) && elem is not null ? Visit(elem.GetChild(0)) : null,
-                            e.TryGetChild(Vocabulary.Method, out var comp) ? VisitMemberInfo(comp) as MethodInfo : null,
-                            e.Elements(ElementNames.Case).Select(VisitSwitchCase));
+                e.TryGetTypeFromAttribute(out var type) ? type : null,
+                VisitChild(e, 0),
+                e.TryGetChild(Vocabulary.DefaultCase, out var elem) && elem is not null ? Visit(elem.GetChild(0)) : null,
+                e.TryGetChild(Vocabulary.Method, out var comp) ? VisitMemberInfo(comp) as MethodInfo : null,
+                e.Elements(ElementNames.Case).Select(VisitSwitchCase));
 
     /// <summary>
     /// Visits an XML element representing a 'switch case' expression.
@@ -331,8 +331,8 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="SwitchExpression"/> represented by the element.</returns>
     protected virtual SwitchCase VisitSwitchCase(XElement e)
         => Expression.SwitchCase(
-                            e.Elements().Where(e => e.Name.LocalName is not Vocabulary.CaseValues).Select(Visit).Single(),
-                            e.Element(ElementNames.CaseValues)?.Elements().Select(Visit) ?? throw new SerializationException($"Could not get a switch case's test values in '{e.Name}'"));
+                e.Elements().Where(e => e.Name.LocalName is not Vocabulary.CaseValues).Select(Visit).Single(),
+                e.Element(ElementNames.CaseValues)?.Elements().Select(Visit) ?? throw new SerializationException($"Could not get a switch case's test values in '{e.Name}'"));
 
     /// <summary>
     /// Visits an XML element representing a 'try...catch(x)...catch...finally' expression.
@@ -341,11 +341,11 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual TryExpression VisitTry(XElement e)
         => Expression.MakeTry(
-                            e.TryGetTypeFromAttribute(out var type) ? type : null,
-                            VisitChild(e, 0),
-                            e.TryGetChild(Vocabulary.Finally, out var final) && final is not null ? Visit(final.GetChild(0)) : null,
-                            e.TryGetChild(Vocabulary.Fault, out var catchAll) && catchAll is not null ? Visit(catchAll.GetChild(0)) : null,
-                            e.Elements(ElementNames.Catch).Select(VisitCatchBlock));
+                e.TryGetTypeFromAttribute(out var type) ? type : null,
+                VisitChild(e, 0),
+                e.TryGetChild(Vocabulary.Finally, out var final) && final is not null ? Visit(final.GetChild(0)) : null,
+                e.TryGetChild(Vocabulary.Fault, out var catchAll) && catchAll is not null ? Visit(catchAll.GetChild(0)) : null,
+                e.Elements(ElementNames.Catch).Select(VisitCatchBlock));
 
     /// <summary>
     /// Visits an XML element representing a 'catch(x) where filter {}' expression.
@@ -354,14 +354,14 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="CatchBlock"/> represented by the element.</returns>
     protected virtual CatchBlock VisitCatchBlock(XElement e)
         => Expression.MakeCatchBlock(
-                            e.GetTypeFromAttribute(),
-                            e.TryGetChild(Vocabulary.Exception, out var exc) && exc is not null ? VisitParameter(exc) : null,
-                            e.Elements()
-                             .Where(e => e.Name.LocalName is not Vocabulary.Exception
-                                                         and not Vocabulary.Filter)
-                             .Select(Visit)
-                             .Single(),
-                            e.TryGetChild(Vocabulary.Filter, out var f) && f is not null ? Visit(f.GetChild(0)) : null);
+                e.GetTypeFromAttribute(),
+                e.TryGetChild(Vocabulary.Exception, out var exc) && exc is not null ? VisitParameter(exc) : null,
+                e.Elements()
+                    .Where(e => e.Name.LocalName is not Vocabulary.Exception
+                                                and not Vocabulary.Filter)
+                    .Select(Visit)
+                    .Single(),
+                e.TryGetChild(Vocabulary.Filter, out var f) && f is not null ? Visit(f.GetChild(0)) : null);
 
     /// <summary>
     /// Visits an XML element representing a member init expression, e.g. the part 'Name = "abc"' or 'List = new() { 1, 2, 3 }' from the
@@ -371,8 +371,8 @@ public partial class FromXmlTransformVisitor
     /// <returns>The <see cref="Expression"/> represented by the element.</returns>
     protected virtual MemberInitExpression VisitMemberInit(XElement e)
         => Expression.MemberInit(
-                            VisitNew(e.GetChild(0)),
-                            e.GetChild(Vocabulary.Bindings).Elements().Select(VisitBinding));
+                VisitNew(e.GetChild(0)),
+                e.GetChild(Vocabulary.Bindings).Elements().Select(VisitBinding));
 
     #region MemberBindings
     /// <summary>
@@ -388,17 +388,17 @@ public partial class FromXmlTransformVisitor
 
         return e.Name.LocalName switch {
             Vocabulary.AssignmentBinding => Expression.Bind(
-                                                    VisitMemberInfo(mi) ?? throw new SerializationException($"Could not deserialize member info from '{e.Name}'"),
-                                                    VisitChild(e, 1)),
+                                                VisitMemberInfo(mi) ?? throw new SerializationException($"Could not deserialize member info from '{e.Name}'"),
+                                                VisitChild(e, 1)),
             Vocabulary.MemberMemberBinding => Expression.MemberBind(
-                                                    VisitMemberInfo(mi) ?? throw new SerializationException($"Could not deserialize member info from '{e.Name}'"),
-                                                    e.Elements()
-                                                     .Where(e => new[] { ElementNames.AssignmentBinding, ElementNames.MemberMemberBinding, ElementNames.MemberListBinding }.Contains(e.Name))
-                                                     .Select(VisitBinding)),
+                                                VisitMemberInfo(mi) ?? throw new SerializationException($"Could not deserialize member info from '{e.Name}'"),
+                                                e.Elements()
+                                                    .Where(e => new[] { ElementNames.AssignmentBinding, ElementNames.MemberMemberBinding, ElementNames.MemberListBinding }.Contains(e.Name))
+                                                    .Select(VisitBinding)),
             Vocabulary.MemberListBinding => Expression.ListBind(
-                                                    VisitMemberInfo(mi) ?? throw new SerializationException($"Could not deserialize member info from '{e.Name}'"),
-                                                    e.Elements(ElementNames.ElementInit)
-                                                     .Select(VisitElementInit)),
+                                                VisitMemberInfo(mi) ?? throw new SerializationException($"Could not deserialize member info from '{e.Name}'"),
+                                                e.Elements(ElementNames.ElementInit)
+                                                    .Select(VisitElementInit)),
             _ => throw new SerializationException($"Don't know how to deserialize member binding '{e.GetName()}'"),
         };
     }
@@ -411,10 +411,10 @@ public partial class FromXmlTransformVisitor
     /// <returns>System.Linq.Expressions.ElementInit.</returns>
     protected virtual ElementInit VisitElementInit(XElement e)
         => Expression.ElementInit(
-                    VisitMemberInfo(e.GetChild(0)) as MethodInfo ?? throw new SerializationException($"Could not deserialize member info from '{e.Name}'"),
-                    e.GetChild(Vocabulary.Arguments)
-                     .Elements()
-                     .Select(Visit));
+                VisitMemberInfo(e.GetChild(0)) as MethodInfo ?? throw new SerializationException($"Could not deserialize member info from '{e.Name}'"),
+                e.GetChild(Vocabulary.Arguments)
+                    .Elements()
+                    .Select(Visit));
 
     /// <summary>
     /// Visits a new list with initializers, e.g. 'new() { 1, a++, b+c }'.

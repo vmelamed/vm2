@@ -115,6 +115,16 @@ public partial class FromJsonTransformVisitor
                         GetMemberInfo(e, Vocabulary.Method) as MethodInfo);
 
     /// <summary>
+    /// Visits a Json element representing a `throw` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual UnaryExpression VisitThrow(JElement e)
+        => e.TryGetTypeFromProperty(out var type) && type is not null
+                ? Expression.Throw(VisitChild(e.GetElement(Vocabulary.Operand)), type)
+                : Expression.Throw(VisitChild(e.GetElement(Vocabulary.Operand)));
+
+    /// <summary>
     /// Visits a Json element representing a binary expression, e.g. `a + b`.
     /// </summary>
     /// <param name="e">The element.</param>
@@ -198,12 +208,63 @@ public partial class FromJsonTransformVisitor
                     (e.TryGetArray(out var vars, Vocabulary.Variables) ? vars : null)?
                         .Select((v, i) => VisitParameter(new($"var{i}", v))),
                     e.GetArray(Vocabulary.Expressions)
-                        .Select(x => Visit(x.ToObject("Expected expression").GetFirstObject())))
+                        .Select(x => Visit(x.ToObject("Expected expression")
+                        .GetFirstObject())))
             : Expression.Block(
                     (e.TryGetArray(out vars, Vocabulary.Variables) ? vars : null)?
                         .Select((v, i) => VisitParameter(new($"var{i}", v))),
                     e.GetArray(Vocabulary.Expressions)
-                        .Select(x => Visit(x.ToObject("Expected expression").GetFirstObject())));
+                        .Select(x => Visit(x.ToObject("Expected expression")
+                        .GetFirstObject())));
+
+    /// <summary>
+    /// Visits a Json element representing a `Member` access expression, e.g. `a.Abc`.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual Expression VisitMember(JElement e)
+    {
+        var memberInfo = VisitMemberInfo(
+                            e.GetElement(Vocabulary.Member)
+                             .GetFirstElement());
+
+        if (memberInfo is not PropertyInfo and not FieldInfo)
+            return e.ThrowSerializationException<Expression>($"Expected '{Vocabulary.Member}/{Vocabulary.Property}' or '{Vocabulary.Member}/{Vocabulary.Field}' element");
+
+        return Expression.MakeMemberAccess(
+                e.TryGetElement(out var obj, Vocabulary.Object) && obj.HasValue
+                && obj.Value.Value is JsonObject
+                    ? VisitChild(obj.Value)
+                    : null,
+                memberInfo);
+    }
+
+    /// <summary>
+    /// Visits a Json element representing a Method call expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual MethodCallExpression VisitMethodCall(JElement e)
+        => Expression.Call(
+                e.TryGetElement(out var obj, Vocabulary.Object) && obj.HasValue
+                    ? VisitChild(obj.Value)
+                    : null,
+                VisitMemberInfo(e.GetElement(Vocabulary.Method)) as MethodInfo
+                    ?? e.ThrowSerializationException<MethodInfo>($"Expected '{Vocabulary.Method}' element"),
+                e.GetArray(Vocabulary.Arguments)
+                    .Select((n, i) => VisitChild(new($"arg{i}", n.ToObject("Expected argument expression")))));
+
+    /// <summary>
+    /// Visits a Json element representing a `delegate` or lambda invocation expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual InvocationExpression VisitInvocation(JElement e)
+        => Expression.Invoke(
+                VisitChild(
+                    e.GetElement(Vocabulary.Delegate)),
+                e.GetArray(Vocabulary.Arguments)
+                    .Select((n, i) => VisitChild(new($"arg{i}", n.ToObject("Expected argument expression")))));
 
     ///// <summary>
     ///// Visits a Json element representing a conditional expression.
@@ -248,58 +309,6 @@ public partial class FromJsonTransformVisitor
 
     //    return mems is null ? Expression.New(ci, args) : Expression.New(ci, args, mems);
     //}
-
-    /// <summary>
-    /// Visits a Json element representing a `throw` expression.
-    /// </summary>
-    /// <param name="e">The element.</param>
-    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    protected virtual UnaryExpression VisitThrow(JElement e)
-        => e.TryGetTypeFromProperty(out var type) && type is not null
-                ? Expression.Throw(VisitChild(e.GetElement(Vocabulary.Operand)), type)
-                : Expression.Throw(VisitChild(e.GetElement(Vocabulary.Operand)));
-
-    ///// <summary>
-    ///// Visits a Json element representing a `Member` access expression, e.g. `a.Abc`.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual Expression VisitMember(JElement e)
-    //    => Expression.MakeMemberAccess(
-    //                        VisitChild(e),
-    //                        VisitMemberInfo(
-    //                            e.TryGetFirstElement(Vocabulary.Property, out var mem) ||
-    //                            e.TryGetFirstElement(Vocabulary.Field, out mem) ? mem : throw new SerializationException($"Could not deserialize `property` or `field` in `{e.Name}`"))
-    //                                    ?? throw new SerializationException($"Could not deserialize `MemberInfo` in `{e.Name}`"));
-
-    ///// <summary>
-    ///// Visits a Json element representing a `XXXX` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual MethodCallExpression VisitMethodCall(JElement e)
-    //{
-    //    var child = e.GetElement(0);
-
-    //    return child.Name == Vocabulary.Method
-    //                ? Expression.Call(
-    //                        VisitMemberInfo(child) as MethodInfo ?? throw new SerializationException($"Could not deserialize `MethodInfo` from `{e.Name}`"),
-    //                        e.GetElement(Vocabulary.Arguments).Elements().Select(Visit))
-    //                : Expression.Call(
-    //                        Visit(child),
-    //                        VisitMemberInfo(e.GetElement(Vocabulary.Method)) as MethodInfo ?? throw new SerializationException($"Could not deserialize `MethodInfo` from `{e.Name}`"),
-    //                        e.GetElement(Vocabulary.Arguments).Elements().Select(Visit));
-    //}
-
-    ///// <summary>
-    ///// Visits a Json element representing a `delegate` or lambda invocation expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual InvocationExpression VisitInvocation(JElement e)
-    //    => Expression.Invoke(
-    //                        VisitChild(e, 0),
-    //                        e.Elements(ElementNames.Arguments).Elements().Select(Visit));
 
     ///// <summary>
     ///// Visits a Json element representing a `XXXX` expression.

@@ -33,15 +33,13 @@
         {
           "increment": {
             "type": "int",
-            "operands": [
-              {
-                "parameter": {
-                  "type": "int",
-                  "name": "a",
-                  "id": "P1"
-                }
+            "operand": {
+              "parameter": {
+                "type": "int",
+                "name": "a",
+                "id": "P1"
               }
-            ]
+            }
           }
         },
         {
@@ -55,15 +53,13 @@
         {
           "increment": {
             "type": "int",
-            "operands": [
-              {
-                "parameter": {
-                  "type": "int",
-                  "name": "a",
-                  "id": "P1"
-                }
+            "operand": {
+              "parameter": {
+                "type": "int",
+                "name": "a",
+                "id": "P1"
               }
-            ]
+            }
           }
         },
         {

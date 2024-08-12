@@ -152,72 +152,12 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitMember,
             (n, x) =>
                 x.Add(
-                    Pop(),    // pop the expression/value that will give the object whose requested member is being accessed
+                    node.Expression is not null
+                        ? new XElement(
+                                ElementNames.Object,
+                                Pop())  // pop the expression/value that will give the object whose requested member is being accessed
+                        : null,         // or null if the property/field is static
                     VisitMemberInfo(n.Member)));
-
-    #region Member initialization
-    /// <inheritdoc/>
-    protected override Expression VisitMemberInit(MemberInitExpression node)
-        => GenericVisit(
-            node,
-            base.VisitMemberInit,
-            (n, x) =>
-            {
-                var bindings = Pop(n.Bindings.Count).ToList();     // pop the expressions to assign to members
-                x.Add(
-                    Pop(),        // the new value
-                    new XElement(ElementNames.Bindings, bindings));
-            });
-
-    ///// <inheritdoc/>
-    //protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
-    // the base is doing exactly what we need - dispatch the call to the concrete binding below:
-
-    /// <inheritdoc/>
-    protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
-    {
-        using var _ = OutputDebugScope(nameof(MemberAssignment));
-        var binding = base.VisitMemberAssignment(node);
-
-        _elements.Push(
-            new XElement(
-                    ElementNames.AssignmentBinding,
-                        VisitMemberInfo(node.Member),
-                        Pop()));  // pop the value to assign
-
-        return binding;
-    }
-
-    /// <inheritdoc/>
-    protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
-    {
-        using var _ = OutputDebugScope(nameof(MemberMemberBinding));
-        var binding = base.VisitMemberMemberBinding(node);
-
-        _elements.Push(
-            new XElement(
-                    ElementNames.MemberMemberBinding,
-                        VisitMemberInfo(node.Member),
-                        Pop(node.Bindings.Count)));
-
-        return binding;
-    }
-
-    /// <inheritdoc/>
-    protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
-    {
-        using var _ = OutputDebugScope(nameof(MemberListBinding));
-        var binding = base.VisitMemberListBinding(node);
-
-        _elements.Push(
-            new XElement(
-                    ElementNames.MemberListBinding,
-                        VisitMemberInfo(node.Member),
-                        Pop(node.Initializers.Count)));
-
-        return binding;
-    }
-    #endregion
 
     /// <inheritdoc/>
     protected override Expression VisitMethodCall(MethodCallExpression node)
@@ -231,7 +171,9 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                 var method = VisitMemberInfo(n.Method);
 
                 x.Add(
-                    instance,
+                    instance is not null
+                        ? new XElement(ElementNames.Object, instance)
+                        : null,
                     method,
                     arguments);
             });
@@ -314,6 +256,55 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                                     expressions));
             });
 
+    #region Member initialization
+    /// <inheritdoc/>
+    protected override Expression VisitMemberInit(MemberInitExpression node)
+        => GenericVisit(
+            node,
+            base.VisitMemberInit,
+            (n, x) =>
+            {
+                var bindings = Pop(n.Bindings.Count).ToList();     // pop the expressions to assign to members
+                x.Add(
+                    Pop(),        // the new value
+                    new XElement(ElementNames.Bindings, bindings));
+            });
+
+    ///// <inheritdoc/>
+    //protected override MemberBinding VisitMemberBinding(MemberBinding node) => base.VisitMemberBinding(node);
+    // the base is doing exactly what we need - dispatch the call to the concrete binding below:
+
+    /// <inheritdoc/>
+    protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
+    {
+        using var _ = OutputDebugScope(nameof(MemberAssignment));
+        var binding = base.VisitMemberAssignment(node);
+
+        _elements.Push(
+            new XElement(
+                    ElementNames.AssignmentBinding,
+                        VisitMemberInfo(node.Member),
+                        Pop()));  // pop the value to assign
+
+        return binding;
+    }
+
+    /// <inheritdoc/>
+    protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
+    {
+        using var _ = OutputDebugScope(nameof(MemberMemberBinding));
+        var binding = base.VisitMemberMemberBinding(node);
+
+        _elements.Push(
+            new XElement(
+                    ElementNames.MemberMemberBinding,
+                        VisitMemberInfo(node.Member),
+                        Pop(node.Bindings.Count)));
+
+        return binding;
+    }
+    #endregion
+
     #region new List with initializers
     /// <inheritdoc/>
     protected override Expression VisitListInit(ListInitExpression node)
@@ -342,6 +333,21 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
                         new XElement(ElementNames.Arguments, Pop(node.Arguments.Count))));  // pop the elements init expressions
 
         return elementInit;
+    }
+
+    /// <inheritdoc/>
+    protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
+    {
+        using var _ = OutputDebugScope(nameof(MemberListBinding));
+        var binding = base.VisitMemberListBinding(node);
+
+        _elements.Push(
+            new XElement(
+                    ElementNames.MemberListBinding,
+                        VisitMemberInfo(node.Member),
+                        Pop(node.Initializers.Count)));
+
+        return binding;
     }
     #endregion
 
