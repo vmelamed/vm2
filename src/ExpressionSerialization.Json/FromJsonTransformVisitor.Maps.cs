@@ -87,8 +87,8 @@ public partial class FromJsonTransformVisitor
         yield return new(Vocabulary.Call, (v, e) => v.VisitMethodCall(e));
         yield return new(Vocabulary.Invoke, (v, e) => v.VisitInvocation(e));
         //    yield return new(Vocabulary.Exception,            (v, e) => v.VisitParameter(e)          );
-        //    yield return new(Vocabulary.Label,                (v, e) => v.VisitLabel(e)              );
-        //    yield return new(Vocabulary.Goto,                 (v, e) => v.VisitGoto(e)               );
+        yield return new(Vocabulary.Label, (v, e) => v.VisitLabel(e));
+        yield return new(Vocabulary.Goto, (v, e) => v.VisitGoto(e));
         //    yield return new(Vocabulary.Loop,                 (v, e) => v.VisitLoop(e)               );
         //    yield return new(Vocabulary.Switch,               (v, e) => v.VisitSwitch(e)             );
         //    yield return new(Vocabulary.Try,                  (v, e) => v.VisitTry(e)                );

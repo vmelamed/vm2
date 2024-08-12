@@ -266,6 +266,45 @@ public partial class FromJsonTransformVisitor
                 e.GetArray(Vocabulary.Arguments)
                     .Select((n, i) => VisitChild(new($"arg{i}", n.ToObject("Expected argument expression")))));
 
+    /// <summary>
+    /// Visits a Json element representing a `XXXX` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression" /> represented by the element.</returns>
+    /// <exception cref="SerializationException">$"Expected element with name `{expectedName}` but got `{e.Name}`.</exception>
+    protected virtual LabelExpression VisitLabel(JElement e)
+        => Expression.Label(
+                VisitLabelTarget(e.GetElement(Vocabulary.LabelTarget)),
+                e.TryGetElement(out var value, Vocabulary.Default) && value.HasValue
+                    ? Visit(value.Value)
+                    : null);
+
+    /// <summary>
+    /// Visits a Json element representing a `LabelTarget` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    ///
+    /// <returns>System.Linq.Expressions.LabelTarget.</returns>
+    /// <exception cref="SerializationException">$"Expected Json attribute `{(isRef.Value ? Vocabulary.IdRef : Vocabulary.Id)}` in the element `{e.Name}`.</exception>
+    protected virtual LabelTarget VisitLabelTarget(JElement e)
+        => GetTarget(e);
+
+    /// <summary>
+    /// Visits a Json element representing a `goto` expression.
+    /// </summary>
+    /// <param name="e">The element.</param>
+    /// <returns>The <see cref="Expression"/> represented by the element.</returns>
+    protected virtual GotoExpression VisitGoto(JElement e)
+    {
+        var target = VisitLabelTarget(e.GetElement(Vocabulary.LabelTarget));
+
+        return Expression.MakeGoto(
+                e.GetPropertyValue<GotoExpressionKind>(Vocabulary.Kind),
+                target,
+                e.TryGetElement(out var ve) && ve.HasValue ? Visit(ve.Value) : null,
+                target.Type);
+    }
+
     ///// <summary>
     ///// Visits a Json element representing a conditional expression.
     ///// </summary>
@@ -308,45 +347,6 @@ public partial class FromJsonTransformVisitor
     //                .Select(me => VisitMemberInfo(me) ?? throw new SerializationException($"Could not deserialize MemberInfo from `{e.Name}`"));
 
     //    return mems is null ? Expression.New(ci, args) : Expression.New(ci, args, mems);
-    //}
-
-    ///// <summary>
-    ///// Visits a Json element representing a `XXXX` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression" /> represented by the element.</returns>
-    ///// <exception cref="SerializationException">$"Expected element with name `{expectedName}` but got `{e.Name}`.</exception>
-    //protected virtual LabelExpression VisitLabel(JElement e)
-    //    => Expression.Label(
-    //                        VisitLabelTarget(e.GetElement(Vocabulary.LabelTarget)),
-    //                        e.TryGetFirstElement(1, out var value) && value != null ? Visit(value) : null);
-
-    ///// <summary>
-    ///// Visits a Json element representing a `LabelTarget` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    /////
-    ///// <returns>System.Linq.Expressions.LabelTarget.</returns>
-    ///// <exception cref="SerializationException">$"Expected Json attribute `{(isRef.Value ? Vocabulary.IdRef : Vocabulary.Id)}` in the element `{e.Name}`.</exception>
-    //protected virtual LabelTarget VisitLabelTarget(JElement e)
-    //    => GetTarget(e);
-
-    ///// <summary>
-    ///// Visits a Json element representing a `goto` expression.
-    ///// </summary>
-    ///// <param name="e">The element.</param>
-    ///// <returns>The <see cref="Expression"/> represented by the element.</returns>
-    //protected virtual GotoExpression VisitGoto(JElement e)
-    //{
-    //    var target = VisitLabelTarget(e.GetElement(Vocabulary.LabelTarget));
-
-    //    return Expression.MakeGoto(
-    //                        Enum.Parse<GotoExpressionKind>(
-    //                                e.Attribute(AttributeNames.Kind)?.Value ?? throw new SerializationException($"Could not get the kind of the goto expression from `{e.Name}`."),
-    //                                true),
-    //                        target,
-    //                        e.TryGetFirstElement(1, out var ve) && ve is not null ? Visit(ve) : null,
-    //                        target.Type);
     //}
 
     ///// <summary>
