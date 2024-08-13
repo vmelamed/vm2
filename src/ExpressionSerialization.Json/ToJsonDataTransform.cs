@@ -71,13 +71,13 @@ partial class ToJsonDataTransform(JsonOptions options)
         var valueElement = new JElement(Vocabulary.Value);
 
         if (strValue is not null && nodeType.IsDefined(typeof(FlagsAttribute)))
-            valueElement.Value = new JsonArray(
+            valueElement.Node = new JsonArray(
                                         strValue
                                             .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                                             .Select(v => JsonValue.Create(v))
                                             .ToArray());
         else
-            valueElement.Value = JsonValue.Create(strValue);
+            valueElement.Node = JsonValue.Create(strValue);
 
         var underlyingType = nodeType.GetEnumUnderlyingType();
 
@@ -107,8 +107,8 @@ partial class ToJsonDataTransform(JsonOptions options)
                                 new JElement(Vocabulary.Type, Transform.TypeName(underlyingType)),
                                 new JElement(Vocabulary.Value));    // null value
 
-        var value = nodeType.GetProperty("Value")?.GetValue(nodeValue)
-                        ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but 'Nullable<T>.Value' is null.");
+        var value = nodeType.GetProperty("Node")?.GetValue(nodeValue)
+                        ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but 'Nullable<T>.Node' is null.");
 
         return new JElement(
                         Vocabulary.Nullable,
@@ -272,7 +272,7 @@ partial class ToJsonDataTransform(JsonOptions options)
                                             .Cast<object?>()
                                             .Select(e => new JsonObject() { GetTransform(elementType)(e, elementType) })
                                             .ToArray())),
-                            length.HasValue ? new JElement(Vocabulary.Length, length.Value) : null);
+                            length is not null ? new JElement(Vocabulary.Length, length.Value) : null);
     }
 
     /// <summary>

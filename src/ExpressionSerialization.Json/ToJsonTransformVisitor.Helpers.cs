@@ -54,11 +54,11 @@ public partial class ToJsonTransformVisitor
                                     new JElement(Vocabulary.Id, NewLabelId));
 
     /// <summary>
-    /// Pops one element from the stack and returns its <see cref="JElement.Value"/>
+    /// Pops one element from the stack and returns its <see cref="JElement.Node"/>
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <returns>JElement.</returns>
-    JsonNode? PopElementValue() => _elements.Pop().Value;
+    JsonNode? PopElementValue() => _elements.Pop().Node;
 
     /// <summary>
     /// Pops one element from the stack and returns it wrapped in a new <see cref="JsonObject"/>
@@ -69,7 +69,7 @@ public partial class ToJsonTransformVisitor
 
     /// <summary>
     /// Pops a specified number of elements from the stack in the order they entered (FIFO, not LIFO) and returns
-    /// <see cref="IEnumerable{JsonNode}"/> of their <see cref="JElement.Value"/>.
+    /// <see cref="IEnumerable{JsonNode}"/> of their <see cref="JElement.Node"/>.
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <param name="numberOfExpressions">The number of expressions.</param>
@@ -77,12 +77,12 @@ public partial class ToJsonTransformVisitor
     IEnumerable<JsonNode?> PopElementsValues(int numberOfExpressions)
     {
         foreach (var e in Pop(numberOfExpressions))
-            yield return e.Value;
+            yield return e.Node;
     }
 
     /// <summary>
     /// Pops a specified number of elements from the stack wrapped in <see cref="JsonObject"/> in the order they entered
-    /// (FIFO, not LIFO) and returns <see cref="IEnumerable{JsonNode}"/> of their <see cref="JElement.Value"/>.
+    /// (FIFO, not LIFO) and returns <see cref="IEnumerable{JsonNode}"/> of their <see cref="JElement.Node"/>.
     /// <see cref="ExpressionTransformVisitor{TElement}._elements"/>.
     /// </summary>
     /// <param name="numberOfExpressions">The number of expressions.</param>

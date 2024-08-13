@@ -8,7 +8,7 @@
 /// from it but we have implicit conversions to and from it and instances of this class can be used anywhere where
 /// <see cref="KeyValuePair{TKey, TValue}"/> is required.
 /// </remarks>
-[DebuggerDisplay("{Name}: {Value}")]
+[DebuggerDisplay("{Name}: {Node}")]
 public partial struct JElement(string key = "", JsonNode? value = null)
 {
     #region Constructors
@@ -20,31 +20,31 @@ public partial struct JElement(string key = "", JsonNode? value = null)
 
     /// <summary>
     /// Gets or sets the value of this JElement. When this JElement is added to a <see cref="JsonObject"/> or
-    /// <see cref="JsonDocument"/>, the <see cref="Value"/> will become the value of the property with name
+    /// <see cref="JsonDocument"/>, the <see cref="Node"/> will become the value of the property with name
     /// <see cref="Name"/> in that parent.
     /// </summary>
     /// <element>The element.</element>
-    public JsonNode? Value { get; set; } = value;
+    public JsonNode? Node { get; set; } = value;
 
     /// <summary>
     /// Gets the value of the element as JsonObject or throws exception..
     /// </summary>
-    public readonly JsonObject JsObject => Value?.AsObject() ?? throw new SerializationException($"The value of the element {Name} is not JsonObject.");
+    public readonly JsonObject JsObject => Node?.AsObject() ?? throw new SerializationException($"The value of the element {Name} is not JsonObject.");
 
     /// <summary>
     /// Gets the value of the element as JsonArray or throws exception..
     /// </summary>
-    public readonly JsonArray JsArray => Value?.AsArray() ?? throw new SerializationException($"The value of the element {Name} is not JsonArray.");
+    public readonly JsonArray JsArray => Node?.AsArray() ?? throw new SerializationException($"The value of the element {Name} is not JsonArray.");
 
     /// <summary>
     /// Gets the value of the element as JsonValue or throws exception..
     /// </summary>
-    public readonly JsonValue JsValue => Value?.AsValue() ?? throw new SerializationException($"The value of the element {Name} is not JsonValue.");
+    public readonly JsonValue JsValue => Node?.AsValue() ?? throw new SerializationException($"The value of the element {Name} is not JsonValue.");
 
     /// <summary>
     /// Gets the kind of the json value.
     /// </summary>
-    public readonly JsonValueKind JsonValueKind => Value?.GetValueKind() ?? JsonValueKind.Null;
+    public readonly JsonValueKind JsonValueKind => Node?.GetValueKind() ?? JsonValueKind.Null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JElement" /> struct. Disambiguates the <see cref="JsonArray"/>
@@ -56,12 +56,12 @@ public partial struct JElement(string key = "", JsonNode? value = null)
         : this(key, (JsonNode)jArray) { }
 
     /// <summary>
-    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Value"/>
+    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Node"/>
     /// with the given set of <see cref="JElement"/>-s.
     /// </summary>
     /// <param key="key">The name of the property in the parent JSON object that will contain this <see cref="JElement"/>.</param>
     /// <param key="properties">
-    /// A set of <see cref="JElement"/>-s to be added to the new <see cref="JsonObject"/> to be set in the <see cref="Value"/>.
+    /// A set of <see cref="JElement"/>-s to be added to the new <see cref="JsonObject"/> to be set in the <see cref="Node"/>.
     /// </param>
     /// <exception cref="ArgumentException">
     /// If there are two or more properties with the same key in the <paramref name="properties"/>.
@@ -70,12 +70,12 @@ public partial struct JElement(string key = "", JsonNode? value = null)
         : this(key, new JsonObject(properties.Where(p => p is not null).Select(p => (KeyValuePair<string, JsonNode?>)p!))) { }
 
     /// <summary>
-    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Value"/>
+    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Node"/>
     /// with the given set of <see cref="JElement"/>-s.
     /// </summary>
     /// <param key="key">The name of the property in the parent JSON object that will contain this <see cref="JElement"/>.</param>
     /// <param key="properties">
-    /// A set of <see cref="JElement"/>-s to be added to the new <see cref="JsonObject"/> to be set in the <see cref="Value"/>.
+    /// A set of <see cref="JElement"/>-s to be added to the new <see cref="JsonObject"/> to be set in the <see cref="Node"/>.
     /// </param>
     /// <exception cref="ArgumentException">
     /// If there are two or more properties with the same key in the <paramref name="properties"/>.
@@ -84,12 +84,12 @@ public partial struct JElement(string key = "", JsonNode? value = null)
         : this(key, new JsonObject(properties.Where(p => p is not null).Select(p => (KeyValuePair<string, JsonNode?>)p!))) { }
 
     /// <summary>
-    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Value"/>
+    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonObject"/> in the <see cref="Node"/>
     /// with the given set of <see cref="JElement"/>-s.
     /// </summary>
     /// <param key="key">The name of the property in the parent JSON object that will contain this <see cref="JElement"/>.</param>
     /// <param key="properties">
-    /// A set of <see cref="JElement"/>-s to be added to the new <see cref="JsonObject"/> to be set in the <see cref="Value"/>.
+    /// A set of <see cref="JElement"/>-s to be added to the new <see cref="JsonObject"/> to be set in the <see cref="Node"/>.
     /// </param>
     /// <exception cref="ArgumentException">
     /// If there are two or more properties with the same key in the <paramref name="properties"/>.
@@ -98,23 +98,23 @@ public partial struct JElement(string key = "", JsonNode? value = null)
         : this(key, new JsonObject(properties.Select(p => (KeyValuePair<string, JsonNode?>)p))) { }
 
     /// <summary>
-    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonArray"/> in the <see cref="Value"/>
+    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonArray"/> in the <see cref="Node"/>
     /// with the given set of <see cref="JsonNode"/>-s.
     /// </summary>
     /// <param key="key">The name of the property in the parent JSON object that will contain this <see cref="JElement"/>.</param>
     /// <param key="elements">
-    /// A set of <see cref="JsonNode"/>-s to be added to the new <see cref="JsonArray"/> that will be set in the <see cref="Value"/>.
+    /// A set of <see cref="JsonNode"/>-s to be added to the new <see cref="JsonArray"/> that will be set in the <see cref="Node"/>.
     /// </param>
     public JElement(string key, IEnumerable<JsonNode?> elements)
         : this(key, (JsonNode)new JsonArray(elements.ToArray())) { }
 
     /// <summary>
-    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonArray"/> in the <see cref="Value"/>
+    /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonArray"/> in the <see cref="Node"/>
     /// with the given set of <see cref="JsonNode"/>-s.
     /// </summary>
     /// <param key="key">The name of the property in the parent JSON object that will contain this <see cref="JElement"/>.</param>
     /// <param key="elements">
-    /// A set of <see cref="JsonNode"/>-s to be added to the new <see cref="JsonArray"/> that will be set in the <see cref="Value"/>.
+    /// A set of <see cref="JsonNode"/>-s to be added to the new <see cref="JsonArray"/> that will be set in the <see cref="Node"/>.
     /// </param>
     public JElement(string key, params JsonNode?[] elements)
         : this(key, (JsonNode)new JsonArray(elements)) { }
@@ -139,14 +139,14 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// </summary>
     /// <returns>vm2.ExpressionSerialization.Json.JElement.</returns>
     public readonly JElement DeepClone()
-            => new(Name, Value?.DeepClone());
+            => new(Name, Node?.DeepClone());
 
     /// <summary>
     /// Performs an implicit conversion from <see cref="JElement"/> to <see cref="KeyValuePair{String, JsonNode}"/>.
     /// </summary>
     /// <param key="je">The je.</param>
     /// <returns>The result of the conversion.</returns>
-    public static implicit operator KeyValuePair<string, JsonNode?>(JElement je) => new(je.Name, je.Value);
+    public static implicit operator KeyValuePair<string, JsonNode?>(JElement je) => new(je.Name, je.Node);
 
     /// <summary>
     /// Performs an implicit conversion <see cref="KeyValuePair{String, JsonNode}" /> from to <see cref="JElement" />.
@@ -160,7 +160,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// </summary>
     /// <param key="je">The je.</param>
     /// <returns>The result of the conversion.</returns>
-    public static implicit operator ValueTuple<string, JsonNode?>(JElement je) => new(je.Name, je.Value);
+    public static implicit operator ValueTuple<string, JsonNode?>(JElement je) => new(je.Name, je.Node);
 
     /// <summary>
     /// Performs an implicit conversion from <see cref="ValueTuple{String, JsonNode}" /> to <see cref="JElement" />.
@@ -177,14 +177,14 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     public readonly void Deconstruct(out string key, out JsonNode? value)
     {
         key = Name;
-        value = Value;
+        value = Node;
     }
 
     /// <summary>
     /// Returns a <see cref="string" /> that represents this instance.
     /// </summary>
     /// <returns>A <see cref="string" /> that represents this instance.</returns>
-    public override readonly string ToString() => $"[{Name}, {Value}]";
+    public override readonly string ToString() => $"[{Name}, {Node}]";
 
     /// <summary>
     /// Throws a (de)serialization exception.

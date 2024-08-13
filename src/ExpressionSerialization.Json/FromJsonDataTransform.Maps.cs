@@ -86,17 +86,17 @@ static partial class FromJsonDataTransform
             : (Half)x.GetValue<float>();
 
     static long JsonToLong(JElement x)
-        => x.Value?.GetValueKind() switch {
+        => x.Node?.GetValueKind() switch {
             JsonValueKind.Number => x.GetValue<long>(),
             JsonValueKind.String => long.Parse(x.GetValue<string>()!),
-            _ => throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `long` - unexpected JSON type {x.Value?.GetValueKind()}."),
+            _ => throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `long` - unexpected JSON type {x.Node?.GetValueKind()}."),
         };
 
     static ulong JsonToULong(JElement x)
-        => x.Value?.GetValueKind() switch {
+        => x.Node?.GetValueKind() switch {
             JsonValueKind.Number => x.GetValue<ulong>(),
             JsonValueKind.String => ulong.Parse(x.GetValue<string>()!),
-            _ => throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `unsigned long` - unexpected JSON type {x.Value?.GetValueKind()}."),
+            _ => throw new SerializationException($"Could not convert the valueElement of property `{x.Name}` to `unsigned long` - unexpected JSON type {x.Node?.GetValueKind()}."),
         };
 
     static IntPtr JsonToIntPtr(JElement x)

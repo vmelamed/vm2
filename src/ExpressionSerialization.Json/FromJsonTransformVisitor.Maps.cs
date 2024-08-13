@@ -10,7 +10,7 @@ public partial class FromJsonTransformVisitor
     /// </summary>
     static IEnumerable<KeyValuePair<string, VisitJElement>> Transforms()
     {
-        yield return new(Vocabulary.Expression, (v, e) => v.VisitChild(e));
+        yield return new(Vocabulary.Expression, (v, e) => v.VisitFirstChild(e));
         yield return new(Vocabulary.Constant, (v, e) => v.VisitConstant(e));
         yield return new(Vocabulary.ParameterSpec, (v, e) => v.VisitParameter(e));
         yield return new(Vocabulary.Parameter, (v, e) => v.VisitParameter(e));
@@ -79,23 +79,24 @@ public partial class FromJsonTransformVisitor
         yield return new(Vocabulary.TypeIs, (v, e) => v.VisitTypeBinary(e));
         yield return new(Vocabulary.Block, (v, e) => v.VisitBlock(e));
         yield return new(Vocabulary.Conditional, (v, e) => v.VisitConditional(e));
-        //    yield return new(Vocabulary.Index,                (v, e) => v.VisitIndex(e)              );
+        yield return new(Vocabulary.Index, (v, e) => v.VisitIndex(e));
         yield return new(Vocabulary.New, (v, e) => v.VisitNew(e));
         yield return new(Vocabulary.Throw, (v, e) => v.VisitThrow(e));
         yield return new(Vocabulary.Default, (v, e) => v.VisitDefault(e));
         yield return new(Vocabulary.MemberAccess, (v, e) => v.VisitMember(e));
         yield return new(Vocabulary.Call, (v, e) => v.VisitMethodCall(e));
         yield return new(Vocabulary.Invoke, (v, e) => v.VisitInvocation(e));
-        //    yield return new(Vocabulary.Exception,            (v, e) => v.VisitParameter(e)          );
+        yield return new(Vocabulary.Exception, (v, e) => v.VisitParameter(e));
         yield return new(Vocabulary.Label, (v, e) => v.VisitLabel(e));
         yield return new(Vocabulary.Goto, (v, e) => v.VisitGoto(e));
         yield return new(Vocabulary.Loop, (v, e) => v.VisitLoop(e));
         yield return new(Vocabulary.Switch, (v, e) => v.VisitSwitch(e));
         yield return new(Vocabulary.Try, (v, e) => v.VisitTry(e));
-        //    yield return new(Vocabulary.MemberInit,           (v, e) => v.VisitMemberInit(e)         );
-        //    yield return new(Vocabulary.ListInit,             (v, e) => v.VisitListInit(e)           );
-        //    yield return new(Vocabulary.NewArrayInit,         (v, e) => v.VisitNewArrayInit(e)       );
-        //    yield return new(Vocabulary.NewArrayBounds,       (v, e) => v.VisitNewArrayBounds(e)     );
+        yield return new(Vocabulary.NewArrayInit, (v, e) => v.VisitNewArrayInit(e));
+        yield return new(Vocabulary.NewArrayBounds, (v, e) => v.VisitNewArrayBounds(e));
+
+        yield return new(Vocabulary.MemberInit, (v, e) => v.VisitMemberInit(e));
+        yield return new(Vocabulary.ListInit, (v, e) => v.VisitListInit(e));
     }
 
     static readonly FrozenDictionary<string, VisitJElement> _transforms = Transforms().ToFrozenDictionary();

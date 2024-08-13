@@ -112,7 +112,7 @@ static partial class FromJsonDataTransform
         if (concreteType == typeof(object))
             return new();
 
-        return JsonSerializer.Deserialize(valueElement.Value, concreteType);
+        return JsonSerializer.Deserialize(valueElement.Node, concreteType);
     }
 
     static object? TransformAnonymous(
@@ -128,10 +128,10 @@ static partial class FromJsonDataTransform
         var constructorParameters = constructor.GetParameters();
         var valueElement = element.GetElement(Vocabulary.Value);
 
-        if (valueElement.Value is null || valueElement.Value.GetValueKind() != JsonValueKind.Object)
+        if (valueElement.Node is null || valueElement.Node.GetValueKind() != JsonValueKind.Object)
             throw new SerializationException($"Invalid value at '{element.GetPath()}'.");
 
-        var value = valueElement.Value.AsObject();
+        var value = valueElement.Node.AsObject();
 
         if (value.Count != constructorParameters.Length)
             throw new SerializationException($"The number of properties and the number of initialization parameters do not match for anonymous type at '{element.GetPath()}'.");
@@ -159,7 +159,7 @@ static partial class FromJsonDataTransform
                     type,
                     element
                         .GetElement()
-                        .Value!
+                        .Node!
                         .AsObject()
                         .Where(kvp => kvp.Value is JsonObject)
                         .Select(kvp => ValueTransform(kvp.Value?.AsObject()?.GetOneOf(ConstantTypes) ?? throw new SerializationException(kvp.Value?.AsObject().GetPath())).Item1)

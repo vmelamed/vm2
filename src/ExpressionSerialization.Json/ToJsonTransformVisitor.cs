@@ -68,7 +68,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
     #region Lambda
     IEnumerable<JsonNode?> VisitParameterDefinitionList(ReadOnlyCollection<ParameterExpression> parameterList)
     => parameterList.Select(p => !IsDefined(p)
-                                    ? GetParameter(p).Value
+                                    ? GetParameter(p).Node
                                     : throw new InternalTransformErrorException($"Parameter with a name `{p.Name}` is already defined."));
 
     /// <inheritdoc/>
@@ -134,7 +134,7 @@ public partial class ToJsonTransformVisitor(JsonOptions options) : ExpressionTra
                 var indexes = new JElement(Vocabulary.Indexes, PopWrappedElements(n.Arguments.Count));   // pop the index expressions
 
                 x.Add(
-                    new JElement(Vocabulary.Instance, Pop()),    // pop the object being indexed
+                    new JElement(Vocabulary.Object, Pop()),    // pop the object being indexed
                     indexes,
                     VisitMemberInfo(n.Indexer));
             });

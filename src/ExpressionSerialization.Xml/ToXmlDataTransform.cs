@@ -211,7 +211,7 @@ partial class ToXmlDataTransform(XmlOptions options)
                                         ElementNames.Collection,
                                         new XAttribute(AttributeNames.Type, Transform.TypeName(nodeType)),
                                         new XAttribute(AttributeNames.ElementType, Transform.TypeName(elementType)),
-                                        length.HasValue ? new XAttribute(AttributeNames.Length, length.Value) : null,
+                                        length is not null ? new XAttribute(AttributeNames.Length, length.Value) : null,
                                         options.TypeComment(elementType)
                                     );
 
@@ -344,7 +344,7 @@ partial class ToXmlDataTransform(XmlOptions options)
     }
 
     /// <summary>
-    /// Transforms objects using <see cref="DataContractSerializer" /> which also works with classes marked with 
+    /// Transforms objects using <see cref="DataContractSerializer" /> which also works with classes marked with
     /// <see cref="SerializableAttribute"/> types too.
     /// </summary>
     /// <param name="nodeValue">The node v.</param>

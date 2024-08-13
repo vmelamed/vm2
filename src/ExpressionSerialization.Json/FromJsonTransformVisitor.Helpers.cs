@@ -38,17 +38,20 @@ public partial class FromJsonTransformVisitor
         return _labelTargets[id] = type is not null ? Expression.Label(type, name) : Expression.Label(name);
     }
 
-    static MemberInfo? GetMemberInfo(JElement e, string memberInfoName)
-        => e.TryGetElement(out var member, memberInfoName) && member.HasValue
-                ? VisitMemberInfo(member.Value)
+    static MemberInfo? TryGetMemberInfo(JElement e, string memberInfoName)
+        => e.TryGetElement(out var member, memberInfoName) && member is not null
+                ? TryVisitMemberInfo(member.Value)
                 : null;
+
+    static MemberInfo GetMemberInfo(JElement e, string memberInfoName)
+        => VisitMemberInfo(e.GetElement(memberInfoName));
 
     /// <summary>
     /// Gets the member information that may be attached to the expression.
     /// </summary>
     /// <param name="e">The element representing the member info.</param>
     /// <returns>System.Reflection.MemberInfo.</returns>
-    internal static MemberInfo? VisitMemberInfo(JElement e)
+    internal static MemberInfo? TryVisitMemberInfo(JElement e)
     {
         // get the declaring type - where to get the member info from
         var declTypeName = e.GetPropertyValue<string>(Vocabulary.DeclaringType);
@@ -68,11 +71,7 @@ public partial class FromJsonTransformVisitor
         var isStatic = e.TryGetPropertyValue<bool>(out var stat, Vocabulary.Static) && stat;
         var visibility = e.TryGetPropertyValue<string>(out var vis, Vocabulary.Visibility) ? vis : "";
         var bindingFlags = (isStatic ? BindingFlags.Static : BindingFlags.Instance) |
-                           visibility switch
-                           {
-                               Vocabulary.Public or "" => BindingFlags.Public,
-                               _ => BindingFlags.NonPublic,
-                           };
+                           (visibility is Vocabulary.Public or "" ? BindingFlags.Public : BindingFlags.NonPublic);
         var (paramTypes, modifiers) = GetParameterSpecs(e);
 
         return e.Name switch {
@@ -82,8 +81,12 @@ public partial class FromJsonTransformVisitor
             Vocabulary.Field => declType.GetField(name!, bindingFlags),
             Vocabulary.Event => declType.GetEvent(name!, bindingFlags),
             _ => null,
-        } ?? e.ThrowSerializationException<MemberInfo?>($"Could not create the member info");
+        };
     }
+
+    internal static MemberInfo VisitMemberInfo(JElement e)
+        => TryVisitMemberInfo(e)
+                ?? e.ThrowSerializationException<MemberInfo>($"Could not create the member info");
 
     internal static (Type[], ParameterModifier) GetParameterSpecs(JElement e)
     {
@@ -91,7 +94,7 @@ public partial class FromJsonTransformVisitor
                             ? null
                             : parameters.Count;
 
-        if (!paramCount.HasValue || paramCount.Value == 0)
+        if (paramCount is null || paramCount.Value == 0)
             return ([], new ParameterModifier());
 
         Debug.Assert(parameters is not null);

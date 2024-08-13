@@ -4,7 +4,7 @@
   "expression": {
     "index": {
       "type": "int",
-      "instance": {
+      "object": {
         "parameter": {
           "type": "System.Int32[], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
           "name": "Array",

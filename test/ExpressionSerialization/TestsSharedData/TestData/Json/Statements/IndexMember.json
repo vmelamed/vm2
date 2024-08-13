@@ -14,7 +14,7 @@
       "body": {
         "conditional": {
           "type": "int",
-          "else": {
+          "if": {
             "greaterThan": {
               "type": "boolean",
               "operands": [
@@ -112,7 +112,7 @@
               ]
             }
           },
-          "if": {
+          "else": {
             "constant": {
               "int": -1
             }

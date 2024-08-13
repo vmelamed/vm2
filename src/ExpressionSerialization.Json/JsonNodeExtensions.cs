@@ -19,13 +19,13 @@ public static class JsonNodeExtensions
         this JsonObject jsObj,
         JElement? element)
     {
-        if (!element.HasValue)
+        if (element is null)
             return true;
 
         if (element.Value.Name is "")
             throw new ArgumentException("The key of the elements is an empty string.");
 
-        return jsObj.TryAdd(element.Value.Name, element.Value.Value);
+        return jsObj.TryAdd(element.Value.Name, element.Value.Node);
     }
 
     /// <summary>
@@ -41,13 +41,13 @@ public static class JsonNodeExtensions
         this JsonObject jsObj,
         JElement? element)
     {
-        if (!element.HasValue)
+        if (element is null)
             return jsObj;
 
         if (element.Value.Name is "")
             throw new ArgumentException("The key of the elements is an empty string.");
 
-        jsObj.Add(element.Value.Name, element.Value.Value);
+        jsObj.Add(element.Value.Name, element.Value.Node);
         return jsObj;
     }
 
@@ -163,7 +163,7 @@ public static class JsonNodeExtensions
 
         foreach (var element in elements)
             if (element is not null)
-                ret &= jsObj.TryAdd(element.Value.Name, element.Value.Value);
+                ret &= jsObj.TryAdd(element.Value.Name, element.Value.Node);
 
         return ret;
     }
@@ -184,7 +184,7 @@ public static class JsonNodeExtensions
     {
         foreach (var element in elements)
             if (element is not null)
-                jsObj.Add(element.Value.Name, element.Value.Value);
+                jsObj.Add(element.Value.Name, element.Value.Node);
 
         return jsObj;
     }
@@ -291,11 +291,11 @@ public static class JsonNodeExtensions
                 || value.GetValueKind() == JsonValueKind.Null);
 
     /// <summary>
-    /// Tries to get the node of the JSON property 'Value'.
+    /// Tries to get the node of the JSON property 'Node'.
     /// </summary>
     /// <param name="jsObj">The extended JsonObject.</param>
     /// <param name="node">The node.</param>
-    /// <param name="propertyValueName">The name of the 'Value' property.</param>
+    /// <param name="propertyValueName">The name of the 'Node' property.</param>
     /// <returns><c>true</c> if property exists, <c>false</c> otherwise.</returns>
     public static bool TryGetValue(
         this JsonObject jsObj,
@@ -304,10 +304,10 @@ public static class JsonNodeExtensions
         => jsObj.TryGetPropertyValue(propertyValueName, out node);
 
     /// <summary>
-    /// Gets the node of the JSON property 'Value'.
+    /// Gets the node of the JSON property 'Node'.
     /// </summary>
     /// <param name="jsObj">The extended JsonObject.</param>
-    /// <param name="propertyValueName">The name of the 'Value' property.</param>
+    /// <param name="propertyValueName">The name of the 'Node' property.</param>
     public static JsonNode? GetValue(
         this JsonObject jsObj,
         string propertyValueName = Vocabulary.Value)
@@ -510,34 +510,13 @@ public static class JsonNodeExtensions
     /// Casts the <paramref name="node"/> to object or throws an exception.
     /// </summary>
     /// <param name="node">The node to cast.</param>
-    /// <param name="parent">The optional parent of the node.</param>
     /// <param name="message">The message of the exception.</param>
     /// <returns>JsonObject.</returns>
     /// <exception cref="SerializationException"></exception>
     public static JsonObject ToObject(
         this JsonNode? node,
-        JsonNode? parent = null,
         string message = "Expected child JsonObject")
-    {
-        if (node is JsonObject jsObject)
-            return jsObject;
-
-        node?.ThrowSerializationException<JsonObject>(message);
-
-        parent?.ThrowSerializationException<JsonObject>(message);
-
-        throw new SerializationException(message);
-    }
-
-    /// <summary>
-    /// Casts the <paramref name="node"/> to object or throws an exception.
-    /// </summary>
-    /// <param name="node">The node to cast.</param>
-    /// <param name="message">The message of the exception.</param>
-    /// <returns>JsonObject.</returns>
-    /// <exception cref="SerializationException"></exception>
-    public static JsonObject ToObject(
-        this JsonNode? node,
-        string message)
-        => node.ToObject(null, message);
+        => node is JsonObject jsObject
+                ? jsObject
+                : node?.ThrowSerializationException<JsonObject>(message) ?? throw new SerializationException(message);
 }

@@ -604,14 +604,14 @@
                         "index": {
                             "type": "object",
                             "properties": {
-                                "instance": { "$ref": "#/$defs/expression" },
+                                "object": { "$ref": "#/$defs/expression" },
                                 "indexes": { "$ref": "#/$defs/arrayExpressions" },
                                 "indexer": {
                                     "$comment": "Present if the expression represents an indexed property",
                                     "$ref": "#/$defs/property"
                                 }
                             },
-                            "required": [ "instance", "indexes" ],
+                            "required": [ "object", "indexes" ],
                             "additionalProperties": { "type": "string" }
                         }
                     },
@@ -1784,6 +1784,32 @@
                 }
             ]
         },
+        "propertyFieldOrMethod": {
+            "type": "object",
+            "oneOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "property": { "$ref": "#/$defs/property" }
+                    },
+                    "required": [ "property" ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "field": { "$ref": "#/$defs/field" }
+                    },
+                    "required": [ "field" ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "method": { "$ref": "#/$defs/method" }
+                    },
+                    "required": [ "method" ]
+                }
+            ]
+        },
         "lambda": {
             "title": "Defines an expression that defines a lambda function (`(int a, int b) => a+b`)",
             "type": "object",
@@ -1871,7 +1897,7 @@
                     "items": { "$ref": "#/$defs/member" }
                 }
             },
-            "required": [ "constructor", "arguments" ],
+            "required": [ "constructor" ],
             "additionalProperties": { "type": "string" }
         },
         "elementInit": {
@@ -1910,7 +1936,7 @@
             "title": "Defines the initializing a member with the value of an expression.",
             "type": "object",
             "properties": {
-                "member": { "$ref": "#/$defs/member" },
+                "member": { "$ref": "#/$defs/propertyFieldOrMethod" },
                 "value": { "$ref": "#/$defs/expression" }
             },
             "required": [ "member", "value" ],
@@ -1920,7 +1946,7 @@
             "title": "Defines the recursively initializing members of a member (the member is a class or struct).",
             "type": "object",
             "properties": {
-                "member": { "$ref": "#/$defs/member" },
+                "member": { "$ref": "#/$defs/propertyFieldOrMethod" },
                 "bindings": {
                     "type": "array",
                     "items": { "$ref": "#/$defs/memberBinding" }
@@ -1933,7 +1959,7 @@
             "title": "Defines the initializing a member of type `IList` or `ICollection<T>` from a list of elements.",
             "type": "object",
             "properties": {
-                "member": { "$ref": "#/$defs/member" },
+                "member": { "$ref": "#/$defs/propertyFieldOrMethod" },
                 "initializers": { "$ref": "#/$defs/elementInit" }
             },
             "required": [ "member", "initializers" ],

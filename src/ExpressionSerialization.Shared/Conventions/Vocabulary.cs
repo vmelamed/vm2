@@ -100,7 +100,6 @@ public static class Vocabulary
     public const string Operand                 = "operand";
 
     public const string Body                    = "body";
-    public const string Instance                = "instance";
     public const string Indexes                 = "indexes";
     public const string Delegate                = "delegate";
     public const string Arguments               = "arguments";
