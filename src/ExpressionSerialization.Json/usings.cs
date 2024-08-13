@@ -5,6 +5,7 @@ global using System.Collections.Immutable;
 global using System.Collections.ObjectModel;
 global using System.Diagnostics;
 global using System.Globalization;
+global using System.Linq;
 global using System.Linq.Expressions;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
@@ -20,7 +21,6 @@ global using vm2.ExpressionSerialization.Shared.Abstractions;
 global using vm2.ExpressionSerialization.Shared.Conventions;
 global using vm2.ExpressionSerialization.Shared.Exceptions;
 global using vm2.ExpressionSerialization.Shared.Extensions;
-
 global using vm2.Threading;
 
 global using static vm2.ExpressionSerialization.Shared.Extensions.DebugExtensions;

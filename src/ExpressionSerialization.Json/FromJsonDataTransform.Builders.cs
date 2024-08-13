@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.Json;
 
-using vm2.ExpressionSerialization.Shared.Extensions;
-
 static partial class FromJsonDataTransform
 {
     static object BuildCollectionFromEnumerable(

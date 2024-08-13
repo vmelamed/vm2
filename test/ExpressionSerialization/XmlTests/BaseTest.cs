@@ -1,7 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-using System.Linq.Expressions;
-
 [CollectionDefinition("XML")]
 public abstract class BaseTests(
         XmlTestsFixture fixture,

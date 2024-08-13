@@ -1,4 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.Json;
+
 public partial class FromJsonTransformVisitor
 {
     readonly Dictionary<string, ParameterExpression> _parameters = [];
@@ -43,8 +44,10 @@ public partial class FromJsonTransformVisitor
                 ? TryVisitMemberInfo(member.Value)
                 : null;
 
+#pragma warning disable IDE0079, IDE0051 // Remove unnecessary suppression. Remove unused private members
     static MemberInfo GetMemberInfo(JElement e, string memberInfoName)
         => VisitMemberInfo(e.GetElement(memberInfoName));
+#pragma warning restore IDE0051, IDE0079
 
     /// <summary>
     /// Gets the member information that may be attached to the expression.

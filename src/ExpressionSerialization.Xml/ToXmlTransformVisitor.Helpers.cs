@@ -1,8 +1,5 @@
 ﻿namespace vm2.ExpressionSerialization.Xml;
 
-using System.Reflection;
-using System.Xml.Linq;
-
 public partial class ToXmlTransformVisitor
 {
     int _lastParamIdNumber;
