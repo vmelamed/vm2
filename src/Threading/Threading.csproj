@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>vm2.Threading</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Label="NuGet">
+        <Description>Contains multi-threading facilities and synchronization objects.</Description>
+        <PackageReleaseNotes>Initial version of the vm2.RegexLib. Inherits most of the code from vm.</PackageReleaseNotes>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/initial/src/Threading/Threading.csproj</PackageProjectUrl>
+        <PackageTags>C# threading lock</PackageTags>
+    </PropertyGroup>
+
+</Project>

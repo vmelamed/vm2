@@ -1,0 +1,17 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " ClassDataContract1 ",
+  "expression": {
+    "constant": {
+      "$comment": " vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1 ",
+      "object": {
+        "type": "vm2.ExpressionSerialization.TestsSharedData.ClassDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "value": {
+          "$id": "1",
+          "IntProperty": 7,
+          "StringProperty": "vm"
+        }
+      }
+    }
+  }
+}

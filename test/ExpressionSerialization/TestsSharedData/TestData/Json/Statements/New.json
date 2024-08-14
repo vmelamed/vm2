@@ -1,0 +1,45 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " () =\u003E () =\u003E new StructDataContract1(42, \u0022don\u0027t panic\u0022) ",
+  "expression": {
+    "lambda": {
+      "type": "System.Func\u00601[[vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+      "parameters": [],
+      "body": {
+        "lambda": {
+          "type": "vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "parameters": [],
+          "body": {
+            "new": {
+              "constructor": {
+                "declaringType": "vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                "parameterSpecs": [
+                  {
+                    "type": "int",
+                    "name": "i"
+                  },
+                  {
+                    "type": "string",
+                    "name": "s"
+                  }
+                ]
+              },
+              "arguments": [
+                {
+                  "constant": {
+                    "int": 42
+                  }
+                },
+                {
+                  "constant": {
+                    "string": "don\u0027t panic"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
