@@ -5,14 +5,14 @@ public partial class NetTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(Ipv4AddressData))]
     public void TestIpv4Address(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Ipv4Address, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Net.Ipv4Address(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(Ipv6AddressData))]
     public void TestIpv6Address(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Ipv6Address, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Net.Ipv6Address(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
@@ -32,7 +32,7 @@ public partial class NetTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(IpvFutureAddressData))]
     public void TestIpvFutureAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.IpvFutureAddress, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Net.IpvFutureAddress(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
@@ -116,7 +116,7 @@ public partial class NetTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(DnsNameData))]
     public void TestDnsName(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.DnsName, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Net.DnsName(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
@@ -166,5 +166,5 @@ public partial class NetTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(PortData))]
     public void TestPort(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Port, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Net.Port(), TestFileLine, shouldBe, input, captures);
 }

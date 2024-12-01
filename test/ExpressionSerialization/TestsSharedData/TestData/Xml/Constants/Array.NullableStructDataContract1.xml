@@ -6,8 +6,8 @@
     <constant>
         <!--  System.Nullable`1[[vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]][]  -->
         <sequence
-            type="System.Nullable`1[[vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]][], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
-            elementType="System.Nullable`1[[vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+            type="System.Nullable`1[[vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]][], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"
+            elementType="System.Nullable`1[[vm2.ExpressionSerialization.TestsSharedData.StructDataContract1, TestsSharedData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
             <!--  nullable<vm2.ExpressionSerialization.TestsSharedData.StructDataContract1>  -->
             <nullable>
                 <!--  vm2.ExpressionSerialization.TestsSharedData.StructDataContract1  -->

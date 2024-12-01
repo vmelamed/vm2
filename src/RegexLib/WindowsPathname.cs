@@ -1,10 +1,10 @@
 ﻿namespace vm2.RegexLib;
 
 /// <summary>
-/// Class Files. Contains regular expressions that match strings representing Windows drives, directory names, file 
+/// Class Files. Contains regular expressions that match strings representing Windows drives, directory names, file
 /// names, and file paths.
 /// </summary>
-public static class WindowsPathname
+public static partial class WindowsPathname
 {
     // See https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file.
 
@@ -38,14 +38,11 @@ public static class WindowsPathname
     /// </remarks>
     public const string DiskFilenameRegex = $"^{DiskFilenameRex}$";
 
-    static readonly Lazy<Regex> filenameRegex = new(() => new(DiskFilenameRegex, RegexOptions.Compiled |
-                                                                                 RegexOptions.CultureInvariant |
-                                                                                 RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing file or directory name.
     /// </summary>
-    public static Regex DiskFilename => filenameRegex.Value;
+    [GeneratedRegex(DiskFilenameRegex, Common.Options)]
+    public static partial Regex DiskFilename();
 
     /// <summary>
     /// The the name of a matching group representing the drive letter in a path name.
@@ -77,9 +74,9 @@ public static class WindowsPathname
     /// </remarks>
     public const string PathRex = $"""
         (?:
-          (?: 
+          (?:
             (?<{PathGr}> {pathSeparator}? {pathRootless} ) {pathSeparator}
-          ) 
+          )
           | (?<{PathGr}> {pathSeparator}? )
         )
         """;
@@ -104,14 +101,11 @@ public static class WindowsPathname
     /// </remarks>
     public const string PathnameRegex = $"^{PathnameRex}$";
 
-    static readonly Lazy<Regex> pathname = new(() => new Regex(PathnameRegex, RegexOptions.Compiled |
-                                                                              RegexOptions.CultureInvariant |
-                                                                              RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a file path.
     /// </summary>
-    public static Regex Pathname = pathname.Value;
+    [GeneratedRegex(PathnameRegex, Common.Options)]
+    public static partial Regex Pathname();
 
     // TODO: \\?\... \\.\... UNC
 }

@@ -25,5 +25,5 @@ public class LinuxPathnameTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(LinuxPathnameData))]
     public void TestLinuxPathname(string TestLine, bool shouldBe, string pathname, Captures? captures)
-        => base.RegexTest(LinuxPathname.Pathname, TestLine, shouldBe, pathname, captures);
+        => base.RegexTest(LinuxPathname.Pathname(), TestLine, shouldBe, pathname, captures);
 }

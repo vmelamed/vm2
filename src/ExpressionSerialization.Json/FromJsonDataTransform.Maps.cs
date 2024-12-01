@@ -162,7 +162,11 @@ static partial class FromJsonDataTransform
                                  @"(T(((?<hours2>[0-9]+)H((?<minutes4>[0-9]+)M((?<seconds6>[0-9]+)S)?)?|(?<minutes3>[0-9]+)M((?<seconds5>[0-9]+)S)?|(?<seconds4>[0-9]+)S)))?|"+
                                  @"T(((?<hours1>[0-9]+)H((?<minutes2>[0-9]+)M((?<seconds3>[0-9]+)S)?)?|(?<minutes1>[0-9]+)M((?<seconds2>[0-9]+)S)?|(?<seconds1>[0-9]+)S))|(?<weeks>[0-9]+)W)$";
 
-    [GeneratedRegex(durationRegex)]
+    [GeneratedRegex(durationRegex, RegexOptions.Singleline |
+                                   RegexOptions.IgnoreCase |
+                                   RegexOptions.IgnorePatternWhitespace |
+                                   RegexOptions.CultureInvariant |
+                                   RegexOptions.Compiled)]
     private static partial Regex DurationRegex();
 
     static TimeSpan JsonToTimeSpan(JElement x)

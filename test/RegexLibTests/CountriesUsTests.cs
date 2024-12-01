@@ -31,7 +31,7 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(TelephoneNumberData))]
     public void TestTelephoneNumber(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.TelephoneNumber, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.TelephoneNumber(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> TelephoneNumberStrictData => new() {
         { TestFileLine(), false, ""},
@@ -62,7 +62,7 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(TelephoneNumberStrictData))]
     public void TestTelephoneNumberStrict(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.TelephoneNumberStrict, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.TelephoneNumberStrict(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> StateCodeData => new() {
         { TestFileLine(), false, ""},
@@ -91,7 +91,7 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(StateCodeData))]
     public void TestStateCode(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.StateCode, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.StateCode(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> StateCodeIData => new() {
         { TestFileLine(), false, ""},
@@ -120,7 +120,7 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(StateCodeIData))]
     public void TestStateCodeI(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.StateCodeI, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.StateCodeI(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> ZipCode5Data => new() {
         { TestFileLine(), false, ""},
@@ -142,7 +142,7 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(ZipCode5Data))]
     public void TestZipCode5(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.ZipCode5, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.ZipCode5(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> ZipCode5x4Data => new() {
         { TestFileLine(), false, ""},
@@ -164,7 +164,7 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(ZipCode5x4Data))]
     public void TestZipCode5x4(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.ZipCode5x4, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.ZipCode5x4(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> ZipCode5o4Data => new() {
         { TestFileLine(), false, ""},
@@ -186,7 +186,7 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(ZipCode5o4Data))]
     public void TestZipCode5o4(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.ZipCode5o4, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.ZipCode5o4(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> SocialSecurityNumberData => new() {
         { TestFileLine(), false, "" },
@@ -226,7 +226,7 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(SocialSecurityNumberData))]
     public void TestSocialSecurityNumber(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.SocialSecurityNumber, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.SocialSecurityNumber(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> ItinData => new() {
         { TestFileLine(), false, "" },
@@ -266,5 +266,5 @@ public class CountriesUsTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(ItinData))]
     public void TestItin(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.Itin, TestLine, shouldBe, code);
+        => base.RegexTest(Countries.US.Itin(), TestLine, shouldBe, code);
 }

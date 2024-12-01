@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>vm2.ExpressionSerialization</RootNamespace>
+        <RootNamespace>vm2.ExpressionSerialization.Shared</RootNamespace>
     </PropertyGroup>
     
     <PropertyGroup Label="NuGet">

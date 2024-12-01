@@ -3,7 +3,7 @@
 /// <summary>
 /// Class Banking. Contains regular expressions related to the Bank industry.
 /// </summary>
-public static class Banking
+public static partial class Banking
 {
     #region AbaRoutingNumber
     /// <summary>
@@ -16,12 +16,11 @@ public static class Banking
     /// </summary>
     public const string AbaRoutingNumberRegex = $@"^{AbaRoutingNumberRex}$";
 
-    static readonly Lazy<Regex> regexAbaRoutingNumber = new(() => new(AbaRoutingNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing a US ABA routing number.
     /// </summary>
-    public static Regex AbaRoutingNumber => regexAbaRoutingNumber.Value;
+    [GeneratedRegex(AbaRoutingNumberRegex, Common.Options)]
+    public static partial Regex AbaRoutingNumber();
     #endregion
 
     #region SwiftCode
@@ -46,7 +45,7 @@ public static class Banking
     public const string BranchGr = "branch";
 
     /// <summary>
-    /// Regular expression pattern which matches a 
+    /// Regular expression pattern which matches a
     /// <seealso href="https://en.wikipedia.org/wiki/ISO_9362">SWIFT bank code (ISO 9362)</seealso> in a string, a.k.a. BIC.
     /// <para>
     /// Named groups: <see cref="BankGr"/>, <see cref="CountryGr"/>, <see cref="LocationGr"/>, and <see cref="BranchGr"/>.
@@ -73,20 +72,14 @@ public static class Banking
     /// </remarks>
     public const string SwiftCodeRegex = $@"^{SwiftCodeRex}$";
 
-    static readonly Lazy<Regex> regexSwiftCode = new(() => new(SwiftCodeRegex, RegexOptions.Compiled |
-                                                                               RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing a SWIFT bank code, a.k.a. BIC.
     /// <para>
     /// Named groups: <see cref="BankGr"/>, <see cref="CountryGr"/>, <see cref="LocationGr"/>, and <see cref="BranchGr"/>.
     /// </para>
     /// </summary>
-    public static Regex SwiftCode => regexSwiftCode.Value;
-
-    static readonly Lazy<Regex> regexSwiftCodeI = new(() => new(SwiftCodeRegex, RegexOptions.Compiled |
-                                                                                RegexOptions.IgnorePatternWhitespace |
-                                                                                RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500)));
+    [GeneratedRegex(SwiftCodeRegex, Common.Options)]
+    public static partial Regex SwiftCode();
 
     /// <summary>
     /// Gets a Regex object which matches <b>case-insensitevely</b> a string representing a SWIFT bank code, a.k.a. BIC.
@@ -94,7 +87,8 @@ public static class Banking
     /// Named groups: <see cref="BankGr"/>, <see cref="CountryGr"/>, <see cref="LocationGr"/>, and <see cref="BranchGr"/>.
     /// </para>
     /// </summary>
-    public static Regex SwiftCodeI => regexSwiftCodeI.Value;
+    [GeneratedRegex(SwiftCodeRegex, Common.OptionsI)]
+    public static partial Regex SwiftCodeI();
     #endregion
 
     #region Iban
@@ -109,7 +103,7 @@ public static class Banking
     public const string BasicBanGr = "accn";
 
     /// <summary>
-    /// Regular expression pattern which matches an 
+    /// Regular expression pattern which matches an
     /// <seealso href="https://en.wikipedia.org/wiki/International_Bank_Account_Number">
     /// International Bank Account Number - IBAN (ISO 13616) in a string.
     /// </seealso>
@@ -120,9 +114,9 @@ public static class Banking
     /// </remarks>
     public const string IbanRex = $$"""
        (?<{{BankGr}}>      {{Countries.CountryCode2Rex}} )
-       (?<{{CheckGr}}>     {{Ascii.DigitRex}}{2} ) {{Ascii.Space}}? 
+       (?<{{CheckGr}}>     {{Ascii.DigitRex}}{2} ) {{Ascii.Space}}?
        (?<{{BasicBanGr}}>  {{Ascii.HighAlphaNumericRex}}{4}
-                           (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericRex}}{4}   ){2,6} 
+                           (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericRex}}{4}   ){2,6}
                            (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericRex}}{1,4} )?     )
        """;
 
@@ -131,18 +125,12 @@ public static class Banking
     /// </summary>
     public const string IbanRegex = $@"^{IbanRex}$";
 
-    static readonly Lazy<Regex> regexIban = new(() => new(IbanRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing an International Bank Account Number.
     /// <para>Named groups: <see cref="BankGr"/>, <see cref="CheckGr"/>, <see cref="BasicBanGr"/>.</para>
     /// </summary>
-    public static Regex Iban => regexIban.Value;
-
-    static readonly Lazy<Regex> regexIbanI = new(() => new(IbanRegex, RegexOptions.Compiled |
-                                                                      RegexOptions.IgnorePatternWhitespace |
-                                                                      RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500)));
+    [GeneratedRegex(IbanRegex, Common.Options)]
+    public static partial Regex Iban();
 
     /// <summary>
     /// Gets a Regex object which matches <b>case insensitevely</b> a string representing an International Bank Account Number.
@@ -151,6 +139,7 @@ public static class Banking
     /// </seealso>.
     /// <para>Named groups: <see cref="BankGr"/>, <see cref="CheckGr"/>, <see cref="BasicBanGr"/>.</para>
     /// </summary>
-    public static Regex IbanI => regexIbanI.Value;
+    [GeneratedRegex(IbanRegex, Common.OptionsI)]
+    public static partial Regex IbanI();
     #endregion
 }

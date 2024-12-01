@@ -1,10 +1,12 @@
 ﻿namespace vm2.RegexLib;
 
+using System.Text.RegularExpressions;
+
 /// <summary>
-/// Class Ascii. Contains regular expressions that match strings composed of the first 128 Unicode characters (that point 
+/// Class Ascii. Contains regular expressions that match strings composed of the first 128 Unicode characters (that point
 /// to ASCII characters).
 /// </summary>
-public static class Ascii
+public static partial class Ascii
 {
     /// <summary>
     /// The space. It must be escaped in regular expressions with <see cref="RegexOptions.IgnorePatternWhitespace"/>.
@@ -12,7 +14,7 @@ public static class Ascii
     public const string Space = @"\x20";
 
     /// <summary>
-    /// The hash sign. It must not be escaped as "\#" in regular expressions with 
+    /// The hash sign. It must not be escaped as "\#" in regular expressions with
     /// <see cref="RegexOptions.IgnorePatternWhitespace"/> - then it marks a comment to the end of the line.
     /// </summary>
     public const string Hash = @"\x23";
@@ -126,7 +128,7 @@ public static class Ascii
     /// <remarks>
     /// Note that \r and \n may break-to-continue a base64 string but have no meaning when decoded and are ignored.
     /// </remarks>
-    public static string Base64CharRex = $"[{base64Chars}]";
+    public const string Base64CharRex = $"[{base64Chars}]";
 
     /// <summary>
     /// Matches a base64 encoded multiline string fragment possibly padded with `=`-s.
@@ -134,7 +136,7 @@ public static class Ascii
     /// <remarks>
     /// Requires "(?mx)" or <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public static string Base64Rex = @$"(?: ^{Base64CharRex}+ \r?$\n? )* (?: ^{Base64CharRex}+ ={{1,2}} \r?$\n? )?";
+    public const string Base64Rex = @$"(?: ^{Base64CharRex}+ \r?$\n? )* (?: ^{Base64CharRex}+ ={{1,2}} \r?$\n? )?";
 
     /// <summary>
     /// Matches a base64 encoded multiline string possibly padded with `=`-s.
@@ -142,15 +144,12 @@ public static class Ascii
     /// <remarks>
     /// Requires "(?mx)" or <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public static string Base64Regex = @$"\A {Base64Rex} \z";
-
-    static readonly Lazy<Regex> rexBase64 = new(() => new Regex(Base64Regex, RegexOptions.Compiled |
-                                                                             RegexOptions.IgnorePatternWhitespace |
-                                                                             RegexOptions.Multiline, TimeSpan.FromMilliseconds(500)));
+    public const string Base64Regex = @$"\A {Base64Rex} \z";
 
     /// <summary>
     /// A <see cref="Regex"/> object that matches a base64 encoded multiline string possibly padded with `=`-s.
     /// </summary>
-    public static Regex Base64 => rexBase64.Value;
+    [GeneratedRegex(Base64Regex, Common.MultilineOptions)]
+    public static partial Regex Base64();
     #endregion
 }

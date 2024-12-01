@@ -32,7 +32,7 @@ public class WindowsPathnameTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(WinFilenameData))]
     public void TestWinFilename(string TestLine, bool shouldBe, string fileName)
-        => base.RegexTest(WindowsPathname.DiskFilename, TestLine, shouldBe, fileName);
+        => base.RegexTest(WindowsPathname.DiskFilename(), TestLine, shouldBe, fileName);
 
     public static TheoryData<string, bool, string, Captures?> WinPathnameData => new() {
         { TestFileLine(), false, "", null },
@@ -118,5 +118,5 @@ public class WindowsPathnameTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(WinPathnameData))]
     public void TestWinPathname(string TestLine, bool shouldBe, string pathname, Captures? captures)
-        => base.RegexTest(WindowsPathname.Pathname, TestLine, shouldBe, pathname, captures);
+        => base.RegexTest(WindowsPathname.Pathname(), TestLine, shouldBe, pathname, captures);
 }

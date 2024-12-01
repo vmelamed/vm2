@@ -85,5 +85,5 @@ public class SemVerTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(SemVerTestData))]
     public void TestSemVer(string TestLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(SemVer.Regex, TestLine, shouldBe, input, captures);
+        => base.RegexTest(SemVer.SemanticVersion(), TestLine, shouldBe, input, captures);
 }

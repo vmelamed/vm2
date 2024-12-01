@@ -50,7 +50,7 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(SchemeData))]
     public void TestScheme(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Scheme, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.Scheme(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
@@ -100,7 +100,7 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(HostData))]
     public void TestHost(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Host, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.Host(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
@@ -138,21 +138,21 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(NetHostData))]
     public void TestNetHost(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Host, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Net.Host(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(AddressData))]
     public void TestAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Endpoint, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.Endpoint(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(NetAddressData))]
     public void TestNetAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Net.Endpoint, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Net.Endpoint(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
@@ -173,33 +173,33 @@ public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
     [Theory]
     [MemberData(nameof(PathAbsData))]
     public void TestPathAbsData(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Path, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.Path(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(GeneralQueryData))]
     public void TestGeneralQueryData(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Query, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.Query(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(KeyValueQueryData))]
     public void TestKeyValueQueryData(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.KvQuery, TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.KvQuery(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(UriData))]
     public void TestUriData(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTestUri(Uris.Uri, TestFileLine, shouldBe, input, captures);
+        => base.RegexTestUri(Uris.Uri(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
     [Theory]
     [MemberData(nameof(NetUriData))]
     public void TestNetUriData(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTestUri(Uris.NetUri, TestFileLine, shouldBe, input, captures);
+        => base.RegexTestUri(Uris.NetUri(), TestFileLine, shouldBe, input, captures);
 }

@@ -5,7 +5,7 @@
 /// Follows:
 /// https://datatracker.ietf.org/doc/rfc3339/
 /// </summary>
-public static class DateAndTime
+public static partial class DateAndTime
 {
     #region DateTime ISO 8601/RFC3339
     const string dateFullYear = @"\d\d\d\d";
@@ -71,12 +71,11 @@ public static class DateAndTime
     /// </summary>
     public const string DateTimeRegex = $@"^{DateTimeRex}$";
 
-    static readonly Lazy<Regex> regexDateTime = new(() => new(DateTimeRegex, RegexOptions.Compiled));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing a concept.
     /// </summary>
-    public static Regex DateTime => regexDateTime.Value;
+    [GeneratedRegex(DateTimeRegex, Common.Options)]
+    public static partial Regex DateTime();
     #endregion
 
     #region Duration
@@ -139,11 +138,10 @@ public static class DateAndTime
     /// </summary>
     public const string DurationRegex = @$"^{DurationRex}$";
 
-    static readonly Lazy<Regex> regexDuration = new(() => new(DurationRegex, RegexOptions.Compiled | RegexOptions.CultureInvariant));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing a time duration .
     /// </summary>
-    public static Regex Duration => regexDuration.Value;
+    [GeneratedRegex(DurationRegex, Common.Options)]
+    public static partial Regex Duration();
     #endregion
 }

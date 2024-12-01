@@ -10,7 +10,7 @@
 /// https://datatracker.ietf.org/doc/html/rfc3513
 /// https://datatracker.ietf.org/doc/html/rfc6874
 /// </summary>
-public static class Net
+public static partial class Net
 {
     #region Ipv4Address
     /// <summary>
@@ -52,7 +52,7 @@ public static class Net
 
     /// <summary>
     /// Matches an IPv4 address.
-    /// <para>BNF: <c>IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet</c></para>, excluding the 
+    /// <para>BNF: <c>IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet</c></para>, excluding the
     /// addresses provided for use in documentation only in RFC 5737
     /// </summary>
     /// <remarks>
@@ -64,7 +64,7 @@ public static class Net
                                    (?: 198\.51\.100\.{{Ascii.DigitRex}}{1,3} ) |
                                    (?: 203\.0\.113\.{{Ascii.DigitRex}}{1,3} )
                                )
-                               {{firstDecimalOctetRex}} (?: \. {{decimalOctetRex}} ){3} 
+                               {{firstDecimalOctetRex}} (?: \. {{decimalOctetRex}} ){3}
                              )
                              """;
 
@@ -93,15 +93,13 @@ public static class Net
     /// </remarks>
     public const string Ipv4AddressRegex = $@"^{Ipv4AddressRex}$";
 
-    static readonly Lazy<Regex> ipv4AddressRegex = new(() => new(Ipv4AddressRegex, RegexOptions.Compiled |
-                                                                                   RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv4 address.
     /// <para>BNF: <c>ipv4 := dec-octet.dec-octet.dec-octet.dec-octet</c></para>
     /// <para>Named groups: <see cref="Ipv4Gr"/>.</para>
     /// </summary>
-    public static Regex Ipv4Address => ipv4AddressRegex.Value;
+    [GeneratedRegex(Ipv4AddressRegex, Common.Options)]
+    public static partial Regex Ipv4Address();
     #endregion
 
     #region Ipv6Address
@@ -134,8 +132,8 @@ public static class Net
            | (?:{{h16}}:){1,2}(?: :{{h16}} ){1,5}
            | (?:{{h16}}:)     (?: :{{h16}} ){1,6}
            |           :      (?: :{{h16}} ){1,7}
-           | (?:{{h16}}:){7}       {{h16}} 
-                                           
+           | (?:{{h16}}:){7}       {{h16}}
+
            | (?:{{h00}}:){5}  (?:  {{l48}} )
            | (?:{{h00}}:){1,4}(?: :{{l48}} )
            | (?:{{h00}}:){1,3}(?: :{{l48}} )
@@ -187,14 +185,12 @@ public static class Net
     /// </remarks>
     public const string Ipv6NzAddressRegex = $@"^{Ipv6NzAddressRex}$";
 
-    static readonly Lazy<Regex> ipv6NzAddressRegex = new(() => new(Ipv6NzAddressRegex, RegexOptions.Compiled |
-                                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address without a zone/scope ID.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
-    public static Regex Ipv6NzAddress => ipv6NzAddressRegex.Value;
+    [GeneratedRegex(Ipv6NzAddressRegex, Common.Options)]
+    public static partial Regex Ipv6NzAddress();
 
     /// <summary>
     /// The name of a matching group representing an IPv6 address with an optional zone ID.
@@ -219,14 +215,12 @@ public static class Net
     /// </remarks>
     public const string Ipv6AddressRegex = $@"^(?<{Ipv6Gr}> {Ipv6NzAddressRex} (?: % {Ipv6ZoneIdRex} )? )$";
 
-    static readonly Lazy<Regex> ipv6AddressRegex = new(() => new(Ipv6AddressRegex, RegexOptions.Compiled |
-                                                                                   RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address with a zone ID.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
-    public static Regex Ipv6Address => ipv6AddressRegex.Value;
+    [GeneratedRegex(Ipv6AddressRegex, Common.Options)]
+    public static partial Regex Ipv6Address();
     #endregion
 
     #region IpvFutureAddress
@@ -257,14 +251,12 @@ public static class Net
     /// </remarks>
     public const string IpvFutureAddressRegex = $"^{IpvFutureAddressRex}$";
 
-    static readonly Lazy<Regex> ipvFutureAddressRegex = new(() => new(IpvFutureAddressRegex, RegexOptions.Compiled |
-                                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IPv.future address.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
-    public static Regex IpvFutureAddress => ipvFutureAddressRegex.Value;
+    [GeneratedRegex(IpvFutureAddressRegex, Common.Options)]
+    public static partial Regex IpvFutureAddress();
     #endregion
 
     #region DnsName
@@ -303,13 +295,11 @@ public static class Net
     /// </summary>
     public const string DnsNameRegex = $@"^{DnsNameRex}$";
 
-    static readonly Lazy<Regex> regexDnsName = new(() => new(DnsNameRegex, RegexOptions.Compiled |
-                                                                           RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing a concept.
     /// </summary>
-    public static Regex DnsName => regexDnsName.Value;
+    [GeneratedRegex(DnsNameRegex, Common.Options)]
+    public static partial Regex DnsName();
     #endregion
 
     /// <summary>
@@ -342,7 +332,7 @@ public static class Net
     /// Matches a host in a string.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpDnsNameGr"/>, <see cref="Ipv4Gr"/>, 
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpDnsNameGr"/>, <see cref="Ipv4Gr"/>,
     /// <see cref="Ipv6NzGr"/> or <see cref="IpvfGr"/>.
     /// </para>
     /// </summary>
@@ -355,7 +345,7 @@ public static class Net
     /// Matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpDnsNameGr"/>, <see cref="Ipv4Gr"/>, 
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpDnsNameGr"/>, <see cref="Ipv4Gr"/>,
     /// <see cref="Ipv6NzGr"/> or <see cref="IpvfGr"/>.
     /// </para>
     /// </summary>
@@ -364,13 +354,11 @@ public static class Net
     /// </remarks>
     public const string HostRegex = $@"^{HostRex}$";
 
-    static readonly Lazy<Regex> regexHost = new(() => new(HostRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing a host.
     /// </summary>
-    public static Regex Host => regexHost.Value;
+    [GeneratedRegex(HostRegex, Common.Options)]
+    public static partial Regex Host();
     #endregion
 
     #region Port
@@ -408,15 +396,13 @@ public static class Net
     /// </remarks>
     public const string PortRegex = $@"^{PortRex}$";
 
-    static readonly Lazy<Regex> portRegex = new(() => new(PortRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IP port.
     /// <para>BNF: <c>port := decimal-num</c> in the range [0-65535]</para>
     /// <para>Named groups: <see cref="PortGr"/>.</para>
     /// </summary>
-    public static Regex Port => portRegex.Value;
+    [GeneratedRegex(PortRegex, Common.Options)]
+    public static partial Regex Port();
 
     #endregion
 
@@ -446,15 +432,13 @@ public static class Net
     /// </remarks>
     public const string EndpointRegex = $"^{EndpointRex}$";
 
-    static readonly Lazy<Regex> endpointRegex = new(() => new(EndpointRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a TCP endpoint.
     /// <para>BNF: <c>endpoint := host [: port]</c></para>
     /// <para>Named groups: <see cref="HostGr"/>, <see cref="PortGr"/>.</para>
     /// </summary>
     /// <value>The endpoint.</value>
-    public static Regex Endpoint => endpointRegex.Value;
+    [GeneratedRegex(EndpointRegex, Common.Options)]
+    public static partial Regex Endpoint();
     #endregion
 }

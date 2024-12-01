@@ -10,7 +10,7 @@
 /// https://datatracker.ietf.org/doc/html/rfc952
 /// https://datatracker.ietf.org/doc/html/rfc3513
 /// </summary>
-public static class Uris
+public static partial class Uris
 {
     #region URI character sets
     /// <summary>
@@ -96,14 +96,12 @@ public static class Uris
     /// </remarks>
     public const string SchemeRegex = $@"^{SchemeRex}$";
 
-    static readonly Lazy<Regex> rexSchemeRegex = new(() => new(SchemeRegex, RegexOptions.Compiled |
-                                                                            RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI scheme.
     /// <para>BNF: <c>scheme := alpha 1*[ alpha | digit | + | - | . ]</c></para>
     /// </summary>
-    public static Regex Scheme => rexSchemeRegex.Value;
+    [GeneratedRegex(SchemeRegex, Common.Options)]
+    public static partial Regex Scheme();
     #endregion
 
     #region Host
@@ -136,7 +134,7 @@ public static class Uris
     /// Matches a host in a string.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpGenNameGr"/>, <see cref="Net.Ipv4Gr"/>, 
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpGenNameGr"/>, <see cref="Net.Ipv4Gr"/>,
     /// <see cref="Net.Ipv6NzGr"/> or <see cref="Net.IpvfGr"/>.
     /// </para>
     /// </summary>
@@ -158,9 +156,6 @@ public static class Uris
     /// </remarks>
     public const string HostRegex = $@"^{HostRex}$";
 
-    static readonly Lazy<Regex> hostRegex = new(() => new(HostRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
@@ -169,7 +164,8 @@ public static class Uris
     /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>
     /// </para>
     /// </summary>
-    public static Regex Host => hostRegex.Value;
+    [GeneratedRegex(HostRegex, Common.Options)]
+    public static partial Regex Host();
     #endregion
 
     #region Endpoint (Host:Port)
@@ -198,16 +194,14 @@ public static class Uris
     /// </remarks>
     public const string EndpointRegex = $"^{EndpointRex}$";
 
-    static readonly Lazy<Regex> endpointRegex = new(() => new(EndpointRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents an IP endpoint.
     /// <para>BNF: <c>endpoint := host [: port]</c></para>
     /// <para>Named groups: <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
     /// </summary>
     /// <value>The endpoint.</value>
-    public static Regex Endpoint => endpointRegex.Value;
+    [GeneratedRegex(EndpointRegex, Common.Options)]
+    public static partial Regex Endpoint();
     #endregion
 
     #region Authority
@@ -217,15 +211,15 @@ public static class Uris
     public const string UserNameGr = "user";
 
     /// <summary>
-    /// The name of a matching group representing the part of the authority that specifies scheme-specific information 
+    /// The name of a matching group representing the part of the authority that specifies scheme-specific information
     /// about how to gain authorization to access the resource.
     /// </summary>
     /// <remarks>
-    /// Use of the format "user:password" in the userinfo field is deprecated.  Applications should not render as clear 
-    /// text any data after the first colon(":") character found within a userinfo subcomponent unless the data after 
-    /// the colon is the empty string (indicating no password).  Applications may choose to ignore or reject such data 
+    /// Use of the format "user:password" in the userinfo field is deprecated.  Applications should not render as clear
+    /// text any data after the first colon(":") character found within a userinfo subcomponent unless the data after
+    /// the colon is the empty string (indicating no password).  Applications may choose to ignore or reject such data
     /// when it is received as part of a reference and should reject the storage of such data in unencrypted form.The
-    /// passing of authentication information in clear text has proven to be a security risk in almost every case where 
+    /// passing of authentication information in clear text has proven to be a security risk in almost every case where
     /// it has been used.
     /// </remarks>
     public const string AccessGr = "access";
@@ -237,17 +231,17 @@ public static class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// <para>
-    /// Note: the use of the format 'user:password' in the 'userInfo' field is deprecated.  Applications should not 
-    /// render as clear text any data after the first colon (':') character found within a 'userInfo' subcomponent 
-    /// unless the data after the colon is the empty string (indicating no password).  Applications may choose to ignore 
-    /// or reject such data when it is received as part of a reference and should reject the storage of such data in 
+    /// Note: the use of the format 'user:password' in the 'userInfo' field is deprecated.  Applications should not
+    /// render as clear text any data after the first colon (':') character found within a 'userInfo' subcomponent
+    /// unless the data after the colon is the empty string (indicating no password).  Applications may choose to ignore
+    /// or reject such data when it is received as part of a reference and should reject the storage of such data in
     /// un-encrypted form.
     /// </para>
     /// <para>
     /// </para>
     /// </remarks>
     public const string UserInfoRex = $"""
-                                       (?: 
+                                       (?:
                                          (?<{UserNameGr}> (?:{unreservedOrSubDelimiterRex} | {pctEncodedChar})+ )
                                          :?
                                          (?<{AccessGr}>   (?:{unreservedOrSubDelimiterRex} | {pctEncodedChar})* )
@@ -435,9 +429,9 @@ public static class Uris
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     const string pathRex = $"""
-                            (?<{UriPathGr}> 
-                                {pathAbsoluteOrEmptyRex} | 
-                                {pathAbsoluteRex} | 
+                            (?<{UriPathGr}>
+                                {pathAbsoluteOrEmptyRex} |
+                                {pathAbsoluteRex} |
                                 {pathNoSchemeRex} |
                                 {pathRootlessRex} |
                             )?
@@ -458,9 +452,6 @@ public static class Uris
     /// </remarks>
     public const string PathRegex = $"^{pathRex}$";
 
-    static readonly Lazy<Regex> pathRegex = new(() => new(PathRegex, RegexOptions.Compiled |
-                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's path.
     /// <para>BNF:
@@ -471,7 +462,8 @@ public static class Uris
     ///        path-rootless   | ; begins with a segment
     ///        path-empty        ; zero characters (???)</code></para>
     /// </summary>
-    public static Regex Path => pathRegex.Value;
+    [GeneratedRegex(PathRegex, Common.Options)]
+    public static partial Regex Path();
     #endregion
 
     #region General Query
@@ -517,13 +509,11 @@ public static class Uris
     /// </remarks>
     public const string QueryRegex = $@"^{queryRex}$";
 
-    static readonly Lazy<Regex> queryRegex = new(() => new(QueryRegex, RegexOptions.Compiled |
-                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a generic query.
     /// </summary>
-    public static Regex Query => queryRegex.Value;
+    [GeneratedRegex(QueryRegex, Common.Options)]
+    public static partial Regex Query();
     #endregion
 
     #region Key-Value query
@@ -621,13 +611,11 @@ public static class Uris
     /// </remarks>
     public const string KeyValueQueryRegex = $"^{queryKvRex}$";
 
-    static readonly Lazy<Regex> kvQueryRegex = new(() => new(KeyValueQueryRegex, RegexOptions.Compiled |
-                                                                                 RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI's key-value query
     /// </summary>
-    public static Regex KvQuery => kvQueryRegex.Value;
+    [GeneratedRegex(KeyValueQueryRegex, Common.Options)]
+    public static partial Regex KvQuery();
     #endregion
 
     #region Fragment
@@ -671,13 +659,11 @@ public static class Uris
     /// </summary>
     public const string RelativeUriKvQueryRefRegex = $@"^{relativeUriKvQueryRefRex}$";
 
-    static readonly Lazy<Regex> regexRelativeUriKvQueryRef = new(() => new(RelativeUriKvQueryRefRegex, RegexOptions.Compiled |
-                                                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
-    /// <summary>
-    /// Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
-    /// </summary>
-    public static Regex RelativeUriKvQueryRef => regexRelativeUriKvQueryRef.Value;
+    // <summary>
+    // Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
+    // </summary>
+    //[GeneratedRegex(RelativeUriKvQueryRefRegex, Common.Options)]
+    //public static partial Regex RelativeUriKvQueryRef();
     #endregion
 
     #region RelativeUriRef
@@ -699,13 +685,11 @@ public static class Uris
     /// </summary>
     public const string RelativeUriRefRegex = $@"^{relativeUriRefRex}$";
 
-    static readonly Lazy<Regex> regexRelativeUriRef = new(() => new(RelativeUriRefRegex, RegexOptions.Compiled |
-                                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
-    /// <summary>
-    /// Gets a Regex object which matches a string representing a concept.
-    /// </summary>
-    public static Regex RelativeUriRef => regexRelativeUriRef.Value;
+    // <summary>
+    // Gets a Regex object which matches a string representing a concept.
+    // </summary>
+    //[GeneratedRegex(RelativeUriRefRegex, Common.Options)]
+    //public static partial Regex RelativeUriRef();
     #endregion
     #endregion
 
@@ -746,13 +730,11 @@ public static class Uris
     /// </remarks>
     public const string UriKvQueryRegex = $"^{uriKvQueryRex}$";
 
-    static readonly Lazy<Regex> uriKeyValueQueryRegex = new(() => new(UriKvQueryRegex, RegexOptions.Compiled |
-                                                                                       RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
-    public static Regex UriKeyValueQuery => uriKeyValueQueryRegex.Value;
+    [GeneratedRegex(UriKvQueryRegex, Common.Options)]
+    public static partial Regex UriKeyValueQuery();
     #endregion
     #endregion
 
@@ -784,13 +766,11 @@ public static class Uris
     /// </remarks>
     public const string UriRegex = $"^{uriRex}$";
 
-    static readonly Lazy<Regex> uriRegex = new(() => new(UriRegex, RegexOptions.Compiled |
-                                                                   RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
     /// </summary>
-    public static Regex Uri => uriRegex.Value;
+    [GeneratedRegex(UriRegex, Common.Options)]
+    public static partial Regex Uri();
     #endregion
 
     #region Relative URI with network address
@@ -817,13 +797,11 @@ public static class Uris
     /// </summary>
     public const string NetRelativeUriKvQueryRefRegex = $@"^{netRelativeUriKvQueryRefRex}$";
 
-    static readonly Lazy<Regex> regexNetRelativeUriKvQueryRef = new(() => new(NetRelativeUriKvQueryRefRegex, RegexOptions.Compiled |
-                                                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
-    /// <summary>
-    /// Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
-    /// </summary>
-    public static Regex NetRelativeUriKvQueryRef => regexNetRelativeUriKvQueryRef.Value;
+    // <summary>
+    // Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
+    // </summary>
+    //[GeneratedRegex(NetRelativeUriKvQueryRefRegex, Common.Options)]
+    //public static partial Regex NetRelativeUriKvQueryRef();
     #endregion
 
     #region RelativeUriRef with network address
@@ -840,13 +818,11 @@ public static class Uris
     /// </summary>
     public const string NetRelativeUriRefRegex = $@"^{netRelativeUriRefRex}$";
 
-    static readonly Lazy<Regex> netRegexRelativeUriRef = new(() => new(NetRelativeUriRefRegex, RegexOptions.Compiled |
-                                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
-    /// <summary>
-    /// Gets a Regex object which matches a string representing a concept.
-    /// </summary>
-    public static Regex NetRelativeUriRef => netRegexRelativeUriRef.Value;
+    // <summary>
+    // Gets a Regex object which matches a string representing a concept.
+    // </summary>
+    //[GeneratedRegex(NetRelativeUriRefRegex, Common.Options)]
+    //public static partial Regex NetRelativeUriRef();
     #endregion
     #endregion
 
@@ -882,18 +858,15 @@ public static class Uris
     /// </remarks>
     public const string NetUriKvQueryRegex = $"^{netUriKvQueryRex}$";
 
-    static readonly Lazy<Regex> netUriKeyValueQueryRegex = new(() => new(NetUriKvQueryRegex, RegexOptions.Compiled |
-                                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
-    public static Regex NetUriKeyValueQuery => netUriKeyValueQueryRegex.Value;
+    [GeneratedRegex(NetUriKvQueryRegex, Common.Options)]
+    public static partial Regex NetUriKeyValueQuery();
     #endregion
     #endregion
 
     #region Uri with network address
-
     /// <summary>
     /// Matches a URI with an optional general query.
     /// <para>
@@ -916,12 +889,10 @@ public static class Uris
     /// </remarks>
     public const string NetUriRegex = $"^{netUriRex}$";
 
-    static readonly Lazy<Regex> netUriRegex = new(() => new(NetUriRegex, RegexOptions.Compiled |
-                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
     /// </summary>
-    public static Regex NetUri => netUriRegex.Value;
+    [GeneratedRegex(NetUriRegex, Common.Options)]
+    public static partial Regex NetUri();
     #endregion
 }

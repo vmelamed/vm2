@@ -1,9 +1,9 @@
 ﻿namespace vm2.RegexLib;
 
 /// <summary>
-/// Class Numerical. Exposes string and <see cref="Regex"/> constants and static properties that match 
+/// Class Numerical. Exposes string and <see cref="Regex"/> constants and static properties that match
 /// </summary>
-public static class Numerical
+public static partial class Numerical
 {
     #region OctalNumber
     /// <summary>
@@ -29,13 +29,12 @@ public static class Numerical
     /// </summary>
     public const string OctalNumberRegex = $"^{OctNumberRex}$";
 
-    static readonly Lazy<Regex> rexOctalNumber = new(() => new(OctalNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing an octal number.
     /// <para>BNF: <c>octal_number = 1*[octal_digit]</c></para>
     /// </summary>
-    public static Regex OctalNumber => rexOctalNumber.Value;
+    [GeneratedRegex(OctalNumberRegex, Common.Options)]
+    public static partial Regex OctalNumber();
     #endregion
 
     #region HexadecimalNumber
@@ -62,12 +61,11 @@ public static class Numerical
     /// </summary>
     public const string HexadecimalNumberRegex = $"^{HexNumberRex}$";
 
-    static readonly Lazy<Regex> rexHexadecimalNumber = new(() => new(HexadecimalNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a hexadecimal number.
     /// </summary>
-    public static Regex HexadecimalNumber => rexHexadecimalNumber.Value;
+    [GeneratedRegex(HexadecimalNumberRegex, Common.Options)]
+    public static partial Regex HexadecimalNumber();
     #endregion
 
     #region NaturalNumber
@@ -83,14 +81,13 @@ public static class Numerical
     /// </summary>
     public const string NaturalNumberRegex = $"^{NaturalNumberRex}$";
 
-    static readonly Lazy<Regex> rexNaturalNumber = new(() => new(NaturalNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a sign-less, whole, decimal 
+    /// A <see cref="Regex"/> object that matches a string that represents a sign-less, whole, decimal
     /// number, a.k.a. natural number, i.e. 0, 1, ... , 37, etc.
     /// <para>BNF: <c>natural_number = 1*[decimal_digit]</c></para>
     /// </summary>
-    public static Regex NaturalNumber => rexNaturalNumber.Value;
+    [GeneratedRegex(NaturalNumberRegex, Common.Options)]
+    public static partial Regex NaturalNumber();
     #endregion
 
     #region DecimalNumber
@@ -105,12 +102,11 @@ public static class Numerical
     /// </summary>
     public const string DecimalNumberRegex = $@"^{DecimalNumberRex}$";
 
-    static readonly Lazy<Regex> regexDecimalNumber = new(() => new(DecimalNumberRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing a zero or natural number.
     /// </summary>
-    public static Regex DecimalNumber => regexDecimalNumber.Value;
+    [GeneratedRegex(DecimalNumberRegex, Common.Options)]
+    public static partial Regex DecimalNumber();
     #endregion
 
     #region IntegerNumber
@@ -144,17 +140,16 @@ public static class Numerical
     /// </remarks>
     public const string IntegerNumberRegex = $"^{IntegerNumberRex}$";
 
-    static readonly Lazy<Regex> rexIntegerNumber = new(() => new(IntegerNumberRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing an integer number.
     /// <para>BNF: <c>integer_number = [+|-]natural_number</c></para>
     /// <para>Named groups: <see cref="FSignGr"/> and <see cref="IntAbsGr"/>.</para>
     /// </summary>
-    public static Regex IntegerNumber => rexIntegerNumber.Value;
+    [GeneratedRegex(IntegerNumberRegex, Common.Options)]
+    public static partial Regex IntegerNumber();
     #endregion
 
+    #region Fractional numbers
     /// <summary>
     /// The name of a matching group representing the sign of a fractional number.
     /// </summary>
@@ -193,14 +188,14 @@ public static class Numerical
     /// </remarks>
     public const string FractionalNumberRegex = $"^{FractionalNumberRex}$";
 
-    static readonly Lazy<Regex> rexFractional = new(() => new(FractionalNumberRegex, RegexOptions.Compiled |
-                                                                                     RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// A <see cref="Regex"/> object that matches a string representing a decimal fractional number.
     /// </summary>
-    public static Regex FractionalNumber => rexFractional.Value;
+    [GeneratedRegex(FractionalNumberRegex, Common.Options)]
+    public static partial Regex FractionalNumber();
+    #endregion
 
+    #region Scientific notation
     /// <summary>
     /// The name of a matching group representing the mantissa (a.k.a. significant) of a number in a scientific notation.
     /// </summary>
@@ -212,11 +207,11 @@ public static class Numerical
     public const string ExponentGr = "exponent";
 
     /// <summary>
-    /// Matches a number in a scientific notation with mantissa and an exponent, 
+    /// Matches a number in a scientific notation with mantissa and an exponent,
     /// i.e. 12.34e56 -.45e-67 +67.e12 etc. Note that it is not necessarily normalized.
     /// <para>BNF: <c>scientific_number = fractional_point (e | E) integer_number</c></para>
     /// <para>
-    /// Named groups: <see cref="MantissaGr"/> (<see cref="FSignGr"/>, <see cref="WholeGr"/> and <see cref="FractionGr"/>) 
+    /// Named groups: <see cref="MantissaGr"/> (<see cref="FSignGr"/>, <see cref="WholeGr"/> and <see cref="FractionGr"/>)
     /// and <see cref="ExponentGr"/> (<see cref="IntSignGr"/> and <see cref="IntAbsGr"/>).
     /// </para>
     /// </summary>
@@ -226,7 +221,7 @@ public static class Numerical
     public const string ScientificNumberRex = $@"(?<{MantissaGr}>{FractionalNumberRex}) [eE] (?<{ExponentGr}>{IntegerNumberRex})?";
 
     /// <summary>
-    /// Matches a string that represents a number in a scientific notation with mantissa and an exponent, 
+    /// Matches a string that represents a number in a scientific notation with mantissa and an exponent,
     /// i.e. 12.34e56 -.45e-67 +67.e12 etc. Note that it is not necessarily normalized.
     /// <para>BNF: <c>scientific_number = fractional_point (e | E) integer_number</c></para>
     /// </summary>
@@ -235,15 +230,14 @@ public static class Numerical
     /// </remarks>
     public const string ScientificNumberRegex = $"^{ScientificNumberRex}$";
 
-    static readonly Lazy<Regex> scientificNumber = new(() => new(ScientificNumberRegex, RegexOptions.Compiled |
-                                                                                        RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a number in a scientific notation with 
+    /// A <see cref="Regex"/> object that matches a string that represents a number in a scientific notation with
     /// mantissa and an exponent, i.e. 12.34e56 -.45e-67 +67.e12 etc. Note that it is not necessarily normalized.
     /// <para>BNF: <c>scientific_number = fractional_point (e | E) integer_number</c></para>
     /// </summary>
-    public static Regex ScientificNumber => scientificNumber.Value;
+    [GeneratedRegex(ScientificNumberRegex, Common.Options)]
+    public static partial Regex ScientificNumber();
+    #endregion
 
     #region Uuid
     const string uuidWithDashesRex = $$"""
@@ -270,11 +264,10 @@ public static class Numerical
     /// </summary>
     public const string UuidRegex = $@"^{UuidRex}$";
 
-    static readonly Lazy<Regex> regexUuid = new(() => new(UuidRegex, RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches a string representing a UUID.
     /// </summary>
-    public static Regex Uuid => regexUuid.Value;
+    [GeneratedRegex(UuidRegex, Common.Options)]
+    public static partial Regex Uuid();
     #endregion
 }

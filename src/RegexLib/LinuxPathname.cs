@@ -1,10 +1,10 @@
 ﻿namespace vm2.RegexLib;
 
 /// <summary>
-/// Class Files. Contains regular expressions that match strings representing Linux devices, directory names, file 
+/// Class Files. Contains regular expressions that match strings representing Linux devices, directory names, file
 /// names, and file paths.
 /// </summary>
-public static class LinuxPathname
+public static partial class LinuxPathname
 {
     // See https://www.cyberciti.biz/faq/linuxunix-rules-for-naming-file-and-directory-names/
 
@@ -60,12 +60,10 @@ public static class LinuxPathname
     /// </summary>
     public const string PathnameRegex = $@"^{PathnameRex}$";
 
-    static readonly Lazy<Regex> regexPathname = new(() => new(PathnameRegex, RegexOptions.Compiled |
-                                                                             RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches the entire input string against the pattern &lt;see cref="PathnameRegex" /&gt;
     /// </summary>
-    public static Regex Pathname => regexPathname.Value;
+    [GeneratedRegex(PathnameRegex, Common.Options)]
+    public static partial Regex Pathname();
     #endregion
 }

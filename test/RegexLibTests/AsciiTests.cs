@@ -81,92 +81,92 @@ public class AsciiTests(ITestOutputHelper output) : RegexTests(output)
         { TestFileLine(), false, "!" },
         { TestFileLine(), true,  """
                                 IA==
-                            
+
                                 """ },
         { TestFileLine(), false, """
                                 I!A==
-  
+
                                 """ },
         { TestFileLine(), false, """
                                 !IA==
-                   
+
                                 """ },
         { TestFileLine(), false, """
                                 !IA==!
-                                
+
                                 """ },
         { TestFileLine(), true,  """
                                 IAmg455a
                                 12tGb7/+
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 I!Amg455a
                                 12tGb7/+
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 !IAmg455a
                                 12tGb7/+
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 IAmg455a!
                                 12tGb7/+
-                                
+
                                 """ },
         { TestFileLine(), true,  """
                                 IAmg455a
                                 12tGb7/+
                                 IA==
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 !IA==
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 IAmg455a
                                 1!2tGb7/+
                                 IA==
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+!
                                 IA==
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 !IA==
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 IA==!
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 IA=!=
-                                
+
                                 """ },
         { TestFileLine(), false, """
                                 IAmg455a
                                 12tGb7/+
                                 I!A==
-                                
+
                                 """ },
     };
 
     [Theory]
     [MemberData(nameof(Base64Data))]
     public void TestBase64(string TestLine, bool shouldBe, string input)
-        => base.RegexTest(Ascii.Base64, TestLine, shouldBe, input);
+        => base.RegexTest(Ascii.Base64(), TestLine, shouldBe, input);
 }

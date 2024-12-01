@@ -3,7 +3,7 @@
 /// <summary>
 /// Class SemVer. Contains regular expressions that match semantic version strings. See https://semver.org
 /// </summary>
-public static class SemVer
+public static partial class SemVer
 {
     /// <summary>
     /// The the name of a matching group representing the major version in a SemVer.
@@ -157,13 +157,10 @@ public static class SemVer
     /// </summary>
     public const string SemVerRegex = $@"^{SemVerRex}$";
 
-    static readonly Lazy<Regex> regexSemVer = new(() => new(SemVerRegex, RegexOptions.Compiled |
-                                                                         RegexOptions.IgnoreCase |
-                                                                         RegexOptions.IgnorePatternWhitespace, TimeSpan.FromMilliseconds(500)));
-
     /// <summary>
     /// Gets a Regex object which matches the entire input string against the pattern &lt;see cref="SemVerRegex" /&gt;
     /// </summary>
-    public static Regex Regex => regexSemVer.Value;
+    [GeneratedRegex(SemVerRegex, Common.Options)]
+    public static partial Regex SemanticVersion();
     #endregion
 }

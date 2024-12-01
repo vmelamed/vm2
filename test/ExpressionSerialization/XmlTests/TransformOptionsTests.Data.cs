@@ -139,13 +139,13 @@ public partial class TransformOptionsTests
     };
 
     public static TheoryData<string, string, TypeNameConventions, bool> TransformAnonymousTypeNamesLocalData => new() {
-        { TestLine(), "<>f__AnonymousType0`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), "<>f__AnonymousType0`2[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], XmlTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f", TypeNameConventions.AssemblyQualifiedName, false},
         { TestLine(), "<>f__AnonymousType0<int, string>", TypeNameConventions.FullName, false},
         { TestLine(), "<>f__AnonymousType0<int, string>", TypeNameConventions.Name, false},
     };
 
     public static TheoryData<string, string, TypeNameConventions, bool> TransformGenericTypeNamesLocalData => new() {
-        { TestLine(), "System.Collections.Generic.Dictionary`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), "System.Collections.Generic.Dictionary`2[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", TypeNameConventions.AssemblyQualifiedName, false},
         { TestLine(), "System.Collections.Generic.Dictionary<int, string>", TypeNameConventions.FullName, false},
         { TestLine(), "Dictionary<int, string>", TypeNameConventions.Name, false},
     };
