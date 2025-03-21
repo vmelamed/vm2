@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "vm2.sln",
+    "projects": [
+      "src\\Functional\\src\\Primitives\\Primitives.csproj",
+      "test\\Functional\\PrimitivesTests\\PrimitivesTests.csproj",
+      "test\\TestUtilities\\TestUtilities.csproj"
+    ]
+  }
+}

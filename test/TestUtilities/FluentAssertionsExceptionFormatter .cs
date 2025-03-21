@@ -1,4 +1,4 @@
-﻿namespace vm.TestUtilities;
+﻿namespace vm2.TestUtilities;
 
 /// <summary>
 /// Class FluentAssertionsExceptionFormatter enables the display of inner exceptions

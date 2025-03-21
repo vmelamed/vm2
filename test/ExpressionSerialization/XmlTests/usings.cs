@@ -9,7 +9,7 @@ global using System.Xml.Linq;
 
 global using FluentAssertions;
 
-global using vm.TestUtilities;
+global using vm2.TestUtilities;
 
 global using vm2.ExpressionDeepEquals;
 global using vm2.ExpressionSerialization.Shared.Abstractions;

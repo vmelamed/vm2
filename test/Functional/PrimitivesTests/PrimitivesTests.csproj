@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <RootNamespace>vm2.Functional.PrimitivesTests</RootNamespace>
+    </PropertyGroup>
+
+  <ItemGroup>
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="NSubstitute" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="Xunit.Extension" />
+        <PackageReference Include="xunit.extensibility.execution" />
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Functional\src\Primitives\Primitives.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

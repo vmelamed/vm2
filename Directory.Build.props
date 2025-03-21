@@ -4,6 +4,7 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
         <WarningLevel>9999</WarningLevel>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
         <NoWarn>$(NoWarn);</NoWarn>

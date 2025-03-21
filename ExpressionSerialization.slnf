@@ -3,10 +3,12 @@
     "path": "vm2.sln",
     "projects": [
       "src\\ExpressionDeepEquals\\ExpressionDeepEquals.csproj",
-      "src\\ExpressionSerialization\\ExpressionSerialization.csproj",
-      "src\\Threading\\Threading.csproj",
-      "test\\ExpressionSerialization\\CommonData\\CommonData.csproj",
+      "src\\ExpressionSerialization.Json\\ExpressionSerialization.Json.csproj",
+      "src\\ExpressionSerialization.Shared\\ExpressionSerialization.Shared.csproj",
+      "src\\ExpressionSerialization.Xml\\ExpressionSerialization.Xml.csproj",
+      "test\\ExpressionDeepEquals\\ExpressionDeepEqualsTests.csproj",
       "test\\ExpressionSerialization\\JsonTests\\JsonTests.csproj",
+      "test\\ExpressionSerialization\\TestsSharedData\\TestsSharedData.csproj",
       "test\\ExpressionSerialization\\XmlTests\\XmlTests.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"
     ]

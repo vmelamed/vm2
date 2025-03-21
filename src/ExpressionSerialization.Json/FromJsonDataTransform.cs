@@ -157,13 +157,13 @@ static partial class FromJsonDataTransform
 
         return Activator.CreateInstance(
                     type,
-                    element
-                        .GetElement()
-                        .Node!
-                        .AsObject()
-                        .Where(kvp => kvp.Value is JsonObject)
-                        .Select(kvp => ValueTransform(kvp.Value?.AsObject()?.GetOneOf(ConstantTypes) ?? throw new SerializationException(kvp.Value?.AsObject().GetPath())).Item1)
-                        .ToArray());
+                    [.. element
+                            .GetElement()
+                            .Node!
+                            .AsObject()
+                            .Where(kvp => kvp.Value is JsonObject)
+                            .Select(kvp => ValueTransform(kvp.Value?.AsObject()?.GetOneOf(ConstantTypes) ?? throw new SerializationException(kvp.Value?.AsObject().GetPath())).Item1)
+                    ]);
     }
 
     static IEnumerable TransformArray(

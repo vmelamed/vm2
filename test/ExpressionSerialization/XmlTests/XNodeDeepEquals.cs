@@ -2,7 +2,7 @@
 
 public class XNodeDeepEquals(bool ignoreComments = false)
 {
-    Queue<string> _path = new(new string[] { "." });
+    Queue<string> _path = new(["."]);
 
     public string LastResult { get; private set; } = "";
 

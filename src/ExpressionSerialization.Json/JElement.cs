@@ -106,7 +106,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// A set of <see cref="JsonNode"/>-s to be added to the new <see cref="JsonArray"/> that will be set in the <see cref="Node"/>.
     /// </param>
     public JElement(string key, IEnumerable<JsonNode?> elements)
-        : this(key, (JsonNode)new JsonArray(elements.ToArray())) { }
+        : this(key, (JsonNode)new JsonArray([.. elements])) { }
 
     /// <summary>
     /// Initializes a new instance with a <paramref key="key"/> and a new <see cref="JsonArray"/> in the <see cref="Node"/>
