@@ -1,6 +1,4 @@
 ﻿namespace vm2.TestUtilities;
-using System;
-using System.Threading.Tasks;
 
 /// <summary>
 /// Class PrimitivesTestsFixture.
@@ -9,7 +7,7 @@ using System.Threading.Tasks;
 /// </summary>
 /// <seealso cref="System.IDisposable" />
 /// <seealso cref="System.IAsyncDisposable" />
-public class BaseTestsFixture : IDisposable, IAsyncDisposable
+public class BaseTestsFixture<TFixture> : IClassFixture<TFixture>, IDisposable, IAsyncDisposable where TFixture : class
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PrimitivesTestsFixture"/> class.
@@ -17,10 +15,10 @@ public class BaseTestsFixture : IDisposable, IAsyncDisposable
     public BaseTestsFixture() => FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
 
     /// <inheritdoc/>
-    public void Dispose() => GC.SuppressFinalize(this);
+    public virtual void Dispose() => GC.SuppressFinalize(this);
 
     /// <inheritdoc/>
-    public ValueTask DisposeAsync()
+    public virtual ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
         return ValueTask.CompletedTask;

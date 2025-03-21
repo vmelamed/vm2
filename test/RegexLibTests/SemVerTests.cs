@@ -1,6 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class SemVerTests(ITestOutputHelper output) : RegexTests(output)
+public class SemVerTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : RegexTests(fixture, output)
 {
     public static TheoryData<string, bool, string, Captures?> SemVerTestData => new() {
         { TestFileLine(), true,  "0.0.4", new() {  ["core"] = "0.0.4", ["major"] = "0", ["minor"] = "0", ["patch"] = "4", ["pre"] = "", ["build"] = "" } },

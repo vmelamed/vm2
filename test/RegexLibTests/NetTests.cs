@@ -1,6 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public partial class NetTests(ITestOutputHelper output) : RegexTests(output)
+public partial class NetTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : RegexTests(fixture, output)
 {
     [Theory]
     [MemberData(nameof(Ipv4AddressData))]

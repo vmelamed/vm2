@@ -2,13 +2,13 @@
 
 public class Captures : Dictionary<string, string>, IXunitSerializable
 {
-    const string CountId = "CountId";
+    const string countId = "countId";
 
     public void Deserialize(IXunitSerializationInfo info)
     {
         Clear();
 
-        var count = info.GetValue<int>(CountId);
+        var count = info.GetValue<int>(countId);
         for (var i = 0; i < count; i++)
         {
             var name = info.GetValue<string>($"name{i}");
@@ -19,7 +19,7 @@ public class Captures : Dictionary<string, string>, IXunitSerializable
 
     public void Serialize(IXunitSerializationInfo info)
     {
-        info.AddValue(CountId, Count, typeof(int));
+        info.AddValue(countId, Count, typeof(int));
         int i = 0;
         foreach (var (name, value) in this)
         {
@@ -30,9 +30,13 @@ public class Captures : Dictionary<string, string>, IXunitSerializable
     }
 }
 
-public abstract partial class RegexTests(ITestOutputHelper output)
+public abstract partial class RegexTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : IClassFixture<RegexLibTestsFixture>
 {
     public ITestOutputHelper Out { get; } = output;
+
+    protected RegexLibTestsFixture _fixture = fixture;
 
     public const RegexOptions RegexOpt = RegexOptions.IgnorePatternWhitespace;
 

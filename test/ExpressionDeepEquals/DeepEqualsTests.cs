@@ -1,8 +1,12 @@
 ﻿namespace vm2.ExpressionDeepEqualsTests;
 
-public partial class DeepEqualsTests(ITestOutputHelper output)
+public partial class DeepEqualsTests(
+    DeepEqualsTestsFixture fixture,
+    ITestOutputHelper output) : IClassFixture<DeepEqualsTestsFixture>
 {
     public ITestOutputHelper Out { get; } = output;
+
+    protected DeepEqualsTestsFixture _fixture = fixture;
 
     [Theory]
     [InlineData("null", "null", true)]

@@ -1,6 +1,6 @@
 ﻿namespace vm2.ExpressionSerialization.XmlTests;
 
-public class XmlTestsFixture : IDisposable
+public class XmlTestsFixture : BaseTestsFixture<XmlTestsFixture>
 {
     internal const string TestFilesPath = "../../../../TestsSharedData/TestData/Xml";
     internal const string TestLoadPath  = "../../../../TestsSharedData/TestData/Xml/LoadTestData";
@@ -25,7 +25,7 @@ public class XmlTestsFixture : IDisposable
 
     internal const LoadOptions XmlLoadOptions = LoadOptions.SetLineInfo; // LoadOptions.SetBaseUri | LoadOptions.None;
 
-    public XmlTestsFixture()
+    public XmlTestsFixture() : base()
     {
         XmlOptions.SetSchemasLocations(
             new Dictionary<string, string?> {
@@ -33,11 +33,7 @@ public class XmlTestsFixture : IDisposable
                 [XmlOptions.Dcs] = Path.Combine(SchemasPath, "DataContract.xsd"),
                 [XmlOptions.Exs] = Path.Combine(SchemasPath, "Linq.Expressions.Serialization.xsd"),
             }, true);
-
-        FluentAssertionsExceptionFormatter.EnableDisplayOfInnerExceptions();
     }
-
-    public void Dispose() => GC.SuppressFinalize(this);
 
     public void Validate(XDocument doc) => Options.Validate(doc);
 

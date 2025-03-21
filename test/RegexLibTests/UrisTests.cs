@@ -4,7 +4,9 @@ public class UriTheoryData : TheoryData<string, bool, string, Captures?>
 {
 }
 
-public partial class UrisTests(ITestOutputHelper output) : RegexTests(output)
+public partial class UrisTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : RegexTests(fixture, output)
 {
     public static UriTheoryData SchemeData = new() {
         { TestFileLine(), false, "", null },

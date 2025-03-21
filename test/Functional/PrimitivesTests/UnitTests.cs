@@ -3,11 +3,11 @@
 using FluentAssertions;
 
 public class UnitTests(
-        BaseTestsFixture fixture,
-        ITestOutputHelper output) : IClassFixture<BaseTestsFixture>
+        PrimitivesTestsFixture fixture,
+        ITestOutputHelper output) : IClassFixture<PrimitivesTestsFixture>
 {
     protected ITestOutputHelper Out => output;
-    protected BaseTestsFixture _fixture = fixture;
+    protected PrimitivesTestsFixture _fixture = fixture;
     int _sideEffect;
 
     [Fact]

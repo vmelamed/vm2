@@ -1,6 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class WindowsPathnameTests(ITestOutputHelper output) : RegexTests(output)
+public class WindowsPathnameTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : RegexTests(fixture, output)
 {
     static readonly string boarderLengthName = new('a', 260);
     static readonly string overBoardLengthName = new('a', 261);

@@ -11,5 +11,6 @@ global using System.Runtime.Serialization;
 global using FluentAssertions;
 
 global using vm2.ExpressionDeepEquals;
+global using vm2.TestUtilities;
 
 global using Xunit.Abstractions;

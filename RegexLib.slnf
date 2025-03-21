@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "vm2.sln",
+    "projects": [
+      "src\\RegexLib\\RegexLib.csproj",
+      "test\\RegexLibTests\\RegexLibTests.csproj",
+      "test\\TestUtilities\\TestUtilities.csproj"
+    ]
+  }
+}

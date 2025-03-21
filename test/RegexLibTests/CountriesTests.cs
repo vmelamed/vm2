@@ -1,6 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class CountriesTests(ITestOutputHelper output) : RegexTests(output)
+public class CountriesTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : RegexTests(fixture, output)
 {
     public static TheoryData<string, bool, string> CountryCode2Data => new() {
         { TestFileLine(), false, ""},

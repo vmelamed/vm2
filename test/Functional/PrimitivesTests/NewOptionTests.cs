@@ -1,11 +1,11 @@
 ﻿namespace vm2.Functional.PrimitivesTests;
 
 public class NewOptionTests(
-    BaseTestsFixture fixture,
-    ITestOutputHelper output) : IClassFixture<BaseTestsFixture>
+    PrimitivesTestsFixture fixture,
+    ITestOutputHelper output) : IClassFixture<PrimitivesTestsFixture>
 {
     protected ITestOutputHelper Out => output;
-    protected BaseTestsFixture _fixture = fixture;
+    protected PrimitivesTestsFixture _fixture = fixture;
 
     [Fact]
     public void NewDateTime()

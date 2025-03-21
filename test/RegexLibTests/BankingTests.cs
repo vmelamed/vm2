@@ -1,6 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public partial class BankingTests(ITestOutputHelper output) : RegexTests(output)
+public partial class BankingTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : RegexTests(fixture, output)
 {
     [Theory]
     [MemberData(nameof(AbaRoutingNumberRexData))]

@@ -1,6 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class NumericalTests(ITestOutputHelper output) : RegexTests(output)
+public class NumericalTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : RegexTests(fixture, output)
 {
     public static TheoryData<string, bool, string> OctalNumberRexData => new() {
         { TestFileLine(), false, "" },

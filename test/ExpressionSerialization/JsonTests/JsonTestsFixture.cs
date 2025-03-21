@@ -1,6 +1,8 @@
 ﻿namespace vm2.ExpressionSerialization.JsonTests;
 
-public class JsonTestsFixture : IDisposable
+using vm2.TestUtilities;
+
+public class JsonTestsFixture : BaseTestsFixture<JsonTestsFixture>
 {
     internal const string TestFilesPath = "../../../../TestsSharedData/TestData/Json";
     internal const string TestLoadPath  = "../../../../TestsSharedData/TestData/Json/LoadTestData";
@@ -21,7 +23,7 @@ public class JsonTestsFixture : IDisposable
         ValidateInputDocuments = ValidateExpressionDocuments.Always,
     };
 
-    public void Dispose() => GC.SuppressFinalize(this);
+    public JsonTestsFixture() : base() { }
 
     public void Validate(JsonNode doc) => Options.Validate(doc);
 

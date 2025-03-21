@@ -1,6 +1,8 @@
 ﻿namespace vm2.RegexLibTests;
 
-public class AsciiTests(ITestOutputHelper output) : RegexTests(output)
+public class AsciiTests(
+    RegexLibTestsFixture fixture,
+    ITestOutputHelper output) : RegexTests(fixture, output)
 {
     public static TheoryData<string, bool, string> LowAlphaRexData => new() {
         { TestFileLine(), false, ""  },
