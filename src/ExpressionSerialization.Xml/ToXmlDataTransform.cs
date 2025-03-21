@@ -228,9 +228,7 @@ partial class ToXmlDataTransform(XmlOptions options)
             // TODO: figure out how to enumerate Memory<> with reflection, instead of copying to array:
             Debug.Assert(nodeType.IsMemory());
 
-            var array = nodeType.GetMethod("ToArray")?.Invoke(nodeValue, null);
-
-            if (array is IEnumerable enumerable2)
+            if (nodeType.GetMethod("ToArray")?.Invoke(nodeValue, null) is IEnumerable enumerable2)
             {
                 foreach (var element in enumerable2)
                     collectionElement.Add(
