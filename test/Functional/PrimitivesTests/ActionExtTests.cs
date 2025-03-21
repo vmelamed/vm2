@@ -1,6 +1,6 @@
 ﻿namespace vm2.Functional.PrimitivesTests;
 
-public class ActionExtTests(
+public partial class ActionExtTests(
     PrimitivesTestsFixture fixture,
     ITestOutputHelper output) : IClassFixture<PrimitivesTestsFixture>
 {
@@ -183,6 +183,62 @@ public class ActionExtTests(
 
         // Act
         var result = actionExt.ToFunc()(42, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+
+        // Assert
+        result.Should().BeOfType<Unit>();
+        actionExt.Received(1);
+    }
+
+    [Fact]
+    public void ToFunc_StateUnderTest_ExpectedBehavior13()
+    {
+        // Arrange
+        var actionExt = Substitute.For<Action<int, int, int, int, int, int, int, int, int, int, int, int, int>>();
+
+        // Act
+        var result = actionExt.ToFunc()(42, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+
+        // Assert
+        result.Should().BeOfType<Unit>();
+        actionExt.Received(1);
+    }
+
+    [Fact]
+    public void ToFunc_StateUnderTest_ExpectedBehavior14()
+    {
+        // Arrange
+        var actionExt = Substitute.For<Action<int, int, int, int, int, int, int, int, int, int, int, int, int, int>>();
+
+        // Act
+        var result = actionExt.ToFunc()(42, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
+
+        // Assert
+        result.Should().BeOfType<Unit>();
+        actionExt.Received(1);
+    }
+
+    [Fact]
+    public void ToFunc_StateUnderTest_ExpectedBehavior15()
+    {
+        // Arrange
+        var actionExt = Substitute.For<Action<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>>();
+
+        // Act
+        var result = actionExt.ToFunc()(42, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+
+        // Assert
+        result.Should().BeOfType<Unit>();
+        actionExt.Received(1);
+    }
+
+    [Fact]
+    public void ToFunc_StateUnderTest_ExpectedBehavior16()
+    {
+        // Arrange
+        var actionExt = Substitute.For<Action<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>>();
+
+        // Act
+        var result = actionExt.ToFunc()(42, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
 
         // Assert
         result.Should().BeOfType<Unit>();
