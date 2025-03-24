@@ -42,7 +42,35 @@ public readonly struct Option<T> : IEquatable<NoneType>, IEquatable<Option<T>>
     public readonly R Match<R>(Func<T, R> Some, Func<R> None) => _isSome ? Some(_value!) : None();
 
     /// <summary>
-    /// Makes this object behave as a sequence of one element.
+    /// Using the function <paramref name="f"/> generates a new instance of type <typeparamref name="R"/>
+    /// based on the internal state of this.
+    /// Map : (C{T}, (T → R)) → C{R}
+    /// <para>
+    /// <see cref="Map{R}(Func{T, R})"/> makes <typeparamref name="T"/> a <i><b>functor</b></i>.
+    /// </para>
+    /// </summary>
+    /// <typeparam name="R">The type of the result.</typeparam>
+    /// <param name="f">The function that maps T -> R.</param>
+    /// <returns>Functional.Primitives.Option&lt;R&gt;.</returns>
+    public Option<R> Map<R>(Func<T, R> f)
+        => Match(
+                None: () => None,
+                Some: t => Some(f(t)));
+
+    /// <summary>
+    /// Similar to <see cref="Map{R}(Func{T, R})"/> but here the mapping function <paramref name="f"/> takes
+    /// an <see cref="Option{T}"/> argument and returns (maps it to) an <see cref="Option{R}"/> value.
+    /// </summary>
+    /// <typeparam name="R"></typeparam>
+    /// <param name="f">The f.</param>
+    /// <returns>Option&lt;R&gt;.</returns>
+    public Option<R> Bind<R>(Func<T, Option<R>> f)
+        => Match(
+            None: () => None,
+            Some: t => f(t));
+
+    /// <summary>
+    /// Makes this object behave as a sequence of one value.
     /// </summary>
     /// <returns>IEnumerable&lt;T&gt;.</returns>
     public readonly IEnumerable<T> AsEnumerable()
@@ -50,6 +78,14 @@ public readonly struct Option<T> : IEquatable<NoneType>, IEquatable<Option<T>>
         if (_isSome)
             yield return _value!;
     }
+
+    /// <summary>
+    /// Applies the <paramref name="action"/> to the value in this option.
+    /// </summary>
+    /// <param name="action">The action that exhibits side effects.</param>
+    /// <returns>Option&lt;Unit&gt;.</returns>
+    public Option<Unit> ForEach(Action<T> action)
+        => Map(action.ToFunc());
 
     #region IEquatable<Option<T>>
     /// <summary>

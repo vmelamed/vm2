@@ -352,4 +352,81 @@ public class OptionTests(
 
         sut.ToString().Should().Be("None");
     }
+
+    [Fact]
+    public void MapNoneTest()
+    {
+        Option<int> v = None;
+
+        var r = v.Map(t => t.ToString());
+
+        r.Should().BeOfType<Option<string>>();
+        Assert.Equal(r, None);
+    }
+
+    [Fact]
+    public void MapPrimitiveTypeTest()
+    {
+        Option<int> v = 42;
+
+        var r = v.Map(t => t.ToString());
+
+        r.Should().BeOfType<Option<string>>();
+        Assert.Equal(r, "42");
+    }
+
+    readonly record struct Struct(int I, Option<string> S, decimal D);
+
+    [Fact]
+    public void MapStructTest()
+    {
+        Option<Struct> v = new Struct(42, "gogo", 3.14M);
+
+        var r = v.Map(t => new { I = t.I.ToString(), S = t.S.ToString(), D = t.D * 2 });
+
+        Assert.Equal(r, new { I = "42", S = "Some(gogo)", D = 6.28M });
+    }
+
+    [Fact]
+    public void BindNoneTest()
+    {
+        Option<long> v = None;
+
+        var r = v.Bind<string>(t => t.ToString());
+
+        r.Should().BeOfType<Option<string>>();
+        Assert.Equal(r, None);
+    }
+
+    [Fact]
+    public void BindPrimitiveTypeTest()
+    {
+        Option<int> v = 42;
+
+        var r = v.Bind<string>(t => t.ToString());
+
+        r.Should().BeOfType<Option<string>>();
+        Assert.Equal(r, "42");
+    }
+
+    [Fact]
+    public void BindStringToPrimitiveTypeTest()
+    {
+        Option<string> v = "42";
+
+        var r = v.Bind(t => FromString<long>(v, long.TryParse));
+
+        r.Should().BeOfType<Option<long>>();
+        Assert.Equal(r, 42);
+    }
+
+    [Fact]
+    public void BindStructTest()
+    {
+        Option<Struct> v = new Struct(42, "gogo", 3.14M);
+
+        var r = v.Bind(t => Some(new { I = t.I.ToString(), S = t.S.ToString(), D = t.D * 2 }));
+
+        Assert.Equal(r, new { I = "42", S = "Some(gogo)", D = 6.28M });
+    }
 }

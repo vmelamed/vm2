@@ -10,4 +10,5 @@ global using Xunit;
 global using Xunit.Abstractions;
 
 global using static Functional.Primitives.ActionExt;
+global using static Functional.Primitives.NewOption;
 global using static Functional.Primitives.OptionExt;

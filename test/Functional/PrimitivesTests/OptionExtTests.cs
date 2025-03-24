@@ -8,36 +8,22 @@ public class OptionExtTests(
     protected PrimitivesTestsFixture _fixture = fixture;
 
     [Fact]
-    public void MapNoneTest()
+    public void NullableInt_ToOptionTest_Null()
     {
-        Option<int> v = None;
+        int? v = null;
 
-        var r = v.Map(t => t.ToString());
+        var r = v.ToOption();
 
-        r.Should().BeOfType<Option<string>>();
-        Assert.Equal(r, None);
+        Assert.Equal(None, r);
     }
 
     [Fact]
-    public void MapNotNoneTest()
+    public void NullableInt_ToOptionTest_NotNull()
     {
-        Option<int> v = 42;
+        int? v = 7;
 
-        var r = v.Map(t => t.ToString());
+        var r = v.ToOption();
 
-        r.Should().BeOfType<Option<string>>();
-        Assert.Equal(r, "42");
-    }
-
-    readonly record struct Struct(int I, Option<string> S, decimal D);
-
-    [Fact]
-    public void MapNotNone2Test()
-    {
-        Option<Struct> v = new Struct(42, "gogo", 3.14M);
-
-        var r = v.Map(t => new { I = t.I.ToString(), S = t.S.ToString(), D = t.D * 2 });
-
-        Assert.Equal(r, new { I = "42", S = "Some(gogo)", D = 6.28M });
+        Assert.Equal(v.Value, r);
     }
 }
