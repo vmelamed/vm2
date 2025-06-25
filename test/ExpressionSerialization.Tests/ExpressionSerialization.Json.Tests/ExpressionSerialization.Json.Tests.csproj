@@ -20,25 +20,6 @@
         </PackageReference>
     </ItemGroup>
 
-    <!--
-    Defining JSON_SCHEMA switches JSON validation to be done with Json.Schema from
-    https://docs.json-everything.net/.
-    It has some problems with numbers and with the huge recursive schema in some more complex cases.
-    It uses System.Text.Json like this project.
-
-    Otherwise JSON validation is done with Newtonsoft but it is paid if you want more than 1000
-    validations per hour and
-    it is yet another JSON parser.
-    -->
-<!--
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
-    </PropertyGroup>
--->
-
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
         <ProjectReference Include="..\..\..\src\ExpressionSerialization.Json\ExpressionSerialization.Json.csproj" />

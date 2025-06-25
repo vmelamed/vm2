@@ -3,6 +3,8 @@
 #if JSON_SCHEMA
 using global::Json.Schema;
 #else
+using System.Text;
+
 using global::Newtonsoft.Json.Linq;
 using global::Newtonsoft.Json.Schema;
 #endif
