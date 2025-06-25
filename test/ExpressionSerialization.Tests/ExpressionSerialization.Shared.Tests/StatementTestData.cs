@@ -10,7 +10,7 @@ public static class StatementTestData
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns>Expression.</returns>
-    public static Expression GetExpression(string id) => _substitutes[id];
+    public static Expression? GetExpression(string id) => _substitutes.GetValueOrDefault(id);
 
     public static readonly TheoryData<string, string, string> Data = new ()
     {
@@ -37,10 +37,6 @@ public static class StatementTestData
         { TestLine(), "newHashtableInit",               "NewHashtableInit" },
         { TestLine(), "newListInit",                    "NewListInit" },
         { TestLine(), "newMembersInit",                 "NewMembersInit" },
-#if !JSON_SCHEMA
-        { TestLine(), "newMembersInit1",                "NewMembersInit1" },
-        { TestLine(), "newMembersInit2",                "NewMembersInit2" },
-#endif
         { TestLine(), "return1",                        "Return1" },
         { TestLine(), "return2",                        "Return2" },
         { TestLine(), "switch(a){ ... }",               "Switch" },
@@ -53,27 +49,27 @@ public static class StatementTestData
         { TestLine(), "try6",                           "TryCatch6" },
     };
 
-    static ParameterExpression _paramA    = Expression.Parameter(typeof(int), "a");
-    static ParameterExpression _paramB    = Expression.Parameter(typeof(int), "b");
-    static ParameterExpression _paramC    = Expression.Parameter(typeof(int), "c");
-    static ParameterExpression _paramD    = Expression.Parameter(typeof(int), "d");
-    static ParameterExpression _value     = Expression.Parameter(typeof(int), "_value");
-    static ParameterExpression _result    = Expression.Parameter(typeof(int), "_result");
-    static ParameterExpression _var       = Expression.Parameter(typeof(int), "a");
-    static ParameterExpression _array     = Expression.Parameter(typeof(int[]), "Array");
-    static ParameterExpression _index     = Expression.Parameter(typeof(int), "Index");
+    static readonly ParameterExpression _paramA    = Expression.Parameter(typeof(int), "a");
+    static readonly ParameterExpression _paramB    = Expression.Parameter(typeof(int), "b");
+    static readonly ParameterExpression _paramC    = Expression.Parameter(typeof(int), "c");
+    static readonly ParameterExpression _paramD    = Expression.Parameter(typeof(int), "d");
+    static readonly ParameterExpression _value     = Expression.Parameter(typeof(int), "_value");
+    static readonly ParameterExpression _result    = Expression.Parameter(typeof(int), "_result");
+    static readonly ParameterExpression _var       = Expression.Parameter(typeof(int), "a");
+    static readonly ParameterExpression _array     = Expression.Parameter(typeof(int[]), "Array");
+    static readonly ParameterExpression _index     = Expression.Parameter(typeof(int), "Index");
 
-    static LabelTarget _labelContinue  = Expression.Label("continue");
-    static LabelTarget _labelBreak = Expression.Label("break");
-    static LabelTarget _returnTarget = Expression.Label();
+    static readonly LabelTarget _labelContinue  = Expression.Label("continue");
+    static readonly LabelTarget _labelBreak = Expression.Label("break");
+    static readonly LabelTarget _returnTarget = Expression.Label();
 
     static Expression WriteLine1Expression(string s) => Expression.Call(null, _miWriteLine, Expression.Constant(s));
     static Expression ExceptionDefaultCtor() => Expression.New(typeof(Exception).GetConstructor(Type.EmptyTypes)!);
     static Expression ThrowException() => Expression.Throw(ExceptionDefaultCtor());
 
-    static MethodInfo _miWriteLine = typeof(Console).GetMethod("WriteLine", [ typeof(string) ])!;
+    static readonly MethodInfo _miWriteLine = typeof(Console).GetMethod("WriteLine", [ typeof(string) ])!;
 
-    static Expression _block =
+    static readonly Expression _block =
         Expression.Lambda(
             Expression.Block(
                 [_paramD, ],
@@ -85,7 +81,7 @@ public static class StatementTestData
                 Expression.LeftShiftAssign(_paramA, _paramC)),
             _paramA, _paramB);
 
-    static Expression _lambdaWithLoopContinueBreak =
+    static readonly Expression _lambdaWithLoopContinueBreak =
         Expression.Block(
             new[] { _result },
             Expression.Assign(_value, Expression.Constant(5)),
@@ -104,7 +100,7 @@ public static class StatementTestData
                 _labelContinue))
     ;
 
-    static Expression _switch =
+    static readonly Expression _switch =
         Expression.Switch(
             _paramA,
             WriteLine1Expression("Default"),
@@ -118,13 +114,13 @@ public static class StatementTestData
                 Expression.Constant(4))
             );
 
-    static Expression _throw =
+    static readonly Expression _throw =
         Expression.Block(
             WriteLine1Expression("Before throwing"),
             Expression.Throw(ExceptionDefaultCtor())
         );
 
-    static Expression _try1 =
+    static readonly Expression _try1 =
         Expression.TryFault(
             Expression.Block(
                 new Expression[]
@@ -134,7 +130,7 @@ public static class StatementTestData
                 }),
             WriteLine1Expression("caught {}"));
 
-    static Expression _try2 =
+    static readonly Expression _try2 =
         Expression.TryCatch(
             Expression.Block(
                 WriteLine1Expression("TryBody"),
@@ -148,7 +144,7 @@ public static class StatementTestData
                     null),
             ]);
 
-    static Expression _try3 =
+    static readonly Expression _try3 =
         Expression.TryCatchFinally(
             Expression.Block(
                 WriteLine1Expression("TryBody"),
@@ -163,7 +159,7 @@ public static class StatementTestData
                     null),
             ]);
 
-    static Expression _try4 =
+    static readonly Expression _try4 =
         Expression.TryFinally(
             Expression.Block(
                 WriteLine1Expression("TryBody"),
@@ -171,8 +167,8 @@ public static class StatementTestData
             ),
             WriteLine1Expression("finally {}"));
 
-    static ParameterExpression _exception = Expression.Parameter(typeof(ArgumentException), "x");
-    static Expression _try5 =
+    static readonly ParameterExpression _exception = Expression.Parameter(typeof(ArgumentException), "x");
+    static readonly Expression _try5 =
         Expression.TryCatch(
             Expression.Block(
                 WriteLine1Expression("TryBody"),
@@ -189,7 +185,7 @@ public static class StatementTestData
                     null),
             ]);
 
-    static Expression _try6 =
+    static readonly Expression _try6 =
         Expression.TryCatch(
             Expression.Block(
                 WriteLine1Expression("TryBody"),
@@ -207,14 +203,14 @@ public static class StatementTestData
                         Expression.Constant("x"))),
             ]);
 
-    static Expression _goto1 =
+    static readonly Expression _goto1 =
         Expression.Block(
             WriteLine1Expression("GoTo"),
             Expression.Goto(_returnTarget),
             WriteLine1Expression("Unreachable"),
             Expression.Label(_returnTarget)
         );
-    static Expression _goto2 =
+    static readonly Expression _goto2 =
         Expression.Block(
             WriteLine1Expression("GoTo"),
             //Expression.Goto(_returnTarget),
@@ -222,7 +218,7 @@ public static class StatementTestData
             Expression.Label(_returnTarget)
         );
 
-    static Expression _goto3 =
+    static readonly Expression _goto3 =
         Expression.Block(
             [ _var ],
             Expression.Assign(_var, Expression.Constant(0)),
@@ -232,7 +228,7 @@ public static class StatementTestData
             Expression.Label(_returnTarget)
         );
 
-    static Expression _goto4 =
+    static readonly Expression _goto4 =
         Expression.Block(
             [ _var ],
             Expression.Assign(_var, Expression.Constant(0)),
@@ -242,7 +238,7 @@ public static class StatementTestData
             Expression.Label(_returnTarget)
         );
 
-    static Expression _return1 =
+    static readonly Expression _return1 =
         Expression.Block(
             [ _var ],
             Expression.Assign(_var, Expression.Constant(0)),
@@ -252,7 +248,7 @@ public static class StatementTestData
             Expression.Label(_returnTarget)
         );
 
-    static Expression _return2 =
+    static readonly Expression _return2 =
         Expression.Block(
             [ _var ],
             Expression.Assign(_var, Expression.Constant(0)),
@@ -262,9 +258,9 @@ public static class StatementTestData
             Expression.Label(_returnTarget)
         );
 
-    static ParameterExpression _m = Expression.Parameter(typeof(TestMembersInitialized), "m");
-    static LabelTarget _return3 = Expression.Label(typeof(int));
-    static Expression _accessMemberMember1 =
+    static readonly ParameterExpression _m = Expression.Parameter(typeof(TestMembersInitialized), "m");
+    static readonly LabelTarget _return3 = Expression.Label(typeof(int));
+    static readonly Expression _accessMemberMember1 =
         Expression.Block(
             [_m],
             Expression.Assign(
@@ -286,16 +282,16 @@ public static class StatementTestData
             Expression.Label(_return3, Expression.Constant(0))
         );
 
-    static Expression _arrayAccessExpr = Expression.ArrayAccess(_array, _index);
+    static readonly Expression _arrayAccessExpr = Expression.ArrayAccess(_array, _index);
 
     // Array[Index] = (Array[Index] + Value)
-    static Expression _lambdaExpr = Expression.Assign(
+    static readonly Expression _lambdaExpr = Expression.Assign(
                                                 _arrayAccessExpr,
                                                 Expression.Add(
                                                     _arrayAccessExpr,
                                                     _value));
 
-    static Dictionary<string, Expression> _substitutes = new()
+    static readonly Dictionary<string, Expression> _substitutes = new()
     {
         ["() => new"]               = () => () => new StructDataContract1(42, "don't panic"),
         ["(a,b) => { ... }"]        = _block,
@@ -328,48 +324,6 @@ public static class StatementTestData
                 StringProperty = "inner string"
             },
             EnumerableProperty = new List<string> { "aaa", "bbb", "ccc", },
-        },
-        ["newMembersInit1"]         = () => () => new TestMembersInitialized1()
-        {
-            TheOuterIntProperty = 42,
-            Time = new DateTime(1776, 7, 4),
-            InnerProperty = new Inner
-            {
-                IntProperty = 23,
-                StringProperty = "inner string"
-            },
-            ArrayProperty = new[] { 4, 5, 6 },
-            ListProperty = {
-                new Inner()
-                {
-                    IntProperty = 23,
-                    StringProperty = "inner string"
-                },
-                new Inner ()
-                {
-                    IntProperty = 42,
-                    StringProperty = "next inner string"
-                }
-            },
-        },
-        ["newMembersInit2"]         = () => () => new TestMembersInitialized1()
-        {
-            TheOuterIntProperty = 42,
-            Time = new DateTime(1776, 7, 4),
-            InnerProperty = { IntProperty = 23, StringProperty = "inner string" },
-            ArrayProperty = new int[] { 4, 5, 6 },
-            ListProperty =
-            {
-                new Inner()
-                {
-                    IntProperty = 23,
-                    StringProperty = "inner string"
-                },
-                new Inner ()
-                {
-                    IntProperty = 42,
-                    StringProperty = "next inner string" }
-            },
         },
         ["return1"]                 = _return1,
         ["return2"]                 = _return2,

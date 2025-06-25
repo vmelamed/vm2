@@ -7,11 +7,13 @@ public partial class ConstantTests(XmlTestsFixture fixture, ITestOutputHelper ou
 
     [Theory]
     [MemberData(nameof(ConstantTestData.Data), MemberType = typeof(ConstantTestData))]
+    [MemberData(nameof(ConstantTestDataNs.Data), MemberType = typeof(ConstantTestDataNs))]
     public async Task ConstantToXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.ToXmlTestAsync(testFileLine, expressionString, fileName);
 
     [Theory]
     [MemberData(nameof(ConstantTestData.Data), MemberType = typeof(ConstantTestData))]
+    [MemberData(nameof(ConstantTestDataNs.Data), MemberType = typeof(ConstantTestDataNs))]
     public async Task ConstantFromXmlTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.FromXmlTestAsync(testFileLine, expressionString, fileName);
 
@@ -31,5 +33,5 @@ public partial class ConstantTests(XmlTestsFixture fixture, ITestOutputHelper ou
         await testAsyncCall.Should().ThrowAsync<SerializationException>();
     }
 
-    protected override Expression Substitute(string id) => ConstantTestData.GetExpression(id);
+    protected override Expression Substitute(string id) => ConstantTestData.GetExpression(id) ?? ConstantTestDataNs.GetExpression(id);
 }

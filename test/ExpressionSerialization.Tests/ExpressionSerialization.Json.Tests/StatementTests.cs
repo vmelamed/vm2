@@ -7,13 +7,19 @@ public partial class StatementTests(JsonTestsFixture fixture, ITestOutputHelper 
 
     [Theory]
     [MemberData(nameof(StatementTestData.Data), MemberType = typeof(StatementTestData))]
+#if !JSON_SCHEMA
+    [MemberData(nameof(StatementTestDataNs.Data), MemberType = typeof(StatementTestDataNs))]
+#endif
     public async Task StatementToJsonTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.ToJsonTestAsync(testFileLine, expressionString, fileName);
 
     [Theory]
     [MemberData(nameof(StatementTestData.Data), MemberType = typeof(StatementTestData))]
+#if !JSON_SCHEMA
+    [MemberData(nameof(StatementTestDataNs.Data), MemberType = typeof(StatementTestDataNs))]
+#endif
     public async Task StatementFromJsonTestAsync(string testFileLine, string expressionString, string fileName)
         => await base.FromJsonTestAsync(testFileLine, expressionString, fileName);
 
-    protected override Expression Substitute(string id) => StatementTestData.GetExpression(id);
+    protected override Expression Substitute(string id) => StatementTestData.GetExpression(id) ?? StatementTestDataNs.GetExpression(id);
 }

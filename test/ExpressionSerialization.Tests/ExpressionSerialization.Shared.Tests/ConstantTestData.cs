@@ -29,7 +29,7 @@ public static class ConstantTestData
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns>Expression.</returns>
-    public static Expression GetExpression(string id) => _substitutes[id];
+    public static Expression? GetExpression(string id) => _substitutes.GetValueOrDefault(id);
 
     public static readonly TheoryData<string, string, string> Data = new ()
     {
@@ -50,22 +50,6 @@ public static class ConstantTestData
         { TestLine(), "Double.E",                                                               "Double.E" },
         { TestLine(), "Double.-2.234567891233658E-123",                                         "Double.-2.23..E-123" },
         { TestLine(), "Double.5.1234567891234567E-123",                                         "Double.5.12..E-123" },
-#if !JSON_SCHEMA
-        // double - see https://github.com/gregsdennis/json-everything/issues/747#issuecomment-2171905465
-        { TestLine(), "Double.MinValue",                                                        "Double.MinValue" },
-        { TestLine(), "Double.MaxValue",                                                        "Double.MaxValue" },
-        { TestLine(), "Double.float.MinValue",                                                  "Double.Float.MinValue" },
-        { TestLine(), "Double.float.MaxValue",                                                  "Double.Float.MaxValue" },
-        { TestLine(), "Double.BigValue",                                                        "Double.BigValue" },
-        { TestLine(), "Double.SmallValue",                                                      "Double.SmallValue" },
-        { TestLine(), "Double.-3.4028234663852886E+38",                                         "Double.3.40..E38" },
-        { TestLine(), "Double.3.4028234663852886E+38",                                          "Double.-3.40..E38" },
-        // float
-        { TestLine(), "Float.MinValue",                                                         "Float.MinValue" },
-        { TestLine(), "Float.MaxValue",                                                         "Float.MaxValue" },
-        // Half
-        { TestLine(), "Half.NaN",                                                               "Half.NaN" },  // Jason.Schema doesn't like this either
-#endif
         { TestLine(), "Float.Nan",                                                              "Float.Nan" },
         { TestLine(), "Float.NegativeInfinity",                                                 "Float.NegativeInfinity" },
         { TestLine(), "Float.PositiveInfinity",                                                 "Float.PositiveInfinity" },
@@ -300,12 +284,6 @@ public static class ConstantTestData
         // char
         ["Char.'V'"]                                                                            = Expression.Constant('V'),
         // double
-        ["Double.MinValue"]                                                                     = Expression.Constant(double.MinValue),
-        ["Double.MaxValue"]                                                                     = Expression.Constant(double.MaxValue),
-        ["Double.float.MinValue"]                                                               = Expression.Constant((double)float.MinValue),
-        ["Double.float.MaxValue"]                                                               = Expression.Constant((double)float.MaxValue),
-        ["Double.BigValue"]                                                                     = Expression.Constant(1.7976931348623157e308),
-        ["Double.SmallValue"]                                                                   = Expression.Constant(-1.7976931348623157e+308),
         ["Double.Nan"]                                                                          = Expression.Constant(double.NaN),
         ["Double.NegativeInfinity"]                                                             = Expression.Constant(double.NegativeInfinity),
         ["Double.PositiveInfinity"]                                                             = Expression.Constant(double.PositiveInfinity),
@@ -316,11 +294,7 @@ public static class ConstantTestData
         ["Double.E"]                                                                            = Expression.Constant(double.E),
         ["Double.-2.234567891233658E-123"]                                                      = Expression.Constant(-2.234567891233658E-123),
         ["Double.5.1234567891234567E-123"]                                                      = Expression.Constant(5.1234567891234567E-123),
-        ["Double.-3.4028234663852886E+38"]                                                      = Expression.Constant(-3.4028234663852886E+38),
-        ["Double.3.4028234663852886E+38"]                                                       = Expression.Constant(3.4028234663852886E+38),
         // float
-        ["Float.MinValue"]                                                                      = Expression.Constant(float.MinValue),
-        ["Float.MaxValue"]                                                                      = Expression.Constant(float.MaxValue),
         ["Float.Nan"]                                                                           = Expression.Constant(float.NaN),
         ["Float.NegativeInfinity"]                                                              = Expression.Constant(float.NegativeInfinity),
         ["Float.PositiveInfinity"]                                                              = Expression.Constant(float.PositiveInfinity),
@@ -336,7 +310,6 @@ public static class ConstantTestData
         ["Half.MaxValue"]                                                                       = Expression.Constant(Half.MaxValue),
         ["Half.Zero"]                                                                           = Expression.Constant(Half.Zero),
         ["Half.One"]                                                                            = Expression.Constant(Half.One),
-        ["Half.NaN"]                                                                            = Expression.Constant(Half.NaN),
         ["Half.NegativeInfinity"]                                                               = Expression.Constant(Half.NegativeInfinity),
         ["Half.PositiveInfinity"]                                                               = Expression.Constant(Half.PositiveInfinity),
         ["Half.Pi"]                                                                             = Expression.Constant(Half.Pi),

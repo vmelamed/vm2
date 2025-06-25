@@ -1,0 +1,304 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$comment": " () =\u003E () =\u003E new TestMembersInitialized1() {TheOuterIntProperty = 42, Time = new DateTime(1776, 7, 4), InnerProperty = {IntProperty = 23, StringProperty = \u0022inner string\u0022}, ArrayProperty = new [] {4, 5, 6}, ListProperty = {Void Add(vm2.ExpressionSerialization.Shared.Tests.Inner)(new Inner() {IntProperty = 23, StringProperty = \u0022inner string\u0022}), Void Add(vm2.ExpressionSerialization.Shared.Tests.Inner)(new Inner() {IntProperty = 42, StringProperty = \u0022next inner string\u0022})}} ",
+  "expression": {
+    "lambda": {
+      "type": "System.Func\u00601[[vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+      "parameters": [],
+      "body": {
+        "lambda": {
+          "type": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "parameters": [],
+          "body": {
+            "memberInit": {
+              "type": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "new": {
+                "constructor": {
+                  "declaringType": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                  "parameterSpecs": []
+                },
+                "arguments": []
+              },
+              "bindings": [
+                {
+                  "assignmentBinding": {
+                    "member": {
+                      "property": {
+                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "type": "int",
+                        "name": "TheOuterIntProperty"
+                      }
+                    },
+                    "value": {
+                      "constant": {
+                        "int": 42
+                      }
+                    }
+                  }
+                },
+                {
+                  "assignmentBinding": {
+                    "member": {
+                      "property": {
+                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "type": "dateTime",
+                        "name": "Time"
+                      }
+                    },
+                    "value": {
+                      "new": {
+                        "constructor": {
+                          "declaringType": "dateTime",
+                          "parameterSpecs": [
+                            {
+                              "type": "int",
+                              "name": "year"
+                            },
+                            {
+                              "type": "int",
+                              "name": "month"
+                            },
+                            {
+                              "type": "int",
+                              "name": "day"
+                            }
+                          ]
+                        },
+                        "arguments": [
+                          {
+                            "constant": {
+                              "int": 1776
+                            }
+                          },
+                          {
+                            "constant": {
+                              "int": 7
+                            }
+                          },
+                          {
+                            "constant": {
+                              "int": 4
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "memberMemberBinding": {
+                    "member": {
+                      "property": {
+                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "type": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "name": "InnerProperty"
+                      }
+                    },
+                    "bindings": [
+                      {
+                        "member": {
+                          "property": {
+                            "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                            "type": "int",
+                            "name": "IntProperty"
+                          }
+                        },
+                        "value": {
+                          "constant": {
+                            "int": 23
+                          }
+                        }
+                      },
+                      {
+                        "member": {
+                          "property": {
+                            "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                            "type": "string",
+                            "name": "StringProperty"
+                          }
+                        },
+                        "value": {
+                          "constant": {
+                            "string": "inner string"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "assignmentBinding": {
+                    "member": {
+                      "property": {
+                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "type": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                        "name": "ArrayProperty"
+                      }
+                    },
+                    "value": {
+                      "newArrayInit": {
+                        "type": "int",
+                        "elements": [
+                          {
+                            "constant": {
+                              "int": 4
+                            }
+                          },
+                          {
+                            "constant": {
+                              "int": 5
+                            }
+                          },
+                          {
+                            "constant": {
+                              "int": 6
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "memberListBinding": {
+                    "member": {
+                      "property": {
+                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "type": "System.Collections.Generic.List\u00601[[vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                        "name": "ListProperty"
+                      }
+                    },
+                    "initializers": [
+                      {
+                        "method": {
+                          "declaringType": "System.Collections.Generic.List\u00601[[vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                          "type": "void",
+                          "name": "Add",
+                          "parameterSpecs": [
+                            {
+                              "type": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "name": "item"
+                            }
+                          ]
+                        },
+                        "arguments": [
+                          {
+                            "memberInit": {
+                              "type": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "new": {
+                                "constructor": {
+                                  "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                                  "parameterSpecs": []
+                                },
+                                "arguments": []
+                              },
+                              "bindings": [
+                                {
+                                  "assignmentBinding": {
+                                    "member": {
+                                      "property": {
+                                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                                        "type": "int",
+                                        "name": "IntProperty"
+                                      }
+                                    },
+                                    "value": {
+                                      "constant": {
+                                        "int": 23
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "assignmentBinding": {
+                                    "member": {
+                                      "property": {
+                                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                                        "type": "string",
+                                        "name": "StringProperty"
+                                      }
+                                    },
+                                    "value": {
+                                      "constant": {
+                                        "string": "inner string"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "method": {
+                          "declaringType": "System.Collections.Generic.List\u00601[[vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                          "type": "void",
+                          "name": "Add",
+                          "parameterSpecs": [
+                            {
+                              "type": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "name": "item"
+                            }
+                          ]
+                        },
+                        "arguments": [
+                          {
+                            "memberInit": {
+                              "type": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                              "new": {
+                                "constructor": {
+                                  "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                                  "parameterSpecs": []
+                                },
+                                "arguments": []
+                              },
+                              "bindings": [
+                                {
+                                  "assignmentBinding": {
+                                    "member": {
+                                      "property": {
+                                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                                        "type": "int",
+                                        "name": "IntProperty"
+                                      }
+                                    },
+                                    "value": {
+                                      "constant": {
+                                        "int": 42
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "assignmentBinding": {
+                                    "member": {
+                                      "property": {
+                                        "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                                        "type": "string",
+                                        "name": "StringProperty"
+                                      }
+                                    },
+                                    "value": {
+                                      "constant": {
+                                        "string": "next inner string"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
