@@ -1,5 +1,5 @@
 <Project>
-    <PropertyGroup>
+    <PropertyGroup Label="Packages">
         <TargetFramework>net9.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
@@ -7,47 +7,37 @@
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
         <WarningLevel>9999</WarningLevel>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <NoWarn>$(NoWarn);</NoWarn>
+        <WarningsAsErrors />
+        <NoWarn>$(NoWarn);IDE0058;IDE0290;IDE0130;NU1109;NU1507</NoWarn>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)vm2signKey.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
-    <PropertyGroup Label="NuGet">
+    <PropertyGroup Label="NuGetGlobal">
         <IsPackable>true</IsPackable>
-        <Title>vm2 Linq Expression Deep Equals</Title>
         <Company>vm</Company>
         <Product>vm2</Product>
         <ProductName>Val Melamed's packages</ProductName>
         <Authors>Val Melamed</Authors>
-        <Description>Performs &quot;deep equals&quot; of two LINQ Expressions.</Description>
-        <PackageReleaseNotes>Moved to a self-containing project.</PackageReleaseNotes>
-        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionDeepEquals/ExpressionDeepEquals.csproj</PackageProjectUrl>
         <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
-        <PackageTags>C# LINQ expression deep equals</PackageTags>
         <Copyright>Copyright © 2023-2024 vm</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <RepositoryType>git</RepositoryType>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
         <IncludeSymbols>True</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <!--
-    Defining JSON_SCHEMA switches JSON validation to be done with Json.Schema from https://docs.json-everything.net/.
-    It has some problems with numbers and with the huge recursive schema in some more complex cases.
-    It uses System.Text.Json like this project.
-
-    Otherwise JSON validation is done with Newtonsoft but it is paid if you want more than 1000 validations per hour and
-    it is yet another JSON parser.
-    -->
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
+    <PropertyGroup
+        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]test[/\\]'))">
+        <IsTestProject>true</IsTestProject>
+        <IsPackable>false</IsPackable>
+        <NoWarn>
+            $(NoWarn);CA1701;CA1702;CA1707;CA2211;CS0618;CS1572;CS1573;CS1574;CS1591;CS1711;IDE0021;IDE0022;IDE0065;IDE1006;IDE2000;IDE2002;IDE0058;IDE0290
+        </NoWarn>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
-    </PropertyGroup>
+
 </Project>

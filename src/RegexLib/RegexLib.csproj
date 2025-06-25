@@ -1,22 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>vm2.RegexLib</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Description>Useful regular expressions both as strings and lazily initialized System.Text.RegularExpressions.Regex objects.</Description>
-    <PackageReleaseNotes>Initial version of the vm2.RegexLib. Inherits most of the code from vm.</PackageReleaseNotes>
+    <Title>vm2 Frequently used regular expressions</Title>
+    <Description>Useful regular expressions both as strings and `System.Text.RegularExpressions.GeneratedRegexAttribute` methods.</Description>
+    <PackageReleaseNotes>Migrated from Lazy compiled Regex objects to GeneratedRegexAttribute.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/vmelamed/vm2/tree/main/src/RegexLib</PackageProjectUrl>
     <PackageTags>C# regex regular expression</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Update="README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-    
 </Project>

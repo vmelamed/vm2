@@ -3,20 +3,15 @@
     <PropertyGroup>
         <RootNamespace>vm2.ExpressionSerialization.Xml</RootNamespace>
     </PropertyGroup>
-    
+
     <PropertyGroup Label="NuGet">
-        <Description>Serialization/deserialization of LINQ Expressions to and from XML format.</Description>
-        <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.</PackageReleaseNotes>
+        <Title>vm2 XML serializer for LINQ expressions.</Title>
+        <Description>Serialization/deserialization of LINQ Expressions to and from documents in XML format.</Description>
+        <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.Xml.</PackageReleaseNotes>
         <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerialization/ExpressionSerialization.csproj</PackageProjectUrl>
         <PackageTags>C# LINQ expression serialize deserialize XML</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Update="README.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="System.Collections" />
@@ -30,5 +25,5 @@
         <ProjectReference Include="..\ExpressionSerialization.Shared\ExpressionSerialization.Shared.csproj" />
         <ProjectReference Include="..\Threading\Threading.csproj" />
     </ItemGroup>
-    
+
 </Project>

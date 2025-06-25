@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- default(ClassDataContract1) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <default
+        type="vm2.ExpressionSerialization.Shared.Tests.ClassDataContract1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+        <!--  vm2.ExpressionSerialization.Shared.Tests.ClassDataContract1  -->
+    </default>
+</expression>

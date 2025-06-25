@@ -3,34 +3,14 @@
     <PropertyGroup>
         <RootNamespace>vm2.ExpressionSerialization.Json</RootNamespace>
     </PropertyGroup>
-    
+
     <PropertyGroup Label="NuGet">
-        <Description>Serialization/deserialization of LINQ Expressions to and from JSON format.</Description>
-        <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.</PackageReleaseNotes>
+        <Title>vm2 JSON serializer for LINQ expressions.</Title>
+        <Description>Serialization/deserialization of LINQ Expressions to and from documents in JSON format.</Description>
+        <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.Json.</PackageReleaseNotes>
         <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerialization.Json/ExpressionSerialization.Json.csproj</PackageProjectUrl>
         <PackageTags>C# LINQ expression serialize deserialize JSON</PackageTags>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <None Update="README.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
-
-    <!--
-    Defining JSON_SCHEMA switches JSON validation to be done with Json.Schema from https://docs.json-everything.net/.
-    It has some problems with numbers and with the huge recursive schema in some more complex cases.
-    It uses System.Text.Json like this project.
-    
-    Otherwise JSON validation is done with Newtonsoft but it is paid if you want more than 1000 validations per hour and
-    it is yet another JSON parser.
-    -->
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -41,6 +21,22 @@
         <PackageReference Include="System.ServiceModel.Primitives" />
         <PackageReference Include="System.Text.Json" />
     </ItemGroup>
+
+    <!--
+    Defining JSON_SCHEMA switches JSON validation to be done with Json.Schema from https://docs.json-everything.net/.
+    It has some problems with numbers and with the huge recursive schema in some more complex cases.
+    It uses System.Text.Json like this project.
+
+    Otherwise JSON validation is done with Newtonsoft but it is
+    1. paid if you want more than 1000 validations per hour and
+    2. yet another JSON parser.
+    -->
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="JsonSchema.Net" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*JSON_SCHEMA(;.*)*$'))" />

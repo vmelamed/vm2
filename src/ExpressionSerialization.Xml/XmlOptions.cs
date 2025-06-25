@@ -34,7 +34,7 @@ public partial class XmlOptions : DocumentOptions
     /// <summary>
     /// The schemas lock synchronizes the <see cref="Schemas"/> collection.
     /// </summary>
-    static ReaderWriterLockSlim _schemasLock = new(LockRecursionPolicy.SupportsRecursion);
+    static readonly ReaderWriterLockSlim _schemasLock = new(LockRecursionPolicy.SupportsRecursion);
 
     /// <summary>
     /// Gets the schemas.
@@ -47,8 +47,9 @@ public partial class XmlOptions : DocumentOptions
     /// </summary>
     public static void ResetSchemas()
     {
-        using (_schemasLock.WriterLock())
-            Schemas = new();
+        using var _ = _schemasLock.WriterLock();
+
+        Schemas = new();
     }
 
     /// <summary>
@@ -58,14 +59,13 @@ public partial class XmlOptions : DocumentOptions
     /// <param name="url">The location of the schema file.</param>
     public static void SetSchemaLocation(string schemaUri, string? url)
     {
-        using (_schemasLock.WriterLock())
-        {
-            if (Schemas.Contains(schemaUri))
-                return;
+        using var _ = _schemasLock.WriterLock();
 
-            using var reader = new XmlTextReader(url ?? schemaUri);
-            Schemas.Add(schemaUri, reader);
-        }
+        if (Schemas.Contains(schemaUri))
+            return;
+
+        using var reader = new XmlTextReader(url ?? schemaUri);
+        Schemas.Add(schemaUri, reader);
     }
 
     /// <summary>
@@ -75,19 +75,18 @@ public partial class XmlOptions : DocumentOptions
     /// <param name="reset">if set to <c>true</c> the method will first reset the schema collection.</param>
     public static void SetSchemasLocations(IEnumerable<KeyValuePair<string, string?>> schemaUrisUrls, bool reset = false)
     {
-        using (_schemasLock.WriterLock())
+        using var _ = _schemasLock.WriterLock();
+
+        if (reset)
+            Schemas = new();
+
+        foreach (var (schemaUri, url) in schemaUrisUrls)
         {
-            if (reset)
-                Schemas = new();
+            if (Schemas.Contains(schemaUri))
+                continue;
 
-            foreach (var (schemaUri, url) in schemaUrisUrls)
-            {
-                if (Schemas.Contains(schemaUri))
-                    continue;
-
-                using var reader = new XmlTextReader(url ?? schemaUri);
-                Schemas.Add(schemaUri, reader);
-            }
+            using var reader = new XmlTextReader(url ?? schemaUri);
+            Schemas.Add(schemaUri, reader);
         }
     }
 
@@ -113,10 +112,9 @@ public partial class XmlOptions : DocumentOptions
                 "UTF-8" => "utf-8",
                 "UTF-16" => "utf-16",
                 "UTF-32" => "utf-32",
-                "ISO-8859-1" or
-                "LATIN1" => "iso-8859-1",
+                "ISO-8859-1" or "LATIN1" => "iso-8859-1",
                 _ => throw new NotSupportedException($@"The encoding ""{CharacterEncoding}"" is not supported." +
-                                    @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
+                                                        @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
             };
 
             if (Change(_characterEncoding != encoding))
@@ -138,7 +136,7 @@ public partial class XmlOptions : DocumentOptions
     }
 
     /// <summary>
-    /// Gets or sets a value indicating the endianness of the transformed document.
+    /// Gets or sets a value indicating the endian-ness of the transformed document.
     /// </summary>
     public bool BigEndian
     {
@@ -192,12 +190,13 @@ public partial class XmlOptions : DocumentOptions
     /// <summary>
     /// Determines whether the expressions schemaUri <see cref="Exs"/> was added.
     /// </summary>
-    internal override bool HasExpressionSchema
+    public override bool HasExpressionSchema
     {
         get
         {
-            using (_schemasLock.ReaderLock())
-                return Schemas.Contains(Exs);
+            using var _ = _schemasLock.ReaderLock();
+
+            return Schemas.Contains(Exs);
         }
     }
 
@@ -212,8 +211,9 @@ public partial class XmlOptions : DocumentOptions
 
         List<XmlSchemaException> exceptions = [];
 
-        using (_schemasLock.ReaderLock())
-            document.Validate(Schemas, (_, e) => exceptions.Add(e.Exception));
+        using var _ = _schemasLock.ReaderLock();
+
+        document.Validate(Schemas, (_, e) => exceptions.Add(e.Exception));
 
         if (exceptions.Count is not 0)
             throw new SchemaValidationErrorsException(
@@ -233,15 +233,14 @@ public partial class XmlOptions : DocumentOptions
         var exceptions = new List<XmlSchemaException>();
         XmlSchemaObject? schema = null;
 
-        using (_schemasLock.ReaderLock())
-        {
-            schema = Schemas.GlobalElements[new XmlQualifiedName(Vocabulary.Expression, Exs)];
+        using var _ = _schemasLock.ReaderLock();
 
-            if (schema is null)
-                throw new SerializationException($"Could not find schema for element {new XmlQualifiedName(Vocabulary.Expression, Exs)}.");
+        schema = Schemas.GlobalElements[new XmlQualifiedName(Vocabulary.Expression, Exs)];
 
-            element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
-        }
+        if (schema is null)
+            throw new SerializationException($"Could not find schema for element {new XmlQualifiedName(Vocabulary.Expression, Exs)}.");
+
+        element.Validate(schema, Schemas, (_, e) => exceptions.Add(e.Exception));
 
         if (exceptions.Count is not 0)
             throw new SchemaValidationErrorsException(
@@ -253,7 +252,7 @@ public partial class XmlOptions : DocumentOptions
     /// Gets the set  XML document encoding.
     /// </summary>
     /// <returns>The document encoding.</returns>
-    internal Encoding Encoding
+    public Encoding Encoding
         => CharacterEncoding switch {
             "ascii" => Encoding.ASCII,
             "utf-8" => new UTF8Encoding(ByteOrderMark, true),
@@ -315,14 +314,17 @@ public partial class XmlOptions : DocumentOptions
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>The comment as System.Nullable&lt;XComment&gt;.</returns>
-    internal XComment? TypeComment(Type type)
+    public XComment? TypeComment(Type type)
         => AddComments &&
            TypeNames != TypeNameConventions.AssemblyQualifiedName &&
            (!type.IsBasicType() && type != typeof(object) || type.IsEnum)
                 ? Comment($" {Transform.TypeName(type, TypeNames)} ")
                 : null;
 
-    internal XmlWriterSettings XmlWriterSettings
+    /// <summary>
+    /// Gets the XML writer settings.
+    /// </summary>
+    public XmlWriterSettings XmlWriterSettings
         => _xmlWriterSettings is not null && !Changed
                 ? _xmlWriterSettings
                 : _xmlWriterSettings = new() {

@@ -39,13 +39,18 @@ public readonly struct Option<T> : IEquatable<NoneType>, IEquatable<Option<T>>
     /// The function to execute if the current instance is <see cref="NoneType"/>.
     /// </param>
     /// <returns>R.</returns>
-    public readonly R Match<R>(Func<T, R> Some, Func<R> None) => _isSome ? Some(_value!) : None();
+    public readonly R Match<R>(Func<T, R> Some, Func<R> None)
+        => _isSome ? Some(_value!) : None();
 
     /// <summary>
-    /// Using the function <paramref name="f"/> generates a new instance of type <typeparamref name="R"/>
-    /// based on the internal state of this.
-    /// Map : (C{T}, (T → R)) → C{R}
+    /// Using the function <paramref name="f"/> generates a new instance of type <typeparamref name="R"/> based on the internal
+    /// state of this instance.
     /// <para>
+    /// More generic definition would be that: if <c>C{T}</c> is a collection of values of type <typeparamref name="T"/>,
+    /// <c>Map</c> returns a collection of  values of type <typeparamref name="R"/>:
+    /// <code>
+    /// Map : (C{T}, (T → R)) → C{R}
+    /// </code>
     /// <see cref="Map{R}(Func{T, R})"/> makes <typeparamref name="T"/> a <i><b>functor</b></i>.
     /// </para>
     /// </summary>
@@ -58,12 +63,23 @@ public readonly struct Option<T> : IEquatable<NoneType>, IEquatable<Option<T>>
                 Some: t => Some(f(t)));
 
     /// <summary>
-    /// Similar to <see cref="Map{R}(Func{T, R})"/> but here the mapping function <paramref name="f"/> takes
-    /// an <see cref="Option{T}"/> argument and returns (maps it to) an <see cref="Option{R}"/> value.
+    /// Applies the <paramref name="action"/> (side effects!) to the value in this option.
+    /// </summary>
+    /// <param name="action">The action that exhibits side effects.</param>
+    /// <returns>Option&lt;Unit&gt;.</returns>
+    public Option<Unit> ForEach(Action<T> action)
+        => Map(action.ToFunc());
+
+    /// <summary>
+    /// Similar to <see cref="Map{R}(Func{T, R})"/> but here the mapping function <paramref name="f"/> takes an
+    /// <see cref="Option{T}"/> argument and returns (maps it to) an <see cref="Option{R}"/> value.
     /// </summary>
     /// <typeparam name="R"></typeparam>
     /// <param name="f">The f.</param>
     /// <returns>Option&lt;R&gt;.</returns>
+    /// <remarks>
+    /// A series of <see cref="Bind{R}(Func{T, Option{R}})"/> functions can be chained.
+    /// </remarks>
     public Option<R> Bind<R>(Func<T, Option<R>> f)
         => Match(
             None: () => None,
@@ -78,14 +94,6 @@ public readonly struct Option<T> : IEquatable<NoneType>, IEquatable<Option<T>>
         if (_isSome)
             yield return _value!;
     }
-
-    /// <summary>
-    /// Applies the <paramref name="action"/> to the value in this option.
-    /// </summary>
-    /// <param name="action">The action that exhibits side effects.</param>
-    /// <returns>Option&lt;Unit&gt;.</returns>
-    public Option<Unit> ForEach(Action<T> action)
-        => Map(action.ToFunc());
 
     #region IEquatable<Option<T>>
     /// <summary>

@@ -5,10 +5,12 @@
     </PropertyGroup>
 
     <PropertyGroup Label="NuGet">
+        <Title>vm2 Linq Expression Deep Equals</Title>
         <Description>Performs &quot;deep equals&quot; of two LINQ Expressions.</Description>
         <PackageReleaseNotes>Moved to a self-containing project.</PackageReleaseNotes>
         <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionDeepEquals/ExpressionDeepEquals.csproj</PackageProjectUrl>
         <PackageTags>C# LINQ expression deep equals</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
 </Project>

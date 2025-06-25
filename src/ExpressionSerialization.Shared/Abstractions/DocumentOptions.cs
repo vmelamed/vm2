@@ -135,7 +135,7 @@ public abstract class DocumentOptions
     /// Determines whether the expression schema was added.
     /// </summary>
     /// <returns><c>true</c> if an expressions schema is present; otherwise, <c>false</c>.</returns>
-    internal abstract bool HasExpressionSchema { get; }
+    public abstract bool HasExpressionSchema { get; }
 
     /// <summary>
     /// Transforms the <paramref name="type"/> to a readable string according to the <see cref="DocumentOptions.TypeNames"/> convention.

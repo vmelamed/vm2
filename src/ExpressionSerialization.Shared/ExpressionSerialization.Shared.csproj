@@ -3,20 +3,11 @@
     <PropertyGroup>
         <RootNamespace>vm2.ExpressionSerialization.Shared</RootNamespace>
     </PropertyGroup>
-    
-    <PropertyGroup Label="NuGet">
-        <Description>Serialization/deserialization of LINQ Expressions to and from XML and JSON formats.</Description>
-        <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.</PackageReleaseNotes>
-        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerialization/ExpressionSerialization.csproj</PackageProjectUrl>
-        <PackageTags>C# LINQ expression serialize deserialize XML JSON</PackageTags>
-    </PropertyGroup>
 
-    <ItemGroup>
-        <None Update="README.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
+    <PropertyGroup Label="NuGet">
+        <Title>vm2 Shared components between the expression serializers for XML and JSON.</Title>
+        <Description>Serialization/deserialization of LINQ Expressions to and from XML and JSON formats.</Description>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="System.Collections" />
@@ -25,5 +16,5 @@
         <PackageReference Include="System.Security.Cryptography.Pkcs" />
         <PackageReference Include="System.ServiceModel.Primitives" />
     </ItemGroup>
-    
+
 </Project>

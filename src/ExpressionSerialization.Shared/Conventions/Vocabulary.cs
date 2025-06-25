@@ -8,8 +8,8 @@
 /// </summary>
 public static class Vocabulary
 {
-    // The following constants represent the names (hence the prefix 'N') of basic types that are common for all text
-    // documents that we transform into or from, e.g. XML (local names), JSON, YAML, etc.).
+    // The following constants represent the names of basic types that are common for all text documents that we transform into
+    // or from, e.g. XML (local names), JSON, YAML, etc.).
     public const string Void                    = "void";   // used only for method return values!
 
     public const string Boolean                 = "boolean";

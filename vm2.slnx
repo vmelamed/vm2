@@ -1,0 +1,37 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+    <File Path="vm2signKey.snk" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ExpressionDeepEquals/ExpressionDeepEquals.csproj" />
+    <Project Path="src/RegexLib/RegexLib.csproj" />
+    <Project Path="src/Threading/Threading.csproj" />
+  </Folder>
+  <Folder Name="/src/ExpressionSerialization/">
+    <Project Path="src/ExpressionSerialization.Json/ExpressionSerialization.Json.csproj" />
+    <Project Path="src/ExpressionSerialization.Shared/ExpressionSerialization.Shared.csproj" />
+    <Project Path="src/ExpressionSerialization.Xml/ExpressionSerialization.Xml.csproj" />
+  </Folder>
+  <Folder Name="/src/Functional/">
+    <Project Path="src/Functional/src/Primitives/Primitives.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/ExpressionDeepEquals.Tests/ExpressionDeepEquals.Tests.csproj" />
+    <Project Path="test/RegexLibTests/RegexLibTests.csproj" />
+    <Project Path="test/TestUtilities/TestUtilities.csproj" />
+    <Project Path="test/ThreadingTests/ThreadingTests.csproj" />
+  </Folder>
+  <Folder Name="/test/ExpressionSerialization.Tests/">
+    <Project Path="test/ExpressionSerialization.Tests/ExpressionSerialization.Json.Tests/ExpressionSerialization.Json.Tests.csproj" />
+    <Project Path="test/ExpressionSerialization.Tests/ExpressionSerialization.Shared.Tests/ExpressionSerialization.Shared.Tests.csproj" />
+    <Project Path="test/ExpressionSerialization.Tests/ExpressionSerialization.Xml.Tests/ExpressionSerialization.Xml.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Functional/">
+    <Project Path="test/Functional/PrimitivesTests/PrimitivesTests.csproj" />
+  </Folder>
+</Solution>

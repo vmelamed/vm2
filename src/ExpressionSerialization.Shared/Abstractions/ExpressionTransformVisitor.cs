@@ -11,8 +11,8 @@
 public abstract class ExpressionTransformVisitor<TElement> : ExpressionVisitor
 {
     /// <summary>
-    /// The intermediate results (XElements) are pushed here to be popped out and placed later as operands (sub-elements)
-    /// into the parent XML element representing the parent expression.
+    /// The intermediate results (XElement-s or JElement-s) are pushed here to be popped out and placed later as operands
+    /// (sub-elements) into the parent XML element representing the parent expression.
     /// E.g. the sequence of operations while transforming "a+b+c" may look like this:
     /// <para>
     /// push Element(b)

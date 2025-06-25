@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <RootNamespace>vm2.RegexLibTests</RootNamespace>
-        <NoWarn>CA2211</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,7 +19,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\..\src\RegexLib\RegexLib.csproj" />
         <ProjectReference Include="..\TestUtilities\TestUtilities.csproj" />

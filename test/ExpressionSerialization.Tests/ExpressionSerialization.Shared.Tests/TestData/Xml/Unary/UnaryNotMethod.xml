@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- b => Not(b) -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <lambda
+        type="vm2.ExpressionSerialization.Shared.Tests.B, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+        <parameters>
+            <parameter
+                type="vm2.ExpressionSerialization.Shared.Tests.B, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                id="P1"
+                name="b" />
+        </parameters>
+        <body>
+            <not
+                type="vm2.ExpressionSerialization.Shared.Tests.B, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                <parameter
+                    type="vm2.ExpressionSerialization.Shared.Tests.B, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                    id="P1"
+                    name="b" />
+                <method
+                    declaringType="vm2.ExpressionSerialization.Shared.Tests.B, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                    static="true"
+                    type="vm2.ExpressionSerialization.Shared.Tests.B, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                    name="op_LogicalNot">
+                    <parameterSpecs>
+                        <parameterSpec
+                            type="vm2.ExpressionSerialization.Shared.Tests.B, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                            name="x" />
+                    </parameterSpecs>
+                </method>
+            </not>
+        </body>
+    </lambda>
+</expression>

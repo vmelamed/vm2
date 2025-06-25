@@ -20,7 +20,7 @@ public partial class JsonOptions : DocumentOptions
 
     static readonly JsonStringEnumConverter _jsonStringEnumConverter = new();
 
-    ReaderWriterLockSlim _syncSchema = new(LockRecursionPolicy.SupportsRecursion);
+    readonly ReaderWriterLockSlim _syncSchema = new(LockRecursionPolicy.SupportsRecursion);
     bool _allowTrailingCommas = true;
     JsonSerializerOptions? _jsonSerializerOptions;
 
@@ -42,12 +42,13 @@ public partial class JsonOptions : DocumentOptions
     /// Determines whether the expressions schemaUri <see cref="JsonOptions.Exs"/> was added.
     /// </summary>
     /// <returns><c>true</c> if [has expressions schemaUri] [the specified options]; otherwise, <c>false</c>.</returns>
-    internal override bool HasExpressionSchema
+    public override bool HasExpressionSchema
     {
         get
         {
-            using (_syncSchema.ReaderLock())
-                return _schema is not null;
+            using var _ = _syncSchema.ReaderLock();
+
+            return _schema is not null;
         }
     }
 
@@ -128,8 +129,9 @@ public partial class JsonOptions : DocumentOptions
     /// <returns>A Task representing the asynchronous operation.</returns>Load
     public void LoadSchema(string schemaFilePath)
     {
-        using (_syncSchema.WriterLock())
-            _schema = JsonSchema.FromFile(schemaFilePath);
+        using var _ = _syncSchema.WriterLock();
+
+        _schema = JsonSchema.FromFile(schemaFilePath);
     }
 
     /// <summary>
