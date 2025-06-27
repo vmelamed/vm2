@@ -1,5 +1,25 @@
 {
+    "json.schemas": [
+        {
+            "name": "Linq Expressions Serialization",
+            "description": "Schema for LINQ Expression serialization JSON files",
+            "url": "file:///home/valo/repos/vm2/src/ExpressionSerialization.Json/Schema/Linq.Expressions.Serialization.json",
+            "fileMatch": [
+                "**/Json/**/*.json"
+            ]
+        }
+    ],
     "cSpell.words": [
-        "snupkg"
+        "abempty",
+        "cbracket",
+        "cparenth",
+        "fsign",
+        "hier",
+        "iabs",
+        "Ipvf",
+        "isign",
+        "noscheme",
+        "obracket",
+        "oparenth"
     ]
 }

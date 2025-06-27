@@ -1,5 +1,5 @@
 {
-  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$schema": "urn:schemas-vm-com:Linq-Expressions-Serialization-Json",
   "$comment": " b =\u003E IIF(b, 1, 3) ",
   "expression": {
     "lambda": {

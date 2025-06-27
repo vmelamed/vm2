@@ -1,5 +1,5 @@
 {
-  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$schema": "urn:schemas-vm-com:Linq-Expressions-Serialization-Json",
   "$comment": " m =\u003E IIF((ArrayLength(m.ArrayProperty) \u003E 0), m.ArrayProperty[(ArrayLength(m.ArrayProperty) - 1)], -1) ",
   "expression": {
     "lambda": {

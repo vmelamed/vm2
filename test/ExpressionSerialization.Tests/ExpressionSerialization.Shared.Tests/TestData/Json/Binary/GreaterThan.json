@@ -1,5 +1,5 @@
 {
-  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$schema": "urn:schemas-vm-com:Linq-Expressions-Serialization-Json",
   "$comment": " (a, b) =\u003E (a \u003E b) ",
   "expression": {
     "lambda": {

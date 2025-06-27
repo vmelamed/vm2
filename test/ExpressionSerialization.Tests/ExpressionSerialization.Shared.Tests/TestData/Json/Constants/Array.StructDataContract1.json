@@ -1,5 +1,5 @@
 {
-  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$schema": "urn:schemas-vm-com:Linq-Expressions-Serialization-Json",
   "$comment": " value(vm2.ExpressionSerialization.Shared.Tests.StructDataContract1[]) ",
   "expression": {
     "constant": {

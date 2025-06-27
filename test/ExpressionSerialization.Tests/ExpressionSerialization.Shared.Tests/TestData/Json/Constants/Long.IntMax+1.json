@@ -1,5 +1,5 @@
 {
-  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$schema": "urn:schemas-vm-com:Linq-Expressions-Serialization-Json",
   "$comment": " 9007199254740993 ",
   "expression": {
     "constant": {

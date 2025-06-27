@@ -9,7 +9,7 @@ public class TransformLoadDocumentTest(JsonTestsFixture fixture, ITestOutputHelp
 
     void ResetReloadSchemas(bool loadSchemas, ValidateExpressionDocuments validate)
         => _fixture.Options = loadSchemas
-                                ? new(Path.Combine(_fixture.SchemasPath, "Linq.Expressions.Serialization.Json")) {
+                                ? new(Path.Combine(_fixture.SchemasPath, "Linq.Expressions.Serialization.json")) {
                                     Indent = true,
                                     IndentSize = 4,
                                     AddComments = true,

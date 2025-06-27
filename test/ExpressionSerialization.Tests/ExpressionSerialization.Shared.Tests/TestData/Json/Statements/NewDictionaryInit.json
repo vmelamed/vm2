@@ -1,5 +1,5 @@
 {
-  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$schema": "urn:schemas-vm-com:Linq-Expressions-Serialization-Json",
   "$comment": " () =\u003E new Dictionary\u00602() {Void Add(Int32, System.String)(1, \u0022one\u0022), Void Add(Int32, System.String)(2, \u0022two\u0022), Void Add(Int32, System.String)(3, \u0022three\u0022)} ",
   "expression": {
     "lambda": {

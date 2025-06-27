@@ -18,7 +18,7 @@ public partial class JsonOptions : DocumentOptions
     /// <summary>
     /// The expression transformation JSON schemaUri
     /// </summary>
-    public const string Exs = "urn:schemas-vm-com:Linq.Expressions.Serialization.Json";
+    public const string Exs = "urn:schemas-vm-com:Linq-Expressions-Serialization-Json";
 
     static readonly JsonStringEnumConverter _jsonStringEnumConverter = new();
 

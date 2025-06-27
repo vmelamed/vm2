@@ -1,5 +1,5 @@
 {
-  "$schema": "urn:schemas-vm-com:Linq.Expressions.Serialization.Json",
+  "$schema": "urn:schemas-vm-com:Linq-Expressions-Serialization-Json",
   "$comment": " () =\u003E new [] {\u0022aaa\u0022, \u0022bbb\u0022, \u0022ccc\u0022} ",
   "expression": {
     "lambda": {
