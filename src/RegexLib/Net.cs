@@ -94,7 +94,7 @@ public static partial class Net
     public const string Ipv4AddressRegex = $@"^{Ipv4AddressRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv4 address.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents an IPv4 address.
     /// <para>BNF: <c>ipv4 := dec-octet.dec-octet.dec-octet.dec-octet</c></para>
     /// <para>Named groups: <see cref="Ipv4Gr"/>.</para>
     /// </summary>
@@ -186,7 +186,7 @@ public static partial class Net
     public const string Ipv6NzAddressRegex = $@"^{Ipv6NzAddressRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address without a zone/scope ID.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents an IPv6 address without a zone/scope ID.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     [GeneratedRegex(Ipv6NzAddressRegex, Common.Options)]
@@ -216,7 +216,7 @@ public static partial class Net
     public const string Ipv6AddressRegex = $@"^(?<{Ipv6Gr}> {Ipv6NzAddressRex} (?: % {Ipv6ZoneIdRex} )? )$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv6 address with a zone ID.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents an IPv6 address with a zone ID.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     [GeneratedRegex(Ipv6AddressRegex, Common.Options)]
@@ -252,7 +252,7 @@ public static partial class Net
     public const string IpvFutureAddressRegex = $"^{IpvFutureAddressRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IPv.future address.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents an IPv.future address.
     /// <para>Named groups: <see cref="Ipv6NzGr"/>.</para>
     /// </summary>
     [GeneratedRegex(IpvFutureAddressRegex, Common.Options)]
@@ -397,7 +397,7 @@ public static partial class Net
     public const string PortRegex = $@"^{PortRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IP port.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents an IP port.
     /// <para>BNF: <c>port := decimal-num</c> in the range [0-65535]</para>
     /// <para>Named groups: <see cref="PortGr"/>.</para>
     /// </summary>
@@ -433,7 +433,7 @@ public static partial class Net
     public const string EndpointRegex = $"^{EndpointRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a TCP endpoint.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a TCP endpoint.
     /// <para>BNF: <c>endpoint := host [: port]</c></para>
     /// <para>Named groups: <see cref="HostGr"/>, <see cref="PortGr"/>.</para>
     /// </summary>

@@ -39,7 +39,7 @@ public static partial class WindowsPathname
     public const string DiskFilenameRegex = $"^{DiskFilenameRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string representing file or directory name.
+    /// Gets a <see cref="Regex"/> object that matches a string representing file or directory name.
     /// </summary>
     [GeneratedRegex(DiskFilenameRegex, Common.Options)]
     public static partial Regex DiskFilename();
@@ -102,7 +102,7 @@ public static partial class WindowsPathname
     public const string PathnameRegex = $"^{PathnameRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a file path.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a file path.
     /// </summary>
     [GeneratedRegex(PathnameRegex, Common.Options)]
     public static partial Regex Pathname();

@@ -17,19 +17,25 @@ public static partial class Uris
     /// Matches a percent encoded character.
     /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
     /// </summary>
-    public const string PctEncodedChar = $"(?:%{Numerical.HexDigitRex}{Numerical.HexDigitRex})";
+    public const string PctEncodedChar = $"%{Numerical.HexDigitRex}{Numerical.HexDigitRex}";
+
+    /// <summary>
+    /// Matches a percent encoded character.
+    /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
+    /// </summary>
+    public const string PctEncodedCharRex = $"(?:{PctEncodedChar})";
 
     /// <summary>
     /// The URI general delimiters.
     /// <para>BNF: <c>gen-delims  = ":" | "/" | "?" | "#" | "[" | "]" | "@"</c></para>
     /// </summary>
-    const string genDelimiters = @":/\?#\[\]@";
+    const string genDelimiters = @":/\?\#\[\]@";
 
     /// <summary>
     /// The sub-delimiters without the equals and ampersand characters.
     /// <para>BNF: <c>sub-delims-no-eq-no-amp = "!" | "$" | "'" | "(" | ")" | "*" | "+" | "," | ";"</c></para>
     /// </summary>
-    const string subDelimiterNoEqAmpChars = @"!',;\$\(\)\*\+";
+    const string subDelimiterNoEqAmpChars = @"!\$'\(\)\*\+,;";
 
     /// <summary>
     /// The sub-delimiters.
@@ -49,7 +55,7 @@ public static partial class Uris
     /// The characters that are allowed in a URI but do not have a reserved purpose.
     /// <para>BNF: <c>unreserved  = ALPHA | DIGIT | "-" | "." | "_" | "~"</c></para>
     /// </summary>
-    public const string UnreservedChars = $@"\-\.{Ascii.AlphaNumericChars}_~";
+    public const string UnreservedChars = $@"{Ascii.AlphaNumericChars}\-\._~";
 
     /// <summary>
     /// The unreserved or sub-delimiter chars
@@ -97,7 +103,7 @@ public static partial class Uris
     public const string SchemeRegex = $@"^{SchemeRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI scheme.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI scheme.
     /// <para>BNF: <c>scheme := alpha 1*[ alpha | digit | + | - | . ]</c></para>
     /// </summary>
     [GeneratedRegex(SchemeRegex, Common.Options)]
@@ -114,7 +120,7 @@ public static partial class Uris
     /// Matches reg-name in RFC 3986
     /// <para>BNF: <c>registered_name = *[ unreserved | sub-delimiters | pct-encoded ]</c> - yes, it can be empty, see the RFC</para>
     /// </summary>
-    const string generalNameRex = $@"(?<{IpGenNameGr}> (?: {unreservedOrSubDelimiterRex} | {PctEncodedChar} )+ )";
+    const string generalNameRex = $@"(?<{IpGenNameGr}> (?: {unreservedOrSubDelimiterRex} | {PctEncodedCharRex} )+ )";
 
     /// <summary>
     /// Matches a registered name.
@@ -157,7 +163,7 @@ public static partial class Uris
     public const string HostRegex = $@"^{HostRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a host.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
     /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6NzGr"/>,
@@ -195,7 +201,7 @@ public static partial class Uris
     public const string EndpointRegex = $"^{EndpointRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents an IP endpoint.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents an IP endpoint.
     /// <para>BNF: <c>endpoint := host [: port]</c></para>
     /// <para>Named groups: <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
     /// </summary>
@@ -242,9 +248,9 @@ public static partial class Uris
     /// </remarks>
     public const string UserInfoRex = $"""
                                        (?:
-                                         (?<{UserNameGr}> (?:{unreservedOrSubDelimiterRex} | {PctEncodedChar})+ )
+                                         (?<{UserNameGr}> (?:{unreservedOrSubDelimiterRex} | {PctEncodedCharRex})+ )
                                          :?
-                                         (?<{AccessGr}>   (?:{unreservedOrSubDelimiterRex} | {PctEncodedChar})* )
+                                         (?<{AccessGr}>   (?:{unreservedOrSubDelimiterRex} | {PctEncodedCharRex})* )
                                        )
                                        """;
 
@@ -283,7 +289,7 @@ public static partial class Uris
     const string pathNcChars = $"{UnreservedOrSubDelimiterChars}@";
 
     /// <summary>
-    /// Matches a character from a path (without the colon char).
+    /// Matches a character from a path no colon char (NC).
     /// <para>BNF: <c>path-nc-chars := unreserved | sub-delimiters | @</c></para>
     /// </summary>
     /// <remarks>
@@ -292,16 +298,16 @@ public static partial class Uris
     const string pathNcChar = $"[{UnreservedOrSubDelimiterChars}@]";
 
     /// <summary>
-    /// Matches a character from a path (without the colon char).
+    /// Matches a character from a path no colon char (NC).
     /// <para>BNF: <c>path-nc-char := unreserved | sub-delimiters | @ | pct-encoded</c></para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathNcCharRex = $"(?: {pathNcChar} | {PctEncodedChar} )";
+    const string pathNcCharRex = $"(?: {pathNcChar} | {PctEncodedCharRex} )";
 
     /// <summary>
-    /// Matches non-zero length path segment without colon
+    /// Matches non-zero length (NZ) path segment no colon (NC)
     /// <para>BNF: <c>segment-nz-nc := 1*( unreserved | sub-delimiters | @ | pct-encoded )</c></para>
     /// </summary>
     /// <remarks>
@@ -316,7 +322,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathChars = $"{pathNcChars}:";
+    public const string PathChars = $"{pathNcChars}:";
 
     /// <summary>
     /// Path characters (incl. the colon char).
@@ -325,16 +331,25 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathChar = $"[{pathChars}]";
+    public const string PathChar = $"[{PathChars}]";
 
     /// <summary>
     /// Matches a path character (incl. the colon char).
-    /// <para>BNF: <c>path-nc-char := path-nc-char | : | pct-encoded</c></para>
+    /// <para>BNF: <c>pchar := path-nc-char | : | pct-encoded</c></para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string PathCharRex = $"(?: {pathChar} | {PctEncodedChar} )";
+    public const string PChar = $"{PathChar} | {PctEncodedChar}";
+
+    /// <summary>
+    /// Matches a path character (incl. the colon char).
+    /// <para>BNF: <c>pchar := path-nc-char | : | pct-encoded</c></para>
+    /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
+    public const string PCharRex = $"(?: {PChar} )";
 
     /// <summary>
     /// Matches non-zero length path segment incl. colon
@@ -343,7 +358,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathSegmentNzRex = $"{PathCharRex}+";
+    const string pathSegmentNzRex = $"{PCharRex}+";
 
     /// <summary>
     /// Matches path segment incl. colon (can be empty)
@@ -352,7 +367,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathSegmentRex = $"{PathCharRex}*";
+    const string pathSegmentRex = $"{PCharRex}*";
 
     /// <summary>
     /// The name of a matching group representing a URI path
@@ -374,7 +389,7 @@ public static partial class Uris
     public const string PathNoSchemeGr = "pathNoScheme";
 
     /// <summary>
-    /// Matches a path with no scheme.
+    /// Matches a path with no scheme (no colon).
     /// <para>BNF: <c>path-no-scheme := segment-nz-nc *( / segment )</c></para>
     /// </summary>
     /// <remarks>
@@ -453,7 +468,7 @@ public static partial class Uris
     public const string PathRegex = $"^{pathRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI's path.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI's path.
     /// <para>BNF:
     /// <code>
     /// path = path-abs-empty  | ; begins with / or is empty
@@ -474,7 +489,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string queryChars = $@"{pathChars}/\?";
+    const string queryChars = $@"{PathChars}/\?";
 
     /// <summary>
     /// Matches a generic query char.
@@ -483,7 +498,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string queryCharRex = $"(?: [{queryChars}] | {PctEncodedChar} )";
+    const string queryCharRex = $"(?: [{queryChars}] | {PctEncodedCharRex} )";
 
     /// <summary>
     /// The name of a matching group representing the query in a URI
@@ -510,7 +525,7 @@ public static partial class Uris
     public const string QueryRegex = $@"^{queryRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a generic query.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a generic query.
     /// </summary>
     [GeneratedRegex(QueryRegex, Common.Options)]
     public static partial Regex Query();
@@ -542,7 +557,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string keyCharRex = $@"(?: [{keyChars}] | {PctEncodedChar} )";
+    const string keyCharRex = $@"(?: [{keyChars}] | {PctEncodedCharRex} )";
 
     /// <summary>
     /// Matches a key from a URI key-value query
@@ -569,7 +584,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string valueCharRex = $@"(?: [{valueChars}] | {PctEncodedChar} )";
+    const string valueCharRex = $@"(?: [{valueChars}] | {PctEncodedCharRex} )";
 
     /// <summary>
     /// Matches a value from a URI key-value query
@@ -612,14 +627,14 @@ public static partial class Uris
     public const string KeyValueQueryRegex = $"^{queryKvRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI's key-value query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI's key-value query
     /// </summary>
     [GeneratedRegex(KeyValueQueryRegex, Common.Options)]
     public static partial Regex KvQuery();
     #endregion
 
     #region Fragment
-    const string fragmentChars = $@"{pathChars}/\?";
+    const string fragmentChars = $@"{PathChars}/\?";
 
     /// <summary>
     /// Matches a character from a URI fragment
@@ -631,7 +646,7 @@ public static partial class Uris
     /// <remarks>
     /// Note: the fragment is not percent-encoded, so it can contain characters that are not allowed in the query.
     /// </remarks>
-    const string fragmentCharRex = $@"(?: [{fragmentChars}] | {PctEncodedChar} )";
+    public const string FragmentCharRex = $@"(?: [{fragmentChars}] | {PctEncodedCharRex} )";
 
     /// <summary>
     /// The name of a matching group representing a URI fragment
@@ -645,7 +660,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string FragmentRex = $"(?<{FragmentGr}> {fragmentCharRex}*)";
+    public const string FragmentRex = $"(?<{FragmentGr}> {FragmentCharRex}*)";
     #endregion
 
     #region Relative URI
@@ -748,7 +763,7 @@ public static partial class Uris
     public const string UriKvQueryRegex = $"^{uriKvQueryRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
     [GeneratedRegex(UriKvQueryRegex, Common.Options)]
     public static partial Regex UriKeyValueQuery();
@@ -784,7 +799,7 @@ public static partial class Uris
     public const string UriRegex = $"^{uriRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
     /// </summary>
     [GeneratedRegex(UriRegex, Common.Options)]
     public static partial Regex Uri();
@@ -876,7 +891,7 @@ public static partial class Uris
     public const string NetUriKvQueryRegex = $"^{netUriKvQueryRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
     [GeneratedRegex(NetUriKvQueryRegex, Common.Options)]
     public static partial Regex NetUriKeyValueQuery();
@@ -907,7 +922,7 @@ public static partial class Uris
     public const string NetUriRegex = $"^{netUriRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
     /// </summary>
     [GeneratedRegex(NetUriRegex, Common.Options)]
     public static partial Regex NetUri();

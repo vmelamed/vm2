@@ -30,7 +30,7 @@ public static partial class Numerical
     public const string OctalNumberRegex = $"^{OctNumberRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string representing an octal number.
+    /// Gets a <see cref="Regex"/> object that matches a string representing an octal number.
     /// <para>BNF: <c>octal_number = 1*[octal_digit]</c></para>
     /// </summary>
     [GeneratedRegex(OctalNumberRegex, Common.Options)]
@@ -62,7 +62,7 @@ public static partial class Numerical
     public const string HexadecimalNumberRegex = $"^{HexNumberRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a hexadecimal number.
+    /// Gets a <see cref="Regex"/> object that matches a hexadecimal number.
     /// </summary>
     [GeneratedRegex(HexadecimalNumberRegex, Common.Options)]
     public static partial Regex HexadecimalNumber();
@@ -82,7 +82,7 @@ public static partial class Numerical
     public const string NaturalNumberRegex = $"^{NaturalNumberRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a sign-less, whole, decimal
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a sign-less, whole, decimal
     /// number, a.k.a. natural number, i.e. 0, 1, ... , 37, etc.
     /// <para>BNF: <c>natural_number = 1*[decimal_digit]</c></para>
     /// </summary>
@@ -141,7 +141,7 @@ public static partial class Numerical
     public const string IntegerNumberRegex = $"^{IntegerNumberRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string representing an integer number.
+    /// Gets a <see cref="Regex"/> object that matches a string representing an integer number.
     /// <para>BNF: <c>integer_number = [+|-]natural_number</c></para>
     /// <para>Named groups: <see cref="FSignGr"/> and <see cref="IntAbsGr"/>.</para>
     /// </summary>
@@ -189,7 +189,7 @@ public static partial class Numerical
     public const string FractionalNumberRegex = $"^{FractionalNumberRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string representing a decimal fractional number.
+    /// Gets a <see cref="Regex"/> object that matches a string representing a decimal fractional number.
     /// </summary>
     [GeneratedRegex(FractionalNumberRegex, Common.Options)]
     public static partial Regex FractionalNumber();
@@ -231,7 +231,7 @@ public static partial class Numerical
     public const string ScientificNumberRegex = $"^{ScientificNumberRex}$";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a string that represents a number in a scientific notation with
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a number in a scientific notation with
     /// mantissa and an exponent, i.e. 12.34e56 -.45e-67 +67.e12 etc. Note that it is not necessarily normalized.
     /// <para>BNF: <c>scientific_number = fractional_point (e | E) integer_number</c></para>
     /// </summary>

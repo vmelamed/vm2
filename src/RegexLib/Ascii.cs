@@ -147,7 +147,7 @@ public static partial class Ascii
     public const string Base64Regex = @$"\A {Base64Rex} \z";
 
     /// <summary>
-    /// A <see cref="Regex"/> object that matches a base64 encoded multiline string possibly padded with `=`-s.
+    /// Gets a <see cref="Regex"/> object that matches a base64 encoded multiline string possibly padded with `=`-s.
     /// </summary>
     [GeneratedRegex(Base64Regex, Common.MultilineOptions)]
     public static partial Regex Base64();
