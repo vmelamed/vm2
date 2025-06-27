@@ -18,7 +18,7 @@ public class AsciiTests(
     [Theory]
     [MemberData(nameof(LowAlphaRexData))]
     public void TestLowAlphaRex(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest(Ascii.LowAlphaRex, TestLine, shouldBe, input);
+        => base.RegexStringTest(Ascii.LowAlphaChar, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> HighAlphaRexData => new() {
         { TestFileLine(), false, ""  },
@@ -34,7 +34,7 @@ public class AsciiTests(
     [Theory]
     [MemberData(nameof(HighAlphaRexData))]
     public void TestHighAlphaRex(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest(Ascii.HighAlphaRex, TestLine, shouldBe, input);
+        => base.RegexStringTest(Ascii.HighAlphaChar, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> AlphaRexData => new() {
         { TestFileLine(), false, ""  },
@@ -52,7 +52,7 @@ public class AsciiTests(
     [Theory]
     [MemberData(nameof(AlphaRexData))]
     public void TestAlphaRex(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest(Ascii.AlphaRex, TestLine, shouldBe, input);
+        => base.RegexStringTest(Ascii.AlphaChar, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> Base64CharRexData => new() {
         { TestFileLine(), false, ""   },
@@ -75,7 +75,7 @@ public class AsciiTests(
     [Theory]
     [MemberData(nameof(Base64CharRexData))]
     public void TestBase64CharRex(string TestLine, bool shouldBe, string input)
-        => base.RegexStringTest(Ascii.Base64CharRex, TestLine, shouldBe, input);
+        => base.RegexStringTest(Ascii.Base64Char, TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> Base64Data => new() {
         { TestFileLine(), true,  "" },

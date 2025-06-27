@@ -14,7 +14,7 @@ public static partial class Countries
     /// Note that this expression matches upper-case letters only as defined by the standard. Combine with <c>"(?i)"</c>
     /// or use <see cref="RegexOptions.IgnoreCase"/> to match case-insensitively.
     /// </remarks>
-    public const string CountryCode2Rex = $@"{Ascii.HighAlphaRex}{{2}}";
+    public const string CountryCode2Rex = $@"{Ascii.HighAlphaChar}{{2}}";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a
@@ -50,7 +50,7 @@ public static partial class Countries
     /// Note that this expression matches upper-case letters only as defined by the standard. Combine with <c>"(?i)"</c>
     /// or use <see cref="RegexOptions.IgnoreCase"/> to match case-insensitively.
     /// </remarks>
-    public const string CountryCode3Rex = $@"{Ascii.HighAlphaRex}{{3}}";
+    public const string CountryCode3Rex = $@"{Ascii.HighAlphaChar}{{3}}";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a 3-letter country code
@@ -85,7 +85,7 @@ public static partial class Countries
     /// Note that this expression matches upper-case letters only as defined by the standard. Combine with <c>"(?i)"</c>
     /// or use <see cref="RegexOptions.IgnoreCase"/> to match case-insensitively.
     /// </remarks>
-    public const string CurrencyCodeRex = $@"{CountryCode2Rex}{Ascii.HighAlphaRex}";
+    public const string CurrencyCodeRex = $@"{CountryCode2Rex}{Ascii.HighAlphaChar}";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a currency code.
@@ -120,7 +120,7 @@ public static partial class Countries
     /// <remarks>
     /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string TelephoneCodeRex = $@"(?: {Ascii.NonZeroDigitRex}{Ascii.DigitRex}{{0,2}} )";
+    public const string TelephoneCodeRex = $@"(?: {Ascii.NzDigitChar}{Ascii.DigitChar}{{0,2}} )";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a country telephone code.
@@ -141,7 +141,7 @@ public static partial class Countries
     /// <summary>
     /// Regular expression pattern which matches a telephone number in a string.
     /// </summary>
-    public const string TelephoneNumberRex = $@"{Ascii.DigitRex}{{4,15}}";
+    public const string TelephoneNumberRex = $@"{Ascii.DigitChar}{{4,15}}";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a telephone number.
@@ -159,7 +159,7 @@ public static partial class Countries
     /// <summary>
     /// Regular expression pattern which matches a telephone number by E.164 in a string.
     /// </summary>
-    public const string TelephoneNumberE164Rex = $@"\+{Ascii.NonZeroDigitRex}{Ascii.DigitRex}{{2,14}}";
+    public const string TelephoneNumberE164Rex = $@"\+{Ascii.NzDigitChar}{Ascii.DigitChar}{{2,14}}";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a telephone number by E.164.
@@ -180,8 +180,8 @@ public static partial class Countries
     /// </summary>
     public const string TelephoneNumberExtraRex = $$"""
                                                 \+?
-                                                ({{telephoneSeparatorRex}}*{{Ascii.NonZeroDigitRex}})
-                                                (?:{{telephoneSeparatorRex}}? {{Ascii.DigitRex}}){2,14}
+                                                ({{telephoneSeparatorRex}}*{{Ascii.NzDigitChar}})
+                                                (?:{{telephoneSeparatorRex}}? {{Ascii.DigitChar}}){2,14}
                                                 {{telephoneSeparatorRex}}*;
                                                 """;
 
@@ -224,8 +224,8 @@ public static partial class Countries
         /// </remarks>
         public const string TelephoneNumberRex = $$"""
             (?:\+?1)? {{telephoneSeparatorRex}}*
-            (?<{{AreaGr}}>   [2-9] (?!11) {{Ascii.DigitRex}}{2} ) {{telephoneSeparatorRex}}*
-            (?<{{NumberGr}}> [2-9]        {{Ascii.DigitRex}}{2}   {{telephoneSeparatorRex}}* {{Ascii.DigitRex}}{4} {{telephoneSeparatorRex}}* )
+            (?<{{AreaGr}}>   [2-9] (?!11) {{Ascii.DigitChar}}{2} ) {{telephoneSeparatorRex}}*
+            (?<{{NumberGr}}> [2-9]        {{Ascii.DigitChar}}{2}   {{telephoneSeparatorRex}}* {{Ascii.DigitChar}}{4} {{telephoneSeparatorRex}}* )
             """;
 
         /// <summary>
@@ -255,8 +255,8 @@ public static partial class Countries
         /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
         /// </remarks>
         public const string TelephoneNumberStrictRex = $$"""
-             (?:\+?1)? {{Ascii.Space}}? \( (?<{{AreaGr}}> [2-9] (?!11) {{Ascii.DigitRex}}{2} ) \)
-             {{Ascii.Space}}? (?<{{NumberGr}}> [2-9]{{Ascii.DigitRex}}{2} \- {{Ascii.DigitRex}}{4} {{telephoneSeparatorRex}}* )";
+             (?:\+?1)? {{Ascii.Space}}? \( (?<{{AreaGr}}> [2-9] (?!11) {{Ascii.DigitChar}}{2} ) \)
+             {{Ascii.Space}}? (?<{{NumberGr}}> [2-9]{{Ascii.DigitChar}}{2} \- {{Ascii.DigitChar}}{4} {{telephoneSeparatorRex}}* )";
              """;
 
         /// <summary>
@@ -281,7 +281,7 @@ public static partial class Countries
         /// <summary>
         /// Regular expression pattern which matches a state code in a string.
         /// </summary>
-        public const string StateCodeRex = $@"{Ascii.HighAlphaRex}{{2}}";
+        public const string StateCodeRex = $@"{Ascii.HighAlphaChar}{{2}}";
 
         /// <summary>
         /// Regular expression pattern which matches a string that represents a state code.
@@ -318,7 +318,7 @@ public static partial class Countries
         /// <summary>
         /// Regular expression pattern which matches a 5-digit US postal code (ZIP code) in a string.
         /// </summary>
-        public const string ZipCode5Rex = $@"{Ascii.DigitRex}{{5}}";
+        public const string ZipCode5Rex = $@"{Ascii.DigitChar}{{5}}";
 
         /// <summary>
         /// Regular expression pattern which matches a string that represents a US postal code (ZIP code).
@@ -344,7 +344,7 @@ public static partial class Countries
         /// <remarks>
         /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
         /// </remarks>
-        public const string ZipCode5x4Rex = $@"(?<{ZipGr}> {Ascii.DigitRex}{{5}} )( - (?<{ExtGr}> {Ascii.DigitRex}{{4}} ) )";
+        public const string ZipCode5x4Rex = $@"(?<{ZipGr}> {Ascii.DigitChar}{{5}} )( - (?<{ExtGr}> {Ascii.DigitChar}{{4}} ) )";
 
         /// <summary>
         /// Regular expression pattern which matches a string that represents a 5+4 US postal code (ZIP code).
@@ -368,7 +368,7 @@ public static partial class Countries
         /// <remarks>
         /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
         /// </remarks>
-        public const string ZipCode5o4Rex = $@"(?<{ZipGr}>{Ascii.DigitRex}{{5}}) (?: - (?<{ExtGr}> {Ascii.DigitRex}{{4}} ) )?";
+        public const string ZipCode5o4Rex = $@"(?<{ZipGr}>{Ascii.DigitChar}{{5}}) (?: - (?<{ExtGr}> {Ascii.DigitChar}{{4}} ) )?";
 
         /// <summary>
         /// Regular expression pattern which matches a string that represents a 5 (+4 optional) US postal code (ZIP code).
@@ -387,7 +387,7 @@ public static partial class Countries
         /// Regular expression pattern which matches a social security number in a string with optional SSN groups separator '-'.
         /// </summary>
         public const string SocialSecurityNumberRex = "(?: (?! [8-9] | 7[8-9] | 77[3-9] | 000 | 666 | 001-?01-?0001 | 078-?05-?1120 | 433-?54-?3937)" +     // well-known invalid patterns and numbers
-                                                      $@"{Ascii.DigitRex}{{3}} ) -? (?: (?! 00) {Ascii.DigitRex}{{2}} ) -? (?: (?! 0000 ) {Ascii.DigitRex}{{4}} )";
+                                                      $@"{Ascii.DigitChar}{{3}} ) -? (?: (?! 00) {Ascii.DigitChar}{{2}} ) -? (?: (?! 0000 ) {Ascii.DigitChar}{{4}} )";
 
         /// <summary>
         /// Regular expression pattern which matches a string that represents a social security number.
@@ -405,7 +405,7 @@ public static partial class Countries
         /// <summary>
         /// Regular expression pattern which matches a Individual Taxpayer Identification Number in a string with optional SSN groups separator '-'.
         /// </summary>
-        public const string ItinRex = $@"9{Ascii.DigitRex}{{2}} -? [7-9]{Ascii.DigitRex} -? {Ascii.DigitRex}{{4}}";
+        public const string ItinRex = $@"9{Ascii.DigitChar}{{2}} -? [7-9]{Ascii.DigitChar} -? {Ascii.DigitChar}{{4}}";
 
         /// <summary>
         /// Regular expression pattern which matches a string that represents a Individual Taxpayer Identification Number.

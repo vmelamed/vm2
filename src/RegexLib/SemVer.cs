@@ -43,7 +43,7 @@ public static partial class SemVer
     /// <summary>
     /// BNF: <c>positive-digit = 1 | 2 | ... | 9 </c>
     /// </summary>
-    const string positiveDigitChars = Ascii.NonZeroDigitChars;
+    const string positiveDigitChars = Ascii.NzDigitChars;
 
     /// <summary>
     /// BNF: <c>positive-digit = 1 | 2 | ... | 9 </c>
@@ -58,7 +58,7 @@ public static partial class SemVer
     /// <summary>
     /// BNF: <c>digit = 0 | positive-digit </c>
     /// </summary>
-    const string digit  = Ascii.DigitRex;
+    const string digit  = Ascii.DigitChar;
 
     /// <summary>
     /// BNF: <c>non-digit = letter | - </c>

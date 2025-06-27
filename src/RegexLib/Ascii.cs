@@ -14,56 +14,50 @@ public static partial class Ascii
     public const string Space = @"\x20";
 
     /// <summary>
-    /// The hash sign. It must not be escaped as "\#" in regular expressions with
-    /// <see cref="RegexOptions.IgnorePatternWhitespace"/> - then it marks a comment to the end of the line.
-    /// </summary>
-    public const string Hash = @"\x23";
-
-    /// <summary>
     /// The set of Latin uppercase characters.
     /// </summary>
-    internal const string HighAlphaChars = "A-Z";
+    public const string HighAlphaChars = "A-Z";
 
     /// <summary>
     /// Matches a Latin uppercase character.
     /// <para>BNF: <c>high_alpha = A | B | ... | Z</c></para>
     /// </summary>
-    public const string HighAlphaRex = $"[{HighAlphaChars}]";
+    public const string HighAlphaChar = $"[{HighAlphaChars}]";
 
     /// <summary>
     /// The Latin lowercase characters.
     /// </summary>
-    internal const string LowAlphaChars = "a-z";
+    public const string LowAlphaChars = "a-z";
 
     /// <summary>
     /// Matches a Latin lowercase character.
     /// <para>BNF: <c>low_alpha = a | b | ... | z</c></para>
     /// </summary>
-    public const string LowAlphaRex = $"[{LowAlphaChars}]";
+    public const string LowAlphaChar = $"[{LowAlphaChars}]";
 
     /// <summary>
     /// The Latin characters.
     /// <para>BNF: <c>alpha = A | B | ... | Z | a | b | ... | z</c></para>
     /// </summary>
-    internal const string AlphaChars = $"{HighAlphaChars}{LowAlphaChars}";
+    public const string AlphaChars = $"{HighAlphaChars}{LowAlphaChars}";
 
     /// <summary>
     /// Matches a Latin character.
     /// <para>BNF: <c>alpha = low_alpha | high_alpha</c></para>
     /// </summary>
-    public const string AlphaRex = $"[{AlphaChars}]";
+    public const string AlphaChar = $"[{AlphaChars}]";
 
     /// <summary>
     /// The non-zero digit characters.
     /// <para>BNF: <c>non-zero-digit = 1 | 2 | ... | 9</c></para>
     /// </summary>
-    public const string NonZeroDigitChars = "1-9";
+    public const string NzDigitChars = "1-9";
 
     /// <summary>
     /// Matches a non-zero digit.
     /// <para>BNF: <c>non-zero-digit = 1 | 2 | ... | 9</c></para>
     /// </summary>
-    public const string NonZeroDigitRex = $"[{NonZeroDigitChars}]";
+    public const string NzDigitChar = $"[{NzDigitChars}]";
 
     /// <summary>
     /// The digit characters.
@@ -75,7 +69,7 @@ public static partial class Ascii
     /// Matches a digit.
     /// <para>BNF: <c>digit = 0 | 1 | ... | 9</c></para>
     /// </summary>
-    public const string DigitRex = $"[{DigitChars}]";
+    public const string DigitChar = $"[{DigitChars}]";
 
     /// <summary>
     /// The set of high-alpha-numeric chars.
@@ -87,7 +81,7 @@ public static partial class Ascii
     /// Matches an high-alpha-numeric char.
     /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | A | B | ... | Z </c></para>
     /// </summary>
-    public const string HighAlphaNumericRex = $"[{HighAlphaNumericChars}]";
+    public const string HighAlphaNumericChar = $"[{HighAlphaNumericChars}]";
 
     /// <summary>
     /// The set of low-alpha-numeric chars.
@@ -99,7 +93,7 @@ public static partial class Ascii
     /// Matches an low-alpha-numeric char.
     /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | a | b | ... | z </c></para>
     /// </summary>
-    public const string LowAlphaNumericRex = $"[{LowAlphaNumericChars}]";
+    public const string LowAlphaNumericChar = $"[{LowAlphaNumericChars}]";
 
     /// <summary>
     /// The set of alpha-numeric chars.
@@ -111,7 +105,7 @@ public static partial class Ascii
     /// Matches an alpha-numeric char.
     /// <para>BNF: <c>digit = 0 | 1 | ... | 9 | A | B | ... | Z | a | b | ... | z</c></para>
     /// </summary>
-    public const string AlphaNumericRex = $"[{AlphaNumericChars}]";
+    public const string AlphaNumericChar = $"[{AlphaNumericChars}]";
 
     #region Base64
     // See https://datatracker.ietf.org/doc/html/rfc4648#section-4
@@ -119,7 +113,7 @@ public static partial class Ascii
     /// <summary>
     /// The characters that can be used for string representation of a base64 encoded data without the padding.
     /// </summary>
-    const string base64Chars = $@"{AlphaNumericChars}/\+";
+    public const string Base64Chars = $@"{AlphaNumericChars}/\+";
 
     /// <summary>
     /// Matches a character of base64 encoded data.
@@ -128,7 +122,7 @@ public static partial class Ascii
     /// <remarks>
     /// Note that \r and \n may break-to-continue a base64 string but have no meaning when decoded and are ignored.
     /// </remarks>
-    public const string Base64CharRex = $"[{base64Chars}]";
+    public const string Base64Char = $"[{Base64Chars}]";
 
     /// <summary>
     /// Matches a base64 encoded multiline string fragment possibly padded with `=`-s.
@@ -136,7 +130,7 @@ public static partial class Ascii
     /// <remarks>
     /// Requires "(?mx)" or <see cref="RegexOptions.Multiline"/> and <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string Base64Rex = @$"(?: ^{Base64CharRex}+ \r?$\n? )* (?: ^{Base64CharRex}+ ={{1,2}} \r?$\n? )?";
+    public const string Base64Rex = @$"(?: ^{Base64Char}+ \r?$\n? )* (?: ^{Base64Char}+ ={{1,2}} \r?$\n? )?";
 
     /// <summary>
     /// Matches a base64 encoded multiline string possibly padded with `=`-s.

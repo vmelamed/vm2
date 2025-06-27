@@ -17,19 +17,19 @@ public static partial class Uris
     /// Matches a percent encoded character.
     /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
     /// </summary>
-    public const string PctEncodedChar = $"%{Numerical.HexDigitRex}{Numerical.HexDigitRex}";
+    public const string PctEncoded = $"%{Numerical.HexDigitChar}{Numerical.HexDigitChar}";
 
     /// <summary>
     /// Matches a percent encoded character.
     /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
     /// </summary>
-    public const string PctEncodedCharRex = $"(?:{PctEncodedChar})";
+    public const string PctEncodedChar = $"(?:{PctEncoded})";
 
     /// <summary>
     /// The URI general delimiters.
     /// <para>BNF: <c>gen-delims  = ":" | "/" | "?" | "#" | "[" | "]" | "@"</c></para>
     /// </summary>
-    const string genDelimiters = @":/\?\#\[\]@";
+    const string genDelimiterChars = @":/\?\#\[\]@";
 
     /// <summary>
     /// The sub-delimiters without the equals and ampersand characters.
@@ -48,7 +48,7 @@ public static partial class Uris
     /// <para>BNF: <c>reserved = gen-delims | sub-delims</c></para>
     /// </summary>
 #pragma warning disable IDE0051 // Remove unused private members
-    const string reservedChars = $@"{genDelimiters}{SubDelimiterChars}";
+    const string reservedChars = $@"{genDelimiterChars}{SubDelimiterChars}";
 #pragma warning restore IDE0051 // Remove unused private members
 
     /// <summary>
@@ -66,7 +66,7 @@ public static partial class Uris
     /// Matches an unreserved or sub-delimiter character.
     /// <para>BNF: <c>unreserved-or-sub-delimiter := unreserved | sub-delimiter</c></para>
     /// </summary>
-    const string unreservedOrSubDelimiterRex = $"[{UnreservedOrSubDelimiterChars}]";
+    const string unreservedOrSubDelimiterChar = $"[{UnreservedOrSubDelimiterChars}]";
     #endregion
 
     #region Scheme
@@ -91,7 +91,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string SchemeRex = $@"(?<{SchemeGr}> {Ascii.AlphaRex} {schemeRex} )";
+    public const string SchemeRex = $@"(?<{SchemeGr}> {Ascii.AlphaChar} {schemeRex} )";
 
     /// <summary>
     /// Matches a string that represents a URI scheme.
@@ -106,7 +106,7 @@ public static partial class Uris
     /// Gets a <see cref="Regex"/> object that matches a string that represents a URI scheme.
     /// <para>BNF: <c>scheme := alpha 1*[ alpha | digit | + | - | . ]</c></para>
     /// </summary>
-    [GeneratedRegex(SchemeRegex, Common.Options)]
+    [GeneratedRegex(SchemeRegex, Common.OptionsI)]
     public static partial Regex Scheme();
     #endregion
 
@@ -120,7 +120,7 @@ public static partial class Uris
     /// Matches reg-name in RFC 3986
     /// <para>BNF: <c>registered_name = *[ unreserved | sub-delimiters | pct-encoded ]</c> - yes, it can be empty, see the RFC</para>
     /// </summary>
-    const string generalNameRex = $@"(?<{IpGenNameGr}> (?: {unreservedOrSubDelimiterRex} | {PctEncodedCharRex} )+ )";
+    const string generalNameRex = $@"(?<{IpGenNameGr}> (?: {unreservedOrSubDelimiterChar} | {PctEncodedChar} )+ )";
 
     /// <summary>
     /// Matches a registered name.
@@ -170,7 +170,7 @@ public static partial class Uris
     /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>
     /// </para>
     /// </summary>
-    [GeneratedRegex(HostRegex, Common.Options)]
+    [GeneratedRegex(HostRegex, Common.OptionsI)]
     public static partial Regex Host();
     #endregion
 
@@ -206,7 +206,7 @@ public static partial class Uris
     /// <para>Named groups: <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
     /// </summary>
     /// <value>The endpoint.</value>
-    [GeneratedRegex(EndpointRegex, Common.Options)]
+    [GeneratedRegex(EndpointRegex, Common.OptionsI)]
     public static partial Regex Endpoint();
     #endregion
 
@@ -248,9 +248,9 @@ public static partial class Uris
     /// </remarks>
     public const string UserInfoRex = $"""
                                        (?:
-                                         (?<{UserNameGr}> (?:{unreservedOrSubDelimiterRex} | {PctEncodedCharRex})+ )
+                                         (?<{UserNameGr}> (?:{unreservedOrSubDelimiterChar} | {PctEncodedChar})+ )
                                          :?
-                                         (?<{AccessGr}>   (?:{unreservedOrSubDelimiterRex} | {PctEncodedCharRex})* )
+                                         (?<{AccessGr}>   (?:{unreservedOrSubDelimiterChar} | {PctEncodedChar})* )
                                        )
                                        """;
 
@@ -304,7 +304,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string pathNcCharRex = $"(?: {pathNcChar} | {PctEncodedCharRex} )";
+    const string pathNcCharRex = $"(?: {pathNcChar} | {PctEncodedChar} )";
 
     /// <summary>
     /// Matches non-zero length (NZ) path segment no colon (NC)
@@ -340,7 +340,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string PChar = $"{PathChar} | {PctEncodedChar}";
+    public const string PChar = $"{PathChar} | {PctEncoded}";
 
     /// <summary>
     /// Matches a path character (incl. the colon char).
@@ -477,7 +477,7 @@ public static partial class Uris
     ///        path-rootless   | ; begins with a segment
     ///        path-empty        ; zero characters (???)</code></para>
     /// </summary>
-    [GeneratedRegex(PathRegex, Common.Options)]
+    [GeneratedRegex(PathRegex, Common.OptionsI)]
     public static partial Regex Path();
     #endregion
 
@@ -498,7 +498,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string queryCharRex = $"(?: [{queryChars}] | {PctEncodedCharRex} )";
+    const string queryCharRex = $"(?: [{queryChars}] | {PctEncodedChar} )";
 
     /// <summary>
     /// The name of a matching group representing the query in a URI
@@ -527,7 +527,7 @@ public static partial class Uris
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a generic query.
     /// </summary>
-    [GeneratedRegex(QueryRegex, Common.Options)]
+    [GeneratedRegex(QueryRegex, Common.OptionsI)]
     public static partial Regex Query();
     #endregion
 
@@ -557,7 +557,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string keyCharRex = $@"(?: [{keyChars}] | {PctEncodedCharRex} )";
+    const string keyCharRex = $@"(?: [{keyChars}] | {PctEncodedChar} )";
 
     /// <summary>
     /// Matches a key from a URI key-value query
@@ -584,7 +584,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string valueCharRex = $@"(?: [{valueChars}] | {PctEncodedCharRex} )";
+    const string valueCharRex = $@"(?: [{valueChars}] | {PctEncodedChar} )";
 
     /// <summary>
     /// Matches a value from a URI key-value query
@@ -629,7 +629,7 @@ public static partial class Uris
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a URI's key-value query
     /// </summary>
-    [GeneratedRegex(KeyValueQueryRegex, Common.Options)]
+    [GeneratedRegex(KeyValueQueryRegex, Common.OptionsI)]
     public static partial Regex KvQuery();
     #endregion
 
@@ -646,7 +646,7 @@ public static partial class Uris
     /// <remarks>
     /// Note: the fragment is not percent-encoded, so it can contain characters that are not allowed in the query.
     /// </remarks>
-    public const string FragmentCharRex = $@"(?: [{fragmentChars}] | {PctEncodedCharRex} )";
+    public const string FragmentCharRex = $@"(?: [{fragmentChars}] | {PctEncodedChar} )";
 
     /// <summary>
     /// The name of a matching group representing a URI fragment
@@ -684,7 +684,7 @@ public static partial class Uris
     /// BNF: <c>relative-ref = relative-part [ "?" query-kv ] [ "#" fragment ]</c>
     /// </para>
     /// </summary>
-    const string relativeUriKvQueryRefRex = $@"(?<{RelativeUriKvGr}> {relativeUriPartRex} (?: \? {queryKvRex} )? (?: {Ascii.Hash} {FragmentRex} {FragmentRex} )?";
+    const string relativeUriKvQueryRefRex = $@"(?<{RelativeUriKvGr}> {relativeUriPartRex} (?: \? {queryKvRex} )? (?: \# {FragmentRex} {FragmentRex} )?";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a relative URI with key-value pairs query.
@@ -710,7 +710,7 @@ public static partial class Uris
     /// BNF: <c>relative-ref = relative-part [ "?" query-gen ] [ "#" fragment ]</c>
     /// </para>
     /// </summary>
-    const string relativeUriRefRex = $@"(?<{RelativeUriGr}> {relativeUriPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {FragmentRex} )?";
+    const string relativeUriRefRex = $@"(?<{RelativeUriGr}> {relativeUriPartRex} (?: \? {queryRex} )? (?: \# {FragmentRex} )?";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a relative URI with general query.
@@ -720,7 +720,7 @@ public static partial class Uris
     // <summary>
     // Gets a Regex object which matches a string representing a concept.
     // </summary>
-    //[GeneratedRegex(RelativeUriRefRegex, Common.Options)]
+    //[GeneratedRegex(RelativeUriRefRegex, Common.OptionsI)]
     //public static partial Regex RelativeUriRef();
     #endregion
     #endregion
@@ -749,7 +749,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string uriKvQueryRex = $@"(?<{UriKvQueryGr}> {SchemeRex} : {uriHierarchicalPartRex} (?: \? {queryKvRex} )? (?: {Ascii.Hash} {FragmentRex} )? )";
+    const string uriKvQueryRex = $@"(?<{UriKvQueryGr}> {SchemeRex} : {uriHierarchicalPartRex} (?: \? {queryKvRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with an optional key-value query
@@ -765,7 +765,7 @@ public static partial class Uris
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
-    [GeneratedRegex(UriKvQueryRegex, Common.Options)]
+    [GeneratedRegex(UriKvQueryRegex, Common.OptionsI)]
     public static partial Regex UriKeyValueQuery();
     #endregion
     #endregion
@@ -785,7 +785,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string uriRex = $@"(?<{UriGr}> {SchemeRex} : {uriHierarchicalPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {FragmentRex} )? )";
+    const string uriRex = $@"(?<{UriGr}> {SchemeRex} : {uriHierarchicalPartRex} (?: \? {queryRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with an optional general query
@@ -801,7 +801,7 @@ public static partial class Uris
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
     /// </summary>
-    [GeneratedRegex(UriRegex, Common.Options)]
+    [GeneratedRegex(UriRegex, Common.OptionsI)]
     public static partial Regex Uri();
     #endregion
 
@@ -822,7 +822,7 @@ public static partial class Uris
     /// BNF: <c>relative-ref = relative-part [ "?" query-kv ] [ "#" fragment ]</c>
     /// </para>
     /// </summary>
-    const string netRelativeUriKvQueryRefRex = $@"(?<{RelativeUriKvGr}> {netRelativeUriPartRex} (?: \? {queryKvRex} )? (?: {Ascii.Hash} {FragmentRex} {FragmentRex} )?";
+    const string netRelativeUriKvQueryRefRex = $@"(?<{RelativeUriKvGr}> {netRelativeUriPartRex} (?: \? {queryKvRex} )? (?: \# {FragmentRex} {FragmentRex} )?";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a relative URI with key-value pairs query.
@@ -832,7 +832,7 @@ public static partial class Uris
     // <summary>
     // Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
     // </summary>
-    //[GeneratedRegex(NetRelativeUriKvQueryRefRegex, Common.Options)]
+    //[GeneratedRegex(NetRelativeUriKvQueryRefRegex, Common.OptionsI)]
     //public static partial Regex NetRelativeUriKvQueryRef();
     #endregion
 
@@ -843,7 +843,7 @@ public static partial class Uris
     /// BNF: <c>relative-ref = relative-part [ "?" query-gen ] [ "#" fragment ]</c>
     /// </para>
     /// </summary>
-    const string netRelativeUriRefRex = $@"(?<{RelativeUriGr}> {netRelativeUriPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {FragmentRex} )?";
+    const string netRelativeUriRefRex = $@"(?<{RelativeUriGr}> {netRelativeUriPartRex} (?: \? {queryRex} )? (?: \# {FragmentRex} )?";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a relative URI with general query.
@@ -853,7 +853,7 @@ public static partial class Uris
     // <summary>
     // Gets a Regex object which matches a string representing a concept.
     // </summary>
-    //[GeneratedRegex(NetRelativeUriRefRegex, Common.Options)]
+    //[GeneratedRegex(NetRelativeUriRefRegex, Common.OptionsI)]
     //public static partial Regex NetRelativeUriRef();
     #endregion
     #endregion
@@ -877,7 +877,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string netUriKvQueryRex = $@"(?<{UriKvQueryGr}> {SchemeRex} : {netUriHierarchicalPartRex} (?: \? {queryKvRex} )? (?: {Ascii.Hash} {FragmentRex} )? )";
+    const string netUriKvQueryRex = $@"(?<{UriKvQueryGr}> {SchemeRex} : {netUriHierarchicalPartRex} (?: \? {queryKvRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with an optional key-value query
@@ -893,7 +893,7 @@ public static partial class Uris
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
     /// </summary>
-    [GeneratedRegex(NetUriKvQueryRegex, Common.Options)]
+    [GeneratedRegex(NetUriKvQueryRegex, Common.OptionsI)]
     public static partial Regex NetUriKeyValueQuery();
     #endregion
     #endregion
@@ -908,7 +908,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string netUriRex = $@"(?<{UriGr}> {SchemeRex} : {netUriHierarchicalPartRex} (?: \? {queryRex} )? (?: {Ascii.Hash} {FragmentRex} )? )";
+    const string netUriRex = $@"(?<{UriGr}> {SchemeRex} : {netUriHierarchicalPartRex} (?: \? {queryRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
     /// Matches a string that represents a URI with an optional general query
@@ -924,7 +924,7 @@ public static partial class Uris
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
     /// </summary>
-    [GeneratedRegex(NetUriRegex, Common.Options)]
+    [GeneratedRegex(NetUriRegex, Common.OptionsI)]
     public static partial Regex NetUri();
     #endregion
 }

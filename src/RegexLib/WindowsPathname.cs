@@ -59,7 +59,7 @@ public static partial class WindowsPathname
     /// </summary>
     public const string FileGr = "file";
 
-    const string drive = $"(?: (?<{DriveGr}>{Ascii.AlphaRex}) : )";
+    const string drive = $"(?: (?<{DriveGr}>{Ascii.AlphaChar}) : )";
 
     const string pathSegment = $@"(?: \. | \.\. | {DiskFilenameRex} )";
 
@@ -104,7 +104,7 @@ public static partial class WindowsPathname
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a file path.
     /// </summary>
-    [GeneratedRegex(PathnameRegex, Common.Options)]
+    [GeneratedRegex(PathnameRegex, Common.OptionsI)]
     public static partial Regex Pathname();
 
     // TODO: \\?\... \\.\... UNC

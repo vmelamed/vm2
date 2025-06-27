@@ -62,20 +62,26 @@ public static partial class DateAndTime
     public const string NumOffsetGr = "numOffset";
 
     /// <summary>
-    /// Regular expression pattern which matches a concept in a string.
+    /// Regular expression pattern which matches an ISO 8601 date and time representation in a string.
     /// </summary>
     public const string DateTimeRex = $@"(?<{FullYearGr}>{dateFullYear})-(?<{MonthGr}>{dateMonth})-(?<{DayGr}>{dateDay})[T ](?<{HourGr}>{timeHour}):(?<{MinuteGr}>{timeMinute}):(?<{SecondGr}>{timeSecond})(?<{FractionSecondGr}>{secondFrac})?(?<{OffsetGr}>Z|(?<{NumOffsetGr}>{numOffset}))";
 
     /// <summary>
-    /// Regular expression pattern which matches a string that represents a concept.
+    /// Regular expression pattern which matches a string that represents an ISO 8601 date and time representation.
     /// </summary>
     public const string DateTimeRegex = $@"^{DateTimeRex}$";
 
     /// <summary>
-    /// Gets a Regex object which matches a string representing a concept.
+    /// Gets a Regex object which matches a string representing an ISO 8601 (case sensitive!) date and time representation.
     /// </summary>
     [GeneratedRegex(DateTimeRegex, Common.Options)]
     public static partial Regex DateTime();
+
+    /// <summary>
+    /// Gets a Regex object which matches a string representing an RFC 3339 (case insensitive) date and time representation.
+    /// </summary>
+    [GeneratedRegex(DateTimeRegex, Common.OptionsI)]
+    public static partial Regex DateTimeI();
     #endregion
 
     #region Duration
@@ -139,9 +145,15 @@ public static partial class DateAndTime
     public const string DurationRegex = @$"^{DurationRex}$";
 
     /// <summary>
-    /// Gets a Regex object which matches a string representing a time duration .
+    /// Gets a Regex object which matches a string representing a time duration in ISO 8601 (case sensitive!).
     /// </summary>
     [GeneratedRegex(DurationRegex, Common.Options)]
     public static partial Regex Duration();
+
+    /// <summary>
+    /// Gets a Regex object which matches a string representing a time duration (case insensitive!).
+    /// </summary>
+    [GeneratedRegex(DurationRegex, Common.OptionsI)]
+    public static partial Regex DurationI();
     #endregion
 }

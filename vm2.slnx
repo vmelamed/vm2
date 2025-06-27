@@ -34,4 +34,5 @@
   <Folder Name="/test/Functional/">
     <Project Path="test/Functional/PrimitivesTests/PrimitivesTests.csproj" />
   </Folder>
+  <Project Path="src/RegexLibReflector/RegexLibReflector.csproj" />
 </Solution>

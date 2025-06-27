@@ -15,13 +15,13 @@ public static partial class Numerical
     /// Matches an octal digit.
     /// <para>BNF: <c>octal_digit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7</c></para>
     /// </summary>
-    public const string OctDigitRex = $"[{OctDigitChars}]";
+    public const string OctDigitChar = $"[{OctDigitChars}]";
 
     /// <summary>
     /// Matches an octal number.
     /// <para>BNF: <c>octal_number = 1*[octal_digit]</c></para>
     /// </summary>
-    public const string OctNumberRex = $"{OctDigitRex}+";
+    public const string OctNumberRex = $"{OctDigitChar}+";
 
     /// <summary>
     /// Matches a string representing an octal number.
@@ -47,13 +47,13 @@ public static partial class Numerical
     /// Matches a hexadecimal digit.
     /// <para>BNF: <c>hexadecimal_digit = decimal_digit | A | B | C | D | E | F | a | b | c | d | e | f</c></para>
     /// </summary>
-    public const string HexDigitRex = $"[{HexDigitChars}]";
+    public const string HexDigitChar = $"[{HexDigitChars}]";
 
     /// <summary>
     /// Matches a hexadecimal number.
     /// <para>BNF: <c>hexadecimal_number = 1*[hexadecimal_digit]</c></para>
     /// </summary>
-    public const string HexNumberRex = $"{HexDigitRex}+";
+    public const string HexNumberRex = $"{HexDigitChar}+";
 
     /// <summary>
     /// Matches a string representing a hexadecimal number.
@@ -64,7 +64,7 @@ public static partial class Numerical
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a hexadecimal number.
     /// </summary>
-    [GeneratedRegex(HexadecimalNumberRegex, Common.Options)]
+    [GeneratedRegex(HexadecimalNumberRegex, Common.OptionsI)]
     public static partial Regex HexadecimalNumber();
     #endregion
 
@@ -73,7 +73,7 @@ public static partial class Numerical
     /// Matches sign-less, whole, decimal (a.k.a. natural) number.
     /// <para>BNF: <c>natural_number = *[0] [non-zero-digit] *[decimal_digit]</c></para>
     /// </summary>
-    public const string NaturalNumberRex = $"0*{Ascii.NonZeroDigitRex}{Ascii.DigitRex}*";
+    public const string NaturalNumberRex = $"0*{Ascii.NzDigitChar}{Ascii.DigitChar}*";
 
     /// <summary>
     /// Matches a string that represents a sign-less, whole, decimal number, a.k.a. natural number (i.e. 0, 1, ... , 37, etc.)
@@ -95,7 +95,7 @@ public static partial class Numerical
     /// Matches sign-less, whole, decimal (a.k.a. natural) number.
     /// <para>BNF: <c>natural_number = *[0] [non-zero-digit] *[decimal_digit]</c></para>
     /// </summary>
-    public const string DecimalNumberRex = $"{Ascii.DigitRex}+";
+    public const string DecimalNumberRex = $"{Ascii.DigitChar}+";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a zero or natural number.
@@ -128,7 +128,7 @@ public static partial class Numerical
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string IntegerNumberRex = $"(?<{IntSignGr}> [+-])? (?<{IntAbsGr}> {Ascii.DigitRex}+)";
+    public const string IntegerNumberRex = $"(?<{IntSignGr}> [+-])? (?<{IntAbsGr}> {Ascii.DigitChar}+)";
 
     /// <summary>
     /// Matches a string representing an integer number.
@@ -175,8 +175,8 @@ public static partial class Numerical
     /// </remarks>
     public const string FractionalNumberRex = $$"""
         (?<{{FSignGr}}>[+-]?)
-        (?: (?:(?<{{WholeGr}}> {{Ascii.DigitRex}}+)      (?:\.(?<{{FractionGr}}> {{Ascii.DigitRex}}*))? )  |
-        (?: (?:(?<{{WholeGr}}> {{Ascii.DigitRex}}* ) \.))? (?:(?<{{FractionGr}}> {{Ascii.DigitRex}}+))  )
+        (?: (?:(?<{{WholeGr}}> {{Ascii.DigitChar}}+)      (?:\.(?<{{FractionGr}}> {{Ascii.DigitChar}}*))? )  |
+        (?: (?:(?<{{WholeGr}}> {{Ascii.DigitChar}}* ) \.))? (?:(?<{{FractionGr}}> {{Ascii.DigitChar}}+))  )
         """;
 
     /// <summary>
@@ -235,7 +235,7 @@ public static partial class Numerical
     /// mantissa and an exponent, i.e. 12.34e56 -.45e-67 +67.e12 etc. Note that it is not necessarily normalized.
     /// <para>BNF: <c>scientific_number = fractional_point (e | E) integer_number</c></para>
     /// </summary>
-    [GeneratedRegex(ScientificNumberRegex, Common.Options)]
+    [GeneratedRegex(ScientificNumberRegex, Common.OptionsI)]
     public static partial Regex ScientificNumber();
     #endregion
 
@@ -243,16 +243,16 @@ public static partial class Numerical
     const string uuidWithDashesRex = $$"""
          (?<oparenth> \(? )
          (?<obracket> \{? )
-         {{HexDigitRex}}{8}-
-         {{HexDigitRex}}{4}-
-         {{HexDigitRex}}{4}-
-         {{HexDigitRex}}{4}-
-         {{HexDigitRex}}{12}
+         {{HexDigitChar}}{8}-
+         {{HexDigitChar}}{4}-
+         {{HexDigitChar}}{4}-
+         {{HexDigitChar}}{4}-
+         {{HexDigitChar}}{12}
          (?<cbracket-obracket> (?<cbracket> \}? ) )
          (?<cparenth-oparenth> (?<cparenth> \)? ) )
          """;
 
-    const string uuidWithNoDashesRex = $@"{HexDigitRex}{{32}}";
+    const string uuidWithNoDashesRex = $@"{HexDigitChar}{{32}}";
 
     /// <summary>
     /// Regular expression pattern which matches a UUID in a string.
@@ -267,7 +267,7 @@ public static partial class Numerical
     /// <summary>
     /// Gets a Regex object which matches a string representing a UUID.
     /// </summary>
-    [GeneratedRegex(UuidRegex, Common.Options)]
+    [GeneratedRegex(UuidRegex, Common.OptionsI)]
     public static partial Regex Uuid();
     #endregion
 }

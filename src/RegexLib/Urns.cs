@@ -26,15 +26,13 @@ public static partial class Urns
     /// <summary>
     /// Represents a regular expression pattern for matching a namespace identifier (NID).
     /// </summary>
-    public const string NidRex = $@"(?<{NidGr}> {Ascii.AlphaNumericRex} {alphanumericHyphenCharRex}{{0,30}} {Ascii.AlphaNumericRex} )";
+    public const string NidRex = $@"(?<{NidGr}> {Ascii.AlphaNumericChar} {alphanumericHyphenCharRex}{{0,30}} {Ascii.AlphaNumericChar} )";
 
     const string pSlChars   = $@"{Uris.PathChars}/";
 
-    const string pSlChar    = $@"[{pSlChars}] | {Uris.PctEncodedChar}";
+    const string pSlChar    = $@"[{pSlChars}] | {Uris.PctEncoded}";
 
     const string pSlCharRex = $@"(?: {pSlChar} )";
-
-    const string pChar      = Uris.PChar;
 
     const string pCharRex   = Uris.PCharRex;
 
@@ -74,13 +72,13 @@ public static partial class Urns
     [GeneratedRegex(AssignedNameRegex, Common.OptionsI)]
     public static partial Regex AssignedName();
 
-    const string compChars = $@"{pSlChars}\?";
+    const string componentNpChars = $@"{pSlChars}\?";
 
-    const string cChars    = $@"[{compChars}] | {Uris.PctEncodedChar}";
+    const string componentChars   = $@"[{componentNpChars}] | {Uris.PctEncoded}";
 
-    const string cCharRex  = $@"(?: {cChars} )";
+    const string componentChar    = $@"(?: {componentChars} )";
 
-    const string componentRex = $@"{pCharRex} {cCharRex}*";
+    const string componentRex     = $@"{pCharRex} {componentChar}*";
 
     /// <summary>
     /// The name of the group that matches the r-component of a URN.
@@ -95,7 +93,7 @@ public static partial class Urns
     /// </summary>
     public const string QComponentGr = "q_component";
 
-    const string qDelimiter = @"\?\=";
+    const string qDelimiter = @"\?=";
     const string qComponent = $@"{qDelimiter} (?<{QComponentGr}> {componentRex} )";
 
     const string rqComponents = $"""
@@ -138,6 +136,6 @@ public static partial class Urns
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a URN, including the optional components.
     /// </summary>
-    [GeneratedRegex(NameStringRegex, Common.OptionsI)]
+    [GeneratedRegex(NameStringRegex, Common.Options)]
     public static partial Regex NameString();
 }
