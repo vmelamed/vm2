@@ -74,7 +74,8 @@ public abstract partial class RegexTests(
         bool shouldMatch,
         string input,
         Dictionary<string, string>? expectedCaptures = null,
-        bool failIfMissingExpected = true)
+        bool failIfMissingExpected = true,
+        bool allGroups = false)
     {
         var matches = regex.Matches(input);
         var isMatch = matches?.Count is > 0;
@@ -94,17 +95,23 @@ public abstract partial class RegexTests(
             return;
         }
 
+        var groupPredicate = (Group gr, int index) => index > 0 &&
+                                                      !string.IsNullOrEmpty(gr.Value) &&
+                                                      (allGroups || index.ToString() != gr.Name);
+
         foreach (var match in matches!.OfType<Match>())
         {
             Out.WriteLine($"    →{match.Value}←");
-            foreach (var group in match.Groups.AsReadOnly().Where(gr => !string.IsNullOrEmpty(gr.Value)).Skip(1))
+            foreach (var group in match
+                                    .Groups
+                                    .AsReadOnly()
+                                    .Where(groupPredicate))
                 Out.WriteLine($"      {group.Name}: →{group.Value}←");
         }
 
         var actualGroups = matches!
                             .SelectMany(m => m.Groups.AsReadOnly())
-                            .Where(gr => !string.IsNullOrEmpty(gr.Value))
-                            .Skip(1)    // by definition the first group is always ["0"] = match.Value
+                            .Where(groupPredicate)
                             .ToDictionary(gr => gr.Name, gr => gr.Value)
                             ;
 

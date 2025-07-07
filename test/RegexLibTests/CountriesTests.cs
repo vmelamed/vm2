@@ -242,10 +242,10 @@ public class CountriesTests(
         { TestFileLine(), true,  "123456789012345"},
         { TestFileLine(), true,  "1(234)567-89-01-23-45"},
         { TestFileLine(), true,  "+1(234)567-89-01-23-45"},
-        { TestFileLine(), true,  "+1 (134) 567-890 23.45"},
-        { TestFileLine(), true,  "+1 (034) 567-890 23.45"},
-        { TestFileLine(), true,  "+1 (234) 567.89  01 (23 45)"},
-        { TestFileLine(), true,  "----+1 (234) 567.89  01 ((23 45))   "},
+        { TestFileLine(), true,  "+1 (134) 567-890 2345"},
+        { TestFileLine(), true,  "+1 (034) 567-890 23 45"},
+        { TestFileLine(), false, "+1 (234) 567.89  01 (23 45)"},
+        { TestFileLine(), true,  "+1 (234) 567-89  01 ((23 45))   "},
         { TestFileLine(), false, "+1234567890123456"},
     };
 

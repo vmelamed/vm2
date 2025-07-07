@@ -4,67 +4,67 @@ public class CountriesUsTests(
     RegexLibTestsFixture fixture,
     ITestOutputHelper output) : RegexTests(fixture, output)
 {
-    public static TheoryData<string, bool, string> TelephoneNumberData => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "0"},
-        { TestFileLine(), false, "+01"},
-        { TestFileLine(), false, "012"},
-        { TestFileLine(), false, "+0123"},
-        { TestFileLine(), false, "1234567890123456"},
-        { TestFileLine(), false, "+1234567890123456"},
-        { TestFileLine(), false,  "1234"},
-        { TestFileLine(), false, "+1234a-BC"},
-        { TestFileLine(), false, "*1234"},
-        { TestFileLine(), false,  "+1234"},
-        { TestFileLine(), false, "+123456"},
-        { TestFileLine(), true,  "+12345678901"},
-        { TestFileLine(), true,  "12345678901"},
-        { TestFileLine(), true,  "+1 (234) 567-8901"},
-        { TestFileLine(), true,  "+1 234-567-8901"},
-        { TestFileLine(), true,  "1(234)567-8901"},
-        { TestFileLine(), false, "1(034)567-8901"},
-        { TestFileLine(), false, "1(911)511-8901"},
-        { TestFileLine(), false, "+1.234.567.8901"},
-        { TestFileLine(), false, "+1+234+567+8901"},
+    public static TheoryData<string, bool, string, Captures?> TelephoneNumberData => new() {
+        { TestFileLine(), false, "", null},
+        { TestFileLine(), false, " ", null},
+        { TestFileLine(), false, "  ", null},
+        { TestFileLine(), false, "0", null},
+        { TestFileLine(), false, "+01", null},
+        { TestFileLine(), false, "012", null},
+        { TestFileLine(), false, "+0123", null},
+        { TestFileLine(), false, "1234567890123456", null},
+        { TestFileLine(), false, "+1234567890123456", null},
+        { TestFileLine(), false,  "1234", null},
+        { TestFileLine(), false, "+1234a-BC", null},
+        { TestFileLine(), false, "*1234", null},
+        { TestFileLine(), false,  "+1234", null},
+        { TestFileLine(), false, "+123456", null},
+        { TestFileLine(), true,  "+12345678901", new() { ["area"] = "234", ["number"] = "5678901" } },
+        { TestFileLine(), true,  "12345678901", new() { ["area"] = "234", ["number"] = "5678901" } },
+        { TestFileLine(), true,  "+1 (234) 567-8901", new() { ["area"] = "234", ["number"] = "567-8901" } },
+        { TestFileLine(), true,  "+1 234-567-8901", new() { ["area"] = "234", ["number"] = "567-8901" } },
+        { TestFileLine(), true,  "1(234)567-8901", new() { ["area"] = "234", ["number"] = "567-8901" } },
+        { TestFileLine(), false, "1(034)567-8901", null},
+        { TestFileLine(), false, "1(911)511-8901", null},
+        { TestFileLine(), false, "+1.234.567.8901", null},
+        { TestFileLine(), false, "+1+234+567+8901", null},
     };
 
     [Theory]
     [MemberData(nameof(TelephoneNumberData))]
-    public void TestTelephoneNumber(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.TelephoneNumber(), TestLine, shouldBe, code);
+    public void TestTelephoneNumber(string TestLine, bool shouldBe, string code, Captures? captures = null)
+        => base.RegexTest(Countries.US.TelephoneNumber(), TestLine, shouldBe, code, captures);
 
-    public static TheoryData<string, bool, string> TelephoneNumberStrictData => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "0"},
-        { TestFileLine(), false, "+01"},
-        { TestFileLine(), false, "012"},
-        { TestFileLine(), false, "+0123"},
-        { TestFileLine(), false, "1234567890123456"},
-        { TestFileLine(), false, "+1234567890123456"},
-        { TestFileLine(), false, "1234"},
-        { TestFileLine(), false, "+1234a-BC"},
-        { TestFileLine(), false, "*1234"},
-        { TestFileLine(), false, "+1234"},
-        { TestFileLine(), false, "+123456"},
-        { TestFileLine(), false, "+12345678901"},
-        { TestFileLine(), false, "12345678901"},
-        { TestFileLine(), true,  "+1 (234) 567-8901"},
-        { TestFileLine(), false, "+1 234-567-8901"},
-        { TestFileLine(), true,  "1(234)567-8901"},
-        { TestFileLine(), false, "1(034)567-8901"},
-        { TestFileLine(), false, "1(911)511-8901"},
-        { TestFileLine(), false, "+1.234.567.8901"},
-        { TestFileLine(), false, "+1+234+567+8901"},
+    public static TheoryData<string, bool, string, Captures?> TelephoneNumberStrictData => new() {
+        { TestFileLine(), false, "", null},
+        { TestFileLine(), false, " ", null},
+        { TestFileLine(), false, "  ", null},
+        { TestFileLine(), false, "0", null},
+        { TestFileLine(), false, "+01", null},
+        { TestFileLine(), false, "012", null},
+        { TestFileLine(), false, "+0123", null },
+        { TestFileLine(), false, "1234567890123456", null },
+        { TestFileLine(), false, "+1234567890123456", null },
+        { TestFileLine(), false, "1234", null },
+        { TestFileLine(), false, "+1234a-BC", null },
+        { TestFileLine(), false, "*1234", null },
+        { TestFileLine(), false, "+1234", null },
+        { TestFileLine(), false, "+123456", null },
+        { TestFileLine(), false, "+12345678901", null },
+        { TestFileLine(), false, "12345678901", null },
+        { TestFileLine(), true,  "+1 (234) 567-8901", new() { ["area"] = "234", ["number"] = "567-8901"} },
+        { TestFileLine(), false, "+1 234-567-8901", null },
+        { TestFileLine(), true,  "1(234)567-8901", new() { ["area"] = "234", ["number"] = "567-8901"} },
+        { TestFileLine(), false, "1(034)567-8901", null },
+        { TestFileLine(), false, "1(911)511-8901", null },
+        { TestFileLine(), false, "+1.234.567.8901", null },
+        { TestFileLine(), false, "+1+234+567+8901", null },
     };
 
     [Theory]
     [MemberData(nameof(TelephoneNumberStrictData))]
-    public void TestTelephoneNumberStrict(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.TelephoneNumberStrict(), TestLine, shouldBe, code);
+    public void TestTelephoneNumberStrict(string TestLine, bool shouldBe, string code, Captures? captures)
+        => base.RegexTest(Countries.US.TelephoneNumberStrict(), TestLine, shouldBe, code, captures);
 
     public static TheoryData<string, bool, string> StateCodeData => new() {
         { TestFileLine(), false, ""},
@@ -124,71 +124,71 @@ public class CountriesUsTests(
     public void TestStateCodeI(string TestLine, bool shouldBe, string code)
         => base.RegexTest(Countries.US.StateCodeI(), TestLine, shouldBe, code);
 
-    public static TheoryData<string, bool, string> ZipCode5Data => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "0"},
-        { TestFileLine(), false, "01"},
-        { TestFileLine(), false, "012"},
-        { TestFileLine(), false, "0123"},
-        { TestFileLine(), true,  "01234"},
-        { TestFileLine(), false, "012345"},
-        { TestFileLine(), false, "A"},
-        { TestFileLine(), false, "AA"},
-        { TestFileLine(), false, "AAA"},
-        { TestFileLine(), false, "AAAA"},
-        { TestFileLine(), false, "AAAAA"},
+    public static TheoryData<string, bool, string, Captures?> ZipCode5Data => new() {
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine(), false, "  ", null },
+        { TestFileLine(), false, "0", null },
+        { TestFileLine(), false, "01", null },
+        { TestFileLine(), false, "012", null },
+        { TestFileLine(), false, "0123", null },
+        { TestFileLine(), true,  "01234", new() { ["zip"] = "01234" } },
+        { TestFileLine(), false, "012345", null },
+        { TestFileLine(), false, "A", null },
+        { TestFileLine(), false, "AA", null },
+        { TestFileLine(), false, "AAA", null },
+        { TestFileLine(), false, "AAAA", null },
+        { TestFileLine(), false, "AAAAA", null },
     };
 
     [Theory]
     [MemberData(nameof(ZipCode5Data))]
-    public void TestZipCode5(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.ZipCode5(), TestLine, shouldBe, code);
+    public void TestZipCode5(string TestLine, bool shouldBe, string code, Captures? captures)
+        => base.RegexTest(Countries.US.ZipCode5(), TestLine, shouldBe, code, captures);
 
-    public static TheoryData<string, bool, string> ZipCode5x4Data => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "0"},
-        { TestFileLine(), false, "01"},
-        { TestFileLine(), false, "012"},
-        { TestFileLine(), false, "0123"},
-        { TestFileLine(), false,  "01234"},
-        { TestFileLine(), true,  "01234-5678"},
-        { TestFileLine(), false, "A"},
-        { TestFileLine(), false, "AA"},
-        { TestFileLine(), false, "AAA"},
-        { TestFileLine(), false, "AAAA"},
-        { TestFileLine(), false, "AAAAA"},
+    public static TheoryData<string, bool, string, Captures?> ZipCode5x4Data => new() {
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine(), false, "  ", null },
+        { TestFileLine(), false, "0", null },
+        { TestFileLine(), false, "01", null },
+        { TestFileLine(), false, "012", null },
+        { TestFileLine(), false, "0123", null },
+        { TestFileLine(), false,  "01234", null },
+        { TestFileLine(), true,  "01234-5678", new() { ["zip"] = "01234", ["ext"] = "5678" } },
+        { TestFileLine(), false, "A", null },
+        { TestFileLine(), false, "AA", null },
+        { TestFileLine(), false, "AAA", null },
+        { TestFileLine(), false, "AAAA", null },
+        { TestFileLine(), false, "AAAAA", null },
     };
 
     [Theory]
     [MemberData(nameof(ZipCode5x4Data))]
-    public void TestZipCode5x4(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.ZipCode5x4(), TestLine, shouldBe, code);
+    public void TestZipCode5x4(string TestLine, bool shouldBe, string code, Captures? captures)
+        => base.RegexTest(Countries.US.ZipCode5x4(), TestLine, shouldBe, code, captures);
 
-    public static TheoryData<string, bool, string> ZipCode5o4Data => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "0"},
-        { TestFileLine(), false, "01"},
-        { TestFileLine(), false, "012"},
-        { TestFileLine(), false, "0123"},
-        { TestFileLine(), true,  "01234"},
-        { TestFileLine(), true,  "01234-5678"},
-        { TestFileLine(), false, "A"},
-        { TestFileLine(), false, "AA"},
-        { TestFileLine(), false, "AAA"},
-        { TestFileLine(), false, "AAAA"},
-        { TestFileLine(), false, "AAAAA"},
+    public static TheoryData<string, bool, string, Captures?> ZipCode5o4Data => new() {
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine(), false, "  ", null },
+        { TestFileLine(), false, "0", null },
+        { TestFileLine(), false, "01", null },
+        { TestFileLine(), false, "012", null },
+        { TestFileLine(), false, "0123", null },
+        { TestFileLine(), true,  "01234", new() { ["zip"] = "01234", ["ext"] = "" } },
+        { TestFileLine(), true,  "01234-5678", new() { ["zip"] = "01234", ["ext"] = "5678" } },
+        { TestFileLine(), false, "A", null },
+        { TestFileLine(), false, "AA", null },
+        { TestFileLine(), false, "AAA", null },
+        { TestFileLine(), false, "AAAA", null },
+        { TestFileLine(), false, "AAAAA", null },
     };
 
     [Theory]
     [MemberData(nameof(ZipCode5o4Data))]
-    public void TestZipCode5o4(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.US.ZipCode5o4(), TestLine, shouldBe, code);
+    public void TestZipCode5o4(string TestLine, bool shouldBe, string code, Captures? captures)
+        => base.RegexTest(Countries.US.ZipCode5o4(), TestLine, shouldBe, code, captures);
 
     public static TheoryData<string, bool, string> SocialSecurityNumberData => new() {
         { TestFileLine(), false, "" },

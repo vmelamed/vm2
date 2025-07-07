@@ -1,13 +1,15 @@
-using System.CommandLine;
-using vm2.RegexLib;
+namespace vm2.RegexLib.Reflector;
 
-namespace RegexLibReflectorDemo;
+using System.CommandLine;
+
+using vm2.RegexLib;
 
 /// <summary>
 /// Command-line utility to explore and inspect generated regex methods in the RegexLib project.
 /// </summary>
 class Program
 {
+#pragma warning disable IDE1006 // Naming Styles
     static async Task<int> Main(string[] args)
     {
         var rootCommand = new RootCommand("RegexLib Inspector - Explore generated regex methods in the RegexLib project");
@@ -16,31 +18,35 @@ class Program
         var listCommand = new Command("list", "List all generated regex methods")
         {
             new Option<string?>(
-                aliases: ["--format", "-f"],
-                description: "Output format: table, grouped, simple, or full")
-            {
-                ArgumentHelpName = "format"
-            },
+                    aliases: ["--format", "-f"],
+                    description: "Output format: table, grouped, simple, or full") { ArgumentHelpName = "format" },
             new Option<bool>(
-                aliases: ["--validate", "-v"],
-                description: "Validate that all regex methods compile successfully")
+                    aliases: ["--validate", "-v"],
+                    description: "Validate that all regex methods compile successfully")
         };
 
-        listCommand.SetHandler(async (string? format, bool validate) =>
-        {
-            await HandleListCommand(format, validate);
-        }, listCommand.Options.OfType<Option<string?>>().First(), listCommand.Options.OfType<Option<bool>>().First());
+        listCommand.SetHandler(
+                        HandleListCommandAsync,
+                        listCommand
+                            .Options
+                            .OfType<Option<string?>>()
+                            .First(),
+                        listCommand
+                            .Options
+                            .OfType<Option<bool>>()
+                            .First());
 
         // Class-specific command
-        var classCommand = new Command("class", "Show regex methods from a specific class")
-        {
-            new Argument<string>("className", "Name of the class to inspect")
-        };
+        var classCommand = new Command("class", "Show regex methods from a specific class") {
+                                new Argument<string>("className", "Name of the class to inspect")
+                           };
 
-        classCommand.SetHandler(async (string className) =>
-        {
-            await HandleClassCommand(className);
-        }, classCommand.Arguments.OfType<Argument<string>>().First());
+        classCommand.SetHandler(
+            HandleClassCommandAsync,
+            classCommand
+                .Arguments
+                .OfType<Argument<string>>()
+                .First());
 
         // Method-specific command
         var methodCommand = new Command("method", "Show details for a specific regex method")
@@ -54,18 +60,21 @@ class Program
             }
         };
 
-        methodCommand.SetHandler(async (string methodName, string? className) =>
-        {
-            await HandleMethodCommand(methodName, className);
-        }, methodCommand.Arguments.OfType<Argument<string>>().First(), methodCommand.Options.OfType<Option<string?>>().First());
+        methodCommand.SetHandler(
+            HandleMethodCommandAsync,
+            methodCommand
+                .Arguments
+                .OfType<Argument<string>>()
+                .First(),
+            methodCommand
+                .Options
+                .OfType<Option<string?>>()
+                .First());
 
         // Classes command - list available classes
         var classesCommand = new Command("classes", "List all classes that contain generated regex methods");
 
-        classesCommand.SetHandler(() =>
-        {
-            HandleClassesCommand();
-        });
+        classesCommand.SetHandler(HandleClassesCommand);
 
         // Add commands to root
         rootCommand.AddCommand(listCommand);
@@ -92,8 +101,9 @@ class Program
 
         return await rootCommand.InvokeAsync(args);
     }
+#pragma warning restore IDE1006 // Naming Styles
 
-    private static async Task HandleListCommand(string? format, bool validate)
+    private static async Task HandleListCommandAsync(string? format, bool validate)
     {
         Console.WriteLine("=== Generated Regex Methods in RegexLib ===\n");
 
@@ -138,14 +148,14 @@ class Program
         await Task.CompletedTask;
     }
 
-    private static async Task HandleClassCommand(string className)
+    private static async Task HandleClassCommandAsync(string className)
     {
         Console.WriteLine($"=== Regex Methods in '{className}' Class ===\n");
         RegexLibReflector.PrintGeneratedRegexMethodsByClass(className);
         await Task.CompletedTask;
     }
 
-    private static async Task HandleMethodCommand(string methodName, string? className)
+    private static async Task HandleMethodCommandAsync(string methodName, string? className)
     {
         Console.WriteLine($"=== Details for '{methodName}' Method ===\n");
         RegexLibReflector.PrintGeneratedRegexMethodByName(methodName, className);
@@ -156,8 +166,8 @@ class Program
     {
         Console.WriteLine("=== Available Classes with Generated Regex Methods ===\n");
 
-        var classes = RegexLibReflector.GetAvailableClassNames();
-        var allMethods = RegexLibReflector.GetGeneratedRegexMethods();
+        var classes = RegexLibReflector.GetAvailableClassNames().ToList();
+        var allMethods = RegexLibReflector.GetGeneratedRegexMethods().ToList();
 
         foreach (var className in classes)
         {

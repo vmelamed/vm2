@@ -189,7 +189,7 @@ public partial class UrisTests(
     [Theory]
     [MemberData(nameof(KeyValueQueryData))]
     public void TestKeyValueQueryData(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.KvQuery(), TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.KvQuery(), TestFileLine, shouldBe, input, captures, allGroups: true);
 
     // -----
 

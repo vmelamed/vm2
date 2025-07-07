@@ -179,11 +179,10 @@ public static partial class Countries
     /// <c>-() </c> (incl. space).
     /// </summary>
     public const string TelephoneNumberExtraRex = $$"""
-                                                \+?
-                                                ({{telephoneSeparatorRex}}*{{Ascii.NzDigitChar}})
-                                                (?:{{telephoneSeparatorRex}}? {{Ascii.DigitChar}}){2,14}
-                                                {{telephoneSeparatorRex}}*;
-                                                """;
+                                                    \+?{{Ascii.NzDigitChar}}
+                                                    (?:{{telephoneSeparatorRex}}* {{Ascii.DigitChar}}){2,14}
+                                                    {{telephoneSeparatorRex}}*
+                                                    """;
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a telephone number expressed with the accepted
@@ -212,7 +211,7 @@ public static partial class Countries
         /// <summary>
         /// The name of a matching group representing an 7-digit telephone number.
         /// </summary>
-        public const string NumberGr = "area";
+        public const string NumberGr = "number";
 
         #region TelephoneNumber
         /// <summary>
@@ -256,7 +255,8 @@ public static partial class Countries
         /// </remarks>
         public const string TelephoneNumberStrictRex = $$"""
              (?:\+?1)? {{Ascii.Space}}? \( (?<{{AreaGr}}> [2-9] (?!11) {{Ascii.DigitChar}}{2} ) \)
-             {{Ascii.Space}}? (?<{{NumberGr}}> [2-9]{{Ascii.DigitChar}}{2} \- {{Ascii.DigitChar}}{4} {{telephoneSeparatorRex}}* )";
+             {{Ascii.Space}}? (?<{{NumberGr}}> [2-9]{{Ascii.DigitChar}}{2} \-?
+             {{Ascii.DigitChar}}{4} {{telephoneSeparatorRex}}* )
              """;
 
         /// <summary>

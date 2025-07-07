@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/examples/" />
+  <Folder Name="/examples/RegexLib/">
+    <Project Path="examples/RegexLib/Reflector/Reflector.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
@@ -34,5 +38,4 @@
   <Folder Name="/test/Functional/">
     <Project Path="test/Functional/PrimitivesTests/PrimitivesTests.csproj" />
   </Folder>
-  <Project Path="src/RegexLibReflector/RegexLibReflector.csproj" />
 </Solution>

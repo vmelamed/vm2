@@ -20,7 +20,7 @@ public static partial class WindowsPathname
     const string anyFilename         = $@"[^{notFilenameChars}]{{0,259}} [^{notFilenameLastChar}]";
 
     // Special file names (devices)
-    const string deviceNames    = $@"(?i: CON | PRN | AUX | NUL | COM\d? | LPT\d?) (?:\.{anyFilename})?";   // CON.txt is equivalent to CON
+    const string deviceNames    = $@"(?: CON | PRN | AUX | NUL | COM\d? | LPT\d? ) (?:\.{anyFilename})?";   // CON.txt is equivalent to CON
 
     /// <summary>
     /// Matches file or directory name on a disk (excludes the device names).
@@ -34,14 +34,14 @@ public static partial class WindowsPathname
     /// Matches a string representing file or directory name.
     /// </summary>
     /// <remarks>
-    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/> and <see cref="RegexOptions.IgnoreCase"/>.
     /// </remarks>
     public const string DiskFilenameRegex = $"^{DiskFilenameRex}$";
 
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string representing file or directory name.
     /// </summary>
-    [GeneratedRegex(DiskFilenameRegex, Common.Options)]
+    [GeneratedRegex(DiskFilenameRegex, Common.OptionsI)]
     public static partial Regex DiskFilename();
 
     /// <summary>
@@ -70,7 +70,7 @@ public static partial class WindowsPathname
     /// <para>Named groups: <see cref="PathGr"/>.</para>
     /// </summary>
     /// <remarks>
-    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/> and <see cref="RegexOptions.IgnoreCase"/>.
     /// </remarks>
     public const string PathRex = $"""
         (?:

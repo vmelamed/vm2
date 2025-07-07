@@ -1,26 +1,39 @@
 # RegexLib
 
-A library of regular expressions for .NET, providing a collection of commonly used regex patterns for various purposes, such as
-validation, parsing, and matching. For many of the patterns I tried to follow aplicable RFC-s and other standards, so that the
-regular expressions can be used in a wide range of applications. Most of the standards describe the syntax of their respective
-formats in some form of Bacus-Naur Form (BNF), which I tried to follow when creating the regular expressions. By compositioning
-the regular expressions from smaller fragments, as they are defined in the respective defining documents, I tried to make the
-regular expressions easier to understand, follow, and debug. Along the way, I tried to stick with the documents' definitions of
-specific terms but also adopted some naming conventions to make the identifiers more readable and easier to use.
+A library of regular expressions for .NET Core, providing a collection of commonly used, domain specific, regex patterns for
+various purposes, such as validation, parsing, and matching.
 
-The regular expressions that I thought would be used the most I provided compioled versions of them, leveraging the latest .NET
-performance improvements and the attribute `GeneratedRegexAttribute`. Other regex fragments, for which I do not expect a lot of
-demand, I exposed as `public const string`-s. If you need them compiled, you can use either the `Regex.CompileToAssembly` method
-or define your own methods with `GeneratedRegexAttribute`.
+To be honest. I do not believe that the library should be used as a package reference, but rather as a source code reference -
+there migh be many patterns that in your application are not needed, and you would not want to include the whole library.
 
-Because some of the regular expressions are quite complex, I adopted a regex style that uses whitespaces, new lines, etc. Some
-of the expressions should be case-insensitive and some even match multiline strings (e.g. Base64). The used regex options are
-defined in the static class `Common`.
+For many patterns, I have tried to follow applicable RFCs and other standards, so that the regular expressions can be used in a
+wide range of applications. Most of these standards define a simple context-free (regular) grammar. Most of them describe the
+syntax of their respective formats in some form of (Extended) Backus-Naur Form - (E)BNF, which I tried to follow as close as
+possible: encoding the regular expressions by composing smaller expressions (fragments or terms), as defined in the respective
+documents, I aimed to make the regular expressions easier to understand, compare with standards, maintain, and debug. Along the
+way, I tried to adhere to the documents' definitions of specific terms (vocabulary), but also adopted some naming conventions to
+make the identifiers more readable and easier to use in .NET.
+
+For the regular expressions that I expected to be used most often, I provided compiled `Regex` objects, leveraging the latest
+.NET performance improvements and the `GeneratedRegexAttribute`. Other regex fragments, for which I do not expect high
+demand, are exposed as `public const string` fields. If you need them compiled, you can use the `Regex.CompileToAssembly`
+method or define your own methods with `GeneratedRegexAttribute`.
+
+Because some of the regular expressions become quite complex, I adopted a regex style that uses whitespaces, new lines, and
+comments. Some expressions should be case-insensitive, and some even match multiline strings (e.g., for Base64 encoded byte
+arrays). The regex options used are defined in the static class `Common`.
+
+## `RegexLibReflector` utility
+
+If you prefer to use the library as a source code reference, you can use the `RegexLibReflector` utility to examine the library
+and find the regular expressions you need. The utility is a console application that can be used to list all the regular
+expression objects in the library, their names, and their descriptions. It can also be used to search for specific regular
+expressions by name or description, and to generate a markdown file with the list of all regular expressions in the library.
 
 ## Naming Conventions
 
-I tried to follow consistent naming conventions for the identifiers in this library to make it easier to understand, use,
-comprehend the complex regular expressions, and last but not least to debug. Here are the main conventions:
+I tried to follow consistent naming conventions for the identifiers in this library to make it easier to understand and use the
+complex regular expressions, and last but not least to debug. Here are the main conventions:
 
 - Identifiers with suffix <b>`Chars`</b> are regular expression fragments that are meant to be used as a sequence of characters
   (__character set__ -> chars) in more complex regular expressions. Examples:

@@ -1,6 +1,3 @@
-using System.Reflection;
-using System.Text.RegularExpressions;
-
 namespace vm2.RegexLib;
 
 /// <summary>
@@ -8,6 +5,21 @@ namespace vm2.RegexLib;
 /// </summary>
 public static class RegexLibReflector
 {
+    /// <summary>
+    /// Gets all public regular expression methods marked with GeneratedRegexAttribute in the RegexLib project.
+    /// </summary>
+    /// <returns>A list of MethodInfo objects representing the generated regex methods.</returns>
+    public static IEnumerable<MethodInfo> GetGeneratedRegexMethods()
+        => typeof(RegexLibReflector)
+                .Assembly
+                .GetTypes()
+                .Where(t => t.IsPublic && t.Namespace is "vm2.RegexLib")
+                .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                                    .Where(m => m.GetCustomAttribute<GeneratedRegexAttribute>() is not null &&
+                                                m.ReturnType == typeof(Regex) &&
+                                                m.GetParameters().Length is 0))
+                ;
+
     /// <summary>
     /// Prints all public regular expression methods marked with GeneratedRegexAttribute in the RegexLib project.
     /// </summary>
@@ -22,62 +34,17 @@ public static class RegexLibReflector
         var regexMethods = GetGeneratedRegexMethods();
 
         if (sortByType)
-        {
-            regexMethods = regexMethods
-                .OrderBy(m => m.DeclaringType?.Name)
-                .ThenBy(m => m.Name)
-                .ToList();
-        }
+            regexMethods = [.. regexMethods
+                                .OrderBy(m => m.DeclaringType?.Name)
+                                .ThenBy(m => m.Name)];
         else
-        {
-            regexMethods = regexMethods
-                .OrderBy(m => m.Name)
-                .ToList();
-        }
+            regexMethods = [.. regexMethods
+                                .OrderBy(m => m.Name)];
 
-        Console.WriteLine($"Found {regexMethods.Count} public methods marked with [GeneratedRegex] attribute:\n");
+        Console.WriteLine($"Found {regexMethods.Count()} public methods marked with [GeneratedRegex] attribute:\n");
 
         foreach (var method in regexMethods)
-        {
             PrintMethodInfo(method, includeFullSignature, includeDeclaringType);
-        }
-    }
-
-    /// <summary>
-    /// Gets all public regular expression methods marked with GeneratedRegexAttribute in the RegexLib project.
-    /// </summary>
-    /// <returns>A list of MethodInfo objects representing the generated regex methods.</returns>
-    public static List<MethodInfo> GetGeneratedRegexMethods()
-    {
-        var regexLibAssembly = typeof(RegexLibReflector).Assembly;
-        var generatedRegexMethods = new List<MethodInfo>();
-
-        foreach (var type in regexLibAssembly.GetTypes())
-        {
-            // Only look at public types in the vm2.RegexLib namespace
-            if (!type.IsPublic || type.Namespace != "vm2.RegexLib")
-                continue;
-
-            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
-            {
-                // Check if the method has the GeneratedRegexAttribute
-                var generatedRegexAttr = method.GetCustomAttribute<GeneratedRegexAttribute>();
-                if (generatedRegexAttr == null)
-                    continue;
-
-                // Verify it returns a Regex
-                if (method.ReturnType != typeof(Regex))
-                    continue;
-
-                // Verify it's a parameterless method (typical for generated regex methods)
-                if (method.GetParameters().Length > 0)
-                    continue;
-
-                generatedRegexMethods.Add(method);
-            }
-        }
-
-        return generatedRegexMethods;
     }
 
     /// <summary>
@@ -85,13 +52,10 @@ public static class RegexLibReflector
     /// </summary>
     /// <param name="className">The name of the class to filter by.</param>
     /// <returns>A list of MethodInfo objects representing the generated regex methods from the specified class.</returns>
-    public static List<MethodInfo> GetGeneratedRegexMethodsByClass(string className)
-    {
-        var allMethods = GetGeneratedRegexMethods();
-        return allMethods
-            .Where(m => m.DeclaringType?.Name.Equals(className, StringComparison.OrdinalIgnoreCase) == true)
-            .ToList();
-    }
+    public static IEnumerable<MethodInfo> GetGeneratedRegexMethodsByClass(string className)
+        => GetGeneratedRegexMethods()
+                .Where(m => m.DeclaringType?.Name == className)
+                ;
 
     /// <summary>
     /// Gets a specific public regular expression method marked with GeneratedRegexAttribute.
@@ -99,47 +63,37 @@ public static class RegexLibReflector
     /// <param name="methodName">The name of the method to find.</param>
     /// <param name="className">Optional class name to narrow the search.</param>
     /// <returns>A list of MethodInfo objects (could be multiple if method name exists in multiple classes).</returns>
-    public static List<MethodInfo> GetGeneratedRegexMethodByName(string methodName, string? className = null)
-    {
-        var allMethods = GetGeneratedRegexMethods();
-        var filteredMethods = allMethods
-            .Where(m => m.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase));
-
-        if (!string.IsNullOrEmpty(className))
-        {
-            filteredMethods = filteredMethods
-                .Where(m => m.DeclaringType?.Name.Equals(className, StringComparison.OrdinalIgnoreCase) == true);
-        }
-
-        return filteredMethods.ToList();
-    }
+    public static IEnumerable<MethodInfo> GetGeneratedRegexMethodByName(string methodName, string? className = null)
+        => GetGeneratedRegexMethods()
+                .Where(m => m.Name.Equals(methodName))
+                .Where(m => string.IsNullOrEmpty(className) ||
+                            m.DeclaringType?.Name == className)
+                ;
 
     /// <summary>
     /// Gets all available class names that contain generated regex methods.
     /// </summary>
     /// <returns>A list of class names.</returns>
-    public static List<string> GetAvailableClassNames()
-    {
-        var allMethods = GetGeneratedRegexMethods();
-        return allMethods
-            .Select(m => m.DeclaringType?.Name)
-            .Where(name => !string.IsNullOrEmpty(name))
-            .Cast<string>()
-            .Distinct()
-            .OrderBy(name => name)
-            .ToList();
-    }
+    public static IEnumerable<string> GetAvailableClassNames()
+        => GetGeneratedRegexMethods()
+                .Select(m => m.DeclaringType?.Name)
+                .Where(name => !string.IsNullOrEmpty(name))
+                .Cast<string>()
+                .Distinct()
+                .OrderBy(name => name)
+                ;
 
     /// <summary>
     /// Prints detailed information about all generated regex methods grouped by class.
     /// </summary>
     public static void PrintGeneratedRegexMethodsGrouped()
     {
-        var regexMethods = GetGeneratedRegexMethods();
+        var regexMethods = GetGeneratedRegexMethods().ToList();
         var groupedMethods = regexMethods
-            .GroupBy(m => m.DeclaringType)
-            .OrderBy(g => g.Key?.Name)
-            .ToList();
+                .GroupBy(m => m.DeclaringType)
+                .OrderBy(g => g.Key?.Name)
+                .ToList()
+                ;
 
         Console.WriteLine($"Found {regexMethods.Count} public methods marked with [GeneratedRegex] attribute in {groupedMethods.Count} classes:\n");
 
@@ -155,14 +109,7 @@ public static class RegexLibReflector
                 var attr = method.GetCustomAttribute<GeneratedRegexAttribute>();
                 Console.WriteLine($"   • {method.Name}()");
 
-                if (attr != null)
-                {
-                    Console.WriteLine($"     Pattern: {attr.Pattern}");
-                    if (attr.Options != RegexOptions.None)
-                    {
-                        Console.WriteLine($"     Options: {attr.Options}");
-                    }
-                }
+                PrintGeneratedRegexAttribute(attr);
                 Console.WriteLine();
             }
 
@@ -175,23 +122,37 @@ public static class RegexLibReflector
     /// </summary>
     public static void PrintGeneratedRegexSummaryTable()
     {
-        var regexMethods = GetGeneratedRegexMethods();
-        var data = regexMethods
-            .Select(m => new
+        static string TrimPattern(string pattern, int maxLength = 100)
+        {
+            pattern = pattern.Replace(Environment.NewLine, "");
+
+            if (pattern.Length > maxLength)
             {
-                Class = m.DeclaringType?.Name ?? "Unknown",
-                Method = m.Name,
-                Pattern = m.GetCustomAttribute<GeneratedRegexAttribute>()?.Pattern ?? "",
-                Options = m.GetCustomAttribute<GeneratedRegexAttribute>()?.Options ?? RegexOptions.None
-            })
-            .OrderBy(x => x.Class)
-            .ThenBy(x => x.Method)
-            .ToList();
+                pattern = pattern[..(maxLength - 3)];
+                pattern += "...";
+            }
+
+            return pattern;
+        }
+
+        var data = GetGeneratedRegexMethods()
+                        .Select(
+                            m => new
+                            {
+                                Class   = m.DeclaringType?.Name ?? "Unknown",
+                                Method  = m.Name,
+                                Pattern = TrimPattern(m.GetCustomAttribute<GeneratedRegexAttribute>()?.Pattern ?? ""),
+                                Options = m.GetCustomAttribute<GeneratedRegexAttribute>()?.Options ?? RegexOptions.None
+                            })
+                        .OrderBy(x => x.Class)
+                        .ThenBy(x => x.Method)
+                        .ToList()
+                        ;
 
         // Calculate column widths
-        var classWidth = Math.Max(5, data.Max(x => x.Class.Length) + 2);
-        var methodWidth = Math.Max(6, data.Max(x => x.Method.Length) + 2);
-        var patternWidth = Math.Max(7, Math.Min(50, data.Max(x => x.Pattern.Length) + 2));
+        var classWidth   = Math.Max(5, data.Max(x => x.Class.Length) + 2);
+        var methodWidth  = Math.Max(6, data.Max(x => x.Method.Length) + 2);
+        var patternWidth = Math.Max(7, Math.Min(100, data.Max(x => x.Pattern.Length) + 2));
 
         // Print header
         Console.WriteLine($"{"Class".PadRight(classWidth)} | {"Method".PadRight(methodWidth)} | {"Pattern".PadRight(patternWidth)} | Options");
@@ -201,8 +162,8 @@ public static class RegexLibReflector
         foreach (var item in data)
         {
             var truncatedPattern = item.Pattern.Length > patternWidth - 2
-                ? item.Pattern.Substring(0, patternWidth - 5) + "..."
-                : item.Pattern;
+                                        ? item.Pattern[..(patternWidth - 5)] + "..."
+                                        : item.Pattern;
 
             Console.WriteLine($"{item.Class.PadRight(classWidth)} | {item.Method.PadRight(methodWidth)} | {truncatedPattern.PadRight(patternWidth)} | {item.Options}");
         }
@@ -215,27 +176,17 @@ public static class RegexLibReflector
         var generatedRegexAttr = method.GetCustomAttribute<GeneratedRegexAttribute>();
 
         if (includeDeclaringType && method.DeclaringType != null)
-        {
             Console.Write($"{method.DeclaringType.Name}.");
-        }
 
         if (includeFullSignature)
-        {
             Console.Write($"public static Regex {method.Name}()");
-        }
         else
-        {
             Console.Write(method.Name);
-        }
 
         if (generatedRegexAttr != null)
         {
             Console.WriteLine();
-            Console.WriteLine($"    Pattern: {generatedRegexAttr.Pattern}");
-            if (generatedRegexAttr.Options != RegexOptions.None)
-            {
-                Console.WriteLine($"    Options: {generatedRegexAttr.Options}");
-            }
+            PrintGeneratedRegexAttribute(generatedRegexAttr);
         }
 
         Console.WriteLine();
@@ -246,18 +197,18 @@ public static class RegexLibReflector
     /// </summary>
     public static void ValidateGeneratedRegexMethods()
     {
-        var regexMethods = GetGeneratedRegexMethods();
+        var regexMethods = GetGeneratedRegexMethods().ToList();
         var errors = new List<string>();
         var success = 0;
 
         Console.WriteLine($"Validating {regexMethods.Count} generated regex methods...\n");
 
         foreach (var method in regexMethods)
-        {
             try
             {
                 var regex = (Regex?)method.Invoke(null, null);
-                if (regex != null)
+
+                if (regex is not null)
                 {
                     Console.WriteLine($"✅ {method.DeclaringType?.Name}.{method.Name}() - OK");
                     success++;
@@ -275,7 +226,6 @@ public static class RegexLibReflector
                 Console.WriteLine(error);
                 errors.Add(error);
             }
-        }
 
         Console.WriteLine($"\nValidation Summary:");
         Console.WriteLine($"✅ Success: {success}");
@@ -285,9 +235,7 @@ public static class RegexLibReflector
         {
             Console.WriteLine("\nErrors:");
             foreach (var error in errors)
-            {
                 Console.WriteLine($"  {error}");
-            }
         }
     }
 
@@ -297,16 +245,15 @@ public static class RegexLibReflector
     /// <param name="className">The class name to filter by.</param>
     public static void PrintGeneratedRegexMethodsByClass(string className)
     {
-        var methods = GetGeneratedRegexMethodsByClass(className);
+        var methods = GetGeneratedRegexMethodsByClass(className).ToList();
 
-        if (methods.Count == 0)
+        if (methods.Count is 0)
         {
             Console.WriteLine($"No generated regex methods found in class '{className}'.");
             Console.WriteLine("\nAvailable classes:");
             foreach (var availableClass in GetAvailableClassNames())
-            {
                 Console.WriteLine($"  • {availableClass}");
-            }
+
             return;
         }
 
@@ -317,14 +264,7 @@ public static class RegexLibReflector
             var attr = method.GetCustomAttribute<GeneratedRegexAttribute>();
             Console.WriteLine($"• {method.Name}()");
 
-            if (attr != null)
-            {
-                Console.WriteLine($"  Pattern: {attr.Pattern}");
-                if (attr.Options != RegexOptions.None)
-                {
-                    Console.WriteLine($"  Options: {attr.Options}");
-                }
-            }
+            PrintGeneratedRegexAttribute(attr);
             Console.WriteLine();
         }
     }
@@ -336,9 +276,9 @@ public static class RegexLibReflector
     /// <param name="className">Optional class name to narrow the search.</param>
     public static void PrintGeneratedRegexMethodByName(string methodName, string? className = null)
     {
-        var methods = GetGeneratedRegexMethodByName(methodName, className);
+        var methods = GetGeneratedRegexMethodByName(methodName, className).ToList();
 
-        if (methods.Count == 0)
+        if (methods.Count is 0)
         {
             Console.WriteLine($"No generated regex method named '{methodName}' found" +
                              (string.IsNullOrEmpty(className) ? "." : $" in class '{className}'."));
@@ -346,9 +286,7 @@ public static class RegexLibReflector
         }
 
         if (methods.Count > 1)
-        {
             Console.WriteLine($"Found {methods.Count} methods named '{methodName}' in different classes:\n");
-        }
 
         foreach (var method in methods.OrderBy(m => m.DeclaringType?.Name))
         {
@@ -357,27 +295,32 @@ public static class RegexLibReflector
 
             if (attr != null)
             {
-                Console.WriteLine($"  Pattern: {attr.Pattern}");
-                if (attr.Options != RegexOptions.None)
-                {
-                    Console.WriteLine($"  Options: {attr.Options}");
-                }
+                PrintGeneratedRegexAttribute(attr);
 
                 // Show a sample test
                 try
                 {
                     var regex = (Regex?)method.Invoke(null, null);
                     if (regex != null)
-                    {
                         Console.WriteLine($"  Regex compiled successfully");
-                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"  ⚠️  Error compiling regex: {ex.Message}");
                 }
             }
+
             Console.WriteLine();
         }
+    }
+
+    static void PrintGeneratedRegexAttribute(GeneratedRegexAttribute? attr)
+    {
+        if (attr is null)
+            return;
+
+        if (attr.Options != RegexOptions.None)
+            Console.WriteLine($"  Options: {attr.Options}");
+        Console.WriteLine($"  Pattern: ==>{attr.Pattern}<==");
     }
 }
