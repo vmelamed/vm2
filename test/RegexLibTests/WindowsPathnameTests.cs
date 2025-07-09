@@ -115,6 +115,19 @@ public class WindowsPathnameTests(
                                 ["path"] = @"\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm",
                                 ["file"] = "01234567890123456789012345678901234567890.txt" }
                              },
+        { TestFileLine("UNC path - should not match (not supported yet)"), false, @"\\server\share\file.txt", null },
+        { TestFileLine("Device name in subdirectory - should match"), true, @"a:\folder\con\file.txt", new() { ["drive"] = "a", ["path"] = @"\folder\con", ["file"] = "file.txt" } },
+        { TestFileLine("Path with null character (should not match)"), false, "abc\0def", null },
+        { TestFileLine("Path with only slashes (should not match)"), false, @"\\\\", null },
+        { TestFileLine("Path with mixed separators"), true, @"a:/folder\sub/file.txt", new() { ["drive"] = "a", ["path"] = @"/folder\sub", ["file"] = "file.txt" } },
+        { TestFileLine("Path with only dots (should match as file)"), true, ".", new() { ["drive"] = "", ["path"] = "", ["file"] = "." } },
+        { TestFileLine("Path with only double dots (should match as file)"), true, "..", new() { ["drive"] = "", ["path"] = "", ["file"] = ".." } },
+        { TestFileLine("Path with trailing backslash (should not match)"), false, @"C:\abc\", null },
+        { TestFileLine("Path with multiple consecutive separators (should not match)"), false, @"a:\\b\\c\\file.txt", null },
+        { TestFileLine("Path with space in file name"), true, @"a:\folder\file name.txt", new() { ["drive"] = "a", ["path"] = @"\folder", ["file"] = "file name.txt" } },
+        { TestFileLine("Path with dash and underscore"), true, @"a:\foo-bar_baz.txt", new() { ["drive"] = "a", ["path"] = "", ["file"] = "foo-bar_baz.txt" } },
+        { TestFileLine("Path with leading backslash and dot file"), true, @"\folder\.hidden", new() { ["drive"] = "", ["path"] = @"\folder", ["file"] = ".hidden" } },
+        { TestFileLine("Path with Unicode characters"), true, @"a:\папка\файл.txt", new() { ["drive"] = "a", ["path"] = @"\папка", ["file"] = "файл.txt" } },
     };
 
     [Theory]
