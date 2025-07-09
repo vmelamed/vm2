@@ -113,6 +113,7 @@ public partial class NetTests(
                       false, "дир.бг", null },
         { TestFileLine("not good - percent URL-like coded"),
                       false, "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3", null },
+        { TestFileLine("punycode domain"), true, "xn--d1acufc.xn--p1ai", new() { ["ipDnsName"] = "xn--d1acufc.xn--p1ai" } },
     };
 
     [Theory]
@@ -163,6 +164,8 @@ public partial class NetTests(
                       false, "76600", null },
         { TestFileLine("99999999"),
                       false, "99999999", null },
+        { TestFileLine("negative one"), false, "-1", null },
+        { TestFileLine("just above max"), false, "65536", null },
     };
 
     [Theory]
