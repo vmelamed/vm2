@@ -7,34 +7,59 @@ public class WindowsPathnameTests(
     static readonly string boarderLengthName = new('a', 260);
     static readonly string overBoardLengthName = new('a', 261);
 
-    public static TheoryData<string, bool, string> WinFilenameData => new() {
-        { TestFileLine(), false, "" },
-        { TestFileLine(), false, " " },
-        { TestFileLine(), false, "." },
-        { TestFileLine(), false, ".." },
-        { TestFileLine(), false, "con" },
-        { TestFileLine(), false, "con.txt" },
-        { TestFileLine(), false, "lpt1" },
-        { TestFileLine(), false, "lpt1.txt" },
-        { TestFileLine(), true,  "a" },
-        { TestFileLine(), true,  "C" },
-        { TestFileLine(), true,  "ж" },
-        { TestFileLine(), true,  "Ж" },
-        { TestFileLine(), true,  "ab" },
-        { TestFileLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm" },
-        { TestFileLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM qwertyuiopasdfghjklzxcvbnm" },
-        { TestFileLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM.qwertyuiopasdfghjklzxcvbnm" },
-        { TestFileLine(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm." },
-        { TestFileLine(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm " },
-        { TestFileLine(), true,  boarderLengthName },
-        { TestFileLine(), false, overBoardLengthName },
-        { TestFileLine(), true,  "явертъуиопасдфгхйклзьцжбнмшщюч ЯВЕРТЪУИОПАСДФГХЙКЛЗЬЦЖБНМШЩЮЧ" },
+    public static TheoryData<string, bool, string, Captures?> WinFilenameData => new() {
+        { TestFileLine(), false, "", null },
+        { TestFileLine(), false, " ", null },
+        { TestFileLine(), false, ".", null },
+        { TestFileLine(), false, "..", null },
+        { TestFileLine(), false, "con", null },
+        { TestFileLine(), false, "con.txt", null },
+        { TestFileLine(), false, "lpt1", null },
+        { TestFileLine(), false, "lpt1.txt", null },
+        { TestFileLine(), true,  "a", null },
+        { TestFileLine(), true,  "C", null },
+        { TestFileLine(), true,  "ж", null },
+        { TestFileLine(), true,  "Ж", null },
+        { TestFileLine(), true,  "ab", null },
+        { TestFileLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm", null },
+        { TestFileLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM qwertyuiopasdfghjklzxcvbnm", null },
+        { TestFileLine(), true,  "QWERTYUIOPASDFGHJKLZXCVBNM.qwertyuiopasdfghjklzxcvbnm", null },
+        { TestFileLine(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm.", null },
+        { TestFileLine(), false, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm ", null },
+        { TestFileLine(), true,  boarderLengthName, null },
+        { TestFileLine(), false, overBoardLengthName, null },
+        { TestFileLine(), true,  "явертъуиопасдфгхйклзьцжбнмшщюч ЯВЕРТЪУИОПАСДФГХЙКЛЗЬЦЖБНМШЩЮЧ", null },
+        // Edge and additional tests
+        { TestFileLine("File name with dash and underscore"), true, "foo-bar_baz", null },
+        { TestFileLine("File name with space"), true, "file name.txt", null },
+        { TestFileLine("File name with Unicode"), true, "файл.txt", null },
+        { TestFileLine("File name with leading dot"), true, ".hidden", null },
+        { TestFileLine("File name with multiple dots"), true, "archive.tar.gz", null },
+        { TestFileLine("File name with trailing dot (should not match)"), false, "file.", null },
+        { TestFileLine("File name with trailing space (should not match)"), false, "file ", null },
+        { TestFileLine("File name with reserved character < (should not match)"), false, "file<name", null },
+        { TestFileLine("File name with reserved character > (should not match)"), false, "file>name", null },
+        { TestFileLine("File name with reserved character : (should not match)"), false, "file:name", null },
+        { TestFileLine("File name with reserved character \" (should not match)"), false, "file\"name", null },
+        { TestFileLine("File name with reserved character / (should not match)"), false, "file/name", null },
+        { TestFileLine("File name with reserved character \\ (should not match)"), false, "file\\name", null },
+        { TestFileLine("File name with reserved character | (should not match)"), false, "file|name", null },
+        { TestFileLine("File name with reserved character ? (should not match)"), false, "file?name", null },
+        { TestFileLine("File name with reserved character * (should not match)"), false, "file*name", null },
+        { TestFileLine("File name with null character (should not match)"), false, "abc\0def", null },
+        { TestFileLine("File name with only slashes (should not match)"), false, "////", null },
+        { TestFileLine("File name with only spaces (should not match)"), false, "   ", null },
+        { TestFileLine("File name with only underscores"), true, "____", null },
+        { TestFileLine("File name with only dashes"), true, "----", null },
+        { TestFileLine("File name with only numbers"), true, "1234567890", null },
+        { TestFileLine("File name with max length 260"), true, boarderLengthName, null },
+        { TestFileLine("File name with length 261 (should not match)"), false, overBoardLengthName, null },
     };
 
     [Theory]
     [MemberData(nameof(WinFilenameData))]
-    public void TestWinFilename(string TestLine, bool shouldBe, string fileName)
-        => base.RegexTest(WindowsPathname.DiskFilename(), TestLine, shouldBe, fileName);
+    public void TestWinFilename(string TestLine, bool shouldBe, string fileName, Captures? captures)
+        => base.RegexTest(WindowsPathname.DiskFilename(), TestLine, shouldBe, fileName, captures);
 
     public static TheoryData<string, bool, string, Captures?> WinPathnameData => new() {
         { TestFileLine(), false, "", null },
@@ -116,16 +141,21 @@ public class WindowsPathnameTests(
                                 ["file"] = "01234567890123456789012345678901234567890.txt" }
                              },
         { TestFileLine("UNC path - should not match (not supported yet)"), false, @"\\server\share\file.txt", null },
-        { TestFileLine("Device name in subdirectory - should match"), true, @"a:\folder\con\file.txt", new() { ["drive"] = "a", ["path"] = @"\folder\con", ["file"] = "file.txt" } },
+        { TestFileLine("Device name in subdirectory - should match"), false, @"a:\folder\con\file.txt", null },
         { TestFileLine("Path with null character (should not match)"), false, "abc\0def", null },
         { TestFileLine("Path with only slashes (should not match)"), false, @"\\\\", null },
         { TestFileLine("Path with mixed separators"), true, @"a:/folder\sub/file.txt", new() { ["drive"] = "a", ["path"] = @"/folder\sub", ["file"] = "file.txt" } },
-        { TestFileLine("Path with only dots (should match as file)"), true, ".", new() { ["drive"] = "", ["path"] = "", ["file"] = "." } },
-        { TestFileLine("Path with only double dots (should match as file)"), true, "..", new() { ["drive"] = "", ["path"] = "", ["file"] = ".." } },
+        { TestFileLine("Path with only dots (should match as file)"), false, ".", null },
+        { TestFileLine("Path with only double dots (should match as file)"), false, "..", null },
         { TestFileLine("Path with trailing backslash (should not match)"), false, @"C:\abc\", null },
         { TestFileLine("Path with multiple consecutive separators (should not match)"), false, @"a:\\b\\c\\file.txt", null },
         { TestFileLine("Path with space in file name"), true, @"a:\folder\file name.txt", new() { ["drive"] = "a", ["path"] = @"\folder", ["file"] = "file name.txt" } },
-        { TestFileLine("Path with dash and underscore"), true, @"a:\foo-bar_baz.txt", new() { ["drive"] = "a", ["path"] = "", ["file"] = "foo-bar_baz.txt" } },
+        { TestFileLine("Path with dash and underscore"), true, @"a:\foo-bar_baz.txt", new()
+        {
+            ["drive"] = "a",
+            ["path"] = @"\",
+            ["file"] = "foo-bar_baz.txt",
+        } },
         { TestFileLine("Path with leading backslash and dot file"), true, @"\folder\.hidden", new() { ["drive"] = "", ["path"] = @"\folder", ["file"] = ".hidden" } },
         { TestFileLine("Path with Unicode characters"), true, @"a:\папка\файл.txt", new() { ["drive"] = "a", ["path"] = @"\папка", ["file"] = "файл.txt" } },
     };
