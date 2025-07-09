@@ -171,4 +171,102 @@ public class AsciiTests(
     [MemberData(nameof(Base64Data))]
     public void TestBase64(string TestLine, bool shouldBe, string input)
         => base.RegexTest(Ascii.Base64(), TestLine, shouldBe, input);
+
+    public static TheoryData<string, bool, string> DigitCharRexData => new() {
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), true , "0" },
+        { TestFileLine(), true , "9" },
+        { TestFileLine(), false, "a" },
+        { TestFileLine(), false, "A" },
+        { TestFileLine(), false, "/" },
+        { TestFileLine(), false, " " },
+        { TestFileLine(), false, "Ж" },
+    };
+
+    [Theory]
+    [MemberData(nameof(DigitCharRexData))]
+    public void TestDigitCharRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.DigitChar, TestLine, shouldBe, input);
+
+    public static TheoryData<string, bool, string> NzDigitCharRexData => new() {
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), false, "0" },
+        { TestFileLine(), true , "1" },
+        { TestFileLine(), true , "9" },
+        { TestFileLine(), false, "a" },
+        { TestFileLine(), false, " " },
+        { TestFileLine(), false, "Ж" },
+    };
+
+    [Theory]
+    [MemberData(nameof(NzDigitCharRexData))]
+    public void TestNzDigitCharRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.NzDigitChar, TestLine, shouldBe, input);
+
+    public static TheoryData<string, bool, string> AlphaNumericCharRexData => new() {
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), true , "0" },
+        { TestFileLine(), true , "9" },
+        { TestFileLine(), true , "A" },
+        { TestFileLine(), true , "z" },
+        { TestFileLine(), false, "/" },
+        { TestFileLine(), false, "+" },
+        { TestFileLine(), false, " " },
+        { TestFileLine(), false, "Ж" },
+    };
+
+    [Theory]
+    [MemberData(nameof(AlphaNumericCharRexData))]
+    public void TestAlphaNumericCharRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.AlphaNumericChar, TestLine, shouldBe, input);
+
+    public static TheoryData<string, bool, string> HighAlphaNumericCharRexData => new() {
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), true , "0" },
+        { TestFileLine(), true , "9" },
+        { TestFileLine(), true , "A" },
+        { TestFileLine(), true , "Z" },
+        { TestFileLine(), false, "a" },
+        { TestFileLine(), false, "z" },
+        { TestFileLine(), false, "/" },
+        { TestFileLine(), false, " " },
+        { TestFileLine(), false, "Ж" },
+    };
+
+    [Theory]
+    [MemberData(nameof(HighAlphaNumericCharRexData))]
+    public void TestHighAlphaNumericCharRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.HighAlphaNumericChar, TestLine, shouldBe, input);
+
+    public static TheoryData<string, bool, string> LowAlphaNumericCharRexData => new() {
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), true , "0" },
+        { TestFileLine(), true , "9" },
+        { TestFileLine(), true , "a" },
+        { TestFileLine(), true , "z" },
+        { TestFileLine(), false, "A" },
+        { TestFileLine(), false, "Z" },
+        { TestFileLine(), false, "/" },
+        { TestFileLine(), false, " " },
+        { TestFileLine(), false, "Ж" },
+    };
+
+    [Theory]
+    [MemberData(nameof(LowAlphaNumericCharRexData))]
+    public void TestLowAlphaNumericCharRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.LowAlphaNumericChar, TestLine, shouldBe, input);
+
+    public static TheoryData<string, bool, string> SpaceCharRexData => new() {
+        { TestFileLine(), false, ""  },
+        { TestFileLine(), true , " " },
+        { TestFileLine(), false, "\t" },
+        { TestFileLine(), false, "A" },
+        { TestFileLine(), false, "0" },
+        { TestFileLine(), false, "Ж" },
+    };
+
+    [Theory]
+    [MemberData(nameof(SpaceCharRexData))]
+    public void TestSpaceCharRex(string TestLine, bool shouldBe, string input)
+        => base.RegexStringTest(Ascii.Space, TestLine, shouldBe, input);
 }

@@ -63,7 +63,9 @@ public static class RegexLibReflector
     /// <param name="methodName">The name of the method to find.</param>
     /// <param name="className">Optional class name to narrow the search.</param>
     /// <returns>A list of MethodInfo objects (could be multiple if method name exists in multiple classes).</returns>
-    public static IEnumerable<MethodInfo> GetGeneratedRegexMethodByName(string methodName, string? className = null)
+    public static IEnumerable<MethodInfo> GetGeneratedRegexMethodByName(
+        string methodName,
+        string? className = null)
         => GetGeneratedRegexMethods()
             .Where(m => m.Name.Equals(methodName))
             .Where(m => string.IsNullOrEmpty(className) ||
@@ -170,7 +172,10 @@ public static class RegexLibReflector
         Console.WriteLine($"\nTotal: {data.Count} generated regex methods");
     }
 
-    private static void PrintMethodInfo(MethodInfo method, bool includeFullSignature, bool includeDeclaringType)
+    private static void PrintMethodInfo(
+        MethodInfo method,
+        bool includeFullSignature,
+        bool includeDeclaringType)
     {
         var generatedRegexAttr = method.GetCustomAttribute<GeneratedRegexAttribute>();
 
@@ -274,7 +279,9 @@ public static class RegexLibReflector
     /// </summary>
     /// <param name="methodName">The method name to find.</param>
     /// <param name="className">Optional class name to narrow the search.</param>
-    public static void PrintGeneratedRegexMethodByName(string methodName, string? className = null)
+    public static void PrintGeneratedRegexMethodByName(
+        string methodName,
+        string? className = null)
     {
         var methods = GetGeneratedRegexMethodByName(methodName, className).ToList();
 

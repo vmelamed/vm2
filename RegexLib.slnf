@@ -2,7 +2,7 @@
   "solution": {
     "path": "vm2.slnx",
     "projects": [
-      "src\\RegexLibReflector\\RegexLibReflector.csproj",
+      "examples\\RegexLib\\Reflector\\Reflector.csproj",
       "src\\RegexLib\\RegexLib.csproj",
       "test\\RegexLibTests\\RegexLibTests.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"
