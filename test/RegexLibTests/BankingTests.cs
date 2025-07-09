@@ -9,10 +9,16 @@ public partial class BankingTests(
     public void TestAbaRoutingNumberRex(string TestLine, bool shouldBe, string input, Captures? captures)
         => base.RegexTest(Banking.AbaRoutingNumber(), TestLine, shouldBe, input, captures);
 
+    [Theory]
+    [MemberData(nameof(AbaRoutingNumberEdgeData))]
+    public void TestAbaRoutingNumber_Edge(string TestLine, bool shouldBe, string input)
+        => base.RegexTest(Banking.AbaRoutingNumber(), TestLine, shouldBe, input);
+
     // ------
 
     [Theory]
     [MemberData(nameof(SwiftCodeData))]
+    [MemberData(nameof(SwiftCodeEdgeData))]
     public void TestSwiftCodeRex(string TestLine, bool shouldBe, string input, Captures? captures)
         => base.RegexTest(Banking.SwiftCode(), TestLine, shouldBe, input, captures);
 

@@ -100,7 +100,7 @@ public static partial class Banking
     /// <summary>
     /// The name of a matching group representing the basic bank account number from the IBAN.
     /// </summary>
-    public const string BasicBanGr = "accn";
+    public const string BasicBanGr = "account";
 
     /// <summary>
     /// Regular expression pattern which matches an
@@ -113,11 +113,10 @@ public static partial class Banking
     /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string IbanRex = $$"""
-       (?<{{BankGr}}>      {{Countries.CountryCode2Rex}} )
-       (?<{{CheckGr}}>     {{Ascii.DigitChar}}{2} ) {{Ascii.Space}}?
-       (?<{{BasicBanGr}}>  {{Ascii.HighAlphaNumericChar}}{4}
-                           (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericChar}}{4}   ){2,6}
-                           (?: {{Ascii.Space}}? {{Ascii.HighAlphaNumericChar}}{1,4} )?     )
+       (?<{{CountryGr}}>   {{Countries.CountryCode2Rex}} )
+       (?<{{CheckGr}}>     {{Ascii.DigitChar}}{2} )
+       {{Ascii.Space}}?
+       (?<{{BasicBanGr}}>  (?: {{Ascii.HighAlphaNumericChar}} {{Ascii.Space}}? ){1,30} )
        """;
 
     /// <summary>

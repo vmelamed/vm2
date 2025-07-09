@@ -56,28 +56,20 @@ public class CountriesTests(
         => base.RegexTest(Countries.CountryCode2I(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> CountryCode3Data => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "a"},
-        { TestFileLine(), false, "ab"},
-        { TestFileLine(), false, "abc"},
-        { TestFileLine(), false, "a1"},
-        { TestFileLine(), false, "1a"},
-        { TestFileLine(), false, "13"},
-        { TestFileLine(), false, "A"},
-        { TestFileLine(), false, "A1"},
-        { TestFileLine(), false, "A="},
-        { TestFileLine(), false, "1A"},
-        { TestFileLine(), false, "@A"},
-        { TestFileLine(), true,  "ABC"},
-        { TestFileLine(), false, "AB"},
+        { TestFileLine(), false, "" },
+        { TestFileLine(), false, "US" },
+        { TestFileLine(), true , "USA" },
+        { TestFileLine(), false, "US1" },
+        { TestFileLine(), false, "USAA" },
+        { TestFileLine(), false, "usA" },
+        { TestFileLine(), false, "123" },
+        { TestFileLine(), false, "U$A" },
     };
 
     [Theory]
     [MemberData(nameof(CountryCode3Data))]
-    public void TestCountryCode3(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.CountryCode3(), TestLine, shouldBe, code);
+    public void TestCountryCode3(string TestLine, bool shouldBe, string input)
+        => base.RegexTest(Countries.CountryCode3(), TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> CountryCode3IData => new() {
         { TestFileLine(), false, ""},
@@ -107,28 +99,19 @@ public class CountriesTests(
         => base.RegexTest(Countries.CountryCode3I(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> CurrencyCodeData => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "a"},
-        { TestFileLine(), false, "ab"},
-        { TestFileLine(), false, "abc"},
-        { TestFileLine(), false, "a1"},
-        { TestFileLine(), false, "1a"},
-        { TestFileLine(), false, "13"},
-        { TestFileLine(), false, "A"},
-        { TestFileLine(), false, "A1"},
-        { TestFileLine(), false, "A="},
-        { TestFileLine(), false, "1A"},
-        { TestFileLine(), false, "@A"},
-        { TestFileLine(), true,  "ABC"},
-        { TestFileLine(), false, "AB"},
+        { TestFileLine(), false, "" },
+        { TestFileLine(), false, "US" },
+        { TestFileLine(), true , "USD" },
+        { TestFileLine(), false, "usd" },
+        { TestFileLine(), false, "US1" },
+        { TestFileLine(), false, "USDA" },
+        { TestFileLine(), false, "US$" },
     };
 
     [Theory]
     [MemberData(nameof(CurrencyCodeData))]
-    public void TestCurrencyCode(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.CurrencyCode(), TestLine, shouldBe, code);
+    public void TestCurrencyCode(string TestLine, bool shouldBe, string input)
+        => base.RegexTest(Countries.CurrencyCode(), TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> CurrencyCodeIData => new() {
         { TestFileLine(), false, ""},
@@ -158,46 +141,35 @@ public class CountriesTests(
         => base.RegexTest(Countries.CurrencyCodeI(), TestLine, shouldBe, code);
 
     public static TheoryData<string, bool, string> TelephoneCodeData => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "0"},
-        { TestFileLine(), false, "01"},
-        { TestFileLine(), false, "012"},
-        { TestFileLine(), true,  "1"},
-        { TestFileLine(), true,  "12"},
-        { TestFileLine(), true,  "103"},
-        { TestFileLine(), true,  "120"},
-        { TestFileLine(), false, "1234"},
-        { TestFileLine(), false, "a"},
-        { TestFileLine(), false, "A"},
-        { TestFileLine(), false, "AB"},
-        { TestFileLine(), false, "ABC"},
+        { TestFileLine(), false, "" },
+        { TestFileLine(), true , "1" },
+        { TestFileLine(), true , "12" },
+        { TestFileLine(), true , "123" },
+        { TestFileLine(), false, "1234" },
+        { TestFileLine(), false, "01" },
+        { TestFileLine(), false, "a1" },
+        { TestFileLine(), false, "1a" },
     };
 
     [Theory]
     [MemberData(nameof(TelephoneCodeData))]
-    public void TestTelephoneCode(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.TelephoneCode(), TestLine, shouldBe, code);
+    public void TestTelephoneCode(string TestLine, bool shouldBe, string input)
+        => base.RegexTest(Countries.TelephoneCode(), TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> TelephoneNumberData => new() {
-        { TestFileLine(), false, ""},
-        { TestFileLine(), false, " "},
-        { TestFileLine(), false, "  "},
-        { TestFileLine(), false, "0"},
-        { TestFileLine(), false, "01"},
-        { TestFileLine(), false, "012"},
-        { TestFileLine(), false, "1234567890123456"},
-        { TestFileLine(), true,  "1234"},
-        { TestFileLine(), true,  "12345"},
-        { TestFileLine(), true,  "123456"},
-        { TestFileLine(), true,  "123456789012345"},
+        { TestFileLine(), false, "" },
+        { TestFileLine(), true , "1234" },
+        { TestFileLine(), true , "123456789012345" },
+        { TestFileLine(), false, "123" },
+        { TestFileLine(), false, "1234567890123456" },
+        { TestFileLine(), false, "12a4" },
+        { TestFileLine(), false, " 1234" },
     };
 
     [Theory]
     [MemberData(nameof(TelephoneNumberData))]
-    public void TestTelephoneNumber(string TestLine, bool shouldBe, string code)
-        => base.RegexTest(Countries.TelephoneNumber(), TestLine, shouldBe, code);
+    public void TestTelephoneNumber(string TestLine, bool shouldBe, string input)
+        => base.RegexTest(Countries.TelephoneNumber(), TestLine, shouldBe, input);
 
     public static TheoryData<string, bool, string> TelephoneNumberE164Data => new() {
         { TestFileLine(), false, ""},

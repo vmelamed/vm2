@@ -95,7 +95,7 @@ public abstract partial class RegexTests(
             return;
         }
 
-        var groupPredicate = (Group gr, int index) => index > 0 &&
+        bool groupPredicate(Group gr, int index) => index > 0 &&
                                                       !string.IsNullOrEmpty(gr.Value) &&
                                                       (allGroups || index.ToString() != gr.Name);
 
@@ -115,17 +115,17 @@ public abstract partial class RegexTests(
                             .ToDictionary(gr => gr.Name, gr => gr.Value)
                             ;
 
-        var (failed, messages) = CompareGroups(
-                                    expectedCaptures,
-                                    actualGroups,
-                                    failIfMissingExpected);
+        var (groupsFailed, messages) = CompareGroups(
+                                            expectedCaptures,
+                                            actualGroups,
+                                            failIfMissingExpected);
 
         Out.WriteLine($"  Regex:\n    →{regex}←\n");
 
         foreach (var message in messages)
             Out.WriteLine(message);
 
-        failed.Should().BeFalse($":\n{string.Join("\n", messages)}");
+        groupsFailed.Should().BeFalse($":\n{string.Join("\n", messages)}");
         isMatch.Should().Be(shouldMatch);
     }
 
@@ -220,7 +220,8 @@ public abstract partial class RegexTests(
         wr.WriteLine($$"""
                          you can pass expected captures:
                          ```
-                         new() {
+                         new()
+                                 {
                          """);
         foreach (var (name, value) in actualCaptures)
         {

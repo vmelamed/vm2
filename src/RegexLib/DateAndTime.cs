@@ -122,17 +122,17 @@ public static partial class DateAndTime
     /// </summary>
     public const string DurDateGr = "date";
 
-    const string durSecond = @$"(?<{DurSecondGr}>\d+S)";
-    const string durMinute = @$"(?<{DurMinuteGr}>\d+M)(?:{durSecond})?";
-    const string durHour   = @$"(?<{DurHourGr}>\d+H)(?:{durMinute})?";
+    const string durSecond = @$"(?<{DurSecondGr}>\d+)S";
+    const string durMinute = @$"(?<{DurMinuteGr}>\d+)M(?:{durSecond})?";
+    const string durHour   = @$"(?<{DurHourGr}>\d+)H(?:{durMinute})?";
 
-    const string durDay    = @$"(?<{DurDayGr}>\d+D)";
-    const string durMonth  = @$"(?<{DurMonthGr}>\d+M)(?:{durDay})?";
-    const string durYear   = @$"(?<{DurYearGr}>\d+Y)(?:{durMonth})?";
+    const string durDay    = @$"(?<{DurDayGr}>\d+)D";
+    const string durMonth  = @$"(?<{DurMonthGr}>\d+)M(?:{durDay})?";
+    const string durYear   = @$"(?<{DurYearGr}>\d+)Y(?:{durMonth})?";
 
     const string durTime   = @$"T(?<{DurTimeGr}>(?:{durHour}|{durMinute}|{durSecond}))";
     const string durDate   = @$"(?<{DurDateGr}>{durDay}|{durMonth}|{durYear})(?:{durTime})?";
-    const string durWeek   = @$"(?<{DurWeekGr}>\d+W)";
+    const string durWeek   = @$"(?<{DurWeekGr}>\d+)W";
 
     /// <summary>
     /// Regular expression pattern which matches a time duration in a string.
