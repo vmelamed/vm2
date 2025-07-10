@@ -58,7 +58,12 @@ public static partial class SemVer
     /// <summary>
     /// BNF: <c>digit = 0 | positive-digit </c>
     /// </summary>
-    const string digit  = Ascii.DigitChar;
+    const string digit = Ascii.DigitChar;
+
+    /// <summary>
+    /// BNF: <c>digit = 0 | positive-digit </c>
+    /// </summary>
+    const string digits = $"{digit}+";
 
     /// <summary>
     /// BNF: <c>non-digit = letter | - </c>
@@ -81,6 +86,11 @@ public static partial class SemVer
     const string idCharacter = $@"[{idChars}]";
 
     /// <summary>
+    /// BNF: <c>id-chars = id-char | id-char id-chars</c>
+    /// </summary>
+    const string idCharacters = $@"{idCharacter}+";
+
+    /// <summary>
     /// BNF: <c>numeric-id = 0 | positive-digit | positive-digit digits </c>
     /// </summary>
     const string numericId = $@"0 | {positiveDigit} {digit}*";
@@ -89,39 +99,39 @@ public static partial class SemVer
     /// BNF: <c>alpha-numeric-identifier = non-digit | non-digit id-chars | id-chars non-digit | id-chars non-digit id-chars </c>
     /// (alpha-numeric-identifier can be anything with at least one non-digit.)
     /// </summary>
-    const string alphaNumericId = $@"(?: {numericId} | {digit}* {nonDigit} {idCharacter}* )";
-
-    /// <summary>
-    /// BNF: <c>build-identifier = alpha-numeric-identifier | digits</c>
-    /// buildIdentifier can be any identifier
-    /// </summary>
-    const string buildIdentifier = $@"{alphaNumericId}";
-
-    /// <summary>
-    /// BNF: <c>dot-separated-build-identifiers = build-identifier | build-identifier . dot-separated-build-identifiers </c>
-    /// </summary>
-    const string buildIdentifiers = $@"{buildIdentifier} (?: \. {buildIdentifier} )*";
-
-    /// <summary>
-    /// BNF: <c>build = dot-separated-build-identifiers</c>
-    /// </summary>
-    const string build = $@"(?<{BuildGr}> {buildIdentifiers} )";
+    const string alphaNumericId = $"(?: {idCharacters} )";
 
     /// <summary>
     /// BNF: <c>pre-release-identifier = alpha-numeric-identifier | digits</c>
     /// pre-release-identifier can be any identifier
     /// </summary>
-    const string preReleaseIdentifier = $@"{alphaNumericId}";
+    const string preReleaseIdentifier = $@"{alphaNumericId} | {numericId}";
 
     /// <summary>
     /// BNF: <c>dot-separated-pre-release-identifiers = build-identifier | build-identifier . dot-separated-build-identifiers </c>
     /// </summary>
-    const string preReleaseIdentifiers = $@"{preReleaseIdentifier} (?: \. {preReleaseIdentifier} )*";
+    const string preReleaseIdentifiers = $@"(?: {preReleaseIdentifier} ) (?: \. {preReleaseIdentifier} )*";
 
     /// <summary>
     /// BNF: <c>pre-release = dot-separated-pre-release-identifiers</c>
     /// </summary>
     const string preRelease = $@"(?<{PreReleaseGr}> {preReleaseIdentifiers} )";
+
+    /// <summary>
+    /// BNF: <c>build-identifier = alpha-numeric-identifier | digits</c>
+    /// buildIdentifier can be any identifier
+    /// </summary>
+    const string buildIdentifier = $@"{alphaNumericId} | {numericId}";
+
+    /// <summary>
+    /// BNF: <c>dot-separated-build-identifiers = build-identifier | build-identifier . dot-separated-build-identifiers </c>
+    /// </summary>
+    const string buildIdentifiers = $@"(?: {buildIdentifier} ) (?: \. {buildIdentifier} )*";
+
+    /// <summary>
+    /// BNF: <c>build = dot-separated-build-identifiers</c>
+    /// </summary>
+    const string build = $@"(?<{BuildGr}> {buildIdentifiers} )";
 
     /// <summary>
     /// BNF: <c>patch = numeric-id</c>
@@ -143,24 +153,37 @@ public static partial class SemVer
     /// </summary>
     const string versionCore = $@"(?<{CoreGr}> {major}.{minor}.{patch} )";
 
-    #region The Regex object
     /// <summary>
     /// Regular expression pattern which matches a valid SemVer in an input string.
     /// <para>
     /// BNF: <c>semver = version-core | version-core - pre-release | version-core + build | version-core - pre-release + build </c>
     /// </para>
     /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
     public const string SemVerRex = $@"{versionCore} (?: \- {preRelease} )? (?: \+ {build} )?";
 
     /// <summary>
     /// Regular expression pattern which matches a string representing a valid SemVer.
+    /// <para>
+    /// BNF: <c>semver = version-core | version-core - pre-release | version-core + build | version-core - pre-release + build </c>
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
     public const string SemVerRegex = $@"^{SemVerRex}$";
 
     /// <summary>
-    /// Gets a Regex object which matches the entire input string against the pattern &lt;see cref="SemVerRegex" /&gt;
+    /// Gets a Regex object which matches the entire input string against the pattern <see cref="SemVerRegex"/>
+    /// <para>
+    /// BNF: <c>semver = version-core | version-core - pre-release | version-core + build | version-core - pre-release + build </c>
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
+    /// </remarks>
     [GeneratedRegex(SemVerRegex, Common.Options)]
     public static partial Regex SemanticVersion();
-    #endregion
 }

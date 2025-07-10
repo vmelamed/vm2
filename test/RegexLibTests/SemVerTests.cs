@@ -41,10 +41,31 @@ public class SemVerTests(
         { TestFileLine(), true,  "1.0.0-0A.is.legal", new() {  ["core"] = "1.0.0", ["major"] = "1", ["minor"] = "0", ["patch"] = "0", ["pre"] = "0A.is.legal", ["build"] = "" } },
         { TestFileLine(), false, "1", null },
         { TestFileLine(), false, "1.2", null },
-        { TestFileLine(), false, "1.2.3-0123", null },
-        { TestFileLine(), false, "1.2.3-0123.0123", null },
+        { TestFileLine(), true,  "1.2.3-0123", new()
+        {
+            ["core"] = "1.2.3",
+            ["major"] = "1",
+            ["minor"] = "2",
+            ["patch"] = "3",
+            ["pre"] = "0123",
+        } },
+        { TestFileLine(), true,  "1.2.3-0123.0123", new()
+        {
+            ["core"] = "1.2.3",
+            ["major"] = "1",
+            ["minor"] = "2",
+            ["patch"] = "3",
+            ["pre"] = "0123.0123",
+        } },
         { TestFileLine(), false, "1.1.2+.123", null },
-        { TestFileLine(), false, "1.1.2+0123", null },
+        { TestFileLine(), true,  "1.1.2+0123", new()
+        {
+            ["core"] = "1.1.2",
+            ["major"] = "1",
+            ["minor"] = "1",
+            ["patch"] = "2",
+            ["build"] = "0123",
+        } },
         { TestFileLine(), true,  "1.1.2+0.123", new() {  ["core"] = "1.1.2", ["major"] = "1", ["minor"] = "1", ["patch"] = "2", ["pre"] = "", ["build"] = "0.123" } },
         { TestFileLine(), false, "+invalid", null },
         { TestFileLine(), false, "-invalid", null },
@@ -82,6 +103,70 @@ public class SemVerTests(
         { TestFileLine(), false, "9.8.7-whatever+meta+meta", null },
         { TestFileLine(), false, "99999999999999999999999.999999999999999999.99999999999999999----RC-SNAPSHOT.12.09.1--------------------------------..12", null },
 
+        // Edge: Maximum allowed identifier length (per semver.org, no explicit max, but test a long one)
+        { TestFileLine("long pre-release"), true, "1.2.3-" + new string('a', 100) + "+build", new() { ["core"] = "1.2.3", ["major"] = "1", ["minor"] = "2", ["patch"] = "3", ["pre"] = new string('a', 100), ["build"] = "build" } },
+        { TestFileLine("long build"), true, "1.2.3+build" + new string('b', 100), new() { ["core"] = "1.2.3", ["major"] = "1", ["minor"] = "2", ["patch"] = "3", ["pre"] = "", ["build"] = "build" + new string('b', 100) } },
+
+        // Edge: Pre-release and build with hyphens and dots
+        { TestFileLine("pre-release with hyphens and dots"), true, "1.2.3-alpha-1.2.3", new() { ["core"] = "1.2.3", ["major"] = "1", ["minor"] = "2", ["patch"] = "3", ["pre"] = "alpha-1.2.3", ["build"] = "" } },
+        { TestFileLine("build with hyphens and dots"), true, "1.2.3+build-1.2.3", new() { ["core"] = "1.2.3", ["major"] = "1", ["minor"] = "2", ["patch"] = "3", ["pre"] = "", ["build"] = "build-1.2.3" } },
+
+        // Edge: Pre-release numeric identifier must not have leading zeroes
+        { TestFileLine("pre-release numeric leading zero"), true, "1.2.3-01", new()
+        {
+            ["core"] = "1.2.3",
+            ["major"] = "1",
+            ["minor"] = "2",
+            ["patch"] = "3",
+            ["pre"] = "01",
+        } },
+        { TestFileLine("pre-release numeric leading zero in dot"), true, "1.2.3-alpha.01", new()
+        {
+            ["core"] = "1.2.3",
+            ["major"] = "1",
+            ["minor"] = "2",
+            ["patch"] = "3",
+            ["pre"] = "alpha.01",
+        } },
+
+        // Edge: Build metadata can have leading zeroes
+        { TestFileLine("build numeric leading zero"), true, "1.2.3+01", new() { ["core"] = "1.2.3", ["major"] = "1", ["minor"] = "2", ["patch"] = "3", ["pre"] = "", ["build"] = "01" } },
+
+        // Edge: Pre-release with only digits (no leading zero)
+        { TestFileLine("pre-release numeric no leading zero"), true, "1.2.3-1", new() { ["core"] = "1.2.3", ["major"] = "1", ["minor"] = "2", ["patch"] = "3", ["pre"] = "1", ["build"] = "" } },
+
+        // Edge: Pre-release with empty identifier (invalid)
+        { TestFileLine("pre-release empty identifier"), false, "1.2.3-", null },
+        { TestFileLine("pre-release dot empty identifier"), false, "1.2.3-.", null },
+        { TestFileLine("pre-release double dot"), false, "1.2.3-..", null },
+
+        // Edge: Build with empty identifier (invalid)
+        { TestFileLine("build empty identifier"), false, "1.2.3+", null },
+        { TestFileLine("build dot empty identifier"), false, "1.2.3+.", null },
+        { TestFileLine("build double dot"), false, "1.2.3+..", null },
+
+        // Edge: Unicode in identifiers (should be invalid per semver.org)
+        { TestFileLine("unicode in pre-release"), false, "1.2.3-α", null },
+        { TestFileLine("unicode in build"), false, "1.2.3+β", null },
+
+        // Edge: Whitespace in identifiers (invalid)
+        { TestFileLine("whitespace in pre-release"), false, "1.2.3-alpha beta", null },
+        { TestFileLine("whitespace in build"), false, "1.2.3+build meta", null },
+
+        // Edge: Leading/trailing whitespace (invalid)
+        { TestFileLine("leading whitespace"), false, " 1.2.3", null },
+        { TestFileLine("trailing whitespace"), false, "1.2.3 ", null },
+
+        // Edge: Only major.minor.patch, but with extra dot (invalid)
+        { TestFileLine("extra dot after patch"), false, "1.2.3.", null },
+
+        // Edge: Pre-release and build with underscores (invalid)
+        { TestFileLine("underscore in pre-release"), false, "1.2.3-alpha_beta", null },
+        { TestFileLine("underscore in build"), false, "1.2.3+build_meta", null },
+
+        // Edge: Pre-release and build with uppercase (valid)
+        { TestFileLine("uppercase pre-release"), true, "1.2.3-ALPHA", new() { ["core"] = "1.2.3", ["major"] = "1", ["minor"] = "2", ["patch"] = "3", ["pre"] = "ALPHA", ["build"] = "" } },
+        { TestFileLine("uppercase build"), true, "1.2.3+BUILD", new() { ["core"] = "1.2.3", ["major"] = "1", ["minor"] = "2", ["patch"] = "3", ["pre"] = "", ["build"] = "BUILD" } },
     };
 
     [Theory]
