@@ -114,22 +114,22 @@ public static partial class Uris
     /// <summary>
     /// The name of a matching group representing an IP general name.
     /// </summary>
-    public const string IpGenNameGr = "ipGenName";
+    public const string IpRegNameGr = "ipRegName";
 
     /// <summary>
     /// Matches reg-name in RFC 3986
     /// <para>BNF: <c>registered_name = *[ unreserved | sub-delimiters | pct-encoded ]</c> - yes, it can be empty, see the RFC</para>
     /// </summary>
-    const string generalNameRex = $@"(?<{IpGenNameGr}> (?: {unreservedOrSubDelimiterChar} | {PctEncodedChar} )+ )";
+    const string regNameRex = $@"(?<{IpRegNameGr}> (?: {unreservedOrSubDelimiterChar} | {PctEncodedChar} )+ )";
 
     /// <summary>
     /// Matches a registered name.
-    /// <para>Named groups: <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>.</para>
+    /// <para>Named groups: <see cref="Net.IpDnsNameGr"/>, <see cref="IpRegNameGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string registeredNameRex = $@"{Net.DnsNameRex} | {generalNameRex}";
+    const string dnsOrRegNameRex = $@"{Net.DnsNameRex} | {regNameRex}";
 
     /// <summary>
     /// The name of a matching group representing a host name.
@@ -140,21 +140,21 @@ public static partial class Uris
     /// Matches a host in a string.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpGenNameGr"/>, <see cref="Net.Ipv4Gr"/>,
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpRegNameGr"/>, <see cref="Net.Ipv4Gr"/>,
     /// <see cref="Net.Ipv6NzGr"/> or <see cref="Net.IpvfGr"/>.
     /// </para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string HostRex = $@"(?<{HostGr}> {Net.IpNumericAddressRex} | {registeredNameRex} )";
+    public const string HostRex = $@"(?<{HostGr}> {Net.IpNumericAddressRex} | {dnsOrRegNameRex} )";
 
     /// <summary>
     /// Matches a string that represents a host.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
     /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6NzGr"/>,
-    /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>
+    /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpRegNameGr"/>
     /// </para>
     /// </summary>
     /// <remarks>
@@ -167,7 +167,7 @@ public static partial class Uris
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
     /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6NzGr"/>,
-    /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpGenNameGr"/>
+    /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpRegNameGr"/>
     /// </para>
     /// </summary>
     [GeneratedRegex(HostRegex, Common.OptionsI)]

@@ -3,9 +3,8 @@ namespace vm2.RegexLib;
 /// <summary>
 /// Class Uri. Defines many regular expressions with the ultimate goal to define a regular expression for URI.
 /// Follows closely the definitions in
-/// https://datatracker.ietf.org/doc/html/rfc1737
-/// https://datatracker.ietf.org/doc/html/rfc2141
 /// https://datatracker.ietf.org/doc/html/rfc8141
+/// https://datatracker.ietf.org/doc/html/rfc1737
 /// </summary>
 public static partial class Urns
 {
@@ -26,7 +25,7 @@ public static partial class Urns
     /// <summary>
     /// Represents a regular expression pattern for matching a namespace identifier (NID).
     /// </summary>
-    public const string NidRex = $@"(?<{NidGr}> {Ascii.AlphaNumericChar} {alphanumericHyphenCharRex}{{0,30}} {Ascii.AlphaNumericChar} )";
+    public const string NidRex = $@"(?<{NidGr}> (?! urn- )(?! {Ascii.AlphaChar}{{2}}- )(?! X- ) {Ascii.AlphaNumericChar} {alphanumericHyphenCharRex}{{1,30}} {Ascii.AlphaNumericChar} )";
 
     const string pSlChars   = $@"{Uris.PathChars}/";
 

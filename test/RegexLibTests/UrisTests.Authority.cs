@@ -16,7 +16,7 @@ public partial class UrisTests
                                                         {
                                                             ["endpoint"] = "1.2.3:321",
                                                             ["host"] = "1.2.3",
-                                                            ["ipGenName"] = "1.2.3",
+                                                            ["ipRegName"] = "1.2.3",
                                                             ["port"] = "321",
                                                         } },
         { TestFileLine("Complete IPv4"), true, "1.2.3.4:8443", new()
@@ -47,7 +47,7 @@ public partial class UrisTests
                                                         {
                                                             ["endpoint"] = "v1a.skiledh.srethg.23546.:443",
                                                             ["host"] = "v1a.skiledh.srethg.23546.",
-                                                            ["ipGenName"] = "v1a.skiledh.srethg.23546.",
+                                                            ["ipRegName"] = "v1a.skiledh.srethg.23546.",
                                                             ["port"] = "443",
                                                         } },
         { TestFileLine("General name in Unicode"), false, "дир.бг:65534", null },
@@ -55,7 +55,7 @@ public partial class UrisTests
                                                         {
                                                             ["endpoint"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3:8080",
                                                             ["host"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
-                                                            ["ipGenName"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
+                                                            ["ipRegName"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
                                                             ["port"] = "8080",
                                                         } },
         { TestFileLine("General name in percent URL encoded"), false, "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3:808080", null },
@@ -129,7 +129,7 @@ public partial class UrisTests
                                                     ["authority"] = "john.doe:secret@1.2.3:321",
                                                     ["endpoint"] = "1.2.3:321",
                                                     ["host"] = "1.2.3",
-                                                    ["ipGenName"] = "1.2.3",
+                                                    ["ipRegName"] = "1.2.3",
                                                     ["port"] = "321",
                                                     ["user"] = "john.doe",
                                                     ["access"] = "secret",
@@ -170,7 +170,7 @@ public partial class UrisTests
                                                     ["authority"] = "john.doe:secret@v1a.skiledh.srethg.23546.:443",
                                                     ["endpoint"] = "v1a.skiledh.srethg.23546.:443",
                                                     ["host"] = "v1a.skiledh.srethg.23546.",
-                                                    ["ipGenName"] = "v1a.skiledh.srethg.23546.",
+                                                    ["ipRegName"] = "v1a.skiledh.srethg.23546.",
                                                     ["port"] = "443",
                                                     ["user"] = "john.doe",
                                                     ["access"] = "secret",
@@ -180,7 +180,7 @@ public partial class UrisTests
                                                     ["authority"] = "john.doe:secret@%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3:8080",
                                                     ["endpoint"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3:8080",
                                                     ["host"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
-                                                    ["ipGenName"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
+                                                    ["ipRegName"] = "%D0%B4%D0%B8%D1%80.%D0%B1%D0%B3",
                                                     ["port"] = "8080",
                                                     ["user"] = "john.doe",
                                                     ["access"] = "secret",

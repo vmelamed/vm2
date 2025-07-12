@@ -166,7 +166,7 @@ public partial class UrisTests
                 ["authority"] = "%ef%b7%90zyx.com", // →authority← = →﷐zyx.com←
                 ["endpoint"] = "%ef%b7%90zyx.com", // →address← = →﷐zyx.com←
                 ["host"] = "%ef%b7%90zyx.com", // →host← = →﷐zyx.com←
-                ["ipGenName"] = "%ef%b7%90zyx.com", // →ipGenName← = →﷐zyx.com←
+                ["ipRegName"] = "%ef%b7%90zyx.com", // →ipGenName← = →﷐zyx.com←
             } },
         { TestFileLine(), false, "http://\uff27\uff4f.com", null },
         { TestFileLine(), false, "http://\uff05\uff14\uff11.com", null },

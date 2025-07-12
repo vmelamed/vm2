@@ -56,6 +56,15 @@ public partial class UrisTests
                                                     ["user"] = "",
                                                     ["access"] = "",
                                                 } },
+        { TestFileLine(), true, "maria.vtmelamed.com", new()
+                                                {
+                                                    ["authority"] = "maria.vtmelamed.com",
+                                                    ["endpoint"] = "maria.vtmelamed.com",
+                                                    ["host"] = "maria.vtmelamed.com",
+                                                    ["ipDnsName"] = "maria.vtmelamed.com",
+                                                } },
+        { TestFileLine(), false, ".vtmelamed.com", null },
+        { TestFileLine(), false, ".com", null },
         { TestFileLine(), true, "john.doe@maria.vtmelamed.com:8080", new()
                                                 {
                                                     ["authority"] = "john.doe@maria.vtmelamed.com:8080",

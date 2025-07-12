@@ -194,7 +194,7 @@ public abstract partial class RegexTests(
         {
             if (!expectedCaptures.TryGetValue(actualKey, out var expectedValue))
             {
-                messages.Add($"The capturing group '{actualKey}' with value '{actualValue}' is missing from in the expected capturing groups.");
+                messages.Add($"The capturing group '{actualKey}' with value '{actualValue}' is missing from the expected capturing groups.");
                 failed = failIfMissingExpected;
             }
             else

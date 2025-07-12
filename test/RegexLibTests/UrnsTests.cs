@@ -38,11 +38,19 @@ public partial class UrnsTests(
             }
         },
 
+        // Invalid URNs
+        { TestFileLine("Invalid short URN"), false, "urn:az:b", null },
+        { TestFileLine("Invalid short URN"), false, "urn:-az:b", null },
+        { TestFileLine("Invalid short URN"), false, "urn:az-:b", null },
+        { TestFileLine("Invalid short URN"), false, "urn:urn-abc:b", null },
+        { TestFileLine("Invalid short URN"), false, "urn:az-x:b", null },
+        { TestFileLine("Invalid short URN"), false, "urn:X-abc:b", null },
+
         // Valid minimal URNs
-        { TestFileLine("Minimal valid URN"), true, "urn:az:b", new()
+        { TestFileLine("Minimal valid URN"), true, "urn:a1z:b", new()
             {
-                [Urns.AssignedNameGr] = "urn:az:b",
-                [Urns.NidGr] = "az",
+                [Urns.AssignedNameGr] = "urn:a1z:b",
+                [Urns.NidGr] = "a1z",
                 [Urns.NssGr] = "b"
             }
         },
@@ -277,6 +285,80 @@ public partial class UrnsTests(
         { TestFileLine("URN with only fragment"), false, "urn:example:foo#", null },
         { TestFileLine("URN with only r-component"), false, "urn:example:foo?+", null },
         { TestFileLine("URN with only q-component"), false, "urn:example:foo?=", null },
+
+        // from copilot:
+        { TestFileLine("NID max length (32 chars)"), true, "urn:abcdefghijklmnopqrstuvwxyzabcdef:value", new()
+            {
+                [Urns.AssignedNameGr] = "urn:abcdefghijklmnopqrstuvwxyzabcdef:value",
+                [Urns.NidGr] = "abcdefghijklmnopqrstuvwxyzabcdef",
+                [Urns.NssGr] = "value"
+            }
+        },
+        { TestFileLine("NID too long (33 chars)"), false, "urn:abcdefghijklmnopqrstuvwxyzabcdefg:value", null },
+
+        { TestFileLine("NID with leading/trailing hyphen"), false, "urn:-abc-:value", null },
+
+        { TestFileLine("NID with only one char"), false, "urn:a:value", null },
+
+        { TestFileLine("NSS with only allowed punctuation"), true, "urn:test:.-_~", new()
+            {
+                [Urns.AssignedNameGr] = "urn:test:.-_~",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = ".-_~"
+            }
+        },
+
+        { TestFileLine("NSS with consecutive percent encoding"), true, "urn:test:%41%42%43", new()
+            {
+                [Urns.AssignedNameGr] = "urn:test:%41%42%43",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = "%41%42%43"
+            }
+        },
+
+        { TestFileLine("NSS with slash at start"), false, "urn:test:/resource", null },
+
+        { TestFileLine("NSS with multiple consecutive slashes"), true, "urn:test:path//to///resource", new()
+            {
+                [Urns.AssignedNameGr] = "urn:test:path//to///resource",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = "path//to///resource"
+            }
+        },
+
+        { TestFileLine("NSS with trailing slash"), true, "urn:test:resource/", new()
+            {
+                [Urns.AssignedNameGr] = "urn:test:resource/",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = "resource/"
+            }
+        },
+
+        { TestFileLine("NSS with empty percent encoding"), false, "urn:test:%", null },
+
+        { TestFileLine("NSS with percent encoding and non-hex"), false, "urn:test:%GG", null },
+
+        { TestFileLine("NSS with percent encoding and lowercase hex"), true, "urn:test:%2f", new()
+            {
+                [Urns.AssignedNameGr] = "urn:test:%2f",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = "%2f"
+            }
+        },
+
+        { TestFileLine("NSS with percent encoding and uppercase hex"), true, "urn:test:%2F", new()
+            {
+                [Urns.AssignedNameGr] = "urn:test:%2F",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = "%2F"
+            }
+        },
+
+        { TestFileLine("URN with whitespace between colons"), false, "urn:test :value", null },
+
+        { TestFileLine("URN with tab character"), false, "urn:test:\tvalue", null },
+
+        { TestFileLine("URN with newline character"), false, "urn:test:\nvalue", null },
     };
 
     [Theory]
@@ -392,6 +474,46 @@ public partial class UrnsTests(
         { TestFileLine("NSS with reserved URI chars"), false, "urn:test:foo/bar?baz#qux", null },
         { TestFileLine("NSS with invalid percent encoding"), false, "urn:test:abc%2", null },
         { TestFileLine("NSS with invalid percent encoding char"), false, "urn:test:abc%2G", null },
+
+        // from copilot:
+
+        { TestFileLine("URN with r-component and percent encoding"), true, "urn:test:foo?+bar%20baz", new()
+            {
+                [Urns.UrnGr] = "urn:test:foo?+bar%20baz",
+                [Urns.AssignedNameGr] = "urn:test:foo",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = "foo",
+                [Urns.RComponentGr] = "bar%20baz"
+            }
+        },
+
+        { TestFileLine("URN with q-component and percent encoding"), true, "urn:test:foo?=bar%20baz", new()
+            {
+                [Urns.UrnGr] = "urn:test:foo?=bar%20baz",
+                [Urns.AssignedNameGr] = "urn:test:foo",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = "foo",
+                [Urns.QComponentGr] = "bar%20baz"
+            }
+        },
+
+        { TestFileLine("URN with fragment and percent encoding"), true, "urn:test:foo#frag%20ment", new()
+            {
+                [Urns.UrnGr] = "urn:test:foo#frag%20ment",
+                [Urns.AssignedNameGr] = "urn:test:foo",
+                [Urns.NidGr] = "test",
+                [Urns.NssGr] = "foo",
+                [Urns.FComponentGr] = "frag%20ment"
+            }
+        },
+
+        { TestFileLine("URN with empty r-component and valid q-component"), false, "urn:test:foo?+?=bar", null },
+
+        { TestFileLine("URN with valid r-component and empty q-component"), false, "urn:test:foo?+bar?=", null },
+
+        { TestFileLine("URN with only delimiters"), false, "urn:test:foo?+#", null },
+
+        { TestFileLine("URN with multiple fragments"), false, "urn:test:foo#frag1#frag2", null },
     };
 
     [Theory]

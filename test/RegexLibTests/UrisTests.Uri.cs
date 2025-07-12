@@ -166,7 +166,7 @@ public partial class UrisTests
                 ["authority"] = "%ef%b7%90zyx.com", // →authority← = →﷐zyx.com←
                 ["endpoint"] = "%ef%b7%90zyx.com", // →address← = →﷐zyx.com←
                 ["host"] = "%ef%b7%90zyx.com", // →host← = →﷐zyx.com←
-                ["ipGenName"] = "%ef%b7%90zyx.com", // →ipGenName← = →﷐zyx.com←
+                ["ipRegName"] = "%ef%b7%90zyx.com", // →ipGenName← = →﷐zyx.com←
             } },
         { TestLine(), false, "http://\uff27\uff4f.com", null },
         { TestLine(), false, "http://\uff05\uff14\uff11.com", null },
@@ -176,7 +176,7 @@ public partial class UrisTests
                 ["authority"] = "%ef%bc%85%ef%bc%94%ef%bc%91.com", // →authority← = →％４１.com←
                 ["endpoint"] = "%ef%bc%85%ef%bc%94%ef%bc%91.com", // →address← = →％４１.com←
                 ["host"] = "%ef%bc%85%ef%bc%94%ef%bc%91.com", // →host← = →％４１.com←
-                ["ipGenName"] = "%ef%bc%85%ef%bc%94%ef%bc%91.com", // →ipGenName← = →％４１.com←
+                ["ipRegName"] = "%ef%bc%85%ef%bc%94%ef%bc%91.com", // →ipGenName← = →％４１.com←
             } },
         { TestLine(), false, "http://\uff05\uff10\uff10.com", null },
         { TestLine(), true,  "http://%ef%bc%85%ef%bc%90%ef%bc%90.com", new() {
@@ -185,7 +185,7 @@ public partial class UrisTests
                 ["authority"] = "%ef%bc%85%ef%bc%90%ef%bc%90.com", // →authority← = →％００.com←
                 ["endpoint"] = "%ef%bc%85%ef%bc%90%ef%bc%90.com", // →address← = →％００.com←
                 ["host"] = "%ef%bc%85%ef%bc%90%ef%bc%90.com", // →host← = →％００.com←
-                ["ipGenName"] = "%ef%bc%85%ef%bc%90%ef%bc%90.com", // →ipGenName← = →％００.com←
+                ["ipRegName"] = "%ef%bc%85%ef%bc%90%ef%bc%90.com", // →ipGenName← = →％００.com←
             } },
         { TestLine(), false, "http://\u4f60\u597d\u4f60\u597d", null },
         { TestLine(), false, "http://%E4%BD%A0%E5%A5%BD\u4f60\u597d", null },
@@ -196,7 +196,7 @@ public partial class UrisTests
                 ["authority"] = "%25", // →authority← = →%←
                 ["endpoint"] = "%25", // →address← = →%←
                 ["host"] = "%25", // →host← = →%←
-                ["ipGenName"] = "%25", // →ipGenName← = →%←
+                ["ipRegName"] = "%25", // →ipGenName← = →%←
             } },
         { TestLine(), true,  "http://hello%00", new() {
                 ["uri"] = "http://hello%00", // →uri← = →http://hello ←
@@ -204,7 +204,7 @@ public partial class UrisTests
                 ["authority"] = "hello%00", // →authority← = →hello ←
                 ["endpoint"] = "hello%00", // →address← = →hello ←
                 ["host"] = "hello%00", // →host← = →hello ←
-                ["ipGenName"] = "hello%00", // →ipGenName← = →hello ←
+                ["ipRegName"] = "hello%00", // →ipGenName← = →hello ←
             } },
         { TestLine(), true,  "http://%30%78%63%30%2e%30%32%35%30.01", new() {
                 ["uri"] = "http://%30%78%63%30%2e%30%32%35%30.01", // →uri← = →http://0xc0.0250.01←
@@ -212,7 +212,7 @@ public partial class UrisTests
                 ["authority"] = "%30%78%63%30%2e%30%32%35%30.01", // →authority← = →0xc0.0250.01←
                 ["endpoint"] = "%30%78%63%30%2e%30%32%35%30.01", // →address← = →0xc0.0250.01←
                 ["host"] = "%30%78%63%30%2e%30%32%35%30.01", // →host← = →0xc0.0250.01←
-                ["ipGenName"] = "%30%78%63%30%2e%30%32%35%30.01", // →ipGenName← = →0xc0.0250.01←
+                ["ipRegName"] = "%30%78%63%30%2e%30%32%35%30.01", // →ipGenName← = →0xc0.0250.01←
             } },
         { TestLine(), true,  "http://%30%78%63%30%2e%30%32%35%30.01%2e", new() {
                 ["uri"] = "http://%30%78%63%30%2e%30%32%35%30.01%2e", // →uri← = →http://0xc0.0250.01.←
@@ -220,7 +220,7 @@ public partial class UrisTests
                 ["authority"] = "%30%78%63%30%2e%30%32%35%30.01%2e", // →authority← = →0xc0.0250.01.←
                 ["endpoint"] = "%30%78%63%30%2e%30%32%35%30.01%2e", // →address← = →0xc0.0250.01.←
                 ["host"] = "%30%78%63%30%2e%30%32%35%30.01%2e", // →host← = →0xc0.0250.01.←
-                ["ipGenName"] = "%30%78%63%30%2e%30%32%35%30.01%2e", // →ipGenName← = →0xc0.0250.01.←
+                ["ipRegName"] = "%30%78%63%30%2e%30%32%35%30.01%2e", // →ipGenName← = →0xc0.0250.01.←
             } },
         { TestLine(), false, "http://%3g%78%63%30%2e%30%32%35%30%2E.01", null },
         { TestLine(), false, "http://192.168.0.1 hello", null },
@@ -231,7 +231,7 @@ public partial class UrisTests
                 ["authority"] = "192.168.0.257",
                 ["endpoint"] = "192.168.0.257",
                 ["host"] = "192.168.0.257",
-                ["ipGenName"] = "192.168.0.257",
+                ["ipRegName"] = "192.168.0.257",
             } },
         { TestLine(), false, "http://[google.com]", null },
         { TestLine(), false, "http://\u0442(", null },
@@ -318,7 +318,7 @@ public partial class UrisTests
                 ["authority"] = "-foo.bar.com",
                 ["endpoint"] = "-foo.bar.com",
                 ["host"] = "-foo.bar.com",
-                ["ipGenName"] = "-foo.bar.com",
+                ["ipRegName"] = "-foo.bar.com",
             } },
         { TestLine(), true,  "http://foo-.bar.com", new() {
             ["uri"] = "http://foo-.bar.com",
@@ -326,7 +326,7 @@ public partial class UrisTests
             ["authority"] = "foo-.bar.com",
             ["endpoint"] = "foo-.bar.com",
             ["host"] = "foo-.bar.com",
-            ["ipGenName"] = "foo-.bar.com",
+            ["ipRegName"] = "foo-.bar.com",
         } },
         { TestLine(), true, "http://ab--cd.com", new() {
                 ["uri"] = "http://ab--cd.com",
@@ -351,7 +351,7 @@ public partial class UrisTests
                 ["authority"] = ".",
                 ["endpoint"] = ".",
                 ["host"] = ".",
-                ["ipGenName"] = ".",
+                ["ipRegName"] = ".",
             } },
         { TestLine(), true,  "http://192.168.0.1", new() {
                 ["uri"] = "http://192.168.0.1",
@@ -367,7 +367,7 @@ public partial class UrisTests
                 ["authority"] = "0300.0250.00.01",
                 ["endpoint"] = "0300.0250.00.01",
                 ["host"] = "0300.0250.00.01",
-                ["ipGenName"] = "0300.0250.00.01",
+                ["ipRegName"] = "0300.0250.00.01",
             } },
         { TestLine(), true,  "http://0xC0.0Xa8.0x0.0x1", new() {
                 ["uri"] = "http://0xC0.0Xa8.0x0.0x1",
@@ -375,7 +375,7 @@ public partial class UrisTests
                 ["authority"] = "0xC0.0Xa8.0x0.0x1",
                 ["endpoint"] = "0xC0.0Xa8.0x0.0x1",
                 ["host"] = "0xC0.0Xa8.0x0.0x1",
-                ["ipGenName"] = "0xC0.0Xa8.0x0.0x1",
+                ["ipRegName"] = "0xC0.0Xa8.0x0.0x1",
             } },
         { TestLine(), true,  "http://192.168.9.com", new() {
                 ["uri"] = "http://192.168.9.com",
@@ -383,7 +383,7 @@ public partial class UrisTests
                 ["authority"] = "192.168.9.com",
                 ["endpoint"] = "192.168.9.com",
                 ["host"] = "192.168.9.com",
-                ["ipGenName"] = "192.168.9.com",
+                ["ipRegName"] = "192.168.9.com",
             } },
         { TestLine(), true,  "http://19a.168.0.1", new() {
                 ["uri"] = "http://19a.168.0.1",
@@ -391,7 +391,7 @@ public partial class UrisTests
                 ["authority"] = "19a.168.0.1",
                 ["endpoint"] = "19a.168.0.1",
                 ["host"] = "19a.168.0.1",
-                ["ipGenName"] = "19a.168.0.1",
+                ["ipRegName"] = "19a.168.0.1",
             } },
         { TestLine(), true,  "http://0308.0250.00.01", new() {
                 ["uri"] = "http://0308.0250.00.01",
@@ -399,7 +399,7 @@ public partial class UrisTests
                 ["authority"] = "0308.0250.00.01",
                 ["endpoint"] = "0308.0250.00.01",
                 ["host"] = "0308.0250.00.01",
-                ["ipGenName"] = "0308.0250.00.01",
+                ["ipRegName"] = "0308.0250.00.01",
             } },
         { TestLine(), true,  "http://0xCG.0xA8.0x0.0x1", new() {
                 ["uri"] = "http://0xCG.0xA8.0x0.0x1",
@@ -407,7 +407,7 @@ public partial class UrisTests
                 ["authority"] = "0xCG.0xA8.0x0.0x1",
                 ["endpoint"] = "0xCG.0xA8.0x0.0x1",
                 ["host"] = "0xCG.0xA8.0x0.0x1",
-                ["ipGenName"] = "0xCG.0xA8.0x0.0x1",
+                ["ipRegName"] = "0xCG.0xA8.0x0.0x1",
             } },
         { TestLine(), true,  "http://192", new() {
                 ["uri"] = "http://192",
@@ -415,7 +415,7 @@ public partial class UrisTests
                 ["authority"] = "192",
                 ["endpoint"] = "192",
                 ["host"] = "192",
-                ["ipGenName"] = "192",
+                ["ipRegName"] = "192",
             } },
         { TestLine(), true,  "http://0xC0a80001", new() {
                 ["uri"] = "http://0xC0a80001",
@@ -423,7 +423,7 @@ public partial class UrisTests
                 ["authority"] = "0xC0a80001",
                 ["endpoint"] = "0xC0a80001",
                 ["host"] = "0xC0a80001",
-                ["ipGenName"] = "0xC0a80001",
+                ["ipRegName"] = "0xC0a80001",
             } },
         { TestLine(), true,  "http://030052000001", new() {
                 ["uri"] = "http://030052000001",
@@ -431,7 +431,7 @@ public partial class UrisTests
                 ["authority"] = "030052000001",
                 ["endpoint"] = "030052000001",
                 ["host"] = "030052000001",
-                ["ipGenName"] = "030052000001",
+                ["ipRegName"] = "030052000001",
             } },
         { TestLine(), true,  "http://000030052000001", new() {
                 ["uri"] = "http://000030052000001",
@@ -439,7 +439,7 @@ public partial class UrisTests
                 ["authority"] = "000030052000001",
                 ["endpoint"] = "000030052000001",
                 ["host"] = "000030052000001",
-                ["ipGenName"] = "000030052000001",
+                ["ipRegName"] = "000030052000001",
             } },
         { TestLine(), true,  "http://192.168", new() {
                 ["uri"] = "http://192.168",
@@ -447,7 +447,7 @@ public partial class UrisTests
                 ["authority"] = "192.168",
                 ["endpoint"] = "192.168",
                 ["host"] = "192.168",
-                ["ipGenName"] = "192.168",
+                ["ipRegName"] = "192.168",
             } },
         { TestLine(), true,  "http://192.0x00A80001", new() {
                 ["uri"] = "http://192.0x00A80001",
@@ -455,7 +455,7 @@ public partial class UrisTests
                 ["authority"] = "192.0x00A80001",
                 ["endpoint"] = "192.0x00A80001",
                 ["host"] = "192.0x00A80001",
-                ["ipGenName"] = "192.0x00A80001",
+                ["ipRegName"] = "192.0x00A80001",
             } },
         { TestLine(), true,  "http://0xc0.052000001", new() {
                 ["uri"] = "http://0xc0.052000001",
@@ -463,7 +463,7 @@ public partial class UrisTests
                 ["authority"] = "0xc0.052000001",
                 ["endpoint"] = "0xc0.052000001",
                 ["host"] = "0xc0.052000001",
-                ["ipGenName"] = "0xc0.052000001",
+                ["ipRegName"] = "0xc0.052000001",
             } },
         { TestLine(), true,  "http://192.168.1", new() {
                 ["uri"] = "http://192.168.1",
@@ -471,7 +471,7 @@ public partial class UrisTests
                 ["authority"] = "192.168.1",
                 ["endpoint"] = "192.168.1",
                 ["host"] = "192.168.1",
-                ["ipGenName"] = "192.168.1",
+                ["ipRegName"] = "192.168.1",
             } },
         { TestLine(), true,  "http://192.168.0.0.1", new() {
                 ["uri"] = "http://192.168.0.0.1",
@@ -479,7 +479,7 @@ public partial class UrisTests
                 ["authority"] = "192.168.0.0.1",
                 ["endpoint"] = "192.168.0.0.1",
                 ["host"] = "192.168.0.0.1",
-                ["ipGenName"] = "192.168.0.0.1",
+                ["ipRegName"] = "192.168.0.0.1",
             } },
         { TestLine(), true,  "http://192.168.0.1.", new() {
                 ["uri"] = "http://192.168.0.1.",
@@ -487,7 +487,7 @@ public partial class UrisTests
                 ["authority"] = "192.168.0.1.",
                 ["endpoint"] = "192.168.0.1.",
                 ["host"] = "192.168.0.1.",
-                ["ipGenName"] = "192.168.0.1.",
+                ["ipRegName"] = "192.168.0.1.",
             } },
         { TestLine(), false, "http://192.168.0.1. hello", null },
         { TestLine(), true,  "http://192.168.0.1..", new() {
@@ -496,7 +496,7 @@ public partial class UrisTests
                 ["authority"] = "192.168.0.1..",
                 ["endpoint"] = "192.168.0.1..",
                 ["host"] = "192.168.0.1..",
-                ["ipGenName"] = "192.168.0.1..",
+                ["ipRegName"] = "192.168.0.1..",
             } },
         { TestLine(), true, "http://192.168..1", new() {
                 ["uri"] = "http://192.168..1",
@@ -504,7 +504,7 @@ public partial class UrisTests
                 ["authority"] = "192.168..1",
                 ["endpoint"] = "192.168..1",
                 ["host"] = "192.168..1",
-                ["ipGenName"] = "192.168..1",
+                ["ipRegName"] = "192.168..1",
             } },
         { TestLine(), true,  "http://0x100.0", new() {
                 ["uri"] = "http://0x100.0",
@@ -512,7 +512,7 @@ public partial class UrisTests
                 ["authority"] = "0x100.0",
                 ["endpoint"] = "0x100.0",
                 ["host"] = "0x100.0",
-                ["ipGenName"] = "0x100.0",
+                ["ipRegName"] = "0x100.0",
             } },
         { TestLine(), true,  "http://0x100.0.0", new() {
                 ["uri"] = "http://0x100.0.0",
@@ -520,7 +520,7 @@ public partial class UrisTests
                 ["authority"] = "0x100.0.0",
                 ["endpoint"] = "0x100.0.0",
                 ["host"] = "0x100.0.0",
-                ["ipGenName"] = "0x100.0.0",
+                ["ipRegName"] = "0x100.0.0",
             } },
         { TestLine(), true,  "http://0x100.0.0.0", new() {
                 ["uri"] = "http://0x100.0.0.0",
@@ -528,7 +528,7 @@ public partial class UrisTests
                 ["authority"] = "0x100.0.0.0",
                 ["endpoint"] = "0x100.0.0.0",
                 ["host"] = "0x100.0.0.0",
-                ["ipGenName"] = "0x100.0.0.0",
+                ["ipRegName"] = "0x100.0.0.0",
             } },
         { TestLine(), true,  "http://0.0x100.0.0", new() {
                 ["uri"] = "http://0.0x100.0.0",
@@ -536,7 +536,7 @@ public partial class UrisTests
                 ["authority"] = "0.0x100.0.0",
                 ["endpoint"] = "0.0x100.0.0",
                 ["host"] = "0.0x100.0.0",
-                ["ipGenName"] = "0.0x100.0.0",
+                ["ipRegName"] = "0.0x100.0.0",
             } },
         { TestLine(), true, "http://0.0.0x100.0", new() {
                 ["uri"] = "http://0.0.0x100.0",
@@ -544,7 +544,7 @@ public partial class UrisTests
                 ["authority"] = "0.0.0x100.0",
                 ["endpoint"] = "0.0.0x100.0",
                 ["host"] = "0.0.0x100.0",
-                ["ipGenName"] = "0.0.0x100.0",
+                ["ipRegName"] = "0.0.0x100.0",
             } },
         { TestLine(), true,  "http://0.0.0.0x100", new() {
                 ["uri"] = "http://0.0.0.0x100",
@@ -552,7 +552,7 @@ public partial class UrisTests
                 ["authority"] = "0.0.0.0x100",
                 ["endpoint"] = "0.0.0.0x100",
                 ["host"] = "0.0.0.0x100",
-                ["ipGenName"] = "0.0.0.0x100",
+                ["ipRegName"] = "0.0.0.0x100",
             } },
         { TestLine(), true,  "http://0.0.0x10000", new() {
                 ["uri"] = "http://0.0.0x10000",
@@ -560,7 +560,7 @@ public partial class UrisTests
                 ["authority"] = "0.0.0x10000",
                 ["endpoint"] = "0.0.0x10000",
                 ["host"] = "0.0.0x10000",
-                ["ipGenName"] = "0.0.0x10000",
+                ["ipRegName"] = "0.0.0x10000",
             } },
         { TestLine(), true,  "http://0.0x1000000", new() {
             ["uri"] = "http://0.0x1000000",
@@ -568,7 +568,7 @@ public partial class UrisTests
             ["authority"] = "0.0x1000000",
             ["endpoint"] = "0.0x1000000",
             ["host"] = "0.0x1000000",
-            ["ipGenName"] = "0.0x1000000",
+            ["ipRegName"] = "0.0x1000000",
         } },
         { TestLine(), true,  "http://0x100000000", new() {
                 ["uri"] = "http://0x100000000",
@@ -576,7 +576,7 @@ public partial class UrisTests
                 ["authority"] = "0x100000000",
                 ["endpoint"] = "0x100000000",
                 ["host"] = "0x100000000",
-                ["ipGenName"] = "0x100000000",
+                ["ipRegName"] = "0x100000000",
             } },
         { TestLine(), true,  "http://0xFF.0", new() {
                 ["uri"] = "http://0xFF.0",
@@ -584,7 +584,7 @@ public partial class UrisTests
                 ["authority"] = "0xFF.0",
                 ["endpoint"] = "0xFF.0",
                 ["host"] = "0xFF.0",
-                ["ipGenName"] = "0xFF.0",
+                ["ipRegName"] = "0xFF.0",
             } },
         { TestLine(), true,  "http://0xFF.0.0", new() {
                 ["uri"] = "http://0xFF.0.0",
@@ -592,7 +592,7 @@ public partial class UrisTests
                 ["authority"] = "0xFF.0.0",
                 ["endpoint"] = "0xFF.0.0",
                 ["host"] = "0xFF.0.0",
-                ["ipGenName"] = "0xFF.0.0",
+                ["ipRegName"] = "0xFF.0.0",
             } },
         { TestLine(), true,  "http://0xFF.0.0.0", new() {
                 ["uri"] = "http://0xFF.0.0.0",
@@ -600,7 +600,7 @@ public partial class UrisTests
                 ["authority"] = "0xFF.0.0.0",
                 ["endpoint"] = "0xFF.0.0.0",
                 ["host"] = "0xFF.0.0.0",
-                ["ipGenName"] = "0xFF.0.0.0",
+                ["ipRegName"] = "0xFF.0.0.0",
             } },
         { TestLine(), true,  "http://0.0xFF.0.0", new() {
                 ["uri"] = "http://0.0xFF.0.0",
@@ -608,7 +608,7 @@ public partial class UrisTests
                 ["authority"] = "0.0xFF.0.0",
                 ["endpoint"] = "0.0xFF.0.0",
                 ["host"] = "0.0xFF.0.0",
-                ["ipGenName"] = "0.0xFF.0.0",
+                ["ipRegName"] = "0.0xFF.0.0",
             } },
         { TestLine(), true,  "http://0.0.0xFF.0", new() {
                 ["uri"] = "http://0.0.0xFF.0",
@@ -616,7 +616,7 @@ public partial class UrisTests
                 ["authority"] = "0.0.0xFF.0",
                 ["endpoint"] = "0.0.0xFF.0",
                 ["host"] = "0.0.0xFF.0",
-                ["ipGenName"] = "0.0.0xFF.0",
+                ["ipRegName"] = "0.0.0xFF.0",
             } },
         { TestLine(), true,  "http://0.0.0.0xFF", new() {
                 ["uri"] = "http://0.0.0.0xFF",
@@ -624,7 +624,7 @@ public partial class UrisTests
                 ["authority"] = "0.0.0.0xFF",
                 ["endpoint"] = "0.0.0.0xFF",
                 ["host"] = "0.0.0.0xFF",
-                ["ipGenName"] = "0.0.0.0xFF",
+                ["ipRegName"] = "0.0.0.0xFF",
             } },
         { TestLine(), true,  "http://0.0.0xFFFF", new() {
                 ["uri"] = "http://0.0.0xFFFF",
@@ -632,7 +632,7 @@ public partial class UrisTests
                 ["authority"] = "0.0.0xFFFF",
                 ["endpoint"] = "0.0.0xFFFF",
                 ["host"] = "0.0.0xFFFF",
-                ["ipGenName"] = "0.0.0xFFFF",
+                ["ipRegName"] = "0.0.0xFFFF",
             } },
         { TestLine(), true,  "http://0.0xFFFFFF", new() {
                 ["uri"] = "http://0.0xFFFFFF",
@@ -640,7 +640,7 @@ public partial class UrisTests
                 ["authority"] = "0.0xFFFFFF",
                 ["endpoint"] = "0.0xFFFFFF",
                 ["host"] = "0.0xFFFFFF",
-                ["ipGenName"] = "0.0xFFFFFF",
+                ["ipRegName"] = "0.0xFFFFFF",
             } },
         { TestLine(), true,  "http://0xFFFFFFFF", new() {
                 ["uri"] = "http://0xFFFFFFFF",
@@ -648,7 +648,7 @@ public partial class UrisTests
                 ["authority"] = "0xFFFFFFFF",
                 ["endpoint"] = "0xFFFFFFFF",
                 ["host"] = "0xFFFFFFFF",
-                ["ipGenName"] = "0xFFFFFFFF",
+                ["ipRegName"] = "0xFFFFFFFF",
             } },
         { TestLine(), true,  "http://276.256.0xf1a2.077777", new() {
                 ["uri"] = "http://276.256.0xf1a2.077777",
@@ -656,7 +656,7 @@ public partial class UrisTests
                 ["authority"] = "276.256.0xf1a2.077777",
                 ["endpoint"] = "276.256.0xf1a2.077777",
                 ["host"] = "276.256.0xf1a2.077777",
-                ["ipGenName"] = "276.256.0xf1a2.077777",
+                ["ipRegName"] = "276.256.0xf1a2.077777",
             } },
         { TestLine(), true,  "http://192.168.0.257", new() {
                 ["uri"] = "http://192.168.0.257",
@@ -664,7 +664,7 @@ public partial class UrisTests
                 ["authority"] = "192.168.0.257",
                 ["endpoint"] = "192.168.0.257",
                 ["host"] = "192.168.0.257",
-                ["ipGenName"] = "192.168.0.257",
+                ["ipRegName"] = "192.168.0.257",
             } },
         { TestLine(), true,  "http://192.168.0xa20001", new() {
                 ["uri"] = "http://192.168.0xa20001",
@@ -672,7 +672,7 @@ public partial class UrisTests
                 ["authority"] = "192.168.0xa20001",
                 ["endpoint"] = "192.168.0xa20001",
                 ["host"] = "192.168.0xa20001",
-                ["ipGenName"] = "192.168.0xa20001",
+                ["ipRegName"] = "192.168.0xa20001",
             } },
         { TestLine(), true,  "http://192.015052000001", new() {
                 ["uri"] = "http://192.015052000001",
@@ -680,7 +680,7 @@ public partial class UrisTests
                 ["authority"] = "192.015052000001",
                 ["endpoint"] = "192.015052000001",
                 ["host"] = "192.015052000001",
-                ["ipGenName"] = "192.015052000001",
+                ["ipRegName"] = "192.015052000001",
             } },
         { TestLine(), true,  "http://0X12C0a80001", new() {
                 ["uri"] = "http://0X12C0a80001",
@@ -688,7 +688,7 @@ public partial class UrisTests
                 ["authority"] = "0X12C0a80001",
                 ["endpoint"] = "0X12C0a80001",
                 ["host"] = "0X12C0a80001",
-                ["ipGenName"] = "0X12C0a80001",
+                ["ipRegName"] = "0X12C0a80001",
             } },
         { TestLine(), true,  "http://276.1.2", new() {
                 ["uri"] = "http://276.1.2",
@@ -696,7 +696,7 @@ public partial class UrisTests
                 ["authority"] = "276.1.2",
                 ["endpoint"] = "276.1.2",
                 ["host"] = "276.1.2",
-                ["ipGenName"] = "276.1.2",
+                ["ipRegName"] = "276.1.2",
             } },
         { TestLine(), false, "http://192.168.0.1 hello", null },
         { TestLine(), true,  "http://192.168.0.1%20hello", new() {
@@ -705,7 +705,7 @@ public partial class UrisTests
             ["authority"] = "192.168.0.1%20hello", // →authority← = →192.168.0.1 hello←
             ["endpoint"] = "192.168.0.1%20hello", // →address← = →192.168.0.1 hello←
             ["host"] = "192.168.0.1%20hello", // →host← = →192.168.0.1 hello←
-            ["ipGenName"] = "192.168.0.1%20hello", // →ipGenName← = →192.168.0.1 hello←
+            ["ipRegName"] = "192.168.0.1%20hello", // →ipGenName← = →192.168.0.1 hello←
         } },
         { TestLine(), true,  "http://0000000000000300.0x00000000000000fF.00000000000000001", new() {
                 ["uri"] = "http://0000000000000300.0x00000000000000fF.00000000000000001",
@@ -713,7 +713,7 @@ public partial class UrisTests
                 ["authority"] = "0000000000000300.0x00000000000000fF.00000000000000001",
                 ["endpoint"] = "0000000000000300.0x00000000000000fF.00000000000000001",
                 ["host"] = "0000000000000300.0x00000000000000fF.00000000000000001",
-                ["ipGenName"] = "0000000000000300.0x00000000000000fF.00000000000000001",
+                ["ipRegName"] = "0000000000000300.0x00000000000000fF.00000000000000001",
             } },
         { TestLine(), true,  "http://0000000000000300.0xffffffffFFFFFFFF.3022415481470977", new() {
                 ["uri"] = "http://0000000000000300.0xffffffffFFFFFFFF.3022415481470977",
@@ -721,7 +721,7 @@ public partial class UrisTests
                 ["authority"] = "0000000000000300.0xffffffffFFFFFFFF.3022415481470977",
                 ["endpoint"] = "0000000000000300.0xffffffffFFFFFFFF.3022415481470977",
                 ["host"] = "0000000000000300.0xffffffffFFFFFFFF.3022415481470977",
-                ["ipGenName"] = "0000000000000300.0xffffffffFFFFFFFF.3022415481470977",
+                ["ipRegName"] = "0000000000000300.0xffffffffFFFFFFFF.3022415481470977",
             } },
         { TestLine(), true,  "http://00000000000000000001", new() {
                 ["uri"] = "http://00000000000000000001",
@@ -729,7 +729,7 @@ public partial class UrisTests
                 ["authority"] = "00000000000000000001",
                 ["endpoint"] = "00000000000000000001",
                 ["host"] = "00000000000000000001",
-                ["ipGenName"] = "00000000000000000001",
+                ["ipRegName"] = "00000000000000000001",
             } },
         { TestLine(), true,  "http://0000000000000000100000000000000001", new() {
                 ["uri"] = "http://0000000000000000100000000000000001",
@@ -737,7 +737,7 @@ public partial class UrisTests
                 ["authority"] = "0000000000000000100000000000000001",
                 ["endpoint"] = "0000000000000000100000000000000001",
                 ["host"] = "0000000000000000100000000000000001",
-                ["ipGenName"] = "0000000000000000100000000000000001",
+                ["ipRegName"] = "0000000000000000100000000000000001",
             } },
         { TestLine(), true,  "http://0.0.0.000000000000000000z", new() {
                 ["uri"] = "http://0.0.0.000000000000000000z",
@@ -745,7 +745,7 @@ public partial class UrisTests
                 ["authority"] = "0.0.0.000000000000000000z",
                 ["endpoint"] = "0.0.0.000000000000000000z",
                 ["host"] = "0.0.0.000000000000000000z",
-                ["ipGenName"] = "0.0.0.000000000000000000z",
+                ["ipRegName"] = "0.0.0.000000000000000000z",
             } },
         { TestLine(), true,  "http://0.0.0.100000000000000000z", new() {
                 ["uri"] = "http://0.0.0.100000000000000000z",
@@ -753,7 +753,7 @@ public partial class UrisTests
                 ["authority"] = "0.0.0.100000000000000000z",
                 ["endpoint"] = "0.0.0.100000000000000000z",
                 ["host"] = "0.0.0.100000000000000000z",
-                ["ipGenName"] = "0.0.0.100000000000000000z",
+                ["ipRegName"] = "0.0.0.100000000000000000z",
             } },
         { TestLine(), true,  "http://0.00.0x.0x0", new() {
                 ["uri"] = "http://0.00.0x.0x0",
@@ -761,7 +761,7 @@ public partial class UrisTests
                 ["authority"] = "0.00.0x.0x0",
                 ["endpoint"] = "0.00.0x.0x0",
                 ["host"] = "0.00.0x.0x0",
-                ["ipGenName"] = "0.00.0x.0x0",
+                ["ipRegName"] = "0.00.0x.0x0",
             } },
         { TestLine(), false, "http://[", null },
         { TestLine(), false, "http://[:", null },
@@ -1885,7 +1885,7 @@ public partial class UrisTests
                 ["authority"] = "192.0x00A80001",
                 ["endpoint"] = "192.0x00A80001",
                 ["host"] = "192.0x00A80001",
-                ["ipGenName"] = "192.0x00A80001",
+                ["ipRegName"] = "192.0x00A80001",
             } },
         { TestLine(), true,  "http://www/foo%2Ehtml", new() {
             ["uri"] = "http://www/foo%2Ehtml", // →uri← = →http://www/foo.html←
@@ -2139,7 +2139,7 @@ public partial class UrisTests
                 ["authority"] = "%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%3a%38%30", // →authority← = →www.example.com:80←
                 ["endpoint"] = "%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%3a%38%30", // →address← = →www.example.com:80←
                 ["host"] = "%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%3a%38%30", // →host← = →www.example.com:80←
-                ["ipGenName"] = "%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%3a%38%30", // →ipGenName← = →www.example.com:80←
+                ["ipRegName"] = "%77%77%77%2e%65%78%61%6d%70%6c%65%2e%63%6f%6d%3a%38%30", // →ipGenName← = →www.example.com:80←
             } },
         { TestLine(), true,  "http://%A1%C1.com", new() {
                 ["uri"] = "http://%A1%C1.com", // →uri← = →http://��.com←
@@ -2147,7 +2147,7 @@ public partial class UrisTests
                 ["authority"] = "%A1%C1.com", // →authority← = →��.com←
                 ["endpoint"] = "%A1%C1.com", // →address← = →��.com←
                 ["host"] = "%A1%C1.com", // →host← = →��.com←
-                ["ipGenName"] = "%A1%C1.com", // →ipGenName← = →��.com←
+                ["ipRegName"] = "%A1%C1.com", // →ipGenName← = →��.com←
             } },
         { TestLine(), true,  "http://www.example.com/%A1%C1/?foo=%EF%BD%81", new() {
                 ["uri"] = "http://www.example.com/%A1%C1/?foo=%EF%BD%81", // →uri← = →http://www.example.com/��/?foo=ａ←
@@ -2216,7 +2216,7 @@ public partial class UrisTests
                 ["authority"] = "user%40example.com", // →authority← = →user@example.com←
                 ["endpoint"] = "user%40example.com", // →address← = →user@example.com←
                 ["host"] = "user%40example.com", // →host← = →user@example.com←
-                ["ipGenName"] = "user%40example.com", // →ipGenName← = →user@example.com←
+                ["ipRegName"] = "user%40example.com", // →ipGenName← = →user@example.com←
             } },
         { TestLine(), true,  "http://user%3Ainfo%40example.com", new() {
                 ["uri"] = "http://user%3Ainfo%40example.com", // →uri← = →http://user:info@example.com←
@@ -2224,7 +2224,7 @@ public partial class UrisTests
                 ["authority"] = "user%3Ainfo%40example.com", // →authority← = →user:info@example.com←
                 ["endpoint"] = "user%3Ainfo%40example.com", // →address← = →user:info@example.com←
                 ["host"] = "user%3Ainfo%40example.com", // →host← = →user:info@example.com←
-                ["ipGenName"] = "user%3Ainfo%40example.com", // →ipGenName← = →user:info@example.com←
+                ["ipRegName"] = "user%3Ainfo%40example.com", // →ipGenName← = →user:info@example.com←
             } },
         { TestLine(), true,  "http://user@example.com", new() {
             ["uri"] = "http://user@example.com",
