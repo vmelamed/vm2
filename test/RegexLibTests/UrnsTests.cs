@@ -359,6 +359,58 @@ public partial class UrnsTests(
         { TestFileLine("URN with tab character"), false, "urn:test:\tvalue", null },
 
         { TestFileLine("URN with newline character"), false, "urn:test:\nvalue", null },
+
+        { TestFileLine("NID exactly 3 chars"), true, "urn:abc:value", new()
+        {
+            ["a_name"] = "urn:abc:value",
+            ["nid"] = "abc",
+            ["nss"] = "value",
+        } },
+        { TestFileLine("NID with hyphen not at start"), false, "urn:ab-cd:value", null },
+        // NID with urn- or X- not at the start(valid):
+        { TestFileLine("NID with urn- not at start"), true, "urn:abcurn-def:value", new()
+        {
+            ["a_name"] = "urn:abcurn-def:value",
+            ["nid"] = "abcurn-def",
+            ["nss"] = "value",
+        } },
+        // NSS with allowed percent-encoded reserved chars(valid) :
+        { TestFileLine("NSS with percent-encoded reserved"), true, "urn:test:%3A%2F", new()
+        {
+            ["a_name"] = "urn:test:%3A%2F", // →a_name← = →urn:test::/←
+            ["nid"] = "test",
+            ["nss"] = "%3A%2F", // →nss← = →:/←
+        } },
+        // NSS with allowed tilde, dot, dash, underscore (valid):
+
+        // NSS with only one character(valid) :
+        { TestFileLine("NSS single char"), true, "urn:test:a", new()
+        {
+            ["a_name"] = "urn:test:a",
+            ["nid"] = "test",
+            ["nss"] = "a",
+        } },
+        // NID with mixed case (valid):
+        { TestFileLine("NID mixed case"), true, "urn:AbC:value", new()
+        {
+            ["a_name"] = "urn:AbC:value",
+            ["nid"] = "AbC",
+            ["nss"] = "value",
+        } },
+        // NID with digits at start/end(valid) :
+        { TestFileLine("NID starts/ends with digit"), true, "urn:1bc:value", new()
+        {
+            ["a_name"] = "urn:1bc:value",
+            ["nid"] = "1bc",
+            ["nss"] = "value",
+        } },
+        // NSS with percent-encoded non-ASCII(valid) :
+        { TestFileLine("NSS percent-encoded non-ASCII"), true, "urn:test:%E2%82%AC", new()
+        {
+            ["a_name"] = "urn:test:%E2%82%AC", // →a_name← = →urn:test:€←
+            ["nid"] = "test",
+            ["nss"] = "%E2%82%AC", // →nss← = →€←
+        } },
     };
 
     [Theory]

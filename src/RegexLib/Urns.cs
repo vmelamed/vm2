@@ -1,7 +1,7 @@
 namespace vm2.RegexLib;
 
 /// <summary>
-/// Class Uri. Defines many regular expressions with the ultimate goal to define a regular expression for URI.
+/// Class Urns. Defines regular expressions for Uniform Resource Names (URNs) in accordance with RFC 8141 and RFC 1737.
 /// Follows closely the definitions in
 /// https://datatracker.ietf.org/doc/html/rfc8141
 /// https://datatracker.ietf.org/doc/html/rfc1737
@@ -48,7 +48,8 @@ public static partial class Urns
     public const string AssignedNameGr = "a_name";
 
     /// <summary>
-    /// Represents a regular expression pattern used to match and extract an assigned name with schema, namespace
+    /// Regular expression pattern for matching and extracting an assigned URN, including the scheme, namespace identifier (NID),
+    /// and namespace-specific string (NSS).
     /// identifier, and namespace string.
     /// </summary>
     public const string AssignedNameRex = $@"(?<{AssignedNameGr}> {Schema} : {NidRex} : {nss} )";
@@ -111,9 +112,8 @@ public static partial class Urns
     const string fDelimiter = @"\#";
 
     /// <summary>
-    /// The f-component is intended to be interpreted by the client as a specification for a location within, or region of, the
-    /// named resource.  It distinguishes the constituent parts of a resource named by a URN. The f-component is introduced by
-    /// the number sign ("#") character and terminated by the end of the URI.
+    /// The f-component specifies a location or region within the named resource. It is introduced by the number sign ("#") and
+    /// terminated by the end of the URN.
     /// </summary>
     const string fComponent = $@"(?: {fDelimiter} (?<{FComponentGr}> {Uris.FragmentCharRex}* ) )";
 
