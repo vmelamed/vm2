@@ -1,5 +1,7 @@
 ﻿namespace vm2.ThreadingTests;
 
+using vm2.Threading.ReadersWriter;
+
 #pragma warning disable xUnit1026, xUnit1031, xUnit1044
 
 public class ReaderWriterSyncTests

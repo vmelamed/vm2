@@ -41,7 +41,7 @@ public static partial class Numerical
     /// <summary>
     /// The hexadecimal digit characters.
     /// </summary>
-    internal const string HexDigitChars = $"{Ascii.DigitChars}A-Fa-f";
+    internal const string HexDigitChars = $"{DigitChars}A-Fa-f";
 
     /// <summary>
     /// Matches a hexadecimal digit.
@@ -73,7 +73,7 @@ public static partial class Numerical
     /// Matches sign-less, whole, decimal (a.k.a. natural) number.
     /// <para>BNF: <c>natural_number = *[0] [non-zero-digit] *[decimal_digit]</c></para>
     /// </summary>
-    public const string NaturalNumberRex = $"0*{Ascii.NzDigitChar}{Ascii.DigitChar}*";
+    public const string NaturalNumberRex = $"0*{NzDigitChar}{DigitChar}*";
 
     /// <summary>
     /// Matches a string that represents a sign-less, whole, decimal number, a.k.a. natural number (i.e. 0, 1, ... , 37, etc.)
@@ -95,7 +95,7 @@ public static partial class Numerical
     /// Matches sign-less, whole, decimal (a.k.a. natural) number.
     /// <para>BNF: <c>natural_number = *[0] [non-zero-digit] *[decimal_digit]</c></para>
     /// </summary>
-    public const string DecimalNumberRex = $"{Ascii.DigitChar}+";
+    public const string DecimalNumberRex = $"{DigitChar}+";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a zero or natural number.
@@ -128,7 +128,7 @@ public static partial class Numerical
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string IntegerNumberRex = $"(?<{IntSignGr}> [+-])? (?<{IntAbsGr}> {Ascii.DigitChar}+)";
+    public const string IntegerNumberRex = $"(?<{IntSignGr}> [+-])? (?<{IntAbsGr}> {DigitChar}+)";
 
     /// <summary>
     /// Matches a string representing an integer number.
@@ -175,8 +175,8 @@ public static partial class Numerical
     /// </remarks>
     public const string FractionalNumberRex = $$"""
         (?<{{FSignGr}}>[+-]?)
-        (?: (?:(?<{{WholeGr}}> {{Ascii.DigitChar}}+)      (?:\.(?<{{FractionGr}}> {{Ascii.DigitChar}}*))? )  |
-        (?: (?:(?<{{WholeGr}}> {{Ascii.DigitChar}}* ) \.))? (?:(?<{{FractionGr}}> {{Ascii.DigitChar}}+))  )
+        (?: (?:(?<{{WholeGr}}> {{DigitChar}}+)      (?:\.(?<{{FractionGr}}> {{DigitChar}}*))? )  |
+        (?: (?:(?<{{WholeGr}}> {{DigitChar}}* ) \.))? (?:(?<{{FractionGr}}> {{DigitChar}}+))  )
         """;
 
     /// <summary>

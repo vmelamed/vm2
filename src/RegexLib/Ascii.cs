@@ -63,7 +63,7 @@ public static partial class Ascii
     /// The digit characters.
     /// <para>BNF: <c>digit = 0 | non-zero-digit</c></para>
     /// </summary>
-    public const string DigitChars = $@"0-9";   // <==> $@"0{NonZeroDigitChars}";
+    public const string DigitChars = "0-9";   // <==> $@"0{NonZeroDigitChars}";
 
     /// <summary>
     /// Matches a digit.

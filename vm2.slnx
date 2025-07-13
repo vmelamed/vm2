@@ -2,6 +2,7 @@
   <Folder Name="/examples/" />
   <Folder Name="/examples/RegexLib/">
     <Project Path="examples/RegexLib/Reflector/Reflector.csproj" />
+    <Project Path="examples/RegexLib/RegexLibExample/RegexLibExample.csproj" Id="06fbee3a-6941-49f2-aa0e-6c317413e490" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />

@@ -27,10 +27,10 @@ public static partial class Net
     /// </remarks>
     const string firstDecimalOctetRex = $$"""
                                           (?:
-                                             2[0-3]{{Ascii.DigitChar}} |
-                                             1{{Ascii.DigitChar}}{{Ascii.DigitChar}} |
-                                             {{Ascii.NzDigitChar}}{{Ascii.DigitChar}} |
-                                             {{Ascii.NzDigitChar}}
+                                             2[0-3]{{DigitChar}} |
+                                             1{{DigitChar}}{{DigitChar}} |
+                                             {{NzDigitChar}}{{DigitChar}} |
+                                             {{NzDigitChar}}
                                           )
                                           """;
 
@@ -43,10 +43,10 @@ public static partial class Net
     const string decimalOctetRex = $$"""
                                      (?:
                                         25[0-5] |
-                                        2[0-4]{{Ascii.DigitChar}} |
-                                        1{{Ascii.DigitChar}}{{Ascii.DigitChar}} |
-                                        {{Ascii.NzDigitChar}}{{Ascii.DigitChar}} |
-                                        {{Ascii.DigitChar}}
+                                        2[0-4]{{DigitChar}} |
+                                        1{{DigitChar}}{{DigitChar}} |
+                                        {{NzDigitChar}}{{DigitChar}} |
+                                        {{DigitChar}}
                                      )
                                      """;
 
@@ -60,9 +60,9 @@ public static partial class Net
     /// </remarks>
     const string ipv4Rex = $$"""
                              (?:
-                               (?! (?: 192\.0\.2\.{{Ascii.DigitChar}}{1,3} )    |
-                                   (?: 198\.51\.100\.{{Ascii.DigitChar}}{1,3} ) |
-                                   (?: 203\.0\.113\.{{Ascii.DigitChar}}{1,3} )
+                               (?! (?: 192\.0\.2\.{{DigitChar}}{1,3} )    |
+                                   (?: 198\.51\.100\.{{DigitChar}}{1,3} ) |
+                                   (?: 203\.0\.113\.{{DigitChar}}{1,3} )
                                )
                                {{firstDecimalOctetRex}} (?: \. {{decimalOctetRex}} ){3}
                              )
@@ -156,15 +156,21 @@ public static partial class Net
     /// The characters that are allowed in a URI (<see cref="Uris"/>) but do not have a reserved purpose.
     /// <para>BNF: <c>unreserved  = ALPHA | DIGIT | "-" | "." | "_" | "~"</c></para>
     /// </summary>
-    internal const string UnreservedChars = $@"\-\.{Ascii.AlphaNumericChars}_~";
+    internal const string UnreservedChars = $@"\-\.{AlphaNumericChars}_~";
 
     /// <summary>
     /// Matches a percent encoded character (<see cref="Uris"/>).
     /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
     /// </summary>
-    internal const string PctEncodedChar = $"(?:%{Numerical.HexDigitChar}{Numerical.HexDigitChar})";
+    internal const string PctEncoded = $"%{Numerical.HexDigitChar}{Numerical.HexDigitChar}";
 
-    const string unreservedRex = $@"[{UnreservedChars}] | {PctEncodedChar}";
+    /// <summary>
+    /// Matches a percent encoded character (<see cref="Uris"/>).
+    /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
+    /// </summary>
+    internal const string PctEncodedChar = $"(?: {PctEncoded} )";
+
+    const string unreservedRex = $@"[{UnreservedChars}] | {PctEncoded}";
 
     /// <summary>
     /// Matches a Zone or Scope ID from an IPv6 address.
@@ -227,7 +233,7 @@ public static partial class Net
     /// <summary>
     /// The IPvFuture character set.
     /// </summary>
-    const string netNameNcNdChars = $@"!&',;=\$\(\)\*\+\-{Ascii.AlphaNumericChars}_~";
+    const string netNameNcNdChars = $@"!&',;=\$\(\)\*\+\-{AlphaNumericChars}_~";
 
     /// <summary>
     /// The name of a matching group representing an IPv.Future address.
@@ -261,7 +267,7 @@ public static partial class Net
 
     #region DnsName
     // a-zA-Z0-9-
-    const string alphaDigitHyphenChars = $@"{Ascii.AlphaNumericChars}\-";
+    const string alphaDigitHyphenChars = $@"{AlphaNumericChars}\-";
 
     /// <summary>
     /// Matches an alpha-digit-hyphen character from RFC1034 (ASCII only)
@@ -273,7 +279,7 @@ public static partial class Net
     /// Matches a domain name label (e.g. google in www.google.com) from RFC 1034 (ASCII only)
     /// <para>BNF: <c>label := alpha [ *61[ alpha-digit-hyphen ] alpha-digit ]</c></para>
     /// </summary>
-    public const string DnsLabelRex = $@"(?: {Ascii.AlphaChar} (?: {alphaDigitHyphenRex}{{0,61}} {Ascii.AlphaNumericChar} )? )";
+    public const string DnsLabelRex = $@"(?: {AlphaChar} (?: {alphaDigitHyphenRex}{{0,61}} {AlphaNumericChar} )? )";
 
     /// <summary>
     /// The name of a matching group representing a name that can be looked up in DNS.

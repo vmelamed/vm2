@@ -102,7 +102,7 @@ public partial class UrisTests(
     [Theory]
     [MemberData(nameof(HostData))]
     public void TestHost(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Host(), TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.UriHost(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
@@ -433,7 +433,7 @@ public partial class UrisTests(
     [Theory]
     [MemberData(nameof(AddressData))]
     public void TestAddress(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexTest(Uris.Endpoint(), TestFileLine, shouldBe, input, captures);
+        => base.RegexTest(Uris.UriEndpoint(), TestFileLine, shouldBe, input, captures);
 
     // -----
 
@@ -447,7 +447,7 @@ public partial class UrisTests(
     [Theory]
     [MemberData(nameof(AuthorityData))]
     public void TestAuthority(string TestFileLine, bool shouldBe, string input, Captures? captures)
-        => base.RegexStringTest($"^{Uris.AuthorityRex}$", TestFileLine, shouldBe, input, captures);
+        => base.RegexStringTest($"^{Uris.UriAuthorityRex}$", TestFileLine, shouldBe, input, captures);
 
     // -----
 

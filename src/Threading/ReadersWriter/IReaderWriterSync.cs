@@ -1,4 +1,4 @@
-namespace vm2.Threading;
+namespace vm2.Threading.ReadersWriter;
 
 /// <summary>
 /// Interface for a reader-writer synchronization mechanism.

@@ -13,7 +13,7 @@ public static partial class Urns
     /// </summary>
     public const string Schema = "urn";
 
-    const string alphanumericHyphenChars = $@"{Ascii.AlphaNumericChars}-";
+    const string alphanumericHyphenChars = $@"{AlphaNumericChars}-";
 
     const string alphanumericHyphenCharRex = $@"[{alphanumericHyphenChars}]";
 
@@ -25,22 +25,22 @@ public static partial class Urns
     /// <summary>
     /// Represents a regular expression pattern for matching a namespace identifier (NID).
     /// </summary>
-    public const string NidRex = $@"(?<{NidGr}> (?! urn- )(?! {Ascii.AlphaChar}{{2}}- )(?! X- ) {Ascii.AlphaNumericChar} {alphanumericHyphenCharRex}{{1,30}} {Ascii.AlphaNumericChar} )";
+    public const string NidRex = $@"(?<{NidGr}> (?! urn- )(?! {AlphaChar}{{2}}- )(?! X- ) {AlphaNumericChar} {alphanumericHyphenCharRex}{{1,30}} {AlphaNumericChar} )";
 
-    const string pSlChars   = $@"{Uris.PathChars}/";
+    const string pathSlChars   = $@"{PathChars}/";
 
-    const string pSlChar    = $@"[{pSlChars}] | {Uris.PctEncoded}";
+    const string pathSlChar    = $@"[{pathSlChars}] | {PctEncoded}";
 
-    const string pSlCharRex = $@"(?: {pSlChar} )";
+    const string pathSlCharRex = $@"(?: {pathSlChar} )";
 
-    const string pCharRex   = Uris.PCharRex;
+    const string pathCharRex   = PCharRex;
 
     /// <summary>
     /// The name of the group that matches the URN namespace specific string (NSS).
     /// </summary>
     public const string NssGr = "nss";
 
-    const string nss = $@"(?<{NssGr}> {pCharRex} {pSlCharRex}* )";
+    const string nss = $@"(?<{NssGr}> {pathCharRex} {pathSlCharRex}* )";
 
     /// <summary>
     /// The name of the group that matches the URN namespace specific string (NSS).
@@ -72,13 +72,13 @@ public static partial class Urns
     [GeneratedRegex(AssignedNameRegex, Common.OptionsI)]
     public static partial Regex AssignedName();
 
-    const string componentNpChars = $@"{pSlChars}\?";
+    const string componentNpChars = $@"{pathSlChars}\?";
 
-    const string componentChars   = $@"[{componentNpChars}] | {Uris.PctEncoded}";
+    const string componentChars   = $@"[{componentNpChars}] | {PctEncoded}";
 
     const string componentChar    = $@"(?: {componentChars} )";
 
-    const string componentRex     = $@"{pCharRex} {componentChar}*";
+    const string componentRex     = $@"{pathCharRex} {componentChar}*";
 
     /// <summary>
     /// The name of the group that matches the r-component of a URN.
@@ -115,7 +115,7 @@ public static partial class Urns
     /// The f-component specifies a location or region within the named resource. It is introduced by the number sign ("#") and
     /// terminated by the end of the URN.
     /// </summary>
-    const string fComponent = $@"(?: {fDelimiter} (?<{FComponentGr}> {Uris.FragmentCharRex}* ) )";
+    const string fComponent = $@"(?: {fDelimiter} (?<{FComponentGr}> {FragmentCharRex}* ) )";
 
     /// <summary>
     /// The name of the group that matches a URN, including the optional components.
@@ -125,12 +125,12 @@ public static partial class Urns
     /// <summary>
     /// Represents a regular expression pattern for matching names, including the optional components, in a string.
     /// </summary>
-    public const string NameStringRex = $@"(?<{UrnGr}> {AssignedNameRex} {rqComponents}? {fComponent}?)";
+    public const string NameStringRex = $@"(?<{UrnGr}> {AssignedNameRex} {rqComponents}? {fComponent}? )";
 
     /// <summary>
     /// Represents a regular expression pattern for matching names, including the optional components.
     /// </summary>
-    public const string NameStringRegex = $@"^ {NameStringRex} $";
+    public const string NameStringRegex = $@"^{NameStringRex}$";
 
     /// <summary>
     /// Gets a <see cref="Regex"/> object that matches a string that represents a URN, including the optional components.

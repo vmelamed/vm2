@@ -1,10 +1,9 @@
-namespace vm2.Threading;
-
+namespace vm2.Threading.ReadersWriter;
 /// <summary>
-/// With the help of this class create a synchronized multiple readers scope by leveraging the <c>using</c> statement.
+/// With the help of this class create a synchronized single writer scope by leveraging the <c>using</c> statement.
 /// <para/>
-/// When the object is created, it attempts to acquire the lock in reader mode. When disposed, it
-/// releases the lock if it has previously acquired.
+/// When the object is created, it attempts to acquire the lock in writer mode. When disposed, it releases the lock if
+/// it was previously acquired.
 /// <para/>
 /// Never omit disposing this object. Better yet always use it inside of a <c>using</c> statement.
 /// </summary>
@@ -16,16 +15,16 @@ namespace vm2.Threading;
 ///     static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 ///     static RWSynchronizedObject _protected = new();
 ///
-///     public void Read()
+///     public void Get(string key)
 ///     {
-///         using var _ = new ReaderSync(_lock, 100))
-///         return _protected.ReadOperation();
+///         using(new WriterSync(_lock, 100))
+///             return _protected.WriteOperation();
 ///     }
 /// }
 /// ]]>
 /// </code>
 /// </example>
-public sealed class ReaderSync : IReaderWriterSync
+public sealed class WriterSync : IReaderWriterSync
 {
     /// <summary>
     /// Gets the lock.
@@ -35,44 +34,42 @@ public sealed class ReaderSync : IReaderWriterSync
     public ReaderWriterLockSlim Lock { get; init; }
 
     /// <summary>
-    /// Gets a value indicating whether the lock is held and the lock owner can read from the protected resource(s).
+    /// Gets a value indicating whether the lock is held and the lock owner can write to the protected resource(s).
     /// </summary>
     public bool IsLockHeld { get; private set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ReaderSync"/> class with the specified <paramref name="readerWriterLock"/>
-    /// and waits the specified number of milliseconds or indefinitely until it acquires the lock in reader mode.
+    /// Initializes a new instance of the <see cref="WriterSync"/> class with the specified <paramref name="readerWriterLock"/>
+    /// and waits the specified number of milliseconds or indefinitely until it acquires the lock in writer mode.
     /// <para/>
     /// <b>Hint:</b> prefer using the extension methods from <see cref="ReaderWriterLockExtensions"/> to work with the lock.
     /// </summary>
-    /// <param name="readerWriterLock">The reader writer lock.</param>
+    /// <param name="readerWriterLock">The reader-writer lock.</param>
     /// <param name="waitMs">How long to wait for the lock to be acquired in ms. If 0 - wait indefinitely.</param>
-    public ReaderSync(
+    public WriterSync(
         ReaderWriterLockSlim readerWriterLock,
         int waitMs = 0)
     {
         Lock = readerWriterLock;
         if (waitMs is 0)
         {
-            Lock.EnterReadLock();
+            Lock.EnterWriteLock();
             IsLockHeld = true;
         }
         else
-            IsLockHeld = Lock.TryEnterReadLock(waitMs);
+            IsLockHeld = Lock.TryEnterWriteLock(waitMs);
     }
 
-    #region IDisposable
+    #region IDisposable pattern implementation
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// <para/>
-    /// <b>Hint:</b> prefer using the extension methods from <see cref="ReaderWriterLockExtensions"/> to work with the lock.
     /// </summary>
     public void Dispose()
     {
         if (IsLockHeld)
         {
             IsLockHeld = false;
-            Lock.ExitReadLock();
+            Lock.ExitWriteLock();
         }
         GC.SuppressFinalize(this);
     }

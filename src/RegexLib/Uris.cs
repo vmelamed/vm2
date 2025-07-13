@@ -14,18 +14,6 @@ public static partial class Uris
 {
     #region URI character sets
     /// <summary>
-    /// Matches a percent encoded character.
-    /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
-    /// </summary>
-    public const string PctEncoded = $"%{Numerical.HexDigitChar}{Numerical.HexDigitChar}";
-
-    /// <summary>
-    /// Matches a percent encoded character.
-    /// <para>BNF: <c>pct-encoded := % hex_digit hex_digit</c></para>
-    /// </summary>
-    public const string PctEncodedChar = $"(?:{PctEncoded})";
-
-    /// <summary>
     /// The URI general delimiters.
     /// <para>BNF: <c>gen-delims  = ":" | "/" | "?" | "#" | "[" | "]" | "@"</c></para>
     /// </summary>
@@ -43,19 +31,19 @@ public static partial class Uris
     /// </summary>
     public const string SubDelimiterChars = $@"{subDelimiterNoEqAmpChars}=&";
 
+#pragma warning disable IDE0051 // Remove unused private members
     /// <summary>
     /// The reserved chars.
     /// <para>BNF: <c>reserved = gen-delims | sub-delims</c></para>
     /// </summary>
-#pragma warning disable IDE0051 // Remove unused private members
-    const string reservedChars = $@"{genDelimiterChars}{SubDelimiterChars}";
-#pragma warning restore IDE0051 // Remove unused private members
+    public const string ReservedChars = $@"{genDelimiterChars}{SubDelimiterChars}";
+#pragma warning restore IDE0051
 
     /// <summary>
     /// The characters that are allowed in a URI but do not have a reserved purpose.
     /// <para>BNF: <c>unreserved  = ALPHA | DIGIT | "-" | "." | "_" | "~"</c></para>
     /// </summary>
-    public const string UnreservedChars = $@"{Ascii.AlphaNumericChars}\-\._~";
+    public const string UnreservedChars = $@"{AlphaNumericChars}-._~";
 
     /// <summary>
     /// The unreserved or sub-delimiter chars
@@ -79,7 +67,7 @@ public static partial class Uris
     /// The scheme characters
     /// <para>BNF: <c>scheme-char = ALPHA | DIGIT | "+" | "-" | "."</c></para>
     /// </summary>
-    const string schemeChars = $@"{Ascii.AlphaNumericChars}\.\+\-";
+    const string schemeChars = $@"{AlphaNumericChars}.+-";
 
     const string schemeRex = $@"[{schemeChars}]*";
 
@@ -91,7 +79,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string SchemeRex = $@"(?<{SchemeGr}> {Ascii.AlphaChar} {schemeRex} )";
+    public const string SchemeRex = $@"(?<{SchemeGr}> {AlphaChar} {schemeRex} )";
 
     /// <summary>
     /// Matches a string that represents a URI scheme.
@@ -118,60 +106,55 @@ public static partial class Uris
 
     /// <summary>
     /// Matches reg-name in RFC 3986
-    /// <para>BNF: <c>registered_name = *[ unreserved | sub-delimiters | pct-encoded ]</c> - yes, it can be empty, see the RFC</para>
+    /// <para>BNF: <c>registered_name = *[ unreserved | sub-delimiters | pct-encoded ]</c></para>
     /// </summary>
-    const string regNameRex = $@"(?<{IpRegNameGr}> (?: {unreservedOrSubDelimiterChar} | {PctEncodedChar} )+ )";
+    const string regNameRex = $@"(?<{IpRegNameGr}>(?: {unreservedOrSubDelimiterChar} | {PctEncoded} )+)";
 
     /// <summary>
     /// Matches a registered name.
-    /// <para>Named groups: <see cref="Net.IpDnsNameGr"/>, <see cref="IpRegNameGr"/>.</para>
+    /// <para>Named groups: <see cref="IpDnsNameGr"/>, <see cref="IpRegNameGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    const string dnsOrRegNameRex = $@"{Net.DnsNameRex} | {regNameRex}";
+    const string dnsOrRegNameRex = $@"{DnsNameRex} | {regNameRex}";
 
     /// <summary>
-    /// The name of a matching group representing a host name.
-    /// </summary>
-    public const string HostGr = Net.HostGr;
-
-    /// <summary>
-    /// Matches a host in a string.
+    /// Matches a host in a URI string. Includes RFC3986 reg-name.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpRegNameGr"/>, <see cref="Net.Ipv4Gr"/>,
-    /// <see cref="Net.Ipv6NzGr"/> or <see cref="Net.IpvfGr"/>.
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="IpRegNameGr"/>, <see cref="Ipv4Gr"/>,
+    /// <see cref="Ipv6NzGr"/> or <see cref="IpvfGr"/>.
     /// </para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string HostRex = $@"(?<{HostGr}> {Net.IpNumericAddressRex} | {dnsOrRegNameRex} )";
+    public const string UriHostRex = $@"(?<{HostGr}> {IpNumericAddressRex} | {dnsOrRegNameRex} )";
 
     /// <summary>
-    /// Matches a string that represents a host.
+    /// Matches a string that represents a host. Includes RFC3986 reg-name.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6NzGr"/>,
-    /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpRegNameGr"/>
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Ipv4Gr"/>, <see cref="Ipv6NzGr"/>,
+    /// <see cref="IpvfGr"/>, <see cref="IpDnsNameGr"/>, <see cref="IpRegNameGr"/>
     /// </para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string HostRegex = $@"^{HostRex}$";
+    public const string UriHostRegex = $@"^{UriHostRex}$";
 
     /// <summary>
-    /// Gets a <see cref="Regex"/> object that matches a string that represents a host.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a host. Includes RFC3986 reg-name.
     /// <para>BNF: <c>host := IP-literal | IPv4address | reg-name</c></para>
     /// <para>
-    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Net.Ipv4Gr"/>, <see cref="Net.Ipv6NzGr"/>,
-    /// <see cref="Net.IpvfGr"/>, <see cref="Net.IpDnsNameGr"/>, <see cref="IpRegNameGr"/>
+    /// Named groups: <see cref="HostGr"/>, and one of: <see cref="Ipv4Gr"/>, <see cref="Ipv6NzGr"/>,
+    /// <see cref="IpvfGr"/>, <see cref="IpDnsNameGr"/>, <see cref="IpRegNameGr"/>
     /// </para>
     /// </summary>
-    [GeneratedRegex(HostRegex, Common.OptionsI)]
-    public static partial Regex Host();
+    [GeneratedRegex(UriHostRegex, Common.OptionsI)]
+    public static partial Regex UriHost();
     #endregion
 
     #region Endpoint (Host:Port)
@@ -181,33 +164,33 @@ public static partial class Uris
     public const string EndpointGr = "endpoint";
 
     /// <summary>
-    /// Matches an IP endpoint.
+    /// Matches an IP endpoint. Includes RFC3986 reg-name.
     /// <para>BNF: <c>endpoint := host [: port]</c></para>
-    /// <para>Named groups: <see cref="EndpointGr"/> <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
+    /// <para>Named groups: <see cref="EndpointGr"/> <see cref="HostGr"/>, <see cref="PortGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string EndpointRex = $"(?<{EndpointGr}> {HostRex} (?: : {Net.PortRex})? )";
+    public const string UriEndpointRex = $"(?<{EndpointGr}> {UriHostRex} (?: : {PortRex})? )";
 
     /// <summary>
-    /// Matches a string that represents an IP endpoint.
+    /// Matches a string that represents an IP endpoint. Includes RFC3986 reg-name.
     /// <para>BNF: <c>endpoint := host [: port]</c></para>
-    /// <para>Named groups: <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
+    /// <para>Named groups: <see cref="HostGr"/>, <see cref="PortGr"/>.</para>
     /// </summary>
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string EndpointRegex = $"^{EndpointRex}$";
+    public const string UriEndpointRegex = $"^{UriEndpointRex}$";
 
     /// <summary>
-    /// Gets a <see cref="Regex"/> object that matches a string that represents an IP endpoint.
+    /// Gets a <see cref="Regex"/> object that matches a string that represents an IP endpoint. Includes RFC3986 reg-name.
     /// <para>BNF: <c>endpoint := host [: port]</c></para>
-    /// <para>Named groups: <see cref="HostGr"/>, <see cref="Net.PortGr"/>.</para>
+    /// <para>Named groups: <see cref="HostGr"/>, <see cref="PortGr"/>.</para>
     /// </summary>
     /// <value>The endpoint.</value>
-    [GeneratedRegex(EndpointRegex, Common.OptionsI)]
-    public static partial Regex Endpoint();
+    [GeneratedRegex(UriEndpointRegex, Common.OptionsI)]
+    public static partial Regex UriEndpoint();
     #endregion
 
     #region Authority
@@ -230,6 +213,8 @@ public static partial class Uris
     /// </remarks>
     public const string AccessGr = "access";
 
+    const string userInfoChar = $"(?: {unreservedOrSubDelimiterChar} | {PctEncoded} )";
+
     /// <summary>
     /// Matches URI's user info (name and password).
     /// <para>BNF: <c>user-info := *[ unreserved | sub-delimiters | : | pct-encoded ]</c></para>
@@ -246,13 +231,7 @@ public static partial class Uris
     /// <para>
     /// </para>
     /// </remarks>
-    public const string UserInfoRex = $"""
-                                       (?:
-                                         (?<{UserNameGr}> (?:{unreservedOrSubDelimiterChar} | {PctEncodedChar})+ )
-                                         :?
-                                         (?<{AccessGr}>   (?:{unreservedOrSubDelimiterChar} | {PctEncodedChar})* )
-                                       )
-                                       """;
+    public const string UserInfoRex = $"(?<{UserNameGr}> {userInfoChar}+) :? (?<{AccessGr}> {userInfoChar}*)";
 
     /// <summary>
     /// authority in a URI.
@@ -266,7 +245,7 @@ public static partial class Uris
     /// <remarks>
     /// Requires <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
-    public const string AuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {EndpointRex} )";
+    public const string UriAuthorityRex = $"(?<{AuthorityGr}> (?: {UserInfoRex} @ )? {Uris.UriEndpointRex} )";
 
     /// <summary>
     /// Matches the URI's authority with network address.
@@ -665,12 +644,12 @@ public static partial class Uris
 
     #region Relative URI
     /// <summary>
-    /// Matches the URI relative part
+    /// Matches the URI relative part. Includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-noscheme | path-empty</c>
     /// </para>
     /// </summary>
-    const string relativeUriPartRex = $"(?: (?: // {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
+    const string relativeUriPartRex = $"(?: (?: // {UriAuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
 
     #region RelativeUriKvQueryRef
     /// <summary>
@@ -679,23 +658,25 @@ public static partial class Uris
     public const string RelativeUriKvGr = "relUriKv";
 
     /// <summary>
-    /// Matches the URI relative reference with an optional key-value query in a string
+    /// Matches the URI relative reference with an optional key-value query in a string. Includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>relative-ref = relative-part [ "?" query-kv ] [ "#" fragment ]</c>
     /// </para>
     /// </summary>
-    const string relativeUriKvQueryRefRex = $@"(?<{RelativeUriKvGr}> {relativeUriPartRex} (?: \? {queryKvRex} )? (?: \# {FragmentRex} {FragmentRex} )?";
+    const string relativeUriKvQueryRefRex = $@"(?<{RelativeUriKvGr}> {relativeUriPartRex} (?: \? {queryKvRex} )? (?: \# {FragmentRex} {FragmentRex} )? )";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a relative URI with key-value pairs query.
+    /// Includes RFC3986 reg-name.
     /// </summary>
     public const string RelativeUriKvQueryRefRegex = $@"^{relativeUriKvQueryRefRex}$";
 
-    // <summary>
-    // Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
-    // </summary>
-    //[GeneratedRegex(RelativeUriKvQueryRefRegex, Common.Options)]
-    //public static partial Regex RelativeUriKvQueryRef();
+    /// <summary>
+    /// Gets a Regex object which matches a string representing a relative URI with key-value pairs query.
+    /// Includes RFC3986 reg-name.
+    /// </summary>
+    [GeneratedRegex(RelativeUriKvQueryRefRegex, Common.Options)]
+    public static partial Regex RelativeUriKvQueryRef();
     #endregion
 
     #region RelativeUriRef
@@ -705,34 +686,35 @@ public static partial class Uris
     public const string RelativeUriGr = "relUri";
 
     /// <summary>
-    /// Matches the URI relative reference  in a string
+    /// Matches the URI relative reference in a string. Includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>relative-ref = relative-part [ "?" query-gen ] [ "#" fragment ]</c>
     /// </para>
     /// </summary>
-    const string relativeUriRefRex = $@"(?<{RelativeUriGr}> {relativeUriPartRex} (?: \? {queryRex} )? (?: \# {FragmentRex} )?";
+    const string relativeUriRefRex = $@"(?<{RelativeUriGr}> {relativeUriPartRex} (?: \? {queryRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a relative URI with general query.
+    /// Includes RFC3986 reg-name.
     /// </summary>
     public const string RelativeUriRefRegex = $@"^{relativeUriRefRex}$";
 
-    // <summary>
-    // Gets a Regex object which matches a string representing a concept.
-    // </summary>
-    //[GeneratedRegex(RelativeUriRefRegex, Common.OptionsI)]
-    //public static partial Regex RelativeUriRef();
+    /// <summary>
+    /// Gets a Regex object which matches a string representing a concept. Includes RFC3986 reg-name.
+    /// </summary>
+    [GeneratedRegex(RelativeUriRefRegex, Common.OptionsI)]
+    public static partial Regex RelativeUriRef();
     #endregion
     #endregion
 
     #region Absolute URI
     /// <summary>
-    /// Matches the hierarchical part  in a string
+    /// Matches the hierarchical part  in a string. Includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-rootless | path-empty</c>
     /// </para>
     /// </summary>
-    const string uriHierarchicalPartRex = $"(?: (?: // {AuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
+    const string uriHierarchicalPartRex = $"(?: (?: // {UriAuthorityRex} {pathAbsoluteOrEmptyRex} ) | {pathAbsoluteRex} | {pathNoSchemeRex} )?";
 
     #region UriKeyValueQuery
     /// <summary>
@@ -741,7 +723,7 @@ public static partial class Uris
     public const string UriKvQueryGr = "uriKvQuery";
 
     /// <summary>
-    /// Matches a URI with an optional key-value query
+    /// Matches a URI with an optional key-value query. Includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>URI = scheme : hier-part [ ? kv-query ] [ # fragment ]</c>
     /// </para>
@@ -752,7 +734,7 @@ public static partial class Uris
     const string uriKvQueryRex = $@"(?<{UriKvQueryGr}> {SchemeRex} : {uriHierarchicalPartRex} (?: \? {queryKvRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
-    /// Matches a string that represents a URI with an optional key-value query
+    /// Matches a string that represents a URI with an optional key-value query. Includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>URI = scheme : hier-part [ ? kv-query ] [ # fragment ]</c>
     /// </para>
@@ -763,7 +745,8 @@ public static partial class Uris
     public const string UriKvQueryRegex = $"^{uriKvQueryRex}$";
 
     /// <summary>
-    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with a key-value query.
+    /// Includes RFC3986 reg-name.
     /// </summary>
     [GeneratedRegex(UriKvQueryRegex, Common.OptionsI)]
     public static partial Regex UriKeyValueQuery();
@@ -777,7 +760,7 @@ public static partial class Uris
     public const string UriGr = "uri";
 
     /// <summary>
-    /// Matches a URI with an optional general query.
+    /// Matches a URI with an optional general query. Includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>URI = scheme : hier-part [ ? query ] [ # fragment ]</c>
     /// </para>
@@ -788,7 +771,7 @@ public static partial class Uris
     const string uriRex = $@"(?<{UriGr}> {SchemeRex} : {uriHierarchicalPartRex} (?: \? {queryRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
-    /// Matches a string that represents a URI with an optional general query
+    /// Matches a string that represents a URI with an optional general query. Includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>URI = scheme : hier-part [ ? query ] [ # fragment ]</c>
     /// </para>
@@ -799,7 +782,8 @@ public static partial class Uris
     public const string UriRegex = $"^{uriRex}$";
 
     /// <summary>
-    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with an optional general query.
+    /// Includes RFC3986 reg-name.
     /// </summary>
     [GeneratedRegex(UriRegex, Common.OptionsI)]
     public static partial Regex Uri();
@@ -860,7 +844,7 @@ public static partial class Uris
 
     #region Absolute URI with network address
     /// <summary>
-    /// Matches the hierarchical part  in a string
+    /// Matches the hierarchical part in a string. Does not include RFC3986 reg-name.
     /// <para>
     /// BNF: <c>relative-part = "//" authority path-abempty | path-absolute | path-rootless | path-empty</c>
     /// </para>
@@ -869,7 +853,7 @@ public static partial class Uris
 
     #region UriKeyValueQuery with network address
     /// <summary>
-    /// Matches a URI with an optional key-value query
+    /// Matches a URI with an optional key-value query. Does not include RFC3986 reg-name.
     /// <para>
     /// BNF: <c>URI = scheme : hier-part [ ? kv-query ] [ # fragment ]</c>
     /// </para>
@@ -880,7 +864,7 @@ public static partial class Uris
     const string netUriKvQueryRex = $@"(?<{UriKvQueryGr}> {SchemeRex} : {netUriHierarchicalPartRex} (?: \? {queryKvRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
-    /// Matches a string that represents a URI with an optional key-value query
+    /// Matches a string that represents a URI with an optional key-value query. Does not include RFC3986 reg-name.
     /// <para>
     /// BNF: <c>URI = scheme : hier-part [ ? kv-query ] [ # fragment ]</c>
     /// </para>
@@ -891,7 +875,8 @@ public static partial class Uris
     public const string NetUriKvQueryRegex = $"^{netUriKvQueryRex}$";
 
     /// <summary>
-    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with a key-value query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with a key-value query.
+    /// not include RFC3986 reg-name.
     /// </summary>
     [GeneratedRegex(NetUriKvQueryRegex, Common.OptionsI)]
     public static partial Regex NetUriKeyValueQuery();
@@ -900,7 +885,7 @@ public static partial class Uris
 
     #region Uri with network address
     /// <summary>
-    /// Matches a URI with an optional general query.
+    /// Matches a URI with an optional general query. Does not includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>URI = scheme : hier-part [ ? query ] [ # fragment ]</c>
     /// </para>
@@ -911,7 +896,7 @@ public static partial class Uris
     const string netUriRex = $@"(?<{UriGr}> {SchemeRex} : {netUriHierarchicalPartRex} (?: \? {queryRex} )? (?: \# {FragmentRex} )? )";
 
     /// <summary>
-    /// Matches a string that represents a URI with an optional general query
+    /// Matches a string that represents a URI with an optional general query. Does not includes RFC3986 reg-name.
     /// <para>
     /// BNF: <c>URI = scheme : hier-part [ ? query ] [ # fragment ]</c>
     /// </para>
@@ -922,7 +907,8 @@ public static partial class Uris
     public const string NetUriRegex = $"^{netUriRex}$";
 
     /// <summary>
-    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with an optional general query
+    /// Gets a <see cref="Regex"/> object that matches a string that represents a URI with an optional general query.
+    /// Does not includes RFC3986 reg-name.
     /// </summary>
     [GeneratedRegex(NetUriRegex, Common.OptionsI)]
     public static partial Regex NetUri();

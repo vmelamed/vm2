@@ -1,12 +1,13 @@
-﻿namespace vm2.Threading;
+﻿namespace vm2.Threading.Latch;
 
 /// <summary>
-/// Can be used as a one time action (e.g. initialization), thread synchronization that avoids using the pattern 
+/// Can be used as a one time action (e.g. initialization), thread synchronization that avoids using the pattern
 /// if(flag)-lock()-if(flag)-do() pattern.
 /// </summary>
 /// <example>
 /// The following double-checking pattern:
 /// <![CDATA[
+///     static void Initialize() {...}
 ///     bool _isInitialized;
 ///     object _sync = new object();
 ///     ...
@@ -22,18 +23,8 @@
 /// ]]>
 /// can be replaced by:
 /// <![CDATA[
-///     Latch _initLatch = new Latch();
-///     ...
-///     if (_initLatch.Lock())
-///     {
-///         // no other thread will attempt to initialize this object ever again
-///         Initialize();
-///     }
-/// ]]>
-/// or similarly:
-/// <![CDATA[
-///     static Latch _initLatch = new Latch();
 ///     static void Initialize() {...}
+///     static Latch _initLatch = new Latch();
 ///     ...
 ///     if (_initLatch.Lock())
 ///     {
@@ -51,4 +42,9 @@ public struct Latch
     /// </summary>
     /// <returns><c>true</c> if the latch latched on, <c>false</c> otherwise.</returns>
     public bool Lock() => Interlocked.CompareExchange(ref _latch, 1, 0) == 0;
+
+    /// <summary>
+    /// Resets the latch back to unlocked state.
+    /// </summary>
+    public void Reset() => Interlocked.Exchange(ref _latch, 0);
 }

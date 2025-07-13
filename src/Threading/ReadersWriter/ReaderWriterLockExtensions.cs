@@ -1,4 +1,4 @@
-namespace vm2.Threading;
+namespace vm2.Threading.ReadersWriter;
 
 /// <summary>
 /// Class ReaderWriterLockSlimExtensions. Utility class for better management of the lifetime of the scope of

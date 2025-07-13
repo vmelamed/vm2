@@ -38,12 +38,12 @@ public static partial class SemVer
     /// <summary>
     /// BNF: <c>letter-chars = A | B | ... | Z | a | b | ... | z </c>
     /// </summary>
-    const string letterChars = Ascii.AlphaChars;
+    const string letterChars = AlphaChars;
 
     /// <summary>
     /// BNF: <c>positive-digit = 1 | 2 | ... | 9 </c>
     /// </summary>
-    const string positiveDigitChars = Ascii.NzDigitChars;
+    const string positiveDigitChars = NzDigitChars;
 
     /// <summary>
     /// BNF: <c>positive-digit = 1 | 2 | ... | 9 </c>
@@ -53,12 +53,12 @@ public static partial class SemVer
     /// <summary>
     /// BNF: <c>digit = 0 | positive-digit </c>
     /// </summary>
-    const string digitChars  = Ascii.DigitChars;
+    const string digitChars  = DigitChars;
 
     /// <summary>
     /// BNF: <c>digit = 0 | positive-digit </c>
     /// </summary>
-    const string digit = Ascii.DigitChar;
+    const string digit = DigitChar;
 
     /// <summary>
     /// BNF: <c>digit = 0 | positive-digit </c>

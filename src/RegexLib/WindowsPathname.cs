@@ -16,7 +16,7 @@ public static partial class WindowsPathname
 
     // Characters that can not be in a file/directory name
     const string notFilenameChars    = $@"{pathSeparatorChars}\x00-\x1F:*?""<>|";
-    const string notFilenameLastChar = $@"{notFilenameChars}\.{Ascii.Space}";
+    const string notFilenameLastChar = $@"{notFilenameChars}\.{Space}";
     const string anyFilename         = $@"[^{notFilenameChars}]{{0,259}} [^{notFilenameLastChar}]";
 
     // Special file names (devices)
@@ -59,7 +59,7 @@ public static partial class WindowsPathname
     /// </summary>
     public const string FileGr = "file";
 
-    const string drive = $"(?: (?<{DriveGr}>{Ascii.AlphaChar}) : )";
+    const string drive = $"(?: (?<{DriveGr}>{AlphaChar}) : )";
 
     const string pathSegment = $@"(?: \. | \.\. | {DiskFilenameRex} )";
 

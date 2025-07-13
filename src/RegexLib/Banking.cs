@@ -9,7 +9,7 @@ public static partial class Banking
     /// <summary>
     /// Regular expression pattern which matches a US ABA routing number in a string.
     /// </summary>
-    public const string AbaRoutingNumberRex = $@"{Ascii.DigitChar}{{9}}";
+    public const string AbaRoutingNumberRex = $@"{DigitChar}{{9}}";
 
     /// <summary>
     /// Regular expression pattern which matches a string that represents a US ABA routing number.
@@ -55,10 +55,10 @@ public static partial class Banking
     /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/>.
     /// </remarks>
     public const string SwiftCodeRex = $$"""
-        (?<{{BankGr}}>     {{Ascii.HighAlphaChar}}{4}        )
+        (?<{{BankGr}}>     {{HighAlphaChar}}{4}        )
         (?<{{CountryGr}}>  {{Countries.CountryCode2Rex}}    )
-        (?<{{LocationGr}}> {{Ascii.HighAlphaNumericChar}}{2} )
-        (?<{{BranchGr}}>   {{Ascii.HighAlphaNumericChar}}{3} )?
+        (?<{{LocationGr}}> {{HighAlphaNumericChar}}{2} )
+        (?<{{BranchGr}}>   {{HighAlphaNumericChar}}{3} )?
         """;
 
     /// <summary>
@@ -114,9 +114,9 @@ public static partial class Banking
     /// </remarks>
     public const string IbanRex = $$"""
        (?<{{CountryGr}}>   {{Countries.CountryCode2Rex}} )
-       (?<{{CheckGr}}>     {{Ascii.DigitChar}}{2} )
-       {{Ascii.Space}}?
-       (?<{{BasicBanGr}}>  (?: {{Ascii.HighAlphaNumericChar}} {{Ascii.Space}}? ){1,30} )
+       (?<{{CheckGr}}>     {{DigitChar}}{2} )
+       {{Space}}?
+       (?<{{BasicBanGr}}>  (?: {{HighAlphaNumericChar}} {{Space}}? ){1,30} )
        """;
 
     /// <summary>
