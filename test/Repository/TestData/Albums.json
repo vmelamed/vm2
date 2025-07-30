@@ -1,0 +1,1694 @@
+﻿{
+    "labels": [
+        {
+            "LabelId": 1,
+            "Name": "Columbia Records"
+        },
+        {
+            "LabelId": 2,
+            "Name": "Blue Note"
+        },
+        {
+            "LabelId": 3,
+            "Name": "Newport Jazz Festival"
+        },
+        {
+            "LabelId": 4,
+            "Name": "Deutsche Grammophon"
+        },
+        {
+            "LabelId": 5,
+            "Name": "Verve"
+        }
+    ],
+    "instruments": [
+        {
+            "Code": "ts",
+            "Name": "Tenor Saxophone"
+        },
+        {
+            "Code": "as",
+            "Name": "Alto Saxophone"
+        },
+        {
+            "Code": "ss",
+            "Name": "Soprano Saxophone"
+        },
+        {
+            "Code": "tp",
+            "Name": "Trumpet"
+        },
+        {
+            "Code": "tb",
+            "Name": "Trombone"
+        },
+        {
+            "Code": "p",
+            "Name": "Piano"
+        },
+        {
+            "Code": "b",
+            "Name": "Double Bass"
+        },
+        {
+            "Code": "dr",
+            "Name": "Drums"
+        },
+        {
+            "Code": "v",
+            "Name": "Violin"
+        },
+        {
+            "Code": "va",
+            "Name": "Viola"
+        },
+        {
+            "Code": "vc",
+            "Name": "Cello"
+        },
+        {
+            "Code": "fl",
+            "Name": "Flute"
+        },
+        {
+            "Code": "cl",
+            "Name": "Clarinet"
+        },
+        {
+            "Code": "ob",
+            "Name": "Oboe"
+        },
+        {
+            "Code": "fg",
+            "Name": "Bassoon"
+        },
+        {
+            "Code": "hrn",
+            "Name": "French Horn"
+        },
+        {
+            "Code": "tpt",
+            "Name": "Trumpet (orchestral)"
+        },
+        {
+            "Code": "tbne",
+            "Name": "Trombone (orchestral)"
+        },
+        {
+            "Code": "perc",
+            "Name": "Percussion"
+        },
+        {
+            "Code": "g",
+            "Name": "Guitar"
+        },
+        {
+            "Code": "voc",
+            "Name": "Vocals"
+        }
+    ],
+    "roles": [
+        "Performer",
+        "Composer",
+        "Bandleader",
+        "Soloist",
+        "Orchestra",
+        "Arranger",
+        "Conductor",
+        "Producer",
+        "Lyricist"
+    ],
+    "genres": [
+        "Jazz",
+        "Classical",
+        "Rock",
+        "Pop",
+        "Blues",
+        "Folk",
+        "Country"
+    ],
+    "musicians": [
+        {
+            "MusicianId": 1,
+            "Name": "Miles Davis",
+            "BirthYear": 1926,
+            "DeathYear": 1991,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "tp" ]
+        },
+        {
+            "MusicianId": 2,
+            "Name": "John Coltrane",
+            "BirthYear": 1926,
+            "DeathYear": 1967,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "ts", "as", "ss" ]
+        },
+        {
+            "MusicianId": 3,
+            "Name": "Bill Evans",
+            "BirthYear": 1929,
+            "DeathYear": 1980,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "p" ]
+        },
+        {
+            "MusicianId": 4,
+            "Name": "Wynton Kelly",
+            "BirthYear": 1931,
+            "DeathYear": 1971,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "p" ]
+        },
+        {
+            "MusicianId": 5,
+            "Name": "Julian 'Cannonball' Adderley",
+            "BirthYear": 1928,
+            "DeathYear": 1975,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "as" ]
+        },
+        {
+            "MusicianId": 6,
+            "Name": "Paul Chambers",
+            "BirthYear": 1935,
+            "DeathYear": 1969,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "b" ]
+        },
+        {
+            "MusicianId": 7,
+            "Name": "Jimmy Cobb",
+            "BirthYear": 1929,
+            "DeathYear": 2020,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "dr" ]
+        },
+        {
+            "MusicianId": 8,
+            "Name": "Lee Morgan",
+            "BirthYear": 1938,
+            "DeathYear": 1972,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "tp" ]
+        },
+        {
+            "MusicianId": 9,
+            "Name": "Curtis Fuller",
+            "BirthYear": 1934,
+            "DeathYear": 2021,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "tb" ]
+        },
+        {
+            "MusicianId": 10,
+            "Name": "Kenny Drew",
+            "BirthYear": 1928,
+            "DeathYear": 1993,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "p" ]
+        },
+        {
+            "MusicianId": 11,
+            "Name": "Philly Joe Jones",
+            "BirthYear": 1923,
+            "DeathYear": 1985,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "dr" ]
+        },
+        {
+            "MusicianId": 12,
+            "Name": "Herbie Hancock",
+            "BirthYear": 1940,
+            "DeathYear": null,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "p" ]
+        },
+        {
+            "MusicianId": 13,
+            "Name": "Freddie Hubbard",
+            "BirthYear": 1938,
+            "DeathYear": 2008,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "tp" ]
+        },
+        {
+            "MusicianId": 14,
+            "Name": "Ron Carter",
+            "BirthYear": 1937,
+            "DeathYear": null,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "b" ]
+        },
+        {
+            "MusicianId": 15,
+            "Name": "Tony Williams",
+            "BirthYear": 1945,
+            "DeathYear": 1997,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "dr" ]
+        },
+        {
+            "MusicianId": 16,
+            "Name": "George Coleman",
+            "BirthYear": 1935,
+            "DeathYear": null,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "ts", "as" ]
+        },
+        {
+            "MusicianId": 17,
+            "Name": "McCoy Tyner",
+            "BirthYear": 1938,
+            "DeathYear": 2020,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "p" ]
+        },
+        {
+            "MusicianId": 18,
+            "Name": "Elvin Jones",
+            "BirthYear": 1927,
+            "DeathYear": 2004,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "dr" ]
+        },
+        {
+            "MusicianId": 19,
+            "Name": "Jimmy Garrison",
+            "BirthYear": 1934,
+            "DeathYear": 1976,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "b" ]
+        },
+        {
+            "MusicianId": 20,
+            "Name": "Duke Ellington",
+            "BirthYear": 1899,
+            "DeathYear": 1974,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "p" ]
+        },
+        {
+            "MusicianId": 21,
+            "Name": "Paul Gonsalves",
+            "BirthYear": 1920,
+            "DeathYear": 1974,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "ts" ]
+        },
+        {
+            "MusicianId": 22,
+            "Name": "Johnny Hodges",
+            "BirthYear": 1907,
+            "DeathYear": 1970,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "as" ]
+        },
+        {
+            "MusicianId": 23,
+            "Name": "Sam Woodyard",
+            "BirthYear": 1925,
+            "DeathYear": 1988,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "dr" ]
+        },
+        {
+            "MusicianId": 24,
+            "Name": "Jimmy Woode",
+            "BirthYear": 1926,
+            "DeathYear": 2005,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "b" ]
+        },
+        {
+            "MusicianId": 25,
+            "Name": "Ella Fitzgerald",
+            "BirthYear": 1917,
+            "DeathYear": 1996,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "voc" ]
+        },
+        {
+            "MusicianId": 26,
+            "Name": "Louis Armstrong",
+            "BirthYear": 1901,
+            "DeathYear": 1971,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "tp", "voc" ]
+        },
+        {
+            "MusicianId": 27,
+            "Name": "Oscar Peterson",
+            "BirthYear": 1925,
+            "DeathYear": 2007,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "p" ]
+        },
+        {
+            "MusicianId": 28,
+            "Name": "Herb Ellis",
+            "BirthYear": 1921,
+            "DeathYear": 2010,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "g" ]
+        },
+        {
+            "MusicianId": 29,
+            "Name": "Ray Brown",
+            "BirthYear": 1926,
+            "DeathYear": 2002,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "b" ]
+        },
+        {
+            "MusicianId": 30,
+            "Name": "Buddy Rich",
+            "BirthYear": 1917,
+            "DeathYear": 1987,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "dr" ]
+        },
+
+        {
+            "MusicianId": 31,
+            "Name": "Ludwig van Beethoven",
+            "BirthYear": 1770,
+            "DeathYear": 1827,
+            "Genres": [ "Classical" ],
+            "Type": "Composer",
+            "InstrumentCodes": []
+        },
+        {
+            "MusicianId": 32,
+            "Name": "Wolfgang Amadeus Mozart",
+            "BirthYear": 1756,
+            "DeathYear": 1791,
+            "Genres": [ "Classical" ],
+            "Type": "Composer",
+            "InstrumentCodes": []
+        },
+        {
+            "MusicianId": 33,
+            "Name": "Johann Sebastian Bach",
+            "BirthYear": 1685,
+            "DeathYear": 1750,
+            "Genres": [ "Classical" ],
+            "Type": "Composer",
+            "InstrumentCodes": []
+        },
+        {
+            "MusicianId": 34,
+            "Name": "Glenn Gould",
+            "BirthYear": 1932,
+            "DeathYear": 1982,
+            "Genres": [ "Classical" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "p" ]
+        },
+        {
+            "MusicianId": 35,
+            "Name": "Hilary Hahn",
+            "BirthYear": 1979,
+            "DeathYear": null,
+            "Genres": [ "Classical" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "v" ]
+        },
+        {
+            "MusicianId": 36,
+            "Name": "Henryk Szeryng",
+            "BirthYear": 1918,
+            "DeathYear": 1988,
+            "Genres": [ "Classical" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "v" ]
+        },
+        {
+            "MusicianId": 37,
+            "Name": "Mstislav Rostropovich",
+            "BirthYear": 1927,
+            "DeathYear": 2007,
+            "Genres": [ "Classical" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "vc" ]
+        },
+
+        {
+            "MusicianId": 38,
+            "Name": "Berliner Philharmoniker",
+            "BirthYear": null,
+            "DeathYear": null,
+            "Genres": [ "Classical" ],
+            "Type": "Orchestra",
+            "InstrumentCodes": []
+        },
+        {
+            "MusicianId": 39,
+            "Name": "Wiener Philharmoniker",
+            "BirthYear": null,
+            "DeathYear": null,
+            "Genres": [ "Classical" ],
+            "Type": "Orchestra",
+            "InstrumentCodes": []
+        },
+        {
+            "MusicianId": 40,
+            "Name": "London Symphony Orchestra",
+            "BirthYear": null,
+            "DeathYear": null,
+            "Genres": [ "Classical" ],
+            "Type": "Orchestra",
+            "InstrumentCodes": []
+        },
+        {
+            "MusicianId": 41,
+            "Name": "Scott LaFaro",
+            "BirthYear": 1936,
+            "DeathYear": 1961,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "b" ]
+        },
+        {
+            "MusicianId": 42,
+            "Name": "Paul Motian",
+            "BirthYear": 1931,
+            "DeathYear": 2011,
+            "Genres": [ "Jazz" ],
+            "Type": "Artist",
+            "InstrumentCodes": [ "dr" ]
+        }
+    ],
+    "albums": [
+        {
+            "AlbumId": 1,
+            "Title": "Kind of Blue",
+            "ReleaseYear": 1959,
+            "Genre": "Jazz",
+            "LabelId": 1,
+            "AlbumMusicians": [
+                {
+                    "MusicianId": 1,
+                    "InstrumentCodes": [ "tp" ],
+                    "Roles": [ "Performer", "Bandleader" ]
+                },
+                {
+                    "MusicianId": 2,
+                    "InstrumentCodes": [ "ts" ],
+                    "Roles": [ "Performer" ]
+                },
+                {
+                    "MusicianId": 5,
+                    "InstrumentCodes": [ "as" ],
+                    "Roles": [ "Performer" ]
+                },
+                {
+                    "MusicianId": 3,
+                    "InstrumentCodes": [ "p" ],
+                    "Roles": [ "Performer" ]
+                },
+                {
+                    "MusicianId": 6,
+                    "InstrumentCodes": [ "b" ],
+                    "Roles": [ "Performer" ]
+                },
+                {
+                    "MusicianId": 7,
+                    "InstrumentCodes": [ "dr" ],
+                    "Roles": [ "Performer" ]
+                }
+            ],
+            "Tracks": [
+                {
+                    "TrackId": 1,
+                    "Title": "So What",
+                    "Duration": 545,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 1,
+                            "InstrumentCodes": [ "tp" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 2,
+                            "InstrumentCodes": [ "ts" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 5,
+                            "InstrumentCodes": [ "as" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 3,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 6,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 7,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Performer" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 2,
+                    "Title": "Freddie Freeloader",
+                    "Duration": 589,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 1,
+                            "InstrumentCodes": [ "tp" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 2,
+                            "InstrumentCodes": [ "ts" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 4,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 6,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 7,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Performer" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 3,
+                    "Title": "Blue in Green",
+                    "Duration": 327,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 1,
+                            "InstrumentCodes": [ "tp" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 3,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 6,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 7,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Performer" ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AlbumId": 2,
+            "Title": "Ellington at Newport",
+            "ReleaseYear": 1956,
+            "Genre": "Jazz",
+            "LabelId": 3,
+            "AlbumMusicians": [
+                {
+                    "MusicianId": 20,
+                    "InstrumentCodes": [ "p" ],
+                    "Roles": [ "Performer", "Bandleader" ]
+                },
+                {
+                    "MusicianId": 21,
+                    "InstrumentCodes": [ "ts" ],
+                    "Roles": [ "Performer" ]
+                },
+                {
+                    "MusicianId": 22,
+                    "InstrumentCodes": [ "as" ],
+                    "Roles": [ "Performer" ]
+                },
+                {
+                    "MusicianId": 23,
+                    "InstrumentCodes": [ "dr" ],
+                    "Roles": [ "Performer" ]
+                },
+                {
+                    "MusicianId": 24,
+                    "InstrumentCodes": [ "b" ],
+                    "Roles": [ "Performer" ]
+                }
+            ],
+            "Tracks": [
+                {
+                    "TrackId": 1,
+                    "Title": "Diminuendo and Crescendo in Blue",
+                    "Duration": 700,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 20,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 21,
+                            "InstrumentCodes": [ "ts" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 22,
+                            "InstrumentCodes": [ "as" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 23,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Performer" ]
+                        },
+                        {
+                            "MusicianId": 24,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Performer" ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AlbumId": 3,
+            "Title": "Beethoven: Violin Concerto",
+            "ReleaseYear": 1962,
+            "Genre": "Classical",
+            "LabelId": 4,
+            "AlbumMusicians": [
+                {
+                    "MusicianId": 31,
+                    "InstrumentCodes": [],
+                    "Roles": [ "Composer" ]
+                },
+                {
+                    "MusicianId": 36,
+                    "InstrumentCodes": [ "v" ],
+                    "Roles": [ "Soloist" ]
+                },
+                {
+                    "MusicianId": 38,
+                    "InstrumentCodes": [],
+                    "Roles": [ "Orchestra" ]
+                }
+            ],
+            "Tracks": [
+                {
+                    "TrackId": 1,
+                    "Title": "Violin Concerto in D major, Op. 61: I. Allegro ma non troppo",
+                    "Duration": 1420,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 31,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        },
+                        {
+                            "MusicianId": 38,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Orchestra" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 2,
+                    "Title": "Violin Concerto in D major, Op. 61: II. Larghetto",
+                    "Duration": 630,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 31,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        },
+                        {
+                            "MusicianId": 38,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Orchestra" ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AlbumId": 4,
+            "Title": "Bach: Sonatas and Partitas for Solo Violin",
+            "ReleaseYear": 1971,
+            "Genre": "Classical",
+            "LabelId": 4,
+            "AlbumMusicians": [
+                {
+                    "MusicianId": 33,
+                    "InstrumentCodes": [],
+                    "Roles": [ "Composer" ]
+                },
+                {
+                    "MusicianId": 36,
+                    "InstrumentCodes": [ "v" ],
+                    "Roles": [ "Soloist" ]
+                }
+            ],
+            "Tracks": [
+                {
+                    "TrackId": 1,
+                    "Title": "Sonata No. 1 in G minor, BWV 1001: I. Adagio",
+                    "Duration": 286,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 2,
+                    "Title": "Sonata No. 1 in G minor, BWV 1001: II. Fuga",
+                    "Duration": 401,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 3,
+                    "Title": "Sonata No. 1 in G minor, BWV 1001: III. Siciliana",
+                    "Duration": 194,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 4,
+                    "Title": "Sonata No. 1 in G minor, BWV 1001: IV. Presto",
+                    "Duration": 237,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+
+                {
+                    "TrackId": 5,
+                    "Title": "Partita No. 1 in B minor, BWV 1002: I. Allemande",
+                    "Duration": 259,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 6,
+                    "Title": "Partita No. 1 in B minor, BWV 1002: II. Double",
+                    "Duration": 169,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 7,
+                    "Title": "Partita No. 1 in B minor, BWV 1002: III. Courante",
+                    "Duration": 193,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 8,
+                    "Title": "Partita No. 1 in B minor, BWV 1002: IV. Double",
+                    "Duration": 142,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 9,
+                    "Title": "Partita No. 1 in B minor, BWV 1002: V. Sarabande",
+                    "Duration": 217,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 10,
+                    "Title": "Partita No. 1 in B minor, BWV 1002: VI. Double",
+                    "Duration": 141,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 11,
+                    "Title": "Partita No. 1 in B minor, BWV 1002: VII. Tempo di Borea",
+                    "Duration": 178,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 12,
+                    "Title": "Partita No. 1 in B minor, BWV 1002: VIII. Double",
+                    "Duration": 144,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+
+                {
+                    "TrackId": 13,
+                    "Title": "Sonata No. 2 in A minor, BWV 1003: I. Grave",
+                    "Duration": 264,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 14,
+                    "Title": "Sonata No. 2 in A minor, BWV 1003: II. Fuga",
+                    "Duration": 594,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 15,
+                    "Title": "Sonata No. 2 in A minor, BWV 1003: III. Andante",
+                    "Duration": 306,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 16,
+                    "Title": "Sonata No. 2 in A minor, BWV 1003: IV. Allegro",
+                    "Duration": 273,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+
+                {
+                    "TrackId": 17,
+                    "Title": "Partita No. 2 in D minor, BWV 1004: I. Allemande",
+                    "Duration": 294,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 18,
+                    "Title": "Partita No. 2 in D minor, BWV 1004: II. Courante",
+                    "Duration": 150,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 19,
+                    "Title": "Partita No. 2 in D minor, BWV 1004: III. Sarabande",
+                    "Duration": 261,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 20,
+                    "Title": "Partita No. 2 in D minor, BWV 1004: IV. Gigue",
+                    "Duration": 220,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 21,
+                    "Title": "Partita No. 2 in D minor, BWV 1004: V. Ciaccona",
+                    "Duration": 900,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+
+                {
+                    "TrackId": 22,
+                    "Title": "Sonata No. 3 in C major, BWV 1005: I. Adagio",
+                    "Duration": 291,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 23,
+                    "Title": "Sonata No. 3 in C major, BWV 1005: II. Fuga",
+                    "Duration": 557,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 24,
+                    "Title": "Sonata No. 3 in C major, BWV 1005: III. Largo",
+                    "Duration": 196,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 25,
+                    "Title": "Sonata No. 3 in C major, BWV 1005: IV. Allegro assai",
+                    "Duration": 281,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+
+                {
+                    "TrackId": 26,
+                    "Title": "Partita No. 3 in E major, BWV 1006: I. Preludio",
+                    "Duration": 211,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 27,
+                    "Title": "Partita No. 3 in E major, BWV 1006: II. Loure",
+                    "Duration": 167,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 28,
+                    "Title": "Partita No. 3 in E major, BWV 1006: III. Gavotte en Rondeau",
+                    "Duration": 191,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 29,
+                    "Title": "Partita No. 3 in E major, BWV 1006: IV. Menuet I & II",
+                    "Duration": 226,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 30,
+                    "Title": "Partita No. 3 in E major, BWV 1006: V. Bourrée",
+                    "Duration": 105,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 31,
+                    "Title": "Partita No. 3 in E major, BWV 1006: VI. Gigue",
+                    "Duration": 128,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 36,
+                            "InstrumentCodes": [ "v" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AlbumId": 5,
+            "Title": "Bach: Cello Sonatas",
+            "ReleaseYear": 1979,
+            "Genre": "Classical",
+            "LabelId": 4,
+            "AlbumMusicians": [
+                {
+                    "MusicianId": 33,
+                    "InstrumentCodes": [],
+                    "Roles": [ "Composer" ]
+                },
+                {
+                    "MusicianId": 37,
+                    "InstrumentCodes": [ "vc" ],
+                    "Roles": [ "Soloist" ]
+                }
+            ],
+            "Tracks": [
+                {
+                    "TrackId": 1,
+                    "Title": "Cello Sonata No. 1 in G major, BWV 1027: I. Adagio",
+                    "Duration": 310,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 2,
+                    "Title": "Cello Sonata No. 1 in G major, BWV 1027: II. Allegro ma non tanto",
+                    "Duration": 250,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 3,
+                    "Title": "Cello Sonata No. 1 in G major, BWV 1027: III. Andante",
+                    "Duration": 210,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 4,
+                    "Title": "Cello Sonata No. 1 in G major, BWV 1027: IV. Allegro moderato",
+                    "Duration": 205,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+
+                {
+                    "TrackId": 5,
+                    "Title": "Cello Sonata No. 2 in D major, BWV 1028: I. Allegro",
+                    "Duration": 274,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 6,
+                    "Title": "Cello Sonata No. 2 in D major, BWV 1028: II. Adagio",
+                    "Duration": 235,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 7,
+                    "Title": "Cello Sonata No. 2 in D major, BWV 1028: III. Allegro",
+                    "Duration": 240,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+
+                {
+                    "TrackId": 8,
+                    "Title": "Cello Sonata No. 3 in G minor, BWV 1029: I. Vivace",
+                    "Duration": 255,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 9,
+                    "Title": "Cello Sonata No. 3 in G minor, BWV 1029: II. Adagio",
+                    "Duration": 215,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 10,
+                    "Title": "Cello Sonata No. 3 in G minor, BWV 1029: III. Allegro",
+                    "Duration": 262,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 33,
+                            "InstrumentCodes": [],
+                            "Roles": [ "Composer" ]
+                        },
+                        {
+                            "MusicianId": 37,
+                            "InstrumentCodes": [ "vc" ],
+                            "Roles": [ "Soloist" ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AlbumId": 7,
+            "Title": "Bill Evans Trio at the Village Vanguard",
+            "ReleaseYear": 1961,
+            "Genre": "Jazz",
+            "LabelId": 1,
+            "AlbumMusicians": [
+                {
+                    "MusicianId": 3,
+                    "InstrumentCodes": [ "p" ],
+                    "Roles": [ "Piano", "Bandleader" ]
+                }, // Bill Evans
+                {
+                    "MusicianId": 41,
+                    "InstrumentCodes": [ "b" ],
+                    "Roles": [ "Bass" ]
+                }, // Scott LaFaro
+                {
+                    "MusicianId": 42,
+                    "InstrumentCodes": [ "dr" ],
+                    "Roles": [ "Drums" ]
+                } // Paul Motian
+            ],
+            "Tracks": [
+                {
+                    "TrackId": 1,
+                    "Title": "Gloria's Step",
+                    "Duration": 334,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 3,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Piano" ]
+                        },
+                        {
+                            "MusicianId": 41,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Bass" ]
+                        },
+                        {
+                            "MusicianId": 42,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Drums" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 2,
+                    "Title": "My Man's Gone Now",
+                    "Duration": 373,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 3,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Piano" ]
+                        },
+                        {
+                            "MusicianId": 41,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Bass" ]
+                        },
+                        {
+                            "MusicianId": 42,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Drums" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 3,
+                    "Title": "Solar",
+                    "Duration": 348,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 3,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Piano" ]
+                        },
+                        {
+                            "MusicianId": 41,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Bass" ]
+                        },
+                        {
+                            "MusicianId": 42,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Drums" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 4,
+                    "Title": "Alice in Wonderland",
+                    "Duration": 419,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 3,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Piano" ]
+                        },
+                        {
+                            "MusicianId": 41,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Bass" ]
+                        },
+                        {
+                            "MusicianId": 42,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Drums" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 5,
+                    "Title": "All of You",
+                    "Duration": 491,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 3,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Piano" ]
+                        },
+                        {
+                            "MusicianId": 41,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Bass" ]
+                        },
+                        {
+                            "MusicianId": 42,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Drums" ]
+                        }
+                    ]
+                },
+                {
+                    "TrackId": 6,
+                    "Title": "Jade Visions",
+                    "Duration": 232,
+                    "TrackMusicians": [
+                        {
+                            "MusicianId": 3,
+                            "InstrumentCodes": [ "p" ],
+                            "Roles": [ "Piano" ]
+                        },
+                        {
+                            "MusicianId": 41,
+                            "InstrumentCodes": [ "b" ],
+                            "Roles": [ "Bass" ]
+                        },
+                        {
+                            "MusicianId": 42,
+                            "InstrumentCodes": [ "dr" ],
+                            "Roles": [ "Drums" ]
+                        }
+                    ]
+                }
+            ]
+        }
+
+    ]
+}

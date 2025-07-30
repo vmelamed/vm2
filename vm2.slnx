@@ -13,8 +13,10 @@
     <File Path="vm2signKey.snk" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/DbSetTestSubstitute/DbSetTestSubstitute.csproj" />
     <Project Path="src/ExpressionDeepEquals/ExpressionDeepEquals.csproj" />
     <Project Path="src/RegexLib/RegexLib.csproj" />
+    <Project Path="src/Repository/Repository.csproj" Id="6e62a792-2bdc-47c5-aa58-854d45b3360b" />
     <Project Path="src/Threading/Threading.csproj" />
   </Folder>
   <Folder Name="/src/ExpressionSerialization/">
@@ -38,5 +40,9 @@
   </Folder>
   <Folder Name="/test/Functional/">
     <Project Path="test/Functional/PrimitivesTests/PrimitivesTests.csproj" />
+  </Folder>
+  <Folder Name="/test/Repository/">
+    <Project Path="test/Repository/Domain/Domain.csproj" Id="ef225de8-8a94-4835-8bd8-3d6607673d2e" />
+    <Project Path="test/Repository/TestData/TestData.csproj" Id="55bd1290-eb6b-47f7-80be-ae6b4f7aa97e" />
   </Folder>
 </Solution>
