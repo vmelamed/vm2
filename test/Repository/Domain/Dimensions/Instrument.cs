@@ -13,6 +13,16 @@ public record Instrument(string Code, string Name) : IFindable<Instrument>, IVal
     #region IFindable<Instrument>
     /// <inheritdoc />
     public static Expression<Func<Instrument, object?>> KeyExpression => i => i.Code;
+
+    /// <inheritdoc />
+    public ValueTask ValidateFindable(
+        object? context = null,
+        CancellationToken cancellationToken = default)
+    {
+        new InstrumentFindableValidator()
+                        .ValidateAndThrow(this);
+        return ValueTask.CompletedTask;
+    }
     #endregion
 
     #region IValidatable

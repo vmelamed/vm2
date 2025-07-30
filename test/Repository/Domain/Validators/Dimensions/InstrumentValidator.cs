@@ -19,11 +19,11 @@ class InstrumentFindableValidator : AbstractValidator<Instrument>
 {
     public InstrumentFindableValidator()
     {
-        Include(new FindableValidator(Instrument.KeyExpression));
         RuleFor(instrument => instrument.Code)
             .Matches(Regexes.InstrumentCode())
             .WithMessage("Instrument ID cannot be empty, and must consist of no more than 8 lower-case Latin characters.")
             ;
+        Include(new FindableValidator(Instrument.KeyExpression));
     }
 }
 

@@ -13,6 +13,16 @@ public sealed record Country(string Code, string Name) : IFindable<Country>, IVa
     #region IFindable<Instrument>
     /// <inheritdoc />
     public static Expression<Func<Country, object?>> KeyExpression => c => c.Code;
+
+    /// <inheritdoc />
+    public ValueTask ValidateFindable(
+        object? context = null,
+        CancellationToken cancellationToken = default)
+    {
+        new CountryFindableValidator()
+                        .ValidateAndThrow(this);
+        return ValueTask.CompletedTask;
+    }
     #endregion
 
     #region IValidatable
