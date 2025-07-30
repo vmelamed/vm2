@@ -44,7 +44,7 @@ class PersonFindableValidator : AbstractValidator<Person>
     public PersonFindableValidator()
     {
         RuleFor(p => p.Id)
-            .GreaterThan(0)
+            .Must(id => id > 0)
             .WithMessage("Person ID must be greater than 0.")
             ;
         Include(new FindableValidator(Person.KeyExpression));
@@ -73,7 +73,7 @@ class PersonValidator : AbstractValidator<Person>
     static async ValueTask<bool> IsValid(
         IRepository repository,
         Person person,
-        int id,
+        uint id,
         CancellationToken cancellationToken)
         => repository.StateOf(person) switch {
             // if Added, make sure the id is unique in the database.

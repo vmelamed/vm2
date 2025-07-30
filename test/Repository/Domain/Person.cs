@@ -5,7 +5,7 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public int Id { get; set; } = -1;
+    public uint Id { get; set; } = 0;
 
     /// <summary>
     /// Gets or sets the names of the person.
@@ -82,7 +82,7 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
     /// The identifier of the user who deleted the person record, or empty string if the record is not deleted.
     /// </param>
     public Person(
-        int id,
+        uint id,
         string name,
         int? birthYear,
         int? deathYear,
