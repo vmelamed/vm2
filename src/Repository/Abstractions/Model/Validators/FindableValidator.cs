@@ -29,12 +29,20 @@ public class FindableValidator : AbstractValidator<IFindable>
         Type[]? paramTypes = null;
 
         if (keyExpression.Body is UnaryExpression ue &&
+            ue.NodeType is ExpressionType.Convert or
+                           ExpressionType.ConvertChecked &&
+            ue.Type == typeof(object) &&
             ue.Operand is MemberExpression me)
             paramTypes = [me.Type];
         else
         if (keyExpression.Body is NewArrayExpression ne &&
             ne.Expressions.Count > 0 &&
-            ne.Expressions.All(x => x is UnaryExpression))
+            ne.Expressions.All(
+                x => x is UnaryExpression ue &&
+                     ue.NodeType is ExpressionType.Convert or
+                                    ExpressionType.ConvertChecked &&
+                     ue.Type == typeof(object) &&
+                     ue.Operand is MemberExpression))
             paramTypes = [.. ne.Expressions.Select(x => ((UnaryExpression)x).Operand.Type)];
 
         RuleFor(findable => findable.KeyValues)
