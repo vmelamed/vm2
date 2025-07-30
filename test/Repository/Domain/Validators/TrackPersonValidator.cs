@@ -4,9 +4,19 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
 {
     public TrackPersonValidator(IRepository? repository = null)
     {
-        RuleFor(tp => tp.PersonId)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("PersonId must be non-negative.")
+        RuleFor(ta => ta.Track)
+            .NotNull()
+            .WithMessage("Track must not be null.")
+            ;
+
+        RuleFor(ta => ta.Person)
+            .NotNull()
+            .WithMessage("Person must not be null.")
+            ;
+
+        RuleFor(ta => ta.PersonName)
+            .NotEmpty()
+            .WithMessage("Person name must not be null or empty.")
             ;
 
         RuleFor(ta => ta.Roles)
@@ -46,15 +56,15 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
 
     static async ValueTask<bool> AreValidRoles(
         IRepository repository,
-        TrackPerson trackArtist,
+        TrackPerson trackPerson,
         HashSet<string> roles,
         CancellationToken ct)
-        => repository.StateOf(trackArtist) switch {
-            // If the track artist is being added, the roles must exist in the database.
+        => repository.StateOf(trackPerson) switch {
+            // If the track-person is being added, the roles must exist in the database.
             EntityState.Added => (await repository.Set<Role>().CountAsync(r => roles.Contains(r.Name), ct)) == roles.Count,
 
             // If the track artist is being modified, the Roles collection is either not modified or the roles must exist in the database.
-            EntityState.Modified => !repository.Entry(trackArtist).Collection(nameof(TrackPerson.Roles)).IsModified ||
+            EntityState.Modified => !repository.Entry(trackPerson).Collection(nameof(TrackPerson.Roles)).IsModified ||
                                     (await repository.Set<Role>().CountAsync(r => roles.Contains(r.Name), ct)) == roles.Count,
 
             _ => true,

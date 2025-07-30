@@ -25,25 +25,39 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
     /// <summary>
     /// Gets or sets the collection (set) of roles associated with the person, e.g. performer, conductor, etc.
     /// </summary>
-    public ICollection<string> Roles { get; set; } = [];
+    public HashSet<string> Roles { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the collection of genres that the person is known to have worked in, e.g. jazz, classical, etc.
     /// </summary>
-    public ICollection<string> Genres { get; set; } = [];
+    public HashSet<string> Genres { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the collection of instrument codes that the person is known to have played, e.g. "tp" for trumpet, "g" for guitar, etc.
     /// </summary>
-    public ICollection<string> InstrumentCodes { get; set; } = [];
+    public HashSet<string> InstrumentCodes { get; set; } = [];
 
-    /// <summary>
-    /// This constructor is intentionally left empty to allow EF Core to create instances of this class.
-    /// It is not meant to be used directly in application code.
-    /// </summary>
-    private Person()
-    {
-    }
+    #region IAuditable
+    /// <inheritdoc />
+    public DateTimeOffset CreatedAt { get; set; } = default;
+
+    /// <inheritdoc />
+    public string CreatedBy { get; set; } = "";
+
+    /// <inheritdoc />
+    public DateTimeOffset UpdatedAt { get; set; } = default;
+
+    /// <inheritdoc />
+    public string UpdatedBy { get; set; } = "";
+    #endregion
+
+    #region ISoftDeletable
+    /// <inheritdoc />
+    public DateTimeOffset? DeletedAt { get; set; } = default;
+
+    /// <inheritdoc />
+    public string DeletedBy { get; set; } = "";
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Person"/> class with specified details.
@@ -72,9 +86,9 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
         string name,
         int? birthYear,
         int? deathYear,
-        ICollection<string>? roles,
-        ICollection<string>? genres,
-        ICollection<string>? instrumentCodes = null,
+        IEnumerable<string>? roles,
+        IEnumerable<string>? genres,
+        IEnumerable<string>? instrumentCodes = null,
         DateTimeOffset createdAt = default,
         string createdBy = "",
         DateTimeOffset updatedAt = default,
@@ -86,9 +100,9 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
         Name            = name;
         BirthYear       = birthYear;
         DeathYear       = deathYear;
-        Genres          = genres ?? [];
-        Roles           = roles ?? [];
-        InstrumentCodes = instrumentCodes ?? [];
+        Genres          = genres?.ToHashSet() ?? [];
+        Roles           = roles?.ToHashSet() ?? [];
+        InstrumentCodes = instrumentCodes?.ToHashSet() ?? [];
         CreatedAt       = createdAt;
         CreatedBy       = createdBy;
         UpdatedAt       = updatedAt;
@@ -100,38 +114,24 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
     #region IFindable<Person>
     /// <inheritdoc />
     public static Expression<Func<Person, object?>> KeyExpression => p => new { p.Id };
+
+    /// <inheritdoc />
+    public ValueTask ValidateFindable(object? _, CancellationToken __)
+    {
+        new PersonFindableValidator()
+                .ValidateAndThrow(this);
+        return ValueTask.CompletedTask;
+    }
     #endregion
 
     /// <summary>
     /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Person"/> by its unique
     /// identifier. Can be used in <see cref="IRepository.Find{Person}(IFindable, CancellationToken)"/> and
     /// <see cref="QueryableExtensions.Find{Person}(IFindable, CancellationToken)"/>. E.g.<br/>
-    /// <code><![CDATA[var person = await _repository.Find(Person.ById(42), ct);]]></code>
+    /// <c><![CDATA[var person = await _repository.Find(Person.ById(42), ct);]]></c>
     /// </summary>
     /// <param name="id">The unique identifier for the person.</param>
     public static IFindable ById(int Id) => new Findable(Id);
-
-    #region IAuditable
-    /// <inheritdoc />
-    public DateTimeOffset CreatedAt { get; set; } = default;
-
-    /// <inheritdoc />
-    public string CreatedBy { get; set; } = "";
-
-    /// <inheritdoc />
-    public DateTimeOffset UpdatedAt { get; set; } = default;
-
-    /// <inheritdoc />
-    public string UpdatedBy { get; set; } = "";
-    #endregion
-
-    #region ISoftDeletable
-    /// <inheritdoc />
-    public DateTimeOffset? DeletedAt { get; set; } = default;
-
-    /// <inheritdoc />
-    public string DeletedBy { get; set; } = "";
-    #endregion
 
     #region IValidatable
     /// <inheritdoc />
@@ -141,15 +141,69 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
         => await new PersonValidator(context as IRepository).ValidateAndThrowAsync(this, cancellationToken);
     #endregion
 
-    public void AddRole(Role role) => Roles.Add(role.Name);
+    /// <summary>
+    /// Adds a role to the current person and returns the updated person.
+    /// </summary>
+    /// <param name="role">The role to add to the person. Cannot be null or empty.</param>
+    /// <returns>The current person with the new role added.</returns>
+    public Person AddRole(string role)
+    {
+        Roles.Add(role);
+        return this;
+    }
 
-    public void AddRole(string role) => Roles.Add(role.ToLower().Trim());
+    /// <summary>
+    /// Removes the specified role from the person's list of roles.
+    /// </summary>
+    /// <param name="role">The role to be removed. Cannot be null or empty.</param>
+    /// <returns>The current instance of <see cref="Person"/> with the role removed.</returns>
+    public Person RemoveRole(string role)
+    {
+        Roles.Remove(role);
+        return this;
+    }
 
-    public void AddInstrumentCode(Instrument instrument) => InstrumentCodes.Add(instrument.Code);
+    /// <summary>
+    /// Adds a musical instrument to the person's collection of instrument codes.
+    /// </summary>
+    /// <param name="instrumentCode">The code representing the musical instrument to add. Cannot be null or empty.</param>
+    /// <returns>The current instance of <see cref="Person"/> with the updated instrument collection.</returns>
+    public Person AddInstrument(string instrumentCode)
+    {
+        InstrumentCodes.Add(instrumentCode);
+        return this;
+    }
 
-    public void AddInstrumentCode(string instrumentCode) => InstrumentCodes.Add(instrumentCode.ToLower().Trim());
+    /// <summary>
+    /// Removes the specified instrument code from the collection of instrument codes.
+    /// </summary>
+    /// <param name="instrumentCode">The code of the instrument to remove. Cannot be null or empty.</param>
+    /// <returns>The current instance of <see cref="Person"/> with the specified instrument code removed.</returns>
+    public Person RemoveInstrument(string instrumentCode)
+    {
+        InstrumentCodes.Remove(instrumentCode);
+        return this;
+    }
 
-    public void AddGenre(Genre genre) => Genres.Add(genre.Name);
+    /// <summary>
+    /// Adds a specified genre to the list of genres associated with the person.
+    /// </summary>
+    /// <param name="genre">The genre to add. Cannot be null or empty.</param>
+    /// <returns>The current instance of <see cref="Person"/> with the updated list of genres.</returns>
+    public Person AddGenre(string genre)
+    {
+        Genres.Add(genre);
+        return this;
+    }
 
-    public void AddGenre(string genre) => Genres.Add(genre.ToLower().Trim());
+    /// <summary>
+    /// Removes the specified genre from the list of genres associated with the person.
+    /// </summary>
+    /// <param name="genre">The genre to be removed. Cannot be null or empty.</param>
+    /// <returns>The current instance of <see cref="Person"/> with the specified genre removed.</returns>
+    public Person RemoveGenre(string genre)
+    {
+        Genres.Remove(genre);
+        return this;
+    }
 }

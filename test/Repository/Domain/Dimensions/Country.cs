@@ -15,9 +15,7 @@ public sealed record Country(string Code, string Name) : IFindable<Country>, IVa
     public static Expression<Func<Country, object?>> KeyExpression => c => c.Code;
 
     /// <inheritdoc />
-    public ValueTask ValidateFindable(
-        object? context = null,
-        CancellationToken cancellationToken = default)
+    public ValueTask ValidateFindable(object? _, CancellationToken __)
     {
         new CountryFindableValidator()
                         .ValidateAndThrow(this);

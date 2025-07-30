@@ -1,27 +1,17 @@
 ﻿namespace vm2.Repository.Domain;
 
-[DebuggerDisplay("{Track}-{PersonId}: {PersonName}")]
+[DebuggerDisplay("{TrackId}-{PersonId}: {PersonName}")]
 public class TrackPerson : IValidatable
 {
     /// <summary>
-    /// Gets the track of an album (can be more than 1, e.g. "The Best Of...").
+    /// Gets the track of an album (1 track can belong to more than 1 albums, e.g. "The Best Of...").
     /// </summary>
     public Track Track { get; init; }
-
-    /// <summary>
-    /// Gets the unique identifier for the track. For use by EF.
-    /// </summary>
-    internal int TrackId { get; init; }
 
     /// <summary>
     /// Gets the person associated with the track from this instance.
     /// </summary>
     public Person Person { get; init; }
-
-    /// <summary>
-    /// Gets the unique identifier for a person. For use by EF.
-    /// </summary>
-    internal int PersonId { get; init; }
 
     /// <summary>
     /// Caches the name of the person to avoid excessive loading of Person instances.
@@ -41,22 +31,22 @@ public class TrackPerson : IValidatable
     public TrackPerson(
         Person person,
         Track track,
-        IEnumerable<string> roles,
-        IEnumerable<string> instrumentCodes)
+        IEnumerable<string>? roles,
+        IEnumerable<string>? instrumentCodes)
     {
         Person          = person;
-        PersonId        = person.Id;
         PersonName      = person.Name;
         Track           = track;
-        TrackId         = track.Id;
-        Roles           = [.. roles];
-        InstrumentCodes = [.. instrumentCodes];
+        Roles           = roles?.ToHashSet() ?? [];
+        InstrumentCodes = instrumentCodes?.ToHashSet() ?? [];
 
-        foreach (var role in roles.Except(person.Roles, StringComparer.OrdinalIgnoreCase).ToList())
-            person.AddRole(role);
+        if (roles is not null)
+            foreach (var role in roles.Except(person.Roles, StringComparer.OrdinalIgnoreCase))
+                person.AddRole(role);
 
-        foreach (var instrument in instrumentCodes.Except(person.InstrumentCodes, StringComparer.OrdinalIgnoreCase).ToList())
-            person.AddInstrumentCode(instrument);
+        if (instrumentCodes is not null)
+            foreach (var instrument in instrumentCodes.Except(person.InstrumentCodes, StringComparer.OrdinalIgnoreCase))
+                person.AddInstrument(instrument);
     }
 
     public async ValueTask Validate(

@@ -16,8 +16,8 @@ class AlbumInvariantValidator : AbstractValidator<Album>
 
         RuleFor(a => a.Personnel)
             .NotEmpty()
-            .Must(ps => ps.All(a => a is not null))
-            .WithMessage("Personnel must not be null or empty.")
+            .Must(p => p.All(a => a is not null))
+            .WithMessage("Personnel must not be null or empty and cannot contain null items.")
             ;
 
         RuleFor(a => a.Label)
@@ -26,12 +26,12 @@ class AlbumInvariantValidator : AbstractValidator<Album>
             ;
 
         RuleFor(a => a.LabelId)
-            .GreaterThan(0)
-            .WithMessage("Label must not be null.")
+            .Must(id => id > 0)
+            .WithMessage("LabelId must not be 0.")
             ;
 
         RuleFor(a => a.Tracks)
-            .NotEmpty()
+            .NotNull()
             .WithMessage("Tracks must not be null or empty.")
             ;
 
@@ -46,11 +46,11 @@ class AlbumFindableValidator : AbstractValidator<Album>
 {
     public AlbumFindableValidator()
     {
-        Include(new FindableValidator(Album.KeyExpression));
         RuleFor(a => a.Id)
-            .GreaterThan(0)
-            .WithMessage("Album ID must be a positive number.")
+            .Must(id => id > 0)
+            .WithMessage("Album ID must be greater than 0.")
             ;
+        Include(new FindableValidator(Album.KeyExpression));
     }
 }
 
@@ -65,5 +65,26 @@ class AlbumValidator : AbstractValidator<Album>
 
         if (repository is null)
             return;
+
+        // Do we want this extra trip to the database, if we have unique DB constraints on the PK Id?
+        RuleFor(l => l.Id)
+            .MustAsync(async (l, id, ct) => await IsValid(repository, l, id, ct))
+            .WithMessage("The Album Id must be unique.")
+            ;
     }
+
+    static async ValueTask<bool> IsValid(
+        IRepository repository,
+        Album album,
+        uint id,
+        CancellationToken cancellationToken)
+        => repository.StateOf(album) switch {
+            // if Added, make sure the id is unique in the database.
+            EntityState.Added => !await repository.Set<Album>().AnyAsync(a => a.Id == id, cancellationToken),
+
+            // if Modified, make sure there is an album with this id in the database.
+            EntityState.Modified => await repository.Set<Album>().AnyAsync(a => a.Id == id, cancellationToken),
+
+            _ => true
+        };
 }

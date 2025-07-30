@@ -23,11 +23,11 @@ class LabelFindableValidator : AbstractValidator<Label>
 {
     public LabelFindableValidator()
     {
-        Include(new FindableValidator(Label.KeyExpression));
         RuleFor(label => label.Id)
-            .GreaterThan(0)
-            .WithMessage("Label ID must be positive number.")
+            .Must(id => id > 0)
+            .WithMessage("Label ID must be greater than 0.")
             ;
+        Include(new FindableValidator(Label.KeyExpression));
     }
 }
 
@@ -46,7 +46,7 @@ class LabelValidator : AbstractValidator<Label>
         // Label is almost like a dimension data: does not get added or modified all that often, so it may be worth it.
         RuleFor(l => l.Id)
             .MustAsync(async (l, id, ct) => await IsValid(repository, l, id, ct))
-            .WithMessage("The genre name must be unique.")
+            .WithMessage("The Label Id must be unique.")
             ;
     }
 
@@ -54,7 +54,7 @@ class LabelValidator : AbstractValidator<Label>
     static async ValueTask<bool> IsValid(
         IRepository repository,
         Label label,
-        int id,
+        uint id,
         CancellationToken cancellationToken)
         => repository.StateOf(label) switch {
             // if Added, make sure the Id and the Name are unique in the database.

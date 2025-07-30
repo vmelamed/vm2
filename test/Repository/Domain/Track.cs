@@ -5,7 +5,7 @@ public class Track : IFindable<Track>, IAuditable, ISoftDeletable, IValidatable
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public int Id { get; set; } = -1;
+    public uint Id { get; set; } = 0;
 
     /// <summary>
     /// Gets or sets the title of the track (song).
@@ -30,52 +30,7 @@ public class Track : IFindable<Track>, IAuditable, ISoftDeletable, IValidatable
     /// <summary>
     /// Gets or sets the unique identifier of the album this track belongs to. (Navigation property!)
     /// </summary>
-    public int AlbumId { get; set; } = 0;
-
-    /// <summary>
-    /// This constructor is intentionally left empty to allow EF Core to create instances of this class.
-    /// It is not meant to be used directly in application code.
-    /// </summary>
-    private Track()
-    {
-    }
-
-    public Track(
-        int id,
-        string title,
-        TimeSpan duration,
-        ICollection<TrackPerson>? personnel = null,
-        Album? album = null,
-        int albumId = 0,
-        DateTimeOffset createdAt = default,
-        string createdBy = "",
-        DateTimeOffset updatedAt = default,
-        string updatedBy = "")
-    {
-        Id        = id;
-        Title     = title;
-        Duration  = duration;
-        Personnel = personnel ?? [];
-        Album     = album;
-        AlbumId   = album is null ? albumId : album.Id;
-        CreatedAt = createdAt;
-        CreatedBy = createdBy;
-        UpdatedAt = updatedAt;
-        UpdatedBy = updatedBy;
-    }
-
-    #region IFindable<Track>
-    public static Expression<Func<Track, object?>> KeyExpression => t => new { t.Id };
-    #endregion
-
-    /// <summary>
-    /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Track"/> by its unique
-    /// identifier. Can be used in <see cref="IRepository.Find{Track}(IFindable, CancellationToken)"/> and
-    /// <see cref="QueryableExtensions.Find{Track}(IFindable, CancellationToken)"/>. E.g.<br/>
-    /// <code><![CDATA[var track = await _repository.Find(Track.ById(42), ct);]]></code>
-    /// </summary>
-    /// <param name="id">The unique identifier for the track.</param>
-    public static IFindable ById(int Id) => new Findable(Id);
+    public uint AlbumId { get; set; } = 0;
 
     #region IAuditable
     /// <inheritdoc />
@@ -98,6 +53,51 @@ public class Track : IFindable<Track>, IAuditable, ISoftDeletable, IValidatable
     /// <inheritdoc />
     public string DeletedBy { get; set; } = "";
     #endregion
+
+    public Track(
+        uint id,
+        string title,
+        TimeSpan duration,
+        ICollection<TrackPerson>? personnel = null,
+        Album? album = null,
+        uint albumId = 0,
+        DateTimeOffset createdAt = default,
+        string createdBy = "",
+        DateTimeOffset updatedAt = default,
+        string updatedBy = "")
+    {
+        Id        = id;
+        Title     = title;
+        Duration  = duration;
+        Personnel = personnel ?? [];
+        Album     = album;
+        AlbumId   = album is null ? albumId : album.Id;
+        CreatedAt = createdAt;
+        CreatedBy = createdBy;
+        UpdatedAt = updatedAt;
+        UpdatedBy = updatedBy;
+    }
+
+    #region IFindable<Track>
+    public static Expression<Func<Track, object?>> KeyExpression => t => new { t.Id };
+
+    /// <inheritdoc />
+    public ValueTask ValidateFindable(object? _, CancellationToken __)
+    {
+        new TrackFindableValidator()
+                .ValidateAndThrow(this);
+        return ValueTask.CompletedTask;
+    }
+    #endregion
+
+    /// <summary>
+    /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Track"/> by its unique
+    /// identifier. Can be used in <see cref="IRepository.Find{Track}(IFindable, CancellationToken)"/> and
+    /// <see cref="QueryableExtensions.Find{Track}(IFindable, CancellationToken)"/>. E.g.<br/>
+    /// <code><![CDATA[var track = await _repository.Find(Track.ById(42), ct);]]></code>
+    /// </summary>
+    /// <param name="id">The unique identifier for the track.</param>
+    public static IFindable ById(int Id) => new Findable(Id);
 
     #region IValidatable
     /// <inheritdoc />

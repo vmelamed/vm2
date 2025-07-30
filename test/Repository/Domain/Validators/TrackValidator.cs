@@ -30,11 +30,11 @@ class TrackFindableValidator : AbstractValidator<Track>
 {
     public TrackFindableValidator()
     {
-        Include(new FindableValidator(Track.KeyExpression));
         RuleFor(track => track.Id)
-            .GreaterThan(0)
-            .WithMessage("Track ID must be a positive number.")
+            .Must(id => id > 0)
+            .WithMessage("Track ID must be greater than 0.")
             ;
+        Include(new FindableValidator(Track.KeyExpression));
     }
 }
 
@@ -72,7 +72,7 @@ class TrackValidator : AbstractValidator<Track>
     static async Task<bool> IsValid(
         IRepository repository,
         Track track,
-        int id,
+        uint id,
         CancellationToken cancellationToken)
         => repository.StateOf(track) switch {
             // If the track is being added, the ID must not exist in the database.
