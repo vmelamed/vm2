@@ -35,7 +35,7 @@ public static partial class Countries
 
     /// <summary>
     /// Gets a Regex object which matches <b>case-insensitively</b> a string representing a
-    /// <seealso href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">2-letter country code</seealso>, e.g. US.
+    /// <seealso href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">2-letter country code</seealso>, e.g. us.
     /// </summary>
     [GeneratedRegex(CountryCode2Regex, Common.OptionsI)]
     public static partial Regex CountryCode2I();
