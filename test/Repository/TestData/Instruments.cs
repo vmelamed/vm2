@@ -1,7 +1,5 @@
 ﻿namespace vm2.Repository.TestData;
 
-using vm2.Repository.Domain.Dimensions;
-
 public static class Instruments
 {
     static Instrument? _instrument01;
@@ -24,7 +22,6 @@ public static class Instruments
     static Instrument? _instrument18;
     static Instrument? _instrument19;
     static Instrument? _instrument20;
-    static Instrument? _instrument21;
 
     static IEnumerable<Instrument> _allInstruments = [];
 
@@ -34,24 +31,23 @@ public static class Instruments
             _instrument01 = new Instrument(Code: "ts",         Name: "Tenor Saxophone"),
             _instrument02 = new Instrument(Code: "as",         Name: "Alto Saxophone"),
             _instrument03 = new Instrument(Code: "ss",         Name: "Soprano Saxophone"),
-            _instrument04 = new Instrument(Code: "tp",         Name: "Trumpet"),
-            _instrument05 = new Instrument(Code: "tb",         Name: "Trombone"),
-            _instrument06 = new Instrument(Code: "p",          Name: "piano"),
-            _instrument07 = new Instrument(Code: "b",          Name: "Double Bass"),
-            _instrument08 = new Instrument(Code: "dr",         Name: "Drums"),
-            _instrument09 = new Instrument(Code: "v",          Name: "Violin"),
-            _instrument10 = new Instrument(Code: "va",         Name: "Viola"),
-            _instrument11 = new Instrument(Code: "c",          Name: "cello"),
-            _instrument12 = new Instrument(Code: "fl",         Name: "Flute"),
-            _instrument13 = new Instrument(Code: "cl",         Name: "Clarinet"),
-            _instrument14 = new Instrument(Code: "ob",         Name: "Oboe"),
-            _instrument15 = new Instrument(Code: "fg",         Name: "Bassoon"),
-            _instrument16 = new Instrument(Code: "hrn",        Name: "French Horn"),
-            _instrument17 = new Instrument(Code: "tpt",        Name: "Trumpet (orchestral)"),
-            _instrument18 = new Instrument(Code: "tbne",       Name: "Trombone (orchestral)"),
-            _instrument19 = new Instrument(Code: "Percussion", Name: "perc"),
-            _instrument20 = new Instrument(Code: "g",          Name: "guitar"),
-            _instrument21 = new Instrument(Code: "voc",        Name: "Vocals"),
+            _instrument04 = new Instrument(Code: "bs",         Name: "Baritone Saxophone"),
+            _instrument05 = new Instrument(Code: "tp",         Name: "Trumpet"),
+            _instrument06 = new Instrument(Code: "tb",         Name: "Trombone"),
+            _instrument07 = new Instrument(Code: "p",          Name: "piano"),
+            _instrument08 = new Instrument(Code: "b",          Name: "Double Bass"),
+            _instrument09 = new Instrument(Code: "dr",         Name: "Drums"),
+            _instrument10 = new Instrument(Code: "v",          Name: "Violin"),
+            _instrument11 = new Instrument(Code: "va",         Name: "Viola"),
+            _instrument12 = new Instrument(Code: "c",          Name: "cello"),
+            _instrument13 = new Instrument(Code: "fl",         Name: "Flute"),
+            _instrument14 = new Instrument(Code: "cl",         Name: "Clarinet"),
+            _instrument15 = new Instrument(Code: "ob",         Name: "Oboe"),
+            _instrument16 = new Instrument(Code: "fg",         Name: "Bassoon"),
+            _instrument17 = new Instrument(Code: "hrn",        Name: "French Horn"),
+            _instrument18 = new Instrument(Code: "perc",       Name: "Percussion"),
+            _instrument19 = new Instrument(Code: "g",          Name: "guitar"),
+            _instrument20 = new Instrument(Code: "voc",        Name: "Vocals"),
         };
 
     public static IEnumerable<Instrument> InstrumentsSequence => _allInstruments.Any() ? _allInstruments : NewInstruments();
@@ -72,9 +68,6 @@ public static class Instruments
     public static Instrument Instrument14 => _instrument14 ?? (NewInstruments(), _instrument14!).Item2;
     public static Instrument Instrument15 => _instrument15 ?? (NewInstruments(), _instrument15!).Item2;
     public static Instrument Instrument16 => _instrument16 ?? (NewInstruments(), _instrument16!).Item2;
-    public static Instrument Instrument17 => _instrument17 ?? (NewInstruments(), _instrument17!).Item2;
-    public static Instrument Instrument18 => _instrument18 ?? (NewInstruments(), _instrument18!).Item2;
     public static Instrument Instrument19 => _instrument19 ?? (NewInstruments(), _instrument19!).Item2;
     public static Instrument Instrument20 => _instrument20 ?? (NewInstruments(), _instrument20!).Item2;
-    public static Instrument Instrument21 => _instrument21 ?? (NewInstruments(), _instrument21!).Item2;
 }

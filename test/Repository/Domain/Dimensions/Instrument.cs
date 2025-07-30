@@ -9,25 +9,6 @@
 /// <param name="Name">The instrument's full name, e.g. "French horn". Cannot be empty.</param>
 public record Instrument(string Code, string Name) : IFindable<Instrument>, IValidatable
 {
-    /// <summary>
-    /// This constructor is intentionally left empty to allow EF Core to create instances of this class.
-    /// It is not meant to be used directly in application code.
-    /// </summary>
-    private Instrument()
-        : this("", "")
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Instrument"/> class with the specified code. This will make it appropriate
-    /// for using the instance in methods that require <see cref="IFindable{Instrument}"/>.
-    /// </summary>
-    /// <param name="code">The unique code identifying the instrument. Cannot be null or empty.</param>
-    public Instrument(string code)
-        : this(code, "")
-    {
-    }
-
     #region IFindable<Instrument>
     /// <inheritdoc />
     public static Expression<Func<Instrument, object?>> KeyExpression => i => i.Code;

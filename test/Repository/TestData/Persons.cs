@@ -1,6 +1,4 @@
-﻿using vm2.Repository.Abstractions.Model;
-
-namespace vm2.Repository.TestData;
+﻿namespace vm2.Repository.TestData;
 
 public static class Persons
 {

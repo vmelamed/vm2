@@ -40,7 +40,7 @@ class InstrumentValidator : AbstractValidator<Instrument>
         // Dimension data does not get added or modified all that often, so it may be worth it.
         RuleFor(i => i.Code)
             .MustAsync(async (i, c, ct) => await IsValid(repository, i, c, ct))
-            .WithMessage("The genre name must be unique.")
+            .WithMessage("The instrument name must be unique.")
             ;
     }
 
