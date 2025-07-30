@@ -1,7 +1,7 @@
 ﻿namespace vm2.Repository.Domain.Validators.Dimensions;
 
 /// <summary>
-/// Validates the minimal set of rules that make an <see cref="Country"/> object valid regardless of the state of the object.
+/// Validates the minimal set of rules that make a <see cref="Country"/> object valid regardless of the state of the object.
 /// </summary>
 class CountryInvariantValidator : AbstractValidator<Country>
 {
@@ -21,7 +21,7 @@ class CountryFindableValidator : AbstractValidator<Country>
     {
         RuleFor(country => country.Code)
             .Matches(Regexes.CountryCode())
-            .WithMessage("Country ID cannot be empty, and must consist of 2 upper-case Latin characters.")
+            .WithMessage("Country's Code cannot be null or empty. It must be a valid ISO 3166 country code and must consist of 2 upper-case Latin characters.")
             ;
         Include(new FindableValidator(Country.KeyExpression));
     }
@@ -40,7 +40,7 @@ class CountryValidator : AbstractValidator<Country>
         // Dimension data does not get added or modified all that often, so it may be worth it.
         RuleFor(i => i.Code)
             .MustAsync(async (i, c, ct) => await IsValid(repository, i, c, ct))
-            .WithMessage("The country name must be unique.")
+            .WithMessage("The country code must be a valid ISO 3166 country code and must consist of 2 upper-case Latin characters..")
             ;
     }
 
@@ -55,13 +55,11 @@ class CountryValidator : AbstractValidator<Country>
                                             .Set<Country>()
                                             .AnyAsync(i => i.Code == code, cancellationToken)
                                             ,
-
             // The code of a modified country must exist in the database: we can edit only the name of the country, not its code.
             EntityState.Modified => await repository
                                             .Set<Country>()
                                             .AnyAsync(i => i.Code == code, cancellationToken)
                                             ,
-
             _ => true,
         };
 }

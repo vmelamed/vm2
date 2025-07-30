@@ -3,13 +3,16 @@
 /// <summary>
 /// Represents a category or type of music.
 /// </summary>
-/// <param name="Name">The name of the genre. Cannot be empty and must be unique.</param>
+/// <param name="Name">The name of the genre. This value cannot be null or empty and must be unique.</param>
+[DebuggerDisplay("Genre: {Name}")]
 public record Genre(string Name) : IValidatable
 {
+    #region IValidatable
     /// <inheritdoc />
     public async ValueTask Validate(
         object? context = null,
         CancellationToken cancellationToken = default)
         => await new GenreValidator(context as IRepository)
                         .ValidateAndThrowAsync(this, cancellationToken);
+    #endregion
 }

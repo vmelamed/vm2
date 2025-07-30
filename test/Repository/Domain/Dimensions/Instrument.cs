@@ -5,8 +5,9 @@
 /// ("trumpet").
 /// </summary>
 /// <remarks>The <see cref="Instrument"/> class provides properties to access the code and name of an instrument.
-/// <param name="Code">The instrument's code, e.g. "ts" for tenor saxophone. Cannot be empty and must be unique.</param>
-/// <param name="Name">The instrument's full name, e.g. "French horn". Cannot be empty.</param>
+/// <param name="Code">The instrument's code, e.g. "ts" for tenor saxophone. This value cannot be null or empty and must be unique.</param>
+/// <param name="Name">The instrument's full name, e.g. "French horn". This value cannot be null or empty.</param>
+[DebuggerDisplay("Instrument: {Name}")]
 public record Instrument(string Code, string Name) : IFindable<Instrument>, IValidatable
 {
     #region IFindable<Instrument>
