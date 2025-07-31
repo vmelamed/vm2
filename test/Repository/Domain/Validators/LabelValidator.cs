@@ -52,7 +52,6 @@ class LabelValidator : AbstractValidator<Label>
             ;
     }
 
-
     static async ValueTask<bool> IsValid(
         IRepository repository,
         Label label,
@@ -62,9 +61,8 @@ class LabelValidator : AbstractValidator<Label>
             // if Added, make sure the Id and the Name are unique in the database.
             EntityState.Added => !await repository
                                             .Set<Label>()
-                                            .AnyAsync(l => l.Id == id ||
-                                                           l.Name == label.Name,
-                                                        cancellationToken),
+                                            .AnyAsync(l => l.Id   == id ||
+                                                           l.Name == label.Name, cancellationToken),
 
             // if Modified, make sure the Id already exists in the database and if the name has changed, it is also unique.
             EntityState.Modified => !repository.Entry(label).Property(nameof(Label.Name)).IsModified
@@ -74,7 +72,7 @@ class LabelValidator : AbstractValidator<Label>
                                         : (await repository
                                                     .Set<Label>()
                                                     .Where(l => l.Id == id || l.Name == label.Name)
-                                                    .AsNoTracking()
+                                                    .Select(l => new { l.Id })
                                                     .ToListAsync(cancellationToken))
                                                     .SingleOrDefault()?.Id == id,
 

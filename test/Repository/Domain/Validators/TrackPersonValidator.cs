@@ -9,7 +9,7 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
             .WithMessage("Person must not be null.")
             ;
 
-        RuleFor(tp => tp.PersonName)
+        RuleFor(tp => tp.Name)
             .NotEmpty()
             .WithMessage("Person name must not be null or empty.")
             .MaximumLength(Person.MaxNameLength)
@@ -37,7 +37,7 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
                 async (tp, person, ct) => await repository
                                                     .Set<Person>()
                                                     .AnyAsync(p => p.Id == person.Id &&
-                                                                    p.Name == tp.PersonName, ct))
+                                                                    p.Name == tp.Name, ct))
             .WithMessage("Invalid person or person name.")
             ;
 

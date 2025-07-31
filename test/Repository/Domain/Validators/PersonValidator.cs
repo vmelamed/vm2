@@ -22,21 +22,21 @@ class PersonInvariantValidator : AbstractValidator<Person>
             .NotNull()
             .WithMessage("The Roles collection must not be null.")
             .Must(roles => roles.All(t => !string.IsNullOrEmpty(t)))
-            .WithMessage("If not empty, the individual roles must not be null or empty.")
+            .WithMessage("If Roles is not empty, the individual roles must not be null or empty.")
             ;
 
         RuleFor(p => p.Genres)
             .NotNull()
             .WithMessage("The Genres collection must not be null.")
             .Must(genres => genres.All(g => !string.IsNullOrEmpty(g)))
-            .WithMessage("If not empty, the individual genres must not be null or empty.")
+            .WithMessage("If Genres is not empty, the individual genres must not be null or empty.")
             ;
 
         RuleFor(p => p.InstrumentCodes)
             .NotNull()
             .WithMessage("The Instruments collection must not be null.")
             .Must(instruments => instruments.All(t => !string.IsNullOrEmpty(t)))
-            .WithMessage("If not empty, the individual instruments must not be null or empty.")
+            .WithMessage("If Instruments is not empty, the individual instruments must not be null or empty.")
             ;
     }
 }

@@ -51,23 +51,11 @@ class TrackValidator : AbstractValidator<Track>
         if (repository is null)
             return;
 
+        // Do we want this extra trip to the database, if we have unique DB constraints on the PK Id?
         RuleFor(track => track.Id)
             .MustAsync(async (track, id, ct) => await IsValid(repository, track, id, ct))
             .WithMessage("The track ID must be unique.")
             ;
-
-        RuleForEach(track => track.Personnel)
-            .SetValidator(new TrackPersonValidator(repository))
-            .WithMessage("Invalid personnel in the track.")
-            ;
-
-        When(
-            track => track.OriginalAlbum is not null,
-            () => RuleFor(track => track.OriginalAlbum!)
-                    .SetValidator(new AlbumValidator(repository))
-                    .When(track => track.OriginalAlbum != null)
-                    .WithMessage("Album must be valid.")
-            );
     }
 
     static async Task<bool> IsValid(
@@ -79,13 +67,13 @@ class TrackValidator : AbstractValidator<Track>
             // If the track is being added, the ID must not exist in the database.
             EntityState.Added => !await repository
                                             .Set<Track>()
-                                            .AnyAsync(t => t.Id == id, cancellationToken)
-                                            ,
+                                            .AnyAsync(t => t.Id == id, cancellationToken),
 
             // If the track is being modified, the ID must exist in the database.
             EntityState.Modified => await repository
                                             .Set<Track>()
                                             .AnyAsync(t => t.Id == id, cancellationToken),
+
             _ => true,
         };
 }

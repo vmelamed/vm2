@@ -59,10 +59,18 @@ public class Person : IFindable<Person>, IAuditable, IValidatable
     /// <param name="id">The unique identifier for the person.</param>
     /// <param name="name">The name of the person. Cannot be null or empty.</param>
     /// <param name="birthYear">The birth year of the person, or <see langword="null"/> if unknown.</param>
-    /// <param name="deathYear">The death year of the person, or <see langword="null"/> if the person is still alive or the year is unknown.</param>
-    /// <param name="roles">A collection of roles associated with the person. If <see langword="null"/>, an empty collection is used.</param>
-    /// <param name="genres">A collection of genres associated with the person. If <see langword="null"/>, an empty collection is used.</param>
-    /// <param name="instrumentCodes">A collection of instruments the person plays. If <see langword="null"/>, an empty collection is used.</param>
+    /// <param name="deathYear">
+    /// The death year of the person, or <see langword="null"/> if the person is still alive or the year is unknown.
+    /// </param>
+    /// <param name="roles">
+    /// A collection of roles associated with the person. If <see langword="null"/>, an empty collection is used.
+    /// </param>
+    /// <param name="genres">
+    /// A collection of genres associated with the person. If <see langword="null"/>, an empty collection is used.
+    /// </param>
+    /// <param name="instrumentCodes">
+    /// A collection of instruments the person plays. If <see langword="null"/>, an empty collection is used.
+    /// </param>
     /// <param name="createdAt">
     /// The date and time when the person record was created. Defaults to <see cref="DateTimeOffset.MinValue"/> if not specified.
     /// </param>

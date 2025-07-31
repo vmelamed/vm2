@@ -26,11 +26,6 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
     public ICollection<TrackPerson> Personnel { get; set; } = [];
 
     /// <summary>
-    /// Gets or sets the original album that this track appeared for first time on.
-    /// </summary>
-    public Album? OriginalAlbum { get; set; } = null;
-
-    /// <summary>
     /// Gets or sets the collection of albums featuring this track.
     /// </summary>
     public HashSet<Album> Albums { get; set; } = [];
@@ -93,7 +88,6 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
     /// <param name="title">The title of the track. Cannot be null or empty.</param>
     /// <param name="duration">The duration of the track. Cannot be <c>default(TimeSpan)</c>.</param>
     /// <param name="personnel">An optional collection of personnel associated with the track, such as artists or contributors.</param>
-    /// <param name="originalAlbum">The optional original album to which the track belongs.</param>
     /// <param name="albums">An optional collection of albums that include this track.</param>
     /// <param name="createdAt">The date and time when the track was created.</param>
     /// <param name="createdBy">The user or system that created the track.</param>
@@ -104,7 +98,6 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
         string title,
         TimeSpan duration,
         ICollection<TrackPerson>? personnel = null,
-        Album? originalAlbum = null,
         IEnumerable<Album>? albums = null,
         DateTimeOffset createdAt = default,
         string createdBy = "",
@@ -113,7 +106,6 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
         : this(id, title, duration, createdAt, createdBy, updatedAt, updatedBy)
     {
         Personnel       = personnel ?? [];
-        OriginalAlbum   = originalAlbum;
         Albums          = albums?.ToHashSet() ?? [];
     }
 
@@ -151,7 +143,6 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
     /// <returns>The current <see cref="Track"/> instance with the updated original album information.</returns>
     public Track OriginallyReleasesOn(Album album, int index = -1)
     {
-        OriginalAlbum   = album;
         return ReleasedOn(album, index);
     }
 

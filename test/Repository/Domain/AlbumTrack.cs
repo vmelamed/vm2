@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.Domain;
 
-public class AlbumTrack
+public class AlbumTrack : IValidatable
 {
     /// <summary>
     /// Gets or sets the album that this track is part of.
@@ -15,7 +15,7 @@ public class AlbumTrack
     /// <summary>
     /// Gets or sets the track order number within the album.
     /// </summary>
-    public uint TrackNumber { get; set; }
+    public uint OrderNumber { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this track is first released on this album.
@@ -27,17 +27,21 @@ public class AlbumTrack
     /// </summary>
     /// <param name="album">The album to which the track belongs. Cannot be <see langword="null"/>.</param>
     /// <param name="track">The track being associated with the album. Cannot be <see langword="null"/>.</param>
-    /// <param name="trackNumber">The position of the track within the album. Must be greater than 0.</param>
+    /// <param name="orderNumber">The position of the track within the album. Must be greater than 0.</param>
     /// <param name="firstRelease"><see langword="true"/> if the track's first release was on this album; otherwise, <see langword="false"/>.</param>
     public AlbumTrack(
         Album album,
         Track track,
-        uint trackNumber,
+        uint orderNumber,
         bool firstRelease)
     {
         Album         = album;
         Track         = track;
-        TrackNumber   = trackNumber;
+        OrderNumber   = orderNumber;
         FirstRelease  = firstRelease;
     }
+
+    public async ValueTask Validate(object? context = null, CancellationToken cancellationToken = default)
+        => await new AlbumTrackValidator(context as IRepository)
+                        .ValidateAndThrowAsync(this, cancellationToken);
 }

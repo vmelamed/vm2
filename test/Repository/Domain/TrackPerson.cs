@@ -1,7 +1,7 @@
 ﻿namespace vm2.Repository.Domain;
 
 [DebuggerDisplay("{TrackId}-{PersonId}: {PersonName}")]
-public readonly record struct TrackPerson : IValidatable
+public record TrackPerson : IValidatable
 {
     /// <summary>
     /// Gets the person associated with the track from this instance.
@@ -11,7 +11,7 @@ public readonly record struct TrackPerson : IValidatable
     /// <summary>
     /// Caches the name of the person to avoid excessive loading of Person instances.
     /// </summary>
-    public string PersonName { get; init; }
+    public string Name { get; init; }
 
     /// <summary>
     /// Gets the set of roles that the person has on the track.
@@ -29,17 +29,9 @@ public readonly record struct TrackPerson : IValidatable
         IEnumerable<string>? instrumentCodes)
     {
         Person          = person;
-        PersonName      = person.Name;
+        Name            = person.Name;
         Roles           = roles?.ToHashSet() ?? [];
         InstrumentCodes = instrumentCodes?.ToHashSet() ?? [];
-
-        if (roles is not null)
-            foreach (var role in roles.Except(person.Roles, StringComparer.OrdinalIgnoreCase))
-                person.AddRole(role);
-
-        if (instrumentCodes is not null)
-            foreach (var instrument in instrumentCodes.Except(person.InstrumentCodes, StringComparer.OrdinalIgnoreCase))
-                person.AddInstrument(instrument);
     }
 
     public async ValueTask Validate(
