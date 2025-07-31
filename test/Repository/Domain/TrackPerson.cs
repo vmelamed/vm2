@@ -1,13 +1,8 @@
 ﻿namespace vm2.Repository.Domain;
 
 [DebuggerDisplay("{TrackId}-{PersonId}: {PersonName}")]
-public class TrackPerson : IValidatable
+public readonly record struct TrackPerson : IValidatable
 {
-    /// <summary>
-    /// Gets the track of an album (1 track can belong to more than 1 albums, e.g. "The Best Of...").
-    /// </summary>
-    public Track Track { get; init; }
-
     /// <summary>
     /// Gets the person associated with the track from this instance.
     /// </summary>
@@ -30,13 +25,11 @@ public class TrackPerson : IValidatable
 
     public TrackPerson(
         Person person,
-        Track track,
         IEnumerable<string>? roles,
         IEnumerable<string>? instrumentCodes)
     {
         Person          = person;
         PersonName      = person.Name;
-        Track           = track;
         Roles           = roles?.ToHashSet() ?? [];
         InstrumentCodes = instrumentCodes?.ToHashSet() ?? [];
 

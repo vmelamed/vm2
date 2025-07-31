@@ -7,6 +7,8 @@ class PersonInvariantValidator : AbstractValidator<Person>
         RuleFor(p => p.Name)
             .NotEmpty()
             .WithMessage("Name must not be null or empty.")
+            .MaximumLength(Person.MaxNameLength)
+            .WithMessage($"Name cannot be longer than {Person.MaxNameLength} characters.")
             ;
 
         RuleFor(p => p)
@@ -58,7 +60,6 @@ class PersonValidator : AbstractValidator<Person>
         Include(new PersonInvariantValidator());
         Include(new PersonFindableValidator());
         Include(new AuditableValidator());
-        Include(new SoftDeletableValidator());
 
         if (repository is null)
             return;

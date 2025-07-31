@@ -1,16 +1,24 @@
 ﻿namespace vm2.Repository.Domain;
 
+[DebuggerDisplay("{Name} ({CountryCode})")]
 public class Label : IFindable<Label>, IAuditable, IValidatable
 {
+    public const int MaxNameLength = 100;
+
     /// <summary>Gets or sets the unique identifier for the recording label entities.</summary>
     public uint Id { get; private set; }
 
     /// <summary>Gets or sets the name of the recording label.</summary>
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
     /// <summary>Gets or sets the country code where the recording label company is registered.
     /// </summary>
-    public string CountryCode { get; private set; }
+    public string CountryCode { get; set; }
+
+    /// <summary>
+    /// Gets the collection of albums released by this label.
+    /// </summary>
+    public HashSet<Album> Albums { get; private set; } = [];
 
     #region IAuditable
     /// <inheritdoc />
@@ -33,6 +41,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable
     /// <param name="id">The unique identifier for the label.</param>
     /// <param name="name">The name of the label. Cannot be null or empty.</param>
     /// <param name="countryCode">The country code associated with the label. Must be a valid ISO 3166-1 alpha-2 code.</param>
+    /// <param name="albums">The collection of albums released by this label.</param>
     /// <param name="createdAt">The date and time when the label was created. Defaults to the current date and time if not specified.</param>
     /// <param name="createdBy">The identifier of the actor who created the label. Defaults to an empty string if not specified.</param>
     /// <param name="updatedAt">The date and time when the label was last updated. Defaults to the current date and time if not specified.</param>
@@ -53,6 +62,35 @@ public class Label : IFindable<Label>, IAuditable, IValidatable
         CreatedBy   = createdBy;
         UpdatedAt   = updatedAt;
         UpdatedBy   = updatedBy;
+
+        new LabelInvariantValidator()
+                .ValidateAndThrow(this);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Label"/> class with specified creation and update metadata. Used by unit
+    /// tests to materialize <see cref="Label"/> instances containing albums (EF cannot do this).
+    /// </summary>
+    /// <param name="id">The unique identifier for the label.</param>
+    /// <param name="name">The name of the label. Cannot be null or empty.</param>
+    /// <param name="countryCode">The country code associated with the label. Must be a valid ISO 3166-1 alpha-2 code.</param>
+    /// <param name="albums">The collection of albums released by this label.</param>
+    /// <param name="createdAt">The date and time when the label was created. Defaults to the current date and time if not specified.</param>
+    /// <param name="createdBy">The identifier of the actor who created the label. Defaults to an empty string if not specified.</param>
+    /// <param name="updatedAt">The date and time when the label was last updated. Defaults to the current date and time if not specified.</param>
+    /// <param name="updatedBy">The identifier of the actor who last updated the label. Defaults to an empty string if not specified.</param>
+    public Label(
+        uint id,
+        string name,
+        string countryCode,
+        IEnumerable<Album>? albums,
+        DateTimeOffset createdAt = default,
+        string createdBy = "",
+        DateTimeOffset updatedAt = default,
+        string updatedBy = "")
+        : this(id, name, countryCode, createdAt, createdBy, updatedAt, updatedBy)
+    {
+        Albums      = albums?.ToHashSet() ?? [];
     }
 
     #region IFindable<Label>
@@ -85,4 +123,13 @@ public class Label : IFindable<Label>, IAuditable, IValidatable
         => await new LabelValidator(context as IRepository)
                         .ValidateAndThrowAsync(this, cancellationToken);
     #endregion
+
+    public Label ReleasesAlbum(Album album)
+    {
+        if (album.Label is null)
+            throw new InvalidOperationException("Album is already assigned to a different label.");
+
+        album.Label = this;
+        return this;
+    }
 }

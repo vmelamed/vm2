@@ -1,11 +1,14 @@
 ﻿namespace vm2.Repository.Domain;
 
-public class Track : IFindable<Track>, IAuditable, ISoftDeletable, IValidatable
+[DebuggerDisplay("{Title} ({Duration})")]
+public class Track : IFindable<Track>, IAuditable, IValidatable
 {
+    public const int MaxTitleLength = 256;
+
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public uint Id { get; set; } = 0;
+    internal uint Id { get; set; } = 0;
 
     /// <summary>
     /// Gets or sets the title of the track (song).
@@ -23,14 +26,14 @@ public class Track : IFindable<Track>, IAuditable, ISoftDeletable, IValidatable
     public ICollection<TrackPerson> Personnel { get; set; } = [];
 
     /// <summary>
-    /// Gets or sets the album associated with the current context.
+    /// Gets or sets the original album that this track appeared for first time on.
     /// </summary>
-    public Album? Album { get; init; } = null;
+    public Album? OriginalAlbum { get; set; } = null;
 
     /// <summary>
-    /// Gets or sets the unique identifier of the album this track belongs to. (Navigation property!)
+    /// Gets or sets the collection of albums featuring this track.
     /// </summary>
-    public uint AlbumId { get; set; } = 0;
+    public HashSet<Album> Albums { get; set; } = [];
 
     #region IAuditable
     /// <inheritdoc />
@@ -46,36 +49,72 @@ public class Track : IFindable<Track>, IAuditable, ISoftDeletable, IValidatable
     public string UpdatedBy { get; set; } = "";
     #endregion
 
-    #region ISoftDeletable
-    /// <inheritdoc />
-    public DateTimeOffset? DeletedAt { get; set; } = null;
-
-    /// <inheritdoc />
-    public string DeletedBy { get; set; } = "";
-    #endregion
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Track"/> class with the specified details.
+    /// </summary>
+    /// <remarks>
+    /// This constructor allows for the creation of a track with detailed metadata, including its associated personnel, albums,
+    /// and audit information. Used by EF when materializing <see cref="Track"/> instances.
+    /// </remarks>
+    /// <param name="id">The unique identifier for the track.</param>
+    /// <param name="title">The title of the track. Cannot be null or empty.</param>
+    /// <param name="duration">The duration of the track. Cannot be <c>default(TimeSpan)</c>.</param>
+    /// <param name="createdAt">The date and time when the track was created.</param>
+    /// <param name="createdBy">The user or system that created the track.</param>
+    /// <param name="updatedAt">The date and time when the track was last updated.</param>
+    /// <param name="updatedBy">The user or system that last updated the track.</param>
     public Track(
         uint id,
         string title,
         TimeSpan duration,
-        ICollection<TrackPerson>? personnel = null,
-        Album? album = null,
-        uint albumId = 0,
         DateTimeOffset createdAt = default,
         string createdBy = "",
         DateTimeOffset updatedAt = default,
         string updatedBy = "")
     {
-        Id        = id;
-        Title     = title;
-        Duration  = duration;
-        Personnel = personnel ?? [];
-        Album     = album;
-        AlbumId   = album is null ? albumId : album.Id;
-        CreatedAt = createdAt;
-        CreatedBy = createdBy;
-        UpdatedAt = updatedAt;
-        UpdatedBy = updatedBy;
+        Id              = id;
+        Title           = title;
+        Duration        = duration;
+        CreatedAt       = createdAt;
+        CreatedBy       = createdBy;
+        UpdatedAt       = updatedAt;
+        UpdatedBy       = updatedBy;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Track"/> class with the specified details. Used by unit tests to
+    /// materialize <see cref="Track"/> instances containing tracks (EF cannot do this).
+    /// </summary>
+    /// <remarks>
+    /// This constructor allows for the creation of a track with detailed metadata, including its associated personnel, albums,
+    /// and audit information. Used by EF when materializing <see cref="Track"/> instances.
+    /// </remarks>
+    /// <param name="id">The unique identifier for the track.</param>
+    /// <param name="title">The title of the track. Cannot be null or empty.</param>
+    /// <param name="duration">The duration of the track. Cannot be <c>default(TimeSpan)</c>.</param>
+    /// <param name="personnel">An optional collection of personnel associated with the track, such as artists or contributors.</param>
+    /// <param name="originalAlbum">The optional original album to which the track belongs.</param>
+    /// <param name="albums">An optional collection of albums that include this track.</param>
+    /// <param name="createdAt">The date and time when the track was created.</param>
+    /// <param name="createdBy">The user or system that created the track.</param>
+    /// <param name="updatedAt">The date and time when the track was last updated.</param>
+    /// <param name="updatedBy">The user or system that last updated the track.</param>
+    public Track(
+        uint id,
+        string title,
+        TimeSpan duration,
+        ICollection<TrackPerson>? personnel = null,
+        Album? originalAlbum = null,
+        IEnumerable<Album>? albums = null,
+        DateTimeOffset createdAt = default,
+        string createdBy = "",
+        DateTimeOffset updatedAt = default,
+        string updatedBy = "")
+        : this(id, title, duration, createdAt, createdBy, updatedAt, updatedBy)
+    {
+        Personnel       = personnel ?? [];
+        OriginalAlbum   = originalAlbum;
+        Albums          = albums?.ToHashSet() ?? [];
     }
 
     #region IFindable<Track>
@@ -104,4 +143,21 @@ public class Track : IFindable<Track>, IAuditable, ISoftDeletable, IValidatable
     public async ValueTask Validate(object? context = null, CancellationToken cancellationToken = default)
         => await new TrackValidator().ValidateAndThrowAsync(this, cancellationToken);
     #endregion
+
+    /// <summary>
+    /// Associates the track with the specified original album and updates the album's identifier.
+    /// </summary>
+    /// <param name="album">The album to associate as the original release for the track. Cannot be null.</param>
+    /// <returns>The current <see cref="Track"/> instance with the updated original album information.</returns>
+    public Track OriginallyReleasesOn(Album album, int index = -1)
+    {
+        OriginalAlbum   = album;
+        return ReleasedOn(album, index);
+    }
+
+    public Track ReleasedOn(Album album, int index = -1)
+    {
+        album.AddTrack(this, index);
+        return this;
+    }
 }

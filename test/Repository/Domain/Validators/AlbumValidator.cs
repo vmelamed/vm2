@@ -7,6 +7,8 @@ class AlbumInvariantValidator : AbstractValidator<Album>
         RuleFor(a => a.Title)
             .NotEmpty()
             .WithMessage("Title must not be null or empty.")
+            .MaximumLength(Album.MaxTitleLength)
+            .WithMessage($"Title cannot be longer than {Album.MaxTitleLength} characters.")
             ;
 
         RuleFor(a => a.ReleaseYear)
@@ -18,16 +20,6 @@ class AlbumInvariantValidator : AbstractValidator<Album>
             .NotEmpty()
             .Must(p => p.All(a => a is not null))
             .WithMessage("Personnel must not be null or empty and cannot contain null items.")
-            ;
-
-        RuleFor(a => a.Label)
-            .NotNull()
-            .WithMessage("Label must not be null.")
-            ;
-
-        RuleFor(a => a.LabelId)
-            .Must(id => id > 0)
-            .WithMessage("LabelId must not be 0.")
             ;
 
         RuleFor(a => a.Tracks)

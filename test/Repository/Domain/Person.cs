@@ -1,11 +1,13 @@
 ﻿namespace vm2.Repository.Domain;
 
-public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatable
+public class Person : IFindable<Person>, IAuditable, IValidatable
 {
+    public const int MaxNameLength = 100;
+
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public uint Id { get; set; } = 0;
+    public uint Id { get; private set; } = 0;
 
     /// <summary>
     /// Gets or sets the names of the person.
@@ -25,17 +27,17 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
     /// <summary>
     /// Gets or sets the collection (set) of roles associated with the person, e.g. performer, conductor, etc.
     /// </summary>
-    public HashSet<string> Roles { get; set; } = [];
+    public HashSet<string> Roles { get; private set; } = [];
 
     /// <summary>
     /// Gets or sets the collection of genres that the person is known to have worked in, e.g. jazz, classical, etc.
     /// </summary>
-    public HashSet<string> Genres { get; set; } = [];
+    public HashSet<string> Genres { get; private set; } = [];
 
     /// <summary>
     /// Gets or sets the collection of instrument codes that the person is known to have played, e.g. "tp" for trumpet, "g" for guitar, etc.
     /// </summary>
-    public HashSet<string> InstrumentCodes { get; set; } = [];
+    public HashSet<string> InstrumentCodes { get; private set; } = [];
 
     #region IAuditable
     /// <inheritdoc />
@@ -49,14 +51,6 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
 
     /// <inheritdoc />
     public string UpdatedBy { get; set; } = "";
-    #endregion
-
-    #region ISoftDeletable
-    /// <inheritdoc />
-    public DateTimeOffset? DeletedAt { get; set; } = default;
-
-    /// <inheritdoc />
-    public string DeletedBy { get; set; } = "";
     #endregion
 
     /// <summary>
@@ -75,12 +69,6 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
     /// <param name="createdBy">The identifier of the actor who created the person record.</param>
     /// <param name="updatedAt">The date and time when the person record was last updated.</param>
     /// <param name="updatedBy">The identifier of the user who last updated the person record.</param>
-    /// <param name="deletedAt">
-    /// The date and time when the person record was deleted, or <see langword="null"/> if the record is not deleted.
-    /// </param>
-    /// <param name="deletedBy">
-    /// The identifier of the user who deleted the person record, or empty string if the record is not deleted.
-    /// </param>
     public Person(
         uint id,
         string name,
@@ -92,23 +80,22 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
         DateTimeOffset createdAt = default,
         string createdBy = "",
         DateTimeOffset updatedAt = default,
-        string updatedBy = "",
-        DateTimeOffset? deletedAt = null,
-        string deletedBy = "")
+        string updatedBy = "")
     {
         Id              = id;
         Name            = name;
         BirthYear       = birthYear;
         DeathYear       = deathYear;
-        Genres          = genres?.ToHashSet() ?? [];
-        Roles           = roles?.ToHashSet() ?? [];
-        InstrumentCodes = instrumentCodes?.ToHashSet() ?? [];
+        Genres          = genres?.Select(g => g.Trim().ToLower()).ToHashSet() ?? [];
+        Roles           = roles?.Select(r => r.Trim().ToLower()).ToHashSet() ?? [];
+        InstrumentCodes = instrumentCodes?.Select(i => i.Trim().ToLower()).ToHashSet() ?? [];
         CreatedAt       = createdAt;
         CreatedBy       = createdBy;
         UpdatedAt       = updatedAt;
         UpdatedBy       = updatedBy;
-        DeletedAt       = deletedAt;
-        DeletedBy       = deletedBy;
+
+        new PersonInvariantValidator()
+                .ValidateAndThrow(this);
     }
 
     #region IFindable<Person>
@@ -118,8 +105,7 @@ public class Person : IFindable<Person>, IAuditable, ISoftDeletable, IValidatabl
     /// <inheritdoc />
     public ValueTask ValidateFindable(object? _, CancellationToken __)
     {
-        new PersonFindableValidator()
-                .ValidateAndThrow(this);
+        new PersonFindableValidator().ValidateAndThrow(this);
         return ValueTask.CompletedTask;
     }
     #endregion

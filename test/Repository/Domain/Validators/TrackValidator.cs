@@ -7,11 +7,13 @@ class TrackInvariantValidator : AbstractValidator<Track>
         RuleFor(track => track.Title)
             .NotEmpty()
             .WithMessage("The track title must not be null or empty.")
+            .MaximumLength(Track.MaxTitleLength)
+            .WithMessage($"The track title cannot be longer than {Track.MaxTitleLength} characters.")
             ;
 
         RuleFor(track => track.Duration)
-            .Must(duration => duration.TotalSeconds >= 0)
-            .WithMessage("Duration must be non-negative.")
+            .Must(duration => duration.TotalSeconds > 0)
+            .WithMessage("Duration must be greater than 0 sec.")
             ;
 
         RuleFor(track => track.Personnel)
@@ -45,7 +47,6 @@ class TrackValidator : AbstractValidator<Track>
         Include(new TrackInvariantValidator());
         Include(new TrackFindableValidator());
         Include(new AuditableValidator());
-        Include(new SoftDeletableValidator());
 
         if (repository is null)
             return;
@@ -61,10 +62,10 @@ class TrackValidator : AbstractValidator<Track>
             ;
 
         When(
-            track => track.Album is not null,
-            () => RuleFor(track => track.Album!)
+            track => track.OriginalAlbum is not null,
+            () => RuleFor(track => track.OriginalAlbum!)
                     .SetValidator(new AlbumValidator(repository))
-                    .When(track => track.Album != null)
+                    .When(track => track.OriginalAlbum != null)
                     .WithMessage("Album must be valid.")
             );
     }

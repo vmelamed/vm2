@@ -9,12 +9,14 @@ class LabelInvariantValidator : AbstractValidator<Label>
     {
         RuleFor(label => label.Name)
             .NotEmpty()
-            .WithMessage("Label name must not be empty.")
+            .WithMessage("Label name must not be null or empty.")
+            .MaximumLength(Label.MaxNameLength)
+            .WithMessage($"Label name cannot be longer than {Label.MaxNameLength} characters.")
             ;
 
         RuleFor(label => label.CountryCode)
             .Matches(Regexes.CountryCode())
-            .WithMessage("Country code must not be empty.")
+            .WithMessage("Country code must not be null or empty and it must be a valid ISO 3166 country code.")
             ;
     }
 }

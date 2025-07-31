@@ -10,11 +10,11 @@ public class FindableValidator : AbstractValidator<IFindable>
     /// </summary>
     /// <remarks>
     /// This constructor sets up validation rules for a findable entity's key values. If a <paramref name="keyExpression"/> is
-    /// provided, it ensures that the types and number of keys in the entity's key values match those specified by the expression.
+    /// provided, it ensures that the number and types of keys in the entity's key values match those specified by the expression.
     /// </remarks>
     /// <param name="keyExpression">
-    /// An optional <see cref="LambdaExpression"/> that specifies the expected key types for validation. If null, only the
-    /// presence of key values is validated.
+    /// An optional <see cref="LambdaExpression"/> that specifies the expected keys for validation. If null, only the presence
+    /// of key values is validated.
     /// </param>
     public FindableValidator(LambdaExpression? keyExpression = null)
     {
