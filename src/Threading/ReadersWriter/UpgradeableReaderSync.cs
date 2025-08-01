@@ -1,4 +1,5 @@
 namespace vm2.Threading.ReadersWriter;
+
 /// <summary>
 /// With the help of this class create a synchronized reader upgradeable to writer scope by utilizing the <c>using</c> statement.
 /// <para/>

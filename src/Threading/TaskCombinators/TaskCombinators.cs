@@ -1,13 +1,5 @@
 ﻿namespace vm.Aspects.Threading.TaskCombinators;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
-
 /// <summary>
 /// Class TaskCombinators. Contains several methods combining <see cref="T:System.Threading.Tasks.Task"/> objects.
 /// The methods were copied from the famous article "The Task-based Asynchronous Pattern" by Stephen Toub.

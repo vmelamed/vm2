@@ -1,7 +1,5 @@
 ﻿namespace vm2.RegexLib;
 
-using System.Text.RegularExpressions;
-
 /// <summary>
 /// Class Ascii. Contains regular expressions that match strings composed of the first 128 Unicode characters (that point
 /// to ASCII characters).

@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <RootNamespace>vm2.ExpressionSerialization.Xml.Tests</RootNamespace>
+        <RootNamespace>vm2.Functional.PrimitivesTests</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
+  <ItemGroup>
         <PackageReference Include="FluentAssertions" />
-        <PackageReference Include="LibGit2Sharp" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="NSubstitute" />
         <PackageReference Include="xunit" />
         <PackageReference Include="Xunit.Extension" />
         <PackageReference Include="xunit.extensibility.execution" />
@@ -19,18 +18,15 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup>
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
-        <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.Shared\ExpressionSerialization.Shared.csproj" />
-        <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.Xml\ExpressionSerialization.Xml.csproj" />
-        <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
-        <ProjectReference Include="..\ExpressionSerialization.Shared.Tests\ExpressionSerialization.Shared.Tests.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Functional\Primitives\Primitives.csproj" />
+    <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <Using Include="Xunit" />
-    </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
 
 </Project>

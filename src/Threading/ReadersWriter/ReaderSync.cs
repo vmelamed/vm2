@@ -1,4 +1,5 @@
 namespace vm2.Threading.ReadersWriter;
+
 /// <summary>
 /// With the help of this class create a synchronized multiple readers scope by leveraging the <c>using</c> statement.
 /// <para/>

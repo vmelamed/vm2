@@ -18,4 +18,3 @@ global using vm2.TestUtilities;
 global using Xunit.Abstractions;
 
 global using static TestUtilities.Utilities;
-

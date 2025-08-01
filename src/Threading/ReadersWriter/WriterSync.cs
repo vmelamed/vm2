@@ -1,4 +1,5 @@
 namespace vm2.Threading.ReadersWriter;
+
 /// <summary>
 /// With the help of this class create a synchronized single writer scope by leveraging the <c>using</c> statement.
 /// <para/>

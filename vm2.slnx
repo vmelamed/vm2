@@ -4,6 +4,7 @@
     <Project Path="examples/RegexLib/Reflector/Reflector.csproj" />
     <Project Path="examples/RegexLib/RegexLibExample/RegexLibExample.csproj" Id="06fbee3a-6941-49f2-aa0e-6c317413e490" />
   </Folder>
+
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
@@ -12,37 +13,44 @@
     <File Path="README.md" />
     <File Path="vm2signKey.snk" />
   </Folder>
+
   <Folder Name="/src/">
-    <Project Path="src/DbSetTestSubstitute/DbSetTestSubstitute.csproj" />
     <Project Path="src/ExpressionDeepEquals/ExpressionDeepEquals.csproj" />
     <Project Path="src/RegexLib/RegexLib.csproj" />
-    <Project Path="src/Repository/Repository.csproj" Id="6e62a792-2bdc-47c5-aa58-854d45b3360b" />
     <Project Path="src/Threading/Threading.csproj" />
   </Folder>
   <Folder Name="/src/ExpressionSerialization/">
-    <Project Path="src/ExpressionSerialization.Json/ExpressionSerialization.Json.csproj" />
-    <Project Path="src/ExpressionSerialization.Shared/ExpressionSerialization.Shared.csproj" />
-    <Project Path="src/ExpressionSerialization.Xml/ExpressionSerialization.Xml.csproj" />
+    <Project Path="src/ExpressionSerialization/ExpressionSerialization.Json/ExpressionSerialization.Json.csproj" />
+    <Project Path="src/ExpressionSerialization/ExpressionSerialization.Shared/ExpressionSerialization.Shared.csproj" />
+    <Project Path="src/ExpressionSerialization/ExpressionSerialization.Xml/ExpressionSerialization.Xml.csproj" />
+  </Folder>
+  <Folder Name="/src/Repository/">
+    <Project Path="src/Repository/DbSetTestSubstitute/DbSetTestSubstitute.csproj" />
+    <Project Path="src/Repository/Repository/Repository.csproj" />
   </Folder>
   <Folder Name="/src/Functional/">
-    <Project Path="src/Functional/src/Primitives/Primitives.csproj" />
+    <Project Path="src/Functional/Primitives/Primitives.csproj" />
   </Folder>
+
   <Folder Name="/test/">
     <Project Path="test/ExpressionDeepEquals.Tests/ExpressionDeepEquals.Tests.csproj" />
-    <Project Path="test/RegexLibTests/RegexLibTests.csproj" />
+    <Project Path="test/RegexLib.Tests/RegexLib.Tests.csproj" />
     <Project Path="test/TestUtilities/TestUtilities.csproj" />
-    <Project Path="test/ThreadingTests/ThreadingTests.csproj" />
+    <Project Path="test/Threading.Tests/Threading.Tests.csproj" />
   </Folder>
   <Folder Name="/test/ExpressionSerialization.Tests/">
     <Project Path="test/ExpressionSerialization.Tests/ExpressionSerialization.Json.Tests/ExpressionSerialization.Json.Tests.csproj" />
     <Project Path="test/ExpressionSerialization.Tests/ExpressionSerialization.Shared.Tests/ExpressionSerialization.Shared.Tests.csproj" />
     <Project Path="test/ExpressionSerialization.Tests/ExpressionSerialization.Xml.Tests/ExpressionSerialization.Xml.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Functional/">
-    <Project Path="test/Functional/PrimitivesTests/PrimitivesTests.csproj" />
+  <Folder Name="/test/Functional.Tests/">
+    <Project Path="test/Functional.Tests/Primitives.Tests/Primitives.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Repository/">
-    <Project Path="test/Repository/Domain/Domain.csproj" Id="ef225de8-8a94-4835-8bd8-3d6607673d2e" />
-    <Project Path="test/Repository/TestData/TestData.csproj" Id="55bd1290-eb6b-47f7-80be-ae6b4f7aa97e" />
+  <Folder Name="/test/Repository.Tests/">
+    <Project Path="test/Repository.Tests/Domain/Domain.csproj" Id="ef225de8-8a94-4835-8bd8-3d6607673d2e" />
+    <Project Path="test/Repository.Tests/TestData/TestData.csproj" Id="55bd1290-eb6b-47f7-80be-ae6b4f7aa97e" />
+  </Folder>
+  <Folder Name="/test/Repository.Tests/DB/">
+    <Project Path="test/Repository.Tests/DB/SQLite/SQLite.csproj" Id="e13f69eb-e77f-40e5-8179-04a7ebc0db6b" />
   </Folder>
 </Solution>
