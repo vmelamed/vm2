@@ -2,11 +2,11 @@
   "solution": {
     "path": "vm2.slnx",
     "projects": [
-      "src\\DbSetTestSubstitute\\DbSetTestSubstitute.csproj",
-      "src\\RegexLib\\RegexLib.csproj",
-      "src\\Repository\\Repository.csproj",
-      "test\\Repository\\Domain\\Domain.csproj",
-      "test\\Repository\\TestData\\TestData.csproj",
+      "src\\Repository\\DbSetTestSubstitute\\DbSetTestSubstitute.csproj",
+      "src\\Repository\\Repository\\Repository.csproj",
+      "test\\Repository.Tests\\DB\\SQLite\\SQLite.csproj",
+      "test\\Repository.Tests\\Domain\\Domain.csproj",
+      "test\\Repository.Tests\\TestData\\TestData.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"
     ]
   }

@@ -3,8 +3,9 @@
     "path": "vm2.slnx",
     "projects": [
       "examples\\RegexLib\\Reflector\\Reflector.csproj",
+      "examples\\RegexLib\\RegexLibExample\\RegexLibExample.csproj",
       "src\\RegexLib\\RegexLib.csproj",
-      "test\\RegexLibTests\\RegexLibTests.csproj",
+      "test\\RegexLib.Tests\\RegexLib.Tests.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"
     ]
   }

@@ -41,10 +41,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\src\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
-        <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.Json\ExpressionSerialization.Json.csproj" />
-        <ProjectReference Include="..\..\..\src\ExpressionSerialization\ExpressionSerialization.Shared\ExpressionSerialization.Shared.csproj" />
-        <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\ExpressionSerialization.Json\ExpressionSerialization.Json.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\ExpressionSerialization.Shared\ExpressionSerialization.Shared.csproj" />
+        <ProjectReference Include="..\..\..\TestUtilities\TestUtilities.csproj" />
         <ProjectReference Include="..\ExpressionSerialization.Shared.Tests\ExpressionSerialization.Shared.Tests.csproj" />
     </ItemGroup>
 
