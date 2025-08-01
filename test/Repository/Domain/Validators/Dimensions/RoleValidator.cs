@@ -7,6 +7,8 @@ class RoleValidator : AbstractValidator<Role>
         RuleFor(r => r.Name)
             .NotEmpty()
             .WithMessage("The role name cannot be null or empty.")
+            .MaximumLength(Role.MaxNameLength)
+            .WithMessage($"The role name cannot be longer than {Role.MaxNameLength} characters.")
             ;
 
         if (repository is null)

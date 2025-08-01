@@ -7,6 +7,8 @@
 [DebuggerDisplay("Genre: {Name}")]
 public record Genre(string Name) : IValidatable
 {
+    public const int MaxLength = 50;
+
     #region IValidatable
     /// <inheritdoc />
     public async ValueTask Validate(

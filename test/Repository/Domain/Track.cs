@@ -76,39 +76,6 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
         UpdatedBy       = updatedBy;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Track"/> class with the specified details. Used by unit tests to
-    /// materialize <see cref="Track"/> instances containing tracks (EF cannot do this).
-    /// </summary>
-    /// <remarks>
-    /// This constructor allows for the creation of a track with detailed metadata, including its associated personnel, albums,
-    /// and audit information. Used by EF when materializing <see cref="Track"/> instances.
-    /// </remarks>
-    /// <param name="id">The unique identifier for the track.</param>
-    /// <param name="title">The title of the track. Cannot be null or empty.</param>
-    /// <param name="duration">The duration of the track. Cannot be <c>default(TimeSpan)</c>.</param>
-    /// <param name="personnel">An optional collection of personnel associated with the track, such as artists or contributors.</param>
-    /// <param name="albums">An optional collection of albums that include this track.</param>
-    /// <param name="createdAt">The date and time when the track was created.</param>
-    /// <param name="createdBy">The user or system that created the track.</param>
-    /// <param name="updatedAt">The date and time when the track was last updated.</param>
-    /// <param name="updatedBy">The user or system that last updated the track.</param>
-    public Track(
-        uint id,
-        string title,
-        TimeSpan duration,
-        ICollection<TrackPerson>? personnel = null,
-        IEnumerable<Album>? albums = null,
-        DateTimeOffset createdAt = default,
-        string createdBy = "",
-        DateTimeOffset updatedAt = default,
-        string updatedBy = "")
-        : this(id, title, duration, createdAt, createdBy, updatedAt, updatedBy)
-    {
-        Personnel       = personnel ?? [];
-        Albums          = albums?.ToHashSet() ?? [];
-    }
-
     #region IFindable<Track>
     public static Expression<Func<Track, object?>> KeyExpression => t => new { t.Id };
 
@@ -141,14 +108,12 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
     /// </summary>
     /// <param name="album">The album to associate as the original release for the track. Cannot be null.</param>
     /// <returns>The current <see cref="Track"/> instance with the updated original album information.</returns>
-    public Track OriginallyReleasesOn(Album album, int index = -1)
-    {
-        return ReleasedOn(album, index);
-    }
+    public Track OriginallyReleasesOn(Album album, uint index, bool firstRelease)
+        => ReleasedOn(album, index, firstRelease);
 
-    public Track ReleasedOn(Album album, int index = -1)
+    public Track ReleasedOn(Album album, uint index, bool firstRelease)
     {
-        album.AddTrack(this, index);
+        album.AddTrack(this, index, firstRelease);
         return this;
     }
 }

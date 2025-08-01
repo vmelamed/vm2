@@ -7,6 +7,8 @@ public class GenreValidator : AbstractValidator<Genre>
         RuleFor(g => g.Name)
             .NotEmpty()
             .WithMessage("The genre name cannot be null or empty.")
+            .MaximumLength(Genre.MaxLength)
+            .WithMessage($"The genre name cannot be longer than {Genre.MaxLength} characters.")
             ;
 
         if (repository is null)

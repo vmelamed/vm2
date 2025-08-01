@@ -10,6 +10,10 @@
 [DebuggerDisplay("Instrument: {Name}")]
 public record Instrument(string Code, string Name) : IFindable<Instrument>, IValidatable
 {
+    public const int MaxCodeLength = 8;
+
+    public const int MaxNameLength = 256;
+
     #region IFindable<Instrument>
     /// <inheritdoc />
     public static Expression<Func<Instrument, object?>> KeyExpression => i => i.Code;

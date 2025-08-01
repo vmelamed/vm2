@@ -10,6 +10,21 @@
 [DebuggerDisplay("Country: {Name}")]
 public sealed record Country(string Code, string Name) : IFindable<Country>, IValidatable
 {
+    /// <summary>
+    /// Represents the length for a country code.
+    /// </summary>
+    /// <remarks>This constant is typically used to validate or enforce constraints on code length in applications.</remarks>
+    public const int CodeLength = 2;
+
+    /// <summary>
+    /// Represents the maximum allowable length for a country name.
+    /// </summary>
+    /// <remarks>
+    /// This constant defines the upper limit for the number of characters in a country name. It can be used to validate input
+    /// or enforce constraints in applications.
+    /// </remarks>
+    public const int MaxNameLength = 256;
+
     #region IFindable<Instrument>
     /// <inheritdoc />
     public static Expression<Func<Country, object?>> KeyExpression => c => c.Code;

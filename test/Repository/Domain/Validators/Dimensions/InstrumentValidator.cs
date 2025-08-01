@@ -11,6 +11,8 @@ class InstrumentInvariantValidator : AbstractValidator<Instrument>
         RuleFor(instrument => instrument.Name)
             .NotEmpty()
             .WithMessage("Instrument's full name must not be empty.")
+            .MaximumLength(Instrument.MaxNameLength)
+            .WithMessage($"Instrument's full name cannot be longer than {Instrument.MaxNameLength} characters.")
             ;
     }
 }
@@ -21,7 +23,9 @@ class InstrumentFindableValidator : AbstractValidator<Instrument>
     {
         RuleFor(instrument => instrument.Code)
             .Matches(Regexes.InstrumentCode())
-            .WithMessage("Instrument ID cannot be empty, and must consist of no more than 8 lower-case Latin characters.")
+            .WithMessage($"Instrument ID cannot be null or empty.")
+            .MaximumLength(Instrument.MaxCodeLength)
+            .WithMessage($"Instrument ID cannot be longer than {Instrument.MaxCodeLength} characters.")
             ;
         Include(new FindableValidator(Instrument.KeyExpression));
     }

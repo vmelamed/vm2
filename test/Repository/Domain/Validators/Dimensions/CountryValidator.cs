@@ -11,6 +11,8 @@ class CountryInvariantValidator : AbstractValidator<Country>
         RuleFor(country => country.Name)
             .NotEmpty()
             .WithMessage("Country's full name must not be empty.")
+            .MaximumLength(Country.MaxNameLength)
+            .WithMessage($"Country's full name cannot be longer than {Country.MaxNameLength} characters.")
             ;
     }
 }

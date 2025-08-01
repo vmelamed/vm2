@@ -7,6 +7,8 @@
 [DebuggerDisplay("Role: {Name}")]
 public record Role(string Name) : IValidatable
 {
+    public const int MaxNameLength = 50;
+
     #region IValidatable
     /// <inheritdoc />
     public async ValueTask Validate(

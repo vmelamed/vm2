@@ -1,7 +1,8 @@
 ﻿namespace vm2.Repository.Domain;
+using System;
 
 [DebuggerDisplay("Album: {Title}")]
-public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable
+public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable, IEquatable<Album>
 {
     public const int MaxTitleLength = 250;
 
@@ -33,7 +34,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable
     /// <summary>
     /// Gets or sets the collection of tracks on this album.
     /// </summary>
-    public List<Track> Tracks { get; private set; } = [];
+    public List<AlbumTrack> Tracks { get; private set; } = [];
 
     #region IAuditable
     /// <inheritdoc />
@@ -93,42 +94,6 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable
 
         new AlbumInvariantValidator()
                 .ValidateAndThrow(this);
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Album"/> class with the specified details. Used by unit tests to
-    /// materialize <see cref="Album"/> instances containing tracks (EF cannot do this).
-    /// </summary>
-    /// <param name="id">The unique identifier for the album.</param>
-    /// <param name="title">The title of the album.</param>
-    /// <param name="releaseYear">The year when the album was released.</param>
-    /// <param name="personnel">An optional collection of <see cref="Person"/>-s - the personnel involved in the album.</param>
-    /// <param name="label">An optional <see cref="Label"/> object representing the record label that released the album.</param>
-    /// <param name="tracks">An optional collection of <see cref="Track"/>-s - the tracks in the album.</param>
-    /// <param name="createdAt">The date and time when the album instance was created.</param>
-    /// <param name="createdBy">The name of the actor who created the album instance.</param>
-    /// <param name="updatedAt">The date and time when the album record was last updated.</param>
-    /// <param name="updatedBy">The name of the actor who last updated the album record.</param>
-    /// <param name="deletedAt">The dater and time when the album was soft-deleted.</param>
-    /// <param name="deletedAt">The name of the actor who soft-deleted the album.</param>
-    public Album(
-        uint id,
-        string title,
-        int? releaseYear,
-        IEnumerable<Person>? personnel = null,
-        Label? label = null,
-        IEnumerable<Track>? tracks = null,
-        DateTimeOffset createdAt = default,
-        string createdBy = "",
-        DateTimeOffset updatedAt = default,
-        string updatedBy = "",
-        DateTimeOffset? deletedAt = null,
-        string deletedBy = "")
-        : this(id, title, releaseYear, createdAt, createdBy, updatedAt, updatedBy, deletedAt, deletedBy)
-    {
-        Tracks      = tracks?.ToList() ?? [];
-        Personnel   = personnel?.ToHashSet() ?? [];
-        Label       = label;
     }
 
     #region IFindable<Album>
@@ -196,61 +161,129 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable
     }
 
     /// <summary>
-    /// Adds a track to the collection of tracks.
-    /// </summary>
-    /// <param name="track">The track to add to the collection. Cannot be null.</param>
-    /// <returns>The current instance of the album, allowing for method chaining.</returns>
-    public Album AddTrack(Track track)
-    {
-        Tracks.Add(track);
-        return this;
-    }
-
-    /// <summary>
-    /// Removes a track from the collection of tracks.
-    /// </summary>
-    /// <param name="track">The track to add to the collection. Cannot be null.</param>
-    /// <returns>The current instance of the album, allowing for method chaining.</returns>
-    public Album RemoveTrack(Track track)
-    {
-        Tracks.Add(track);
-        return this;
-    }
-
-    /// <summary>
     /// Adds a track to the album at the specified index or appends it to the end if no index is provided.
     /// </summary>
     /// <remarks>If the track is already present in the album at the specified index, no changes are made. Adding a track also
     /// updates the album's personnel list by including all personnel associated with the track.
     /// </remarks>
     /// <param name="track">The track to add to the album. Cannot be null.</param>
-    /// <param name="index">
+    /// <param name="orderNumber">
     /// The zero-based index at which to insert the track. If set to -1 (default) or equal or greater than the number of tracks
     /// that are already on the album, the track is appended to the end.
     /// </param>
+    /// <param name="firstRelease">Indicates whether the track was released on this album for the first time.</param>
     /// <returns>The current <see cref="Album"/> instance, allowing for method chaining.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown if the track is already in the album at a different index.
-    /// </exception>
-    public Album AddTrack(Track track, int index = -1)
+    /// <exception cref="InvalidOperationException">Thrown if the track is already in the album at a different index.</exception>
+    public Album AddTrack(Track track, uint orderNumber, bool firstRelease)
     {
-        var currentIndex = Tracks.IndexOf(track);
+        var existingTrack = Tracks.FirstOrDefault(t => t.Track == track);
 
-        if (currentIndex is not -1)
+        if (existingTrack.Track is not null)
         {
-            if (currentIndex == index)
-                return this;
-            throw new InvalidOperationException("The track is already at a different index.");
+            var currentOrder = (uint)Tracks.IndexOf(existingTrack);
+
+            if (currentOrder != orderNumber)
+                throw new InvalidOperationException("The track is already at a different order number.");
+
+            Tracks.Remove(existingTrack);
+            Tracks.Insert((int)orderNumber, existingTrack with { FirstRelease = firstRelease });
+
+            return this;
         }
 
-        if (index < 0 || index >= Tracks.Count)
-            Tracks.Add(track);
+        if (orderNumber == 0 || orderNumber >= Tracks.Count)
+            Tracks.Add(new AlbumTrack(track, firstRelease));
         else
-            Tracks.Insert(index, track);
+            Tracks.Insert((int)orderNumber, new AlbumTrack(track, firstRelease));
 
         foreach (var trackPerson in track.Personnel)
             Personnel.Add(trackPerson.Person);
 
         return this;
     }
+
+    /// <summary>
+    /// Removes the specified track from the album.
+    /// </summary>
+    /// <remarks>
+    /// This method removes the specified track from the album's track list and reorders the remaining
+    /// tracks to maintain sequential order numbers.
+    /// </remarks>
+    /// <param name="track">The track to remove from the album. Cannot be <see langword="null"/>.</param>
+    /// <returns>The current <see cref="Album"/> instance after the track has been removed.</returns>
+    public Album RemoveTrack(Track track)
+    {
+        var existingTrack = Tracks.FirstOrDefault(t => t.Track == track);
+
+        if (existingTrack.Track is null)
+            return this;
+
+        Tracks.Remove(existingTrack);
+        return this;
+    }
+
+    #region Identity rules implementation.
+    #region IEquatable<Album> Members
+    /// <summary>
+    /// Indicates whether the current object is equal to a reference to another object of the same type.
+    /// </summary>
+    /// <param name="other">A reference to another object of type <see cref="Album"/> to compare with the current object.</param>
+    /// <returns>
+    /// <list type="number">
+    ///     <item><see langword="false"/> if <paramref name="other"/> is equal to <see langword="null"/>, otherwise</item>
+    ///     <item><see langword="true"/> if <paramref name="other"/> refers to <c>this</c> object, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="other"/> is not the same type as <c>this</c> object, otherwise</item>
+    ///     <item><see langword="true"/> if the current object and the <paramref name="other"/> are considered to be equal,
+    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
+    /// </list>
+    /// </returns>
+    public virtual bool Equals(Album? other)
+        => other is not null  &&
+           (ReferenceEquals(this, other)  ||  GetType() == other.GetType() && Id == other.Id);
+    #endregion
+
+    /// <summary>
+    /// Determines whether this <see cref="Album"/> instance is equal to the specified <see cref="object"/> reference.
+    /// </summary>
+    /// <param name="obj">The <see cref="object"/> reference to compare with this <see cref="Album"/> object.</param>
+    /// <returns>
+    /// <list type="number">
+    ///     <item><see langword="false"/> if <paramref name="obj"/> cannot be cast to <see cref="Album"/>, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="obj"/> is equal to <see langword="null"/>, otherwise</item>
+    ///     <item><see langword="true"/> if <paramref name="obj"/> refers to <c>this</c> object, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="obj"/> is not the same type as <c>this</c> object, otherwise</item>
+    ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
+    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
+    /// </list>
+    /// </returns>
+    public override bool Equals(object? obj) => Equals(obj as Album);
+
+    /// <summary>
+    /// Serves as a hash function for the objects of <see cref="Album"/> and its derived types.
+    /// </summary>
+    /// <returns>A hash code for the current <see cref="Album"/> instance.</returns>
+    public override int GetHashCode() => Id.GetHashCode();
+
+    /// <summary>
+    /// Compares two <see cref="Album"/> objects.
+    /// </summary>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns>
+    /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Album)"/>);
+    /// otherwise <see langword="false"/>.
+    /// </returns>
+    public static bool operator ==(Album left, Album right) => left is null ? right is null : left.Equals(right);
+
+    /// <summary>
+    /// Compares two <see cref="Album"/> objects.
+    /// </summary>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns>
+    /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Album)"/>);
+    /// otherwise <see langword="false"/>.
+    /// </returns>
+    public static bool operator !=(Album left, Album right) => !(left==right);
+    #endregion
 }
