@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Json;
+﻿namespace vm2.Linq.ExpressionSerialization.Json;
 
 /// <summary>
 /// Class that visits the nodes of a JSON node to produce a LINQ expression tree.

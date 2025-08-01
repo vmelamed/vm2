@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Xml;
+﻿namespace vm2.Linq.ExpressionSerialization.Xml;
 
 partial class FromXmlDataTransform
 {

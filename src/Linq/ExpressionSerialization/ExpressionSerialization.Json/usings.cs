@@ -17,10 +17,10 @@ global using System.Text.Json.Serialization;
 global using System.Text.RegularExpressions;
 global using System.Xml.Linq;
 
-global using vm2.ExpressionSerialization.Shared.Abstractions;
-global using vm2.ExpressionSerialization.Shared.Conventions;
-global using vm2.ExpressionSerialization.Shared.Exceptions;
-global using vm2.ExpressionSerialization.Shared.Extensions;
+global using vm2.Linq.ExpressionSerialization.Shared.Abstractions;
+global using vm2.Linq.ExpressionSerialization.Shared.Conventions;
+global using vm2.Linq.ExpressionSerialization.Shared.Exceptions;
+global using vm2.Linq.ExpressionSerialization.Shared.Extensions;
 global using vm2.Threading.ReadersWriter;
 
-global using static vm2.ExpressionSerialization.Shared.Extensions.DebugExtensions;
+global using static vm2.Linq.ExpressionSerialization.Shared.Extensions.DebugExtensions;

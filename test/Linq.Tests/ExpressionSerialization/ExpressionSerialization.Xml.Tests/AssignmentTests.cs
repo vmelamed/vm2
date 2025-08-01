@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Xml.Tests;
+﻿namespace vm2.Linq.ExpressionSerialization.Xml.Tests;
 
 [CollectionDefinition("XML")]
 public partial class AssignmentTests(XmlTestsFixture fixture, ITestOutputHelper output) : BaseTests(fixture, output)

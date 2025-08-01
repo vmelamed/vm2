@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Exceptions;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Exceptions;
 
 /// <summary>
 /// Class NotImplementedExpressionException is thrown when the expression visitor encounters unexpected or not-implemented expression.

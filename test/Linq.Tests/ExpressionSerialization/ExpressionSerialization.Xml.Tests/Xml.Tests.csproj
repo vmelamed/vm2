@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>vm2.ExpressionSerialization.Xml.Tests</RootNamespace>
+        <RootNamespace>vm2.Linq.ExpressionSerialization.Xml.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,10 +23,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\..\src\Linq\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
-        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\ExpressionSerialization.Shared\ExpressionSerialization.Shared.csproj" />
-        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\ExpressionSerialization.Xml\ExpressionSerialization.Xml.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\ExpressionSerialization.Shared\Shared.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\ExpressionSerialization.Xml\Xml.csproj" />
         <ProjectReference Include="..\..\..\TestUtilities\TestUtilities.csproj" />
-        <ProjectReference Include="..\ExpressionSerialization.Shared.Tests\ExpressionSerialization.Shared.Tests.csproj" />
+        <ProjectReference Include="..\ExpressionSerialization.Shared.Tests\Shared.Tests.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -23,7 +23,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Threading\Threading.csproj" />
-        <ProjectReference Include="..\ExpressionSerialization.Shared\ExpressionSerialization.Shared.csproj" />
+        <ProjectReference Include="..\ExpressionSerialization.Shared\Shared.csproj" />
     </ItemGroup>
 
 </Project>

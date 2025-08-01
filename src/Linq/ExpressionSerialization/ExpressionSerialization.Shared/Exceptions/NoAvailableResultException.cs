@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Exceptions;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Exceptions;
 
 /// <summary>
 /// Class NoAvailableResultException is thrown when there are no available results to be returned from a transform.

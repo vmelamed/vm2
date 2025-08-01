@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Xml;
+﻿namespace vm2.Linq.ExpressionSerialization.Xml;
 
 /// <summary>
 /// Class XmlOptions holds options that control certain aspects of the transformations to/from LINQ expressions from/to

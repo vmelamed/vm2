@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Conventions;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Conventions;
 
 #pragma warning disable IDE0079
 #pragma warning disable CS1591

@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Json.Tests;
+﻿namespace vm2.Linq.ExpressionSerialization.Json.Tests;
 
 public class JsonTestsFixture : BaseTestsFixture<JsonTestsFixture>
 {

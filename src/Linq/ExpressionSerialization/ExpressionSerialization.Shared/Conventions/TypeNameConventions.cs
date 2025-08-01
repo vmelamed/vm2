@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Conventions;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Conventions;
 /// <summary>
 /// Enum TypeNameConventions specify how to transform the type names.
 /// Note: no casing transformation.

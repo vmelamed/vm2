@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>vm2.ExpressionSerialization.Json</RootNamespace>
+        <RootNamespace>vm2.Linq.ExpressionSerialization.Json</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Label="NuGet">
@@ -49,7 +49,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Threading\Threading.csproj" />
-        <ProjectReference Include="..\ExpressionSerialization.Shared\ExpressionSerialization.Shared.csproj" />
+        <ProjectReference Include="..\ExpressionSerialization.Shared\Shared.csproj" />
     </ItemGroup>
 
 </Project>

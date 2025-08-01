@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Json;
+﻿namespace vm2.Linq.ExpressionSerialization.Json;
 
 /// <summary>
 /// struct JElement is a key-value pair, similar to <see cref="XElement"/>. The <paramref name="key"/> is the name of
@@ -138,7 +138,7 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// <summary>
     /// Deeply clones this element.
     /// </summary>
-    /// <returns>vm2.ExpressionSerialization.Json.JElement.</returns>
+    /// <returns>vm2.Linq.ExpressionSerialization.Json.JElement.</returns>
     public readonly JElement DeepClone()
             => new(Name, Node?.DeepClone());
 

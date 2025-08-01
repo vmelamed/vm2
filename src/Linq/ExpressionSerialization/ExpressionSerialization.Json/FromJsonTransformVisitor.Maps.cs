@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Json;
+﻿namespace vm2.Linq.ExpressionSerialization.Json;
 
 public partial class FromJsonTransformVisitor
 {

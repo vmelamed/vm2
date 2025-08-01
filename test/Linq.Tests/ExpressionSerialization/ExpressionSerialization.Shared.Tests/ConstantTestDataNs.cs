@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Tests;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Tests;
 
 public static class ConstantTestDataNs
 {

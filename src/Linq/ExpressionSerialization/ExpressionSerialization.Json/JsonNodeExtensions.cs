@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Json;
+﻿namespace vm2.Linq.ExpressionSerialization.Json;
 
 /// <summary>
 /// Class JsonObject extensions.

@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Tests;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Tests;
 
 #pragma warning disable IDE0300 // Simplify collection initialization
 #pragma warning disable IDE0056 // Use index operator

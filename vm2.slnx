@@ -22,9 +22,9 @@
     <Project Path="src/Linq/ExpressionDeepEquals/ExpressionDeepEquals.csproj" />
   </Folder>
   <Folder Name="/src/Linq/ExpressionSerialization/">
-    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Json/ExpressionSerialization.Json.csproj" />
-    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Shared/ExpressionSerialization.Shared.csproj" />
-    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Xml/ExpressionSerialization.Xml.csproj" />
+    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Json/Json.csproj" />
+    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Shared/Shared.csproj" />
+    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Xml/Xml.csproj" />
   </Folder>
   <Folder Name="/src/Repository/">
     <Project Path="src/Repository/DbSetTestSubstitute/DbSetTestSubstitute.csproj" />
@@ -45,10 +45,10 @@
   <Folder Name="/test/Linq/">
     <Project Path="test/Linq.Tests/ExpressionDeepEquals.Tests/ExpressionDeepEquals.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Linq/ExpressionSerialization.Tests/">
-    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Json.Tests/ExpressionSerialization.Json.Tests.csproj" />
-    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Shared.Tests/ExpressionSerialization.Shared.Tests.csproj" />
-    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Xml.Tests/ExpressionSerialization.Xml.Tests.csproj" />
+  <Folder Name="/test/Linq/ExpressionSerialization/">
+    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Json.Tests/Json.Tests.csproj" />
+    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Shared.Tests/Shared.Tests.csproj" />
+    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Xml.Tests/Xml.Tests.csproj" />
   </Folder>
   <Folder Name="/test/Repository.Tests/">
     <Project Path="test/Repository.Tests/Domain/Domain.csproj" Id="ef225de8-8a94-4835-8bd8-3d6607673d2e" />

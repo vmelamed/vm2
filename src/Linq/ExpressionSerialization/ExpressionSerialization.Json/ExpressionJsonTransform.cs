@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Json;
+﻿namespace vm2.Linq.ExpressionSerialization.Json;
 
 /// <summary>
 /// Class ExpressionTransform.
@@ -7,7 +7,7 @@
 /// <seealso cref="IExpressionTransform{XNode}" />
 public class ExpressionJsonTransform(JsonOptions? options = null) : IExpressionTransform<JsonObject>
 {
-    JsonOptions _options = options ?? new();
+    readonly JsonOptions _options = options ?? new();
     JsonNodeOptions _nodeOptions = new() { PropertyNameCaseInsensitive = false };
     ToJsonTransformVisitor? _expressionVisitor;
     FromJsonTransformVisitor? _jsonVisitor;

@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>vm2.ExpressionDeepEqualsTests</RootNamespace>
-        <IsTestProject>true</IsTestProject>
-        <IsPackable>false</IsPackable>
+        <RootNamespace>vm2.Linq.ExpressionDeepEquals.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

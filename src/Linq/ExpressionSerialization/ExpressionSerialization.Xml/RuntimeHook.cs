@@ -6,7 +6,7 @@
     "91e8680b7b12640c5e0f6021720c7e0945ef9f286bb4cfa0a616e1e3fd10106bf1427d402f594c" +
     "4af78fda")]
 
-namespace vm2.ExpressionSerialization.Xml;
+namespace vm2.Linq.ExpressionSerialization.Xml;
 
 /// <summary>
 /// Class RuntimeHook.

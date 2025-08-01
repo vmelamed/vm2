@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Json;
+﻿namespace vm2.Linq.ExpressionSerialization.Json;
 
 public partial class FromJsonTransformVisitor
 {
@@ -78,7 +78,7 @@ public partial class FromJsonTransformVisitor
         var (paramTypes, modifiers) = GetParameterSpecs(e);
 
         return e.Name switch {
-            Vocabulary.Constructor => declType.GetConstructor(bindingFlags, null, paramTypes, [modifiers]) as MemberInfo,
+            Vocabulary.Constructor => declType.GetConstructor(bindingFlags, null, paramTypes, [modifiers]),
             Vocabulary.Property => declType.GetProperty(name!, bindingFlags, null, e.GetTypeFromProperty(), paramTypes, [modifiers]),
             Vocabulary.Method => declType.GetMethod(name!, bindingFlags, null, paramTypes, [modifiers]),
             Vocabulary.Field => declType.GetField(name!, bindingFlags),

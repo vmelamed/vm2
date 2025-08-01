@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionDeepEquals.Tests;
+﻿namespace vm2.Linq.ExpressionDeepEquals.Tests;
 
 public class DeepEqualsTestsFixture : BaseTestsFixture<DeepEqualsTestsFixture>
 {

@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Extensions;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Extensions;
 
 /// <summary>
 /// Class TypeExtensions contains extension methods of <see cref="Type"/>.

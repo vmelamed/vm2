@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Abstractions;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Abstractions;
 
 /// <summary>
 /// Enum ValidateExpressionDocuments specifies whether to validate the input XML or JSON expression documents that are to be transformed to 

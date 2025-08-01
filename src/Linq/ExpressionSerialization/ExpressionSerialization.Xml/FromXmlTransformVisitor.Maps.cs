@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Xml;
+﻿namespace vm2.Linq.ExpressionSerialization.Xml;
 
 /// <summary>
 /// Class that visits the nodes of an XML element to produce a LINQ expression tree.

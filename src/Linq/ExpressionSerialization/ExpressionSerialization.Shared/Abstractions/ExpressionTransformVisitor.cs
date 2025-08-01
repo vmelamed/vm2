@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Abstractions;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Abstractions;
 
 /// <summary>
 /// Class ExpressionTransformVisitor.

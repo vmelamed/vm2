@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionSerialization.Shared.Exceptions;
+﻿namespace vm2.Linq.ExpressionSerialization.Shared.Exceptions;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="InternalTransformErrorException"/> class.
