@@ -8,8 +8,8 @@
     <Title>vm2 Frequently used regular expressions</Title>
     <Description>Useful regular expressions both as strings and `System.Text.RegularExpressions.GeneratedRegexAttribute` methods.</Description>
     <PackageReleaseNotes>Migrated from Lazy compiled Regex objects to GeneratedRegexAttribute.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/vmelamed/vm2/tree/main/src/RegexLib</PackageProjectUrl>
-    <PackageTags>C# regex regular expression</PackageTags>
+    <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/RegexLib/RegexLib.csproj</PackageProjectUrl>
+    <PackageTags>C# regex regular expression vm vm2</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

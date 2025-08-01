@@ -8,8 +8,8 @@
         <Title>vm2 Multi-threading facilities.</Title>
         <Description>Sugar-code for using multi-threading synchronization objects.</Description>
         <PackageReleaseNotes>Fixed bugs and added unit tests.</PackageReleaseNotes>
-        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/initial/src/Threading/Threading.csproj</PackageProjectUrl>
-        <PackageTags>C# threading lock reader writer</PackageTags>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/Threading/Threading.csproj</PackageProjectUrl>
+        <PackageTags>C# threading lock reader writer vm vm2</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 

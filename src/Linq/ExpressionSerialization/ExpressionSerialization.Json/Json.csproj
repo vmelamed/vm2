@@ -6,10 +6,10 @@
 
     <PropertyGroup Label="NuGet">
         <Title>vm2 JSON serializer for LINQ expressions.</Title>
-        <Description>Serialization/deserialization of LINQ Expressions to and from documents in JSON format.</Description>
+        <Description>Serialization and deserialization of LINQ Expressions to and from documents in JSON format.</Description>
         <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.Json.</PackageReleaseNotes>
-        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/ExpressionSerialization.Json/ExpressionSerialization.Json.csproj</PackageProjectUrl>
-        <PackageTags>C# LINQ expression serialize deserialize JSON</PackageTags>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/Linq/ExpressionSerialization/ExpressionSerialization.Json/Json.csproj</PackageProjectUrl>
+        <PackageTags>C# LINQ expression serialize deserialize JSON vm vm2</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
