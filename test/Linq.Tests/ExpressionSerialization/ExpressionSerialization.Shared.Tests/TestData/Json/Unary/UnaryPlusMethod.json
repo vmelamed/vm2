@@ -3,32 +3,32 @@
   "$comment": " a =\u003E \u002Ba ",
   "expression": {
     "lambda": {
-      "type": "vm2.ExpressionSerialization.Shared.Tests.A, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
       "parameters": [
         {
-          "type": "vm2.ExpressionSerialization.Shared.Tests.A, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "name": "a",
           "id": "P1"
         }
       ],
       "body": {
         "unaryPlus": {
-          "type": "vm2.ExpressionSerialization.Shared.Tests.A, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "operand": {
             "parameter": {
-              "type": "vm2.ExpressionSerialization.Shared.Tests.A, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "name": "a",
               "id": "P1"
             }
           },
           "method": {
-            "declaringType": "vm2.ExpressionSerialization.Shared.Tests.A, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+            "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
             "static": true,
-            "type": "vm2.ExpressionSerialization.Shared.Tests.A, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+            "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
             "name": "op_UnaryPlus",
             "parameterSpecs": [
               {
-                "type": "vm2.ExpressionSerialization.Shared.Tests.A, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                 "name": "x"
               }
             ]

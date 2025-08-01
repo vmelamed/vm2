@@ -3,9 +3,9 @@
   "$comment": " Three ",
   "expression": {
     "constant": {
-      "$comment": " vm2.ExpressionSerialization.Shared.Tests.EnumTest ",
+      "$comment": " vm2.Linq.ExpressionSerialization.Shared.Tests.EnumTest ",
       "enum": {
-        "type": "vm2.ExpressionSerialization.Shared.Tests.EnumTest, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.EnumTest, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
         "value": "Three",
         "baseValue": 2
       }

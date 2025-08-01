@@ -3,10 +3,10 @@
   "$comment": " ClassDataContract2 ",
   "expression": {
     "constant": {
-      "$comment": " vm2.ExpressionSerialization.Shared.Tests.ClassDataContract1 ",
+      "$comment": " vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1 ",
       "object": {
-        "type": "vm2.ExpressionSerialization.Shared.Tests.ClassDataContract1, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-        "concreteType": "vm2.ExpressionSerialization.Shared.Tests.ClassDataContract2, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "concreteType": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract2, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
         "value": {
           "$id": "1",
           "DecimalProperty": 3,

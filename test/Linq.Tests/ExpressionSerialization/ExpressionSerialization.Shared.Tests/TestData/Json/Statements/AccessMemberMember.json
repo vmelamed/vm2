@@ -6,7 +6,7 @@
       "type": "int",
       "parameters": [
         {
-          "type": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
           "name": "m",
           "id": "P1"
         }
@@ -16,18 +16,18 @@
           "type": "int",
           "object": {
             "memberAccess": {
-              "type": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.Inner, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "object": {
                 "parameter": {
-                  "type": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                  "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                   "name": "m",
                   "id": "P1"
                 }
               },
               "member": {
                 "property": {
-                  "declaringType": "vm2.ExpressionSerialization.Shared.Tests.TestMembersInitialized, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-                  "type": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                  "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                  "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.Inner, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
                   "name": "InnerProperty"
                 }
               }
@@ -35,7 +35,7 @@
           },
           "member": {
             "property": {
-              "declaringType": "vm2.ExpressionSerialization.Shared.Tests.Inner, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.Inner, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "type": "int",
               "name": "IntProperty"
             }

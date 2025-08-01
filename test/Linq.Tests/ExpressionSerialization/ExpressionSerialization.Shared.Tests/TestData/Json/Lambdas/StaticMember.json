@@ -10,7 +10,7 @@
           "type": "int",
           "member": {
             "field": {
-              "declaringType": "vm2.ExpressionSerialization.Shared.Tests.TestMethods, ExpressionSerialization.Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMethods, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
               "static": true,
               "readOnly": true,
               "type": "int",
