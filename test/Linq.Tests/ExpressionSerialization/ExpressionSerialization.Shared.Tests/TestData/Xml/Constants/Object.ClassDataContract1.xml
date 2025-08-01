@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- ClassDataContract1 -->
+<expression
+    xmlns="urn:schemas-vm-com:Linq.Expressions.Serialization.Xml"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+    <constant>
+        <!--  vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1  -->
+        <object
+            type="vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+            <ClassDataContract1
+                xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns="http://schemas.datacontract.org/2004/07/vm2.Linq.ExpressionSerialization.Shared.Tests">
+                <IntProperty>7</IntProperty>
+                <StringProperty>vm</StringProperty>
+            </ClassDataContract1>
+        </object>
+    </constant>
+</expression>

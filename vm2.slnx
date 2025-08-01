@@ -42,10 +42,10 @@
   <Folder Name="/test/Functional.Tests/">
     <Project Path="test/Functional.Tests/Primitives.Tests/Primitives.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Linq/">
+  <Folder Name="/test/Linq.Test/">
     <Project Path="test/Linq.Tests/ExpressionDeepEquals.Tests/ExpressionDeepEquals.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Linq/ExpressionSerialization/">
+  <Folder Name="/test/Linq.Test/ExpressionSerialization/">
     <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Json.Tests/Json.Tests.csproj" />
     <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Shared.Tests/Shared.Tests.csproj" />
     <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Xml.Tests/Xml.Tests.csproj" />

@@ -25,9 +25,9 @@ public class XmlTestsFixture : BaseTestsFixture<XmlTestsFixture>
                                         Repository.Discover(".") ?? throw new FileNotFoundException("Could not find the GIT repository of the test."),
                                         ".."));
 
-        TestFilesPath = Path.Combine(gitWorkSpace, "test/ExpressionSerialization.Tests/ExpressionSerialization.Shared.Tests/TestData/Xml");
-        TestLoadPath = Path.Combine(TestFilesPath, "LoadTestData");
-        SchemasPath = Path.Combine(gitWorkSpace, "src/ExpressionSerialization.Xml/Schema");
+        TestFilesPath = Path.Combine(gitWorkSpace, "test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Shared.Tests/TestData/Xml");
+        TestLoadPath  = Path.Combine(TestFilesPath, "LoadTestData");
+        SchemasPath   = Path.Combine(gitWorkSpace, "src/Linq/ExpressionSerialization/ExpressionSerialization.Xml/Schema");
 
         XmlOptions.SetSchemasLocations(
             new Dictionary<string, string?> {

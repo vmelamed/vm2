@@ -8,9 +8,9 @@
       "src\\Linq\\ExpressionSerialization\\ExpressionSerialization.Xml\\Xml.csproj",
       "src\\Threading\\Threading.csproj",
       "test\\Linq.Tests\\ExpressionDeepEquals.Tests\\ExpressionDeepEquals.Tests.csproj",
-      "test\\Linq.Tests\\ExpressionSerialization\\ExpressionSerialization.Json.Tests\\ExpressionSerialization.Json.Tests.csproj",
-      "test\\Linq.Tests\\ExpressionSerialization\\ExpressionSerialization.Shared.Tests\\ExpressionSerialization.Shared.Tests.csproj",
-      "test\\Linq.Tests\\ExpressionSerialization\\ExpressionSerialization.Xml.Tests\\ExpressionSerialization.Xml.Tests.csproj",
+      "test\\Linq.Tests\\ExpressionSerialization\\ExpressionSerialization.Json.Tests\\Json.Tests.csproj",
+      "test\\Linq.Tests\\ExpressionSerialization\\ExpressionSerialization.Shared.Tests\\Shared.Tests.csproj",
+      "test\\Linq.Tests\\ExpressionSerialization\\ExpressionSerialization.Xml.Tests\\Xml.Tests.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"
     ]
   }
