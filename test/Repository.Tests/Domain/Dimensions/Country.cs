@@ -10,7 +10,7 @@ using vm2.Repository.EfRepository.Models;
 /// <param name="Code">The country's unique 2-letter ISO 3166 code, e.g. "US". This value cannot be null or empty and must be unique.</param>
 /// <param name="Name">The country's full name, e.g. "United States of America". This value cannot be null or empty.</param>
 [DebuggerDisplay("Country: {Name}")]
-public sealed record Country(string Code, string Name) : IFindable<Country>, IValidatable
+public sealed record Country(string Code, string Name) : IFindable<Country>, IValidatable, IDimensionValidator<Country, string>
 {
     /// <summary>
     /// Represents the length for a country code.
@@ -48,4 +48,13 @@ public sealed record Country(string Code, string Name) : IFindable<Country>, IVa
         => await new CountryValidator(context as IRepository)
                         .ValidateAndThrowAsync(this, cancellationToken);
     #endregion
+
+    public static Expression<Func<Country, string>> ValueExpression
+        => country => country.Code;
+
+    public static bool HasValue(string value)
+        => IDimensionValidator<Country, string>.Has(value);
+
+    public static bool HasValues(IEnumerable<string> values)
+        => IDimensionValidator<Country, string>.Has(values);
 }

@@ -33,7 +33,7 @@ public class GenreValidator : AbstractValidator<Genre>
                                             .AnyAsync(g => g.Name == name, cancellationToken)
                                             ,
 
-            EntityState.Modified => !await repository
+            EntityState.Modified => await repository
                                             .Set<Genre>()
                                             .AnyAsync(g => g.Name == name, cancellationToken)
                                             ,

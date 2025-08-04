@@ -14,7 +14,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    internal uint Id { get; private set; }
+    public uint Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the names of the person.
@@ -129,9 +129,6 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
         CreatedBy        = createdBy;
         UpdatedAt        = updatedAt;
         UpdatedBy        = updatedBy;
-
-        new PersonInvariantValidator()
-                .ValidateAndThrow(this);
     }
 
     /// <summary>

@@ -29,7 +29,6 @@ class LabelFindableValidator : AbstractValidator<Label>
             .Must(id => id > 0)
             .WithMessage("Label ID must be greater than 0.")
             ;
-        Include(new FindableValidator(Label.KeyExpression));
     }
 }
 

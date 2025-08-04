@@ -36,7 +36,6 @@ class TrackFindableValidator : AbstractValidator<Track>
             .Must(id => id > 0)
             .WithMessage("Track ID must be greater than 0.")
             ;
-        Include(new FindableValidator(Track.KeyExpression));
     }
 }
 

@@ -5,7 +5,7 @@
 /// </summary>
 /// <param name="Name">The name of the role. This value cannot be null or empty and must be unique.</param>
 [DebuggerDisplay("Role: {Name}")]
-public record Role(string Name) : IValidatable
+public record Role(string Name) : IValidatable, IDimensionValidator<Role, string>
 {
     public const int MaxNameLength = 50;
 
@@ -17,4 +17,13 @@ public record Role(string Name) : IValidatable
         => await new RoleValidator(context as IRepository)
                         .ValidateAndThrowAsync(this, cancellationToken);
     #endregion
+
+    public static Expression<Func<Role, string>> ValueExpression
+        => role => role.Name;
+
+    public static bool HasValue(string value)
+        => IDimensionValidator<Role, string>.Has(value);
+
+    public static bool HasValues(IEnumerable<string> values)
+        => IDimensionValidator<Role, string>.Has(values);
 }

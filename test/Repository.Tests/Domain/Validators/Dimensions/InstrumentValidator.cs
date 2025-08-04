@@ -27,7 +27,6 @@ class InstrumentFindableValidator : AbstractValidator<Instrument>
             .MaximumLength(Instrument.MaxCodeLength)
             .WithMessage($"Instrument ID cannot be longer than {Instrument.MaxCodeLength} characters.")
             ;
-        Include(new FindableValidator(Instrument.KeyExpression));
     }
 }
 

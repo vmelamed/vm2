@@ -23,12 +23,12 @@ class AlbumInvariantValidator : AbstractValidator<Album>
             .WithMessage("Personnel cannot contain null items.")
             ;
 
-        RuleFor(a => a.AlbumTracks)
+        RuleFor(a => a.Tracks)
             .NotNull()
             .WithMessage("Tracks must not be null.")
             ;
 
-        RuleForEach(a => a.AlbumTracks)
+        RuleForEach(a => a.Tracks)
             .SetValidator(new AlbumTrackValidator())
             .WithMessage("Invalid track in the album.")
             ;
@@ -43,7 +43,6 @@ class AlbumFindableValidator : AbstractValidator<Album>
             .Must(id => id > 0)
             .WithMessage("Album ID must be greater than 0.")
             ;
-        Include(new FindableValidator(Album.KeyExpression));
     }
 }
 

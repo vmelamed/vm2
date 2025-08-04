@@ -23,9 +23,8 @@ class CountryFindableValidator : AbstractValidator<Country>
     {
         RuleFor(country => country.Code)
             .Matches(Regexes.CountryCode())
-            .WithMessage("Country's Code cannot be null or empty. It must be a valid ISO 3166 country code and must consist of 2 upper-case Latin characters.")
+            .WithMessage("Country's Code must be a valid ISO 3166 country code and must consist of 2 upper-case Latin characters.")
             ;
-        Include(new FindableValidator(Country.KeyExpression));
     }
 }
 
@@ -42,7 +41,7 @@ class CountryValidator : AbstractValidator<Country>
         // Dimension data does not get added or modified all that often, so it may be worth it.
         RuleFor(i => i.Code)
             .MustAsync(async (i, c, ct) => await IsValid(repository, i, c, ct))
-            .WithMessage("The country code must be a valid ISO 3166 country code and must consist of 2 upper-case Latin characters..")
+            .WithMessage("The country code is not unique or cannot be found.")
             ;
     }
 

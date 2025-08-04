@@ -22,21 +22,21 @@ class PersonInvariantValidator : AbstractValidator<Person>
             .NotNull()
             .WithMessage("The Roles collection must not be null.")
             .Must(roles => roles.All(t => !string.IsNullOrEmpty(t)))
-            .WithMessage("If Roles is not empty, the individual roles must not be null or empty.")
+            .WithMessage("If Roles is not empty, no role can be null or empty.")
             ;
 
         RuleFor(p => p.Genres)
             .NotNull()
             .WithMessage("The Genres collection must not be null.")
             .Must(genres => genres.All(g => !string.IsNullOrEmpty(g)))
-            .WithMessage("If Genres is not empty, the individual genres must not be null or empty.")
+            .WithMessage("If Genres is not empty, no genre can be null or empty.")
             ;
 
         RuleFor(p => p.Instruments)
             .NotNull()
             .WithMessage("The Instruments collection must not be null.")
             .Must(instruments => instruments.All(t => !string.IsNullOrEmpty(t)))
-            .WithMessage("If Instruments is not empty, the individual instruments must not be null or empty.")
+            .WithMessage("If Instruments is not empty, no instrument can be null or empty.")
             ;
     }
 }
@@ -49,7 +49,6 @@ class PersonFindableValidator : AbstractValidator<Person>
             .Must(id => id > 0)
             .WithMessage("Person ID must be greater than 0.")
             ;
-        Include(new FindableValidator(Person.KeyExpression));
     }
 }
 
@@ -78,10 +77,16 @@ class PersonValidator : AbstractValidator<Person>
         CancellationToken cancellationToken)
         => repository.StateOf(person) switch {
             // if Added, make sure the id is unique in the database.
-            EntityState.Added => !await repository.Set<Person>().AnyAsync(a => a.Id == id, cancellationToken),
+            EntityState.Added => !await repository
+                                            .Set<Person>()
+                                            .AnyAsync(a => a.Id == id, cancellationToken)
+                                            ,
 
             // if Modified, make sure there is a Person with this id in the database.
-            EntityState.Modified => await repository.Set<Person>().AnyAsync(a => a.Id == id, cancellationToken),
+            EntityState.Modified => await repository
+                                            .Set<Person>()
+                                            .AnyAsync(a => a.Id == id, cancellationToken)
+                                            ,
 
             _ => true
         };
