@@ -6,15 +6,15 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
 {
     public const int MaxTitleLength = 256;
 
-    HashSet<TrackPerson> _tracksPersons = [];
-    HashSet<Person> _personnel = [];
-    HashSet<Album> _albums = [];
     HashSet<string> _genres = [];
+    HashSet<Album> _albums = [];
+    HashSet<Person> _personnel = [];
+    HashSet<TrackPerson> _tracksPersons = [];
 
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public uint Id { get; private set; }
+    internal uint Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the title of the track (song).
@@ -22,14 +22,19 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
     public string Title { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the duration of the track.
+    /// </summary>
+    public TimeSpan Duration { get; set; } = default;
+
+    /// <summary>
     /// Gets the collection of genres that this track can be categorized under.
     /// </summary>
     public IEnumerable<string> Genres => _genres;
 
     /// <summary>
-    /// Gets or sets the duration of the track.
+    /// Gets or sets the collection of albums featuring this track.
     /// </summary>
-    public TimeSpan Duration { get; set; } = default;
+    public IEnumerable<Album> Albums => _albums;
 
     /// <summary>
     /// Gets or sets the collection of artists recorded on the track.
@@ -40,11 +45,6 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
     /// Gets a collection of persons associated with this track.
     /// </summary>
     internal IEnumerable<TrackPerson> TracksPersons => _tracksPersons;
-
-    /// <summary>
-    /// Gets or sets the collection of albums featuring this track.
-    /// </summary>
-    public IEnumerable<Album> Albums => _albums;
 
     #region IAuditable
     /// <inheritdoc />
@@ -130,6 +130,22 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
         => await new TrackValidator().ValidateAndThrowAsync(this, cancellationToken);
     #endregion
 
+    public Track AddPerson(Person person, IEnumerable<string> instruments, IEnumerable<string> roles)
+    {
+        var trackPerson = _tracksPersons.FirstOrDefault(tp => tp.PersonId == person.Id);
+
+        if (trackPerson is null)
+        {
+            trackPerson = new TrackPerson(this, person);
+            _tracksPersons.Add(trackPerson);
+        }
+
+        _personnel.Add(person);
+
+
+        return this;
+    }
+
     #region Identity rules implementation.
     #region IEquatable<Track> Members
     /// <summary>
@@ -144,8 +160,10 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
     ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
     /// </list></returns>
     public virtual bool Equals(Track? other)
-        => other is not null  &&
-           (ReferenceEquals(this, other)  ||  GetType() == other.GetType() && Id == other.Id);
+        => other is not null
+           && (ReferenceEquals(this, other)
+               || typeof(Track) == other.GetType()
+                  && Id         == other.Id);
     #endregion
 
     /// <summary>
@@ -160,13 +178,15 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
     ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
     ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
     /// </list></returns>
-    public override bool Equals(object? obj) => Equals(obj as Track);
+    public override bool Equals(object? obj)
+        => Equals(obj as Track);
 
     /// <summary>
     /// Serves as a hash function for the objects of <see cref="Track"/> and its derived types.
     /// </summary>
     /// <returns>A hash code for the current <see cref="Track"/> instance.</returns>
-    public override int GetHashCode() => HashCode.Combine(typeof(Track), Id);
+    public override int GetHashCode()
+        => HashCode.Combine(typeof(Track), Id);
 
     /// <summary>
     /// Compares two <see cref="Track"/> objects.
@@ -177,7 +197,10 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
     /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Track)"/>);
     /// otherwise <see langword="false"/>.
     /// </returns>
-    public static bool operator ==(Track left, Track right) => left is null ? right is null : left.Equals(right);
+    public static bool operator ==(Track left, Track right)
+        => left is null
+                ? right is null
+                : left.Equals(right);
 
     /// <summary>
     /// Compares two <see cref="Track"/> objects.
@@ -188,6 +211,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
     /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Track)"/>);
     /// otherwise <see langword="false"/>.
     /// </returns>
-    public static bool operator !=(Track left, Track right) => !(left==right);
+    public static bool operator !=(Track left, Track right)
+        => !(left==right);
     #endregion
 }

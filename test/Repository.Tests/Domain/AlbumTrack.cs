@@ -1,7 +1,6 @@
 ﻿namespace vm2.Repository.Tests.Domain;
-
 /// <summary>
-/// Represents a track within an album, including its position and metadata.
+/// Represents a track within an album.
 /// </summary>
 /// <remarks>
 /// This type is immutable and provides information about a track's association with an album, including its order within the
@@ -10,17 +9,17 @@
 /// <param name="Track"></param>
 /// <param name="OrderNumber"></param>
 /// <param name="FirstRelease"></param>
-public record AlbumTrack
+public class AlbumTrack : IValidatable
 {
     /// <summary>
     /// Gets the track of the album.
     /// </summary>
-    public Track Track { get; init; }
+    public Track Track { get; init; } = null!;
 
     /// <summary>
     /// Gets the unique identifier for the track.
     /// </summary>
-    public uint TrackId { get; init; }
+    internal uint TrackId { get; init; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AlbumTrack"/> class using the specified track.
@@ -40,7 +39,6 @@ public record AlbumTrack
     /// class from the database. It is intended for use by EF Core and should not be called directly in application code.
     /// </remarks>
     private AlbumTrack()
-        : this(default(Track)!)
     {
     }
 

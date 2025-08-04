@@ -5,15 +5,15 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
 {
     public const int MaxTitleLength = 250;
 
+    HashSet<string> _genres = [];
+    List<AlbumTrack> _tracks = [];
     HashSet<Person> _personnel = [];
     HashSet<AlbumPerson> _albumsPersons = [];
-    List<AlbumTrack> _albumTracks = [];
-    HashSet<string> _genres = [];
 
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public uint Id { get; private set; }
+    internal uint Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the title of the album.
@@ -38,7 +38,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <summary>
     /// Gets the unique identifier for the label.
     /// </summary>
-    public uint LabelId { get; private set; }
+    internal uint LabelId { get; private set; }
 
     /// <summary>
     /// Gets or sets the collection of artists associated with the album.
@@ -53,7 +53,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <summary>
     /// Gets or sets the collection of tracks on this album.
     /// </summary>
-    internal IEnumerable<AlbumTrack> AlbumTracks => _albumTracks;
+    internal IEnumerable<AlbumTrack> Tracks => _tracks;
 
     #region IAuditable
     /// <inheritdoc />
@@ -170,6 +170,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
 
         Label = label;
         ReleaseYear = year;
+        Label.Releases(this);
         return this;
     }
 
@@ -188,12 +189,12 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         var albumPerson = _albumsPersons.FirstOrDefault(ap => ap.Person == person);
 
         if (albumPerson is null)
-            _albumsPersons.Add(albumPerson = new AlbumPerson(this, person));
-
-        albumPerson
-            .AddRoles(roles)
-            .AddInstruments(instruments)
-            ;
+            _albumsPersons.Add(albumPerson = new AlbumPerson(this, person, roles, instruments));
+        else
+            albumPerson
+                .AddRoles(roles)
+                .AddInstruments(instruments)
+                ;
 
         return this;
     }
@@ -208,9 +209,12 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         var albumPerson = _albumsPersons.FirstOrDefault(ap => ap.Person == person);
 
         if (albumPerson is not null)
-            // here we do not want to remove roles and instruments from the person, as they may be used in other albums
-            // it is asymmetric operation
+        {
             _albumsPersons.Remove(albumPerson);
+            _personnel.Remove(person);
+            // here we do not want to remove roles and instruments from the person, as they may be used in other albums
+            // yes, it is asymmetric operation
+        }
 
         return this;
     }
@@ -233,23 +237,23 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         Track track,
         Track? after)
     {
-        var trackAti = _albumTracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == track);
+        var trackAti = _tracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == track);
 
         if (after is null)
         {
             if (trackAti.at is null)
             {
                 // the track is not in the album and no after track is specified: add to the end of the tracks
-                _albumTracks.Add(new AlbumTrack(track));
+                _tracks.Add(new AlbumTrack(track));
                 TrackAdded(track);
             }
             else
             {
-                if (trackAti.i != _albumTracks.Count-1)
+                if (trackAti.i != _tracks.Count-1)
                 {
                     // the track is already in the album, but not at the end: remove it and add to the end
-                    _albumTracks.Remove(trackAti.at);
-                    _albumTracks.Add(trackAti.at);
+                    _tracks.Remove(trackAti.at);
+                    _tracks.Add(trackAti.at);
                 }
                 // otherwise the track is already at the end of the album: do nothing
             }
@@ -259,7 +263,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
 
         Debug.Assert(after is not null, "After cannot be null at this point");
 
-        var afterAti = _albumTracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == after);
+        var afterAti = _tracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == after);
 
         if (afterAti.at is null)
             throw new ArgumentException("The specified track to add after is not in the album.", nameof(after));
@@ -273,7 +277,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         if (trackAti.at is not null)
         {
             at = trackAti.at;
-            _albumTracks.RemoveAt(trackAti.i);
+            _tracks.RemoveAt(trackAti.i);
         }
         else
         {
@@ -281,7 +285,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
             TrackAdded(track);
         }
 
-        _albumTracks.Insert(afterAti.i, at);
+        _tracks.Insert(afterAti.i, at);
 
         return this;
     }
@@ -304,14 +308,14 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         Track track,
         Track? before)
     {
-        var trackAti = _albumTracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == track);
+        var trackAti = _tracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == track);
 
         if (before is null)
         {
             if (trackAti.at is null)
             {
                 // the track is not in the album and no before track is specified: add at the beginning of the tracks
-                _albumTracks.Insert(0, new AlbumTrack(track));
+                _tracks.Insert(0, new AlbumTrack(track));
                 return TrackAdded(track);
             }
             else
@@ -319,8 +323,8 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
                 if (trackAti.i != 0)
                 {
                     // the track is already in the album, but not at the beginning: remove it and add at the beginning
-                    _albumTracks.Remove(trackAti.at);
-                    _albumTracks.Insert(0, trackAti.at);
+                    _tracks.Remove(trackAti.at);
+                    _tracks.Insert(0, trackAti.at);
                 }
                 // otherwise the track is already in the beginning of the album: do nothing
                 return this;
@@ -329,7 +333,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
 
         Debug.Assert(before is not null, "After cannot be null at this point");
 
-        var beforeAti = _albumTracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == before);
+        var beforeAti = _tracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == before);
 
         if (beforeAti.at is null)
             throw new ArgumentException("The specified track to add after is not in the album.", nameof(before));
@@ -348,10 +352,10 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         else
         {
             at = trackAti.at;
-            _albumTracks.RemoveAt(trackAti.i);
+            _tracks.RemoveAt(trackAti.i);
         }
 
-        _albumTracks.Insert(beforeAti.i, at);
+        _tracks.Insert(beforeAti.i, at);
 
         return this;
     }
@@ -368,20 +372,20 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
             _genres.Add(genre);
 
         // add the track's personnel to the album's personnel
-        foreach (var person in track.Personnel)
+        foreach (var pt in track.TracksPersons)
         {
-            var ap = _albumsPersons.FirstOrDefault(ap => ap.Person == person);
+            var ap = _albumsPersons.FirstOrDefault(ap => ap.Person == pt.Person);
 
             if (ap is null)
-                _albumsPersons.Add(ap = new AlbumPerson(this, person, person.Roles, person.Instruments));
+                _albumsPersons.Add(ap = new AlbumPerson(this, pt.Person, pt.Roles, pt.Instruments));
             else
             {
                 // if the person is already in the album, ensure that their roles and instruments are updated
-                ap.AddRoles(person.Roles);
-                ap.AddInstruments(person.Instruments);
+                ap.AddRoles(pt.Roles);
+                ap.AddInstruments(pt.Instruments);
             }
 
-            // TODO: we don't need this, right? person.AddAlbum(this);
+            ap.Person.AddAlbum(ap);
         }
 
         return this;
@@ -398,12 +402,12 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <returns>The current <see cref="Album"/> instance after the track has been removed.</returns>
     public Album RemoveTrack(Track track)
     {
-        var existingTrack = _albumTracks.FirstOrDefault(t => t.TrackId == track.Id);
+        var existingTrack = _tracks.FirstOrDefault(t => t.TrackId == track.Id);
 
         if (existingTrack is null)
             return this;
 
-        _albumTracks.Remove(existingTrack);
+        _tracks.Remove(existingTrack);
         return this;
     }
 
@@ -423,8 +427,10 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// </list>
     /// </returns>
     public virtual bool Equals(Album? other)
-        => other is not null  &&
-           (ReferenceEquals(this, other)  ||  GetType() == other.GetType() && Id == other.Id);
+        => other is not null
+           && (ReferenceEquals(this, other)
+               || typeof(Album) == other.GetType()
+                  && Id         == other.Id);
     #endregion
 
     /// <summary>
@@ -441,13 +447,15 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
     /// </list>
     /// </returns>
-    public override bool Equals(object? obj) => Equals(obj as Album);
+    public override bool Equals(object? obj)
+        => Equals(obj as Album);
 
     /// <summary>
     /// Serves as a hash function for the objects of <see cref="Album"/> and its derived types.
     /// </summary>
     /// <returns>A hash code for the current <see cref="Album"/> instance.</returns>
-    public override int GetHashCode() => Id.GetHashCode();
+    public override int GetHashCode()
+        => HashCode.Combine(typeof(Album), Id);
 
     /// <summary>
     /// Compares two <see cref="Album"/> objects.

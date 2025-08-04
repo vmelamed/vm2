@@ -50,6 +50,28 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     public string UpdatedBy { get; set; } = "";
     #endregion
 
+    #region IFindable<Label>
+    /// <inheritdoc />
+    public static Expression<Func<Label, object?>> KeyExpression => l => new { l.Id };
+
+    /// <inheritdoc />
+    public ValueTask ValidateFindable(object? _, CancellationToken __)
+    {
+        new LabelFindableValidator()
+                .ValidateAndThrow(this);
+        return ValueTask.CompletedTask;
+    }
+    #endregion
+
+    /// <summary>
+    /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Label"/> by its unique
+    /// identifier. Can be used in <see cref="IRepository.Find{Label}(IFindable, CancellationToken)"/> and
+    /// <see cref="QueryableExtensions.Find{Label}(IFindable, CancellationToken)"/>. E.g.<br/>
+    /// <c><![CDATA[var label = await _repository.Find(Label.ById(42), ct);]]></c>
+    /// </summary>
+    /// <param name="id">The unique identifier for the label.</param>
+    public static IFindable ById(int Id) => new Findable(Id);
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Label"/> class with specified creation and update metadata. For use mostly
     /// by EF.
@@ -93,28 +115,6 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     {
     }
 
-    #region IFindable<Label>
-    /// <inheritdoc />
-    public static Expression<Func<Label, object?>> KeyExpression => l => new { l.Id };
-
-    /// <inheritdoc />
-    public ValueTask ValidateFindable(object? _, CancellationToken __)
-    {
-        new LabelFindableValidator()
-                .ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
-    #endregion
-
-    /// <summary>
-    /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Label"/> by its unique
-    /// identifier. Can be used in <see cref="IRepository.Find{Label}(IFindable, CancellationToken)"/> and
-    /// <see cref="QueryableExtensions.Find{Label}(IFindable, CancellationToken)"/>. E.g.<br/>
-    /// <c><![CDATA[var label = await _repository.Find(Label.ById(42), ct);]]></c>
-    /// </summary>
-    /// <param name="id">The unique identifier for the label.</param>
-    public static IFindable ById(int Id) => new Findable(Id);
-
     #region IValidatable
     /// <inheritdoc />
     public async ValueTask Validate(
@@ -124,7 +124,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
                         .ValidateAndThrowAsync(this, cancellationToken);
     #endregion
 
-    public Label ReleasesAlbum(Album album)
+    public Label Releases(Album album)
     {
         if (album.Label is null)
             throw new InvalidOperationException("Album is already assigned to a different label.");
@@ -147,8 +147,10 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
     /// </list></returns>
     public virtual bool Equals(Label? other)
-        => other is not null  &&
-           (ReferenceEquals(this, other)  ||  GetType() == other.GetType() && Id == other.Id);
+        => other is not null
+           && (ReferenceEquals(this, other)
+               ||  typeof(Label) == other.GetType()
+                   && Id         == other.Id);
     #endregion
 
     /// <summary>
@@ -163,13 +165,15 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
     ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
     /// </list></returns>
-    public override bool Equals(object? obj) => Equals(obj as Label);
+    public override bool Equals(object? obj)
+        => Equals(obj as Label);
 
     /// <summary>
     /// Serves as a hash function for the objects of <see cref="Label"/> and its derived types.
     /// </summary>
     /// <returns>A hash code for the current <see cref="Label"/> instance.</returns>
-    public override int GetHashCode() => HashCode.Combine(typeof(Label), Id);
+    public override int GetHashCode()
+        => HashCode.Combine(typeof(Label), Id);
 
     /// <summary>
     /// Compares two <see cref="Label"/> objects.
@@ -180,7 +184,10 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Label)"/>);
     /// otherwise <see langword="false"/>.
     /// </returns>
-    public static bool operator ==(Label left, Label right) => left is null ? right is null : left.Equals(right);
+    public static bool operator ==(Label left, Label right)
+        => left is null
+                ? right is null
+                : left.Equals(right);
 
     /// <summary>
     /// Compares two <see cref="Label"/> objects.
@@ -191,6 +198,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Label)"/>);
     /// otherwise <see langword="false"/>.
     /// </returns>
-    public static bool operator !=(Label left, Label right) => !(left==right);
+    public static bool operator !=(Label left, Label right)
+        => !(left==right);
     #endregion
 }

@@ -14,7 +14,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public uint Id { get; private set; }
+    internal uint Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the names of the person.
@@ -70,70 +70,6 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     public string UpdatedBy { get; set; } = "";
     #endregion
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Person"/> class with specified details.
-    /// </summary>
-    /// <param name="id">The unique identifier for the person.</param>
-    /// <param name="name">The name of the person. Cannot be null or empty.</param>
-    /// <param name="birthYear">The birth year of the person, or <see langword="null"/> if unknown.</param>
-    /// <param name="deathYear">
-    /// The death year of the person, or <see langword="null"/> if the person is still alive or the year is unknown.
-    /// </param>
-    /// <param name="roles">
-    /// A collection of roles associated with the person. If <see langword="null"/>, an empty collection is used.
-    /// </param>
-    /// <param name="genres">
-    /// A collection of genres associated with the person. If <see langword="null"/>, an empty collection is used.
-    /// </param>
-    /// <param name="instrumentCodes">
-    /// A collection of instruments the person plays. If <see langword="null"/>, an empty collection is used.
-    /// </param>
-    /// <param name="createdAt">
-    /// The date and time when the person record was created. Defaults to <see cref="DateTimeOffset.MinValue"/> if not specified.
-    /// </param>
-    /// <param name="createdBy">The identifier of the actor who created the person record.</param>
-    /// <param name="updatedAt">The date and time when the person record was last updated.</param>
-    /// <param name="updatedBy">The identifier of the user who last updated the person record.</param>
-    public Person(
-        uint id,
-        string name,
-        int? birthYear = null,
-        int? deathYear = null,
-        IEnumerable<string>? roles = null,
-        IEnumerable<string>? genres = null,
-        IEnumerable<string>? instrumentCodes = null,
-        DateTimeOffset createdAt = default,
-        string createdBy = "",
-        DateTimeOffset updatedAt = default,
-        string updatedBy = "")
-    {
-        Id               = id;
-        Name             = name;
-        BirthYear        = birthYear;
-        DeathYear        = deathYear;
-        _genres          = genres?.Select(g => g.Trim().ToLower()).ToHashSet() ?? [];
-        _roles           = roles?.Select(r => r.Trim().ToLower()).ToHashSet() ?? [];
-        _instruments = instrumentCodes?.Select(i => i.Trim().ToLower()).ToHashSet() ?? [];
-        CreatedAt        = createdAt;
-        CreatedBy        = createdBy;
-        UpdatedAt        = updatedAt;
-        UpdatedBy        = updatedBy;
-
-        new PersonInvariantValidator()
-                .ValidateAndThrow(this);
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Person"/> class.
-    /// </summary>
-    /// <remarks>
-    /// This parameterless constructor is required by Entity Framework Core for materializing instances of the <see cref="Person"/>
-    /// class from the database. It is intended for use by EF Core and should not be called directly in application code.
-    /// </remarks>
-    private Person()
-    {
-    }
-
     #region IFindable<Person>
     /// <inheritdoc />
     public static Expression<Func<Person, object?>> KeyExpression => p => new { p.Id };
@@ -155,6 +91,60 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// <param name="id">The unique identifier for the person.</param>
     public static IFindable ById(int Id) => new Findable(Id);
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Person"/> class with specified details.
+    /// </summary>
+    /// <param name="id">The unique identifier for the person.</param>
+    /// <param name="name">The name of the person. Cannot be null or empty.</param>
+    /// <param name="birthYear">The birth year of the person.</param>
+    /// <param name="deathYear">The death year of the person.</param>
+    /// <param name="roles">A collection of roles associated with the person.</param>
+    /// <param name="genres">A collection of genres associated with the person.</param>
+    /// <param name="instruments">A collection of instruments the person plays.</param>
+    /// <param name="createdAt">The date and time when the person entity was created.</param>
+    /// <param name="createdBy">The identifier of the actor who created the person entity.</param>
+    /// <param name="updatedAt">The date and time when the person entity was last updated.</param>
+    /// <param name="updatedBy">The identifier of the user who last updated the person entity.</param>
+    public Person(
+        uint id,
+        string name,
+        int? birthYear = null,
+        int? deathYear = null,
+        IEnumerable<string>? roles = null,
+        IEnumerable<string>? genres = null,
+        IEnumerable<string>? instruments = null,
+        DateTimeOffset createdAt = default,
+        string createdBy = "",
+        DateTimeOffset updatedAt = default,
+        string updatedBy = "")
+    {
+        Id               = id;
+        Name             = name;
+        BirthYear        = birthYear;
+        DeathYear        = deathYear;
+        _genres          = genres?.Select(g => g.Trim().ToLower()).ToHashSet() ?? [];
+        _roles           = roles?.Select(r => r.Trim().ToLower()).ToHashSet() ?? [];
+        _instruments = instruments?.Select(i => i.Trim().ToLower()).ToHashSet() ?? [];
+        CreatedAt        = createdAt;
+        CreatedBy        = createdBy;
+        UpdatedAt        = updatedAt;
+        UpdatedBy        = updatedBy;
+
+        new PersonInvariantValidator()
+                .ValidateAndThrow(this);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Person"/> class.
+    /// </summary>
+    /// <remarks>
+    /// This parameterless constructor is required by Entity Framework Core for materializing instances of the <see cref="Person"/>
+    /// class from the database. It is intended for use by EF Core and should not be called directly in application code.
+    /// </remarks>
+    private Person()
+    {
+    }
+
     #region IValidatable
     /// <inheritdoc />
     public async ValueTask Validate(
@@ -168,20 +158,10 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// </summary>
     /// <param name="role">The role to add to the person. Cannot be null or empty.</param>
     /// <returns>The current person with the new role added.</returns>
-    public Person AddRole(string role)
+    public Person AddRoles(IEnumerable<string> roles)
     {
-        _roles.Add(role);
-        return this;
-    }
-
-    /// <summary>
-    /// Removes the specified role from the person's list of roles.
-    /// </summary>
-    /// <param name="role">The role to be removed. Cannot be null or empty.</param>
-    /// <returns>The current instance of <see cref="Person"/> with the role removed.</returns>
-    public Person RemoveRole(string role)
-    {
-        _roles.Remove(role);
+        foreach (var role in roles)
+            _roles.Add(role);
         return this;
     }
 
@@ -190,20 +170,10 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// </summary>
     /// <param name="instrumentCode">The code representing the musical instrument to add. Cannot be null or empty.</param>
     /// <returns>The current instance of <see cref="Person"/> with the updated instrument collection.</returns>
-    public Person AddInstrument(string instrumentCode)
+    public Person AddInstruments(IEnumerable<string> instrumentCodes)
     {
-        _instruments.Add(instrumentCode);
-        return this;
-    }
-
-    /// <summary>
-    /// Removes the specified instrument code from the collection of instrument codes.
-    /// </summary>
-    /// <param name="instrumentCode">The code of the instrument to remove. Cannot be null or empty.</param>
-    /// <returns>The current instance of <see cref="Person"/> with the specified instrument code removed.</returns>
-    public Person RemoveInstrument(string instrumentCode)
-    {
-        _instruments.Remove(instrumentCode);
+        foreach (var instrument in instrumentCodes)
+            _instruments.Add(instrument);
         return this;
     }
 
@@ -212,20 +182,19 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// </summary>
     /// <param name="genre">The genre to add. Cannot be null or empty.</param>
     /// <returns>The current instance of <see cref="Person"/> with the updated list of genres.</returns>
-    public Person AddGenre(string genre)
+    public Person AddGenres(IEnumerable<string> genres)
     {
-        _genres.Add(genre);
+        foreach (var genre in genres)
+            _genres.Add(genre);
         return this;
     }
 
-    /// <summary>
-    /// Removes the specified genre from the list of genres associated with the person.
-    /// </summary>
-    /// <param name="genre">The genre to be removed. Cannot be null or empty.</param>
-    /// <returns>The current instance of <see cref="Person"/> with the specified genre removed.</returns>
-    public Person RemoveGenre(string genre)
+    internal Person AddAlbum(AlbumPerson albumPerson)
     {
-        _genres.Remove(genre);
+        _personsAlbums.Add(albumPerson);
+        _albums.Add(albumPerson.Album);
+        AddRoles(albumPerson.Roles);
+        AddInstruments(albumPerson.Instruments);
         return this;
     }
 
@@ -243,8 +212,10 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
     /// </list></returns>
     public virtual bool Equals(Person? other)
-        => other is not null  &&
-           (ReferenceEquals(this, other)  ||  GetType() == other.GetType() && Id == other.Id);
+        => other is not null
+           && (ReferenceEquals(this, other)
+               || typeof(Person) == other.GetType()
+                  && Id          == other.Id);
     #endregion
 
     /// <summary>
@@ -259,13 +230,15 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
     ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
     /// </list></returns>
-    public override bool Equals(object? obj) => Equals(obj as Person);
+    public override bool Equals(object? obj)
+        => Equals(obj as Person);
 
     /// <summary>
     /// Serves as a hash function for the objects of <see cref="Person"/> and its derived types.
     /// </summary>
     /// <returns>A hash code for the current <see cref="Person"/> instance.</returns>
-    public override int GetHashCode() => HashCode.Combine(typeof(Person), Id);
+    public override int GetHashCode()
+        => HashCode.Combine(typeof(Person), Id);
 
     /// <summary>
     /// Compares two <see cref="Person"/> objects.
@@ -276,7 +249,10 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Person)"/>);
     /// otherwise <see langword="false"/>.
     /// </returns>
-    public static bool operator ==(Person left, Person right) => left is null ? right is null : left.Equals(right);
+    public static bool operator ==(Person left, Person right)
+        => left is null
+                ? right is null
+                : left.Equals(right);
 
     /// <summary>
     /// Compares two <see cref="Person"/> objects.
@@ -287,6 +263,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Person)"/>);
     /// otherwise <see langword="false"/>.
     /// </returns>
-    public static bool operator !=(Person left, Person right) => !(left==right);
+    public static bool operator !=(Person left, Person right)
+        => !(left==right);
     #endregion
 }
