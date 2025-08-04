@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Validators;
+﻿namespace vm2.Repository.Tests.Domain.Validators;
 
 class PersonInvariantValidator : AbstractValidator<Person>
 {
@@ -32,7 +32,7 @@ class PersonInvariantValidator : AbstractValidator<Person>
             .WithMessage("If Genres is not empty, the individual genres must not be null or empty.")
             ;
 
-        RuleFor(p => p.InstrumentCodes)
+        RuleFor(p => p.Instruments)
             .NotNull()
             .WithMessage("The Instruments collection must not be null.")
             .Must(instruments => instruments.All(t => !string.IsNullOrEmpty(t)))

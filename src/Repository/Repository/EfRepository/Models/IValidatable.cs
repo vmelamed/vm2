@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Abstractions.Model;
+﻿namespace vm2.Repository.EfRepository.Models;
 
 /// <summary>
 /// Provides a contract for objects that can be validated.

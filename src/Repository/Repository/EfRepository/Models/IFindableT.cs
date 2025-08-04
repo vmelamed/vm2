@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Abstractions.Model;
+﻿namespace vm2.Repository.EfRepository.Models;
 
 /// <summary>
 /// Extends <see cref="IFindable"/> with a new <c>static abstract</c> property <see cref="KeyExpression"/> - a lambda expression
@@ -73,7 +73,6 @@ public interface IFindable<TEntity> : IFindable where TEntity : class, IFindable
             if (TEntity.KeyExpression.Body is UnaryExpression conversion &&
                 conversion.NodeType is ExpressionType.Convert or ExpressionType.ConvertChecked &&
                 conversion.Operand is MemberExpression memberExpression)
-            {
                 // if the lambda has the form `x => x.Id`,
                 // the key expression must be `x => x.Id`
                 keyExpressions = Expression.Convert(
@@ -81,12 +80,10 @@ public interface IFindable<TEntity> : IFindable where TEntity : class, IFindable
                                                     entityParam,
                                                     memberExpression.Member),
                                     typeof(object));
-            }
             else
             if (TEntity.KeyExpression.Body is NewExpression newExpression &&
                 newExpression.Members is not null &&
                 newExpression.Members.Count > 0)
-            {
                 // if the lambda has the form `x => new { x.Id, x.SubId }`,
                 // the key expression must be `e => new[] { x.Id, x.SubId }`
                 keyExpressions = Expression.NewArrayInit(
@@ -103,7 +100,6 @@ public interface IFindable<TEntity> : IFindable where TEntity : class, IFindable
                                                                             Expression.MakeMemberAccess(entityParam, fi),
                                                                             typeof(object))
                                                                     : Expression.Constant(null)));
-            }
             else
                 throw new InvalidOperationException("""
                             The body of the KeyExpression lambda must be a member-access expression - the property of the key, e.g.

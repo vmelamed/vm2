@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Validators.Dimensions;
+﻿namespace vm2.Repository.Tests.Domain.Validators.Dimensions;
 
 /// <summary>
 /// Validates the minimal set of rules that make a <see cref="Country"/> object valid regardless of the state of the object.

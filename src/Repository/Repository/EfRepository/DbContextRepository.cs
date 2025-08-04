@@ -1,4 +1,6 @@
-﻿namespace vm2.Repository.EntityFrameworkRepository;
+﻿namespace vm2.Repository.EfRepository;
+
+using vm2.Repository.EfRepository.Models;
 
 /// <summary>
 /// <see cref="DbContext"/> implementation of the interface <see cref="IRepository"/> - the repository pattern, providing methods
@@ -8,15 +10,15 @@
 /// The options to be used by the <see cref="DbContext"/>. The options can be created with the <see cref="DbContextOptionsBuilder"/>.
 /// </param>
 /// <remarks>
-/// Note that the <see cref="IRepository"/> is implemented explicitly by the <see cref="EfRepository"/> class. Therefore, in
-/// order to access the interface methods, your <see cref="DbContext"/> that inherits from <see cref="EfRepository"/>, can be
+/// Note that the <see cref="IRepository"/> is implemented explicitly by the <see cref="DbContextRepository"/> class. Therefore, in
+/// order to access the interface methods, your <see cref="DbContext"/> that inherits from <see cref="DbContextRepository"/>, can be
 /// passed in as <see cref="IRepository"/> to the clients. Alternatively, the clients can cast your <see cref="DbContext"/>
 /// to <see cref="IRepository"/>. The best approach would be to use dependency injection that resolves <see cref="IRepository"/>
-/// to the concrete <see cref="EfRepository"/> descendant.<para/>
+/// to the concrete <see cref="DbContextRepository"/> descendant.<para/>
 /// <see cref="IRepository"/> does not claim, nor tries to cover the full functionality of <see cref="DbContext"/>. To access
 /// the full functionality of <see cref="DbContext"/>, you can use the extension method <see cref="EfRepositoryExtensions.DbContext"/>.
 /// </remarks>
-public class EfRepository(DbContextOptions options) : DbContext(options), IRepository
+public class DbContextRepository(DbContextOptions options) : DbContext(options), IRepository
 {
     IRepository ThisRepo => this;
 

@@ -218,7 +218,7 @@ dotnet_naming_rule.enum_should_be_pascal_case.style = pascal_case
 
 dotnet_naming_rule.async_method_or_function_should_be_async_pascal_case.severity = warning
 dotnet_naming_rule.async_method_or_function_should_be_async_pascal_case.symbols = async_method_or_function
-dotnet_naming_rule.async_method_or_function_should_be_async_pascal_case.style = async_pascal_case
+dotnet_naming_rule.async_method_or_function_should_be_async_pascal_case.style = pascal_case
 
 dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
@@ -358,7 +358,7 @@ csharp_prefer_static_anonymous_function = true:suggestion
 csharp_style_prefer_implicitly_typed_lambda_expression = true:suggestion
 
 [*.{cs,vb}]
-dotnet_style_readonly_field = true:silent
+dotnet_style_readonly_field = false:suggestion
 dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
 dotnet_style_predefined_type_for_member_access = true:suggestion
 dotnet_style_require_accessibility_modifiers = omit_if_default:silent

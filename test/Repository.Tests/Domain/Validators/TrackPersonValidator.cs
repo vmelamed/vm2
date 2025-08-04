@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Validators;
+﻿namespace vm2.Repository.Tests.Domain.Validators;
 
 class TrackPersonValidator : AbstractValidator<TrackPerson>
 {
@@ -22,7 +22,7 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
             .WithMessage("Roles must not be null. If not empty, the individual roles must not be null or empty.")
             ;
 
-        RuleFor(tp => tp.InstrumentCodes)
+        RuleFor(tp => tp.Instruments)
             .NotNull()
             .Must(instruments => instruments.All(i => !string.IsNullOrEmpty(i)))
             .WithMessage("Instruments must not be null. If not empty, the individual instruments must not be null or empty.")
@@ -52,7 +52,7 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
             ;
 
         // Make sure all the assigned instruments exist in the database.
-        RuleFor(tp => tp.InstrumentCodes)
+        RuleFor(tp => tp.Instruments)
             .MustAsync(
                 async (instruments, ct) => instruments.Count == 0 ||
                                            instruments.Count == await repository

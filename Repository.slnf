@@ -4,6 +4,7 @@
     "projects": [
       "src\\Repository\\DbSetTestSubstitute\\DbSetTestSubstitute.csproj",
       "src\\Repository\\Repository\\Repository.csproj",
+      "src\\Threading\\Threading.csproj",
       "test\\Repository.Tests\\DB\\SQLite\\SQLite.csproj",
       "test\\Repository.Tests\\Domain\\Domain.csproj",
       "test\\Repository.Tests\\TestData\\TestData.csproj",

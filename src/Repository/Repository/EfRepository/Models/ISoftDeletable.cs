@@ -1,4 +1,5 @@
-﻿namespace vm2.Repository.Abstractions.Model;
+﻿namespace vm2.Repository.EfRepository.Models;
+using vm2.Repository.Abstractions;
 
 /// <summary>
 /// Represents an entity that supports soft deletion functionality.
@@ -14,12 +15,17 @@
 public interface ISoftDeletable
 {
     /// <summary>
+    /// Represents the maximum allowed length for an actor's name - deleter.
+    /// </summary>
+    public const int MaxActorNameLength = IAuditable.MaxActorNameLength;
+
+    /// <summary>
     /// Gets or sets the timestamp indicating when the entity was deleted.
     /// </summary>
     DateTimeOffset? DeletedAt { get; set; }
 
     /// <summary>
-    /// Gets or sets the identifier of the user who deleted the entity.
+    /// Gets or sets the identifier of the actor who deleted the entity.
     /// </summary>
     string DeletedBy { get; set; }
 

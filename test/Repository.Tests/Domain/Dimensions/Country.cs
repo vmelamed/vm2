@@ -1,4 +1,6 @@
-﻿namespace vm2.Repository.Domain.Dimensions;
+﻿namespace vm2.Repository.Tests.Domain.Dimensions;
+
+using vm2.Repository.EfRepository.Models;
 
 /// <summary>
 /// Represents a dimension of countries with their unique 2-letter ISO 3166 codes and full names.

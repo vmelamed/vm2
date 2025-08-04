@@ -1,5 +1,4 @@
-﻿namespace vm2.Repository.Abstractions.Model;
-
+﻿namespace vm2.Repository.EfRepository.Models;
 /// <summary>
 /// Represents a structure that holds a collection of identifiers, which can be used to locate or identify an entity.
 /// </summary>

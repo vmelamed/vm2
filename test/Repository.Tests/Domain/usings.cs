@@ -11,8 +11,8 @@ global using Microsoft.EntityFrameworkCore;
 
 global using vm2.Repository.Abstractions;
 global using vm2.Repository.Abstractions.Extensions;
-global using vm2.Repository.Abstractions.Model;
-global using vm2.Repository.Abstractions.Model.Validators;
-global using vm2.Repository.Domain.Dimensions;
-global using vm2.Repository.Domain.Validators;
-global using vm2.Repository.Domain.Validators.Dimensions;
+global using vm2.Repository.EfRepository.Models;
+global using vm2.Repository.EfRepository.Models.Validators;
+global using vm2.Repository.Tests.Domain.Dimensions;
+global using vm2.Repository.Tests.Domain.Validators;
+global using vm2.Repository.Tests.Domain.Validators.Dimensions;

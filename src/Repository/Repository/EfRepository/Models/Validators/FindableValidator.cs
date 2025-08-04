@@ -1,4 +1,6 @@
-﻿namespace vm2.Repository.Abstractions.Model.Validators;
+﻿namespace vm2.Repository.EfRepository.Models.Validators;
+
+using vm2.Repository.EfRepository.Models;
 
 /// <summary>
 /// Provides validation rules for objects implementing the <see cref="IFindable"/> interface.
@@ -48,7 +50,7 @@ public class FindableValidator : AbstractValidator<IFindable>
         RuleFor(findable => findable.KeyValues)
             .Must(keyValues => keyValues is not null &&
                                paramTypes is not null &&
-                               Enumerable.SequenceEqual(keyValues, paramTypes))
+                               keyValues.SequenceEqual(paramTypes))
             .WithMessage("The number and types of the keys in KeyValues must match the number and type of keys in the KeyExpression.")
             ;
     }

@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Validators;
+﻿namespace vm2.Repository.Tests.Domain.Validators;
 
 /// <summary>
 /// Validates the minimal set of rules that make a <see cref="Label"/> object valid regardless of the state of the object.

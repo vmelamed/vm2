@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Dimensions;
+﻿namespace vm2.Repository.Tests.Domain.Dimensions;
 
 /// <summary>
 /// Represents a dimension of musical instruments with their unique codes (the accepted abbreviation, e.g. "tp") and full names

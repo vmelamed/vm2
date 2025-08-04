@@ -1,5 +1,4 @@
-﻿namespace vm2.Repository.Abstractions.Model;
-
+﻿namespace vm2.Repository.EfRepository.Models;
 /// <summary>
 /// Domain objects that implement <c>IAuditable</c> store auditing information that can be populated automatically by the
 /// repository and can be used to track the lifecycle of the entity. The entities that implement this interface can also be
@@ -11,12 +10,17 @@
 public interface IAuditable
 {
     /// <summary>
+    /// Represents the maximum allowed length for an actor's name - creator or updater.
+    /// </summary>
+    public const int MaxActorNameLength = 128;
+
+    /// <summary>
     /// Gets or sets the date and time when the entity was created.
     /// </summary>
     DateTimeOffset CreatedAt { get; set; }
 
     /// <summary>
-    /// Gets or sets the identifier of the user who created the entity.
+    /// Gets or sets the identifier of the actor who created the entity.
     /// </summary>
     string CreatedBy { get; set; }
 
@@ -26,7 +30,7 @@ public interface IAuditable
     DateTimeOffset UpdatedAt { get; set; }
 
     /// <summary>
-    /// Gets or sets the identifier of the user who last updated the entity.
+    /// Gets or sets the identifier of the actor who last updated the entity.
     /// </summary>
     string UpdatedBy { get; set; }
 

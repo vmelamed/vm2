@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.Abstractions.Extensions;
 
+using vm2.Repository.EfRepository.Models;
+
 /// <summary>
 /// Provides extension methods to <see cref="IRepository"/>.
 /// </summary>

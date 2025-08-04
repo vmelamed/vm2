@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Dimensions;
+﻿namespace vm2.Repository.Tests.Domain.Dimensions;
 
 /// <summary>
 /// Represents a role of a person in their carrier, on an album, or on a track.

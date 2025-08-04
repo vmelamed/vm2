@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Abstractions.Model;
+﻿namespace vm2.Repository.EfRepository.Models;
 
 /// <summary>
 /// Domain objects that implement this interface can be found in the repository by their primary key or composite primary keys.

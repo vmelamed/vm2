@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>vm2.Repository.Domain</RootNamespace>
+    <RootNamespace>vm2.Repository.Tests.Domain</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,7 +5,7 @@
 /// </summary>
 public static class EfRepositoryExtensions
 {
-    const string notSupportedMessage = $"The repository is not an instance of {nameof(DbContext)}. Please use an {nameof(EfRepository)} descendant.";
+    const string notSupportedMessage = $"The repository is not an instance of {nameof(DbContext)}. Please use an {nameof(DbContextRepository)} descendant.";
 
     /// <summary>
     /// Retrieves the <see cref="DbContext"/> instance from the specified repository.

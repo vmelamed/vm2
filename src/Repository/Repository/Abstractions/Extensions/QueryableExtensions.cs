@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.Abstractions.Extensions;
 
+using vm2.Repository.EfRepository.Models;
+
 /// <summary>
 /// Provides extension methods to <see cref="IQueryable{T}"/> that represents a &quot;domain object collection&quot;. It is
 /// assumed and enforced that the <see cref="IQueryable{T}"/> is backed by Entity Framework Core <see cref="DbSet{T}"/>,

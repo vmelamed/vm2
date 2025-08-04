@@ -1,4 +1,6 @@
-﻿namespace vm2.Repository.Abstractions.Model.Validators;
+﻿namespace vm2.Repository.EfRepository.Models.Validators;
+
+using vm2.Repository.EfRepository.Models;
 
 /// <summary>
 /// Validator for entities that implement the <see cref="ISoftDeletable"/> interface.

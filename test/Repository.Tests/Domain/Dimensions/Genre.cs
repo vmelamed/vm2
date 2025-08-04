@@ -1,4 +1,6 @@
-﻿namespace vm2.Repository.Domain.Dimensions;
+﻿namespace vm2.Repository.Tests.Domain.Dimensions;
+
+using vm2.Repository.EfRepository.Models;
 
 /// <summary>
 /// Represents a category or type of music.
@@ -7,7 +9,7 @@
 [DebuggerDisplay("Genre: {Name}")]
 public record Genre(string Name) : IValidatable
 {
-    public const int MaxLength = 50;
+    public const int MaxNameLength = 50;
 
     #region IValidatable
     /// <inheritdoc />

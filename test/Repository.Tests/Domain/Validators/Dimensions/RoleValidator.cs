@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Validators.Dimensions;
+﻿namespace vm2.Repository.Tests.Domain.Validators.Dimensions;
 
 class RoleValidator : AbstractValidator<Role>
 {

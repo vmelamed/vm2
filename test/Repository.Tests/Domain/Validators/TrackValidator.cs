@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Validators;
+﻿namespace vm2.Repository.Tests.Domain.Validators;
 
 class TrackInvariantValidator : AbstractValidator<Track>
 {

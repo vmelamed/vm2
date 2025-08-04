@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Domain.Validators;
+﻿namespace vm2.Repository.Tests.Domain.Validators;
 
 class AlbumInvariantValidator : AbstractValidator<Album>
 {
@@ -17,17 +17,18 @@ class AlbumInvariantValidator : AbstractValidator<Album>
             ;
 
         RuleFor(a => a.Personnel)
-            .NotEmpty()
-            .Must(p => p.All(a => a is not null))
-            .WithMessage("Personnel must not be null or empty and cannot contain null items.")
-            ;
-
-        RuleFor(a => a.Tracks)
             .NotNull()
-            .WithMessage("Tracks must not be null or empty.")
+            .WithMessage("Personnel must not be null.")
+            .Must(p => p.All(a => a is not null))
+            .WithMessage("Personnel cannot contain null items.")
             ;
 
-        RuleForEach(a => a.Tracks)
+        RuleFor(a => a.AlbumTracks)
+            .NotNull()
+            .WithMessage("Tracks must not be null.")
+            ;
+
+        RuleForEach(a => a.AlbumTracks)
             .SetValidator(new AlbumTrackValidator())
             .WithMessage("Invalid track in the album.")
             ;
@@ -58,7 +59,7 @@ class AlbumValidator : AbstractValidator<Album>
         if (repository is null)
             return;
 
-        // Do we want this extra trip to the database, if we have unique DB constraints on the PK Id?
+        // TODO: we probably do not want this extra trip to the database, if we have unique DB constraints on the PK Id?
         RuleFor(l => l.Id)
             .MustAsync(async (l, id, ct) => await IsValid(repository, l, id, ct))
             .WithMessage("The Album Id must be unique.")
@@ -71,6 +72,7 @@ class AlbumValidator : AbstractValidator<Album>
         uint id,
         CancellationToken cancellationToken)
         => repository.StateOf(album) switch {
+
             // if Added, make sure the id is unique in the database.
             EntityState.Added => !await repository.Set<Album>().AnyAsync(a => a.Id == id, cancellationToken),
 

@@ -1,19 +1,30 @@
-﻿namespace vm2.Repository.Domain;
+﻿namespace vm2.Repository.Tests.Domain;
+using System;
 
 [DebuggerDisplay("{Title} ({Duration})")]
-public class Track : IFindable<Track>, IAuditable, IValidatable
+public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Track>
 {
     public const int MaxTitleLength = 256;
+
+    HashSet<TrackPerson> _tracksPersons = [];
+    HashSet<Person> _personnel = [];
+    HashSet<Album> _albums = [];
+    HashSet<string> _genres = [];
 
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    internal uint Id { get; set; } = 0;
+    public uint Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the title of the track (song).
     /// </summary>
-    public string Title { get; set; } = "";
+    public string Title { get; set; } = null!;
+
+    /// <summary>
+    /// Gets the collection of genres that this track can be categorized under.
+    /// </summary>
+    public IEnumerable<string> Genres => _genres;
 
     /// <summary>
     /// Gets or sets the duration of the track.
@@ -23,12 +34,17 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
     /// <summary>
     /// Gets or sets the collection of artists recorded on the track.
     /// </summary>
-    public ICollection<TrackPerson> Personnel { get; set; } = [];
+    public IEnumerable<Person> Personnel => _personnel;
+
+    /// <summary>
+    /// Gets a collection of persons associated with this track.
+    /// </summary>
+    internal IEnumerable<TrackPerson> TracksPersons => _tracksPersons;
 
     /// <summary>
     /// Gets or sets the collection of albums featuring this track.
     /// </summary>
-    public HashSet<Album> Albums { get; set; } = [];
+    public IEnumerable<Album> Albums => _albums;
 
     #region IAuditable
     /// <inheritdoc />
@@ -76,6 +92,17 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
         UpdatedBy       = updatedBy;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Track"/> class.
+    /// </summary>
+    /// <remarks>
+    /// This parameterless constructor is required by Entity Framework Core for materializing instances of the <see cref="Track"/>
+    /// class from the database. It is intended for use by EF Core and should not be called directly in application code.
+    /// </remarks>
+    private Track()
+    {
+    }
+
     #region IFindable<Track>
     public static Expression<Func<Track, object?>> KeyExpression => t => new { t.Id };
 
@@ -103,17 +130,64 @@ public class Track : IFindable<Track>, IAuditable, IValidatable
         => await new TrackValidator().ValidateAndThrowAsync(this, cancellationToken);
     #endregion
 
+    #region Identity rules implementation.
+    #region IEquatable<Track> Members
     /// <summary>
-    /// Associates the track with the specified original album and updates the album's identifier.
+    /// Indicates whether the current object is equal to a reference to another object of the same type.
     /// </summary>
-    /// <param name="album">The album to associate as the original release for the track. Cannot be null.</param>
-    /// <returns>The current <see cref="Track"/> instance with the updated original album information.</returns>
-    public Track OriginallyReleasesOn(Album album, uint index, bool firstRelease)
-        => ReleasedOn(album, index, firstRelease);
+    /// <param name="other">A reference to another object of type <see cref="Track"/> to compare with the current object.</param>
+    /// <returns><list type="number">
+    ///     <item><see langword="false"/> if <paramref name="other"/> is equal to <see langword="null"/>, otherwise</item>
+    ///     <item><see langword="true"/> if <paramref name="other"/> refers to <c>this</c> object, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="other"/> is not the same type as <c>this</c> object, otherwise</item>
+    ///     <item><see langword="true"/> if the current object and the <paramref name="other"/> are considered to be equal,
+    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
+    /// </list></returns>
+    public virtual bool Equals(Track? other)
+        => other is not null  &&
+           (ReferenceEquals(this, other)  ||  GetType() == other.GetType() && Id == other.Id);
+    #endregion
 
-    public Track ReleasedOn(Album album, uint index, bool firstRelease)
-    {
-        album.AddTrack(this, index, firstRelease);
-        return this;
-    }
+    /// <summary>
+    /// Determines whether this <see cref="Track"/> instance is equal to the specified <see cref="object"/> reference.
+    /// </summary>
+    /// <param name="obj">The <see cref="object"/> reference to compare with this <see cref="Track"/> object.</param>
+    /// <returns><list type="number">
+    ///     <item><see langword="false"/> if <paramref name="obj"/> cannot be cast to <see cref="Track"/>, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="obj"/> is equal to <see langword="null"/>, otherwise</item>
+    ///     <item><see langword="true"/> if <paramref name="obj"/> refers to <c>this</c> object, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="obj"/> is not the same type as <c>this</c> object, otherwise</item>
+    ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
+    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
+    /// </list></returns>
+    public override bool Equals(object? obj) => Equals(obj as Track);
+
+    /// <summary>
+    /// Serves as a hash function for the objects of <see cref="Track"/> and its derived types.
+    /// </summary>
+    /// <returns>A hash code for the current <see cref="Track"/> instance.</returns>
+    public override int GetHashCode() => HashCode.Combine(typeof(Track), Id);
+
+    /// <summary>
+    /// Compares two <see cref="Track"/> objects.
+    /// </summary>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns>
+    /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Track)"/>);
+    /// otherwise <see langword="false"/>.
+    /// </returns>
+    public static bool operator ==(Track left, Track right) => left is null ? right is null : left.Equals(right);
+
+    /// <summary>
+    /// Compares two <see cref="Track"/> objects.
+    /// </summary>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns>
+    /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Track)"/>);
+    /// otherwise <see langword="false"/>.
+    /// </returns>
+    public static bool operator !=(Track left, Track right) => !(left==right);
+    #endregion
 }

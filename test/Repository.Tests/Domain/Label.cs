@@ -1,7 +1,8 @@
-﻿namespace vm2.Repository.Domain;
+﻿namespace vm2.Repository.Tests.Domain;
+using System;
 
 [DebuggerDisplay("{Name} ({CountryCode})")]
-public class Label : IFindable<Label>, IAuditable, IValidatable
+public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Label>
 {
     /// <summary>
     /// Represents the maximum allowed length for Label's name.
@@ -11,6 +12,11 @@ public class Label : IFindable<Label>, IAuditable, IValidatable
     public const int MaxNameLength = 100;
 
     /// <summary>
+    /// The collection of albums released by this label.
+    /// </summary>
+    HashSet<Album> _albums = [];
+
+    /// <summary>
     /// Gets or sets the unique identifier for the recording label entities.
     /// </summary>
     public uint Id { get; private set; }
@@ -18,17 +24,17 @@ public class Label : IFindable<Label>, IAuditable, IValidatable
     /// <summary>
     /// Gets or sets the name of the recording label.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the country code where the recording label company is registered.
     /// </summary>
-    public string CountryCode { get; set; }
+    public string CountryCode { get; set; } = null!;
 
     /// <summary>
     /// Gets the collection of albums released by this label.
     /// </summary>
-    public HashSet<Album> Albums { get; private set; } = [];
+    public ICollection<Album> Albums => _albums;
 
     #region IAuditable
     /// <inheritdoc />
@@ -76,6 +82,17 @@ public class Label : IFindable<Label>, IAuditable, IValidatable
                 .ValidateAndThrow(this);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Label"/> class.
+    /// </summary>
+    /// <remarks>
+    /// This parameterless constructor is required by Entity Framework Core for materializing instances of the <see cref="Label"/>
+    /// class from the database. It is intended for use by EF Core and should not be called directly in application code.
+    /// </remarks>
+    private Label()
+    {
+    }
+
     #region IFindable<Label>
     /// <inheritdoc />
     public static Expression<Func<Label, object?>> KeyExpression => l => new { l.Id };
@@ -115,4 +132,65 @@ public class Label : IFindable<Label>, IAuditable, IValidatable
         album.Label = this;
         return this;
     }
+
+    #region Identity rules implementation.
+    #region IEquatable<Label> Members
+    /// <summary>
+    /// Indicates whether the current object is equal to a reference to another object of the same type.
+    /// </summary>
+    /// <param name="other">A reference to another object of type <see cref="Label"/> to compare with the current object.</param>
+    /// <returns><list type="number">
+    ///     <item><see langword="false"/> if <paramref name="other"/> is equal to <see langword="null"/>, otherwise</item>
+    ///     <item><see langword="true"/> if <paramref name="other"/> refers to <c>this</c> object, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="other"/> is not the same type as <c>this</c> object, otherwise</item>
+    ///     <item><see langword="true"/> if the current object and the <paramref name="other"/> are considered to be equal,
+    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
+    /// </list></returns>
+    public virtual bool Equals(Label? other)
+        => other is not null  &&
+           (ReferenceEquals(this, other)  ||  GetType() == other.GetType() && Id == other.Id);
+    #endregion
+
+    /// <summary>
+    /// Determines whether this <see cref="Label"/> instance is equal to the specified <see cref="object"/> reference.
+    /// </summary>
+    /// <param name="obj">The <see cref="object"/> reference to compare with this <see cref="Label"/> object.</param>
+    /// <returns><list type="number">
+    ///     <item><see langword="false"/> if <paramref name="obj"/> cannot be cast to <see cref="Label"/>, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="obj"/> is equal to <see langword="null"/>, otherwise</item>
+    ///     <item><see langword="true"/> if <paramref name="obj"/> refers to <c>this</c> object, otherwise</item>
+    ///     <item><see langword="false"/> if <paramref name="obj"/> is not the same type as <c>this</c> object, otherwise</item>
+    ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
+    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
+    /// </list></returns>
+    public override bool Equals(object? obj) => Equals(obj as Label);
+
+    /// <summary>
+    /// Serves as a hash function for the objects of <see cref="Label"/> and its derived types.
+    /// </summary>
+    /// <returns>A hash code for the current <see cref="Label"/> instance.</returns>
+    public override int GetHashCode() => HashCode.Combine(typeof(Label), Id);
+
+    /// <summary>
+    /// Compares two <see cref="Label"/> objects.
+    /// </summary>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns>
+    /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Label)"/>);
+    /// otherwise <see langword="false"/>.
+    /// </returns>
+    public static bool operator ==(Label left, Label right) => left is null ? right is null : left.Equals(right);
+
+    /// <summary>
+    /// Compares two <see cref="Label"/> objects.
+    /// </summary>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns>
+    /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Label)"/>);
+    /// otherwise <see langword="false"/>.
+    /// </returns>
+    public static bool operator !=(Label left, Label right) => !(left==right);
+    #endregion
 }
