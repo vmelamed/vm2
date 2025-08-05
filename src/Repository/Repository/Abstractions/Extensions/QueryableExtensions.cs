@@ -113,7 +113,7 @@ public static class QueryableExtensions
         if (queryable is not DbSet<T> dbSet)
             return NotSupported<T>(nameof(Find));
 
-        await findable.ValidateFindable(null, cancellationToken);
+        await findable.ValidateFindable(null, cancellationToken).ConfigureAwait(false);
         return await dbSet.FindAsync(findable.KeyValues?.ToArray(), cancellationToken).ConfigureAwait(false);
     }
 

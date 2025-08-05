@@ -15,7 +15,7 @@ public record Role(string Name) : IValidatable, IDimensionValidator<Role, string
         object? context = null,
         CancellationToken cancellationToken = default)
         => await new RoleValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken);
+                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
     public static Expression<Func<Role, string>> ValueExpression

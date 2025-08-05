@@ -216,8 +216,8 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
     /// <inheritdoc />
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        await CompleteAndValidate(cancellationToken);
-        return await base.SaveChangesAsync(cancellationToken);
+        await CompleteAndValidate(cancellationToken).ConfigureAwait(false);
+        return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -277,10 +277,10 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
             auditableAdded.AuditOnAdd(now, actor);
 
         if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken);
+            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
 
         if (entity is IValidatable validatable)
-            await validatable.Validate(this, cancellationToken);
+            await validatable.Validate(this, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -313,10 +313,10 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
             auditable.AuditOnUpdate(now, actor);
 
         if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken);
+            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
 
         if (entity is IValidatable validatableUpdated)
-            await validatableUpdated.Validate(this, cancellationToken);
+            await validatableUpdated.Validate(this, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -340,7 +340,7 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
 
         // Delete other, logically related entities as well?
         if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken);
+            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
 
         if (entity is ISoftDeletable deletable)
         {

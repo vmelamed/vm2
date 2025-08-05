@@ -147,7 +147,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     public async ValueTask Validate(
         object? context = null,
         CancellationToken cancellationToken = default)
-        => await new PersonValidator(context as IRepository).ValidateAndThrowAsync(this, cancellationToken);
+        => await new PersonValidator(context as IRepository).ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
     /// <summary>

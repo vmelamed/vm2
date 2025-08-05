@@ -54,7 +54,7 @@ public static class RepositoryExtensions
         CancellationToken cancellationToken = default) where T : class
     {
         await findable.ValidateFindable(repository, cancellationToken).ConfigureAwait(false);
-        return await repository.Find<T>(findable.KeyValues, cancellationToken);
+        return await repository.Find<T>(findable.KeyValues, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

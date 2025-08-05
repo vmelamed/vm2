@@ -42,7 +42,7 @@ class InstrumentValidator : AbstractValidator<Instrument>
         // Do we want this extra trip to the database, if we have unique DB constraints?
         // Dimension data does not get added or modified all that often, so it may be worth it.
         RuleFor(i => i.Code)
-            .MustAsync(async (i, c, ct) => await IsValid(repository, i, c, ct))
+            .MustAsync(async (i, c, ct) => await IsValid(repository, i, c, ct).ConfigureAwait(false))
             .WithMessage("The instrument name must be unique.")
             ;
     }
@@ -57,6 +57,7 @@ class InstrumentValidator : AbstractValidator<Instrument>
             EntityState.Added => !await repository
                                             .Set<Instrument>()
                                             .AnyAsync(i => i.Code == code, cancellationToken)
+                                            .ConfigureAwait(false)
                                             ,
 
             // The code of a modified instrument must exist in the database: we can edit only the name of the instrument, not its code.
@@ -64,6 +65,7 @@ class InstrumentValidator : AbstractValidator<Instrument>
             EntityState.Modified => await repository
                                             .Set<Instrument>()
                                             .AnyAsync(i => i.Code == code, cancellationToken)
+                                            .ConfigureAwait(false)
                                             ,
 
             _ => true,

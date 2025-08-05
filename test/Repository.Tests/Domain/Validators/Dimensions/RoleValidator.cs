@@ -17,7 +17,7 @@ class RoleValidator : AbstractValidator<Role>
         // do we want this extra trip to the database, if we have unique DB constraints?
         // Dimension data does not get added or modified all that often, so it may be worth it.
         RuleFor(r => r.Name)
-            .MustAsync(async (r, n, ct) => await IsValid(repository, r, n, ct))
+            .MustAsync(async (r, n, ct) => await IsValid(repository, r, n, ct).ConfigureAwait(false))
             .WithMessage("The the role name must be unique.")
             ;
     }
@@ -30,11 +30,15 @@ class RoleValidator : AbstractValidator<Role>
         => repository.StateOf(role) switch {
             EntityState.Added => !await repository
                                             .Set<Role>()
-                                            .AnyAsync(r => r.Name == name, cancellationToken),
+                                            .AnyAsync(r => r.Name == name, cancellationToken)
+                                            .ConfigureAwait(false)
+                                            ,
 
             EntityState.Modified => !await repository
                                             .Set<Role>()
-                                            .AnyAsync(r => r.Name == name, cancellationToken),
+                                            .AnyAsync(r => r.Name == name, cancellationToken)
+                                            .ConfigureAwait(false)
+                                            ,
 
             _ => true,
         };

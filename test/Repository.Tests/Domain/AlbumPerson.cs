@@ -105,12 +105,12 @@ public class AlbumPerson : IFindable<AlbumPerson>, IValidatable, IEquatable<Albu
     /// <inheritdoc />
     public async ValueTask ValidateFindable(object? context, CancellationToken ct)
         => await new AlbumPersonFindableValidator(context)
-            .ValidateAndThrowAsync(this, ct);
+            .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
 
     /// <inheritdoc />
     public async ValueTask Validate(object? context, CancellationToken ct)
         => await new AlbumPersonValidator(context)
-            .ValidateAndThrowAsync(this, ct);
+            .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     #region Identity rules implementation.

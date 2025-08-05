@@ -121,7 +121,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
         object? context = null,
         CancellationToken cancellationToken = default)
         => await new LabelValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken);
+                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
     /// <summary>

@@ -17,7 +17,7 @@ public class GenreValidator : AbstractValidator<Genre>
         // do we want this extra trip to the database, if we have unique DB constraints?
         // Dimension data does not get added or modified all that often, so it may be worth it.
         RuleFor(g => g.Name)
-            .MustAsync(async (g, n, ct) => await IsValid(repository, g, n, ct))
+            .MustAsync(async (g, n, ct) => await IsValid(repository, g, n, ct).ConfigureAwait(false))
             .WithMessage("The genre name must be unique.")
             ;
     }
@@ -31,11 +31,13 @@ public class GenreValidator : AbstractValidator<Genre>
             EntityState.Added => !await repository
                                             .Set<Genre>()
                                             .AnyAsync(g => g.Name == name, cancellationToken)
+                                            .ConfigureAwait(false)
                                             ,
 
             EntityState.Modified => await repository
                                             .Set<Genre>()
                                             .AnyAsync(g => g.Name == name, cancellationToken)
+                                            .ConfigureAwait(false)
                                             ,
 
             _ => true,

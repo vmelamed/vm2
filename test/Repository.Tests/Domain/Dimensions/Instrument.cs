@@ -35,7 +35,7 @@ public record Instrument(string Code, string Name) : IFindable<Instrument>, IVal
         object? context = null,
         CancellationToken cancellationToken = default)
         => await new InstrumentValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken);
+                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
     public static Expression<Func<Instrument, string>> ValueExpression

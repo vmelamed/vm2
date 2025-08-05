@@ -107,7 +107,7 @@ public static class TaskCombinators
             foreach (var task in tasks.Where(t => t != completed))
                 await task.ContinueWith(
                             t => logger.LogError(t.Exception, "Task has been cancelled or failed."),
-                            TaskContinuationOptions.OnlyOnFaulted);
+                            TaskContinuationOptions.OnlyOnFaulted).ConfigureAwait(false);
 
         return completed.Result;
     }

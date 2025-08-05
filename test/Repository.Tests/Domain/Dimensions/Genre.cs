@@ -17,7 +17,7 @@ public record Genre(string Name) : IValidatable, IDimensionValidator<Genre, stri
         object? context = null,
         CancellationToken cancellationToken = default)
         => await new GenreValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken);
+                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
     public static Expression<Func<Genre, string>> ValueExpression

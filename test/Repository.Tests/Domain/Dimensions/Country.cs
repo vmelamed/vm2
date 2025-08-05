@@ -46,7 +46,7 @@ public sealed record Country(string Code, string Name) : IFindable<Country>, IVa
         object? context = null,
         CancellationToken cancellationToken = default)
         => await new CountryValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken);
+                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
     public static Expression<Func<Country, string>> ValueExpression

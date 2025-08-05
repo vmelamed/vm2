@@ -113,8 +113,4 @@ public interface IFindable<TEntity> : IFindable where TEntity : class, IFindable
             return _getKeys((TEntity)this);
         }
     }
-
-    /// <inheritdoc />
-    async ValueTask IFindable.ValidateFindable(object? context, CancellationToken cancellationToken)
-        => await new FindableValidator(TEntity.KeyExpression).ValidateAndThrowAsync(this, cancellationToken);
 }

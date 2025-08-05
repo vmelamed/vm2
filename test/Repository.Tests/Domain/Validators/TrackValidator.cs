@@ -47,7 +47,7 @@ class TrackValidator : AbstractValidator<Track>
 
         // Do we want this extra trip to the database, if we have unique DB constraints on the PK Id?
         RuleFor(track => track.Id)
-            .MustAsync(async (track, id, ct) => await IsValid(repository, track, id, ct))
+            .MustAsync(async (track, id, ct) => await IsValid(repository, track, id, ct).ConfigureAwait(false))
             .WithMessage("The track ID must be unique.")
             ;
     }

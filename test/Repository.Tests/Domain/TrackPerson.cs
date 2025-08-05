@@ -45,7 +45,7 @@ public record TrackPerson(Person Person, string Name) : IValidatable
         object? context = null,
         CancellationToken cancellationToken = default)
         => await new TrackPersonValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken);
+                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
 
     public TrackPerson AddRole(string role)
     {

@@ -127,7 +127,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
     #region IValidatable
     /// <inheritdoc />
     public async ValueTask Validate(object? context = null, CancellationToken cancellationToken = default)
-        => await new TrackValidator().ValidateAndThrowAsync(this, cancellationToken);
+        => await new TrackValidator().ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
     public Track AddPerson(Person person, IEnumerable<string> instruments, IEnumerable<string> roles)

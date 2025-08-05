@@ -55,11 +55,13 @@ class CountryValidator : AbstractValidator<Country>
             EntityState.Added => !await repository
                                             .Set<Country>()
                                             .AnyAsync(i => i.Code == code, cancellationToken)
+                                            .ConfigureAwait(false)
                                             ,
             // The code of a modified country must exist in the database: we can edit only the name of the country, not its code.
             EntityState.Modified => await repository
                                             .Set<Country>()
                                             .AnyAsync(i => i.Code == code, cancellationToken)
+                                            .ConfigureAwait(false)
                                             ,
             _ => true,
         };

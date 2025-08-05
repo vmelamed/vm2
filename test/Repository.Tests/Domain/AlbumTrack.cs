@@ -47,5 +47,5 @@ public class AlbumTrack : IValidatable
         object? context = null,
         CancellationToken cancellationToken = default)
         => await new AlbumTrackValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken);
+                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
 }

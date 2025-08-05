@@ -65,7 +65,7 @@ class PersonValidator : AbstractValidator<Person>
 
         // Do we want this extra trip to the database, if we have unique DB constraints on the PK Id?
         RuleFor(p => p.Id)
-            .MustAsync(async (p, id, ct) => await IsValid(repository, p, id, ct))
+            .MustAsync(async (p, id, ct) => await IsValid(repository, p, id, ct).ConfigureAwait(false))
             .WithMessage("The Person Id must be unique.")
             ;
     }
