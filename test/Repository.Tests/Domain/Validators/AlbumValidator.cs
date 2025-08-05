@@ -60,7 +60,7 @@ class AlbumValidator : AbstractValidator<Album>
 
         // TODO: we probably do not want this extra trip to the database, if we have unique DB constraints on the PK Id?
         RuleFor(l => l.Id)
-            .MustAsync(async (l, id, ct) => await IsValid(repository, l, id, ct))
+            .MustAsync(async (l, id, ct) => await IsValid(repository, l, id, ct).ConfigureAwait(false))
             .WithMessage("The Album Id must be unique.")
             ;
     }
@@ -73,11 +73,19 @@ class AlbumValidator : AbstractValidator<Album>
         => repository.StateOf(album) switch {
 
             // if Added, make sure the id is unique in the database.
-            EntityState.Added => !await repository.Set<Album>().AnyAsync(a => a.Id == id, cancellationToken),
-
+            EntityState.Added => Genre.HasValues(album.Genres)
+                                 && !await repository
+                                                .Set<Album>()
+                                                .AnyAsync(a => a.Id == id, cancellationToken)
+                                                .ConfigureAwait(false)
+                                 ,
             // if Modified, make sure there is an album with this id in the database.
-            EntityState.Modified => await repository.Set<Album>().AnyAsync(a => a.Id == id, cancellationToken),
-
+            EntityState.Modified => Genre.HasValues(album.Genres)
+                                    && await repository
+                                                .Set<Album>()
+                                                .AnyAsync(a => a.Id == id, cancellationToken)
+                                                .ConfigureAwait(false)
+                                    ,
             _ => true
         };
 }

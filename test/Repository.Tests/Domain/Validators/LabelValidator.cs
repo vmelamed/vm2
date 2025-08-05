@@ -45,35 +45,19 @@ class LabelValidator : AbstractValidator<Label>
 
         // Do we want this extra trip to the database, if we have unique DB constraints on the PK and on Name?
         // Label is almost like a dimension data: does not get added or modified all that often, so it may be worth it.
-        RuleFor(l => l.Id)
-            .MustAsync(async (l, id, ct) => await IsValid(repository, l, id, ct))
-            .WithMessage("The Label Id must be unique.")
+        RuleFor(l => l.CountryCode)
+            .Must((l, c) => IsValid(repository, l, c))
+            .WithMessage("The Label must have a valid country code.")
             ;
     }
 
-    static async ValueTask<bool> IsValid(
+    static bool IsValid(
         IRepository repository,
         Label label,
-        uint id,
-        CancellationToken cancellationToken)
+        string countryCode)
         => repository.StateOf(label) switch {
-            // if Added, make sure the Id and the Name are unique in the database.
-            EntityState.Added => !await repository
-                                            .Set<Label>()
-                                            .AnyAsync(l => l.Id   == id ||
-                                                           l.Name == label.Name, cancellationToken),
-
-            // if Modified, make sure the Id already exists in the database and if the name has changed, it is also unique.
-            EntityState.Modified => !repository.Entry(label).Property(nameof(Label.Name)).IsModified
-                                        ? await repository
-                                                    .Set<Label>()
-                                                    .AnyAsync(l => l.Id == id, cancellationToken)
-                                        : (await repository
-                                                    .Set<Label>()
-                                                    .Where(l => l.Id == id || l.Name == label.Name)
-                                                    .Select(l => new { l.Id })
-                                                    .ToListAsync(cancellationToken))
-                                                    .SingleOrDefault()?.Id == id,
+            EntityState.Added or
+            EntityState.Modified => Country.HasValue(countryCode),
 
             _ => true
         };

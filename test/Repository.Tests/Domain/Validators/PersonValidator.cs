@@ -77,17 +77,23 @@ class PersonValidator : AbstractValidator<Person>
         CancellationToken cancellationToken)
         => repository.StateOf(person) switch {
             // if Added, make sure the id is unique in the database.
-            EntityState.Added => !await repository
-                                            .Set<Person>()
-                                            .AnyAsync(a => a.Id == id, cancellationToken)
-                                            ,
-
+            EntityState.Added => Instrument.HasValues(person.Instruments)
+                                 && Role.HasValues(person.Roles)
+                                 && Genre.HasValues(person.Genres)
+                                 && !await repository
+                                                .Set<Person>()
+                                                .AnyAsync(a => a.Id == id, cancellationToken)
+                                                .ConfigureAwait(false)
+                                 ,
             // if Modified, make sure there is a Person with this id in the database.
-            EntityState.Modified => await repository
-                                            .Set<Person>()
-                                            .AnyAsync(a => a.Id == id, cancellationToken)
-                                            ,
-
+            EntityState.Modified => Instrument.HasValues(person.Instruments)
+                                    && Role.HasValues(person.Roles)
+                                    && Genre.HasValues(person.Genres)
+                                    && await repository
+                                                .Set<Person>()
+                                                .AnyAsync(a => a.Id == id, cancellationToken)
+                                                .ConfigureAwait(false)
+                                    ,
             _ => true
         };
 }

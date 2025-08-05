@@ -20,11 +20,6 @@ class TrackInvariantValidator : AbstractValidator<Track>
             .NotNull()
             .WithMessage("Personnel must not be null.")
             ;
-
-        RuleForEach(track => track.Personnel)
-            .SetValidator(new TrackPersonValidator())
-            .WithMessage("Invalid personnel in the track.")
-            ;
     }
 }
 
@@ -64,15 +59,19 @@ class TrackValidator : AbstractValidator<Track>
         CancellationToken cancellationToken)
         => repository.StateOf(track) switch {
             // If the track is being added, the ID must not exist in the database.
-            EntityState.Added => !await repository
-                                            .Set<Track>()
-                                            .AnyAsync(t => t.Id == id, cancellationToken),
-
+            EntityState.Added => Genre.HasValues(track.Genres)
+                                 && !await repository
+                                                .Set<Track>()
+                                                .AnyAsync(t => t.Id == id, cancellationToken)
+                                                .ConfigureAwait(false)
+                                 ,
             // If the track is being modified, the ID must exist in the database.
-            EntityState.Modified => await repository
-                                            .Set<Track>()
-                                            .AnyAsync(t => t.Id == id, cancellationToken),
-
+            EntityState.Modified => Genre.HasValues(track.Genres)
+                                    && await repository
+                                                .Set<Track>()
+                                                .AnyAsync(t => t.Id == id, cancellationToken)
+                                                .ConfigureAwait(false)
+                                    ,
             _ => true,
         };
 }

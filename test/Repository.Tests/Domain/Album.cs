@@ -13,7 +13,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    internal uint Id { get; private set; }
+    public uint Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the title of the album.
@@ -38,7 +38,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <summary>
     /// Gets the unique identifier for the label.
     /// </summary>
-    internal uint LabelId { get; private set; }
+    public uint LabelId { get; private set; }
 
     /// <summary>
     /// Gets or sets the collection of artists associated with the album.
@@ -48,12 +48,12 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <summary>
     /// Gets the collection of personnel associated with the album, such as artists, producers, and contributors.
     /// </summary>
-    internal IEnumerable<AlbumPerson> AlbumsPersons => _albumsPersons;
+    public IEnumerable<AlbumPerson> AlbumsPersons => _albumsPersons;
 
     /// <summary>
     /// Gets or sets the collection of tracks on this album.
     /// </summary>
-    internal IEnumerable<AlbumTrack> Tracks => _tracks;
+    public IEnumerable<AlbumTrack> Tracks => _tracks;
 
     #region IAuditable
     /// <inheritdoc />

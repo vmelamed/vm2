@@ -31,34 +31,20 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
         if (repository is null)
             return;
 
-        // Make sure the person exists in the database and is valid.
-        RuleFor(tp => tp.Person)
-            .MustAsync(
-                async (tp, person, ct) => await repository
-                                                    .Set<Person>()
-                                                    .AnyAsync(p => p.Id == person.Id &&
-                                                                    p.Name == tp.Name, ct))
-            .WithMessage("Invalid person or person name.")
-            ;
-
-        // Make sure all the assigned roles exist in the database.
-        RuleFor(tp => tp.Roles)
-            .MustAsync(
-                async (roles, ct) => roles.Count == 0 ||
-                                     roles.Count == await repository
-                                                            .Set<Role>()
-                                                            .CountAsync(r => roles.Contains(r.Name), ct))
-            .WithMessage("All roles must exist in the dimension table.")
-            ;
-
-        // Make sure all the assigned instruments exist in the database.
-        RuleFor(tp => tp.Instruments)
-            .MustAsync(
-                async (instruments, ct) => instruments.Count == 0 ||
-                                           instruments.Count == await repository
-                                                                        .Set<Instrument>()
-                                                                        .CountAsync(r => instruments.Contains(r.Code), ct))
-            .WithMessage("All instruments must exist in the dimension table.")
+        RuleFor(tp => tp)
+            .Must((tp, ct) => HasValidDimensions(repository, tp))
+            .WithMessage("The AlbumPerson must have valid dimensions.")
             ;
     }
+
+    static bool HasValidDimensions(
+        IRepository repository,
+        TrackPerson tp)
+        => repository.StateOf(tp) switch {
+            EntityState.Added or
+            EntityState.Modified => Role.HasValues(tp.Roles) &&
+                                    Instrument.HasValues(tp.Instruments)
+                                    ,
+            _ => true,
+        };
 }

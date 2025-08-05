@@ -79,10 +79,10 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     /// <param name="id">The unique identifier for the label.</param>
     /// <param name="name">The name of the label. Cannot be null or empty.</param>
     /// <param name="countryCode">The country code associated with the label. Must be a valid ISO 3166-1 alpha-2 code.</param>
-    /// <param name="createdAt">The date and time when the label was created. Defaults to the current date and time if not specified.</param>
-    /// <param name="createdBy">The identifier of the actor who created the label. Defaults to an empty string if not specified.</param>
-    /// <param name="updatedAt">The date and time when the label was last updated. Defaults to the current date and time if not specified.</param>
-    /// <param name="updatedBy">The identifier of the actor who last updated the label. Defaults to an empty string if not specified.</param>
+    /// <param name="createdAt">The date and time when the label was created.</param>
+    /// <param name="createdBy">The identifier of the actor who created the label.</param>
+    /// <param name="updatedAt">The date and time when the label was last updated.</param>
+    /// <param name="updatedBy">The identifier of the actor who last updated the label.</param>
     public Label(
         uint id,
         string name,
@@ -124,6 +124,10 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
                         .ValidateAndThrowAsync(this, cancellationToken);
     #endregion
 
+    /// <summary>
+    /// Assigns the specified album to this label.
+    /// </summary>
+    /// <param name="album">The album to be assigned to this label. Must not already be assigned to another label.</param>
     public Label Releases(Album album)
     {
         if (album.Label is null)

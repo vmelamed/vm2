@@ -19,7 +19,7 @@ public class AlbumTrack : IValidatable
     /// <summary>
     /// Gets the unique identifier for the track.
     /// </summary>
-    internal uint TrackId { get; init; }
+    public uint TrackId { get; init; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AlbumTrack"/> class using the specified track.

@@ -54,7 +54,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// <summary>
     /// Gets the collection of personnel associated with the album, such as musicians, producers, or other contributors.
     /// </summary>
-    internal IEnumerable<AlbumPerson> PersonsAlbums => _personsAlbums;
+    public IEnumerable<AlbumPerson> PersonsAlbums => _personsAlbums;
 
     #region IAuditable
     /// <inheritdoc />

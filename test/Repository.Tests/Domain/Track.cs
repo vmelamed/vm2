@@ -44,7 +44,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
     /// <summary>
     /// Gets a collection of persons associated with this track.
     /// </summary>
-    internal IEnumerable<TrackPerson> TracksPersons => _tracksPersons;
+    public IEnumerable<TrackPerson> TracksPersons => _tracksPersons;
 
     #region IAuditable
     /// <inheritdoc />
@@ -136,7 +136,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IEquatable<Trac
 
         if (trackPerson is null)
         {
-            trackPerson = new TrackPerson(this, person);
+            trackPerson = new TrackPerson(person, person.Name);
             _tracksPersons.Add(trackPerson);
         }
 

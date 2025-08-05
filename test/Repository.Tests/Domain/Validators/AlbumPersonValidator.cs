@@ -28,9 +28,28 @@ class AlbumPersonFindableValidator : AbstractValidator<AlbumPerson>
 
 class AlbumPersonValidator : AbstractValidator<AlbumPerson>
 {
-    public AlbumPersonValidator(object? _ = null)
+    public AlbumPersonValidator(object? context = null)
     {
         Include(new AlbumPersonInvariantValidator());
         Include(new AlbumPersonFindableValidator());
+
+        if (context is not IRepository repository)
+            return;
+
+        RuleFor(ap => ap)
+            .Must((ap, ct) => HasValidDimensions(repository, ap))
+            .WithMessage("The AlbumPerson must have valid dimensions.")
+            ;
     }
+
+    static bool HasValidDimensions(
+        IRepository repository,
+        AlbumPerson ap)
+        => repository.StateOf(ap) switch {
+            EntityState.Added or
+            EntityState.Modified => Role.HasValues(ap.Roles) &&
+                                    Instrument.HasValues(ap.Instruments)
+                                    ,
+            _ => true,
+        };
 }

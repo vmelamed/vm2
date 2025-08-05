@@ -27,12 +27,12 @@ public class AlbumPerson : IFindable<AlbumPerson>, IValidatable, IEquatable<Albu
     /// <summary>
     /// Gets the unique identifier of the album.
     /// </summary>
-    internal uint AlbumId { get; private set; }
+    public uint AlbumId { get; private set; }
 
     /// <summary>
     /// Gets the unique identifier of the person.
     /// </summary>
-    internal uint PersonId { get; private set; }
+    public uint PersonId { get; private set; }
 
     /// <summary>
     /// Gets the collection of roles performed by the person on the associated album.

@@ -50,17 +50,14 @@ public record TrackPerson(Person Person, string Name) : IValidatable
     public TrackPerson AddRole(string role)
     {
         _roles.Add(role);
-        Person.AddRole(role);
+        Person.AddRoles([role]);
         return this;
     }
 
     public TrackPerson RemoveRole(
-        string role,
-        bool removeFromPerson = false)
+        string role)
     {
         _roles.Remove(role);
-        if (removeFromPerson)
-            Person.RemoveRole(role);
         return this;
     }
 
@@ -69,17 +66,14 @@ public record TrackPerson(Person Person, string Name) : IValidatable
         instrumentCode)
     {
         _instruments.Add(instrumentCode);
-        Person.AddInstrument(instrumentCode);
+        Person.AddInstruments([instrumentCode]);
         return this;
     }
 
     public TrackPerson RemoveInstrument(
-        string instrumentCode,
-        bool removeFromPerson = false)
+        string instrumentCode)
     {
         _instruments.Remove(instrumentCode);
-        if (removeFromPerson)
-            Person.RemoveInstrument(instrumentCode);
         return this;
     }
 }
