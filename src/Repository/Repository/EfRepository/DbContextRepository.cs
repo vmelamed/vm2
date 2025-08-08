@@ -234,7 +234,7 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
         ChangeTracker.DetectChanges();
 
         string actor = "";    // TODO: replace with actual actor, e.g. from some call context or user token
-        var now = DateTimeOffset.UtcNow;
+        var now = DateTime.UtcNow;
 
         // Complete all entities that implement ICompletable
         foreach (var entry in ChangeTracker.Entries())
@@ -267,7 +267,7 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
     /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     protected virtual async ValueTask CompleteAndValidateAddedEntity(
         EntityEntry entry,
-        DateTimeOffset now,
+        DateTime now,
         string actor,
         CancellationToken cancellationToken)
     {
@@ -303,7 +303,7 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
     /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     protected virtual async ValueTask CompleteAndValidateUpdatedEntity(
         EntityEntry entry,
-        DateTimeOffset now,
+        DateTime now,
         string actor,
         CancellationToken cancellationToken)
     {
@@ -332,7 +332,7 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
     /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     protected virtual async ValueTask CompleteAndValidateDeletedEntity(
         EntityEntry entry,
-        DateTimeOffset now,
+        DateTime now,
         string actor,
         CancellationToken cancellationToken)
     {

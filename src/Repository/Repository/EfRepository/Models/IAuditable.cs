@@ -17,7 +17,7 @@ public interface IAuditable
     /// <summary>
     /// Gets or sets the date and time when the entity was created.
     /// </summary>
-    DateTimeOffset CreatedAt { get; set; }
+    DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the identifier of the actor who created the entity.
@@ -27,7 +27,7 @@ public interface IAuditable
     /// <summary>
     /// Gets or sets the date and time when the entity was last updated.
     /// </summary>
-    DateTimeOffset UpdatedAt { get; set; }
+    DateTime UpdatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the identifier of the actor who last updated the entity.
@@ -44,10 +44,10 @@ public interface IAuditable
     /// The identifier of the actor performing the addition. Can be an empty string if not specified.
     /// </param>
     void AuditOnAdd(
-        DateTimeOffset? now = default,
+        DateTime? now = default,
         string actor = "")
     {
-        CreatedAt = now ?? DateTimeOffset.UtcNow;
+        CreatedAt = now ?? DateTime.UtcNow;
         CreatedBy = actor;
         AuditOnUpdate(now, actor);
     }
@@ -61,10 +61,10 @@ public interface IAuditable
     /// The identifier of the actor performing the update. Can be an empty string if not specified.
     /// </param>
     void AuditOnUpdate(
-        DateTimeOffset? now = default,
+        DateTime? now = default,
         string actor = "")
     {
-        UpdatedAt = now ?? DateTimeOffset.UtcNow;
+        UpdatedAt = now ?? DateTime.UtcNow;
         UpdatedBy = actor;
     }
 }

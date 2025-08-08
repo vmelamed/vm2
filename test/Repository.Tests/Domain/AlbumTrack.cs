@@ -1,4 +1,5 @@
 ﻿namespace vm2.Repository.Tests.Domain;
+
 /// <summary>
 /// Represents a track within an album.
 /// </summary>
@@ -9,28 +10,8 @@
 /// <param name="Track"></param>
 /// <param name="OrderNumber"></param>
 /// <param name="FirstRelease"></param>
-public class AlbumTrack : IValidatable
+public record AlbumTrack(Track Track) : IValidatable
 {
-    /// <summary>
-    /// Gets the track of the album.
-    /// </summary>
-    public Track Track { get; init; } = null!;
-
-    /// <summary>
-    /// Gets the unique identifier for the track.
-    /// </summary>
-    public uint TrackId { get; init; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AlbumTrack"/> class using the specified track.
-    /// </summary>
-    /// <param name="track">The track associated with this album track.</param>
-    public AlbumTrack(Track track)
-    {
-        Track   = track;
-        TrackId = track?.Id ?? 0;
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="AlbumTrack"/> class.
     /// </summary>
@@ -38,7 +19,8 @@ public class AlbumTrack : IValidatable
     /// This parameterless constructor is required by Entity Framework Core for materializing instances of the <see cref="AlbumTrack"/>
     /// class from the database. It is intended for use by EF Core and should not be called directly in application code.
     /// </remarks>
-    private AlbumTrack()
+    public AlbumTrack()
+        : this((Track)null!)
     {
     }
 

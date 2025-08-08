@@ -14,6 +14,7 @@ class TrackConfiguration : IEntityTypeConfiguration<Track>
 
         builder.Property(t => t.Title)
             .HasMaxLength(Track.MaxTitleLength)
+            .UseCollation("NOCASE")
             ;
 
         builder
@@ -23,11 +24,7 @@ class TrackConfiguration : IEntityTypeConfiguration<Track>
         builder
             .OwnsMany(
                 t => t.Personnel,
-                onb =>
-                {
-                    onb.ToJson();
-                    onb.WithOwner();
-                })
+                onb => onb.ToJson())    // ???
             ;
     }
 }

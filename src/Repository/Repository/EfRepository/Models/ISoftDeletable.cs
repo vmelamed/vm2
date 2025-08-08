@@ -22,7 +22,7 @@ public interface ISoftDeletable
     /// <summary>
     /// Gets or sets the timestamp indicating when the entity was deleted.
     /// </summary>
-    DateTimeOffset? DeletedAt { get; set; }
+    DateTime? DeletedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the identifier of the actor who deleted the entity.
@@ -46,10 +46,10 @@ public interface ISoftDeletable
     /// <param name="now">The timestamp to record as the deletion time. If <see langword="null"/>, the current UTC time is used.</param>
     /// <param name="actor">The identifier of the actor performing the deletion. Can be an empty string if not specified.</param>
     void SoftDelete(
-        DateTimeOffset? now = default,
+        DateTime? now = default,
         string actor = "")
     {
-        DeletedAt = now ?? DateTimeOffset.UtcNow;
+        DeletedAt = now ?? DateTime.UtcNow;
         DeletedBy = actor;
     }
 
@@ -59,13 +59,13 @@ public interface ISoftDeletable
     /// <param name="now">The current date and time, used for logging or auditing purposes. This parameter is optional.</param>
     /// <param name="actor">The identifier of the user or process performing the undelete operation. This parameter is optional.</param>
     void Undelete(
-        DateTimeOffset? now = default,
+        DateTime? now = default,
         string actor = "")
     {
         DeletedAt = null;
         DeletedBy = string.Empty;
 
         if (this is IAuditable a)
-            a.AuditOnUpdate(now ?? DateTimeOffset.UtcNow, actor);
+            a.AuditOnUpdate(now ?? DateTime.UtcNow, actor);
     }
 }

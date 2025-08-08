@@ -1,10 +1,10 @@
-﻿namespace vm2.Repository.TestData;
+﻿namespace vm2.Repository.Tests.TestData;
 
 public static class Labels
 {
-    static uint id = 0;
+    static int id = 0;
 
-    public static uint NextId => Interlocked.Increment(ref id);
+    public static int NextId => Interlocked.Increment(ref id);
 
     static Label? _label1;
     static Label? _label2;

@@ -73,7 +73,7 @@ class PersonValidator : AbstractValidator<Person>
     static async ValueTask<bool> IsValid(
         IRepository repository,
         Person person,
-        uint id,
+        int id,
         CancellationToken cancellationToken)
         => repository.StateOf(person) switch {
             // if Added, make sure the id is unique in the database.

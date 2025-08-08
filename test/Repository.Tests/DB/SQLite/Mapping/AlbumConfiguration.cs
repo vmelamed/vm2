@@ -15,10 +15,13 @@ class AlbumConfiguration : IEntityTypeConfiguration<Album>
         builder
             .Property(a => a.Title)
             .HasMaxLength(Album.MaxTitleLength)
+            .UseCollation("NOCASE")
             ;
 
         builder
             .HasOne(a => a.Label)
+            .WithMany(l => l.Albums)
+            .OnDelete(DeleteBehavior.Restrict)
             ;
 
         builder
@@ -30,7 +33,7 @@ class AlbumConfiguration : IEntityTypeConfiguration<Album>
         builder
             .OwnsMany(
                 a => a.AlbumTracks,
-                onb => onb.ToJson())
+                onb => onb.ToJson())    // ???
             ;
 
         new AuditableConfiguration<Album>().Configure(builder);

@@ -40,11 +40,13 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
     static bool HasValidDimensions(
         IRepository repository,
         TrackPerson tp)
-        => repository.StateOf(tp) switch {
-            EntityState.Added or
-            EntityState.Modified => Role.HasValues(tp.Roles) &&
-                                    Instrument.HasValues(tp.Instruments)
-                                    ,
-            _ => true,
-        };
+        => tp.Person is null
+                ? true
+                : repository.StateOf(tp.Person) switch {
+                    EntityState.Added or
+                    EntityState.Modified => Role.HasValues(tp.Roles) &&
+                                            Instrument.HasValues(tp.Instruments)
+                                            ,
+                    _ => true,
+                };
 }

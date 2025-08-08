@@ -44,6 +44,5 @@ public interface IFindable
     /// <remarks>
     /// Note that the method is asynchronous.
     /// </remarks>
-    async ValueTask ValidateFindable(object? context = default, CancellationToken cancellationToken = default)
-        => await new FindableValidator(context as LambdaExpression).ValidateAndThrowAsync(this, cancellationToken);
+    ValueTask ValidateFindable(object? context = default, CancellationToken cancellationToken = default);
 }

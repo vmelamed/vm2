@@ -1,20 +1,21 @@
 ﻿namespace vm2.Repository.Tests.Domain;
 using System;
 
-public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Person>
+[DebuggerDisplay("Person {Id}: {Name}")]
+public class Person : IFindable<Person>, IAuditable, IValidatable
 {
     public const int MaxNameLength = 100;
 
     HashSet<string> _roles = [];
-    HashSet<string> _genres = [];
     HashSet<string> _instruments = [];
-    HashSet<Album> _albums = [];
-    HashSet<AlbumPerson> _personsAlbums = [];
+    HashSet<string> _genres = [];
+    HashSet<Album> _albums = new(ReferenceEqualityComparer.Instance);
+    HashSet<AlbumPerson> _personsAlbums = new(ReferenceEqualityComparer.Instance);
 
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public uint Id { get; private set; }
+    public int Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the names of the person.
@@ -32,19 +33,19 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     public int? DeathYear { get; set; } = null;
 
     /// <summary>
-    /// Gets or sets the collection (set) of roles associated with the person, e.g. performer, conductor, etc.
+    /// Gets the roles that the person is known to have performed, e.g. performer, conductor, etc.
     /// </summary>
     public IEnumerable<string> Roles => _roles;
 
     /// <summary>
-    /// Gets or sets the collection of genres that the person is known to have worked in, e.g. jazz, classical, etc.
-    /// </summary>
-    public IEnumerable<string> Genres => _genres;
-
-    /// <summary>
-    /// Gets or sets the collection of instrument codes that the person is known to have played, e.g. "tp" for trumpet, "g" for guitar, etc.
+    /// Gets the instrument codes that the person is known to have played, e.g. "tp" for trumpet, "g" for guitar, etc.
     /// </summary>
     public IEnumerable<string> Instruments => _instruments;
+
+    /// <summary>
+    /// Gets the genres that the person is known to have worked in, e.g. jazz, classical, etc.
+    /// </summary>
+    public IEnumerable<string> Genres => _genres;
 
     /// <summary>
     /// Gets the collection of albums that the person appears on. Discography.
@@ -58,13 +59,13 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
 
     #region IAuditable
     /// <inheritdoc />
-    public DateTimeOffset CreatedAt { get; set; } = default;
+    public DateTime CreatedAt { get; set; } = default;
 
     /// <inheritdoc />
     public string CreatedBy { get; set; } = "";
 
     /// <inheritdoc />
-    public DateTimeOffset UpdatedAt { get; set; } = default;
+    public DateTime UpdatedAt { get; set; } = default;
 
     /// <inheritdoc />
     public string UpdatedBy { get; set; } = "";
@@ -80,7 +81,6 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
         new PersonFindableValidator().ValidateAndThrow(this);
         return ValueTask.CompletedTask;
     }
-    #endregion
 
     /// <summary>
     /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Person"/> by its unique
@@ -90,6 +90,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// </summary>
     /// <param name="id">The unique identifier for the person.</param>
     public static IFindable ById(int Id) => new Findable(Id);
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Person"/> class with specified details.
@@ -99,23 +100,23 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
     /// <param name="birthYear">The birth year of the person.</param>
     /// <param name="deathYear">The death year of the person.</param>
     /// <param name="roles">A collection of roles associated with the person.</param>
-    /// <param name="genres">A collection of genres associated with the person.</param>
     /// <param name="instruments">A collection of instruments the person plays.</param>
+    /// <param name="genres">A collection of genres associated with the person.</param>
     /// <param name="createdAt">The date and time when the person entity was created.</param>
     /// <param name="createdBy">The identifier of the actor who created the person entity.</param>
     /// <param name="updatedAt">The date and time when the person entity was last updated.</param>
     /// <param name="updatedBy">The identifier of the user who last updated the person entity.</param>
     public Person(
-        uint id,
+        int id,
         string name,
         int? birthYear = null,
         int? deathYear = null,
         IEnumerable<string>? roles = null,
-        IEnumerable<string>? genres = null,
         IEnumerable<string>? instruments = null,
-        DateTimeOffset createdAt = default,
+        IEnumerable<string>? genres = null,
+        DateTime createdAt = default,
         string createdBy = "",
-        DateTimeOffset updatedAt = default,
+        DateTime updatedAt = default,
         string updatedBy = "")
     {
         Id               = id;
@@ -129,6 +130,9 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
         CreatedBy        = createdBy;
         UpdatedAt        = updatedAt;
         UpdatedBy        = updatedBy;
+
+        new PersonInvariantValidator()
+                .ValidateAndThrow(this);
     }
 
     /// <summary>
@@ -186,81 +190,21 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IEquatable<Pe
         return this;
     }
 
+    /// <summary>
+    /// Adds an album and its associated roles and instruments to the current person.
+    /// </summary>
+    /// <param name="albumPerson">An object containing the album, roles, and instruments associated with the person.</param>
+    /// <returns>The current <see cref="Person"/> instance, allowing for method chaining.</returns>
     internal Person AddAlbum(AlbumPerson albumPerson)
     {
+        // Do we really need these?
         _personsAlbums.Add(albumPerson);
         _albums.Add(albumPerson.Album);
+
+        // Add roles, instruments, and genres from the albumPerson to the person
         AddRoles(albumPerson.Roles);
         AddInstruments(albumPerson.Instruments);
+        AddGenres(albumPerson.Genres);
         return this;
     }
-
-    #region Identity rules implementation.
-    #region IEquatable<Person> Members
-    /// <summary>
-    /// Indicates whether the current object is equal to a reference to another object of the same type.
-    /// </summary>
-    /// <param name="other">A reference to another object of type <see cref="Person"/> to compare with the current object.</param>
-    /// <returns><list type="number">
-    ///     <item><see langword="false"/> if <paramref name="other"/> is equal to <see langword="null"/>, otherwise</item>
-    ///     <item><see langword="true"/> if <paramref name="other"/> refers to <c>this</c> object, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="other"/> is not the same type as <c>this</c> object, otherwise</item>
-    ///     <item><see langword="true"/> if the current object and the <paramref name="other"/> are considered to be equal,
-    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
-    /// </list></returns>
-    public virtual bool Equals(Person? other)
-        => other is not null
-           && (ReferenceEquals(this, other)
-               || typeof(Person) == other.GetType()
-                  && Id          == other.Id);
-    #endregion
-
-    /// <summary>
-    /// Determines whether this <see cref="Person"/> instance is equal to the specified <see cref="object"/> reference.
-    /// </summary>
-    /// <param name="obj">The <see cref="object"/> reference to compare with this <see cref="Person"/> object.</param>
-    /// <returns><list type="number">
-    ///     <item><see langword="false"/> if <paramref name="obj"/> cannot be cast to <see cref="Person"/>, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="obj"/> is equal to <see langword="null"/>, otherwise</item>
-    ///     <item><see langword="true"/> if <paramref name="obj"/> refers to <c>this</c> object, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="obj"/> is not the same type as <c>this</c> object, otherwise</item>
-    ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
-    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
-    /// </list></returns>
-    public override bool Equals(object? obj)
-        => Equals(obj as Person);
-
-    /// <summary>
-    /// Serves as a hash function for the objects of <see cref="Person"/> and its derived types.
-    /// </summary>
-    /// <returns>A hash code for the current <see cref="Person"/> instance.</returns>
-    public override int GetHashCode()
-        => HashCode.Combine(typeof(Person), Id);
-
-    /// <summary>
-    /// Compares two <see cref="Person"/> objects.
-    /// </summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns>
-    /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Person)"/>);
-    /// otherwise <see langword="false"/>.
-    /// </returns>
-    public static bool operator ==(Person left, Person right)
-        => left is null
-                ? right is null
-                : left.Equals(right);
-
-    /// <summary>
-    /// Compares two <see cref="Person"/> objects.
-    /// </summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns>
-    /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Person)"/>);
-    /// otherwise <see langword="false"/>.
-    /// </returns>
-    public static bool operator !=(Person left, Person right)
-        => !(left==right);
-    #endregion
 }

@@ -12,8 +12,8 @@ class AlbumInvariantValidator : AbstractValidator<Album>
             ;
 
         RuleFor(a => a.ReleaseYear)
-            .Must(releaseYear => releaseYear is null || releaseYear.Value >= 1900)
-            .WithMessage("The release year must be equal or greater than 1900.")
+            .Must(releaseYear => releaseYear is null || releaseYear.Value >= 1900 && releaseYear <= DateTime.Now.Year)
+            .WithMessage("The release year must be equal or greater than 1900 and equal or less than the current year.")
             ;
 
         RuleFor(a => a.Personnel)
@@ -23,12 +23,12 @@ class AlbumInvariantValidator : AbstractValidator<Album>
             .WithMessage("Personnel cannot contain null items.")
             ;
 
-        RuleFor(a => a.Tracks)
+        RuleFor(a => a.AlbumTracks)
             .NotNull()
             .WithMessage("Tracks must not be null.")
             ;
 
-        RuleForEach(a => a.Tracks)
+        RuleForEach(a => a.AlbumTracks)
             .SetValidator(new AlbumTrackValidator())
             .WithMessage("Invalid track in the album.")
             ;
@@ -68,7 +68,7 @@ class AlbumValidator : AbstractValidator<Album>
     static async ValueTask<bool> IsValid(
         IRepository repository,
         Album album,
-        uint id,
+        int id,
         CancellationToken cancellationToken)
         => repository.StateOf(album) switch {
 

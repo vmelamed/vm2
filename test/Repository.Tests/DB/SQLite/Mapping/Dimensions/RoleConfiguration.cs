@@ -10,6 +10,8 @@ class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder
             .Property(c => c.Name)
             .HasMaxLength(Role.MaxNameLength)
+            .UseCollation("NOCASE")
+            .UseCollation("RTRIM")
             ;
     }
 }

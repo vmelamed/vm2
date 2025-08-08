@@ -12,7 +12,7 @@ class TrackInvariantValidator : AbstractValidator<Track>
             ;
 
         RuleFor(track => track.Duration)
-            .Must(duration => duration.TotalSeconds > 0)
+            .Must(duration => duration?.TotalSeconds > 0)
             .WithMessage("Duration must be greater than 0 sec.")
             ;
 
@@ -55,7 +55,7 @@ class TrackValidator : AbstractValidator<Track>
     static async Task<bool> IsValid(
         IRepository repository,
         Track track,
-        uint id,
+        int id,
         CancellationToken cancellationToken)
         => repository.StateOf(track) switch {
             // If the track is being added, the ID must not exist in the database.

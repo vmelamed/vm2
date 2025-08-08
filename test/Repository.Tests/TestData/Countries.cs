@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.TestData;
+﻿namespace vm2.Repository.Tests.TestData;
 
 public static class Countries
 {

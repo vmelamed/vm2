@@ -12,10 +12,13 @@ public class SoftDeletableValidator : AbstractValidator<ISoftDeletable>
     /// </summary>
     public SoftDeletableValidator()
     {
-        RuleFor(deletable => deletable.DeletedAt)
-            .Must(date => date is null || date <= DateTimeOffset.Now)
-            .WithMessage("DeletedAt cannot be in the future.")
-            ;
+        When(deletable => deletable.DeletedAt.HasValue, () =>
+            RuleFor(deletable => deletable.DeletedAt)
+                .Must(deletedAt => deletedAt!.Value.Kind == DateTimeKind.Utc)
+                .WithMessage("DeletedAt must be in UTC.")
+            //.Must(deletedAt => deletedAt <= DateTime.UtcNow)
+            //.WithMessage("DeletedAt cannot be in the future.")
+            );
         // TODO: Uncomment when DeletedBy is implemented
         //RuleFor(deletable => deletable.DeletedBy)
         //    .NotEmpty()

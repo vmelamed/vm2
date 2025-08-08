@@ -15,6 +15,7 @@ class LabelConfiguration : IEntityTypeConfiguration<Label>
         builder
             .Property(c => c.Name)
             .HasMaxLength(Label.MaxNameLength)
+            .UseCollation("NOCASE")
             ;
 
         builder
@@ -22,11 +23,7 @@ class LabelConfiguration : IEntityTypeConfiguration<Label>
             .HasMaxLength(2)
             .IsFixedLength(true)
             .IsUnicode(false)
-            ;
-
-        builder
-            .HasMany(c => c.Albums)
-            .WithOne()
+            .UseCollation("NOCASE")
             ;
 
         new AuditableConfiguration<Label>().Configure(builder);

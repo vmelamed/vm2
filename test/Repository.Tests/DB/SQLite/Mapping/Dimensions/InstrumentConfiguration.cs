@@ -19,6 +19,8 @@ class InstrumentConfiguration : IEntityTypeConfiguration<Instrument>
             .Property(c => c.Name)
             .IsRequired()
             .HasMaxLength(Instrument.MaxNameLength)
+            .UseCollation("NOCASE")
+            .UseCollation("RTRIM")
             ;
     }
 }

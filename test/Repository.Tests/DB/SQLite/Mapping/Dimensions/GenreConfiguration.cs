@@ -10,6 +10,8 @@ class GenreConfiguration : IEntityTypeConfiguration<Genre>
         builder
             .Property(c => c.Name)
             .HasMaxLength(Genre.MaxNameLength)
+            .UseCollation("NOCASE")
+            .UseCollation("RTRIM")
             ;
     }
 }

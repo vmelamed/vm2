@@ -1,19 +1,19 @@
 ﻿namespace vm2.Repository.Tests.Domain;
 
-[DebuggerDisplay("Album: {Title}")]
-public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable, IEquatable<Album>
+[DebuggerDisplay("Album {Id}: {Title}")]
+public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable
 {
     public const int MaxTitleLength = 250;
 
     HashSet<string> _genres = [];
-    List<AlbumTrack> _tracks = [];
-    HashSet<Person> _personnel = [];
-    HashSet<AlbumPerson> _albumsPersons = [];
+    List<AlbumTrack> _albumTracks = [];
+    HashSet<Person> _personnel = new(ReferenceEqualityComparer.Instance);
+    HashSet<AlbumPerson> _albumsPersons = new(ReferenceEqualityComparer.Instance);
 
     /// <summary>
-    /// Gets or sets the unique identifier for the entity.
+    /// Gets or sets the unique identifier for the album entity.
     /// </summary>
-    public uint Id { get; private set; }
+    public int Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the title of the album.
@@ -33,12 +33,13 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <summary>
     /// Gets or sets the recording label under which the album was released.
     /// </summary>
-    public Label? Label { get; internal set; }
+    public Label? Label { get; internal set; } = null!;
 
-    /// <summary>
-    /// Gets the unique identifier for the label.
-    /// </summary>
-    public uint LabelId { get; private set; }
+    ///// <summary>
+    ///// Gets the unique identifier for the label.
+    ///// </summary>
+    // Shadow foreign key by convention:
+    //public int? LabelId { get; private set; } = null;
 
     /// <summary>
     /// Gets or sets the collection of artists associated with the album.
@@ -53,17 +54,17 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <summary>
     /// Gets or sets the collection of tracks on this album.
     /// </summary>
-    public IEnumerable<AlbumTrack> Tracks => _tracks;
+    public IEnumerable<AlbumTrack> AlbumTracks => _albumTracks;
 
     #region IAuditable
     /// <inheritdoc />
-    public DateTimeOffset CreatedAt { get; set; } = default;
+    public DateTime CreatedAt { get; set; } = default;
 
     /// <inheritdoc />
     public string CreatedBy { get; set; } = "";
 
     /// <inheritdoc />
-    public DateTimeOffset UpdatedAt { get; set; } = default;
+    public DateTime UpdatedAt { get; set; } = default;
 
     /// <inheritdoc />
     public string UpdatedBy { get; set; } = "";
@@ -71,10 +72,32 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
 
     #region ISoftDeletable
     /// <inheritdoc />
-    public DateTimeOffset? DeletedAt { get; set; } = default;
+    public DateTime? DeletedAt { get; set; } = default;
 
     /// <inheritdoc />
     public string DeletedBy { get; set; } = "";
+    #endregion
+
+    #region IFindable<Album>
+    /// <inheritdoc />
+    public static Expression<Func<Album, object?>> KeyExpression => a => new { a.Id };
+
+    /// <inheritdoc />
+    public ValueTask ValidateFindable(object? _, CancellationToken __)
+    {
+        new AlbumFindableValidator()
+                .ValidateAndThrow(this);
+        return ValueTask.CompletedTask;
+    }
+
+    /// <summary>
+    /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Album"/> by its unique
+    /// identifier. Can be used in <see cref="IRepository.Find{Album}(IFindable, CancellationToken)"/> and
+    /// <see cref="QueryableExtensions.Find{Album}(IFindable, CancellationToken)"/>. E.g.<br/>
+    /// <c><![CDATA[var album = await _repository.Find(Album.ById(42), ct);]]></c>
+    /// </summary>
+    /// <param name="id">The unique identifier for the album.</param>
+    public static IFindable ById(int Id) => new Findable(Id);
     #endregion
 
     /// <summary>
@@ -91,19 +114,21 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <param name="deletedAt">The dater and time when the album was soft-deleted.</param>
     /// <param name="deletedAt">The name of the actor who soft-deleted the album.</param>
     public Album(
-        uint id,
+        int id,
         string title,
         int? releaseYear,
-        DateTimeOffset createdAt = default,
+        IEnumerable<string>? genres,
+        DateTime createdAt = default,
         string createdBy = "",
-        DateTimeOffset updatedAt = default,
+        DateTime updatedAt = default,
         string updatedBy = "",
-        DateTimeOffset? deletedAt = null,
+        DateTime? deletedAt = null,
         string deletedBy = "")
     {
         Id          = id;
         Title       = title;
         ReleaseYear = releaseYear;
+        _genres     = genres is not null ? [.. genres] : [];
         CreatedAt   = createdAt;
         CreatedBy   = createdBy;
         UpdatedAt   = updatedAt;
@@ -125,28 +150,6 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     private Album()
     {
     }
-
-    #region IFindable<Album>
-    /// <inheritdoc />
-    public static Expression<Func<Album, object?>> KeyExpression => a => new { a.Id };
-
-    /// <inheritdoc />
-    public ValueTask ValidateFindable(object? _, CancellationToken __)
-    {
-        new AlbumFindableValidator()
-                .ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
-    #endregion
-
-    /// <summary>
-    /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Album"/> by its unique
-    /// identifier. Can be used in <see cref="IRepository.Find{Album}(IFindable, CancellationToken)"/> and
-    /// <see cref="QueryableExtensions.Find{Album}(IFindable, CancellationToken)"/>. E.g.<br/>
-    /// <c><![CDATA[var album = await _repository.Find(Album.ById(42), ct);]]></c>
-    /// </summary>
-    /// <param name="id">The unique identifier for the album.</param>
-    public static IFindable ById(int Id) => new Findable(Id);
 
     #region IValidatable
     /// <inheritdoc />
@@ -237,23 +240,23 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         Track track,
         Track? after)
     {
-        var trackAti = _tracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == track);
+        var trackAti = _albumTracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == track);
 
         if (after is null)
         {
             if (trackAti.at is null)
             {
                 // the track is not in the album and no after track is specified: add to the end of the tracks
-                _tracks.Add(new AlbumTrack(track));
+                _albumTracks.Add(new AlbumTrack(track));
                 TrackAdded(track);
             }
             else
             {
-                if (trackAti.i != _tracks.Count-1)
+                if (trackAti.i != _albumTracks.Count-1)
                 {
                     // the track is already in the album, but not at the end: remove it and add to the end
-                    _tracks.Remove(trackAti.at);
-                    _tracks.Add(trackAti.at);
+                    _albumTracks.Remove(trackAti.at);
+                    _albumTracks.Add(trackAti.at);
                 }
                 // otherwise the track is already at the end of the album: do nothing
             }
@@ -263,7 +266,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
 
         Debug.Assert(after is not null, "After cannot be null at this point");
 
-        var afterAti = _tracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == after);
+        var afterAti = _albumTracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == after);
 
         if (afterAti.at is null)
             throw new ArgumentException("The specified track to add after is not in the album.", nameof(after));
@@ -277,7 +280,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         if (trackAti.at is not null)
         {
             at = trackAti.at;
-            _tracks.RemoveAt(trackAti.i);
+            _albumTracks.RemoveAt(trackAti.i);
         }
         else
         {
@@ -285,7 +288,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
             TrackAdded(track);
         }
 
-        _tracks.Insert(afterAti.i, at);
+        _albumTracks.Insert(afterAti.i, at);
 
         return this;
     }
@@ -308,14 +311,14 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         Track track,
         Track? before)
     {
-        var trackAti = _tracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == track);
+        var trackAti = _albumTracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == track);
 
         if (before is null)
         {
             if (trackAti.at is null)
             {
                 // the track is not in the album and no before track is specified: add at the beginning of the tracks
-                _tracks.Insert(0, new AlbumTrack(track));
+                _albumTracks.Insert(0, new AlbumTrack(track));
                 return TrackAdded(track);
             }
             else
@@ -323,8 +326,8 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
                 if (trackAti.i != 0)
                 {
                     // the track is already in the album, but not at the beginning: remove it and add at the beginning
-                    _tracks.Remove(trackAti.at);
-                    _tracks.Insert(0, trackAti.at);
+                    _albumTracks.Remove(trackAti.at);
+                    _albumTracks.Insert(0, trackAti.at);
                 }
                 // otherwise the track is already in the beginning of the album: do nothing
                 return this;
@@ -333,7 +336,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
 
         Debug.Assert(before is not null, "After cannot be null at this point");
 
-        var beforeAti = _tracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == before);
+        var beforeAti = _albumTracks.Select((at, i) => (at, i)).FirstOrDefault(ati => ati.at.Track == before);
 
         if (beforeAti.at is null)
             throw new ArgumentException("The specified track to add after is not in the album.", nameof(before));
@@ -352,10 +355,10 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         else
         {
             at = trackAti.at;
-            _tracks.RemoveAt(trackAti.i);
+            _albumTracks.RemoveAt(trackAti.i);
         }
 
-        _tracks.Insert(beforeAti.i, at);
+        _albumTracks.Insert(beforeAti.i, at);
 
         return this;
     }
@@ -402,81 +405,11 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <returns>The current <see cref="Album"/> instance after the track has been removed.</returns>
     public Album RemoveTrack(Track track)
     {
-        var existingTrack = _tracks.FirstOrDefault(t => t.TrackId == track.Id);
+        var existingTrack = _albumTracks.FirstOrDefault(t => t.Track == track);
 
-        if (existingTrack is null)
-            return this;
+        if (existingTrack is not null)
+            _albumTracks.Remove(existingTrack);
 
-        _tracks.Remove(existingTrack);
         return this;
     }
-
-    #region Identity rules implementation.
-    #region IEquatable<Album> Members
-    /// <summary>
-    /// Indicates whether the current object is equal to a reference to another object of the same type.
-    /// </summary>
-    /// <param name="other">A reference to another object of type <see cref="Album"/> to compare with the current object.</param>
-    /// <returns>
-    /// <list type="number">
-    ///     <item><see langword="false"/> if <paramref name="other"/> is equal to <see langword="null"/>, otherwise</item>
-    ///     <item><see langword="true"/> if <paramref name="other"/> refers to <c>this</c> object, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="other"/> is not the same type as <c>this</c> object, otherwise</item>
-    ///     <item><see langword="true"/> if the current object and the <paramref name="other"/> are considered to be equal,
-    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
-    /// </list>
-    /// </returns>
-    public virtual bool Equals(Album? other)
-        => other is not null
-           && (ReferenceEquals(this, other)
-               || typeof(Album) == other.GetType()
-                  && Id         == other.Id);
-    #endregion
-
-    /// <summary>
-    /// Determines whether this <see cref="Album"/> instance is equal to the specified <see cref="object"/> reference.
-    /// </summary>
-    /// <param name="obj">The <see cref="object"/> reference to compare with this <see cref="Album"/> object.</param>
-    /// <returns>
-    /// <list type="number">
-    ///     <item><see langword="false"/> if <paramref name="obj"/> cannot be cast to <see cref="Album"/>, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="obj"/> is equal to <see langword="null"/>, otherwise</item>
-    ///     <item><see langword="true"/> if <paramref name="obj"/> refers to <c>this</c> object, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="obj"/> is not the same type as <c>this</c> object, otherwise</item>
-    ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
-    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
-    /// </list>
-    /// </returns>
-    public override bool Equals(object? obj)
-        => Equals(obj as Album);
-
-    /// <summary>
-    /// Serves as a hash function for the objects of <see cref="Album"/> and its derived types.
-    /// </summary>
-    /// <returns>A hash code for the current <see cref="Album"/> instance.</returns>
-    public override int GetHashCode()
-        => HashCode.Combine(typeof(Album), Id);
-
-    /// <summary>
-    /// Compares two <see cref="Album"/> objects.
-    /// </summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns>
-    /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Album)"/>);
-    /// otherwise <see langword="false"/>.
-    /// </returns>
-    public static bool operator ==(Album left, Album right) => left is null ? right is null : left.Equals(right);
-
-    /// <summary>
-    /// Compares two <see cref="Album"/> objects.
-    /// </summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns>
-    /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Album)"/>);
-    /// otherwise <see langword="false"/>.
-    /// </returns>
-    public static bool operator !=(Album left, Album right) => !(left==right);
-    #endregion
 }

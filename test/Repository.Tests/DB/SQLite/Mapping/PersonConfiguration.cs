@@ -14,7 +14,9 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder
             .Property(p => p.Name)
-            .HasMaxLength(Person.MaxNameLength);
+            .HasMaxLength(Person.MaxNameLength)
+            .UseCollation("NOCASE")
+            ;
 
         // The properties Roles, Genres, and InstrumentCodes are collections of primitive types (strings).
         // EF Core + SQLite handle collections of primitive types automatically with JSON columns.

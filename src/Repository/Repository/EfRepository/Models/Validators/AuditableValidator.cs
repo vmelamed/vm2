@@ -13,9 +13,12 @@ public class AuditableValidator : AbstractValidator<IAuditable>
     public AuditableValidator()
     {
         RuleFor(auditable => auditable.CreatedAt)
-            .NotEqual(default(DateTimeOffset))
-            .LessThanOrEqualTo(DateTimeOffset.Now)
-            .WithMessage("CreatedAt cannot be in the future.")
+            .NotEqual(default(DateTime))
+            .WithMessage("CreatedAt must not be default value.")
+            .Must(createdAt => createdAt.Kind == DateTimeKind.Utc)
+            .WithMessage("CreatedAt must be in UTC.")
+            //.LessThanOrEqualTo(DateTime.UtcNow)
+            //.WithMessage("CreatedAt cannot be in the future.")
             ;
 
         // TODO: Uncomment when CreatedBy is implemented
@@ -25,14 +28,18 @@ public class AuditableValidator : AbstractValidator<IAuditable>
         //    ;
 
         RuleFor(auditable => auditable.UpdatedAt)
-            .NotEqual(default(DateTimeOffset))
-            .LessThanOrEqualTo(DateTimeOffset.Now)
-            .WithMessage("UpdatedAt cannot be in the future.")
+            .NotEqual(default(DateTime))
+            .WithMessage("CreatedAt must not be default value.")
+            .Must(createdAt => createdAt.Kind == DateTimeKind.Utc)
+            .WithMessage("CreatedAt must be in UTC.")
+            //.LessThanOrEqualTo(DateTime.UtcNow)
+            //.WithMessage("UpdatedAt cannot be in the future.")
             ;
 
         // TODO: Uncomment when UpdatedBy is implemented
         //RuleFor(auditable => auditable.UpdatedBy)
         //    .NotEmpty()
-        //    .WithMessage("UpdatedBy must not be empty.");
+        //    .WithMessage("UpdatedBy must not be empty.")
+        //    ;
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace vm2.Repository.Tests.Domain;
 using System;
 
-[DebuggerDisplay("{Name} ({CountryCode})")]
-public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Label>
+[DebuggerDisplay("Label {Id}: {Name} ({CountryCode})")]
+public class Label : IFindable<Label>, IAuditable, IValidatable
 {
     /// <summary>
     /// Represents the maximum allowed length for Label's name.
@@ -14,12 +14,12 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     /// <summary>
     /// The collection of albums released by this label.
     /// </summary>
-    HashSet<Album> _albums = [];
+    HashSet<Album> _albums = new(ReferenceEqualityComparer.Instance);
 
     /// <summary>
     /// Gets or sets the unique identifier for the recording label entities.
     /// </summary>
-    public uint Id { get; private set; }
+    public int Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the name of the recording label.
@@ -38,13 +38,13 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
 
     #region IAuditable
     /// <inheritdoc />
-    public DateTimeOffset CreatedAt { get; set; } = default;
+    public DateTime CreatedAt { get; set; } = default;
 
     /// <inheritdoc />
     public string CreatedBy { get; set; } = "";
 
     /// <inheritdoc />
-    public DateTimeOffset UpdatedAt { get; set; } = default;
+    public DateTime UpdatedAt { get; set; } = default;
 
     /// <inheritdoc />
     public string UpdatedBy { get; set; } = "";
@@ -61,7 +61,6 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
                 .ValidateAndThrow(this);
         return ValueTask.CompletedTask;
     }
-    #endregion
 
     /// <summary>
     /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Label"/> by its unique
@@ -71,6 +70,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     /// </summary>
     /// <param name="id">The unique identifier for the label.</param>
     public static IFindable ById(int Id) => new Findable(Id);
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Label"/> class with specified creation and update metadata. For use mostly
@@ -84,12 +84,12 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     /// <param name="updatedAt">The date and time when the label was last updated.</param>
     /// <param name="updatedBy">The identifier of the actor who last updated the label.</param>
     public Label(
-        uint id,
+        int id,
         string name,
         string countryCode,
-        DateTimeOffset createdAt = default,
+        DateTime createdAt = default,
         string createdBy = "",
-        DateTimeOffset updatedAt = default,
+        DateTime updatedAt = default,
         string updatedBy = "")
     {
         Id          = id;
@@ -130,79 +130,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IEquatable<Labe
     /// <param name="album">The album to be assigned to this label. Must not already be assigned to another label.</param>
     public Label Releases(Album album)
     {
-        if (album.Label is null)
-            throw new InvalidOperationException("Album is already assigned to a different label.");
-
         album.Label = this;
         return this;
     }
-
-    #region Identity rules implementation.
-    #region IEquatable<Label> Members
-    /// <summary>
-    /// Indicates whether the current object is equal to a reference to another object of the same type.
-    /// </summary>
-    /// <param name="other">A reference to another object of type <see cref="Label"/> to compare with the current object.</param>
-    /// <returns><list type="number">
-    ///     <item><see langword="false"/> if <paramref name="other"/> is equal to <see langword="null"/>, otherwise</item>
-    ///     <item><see langword="true"/> if <paramref name="other"/> refers to <c>this</c> object, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="other"/> is not the same type as <c>this</c> object, otherwise</item>
-    ///     <item><see langword="true"/> if the current object and the <paramref name="other"/> are considered to be equal,
-    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
-    /// </list></returns>
-    public virtual bool Equals(Label? other)
-        => other is not null
-           && (ReferenceEquals(this, other)
-               ||  typeof(Label) == other.GetType()
-                   && Id         == other.Id);
-    #endregion
-
-    /// <summary>
-    /// Determines whether this <see cref="Label"/> instance is equal to the specified <see cref="object"/> reference.
-    /// </summary>
-    /// <param name="obj">The <see cref="object"/> reference to compare with this <see cref="Label"/> object.</param>
-    /// <returns><list type="number">
-    ///     <item><see langword="false"/> if <paramref name="obj"/> cannot be cast to <see cref="Label"/>, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="obj"/> is equal to <see langword="null"/>, otherwise</item>
-    ///     <item><see langword="true"/> if <paramref name="obj"/> refers to <c>this</c> object, otherwise</item>
-    ///     <item><see langword="false"/> if <paramref name="obj"/> is not the same type as <c>this</c> object, otherwise</item>
-    ///     <item><see langword="true"/> if the current object and the <paramref name="obj"/> are considered to be equal,
-    ///                                  e.g. their business identities are equal; otherwise, <see langword="false"/>.</item>
-    /// </list></returns>
-    public override bool Equals(object? obj)
-        => Equals(obj as Label);
-
-    /// <summary>
-    /// Serves as a hash function for the objects of <see cref="Label"/> and its derived types.
-    /// </summary>
-    /// <returns>A hash code for the current <see cref="Label"/> instance.</returns>
-    public override int GetHashCode()
-        => HashCode.Combine(typeof(Label), Id);
-
-    /// <summary>
-    /// Compares two <see cref="Label"/> objects.
-    /// </summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns>
-    /// <see langword="true"/> if the objects are considered to be equal (<see cref="Equals(Label)"/>);
-    /// otherwise <see langword="false"/>.
-    /// </returns>
-    public static bool operator ==(Label left, Label right)
-        => left is null
-                ? right is null
-                : left.Equals(right);
-
-    /// <summary>
-    /// Compares two <see cref="Label"/> objects.
-    /// </summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns>
-    /// <see langword="true"/> if the objects are not considered to be equal (<see cref="Equals(Label)"/>);
-    /// otherwise <see langword="false"/>.
-    /// </returns>
-    public static bool operator !=(Label left, Label right)
-        => !(left==right);
-    #endregion
 }

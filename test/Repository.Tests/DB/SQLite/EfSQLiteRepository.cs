@@ -51,6 +51,9 @@ public class EfSQLiteRepository : DbContextRepository
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // TODO: try this approach to apply all configurations from the assembly:
+        // modelBuilder.ApplyConfigurationsFromAssembly(typeof(EfSQLiteRepository).Assembly);
+
         new CountryConfiguration().Configure(modelBuilder.Entity<Country>());
         new RoleConfiguration().Configure(modelBuilder.Entity<Role>());
         new InstrumentConfiguration().Configure(modelBuilder.Entity<Instrument>());
@@ -60,6 +63,8 @@ public class EfSQLiteRepository : DbContextRepository
         new AlbumConfiguration().Configure(modelBuilder.Entity<Album>());
         new TrackConfiguration().Configure(modelBuilder.Entity<Track>());
         new PersonConfiguration().Configure(modelBuilder.Entity<Person>());
+
+        new AlbumPersonConfiguration().Configure(modelBuilder.Entity<AlbumPerson>());
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

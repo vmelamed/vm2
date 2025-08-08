@@ -18,6 +18,8 @@ class CountryConfiguration : IEntityTypeConfiguration<Country>
         builder
             .Property(c => c.Name)
             .HasMaxLength(Country.MaxNameLength)
+            .UseCollation("NOCASE")
+            .UseCollation("RTRIM")
             ;
     }
 }
