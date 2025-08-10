@@ -3,9 +3,12 @@
 /// <summary>
 /// Represents the many-to-many association between a track (the owning entity) and a person, including their roles and instruments on the track.
 /// </summary>
-/// <remarks>This record encapsulates the relationship between a person and a track, providing details such as the
-/// person's name, roles, and instruments. It is designed to be immutable and supports validation through the <see
-/// cref="IValidatable"/> interface.</remarks>
+/// <remarks>This record encapsulates the relationship between a person and a track, providing details such as the person's name,
+/// roles, and instruments.<br/>F
+/// It is designed to be immutable and supports validation through the
+/// <see cref="IValidatable"/> interface.<br/>
+/// TODO: replace with struct when available in, <see href="https://github.com/dotnet/efcore/issues/31237">EF 10(+?)</see>.
+/// </remarks>
 /// <param name="Person">Gets the person associated with the owning track.</param>
 /// <param name="Name">Caches the name of the person to avoid excessive loading of Person instances.</param>
 [DebuggerDisplay("TrackPerson: {PersonId}: {PersonName}")]
@@ -13,6 +16,12 @@ public record TrackPerson(Person Person, string Name) : IValidatable
 {
     HashSet<string> _roles = [];
     HashSet<string> _instruments = [];
+
+    ///// <summary>
+    ///// Gets the unique identifier of the person.
+    ///// </summary>
+    // Shadow foreign key by convention:
+    //public int PersonId { get; private set; }
 
     /// <summary>
     /// Gets the set of roles that the person has on the track.

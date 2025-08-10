@@ -2,7 +2,7 @@
 using System;
 
 [DebuggerDisplay("Person {Id}: {Name}")]
-public class Person : IFindable<Person>, IAuditable, IValidatable
+public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticConcurrency
 {
     public const int MaxNameLength = 100;
 

@@ -2,7 +2,7 @@
 using System;
 
 [DebuggerDisplay("Track {Id}: {Title}")]
-public class Track : IFindable<Track>, IAuditable, IValidatable
+public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConcurrency
 {
     public const int MaxTitleLength = 256;
 

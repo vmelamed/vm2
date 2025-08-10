@@ -4,8 +4,9 @@
 /// Represents a track within an album.
 /// </summary>
 /// <remarks>
-/// This type is immutable and provides information about a track's association with an album, including its order within the
-/// album and whether it was first released on that album.
+/// This type is immutable and provides information about a track's association with an album, including its order within the<br/>
+/// album and whether it was first released on that album.<br/>
+/// TODO: replace with struct when available in, <see href="https://github.com/dotnet/efcore/issues/31237">EF 10(+?)</see>.
 /// </remarks>
 /// <param name="Track"></param>
 /// <param name="OrderNumber"></param>

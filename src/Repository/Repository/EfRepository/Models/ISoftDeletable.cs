@@ -33,7 +33,7 @@ public interface ISoftDeletable
     /// Gets an expression that determines whether an <see cref="ISoftDeletable"/> entity is marked as deleted. The expression
     /// can be used in LINQ queries to filter out deleted entities from results.
     /// </summary>
-    static virtual Expression<Func<ISoftDeletable, bool>> IsDeletedExpression => entity => entity.DeletedAt.HasValue;
+    static virtual Expression<Func<ISoftDeletable, bool>> IsDeletedPredicate => entity => entity.DeletedAt.HasValue;
 
     /// <summary>
     /// Gets a value indicating whether the entity is marked as deleted.

@@ -26,6 +26,8 @@ class TrackConfiguration : IEntityTypeConfiguration<Track>
                 t => t.Personnel,
                 onb => onb.ToJson())    // ???
             ;
+
+        new OptimisticConcurrencyConfiguration<Track>().Configure(builder);
     }
 }
 

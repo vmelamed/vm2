@@ -1,7 +1,7 @@
 ﻿namespace vm2.Repository.Tests.Domain;
 
 [DebuggerDisplay("Album {Id}: {Title}")]
-public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable
+public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable, IOptimisticConcurrency
 {
     public const int MaxTitleLength = 250;
 

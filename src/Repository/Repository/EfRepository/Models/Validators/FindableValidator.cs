@@ -2,8 +2,9 @@
 
 /// <summary>
 /// Validator for objects that implement the <see cref="IFindable"/> interface. This validator can be <c>Include</c>-ed in a
-/// fluent validation pipeline <br/> but it can also be implemented with more specific validation rules in derived classes,
-/// e.g. <c>RuleFor(f => f.Id).Must(id => id > 0)</c>.
+/// fluent validation pipeline <br/>
+/// but it can also be implemented with more specific validation rules in derived classes, e.g. <br/>
+/// <c>RuleFor(f => f.Id).Must(id => id > 0)</c>.
 /// </summary>
 public class FindableValidator : AbstractValidator<IFindable>
 {

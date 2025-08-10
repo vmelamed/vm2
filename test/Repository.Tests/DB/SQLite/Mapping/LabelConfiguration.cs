@@ -4,7 +4,9 @@ class LabelConfiguration : IEntityTypeConfiguration<Label>
 {
     public void Configure(EntityTypeBuilder<Label> builder)
     {
-        builder.ToTable(nameof(Label));
+        builder
+            .ToTable(nameof(Label))
+            ;
         new FindableConfiguration<Label>().Configure(builder);
 
         builder
@@ -27,5 +29,6 @@ class LabelConfiguration : IEntityTypeConfiguration<Label>
             ;
 
         new AuditableConfiguration<Label>().Configure(builder);
+        new OptimisticConcurrencyConfiguration<Label>().Configure(builder);
     }
 }

@@ -12,7 +12,10 @@
         <PackageReference Include="xunit" />
         <PackageReference Include="Xunit.Extension" />
         <PackageReference Include="xunit.extensibility.execution" />
-        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="xunit.runner.visualstudio">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
 </Project>

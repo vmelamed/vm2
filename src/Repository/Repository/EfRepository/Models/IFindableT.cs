@@ -4,8 +4,9 @@
 /// Extends <see cref="IFindable"/> with a new <c>static abstract</c> property <see cref="KeyExpression"/> - a lambda expression
 /// that extracts the primary key(s) from the entity <typeparamref name="TEntity"/>.<br/>
 /// Leverages default interface implementation to provide implementation of the <see cref="IFindable.KeyValues"/> property that
-/// is used by the repository's method <br/><see cref="IRepository.Find{T}(IEnumerable{object}, CancellationToken)"/> to find
-/// the entity by its primary key(s) in the change tracker or in the physical store.
+/// is used by the repository's method <br/>
+/// <see cref="IRepository.Find{T}(IEnumerable{object}, CancellationToken)"/> to find the entity by its primary key(s) in the
+/// change tracker or in the physical store.
 /// </summary>
 /// <example><![CDATA[
 /// class MyEntity : IFindable<MyEntity>

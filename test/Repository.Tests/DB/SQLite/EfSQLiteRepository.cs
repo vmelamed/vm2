@@ -3,31 +3,8 @@
 /// <summary>
 /// <see cref="IRepository"/> based on Entity Framework and SQLite.
 /// </summary>
-public class EfSQLiteRepository : DbContextRepository
+public class EfSQLiteRepository : SQLiteDbContextRepository
 {
-    static SqliteConnection? _inMemConnection;
-
-    public static SqliteConnection GetConnection(string? connectionString)
-    {
-        if (string.IsNullOrWhiteSpace(connectionString))
-            throw new ConfigurationErrorsException("SQLite DB connection string cannot be null, empty, or consist of whitespace characters only.");
-
-        var cb = new DbConnectionStringBuilder() { ConnectionString = connectionString };
-        var db = cb.GetDatabase();
-
-        if (string.IsNullOrWhiteSpace(db))
-            throw new ConfigurationErrorsException("Invalid SQLite DB connection string.");
-
-        var connection = new SqliteConnection(connectionString);
-
-        if (db.Equals(":memory:", StringComparison.OrdinalIgnoreCase))
-            _inMemConnection ??= new SqliteConnection(connectionString);
-
-        connection.Open();
-
-        return connection;
-    }
-
     public string Actor { get; init; }
 
     /// <summary>

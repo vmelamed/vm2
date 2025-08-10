@@ -2,7 +2,7 @@
 using System;
 
 [DebuggerDisplay("Label {Id}: {Name} ({CountryCode})")]
-public class Label : IFindable<Label>, IAuditable, IValidatable
+public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConcurrency
 {
     /// <summary>
     /// Represents the maximum allowed length for Label's name.

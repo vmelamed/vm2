@@ -33,8 +33,8 @@ public static class QueryableExtensions
 
     /// <summary>
     /// Adds the specified entity to the underlying object collection represented by the given queryable.<br/>
-    /// For Entity Framework Core, this means the entity is marked as <see cref="EntityState.Unchanged"/>.
-    /// <br/>If subsequently the entity is modified, its state will change to <see cref="EntityState.Modified"/> and the new<br/>
+    /// For Entity Framework Core, this means the entity is marked as <see cref="EntityState.Unchanged"/>.<br/>
+    /// If subsequently the entity is modified, its state will change to <see cref="EntityState.Modified"/> and the new<br/>
     /// state of the entity will be stored in the data store on <see cref="IRepository.Commit"/>.
     /// </summary>
     /// <typeparam name="T">The type of the entity to attach.</typeparam>

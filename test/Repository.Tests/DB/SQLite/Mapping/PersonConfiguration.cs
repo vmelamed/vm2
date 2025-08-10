@@ -28,5 +28,6 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
             ;
 
         new AuditableConfiguration<Person>().Configure(builder);
+        new OptimisticConcurrencyConfiguration<Person>().Configure(builder);
     }
 }

@@ -4,7 +4,9 @@ class AlbumPersonConfiguration : IEntityTypeConfiguration<AlbumPerson>
 {
     public void Configure(EntityTypeBuilder<AlbumPerson> builder)
     {
-        builder.ToTable(nameof(AlbumPerson));
+        builder
+            .ToTable(nameof(AlbumPerson))
+            ;
 
         builder
             .HasOne(ap => ap.Album)
@@ -15,5 +17,7 @@ class AlbumPersonConfiguration : IEntityTypeConfiguration<AlbumPerson>
             .HasOne(ap => ap.Person)
             .WithMany(p => p.PersonsAlbums)
             ;
+
+        new OptimisticConcurrencyConfiguration<AlbumPerson>().Configure(builder);
     }
 }

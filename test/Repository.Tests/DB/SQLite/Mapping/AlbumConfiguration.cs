@@ -4,7 +4,11 @@ class AlbumConfiguration : IEntityTypeConfiguration<Album>
 {
     public void Configure(EntityTypeBuilder<Album> builder)
     {
-        builder.ToTable(nameof(Album));
+        builder
+            .ToTable(nameof(Album))
+            .HasQueryFilter(a => a.DeletedAt == null)   // Soft delete filter
+            ;
+
         new FindableConfiguration<Album>().Configure(builder);
 
         builder
@@ -38,5 +42,6 @@ class AlbumConfiguration : IEntityTypeConfiguration<Album>
 
         new AuditableConfiguration<Album>().Configure(builder);
         new SoftDeletableConfiguration<Album>().Configure(builder);
+        new OptimisticConcurrencyConfiguration<Album>().Configure(builder);
     }
 }

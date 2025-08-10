@@ -10,7 +10,7 @@
 /// <param name="Album">Gets the album associated with a person.</param>
 /// <param name="Person">Gets the person associated with an album.</param>
 [DebuggerDisplay("AlbumPerson {AlbumId-PersonId}")]
-public class AlbumPerson : IValidatable
+public class AlbumPerson : IValidatable, IOptimisticConcurrency
 {
     HashSet<string> _roles = [];
     HashSet<string> _instruments = [];

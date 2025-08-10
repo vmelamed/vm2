@@ -2,6 +2,7 @@
   "solution": {
     "path": "vm2.slnx",
     "projects": [
+      "src\\Repository\\DB\\SQLiteEfRepository\\SQLiteEfRepository.csproj",
       "src\\Repository\\DbSetTestSubstitute\\DbSetTestSubstitute.csproj",
       "src\\Repository\\Repository\\Repository.csproj",
       "src\\Threading\\Threading.csproj",
