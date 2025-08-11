@@ -140,55 +140,6 @@ public interface IRepository : IAsyncDisposable
     T Remove<T>(T entity) where T : class;
 
     /// <summary>
-    /// Adds a <paramref name="range"/> (or a set) of <typeparamref name="T"/> entities to the change-tracker in "Added" state.
-    /// The method usually finishes synchronously.<br/>
-    /// However, if a whole graph of entities is added and some of the primary keys are generated at the store,<br/>
-    /// the ORM may need to add some of the entities to the store now, to obtain the primary keys and fix-up the values of some<br/>
-    /// of the foreign keys of the dependent entities.<br/>
-    /// The entities are added to the data store on <see cref="IRepository.Commit"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the entities in the <paramref name="range"/>.</typeparam>
-    /// <param name="range">The range or set of entities to add.</param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns><see cref="Task"/>.</returns>
-    /// <remarks>Note that the method is asynchronous.</remarks>
-    Task AddRange<T>(IEnumerable<T> range, CancellationToken cancellationToken = default) where T : class;
-
-    /// <summary>
-    /// Attaches a <paramref name="range"/> or a set of entities to the internal object change-tracker in a "Modified" state.<br/>
-    /// At the next <see cref="IRepository.Commit"/> the ORM will update the entities in "Modified" state in the physical store.
-    /// <para>
-    /// Use with caution! The use of this method implies that the code "knows" what is the current state of the entities better<br/>
-    /// than the DB. In effect the DB stops being the ultimate source of truth. This is a strategy sometimes referred to as
-    /// "client-wins"<br/>
-    /// vs. "store-wins".
-    /// </para>
-    /// </summary>
-    /// <typeparam name="T">The type of the entities in the <paramref name="range"/>.</typeparam>
-    /// <param name="range">The modified entities.</param>
-    void UpdateRange<T>(IEnumerable<T> range) where T : class;
-
-    /// <summary>
-    /// Attaches a range (or a set) of <typeparamref name="T"/> entities to the change-tracker in a "Unmodified" state.
-    /// <para>
-    /// Use with caution! The use of this method implies that the code "knows" what is the current state of the entity better<br/>
-    /// than the repository or the DB. In effect the DB stops being the ultimate source of truth. This is a strategy sometimes<br/>
-    /// known as "client-wins" (vs. "store-wins").
-    /// </para>
-    /// </summary>
-    /// <typeparam name="T">The type of the entities in the range.</typeparam>
-    /// <param name="range">The entities to be attached.</param>
-    void AttachRange<T>(IEnumerable<T> range) where T : class;
-
-    /// <summary>
-    /// Adds the entities in the <paramref name="range"/> in the tracker in "Deleted" state.<br/>
-    /// At the next <see cref="IRepository.Commit"/> the entities will be physically deleted from the DB as well.
-    /// </summary>
-    /// <typeparam name="T">The type of the entities.</typeparam>
-    /// <param name="range">The entities to be deleted.</param>
-    void RemoveRange<T>(IEnumerable<T> range) where T : class;
-
-    /// <summary>
     /// Commits the added, modified and deleted entities in the change-tracker to the physical store invoking the respective <br/>
     /// back-end actions. For some DB-s  the action is a single transaction, for others it is a sequence of transactions.
     /// </summary>

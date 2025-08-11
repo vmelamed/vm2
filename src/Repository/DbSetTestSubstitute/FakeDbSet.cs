@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.DbSetTestSubstitute;
+﻿namespace vm2.Repository.FakeDbSet;
 
 /// <summary>
 /// Class TestDbSet encapsulates an in-memory sequence of objects to be queried synchronously or asynchronously. It
@@ -13,7 +13,7 @@
 /// <![CDATA[
 /// IAsyncRepository _repository = Substitute.For<IAsyncRepository>(); // substitute for EF DbContext
 /// List<Entity> testEntities = new {...};
-/// _repository.Set<Entity>().Returns(new DbSetSubstitute<Entity>(testEntities));
+/// _repository.Set<Entity>().Returns(new FakeDbSet<Entity>(testEntities));
 /// ...
 /// var Sut = new MyService(_repository, ...);
 ///
@@ -21,7 +21,7 @@
 /// var result = await Sut.MyMethodWithLinqQueriesAsync(...);
 /// ]]>
 /// </example>
-public partial class DbSetSubstitute<TEntity> : DbSet<TEntity>,
+public partial class FakeDbSet<TEntity> : DbSet<TEntity>,
                                                 IQueryable<TEntity>,
                                                 IAsyncEnumerable<TEntity>,
                                                 IListSource,
@@ -145,14 +145,14 @@ public partial class DbSetSubstitute<TEntity> : DbSet<TEntity>,
            || GetConventionsKeyNames();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DbSetSubstitute{TEntity}" /> class with an empty List{TEntity}.
+    /// Initializes a new instance of the <see cref="FakeDbSet{TEntity}" /> class with an empty List{TEntity}.
     /// </summary>
     /// <param name="keyExpressions">
     /// LINQ expressions specifying the primary keys. If empty the constructor will try to infer the names via
     /// reflection, looking for properties with with names: ID, Id, id, or if <typeparamref name="TEntity"/> implements
     /// IPointReadable - the pair (id, partitionKey).
     /// </param>
-    public DbSetSubstitute(params Expression<Func<TEntity, object>>[] keyExpressions)
+    public FakeDbSet(params Expression<Func<TEntity, object>>[] keyExpressions)
     {
         GetKeyNames(keyExpressions);
 
@@ -161,14 +161,14 @@ public partial class DbSetSubstitute<TEntity> : DbSet<TEntity>,
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DbSetSubstitute{TEntity}"/> class.
+    /// Initializes a new instance of the <see cref="FakeDbSet{TEntity}"/> class.
     /// </summary>
     /// <param name="source">The initial sequence of entities.</param>
     /// <param name="keyExpressions">
     /// The names of the fields comprising the primary id, as a <c>params</c> array of name selecting lambdas:
     /// <code>e => e.PrimaryKeyField0, e => e.PrimaryKeyField1, ...</code>
     /// </param>
-    public DbSetSubstitute(
+    public FakeDbSet(
         IEnumerable<TEntity> source,
         params Expression<Func<TEntity, object>>[] keyExpressions)
     {
@@ -180,11 +180,11 @@ public partial class DbSetSubstitute<TEntity> : DbSet<TEntity>,
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DbSetSubstitute{TEntity}" /> class with an empty List{TEntity}.
+    /// Initializes a new instance of the <see cref="FakeDbSet{TEntity}" /> class with an empty List{TEntity}.
     /// </summary>
     /// <param name="keyObjExpression">The primary keys expressed as a new expression <c>e => { e.Id, e.TenantId }</c>.</param>
     /// <seealso cref="I:IFindable{TEntity}"/>
-    public DbSetSubstitute(Expression<Func<TEntity, object?>> keyObjExpression)
+    public FakeDbSet(Expression<Func<TEntity, object?>> keyObjExpression)
     {
         GetKeyNames(keyObjExpression);
 
@@ -193,12 +193,12 @@ public partial class DbSetSubstitute<TEntity> : DbSet<TEntity>,
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DbSetSubstitute{TEntity}"/> class.
+    /// Initializes a new instance of the <see cref="FakeDbSet{TEntity}"/> class.
     /// </summary>
     /// <param name="source">The initial sequence of entities.</param>
     /// <param name="keyObjExpression">The primary keys expressed as a new expression <c>e => { e.Id, e.TenantId }</c>.</param>
     /// <seealso cref="I:IFindable{TEntity}"/>
-    public DbSetSubstitute(
+    public FakeDbSet(
         IEnumerable<TEntity> source,
         Expression<Func<TEntity, object?>> keyObjExpression)
     {
@@ -268,8 +268,8 @@ public partial class DbSetSubstitute<TEntity> : DbSet<TEntity>,
     static EntityEntry<TEntity> NewEntry(TEntity entity)
         => new(
             new InternalEntityEntry(
-                    DefaultStubbedStateManager,
-                    DefaultStubbedEntityType,
+                    DefaultStubStateManager,
+                    DefaultStubEntityType,
                     entity));
 #pragma warning restore EF1001
 #pragma warning restore IDE0079
@@ -405,7 +405,7 @@ public partial class DbSetSubstitute<TEntity> : DbSet<TEntity>,
     IQueryProvider IQueryable.Provider => ((IQueryable)_asyncSource).Provider;
 
     /// <inheritdoc/>
-    IServiceProvider IInfrastructure<IServiceProvider>.Instance => DefaultStubbedServiceProvider;
+    IServiceProvider IInfrastructure<IServiceProvider>.Instance => DefaultStubServiceProvider;
 
     /// <inheritdoc/>
     IList IListSource.GetList() => (IList)_source;

@@ -1,18 +1,18 @@
-﻿namespace vm2.Repository.DbSetTestSubstitute;
+﻿namespace vm2.Repository.FakeDbSet;
 
 #pragma warning disable IDE0079
 #pragma warning disable CS0067, IDE1006, EF1001
 
-public partial class DbSetSubstitute<TEntity>
+public partial class FakeDbSet<TEntity>
 {
-    static readonly StubbedStateManager DefaultStubbedStateManager = new();
-    static readonly StubbedEntityType DefaultStubbedEntityType = new();
-    static readonly StubbedSnapshot DefaultStubbedSnapshot = new();
-    static readonly StubbedPropertyCounts DefaultStubbedPropertyCounts = new();
-    static readonly StubbedServiceProvider DefaultStubbedServiceProvider = new();
-    class StubbedStateManager : IStateManager
+    static readonly StubStateManager DefaultStubStateManager = new();
+    static readonly StubEntityType DefaultStubEntityType = new();
+    static readonly StubSnapshot DefaultStubSnapshot = new();
+    static readonly StubPropertyCounts DefaultStubPropertyCounts = new();
+    static readonly StubServiceProvider DefaultStubServiceProvider = new();
+    class StubStateManager : IStateManager
     {
-        public static IStateManager Instance { get; } = DefaultStubbedStateManager;
+        public static IStateManager Instance { get; } = DefaultStubStateManager;
 
         public StateManagerDependencies Dependencies => throw new NotImplementedException();
 
@@ -102,9 +102,9 @@ public partial class DbSetSubstitute<TEntity>
         public InternalEntityEntry StartTrackingFromQuery(IEntityType baseEntityType, object entity, in ISnapshot snapshot) => throw new NotImplementedException();
     }
 
-    class StubbedEntityType : IEntityType, IRuntimeEntityType
+    class StubEntityType : IEntityType, IRuntimeEntityType
     {
-        public static IEntityType Instance { get; } = DefaultStubbedEntityType;
+        public static IEntityType Instance { get; } = DefaultStubEntityType;
 
         public object? this[string name] => throw new NotImplementedException();
 
@@ -281,12 +281,12 @@ public partial class DbSetSubstitute<TEntity>
         IAnnotation? IReadOnlyAnnotatable.FindAnnotation(string name) => throw new NotImplementedException();
         IEnumerable<IAnnotation> IReadOnlyAnnotatable.GetAnnotations() => throw new NotImplementedException();
 
-        PropertyCounts IRuntimeEntityType.Counts => DefaultStubbedPropertyCounts;
+        PropertyCounts IRuntimeEntityType.Counts => DefaultStubPropertyCounts;
         Func<InternalEntityEntry, ISnapshot> IRuntimeEntityType.RelationshipSnapshotFactory => throw new NotImplementedException();
         Func<InternalEntityEntry, ISnapshot> IRuntimeEntityType.OriginalValuesFactory => throw new NotImplementedException();
         Func<ISnapshot> IRuntimeEntityType.StoreGeneratedValuesFactory => throw new NotImplementedException();
         Func<InternalEntityEntry, ISnapshot> IRuntimeEntityType.TemporaryValuesFactory => throw new NotImplementedException();
-        Func<ISnapshot> IRuntimeEntityType.EmptyShadowValuesFactory => () => DefaultStubbedSnapshot;
+        Func<ISnapshot> IRuntimeEntityType.EmptyShadowValuesFactory => () => DefaultStubSnapshot;
         public bool HasServiceProperties() => throw new NotImplementedException();
         public Func<MaterializationContext, object> GetOrCreateMaterializer(IEntityMaterializerSource source) => throw new NotImplementedException();
         public Func<MaterializationContext, object> GetOrCreateEmptyMaterializer(IEntityMaterializerSource source) => throw new NotImplementedException();
@@ -316,24 +316,24 @@ public partial class DbSetSubstitute<TEntity>
         IEnumerable<IReadOnlyPropertyBase> IReadOnlyTypeBase.FindMembersInHierarchy(string name) => throw new NotImplementedException();
         public ConfigurationSource? GetConstructorBindingConfigurationSource() => throw new NotImplementedException();
         public ConfigurationSource? GetServiceOnlyConstructorBindingConfigurationSource() => throw new NotImplementedException();
-        public Func<IDictionary<string, object?>, ISnapshot> ShadowValuesFactory => d => new StubbedSnapshot();
+        public Func<IDictionary<string, object?>, ISnapshot> ShadowValuesFactory => d => new StubSnapshot();
     }
 
-    class StubbedSnapshot : ISnapshot
+    class StubSnapshot : ISnapshot
     {
         public object? this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public T GetValue<T>(int index) => throw new NotImplementedException();
     }
 
-    class StubbedPropertyCounts : PropertyCounts
+    class StubPropertyCounts : PropertyCounts
     {
-        public StubbedPropertyCounts() : base(1, 0, 1, 1, 0, 1, 0)
+        public StubPropertyCounts() : base(1, 0, 1, 1, 0, 1, 0)
         {
         }
     }
 
-    class StubbedServiceProvider : IServiceProvider
+    class StubServiceProvider : IServiceProvider
     {
         public object? GetService(Type serviceType) => default;
     }

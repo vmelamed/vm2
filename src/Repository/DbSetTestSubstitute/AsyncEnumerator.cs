@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.DbSetTestSubstitute;
+﻿namespace vm2.Repository.FakeDbSet;
 
 /// <summary>
 /// Provides an asynchronous enumerator for iterating over a collection of type <typeparamref name="T"/>.

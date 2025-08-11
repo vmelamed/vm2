@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>vm2.Repository.DbSetTestSubstitute</RootNamespace>
+    <RootNamespace>vm2.Repository.FakeDbSet</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

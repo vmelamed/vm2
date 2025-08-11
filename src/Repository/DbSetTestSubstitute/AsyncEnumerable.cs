@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.DbSetTestSubstitute;
+﻿namespace vm2.Repository.FakeDbSet;
 
 /// <summary>
 /// Represents an asynchronous enumerable collection of elements that can be queried asynchronously.

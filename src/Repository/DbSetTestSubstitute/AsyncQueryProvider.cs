@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.DbSetTestSubstitute;
+﻿namespace vm2.Repository.FakeDbSet;
 
 class AsyncQueryProvider<T> : IAsyncQueryProvider
 {
