@@ -27,7 +27,7 @@
     <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Xml/Xml.csproj" />
   </Folder>
   <Folder Name="/src/Repository/">
-    <Project Path="src/Repository/DbSetTestSubstitute/DbSetTestSubstitute.csproj" />
+    <Project Path="src/Repository/FakeDbSet/FakeDbSet.csproj" />
     <Project Path="src/Repository/Repository/Repository.csproj" />
   </Folder>
   <Folder Name="/src/Functional/">
@@ -58,6 +58,7 @@
   </Folder>
   <Folder Name="/test/Repository.Tests/">
     <Project Path="test/Repository.Tests/Domain/Domain.csproj" Id="ef225de8-8a94-4835-8bd8-3d6607673d2e" />
+    <Project Path="test/Repository.Tests/FakeDbSetTests/FakeDbSetTests.csproj" />
     <Project Path="test/Repository.Tests/IntegrationTests/IntegrationTests.csproj" Id="08790151-aed0-4411-a14d-b811a1be8668" />
     <Project Path="test/Repository.Tests/TestData/TestData.csproj" Id="55bd1290-eb6b-47f7-80be-ae6b4f7aa97e" />
   </Folder>

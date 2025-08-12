@@ -1,10 +1,10 @@
 ﻿namespace vm2.Repository.FakeDbSet;
 
-class AsyncQueryProvider<T> : IAsyncQueryProvider
+class FakeAsyncQueryProvider<T> : IAsyncQueryProvider
 {
     readonly IQueryProvider _inner;
 
-    internal AsyncQueryProvider(IQueryProvider inner) => _inner = inner;
+    internal FakeAsyncQueryProvider(IQueryProvider inner) => _inner = inner;
 
     #region IAsyncQueryProvider
     #region IQueryProvider
@@ -13,7 +13,7 @@ class AsyncQueryProvider<T> : IAsyncQueryProvider
     /// </summary>
     /// <param name="expression">An expression tree that represents a LINQ query.</param>
     /// <returns>An <see cref="IQueryable" /> that can evaluate the query represented by the specified expression tree.</returns>
-    public IQueryable CreateQuery(Expression expression) => new AsyncEnumerable<T>(expression);
+    public IQueryable CreateQuery(Expression expression) => new FakeAsyncEnumerable<T>(expression);
 
     /// <summary>
     /// Constructs an <see cref="IQueryable{T}" /> object that can evaluate the query represented by a specified
@@ -22,7 +22,7 @@ class AsyncQueryProvider<T> : IAsyncQueryProvider
     /// <typeparam name="TElement">The type of the elements of the <see cref="IQueryable" /> that is returned.</typeparam>
     /// <param name="expression">An expression tree that represents a LINQ query.</param>
     /// <returns>An <see cref="IQueryable{TElement}" /> that can evaluate the query represented by the specified expression tree.</returns>
-    public IQueryable<TElement> CreateQuery<TElement>(Expression expression) => new AsyncEnumerable<TElement>(expression);
+    public IQueryable<TElement> CreateQuery<TElement>(Expression expression) => new FakeAsyncEnumerable<TElement>(expression);
 
     /// <summary>
     /// Executes the query represented by a specified expression tree.

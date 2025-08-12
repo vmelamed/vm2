@@ -4,5 +4,3 @@ global using System.Text.RegularExpressions;
 global using System.Threading.Tasks;
 
 global using FluentAssertions.Formatting;
-
-global using Xunit;

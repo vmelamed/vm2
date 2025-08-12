@@ -9,24 +9,24 @@
 /// an <see cref="Expression"/> to support LINQ query capabilities.
 /// </remarks>
 /// <typeparam name="T">The type of elements in the collection.</typeparam>
-class AsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
+class FakeAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class.
+    /// Initializes a new instance of the <see cref="FakeAsyncEnumerable{T}"/> class.
     /// </summary>
     /// <param name="enumerable">A collection to associate with the new instance.</param>
-    public AsyncEnumerable(IEnumerable<T> enumerable)
-        : base(enumerable)
+    public FakeAsyncEnumerable(IEnumerable<T> enumerable)
+        : base(enumerable ?? throw new ArgumentNullException(nameof(enumerable)))
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class.
+    /// Initializes a new instance of the <see cref="FakeAsyncEnumerable{T}"/> class.
     /// </summary>
     /// <param name="expression">An expression tree to associate with the new instance.</param>
     /// <exception cref="InvalidOperationException">Expected CallExpression but got: {expression} (TODO!)</exception>
-    public AsyncEnumerable(Expression expression)
-        : base(expression)
+    public FakeAsyncEnumerable(Expression expression)
+        : base(expression ?? throw new ArgumentNullException(nameof(expression)))
     {
     }
 
@@ -36,10 +36,10 @@ class AsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T
     /// <param name="_">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>IAsyncEnumerator&lt;T&gt;.</returns>
     public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken _)
-        => new AsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
+        => new FakeAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
 
     /// <summary>
     /// Gets the query provider that is associated with this data source.
     /// </summary>
-    IQueryProvider IQueryable.Provider => new AsyncQueryProvider<T>(this);
+    IQueryProvider IQueryable.Provider => new FakeAsyncQueryProvider<T>(this);
 }

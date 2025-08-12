@@ -3,11 +3,12 @@
     "path": "vm2.slnx",
     "projects": [
       "src\\Repository\\DB\\SQLiteEfRepository\\SQLiteEfRepository.csproj",
-      "src\\Repository\\DbSetTestSubstitute\\DbSetTestSubstitute.csproj",
+      "src\\Repository\\FakeDbSet\\FakeDbSet.csproj",
       "src\\Repository\\Repository\\Repository.csproj",
       "src\\Threading\\Threading.csproj",
       "test\\Repository.Tests\\DB\\SQLite\\SQLite.csproj",
       "test\\Repository.Tests\\Domain\\Domain.csproj",
+      "test\\Repository.Tests\\FakeDbSetTests\\FakeDbSetTests.csproj",
       "test\\Repository.Tests\\IntegrationTests\\IntegrationTests.csproj",
       "test\\Repository.Tests\\TestData\\TestData.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"

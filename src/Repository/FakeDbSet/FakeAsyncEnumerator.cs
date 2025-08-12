@@ -8,19 +8,20 @@
 /// It is useful for scenarios where asynchronous iteration is required but only a synchronous enumerator is available.
 /// </remarks>
 /// <typeparam name="T">The type of elements in the collection.</typeparam>
-class AsyncEnumerator<T> : IAsyncEnumerator<T>
+class FakeAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
     readonly IEnumerator<T> _enumerator;
+    bool _currentDetermined;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncEnumerator{T}"/> class with the specified enumerator.
+    /// Initializes a new instance of the <see cref="FakeAsyncEnumerator{T}"/> class with the specified enumerator.
     /// </summary>
     /// <remarks>
     /// The provided enumerator is used to perform asynchronous iteration over the collection. Ensure that the enumerator is not
     /// null before passing it to this constructor.
     /// </remarks>
     /// <param name="enumerator">The enumerator to be used for asynchronous iteration.</param>
-    public AsyncEnumerator(IEnumerator<T> enumerator)
+    public FakeAsyncEnumerator(IEnumerator<T> enumerator)
         => _enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator), "Enumerator cannot be null.");
 
     /// <summary>
@@ -32,12 +33,17 @@ class AsyncEnumerator<T> : IAsyncEnumerator<T>
     /// enumerator has passed the end of the collection.
     /// </returns>
     public ValueTask<bool> MoveNextAsync()
-        => ValueTask.FromResult(_enumerator.MoveNext());
+    {
+        _currentDetermined = _enumerator.MoveNext();
+        return ValueTask.FromResult(_currentDetermined);
+    }
 
     /// <summary>
     /// Gets the current element in the collection.
     /// </summary>
-    public T Current => _enumerator.Current;
+    public T Current => _currentDetermined
+                            ? _enumerator.Current
+                            : throw new InvalidOperationException("The enumerator is outside of the enumerable sequence.");
 
     /// <summary>
     /// Asynchronously releases the resources used by the enumerator.

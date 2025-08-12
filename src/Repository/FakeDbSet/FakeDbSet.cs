@@ -1,14 +1,11 @@
 ﻿namespace vm2.Repository.FakeDbSet;
 
 /// <summary>
-/// Class TestDbSet encapsulates an in-memory sequence of objects to be queried synchronously or asynchronously. It
-/// implements the <see cref="DbSet{TEntity}" /> from Entity Framework, so it can be used as a substitute in unit
-/// tests. Also implements the <see cref="IQueryable{TEntity}" /> and the <see cref="IListSource" />.
+/// Class FakeDbSet encapsulates an in-memory sequence of objects to be queried synchronously or asynchronously. It
+/// implements the <see cref="DbSet{TEntity}" /> from Entity Framework, so it can be used as a fake in unit
+/// tests.
 /// </summary>
 /// <typeparam name="TEntity">The type of the entities in the sequence.</typeparam>
-/// <seealso cref="DbSet{TEntity}" />
-/// <seealso cref="IQueryable{TEntity}" />
-/// <seealso cref="IListSource" />
 /// <example>
 /// <![CDATA[
 /// IAsyncRepository _repository = Substitute.For<IAsyncRepository>(); // substitute for EF DbContext
@@ -22,16 +19,17 @@
 /// ]]>
 /// </example>
 public partial class FakeDbSet<TEntity> : DbSet<TEntity>,
-                                                IQueryable<TEntity>,
-                                                IAsyncEnumerable<TEntity>,
-                                                IListSource,
-                                                IInfrastructure<IServiceProvider> where TEntity : class
+                                            IQueryable<TEntity>,
+                                            IAsyncEnumerable<TEntity>,
+                                            IListSource,
+                                            IInfrastructure<IServiceProvider>
+                                            where TEntity : class
 {
     // the in memory sequence that can be queried synchronously by using the default IQueryable provider
     readonly IList<TEntity> _source;
 
     // the in memory sequence that can be queried asynchronously by using the TestAsyncEnumerable IQueryable provider
-    readonly AsyncEnumerable<TEntity> _asyncSource;
+    readonly FakeAsyncEnumerable<TEntity> _asyncSource;
 
     // the names of the properties (columns) that comprise the primary id for implementing Find and FindAsync
     readonly List<string> _primaryKeyNames = [];
@@ -157,7 +155,7 @@ public partial class FakeDbSet<TEntity> : DbSet<TEntity>,
         GetKeyNames(keyExpressions);
 
         _source = [];
-        _asyncSource = new AsyncEnumerable<TEntity>(_source);
+        _asyncSource = new FakeAsyncEnumerable<TEntity>(_source);
     }
 
     /// <summary>
@@ -176,7 +174,7 @@ public partial class FakeDbSet<TEntity> : DbSet<TEntity>,
 
         // copy and wrap the input sequence into the local sources
         _source = [.. source];
-        _asyncSource = new AsyncEnumerable<TEntity>(_source);
+        _asyncSource = new FakeAsyncEnumerable<TEntity>(_source);
     }
 
     /// <summary>
@@ -189,7 +187,7 @@ public partial class FakeDbSet<TEntity> : DbSet<TEntity>,
         GetKeyNames(keyObjExpression);
 
         _source = [];
-        _asyncSource = new AsyncEnumerable<TEntity>(_source);
+        _asyncSource = new FakeAsyncEnumerable<TEntity>(_source);
     }
 
     /// <summary>
@@ -206,7 +204,7 @@ public partial class FakeDbSet<TEntity> : DbSet<TEntity>,
 
         // copy and wrap the input sequence into the local sources
         _source = [.. source];
-        _asyncSource = new AsyncEnumerable<TEntity>(_source);
+        _asyncSource = new FakeAsyncEnumerable<TEntity>(_source);
     }
 
     /// <inheritdoc/>
