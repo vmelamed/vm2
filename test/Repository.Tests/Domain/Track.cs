@@ -93,6 +93,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     /// <param name="title">The title of the track. Cannot be null or empty.</param>
     /// <param name="duration">The duration of the track. Cannot be <c>default(TimeSpan)</c>.</param>
     /// <param name="genres">The genres that the track can be categorized under, e.g. "jazz", "fusion".</param>
+    /// <param name="trackPersons">The track-person objects listing the personnel on the track.</param>
     /// <param name="createdAt">The date and time when the track was created.</param>
     /// <param name="createdBy">The user or system that created the track.</param>
     /// <param name="updatedAt">The date and time when the track was last updated.</param>
@@ -102,6 +103,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
         string title,
         TimeSpan duration,
         IEnumerable<string>? genres = null,
+        IEnumerable<TrackPerson>? trackPersons = null,
         DateTime createdAt = default,
         string createdBy = "",
         DateTime updatedAt = default,
@@ -111,6 +113,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
         Title           = title;
         Duration        = duration;
         _genres         = genres is not null ? [.. genres] : [];
+        _tracksPersons  = trackPersons is not null ? new HashSet<TrackPerson>(trackPersons, ReferenceEqualityComparer.Instance) : [];
         CreatedAt       = createdAt;
         CreatedBy       = createdBy;
         UpdatedAt       = updatedAt;

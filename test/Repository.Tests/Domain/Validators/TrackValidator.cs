@@ -2,7 +2,7 @@
 
 class TrackInvariantValidator : AbstractValidator<Track>
 {
-    public TrackInvariantValidator()
+    public TrackInvariantValidator(bool lazyLoading = false)
     {
         RuleFor(track => track.Title)
             .NotEmpty()
@@ -16,9 +16,21 @@ class TrackInvariantValidator : AbstractValidator<Track>
             .WithMessage("Duration must be greater than 0 sec.")
             ;
 
-        RuleFor(track => track.Personnel)
+        if (lazyLoading)
+            return;
+
+        RuleFor(a => a.TracksPersons)
+            .NotNull()
+            .WithMessage("TracksPersons must not be null.")
+            .Must(p => p.All(ap => ap is not null))
+            .WithMessage("TracksPersons cannot contain null items.")
+            ;
+
+        RuleFor(a => a.Personnel)
             .NotNull()
             .WithMessage("Personnel must not be null.")
+            .Must(p => p.All(a => a is not null))
+            .WithMessage("Personnel cannot contain null items.")
             ;
     }
 }
@@ -38,9 +50,19 @@ class TrackValidator : AbstractValidator<Track>
 {
     public TrackValidator(IRepository? repository = null)
     {
-        Include(new TrackInvariantValidator());
+        Include(new TrackInvariantValidator(repository?.IsLazyLoadingEnabled<Track>() is true));
         Include(new TrackFindableValidator());
         Include(new AuditableValidator());
+
+        RuleForEach(t => t.TracksPersons)
+            .SetValidator(new TrackPersonValidator(repository))
+            .WithMessage("Invalid TrackPerson in the TracksPersons collection.")
+            ;
+
+        RuleForEach(a => a.Personnel)
+            .SetValidator(new PersonValidator(repository))
+            .WithMessage("Invalid track in the album.")
+            ;
 
         if (repository is null)
             return;

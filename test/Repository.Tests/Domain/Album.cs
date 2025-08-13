@@ -6,9 +6,9 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     public const int MaxTitleLength = 250;
 
     HashSet<string> _genres = [];
-    List<AlbumTrack> _albumTracks = [];
-    HashSet<Person> _personnel = new(ReferenceEqualityComparer.Instance);
     HashSet<AlbumPerson> _albumsPersons = new(ReferenceEqualityComparer.Instance);
+    HashSet<Person> _personnel = new(ReferenceEqualityComparer.Instance);
+    List<AlbumTrack> _albumTracks = [];
 
     /// <summary>
     /// Gets or sets the unique identifier for the album entity.
@@ -42,14 +42,14 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     //public int? LabelId { get; private set; } = null;
 
     /// <summary>
+    /// Gets the collection of albumsPersons associated with the album, such as artists, producers, and contributors.
+    /// </summary>
+    public IEnumerable<AlbumPerson> AlbumsPersons => _albumsPersons;
+
+    /// <summary>
     /// Gets or sets the collection of artists associated with the album.
     /// </summary>
     public IEnumerable<Person> Personnel => _personnel;
-
-    /// <summary>
-    /// Gets the collection of personnel associated with the album, such as artists, producers, and contributors.
-    /// </summary>
-    public IEnumerable<AlbumPerson> AlbumsPersons => _albumsPersons;
 
     /// <summary>
     /// Gets or sets the collection of tracks on this album.
@@ -107,17 +107,23 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <param name="id">The unique identifier for the album.</param>
     /// <param name="title">The title of the album.</param>
     /// <param name="releaseYear">The year when the album was released.</param>
+    /// <param name="label">The label under which the album was released.</param>
+    /// <param name="genres">The collection of genres that the album can be categorized under, e.g. "jazz", "fusion".</param>
+    /// <param name="tracks">The collection of tracks on this album.</param>
     /// <param name="createdAt">The date and time when the album instance was created.</param>
     /// <param name="createdBy">The name of the actor who created the album instance.</param>
     /// <param name="updatedAt">The date and time when the album record was last updated.</param>
     /// <param name="updatedBy">The name of the actor who last updated the album record.</param>
     /// <param name="deletedAt">The dater and time when the album was soft-deleted.</param>
-    /// <param name="deletedAt">The name of the actor who soft-deleted the album.</param>
+    /// <param name="deletedBy">The name of the actor who soft-deleted the album.</param>
     public Album(
         int id,
         string title,
         int? releaseYear,
-        IEnumerable<string>? genres,
+        Label? label = null,
+        IEnumerable<string>? genres = null,
+        IEnumerable<AlbumPerson>? albumsPersons = null,
+        IEnumerable<AlbumTrack>? tracks = null,
         DateTime createdAt = default,
         string createdBy = "",
         DateTime updatedAt = default,
@@ -125,16 +131,24 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         DateTime? deletedAt = null,
         string deletedBy = "")
     {
-        Id          = id;
-        Title       = title;
-        ReleaseYear = releaseYear;
-        _genres     = genres is not null ? [.. genres] : [];
-        CreatedAt   = createdAt;
-        CreatedBy   = createdBy;
-        UpdatedAt   = updatedAt;
-        UpdatedBy   = updatedBy;
-        DeletedAt   = deletedAt;
-        DeletedBy   = deletedBy;
+        Id             = id;
+        Title          = title;
+        ReleaseYear    = releaseYear;
+        Label          = label;
+        _genres        = genres is not null ? [.. genres] : [];
+        _albumTracks   = tracks is not null ? [.. tracks] : [];
+        CreatedAt      = createdAt;
+        CreatedBy      = createdBy;
+        UpdatedAt      = updatedAt;
+        UpdatedBy      = updatedBy;
+        DeletedAt      = deletedAt;
+        DeletedBy      = deletedBy;
+
+        if (albumsPersons is not null)
+        {
+            _albumsPersons = [.. albumsPersons];
+            _personnel     = new(albumsPersons.Select(ap => ap.Person), ReferenceEqualityComparer.Instance);
+        }
 
         new AlbumInvariantValidator()
                 .ValidateAndThrow(this);
@@ -178,7 +192,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     }
 
     /// <summary>
-    /// Adds a person to the album's personnel list.
+    /// Adds a person to the album's albumsPersons list.
     /// </summary>
     /// <param name="person">The person to add to the album. Cannot be null.</param>
     /// <param name="roles">The roles that the person has on the album.</param>
@@ -203,7 +217,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     }
 
     /// <summary>
-    /// Removes the specified person from the album's personnel list.
+    /// Removes the specified person from the album's albumsPersons list.
     /// </summary>
     /// <param name="person">The person to be removed from the album. Cannot be null.</param>
     /// <returns>The current instance of the album, allowing for method chaining.</returns>
@@ -226,7 +240,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// Adds a track to the album at the specified index or appends it to the end if no index is provided.
     /// </summary>
     /// <remarks>If the track is already present in the album at the specified index, no changes are made. Adding a track also
-    /// updates the album's personnel list by including all personnel associated with the track.
+    /// updates the album's albumsPersons list by including all albumsPersons associated with the track.
     /// </remarks>
     /// <param name="track">The track to add to the album. Cannot be null.</param>
     /// <param name="order">
@@ -297,7 +311,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// Adds a track to the album at the specified index or appends it to the end if no index is provided.
     /// </summary>
     /// <remarks>If the track is already present in the album at the specified index, no changes are made. Adding a track also
-    /// updates the album's personnel list by including all personnel associated with the track.
+    /// updates the album's albumsPersons list by including all albumsPersons associated with the track.
     /// </remarks>
     /// <param name="track">The track to add to the album. Cannot be null.</param>
     /// <param name="order">
@@ -364,7 +378,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     }
 
     /// <summary>
-    /// A new track was added to the album. Ensure that the album's personnel list is updated accordingly.
+    /// A new track was added to the album. Ensure that the album's albumsPersons list is updated accordingly.
     /// </summary>
     /// <param name="track">The added track.</param>
     /// <returns>The current <see cref="Album"/> instance.</returns>
@@ -374,7 +388,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         foreach (var genre in track.Genres)
             _genres.Add(genre);
 
-        // add the track's personnel to the album's personnel
+        // add the track's albumsPersons to the album's albumsPersons
         foreach (var pt in track.TracksPersons)
         {
             var ap = _albumsPersons.FirstOrDefault(ap => ap.Person == pt.Person);

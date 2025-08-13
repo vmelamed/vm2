@@ -48,14 +48,14 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     public IEnumerable<string> Genres => _genres;
 
     /// <summary>
-    /// Gets the collection of albums that the person appears on. Discography.
-    /// </summary>
-    public IEnumerable<Album> Albums => _albums;
-
-    /// <summary>
     /// Gets the collection of personnel associated with the album, such as musicians, producers, or other contributors.
     /// </summary>
     public IEnumerable<AlbumPerson> PersonsAlbums => _personsAlbums;
+
+    /// <summary>
+    /// Gets the collection of albums that the person appears on. Discography.
+    /// </summary>
+    public IEnumerable<Album> Albums => _albums;
 
     #region IAuditable
     /// <inheritdoc />
@@ -102,6 +102,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     /// <param name="roles">A collection of roles associated with the person.</param>
     /// <param name="instruments">A collection of instruments the person plays.</param>
     /// <param name="genres">A collection of genres associated with the person.</param>
+    /// <param name="personsAlbums">A collection of album-person-s related to the person.</param>
     /// <param name="createdAt">The date and time when the person entity was created.</param>
     /// <param name="createdBy">The identifier of the actor who created the person entity.</param>
     /// <param name="updatedAt">The date and time when the person entity was last updated.</param>
@@ -114,22 +115,26 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
         IEnumerable<string>? roles = null,
         IEnumerable<string>? instruments = null,
         IEnumerable<string>? genres = null,
+        IEnumerable<AlbumPerson>? personsAlbums = null,
         DateTime createdAt = default,
         string createdBy = "",
         DateTime updatedAt = default,
         string updatedBy = "")
     {
-        Id               = id;
-        Name             = name;
-        BirthYear        = birthYear;
-        DeathYear        = deathYear;
-        _genres          = genres?.Select(g => g.Trim().ToLower()).ToHashSet() ?? [];
-        _roles           = roles?.Select(r => r.Trim().ToLower()).ToHashSet() ?? [];
+        Id           = id;
+        Name         = name;
+        BirthYear    = birthYear;
+        DeathYear    = deathYear;
+        _genres      = genres?.Select(g => g.Trim().ToLower()).ToHashSet() ?? [];
+        _roles       = roles?.Select(r => r.Trim().ToLower()).ToHashSet() ?? [];
         _instruments = instruments?.Select(i => i.Trim().ToLower()).ToHashSet() ?? [];
-        CreatedAt        = createdAt;
-        CreatedBy        = createdBy;
-        UpdatedAt        = updatedAt;
-        UpdatedBy        = updatedBy;
+        CreatedAt    = createdAt;
+        CreatedBy    = createdBy;
+        UpdatedAt    = updatedAt;
+        UpdatedBy    = updatedBy;
+
+        foreach (var _ in personsAlbums?.Select(AddAlbum) ?? [])
+            ;
 
         new PersonInvariantValidator()
                 .ValidateAndThrow(this);

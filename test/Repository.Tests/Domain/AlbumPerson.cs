@@ -89,7 +89,7 @@ public class AlbumPerson : IValidatable, IOptimisticConcurrency
     #region IValidatable
     /// <inheritdoc />
     public async ValueTask Validate(object? context, CancellationToken ct)
-        => await new AlbumPersonValidator(context)
+        => await new AlbumPersonValidator(context as IRepository)
             .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 

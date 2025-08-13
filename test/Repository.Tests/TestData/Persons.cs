@@ -6,142 +6,153 @@ public static class Persons
 
     public static int NextId => Interlocked.Increment(ref id);
 
-    static Person? _person01;
-    static Person? _person02;
-    static Person? _person03;
-    static Person? _person04;
-    static Person? _person05;
-    static Person? _person06;
-    static Person? _person07;
-    static Person? _person08;
-    static Person? _person09;
-    static Person? _person10;
-    static Person? _person11;
-    static Person? _person12;
-    static Person? _person13;
-    static Person? _person14;
-    static Person? _person15;
-    static Person? _person16;
-    static Person? _person17;
-    static Person? _person18;
-    static Person? _person19;
-    static Person? _person20;
-    static Person? _person21;
-    static Person? _person22;
-    static Person? _person23;
-    static Person? _person24;
-    static Person? _person25;
-    static Person? _person26;
-    static Person? _person27;
-    static Person? _person28;
-    static Person? _person29;
-    static Person? _person30;
-    static Person? _person31;
-    static Person? _person32;
-    static Person? _person33;
-    static Person? _person34;
-    static Person? _person35;
-    static Person? _person36;
-    static Person? _person37;
-    static Person? _person38;
-    static Person? _person39;
-    static Person? _person40;
-    static Person? _person41;
-    static Person? _person42;
+    static Person? _personMilesDavis;
+    static Person? _personJohnColtrane;
+    static Person? _personBillEvans;
+    static Person? _personWyntonKelly;
+    static Person? _personJulianCannonballAdderley;
+    static Person? _personPaulChambers;
+    static Person? _personJimmyCobb;
+    static Person? _personLeeMorgan;
+    static Person? _personCurtisFuller;
+    static Person? _personKennyDrew;
+    static Person? _personPhillyJoeJones;
+    static Person? _personHerbieHancock;
+    static Person? _personFreddieHubbard;
+    static Person? _personRonCarter;
+    static Person? _personTonyWilliams;
+    static Person? _personGeorgeColeman;
+    static Person? _personMcCoyTyner;
+    static Person? _personElvinJones;
+    static Person? _personJimmyGarrison;
+    static Person? _personDukeEllington;
+    static Person? _personPaulGonsalves;
+    static Person? _personJohnnyHodges;
+    static Person? _personSamWoodyard;
+    static Person? _personJimmyWoode;
+    static Person? _personEllaFitzgerald;
+    static Person? _personLouisArmstrong;
+    static Person? _personOscarPeterson;
+    static Person? _personHerbEllis;
+    static Person? _personRayBrown;
+    static Person? _personBuddyRich;
+    static Person? _personLudwigVanBeethoven;
+    static Person? _personWolfgangAmadeusMozart;
+    static Person? _personJohannSebastianBach;
+    static Person? _personGlennGould;
+    static Person? _personHilaryHahn;
+    static Person? _personHenrykSzeryng;
+    static Person? _personMstislavRostropovich;
+    static Person? _personBerlinerPhilharmoniker;
+    static Person? _personWienerPhilharmoniker;
+    static Person? _personLondonSymphonyOrchestra;
+    static Person? _personScottLaFaro;
+    static Person? _personPaulMotian;
+    // Producers and Arrangers
+    static Person? _personIrvingTownsend;
+    static Person? _personGeorgeAvakian;
+    static Person? _personOrrinKeepnews;
 
     static IEnumerable<Person> _allPersons = [];
 
     internal static IEnumerable<Person> NewPersons()
         => _allPersons = new Person[]
         {
-            _person01 = new Person(id: NextId, name: "Miles Davis",                  birthYear: 1926, deathYear: 1991, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tp"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person02 = new Person(id: NextId, name: "John Coltrane",                birthYear: 1926, deathYear: 1967, roles: ["Performer", "Composer", "Bandleader"], instruments: ["ts", "as", "ss"],      genres: ["Jazz"], createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person03 = new Person(id: NextId, name: "Bill Evans",                   birthYear: 1929, deathYear: 1980, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person04 = new Person(id: NextId, name: "Wynton Kelly",                 birthYear: 1931, deathYear: 1971, roles: ["Performer"],                           instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person05 = new Person(id: NextId, name: "Julian 'Cannonball' Adderley", birthYear: 1928, deathYear: 1975, roles: ["Performer", "Composer", "Bandleader"], instruments: ["as"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person06 = new Person(id: NextId, name: "Paul Chambers",                birthYear: 1935, deathYear: 1969, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person07 = new Person(id: NextId, name: "Jimmy Cobb",                   birthYear: 1929, deathYear: 2020, roles: ["Performer"],                           instruments: ["dr"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person08 = new Person(id: NextId, name: "Lee Morgan",                   birthYear: 1938, deathYear: 1972, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tp"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person09 = new Person(id: NextId, name: "Curtis Fuller",                birthYear: 1934, deathYear: 2021, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tb"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person10 = new Person(id: NextId, name: "Kenny Drew",                   birthYear: 1928, deathYear: 1993, roles: ["Performer"],                           instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person11 = new Person(id: NextId, name: "Philly Joe Jones",             birthYear: 1923, deathYear: 1985, roles: ["Performer"],                           instruments: ["dr"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person12 = new Person(id: NextId, name: "Herbie Hancock",               birthYear: 1940, deathYear: null, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person13 = new Person(id: NextId, name: "Freddie Hubbard",              birthYear: 1938, deathYear: 2008, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tp"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person14 = new Person(id: NextId, name: "Ron Carter",                   birthYear: 1937, deathYear: null, roles: ["Performer", "Composer", "Bandleader"], instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person15 = new Person(id: NextId, name: "Tony Williams",                birthYear: 1945, deathYear: 1997, roles: ["Performer"],                           instruments: ["dr"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person16 = new Person(id: NextId, name: "George Coleman",               birthYear: 1935, deathYear: null, roles: ["Performer"],                           instruments: ["ts", "as"],      genres: ["Jazz"],       createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person17 = new Person(id: NextId, name: "McCoy Tyner",                  birthYear: 1938, deathYear: 2020, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person18 = new Person(id: NextId, name: "Elvin Jones",                  birthYear: 1927, deathYear: 2004, roles: ["Performer", "Composer", "Bandleader"], instruments: ["dr"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person19 = new Person(id: NextId, name: "Jimmy Garrison",               birthYear: 1934, deathYear: 1976, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person20 = new Person(id: NextId, name: "Duke Ellington",               birthYear: 1899, deathYear: 1974, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person21 = new Person(id: NextId, name: "Paul Gonsalves",               birthYear: 1920, deathYear: 1974, roles: ["Performer", "Composer"],               instruments: ["ts"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person22 = new Person(id: NextId, name: "Johnny Hodges",                birthYear: 1907, deathYear: 1970, roles: ["Performer", "Composer", "Bandleader"], instruments: ["as"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person23 = new Person(id: NextId, name: "Sam Woodyard",                 birthYear: 1925, deathYear: 1988, roles: ["Performer"],                           instruments: ["dr"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person24 = new Person(id: NextId, name: "Jimmy Woode",                  birthYear: 1926, deathYear: 2005, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person25 = new Person(id: NextId, name: "Ella Fitzgerald",              birthYear: 1917, deathYear: 1996, roles: ["Performer"],                           instruments: ["voc"],      genres: ["Jazz"],            createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person26 = new Person(id: NextId, name: "Louis Armstrong",              birthYear: 1901, deathYear: 1971, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tp", "voc"],      genres: ["Jazz"],      createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person27 = new Person(id: NextId, name: "Oscar Peterson",               birthYear: 1925, deathYear: 2007, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person28 = new Person(id: NextId, name: "Herb Ellis",                   birthYear: 1921, deathYear: 2010, roles: ["Performer", "Composer", "Bandleader"], instruments: ["g"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person29 = new Person(id: NextId, name: "Ray Brown",                    birthYear: 1926, deathYear: 2002, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person30 = new Person(id: NextId, name: "Buddy Rich",                   birthYear: 1917, deathYear: 1987, roles: ["Performer"],                           instruments: ["dr"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person31 = new Person(id: NextId, name: "Ludwig van Beethoven",         birthYear: 1770, deathYear: 1827, roles: ["Composer"],                            instruments: [], genres: ["Classical"],                 createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person32 = new Person(id: NextId, name: "Wolfgang Amadeus Mozart",      birthYear: 1756, deathYear: 1791, roles: ["Composer"],                            instruments: [], genres: ["Classical"],                 createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person33 = new Person(id: NextId, name: "Johann Sebastian Bach",        birthYear: 1685, deathYear: 1750, roles: ["Composer"],                            instruments: [], genres: ["Classical"],                 createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person34 = new Person(id: NextId, name: "Glenn Gould",                  birthYear: 1932, deathYear: 1982, roles: ["Performer"],                           instruments: ["p"], genres: ["Classical"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person35 = new Person(id: NextId, name: "Hilary Hahn",                  birthYear: 1979, deathYear: null, roles: ["Performer"],                           instruments: ["v"], genres: ["Classical"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person36 = new Person(id: NextId, name: "Henryk Szeryng",               birthYear: 1918, deathYear: 1988, roles: ["Performer"],                           instruments: ["v"], genres: ["Classical"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person37 = new Person(id: NextId, name: "Mstislav Rostropovich",        birthYear: 1927, deathYear: 2007, roles: ["Performer"],                           instruments: ["vc"], genres: ["Classical"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person38 = new Person(id: NextId, name: "Berliner Philharmoniker",      birthYear: 1882, deathYear: null, roles: ["Orchestra"],                           instruments: [], genres: ["Classical"],                 createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person39 = new Person(id: NextId, name: "Wiener Philharmoniker",        birthYear: 1843, deathYear: null, roles: ["Orchestra"],                           instruments: [], genres: ["Classical"],                 createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person40 = new Person(id: NextId, name: "London Symphony Orchestra",    birthYear: 1904, deathYear: null, roles: ["Orchestra"],                           instruments: [], genres: ["Classical"],                 createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person41 = new Person(id: NextId, name: "Scott LaFaro",                 birthYear: 1936, deathYear: 1961, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person42 = new Person(id: NextId, name: "Paul Motian",                  birthYear: 1931, deathYear: 2011, roles: ["Performer"],                           instruments: ["dr"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
-            _person42 = new Person(id: NextId, name: "Wayne Shorter",                birthYear: 1933, deathYear: 2023, roles: ["Performer", "Composer", "Bandleader"], instruments: ["ts", "ss"],      genres: ["Jazz"],       createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personMilesDavis               = new Person(id: NextId, name: "Miles Davis",                  birthYear: 1926, deathYear: 1991, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tp"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personJohnColtrane             = new Person(id: NextId, name: "John Coltrane",                birthYear: 1926, deathYear: 1967, roles: ["Performer", "Composer", "Bandleader"], instruments: ["ts", "as", "ss"], genres: ["Jazz"],      createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personBillEvans                = new Person(id: NextId, name: "Bill Evans",                   birthYear: 1929, deathYear: 1980, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personWyntonKelly              = new Person(id: NextId, name: "Wynton Kelly",                 birthYear: 1931, deathYear: 1971, roles: ["Performer"],                           instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personJulianCannonballAdderley = new Person(id: NextId, name: "Julian 'Cannonball' Adderley", birthYear: 1928, deathYear: 1975, roles: ["Performer", "Composer", "Bandleader"], instruments: ["as"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personPaulChambers             = new Person(id: NextId, name: "Paul Chambers",                birthYear: 1935, deathYear: 1969, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personJimmyCobb                = new Person(id: NextId, name: "Jimmy Cobb",                   birthYear: 1929, deathYear: 2020, roles: ["Performer"],                           instruments: ["dr"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personLeeMorgan                = new Person(id: NextId, name: "Lee Morgan",                   birthYear: 1938, deathYear: 1972, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tp"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personCurtisFuller             = new Person(id: NextId, name: "Curtis Fuller",                birthYear: 1934, deathYear: 2021, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tb"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personKennyDrew                = new Person(id: NextId, name: "Kenny Drew",                   birthYear: 1928, deathYear: 1993, roles: ["Performer"],                           instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personPhillyJoeJones           = new Person(id: NextId, name: "Philly Joe Jones",             birthYear: 1923, deathYear: 1985, roles: ["Performer"],                           instruments: ["dr"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personHerbieHancock            = new Person(id: NextId, name: "Herbie Hancock",               birthYear: 1940, deathYear: null, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personFreddieHubbard           = new Person(id: NextId, name: "Freddie Hubbard",              birthYear: 1938, deathYear: 2008, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tp"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personRonCarter                = new Person(id: NextId, name: "Ron Carter",                   birthYear: 1937, deathYear: null, roles: ["Performer", "Composer", "Bandleader"], instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personTonyWilliams             = new Person(id: NextId, name: "Tony Williams",                birthYear: 1945, deathYear: 1997, roles: ["Performer"],                           instruments: ["dr"],      genres: ["Jazz"],             createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personGeorgeColeman            = new Person(id: NextId, name: "George Coleman",               birthYear: 1935, deathYear: null, roles: ["Performer"],                           instruments: ["ts", "as"], genres: ["Jazz"],            createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personMcCoyTyner               = new Person(id: NextId, name: "McCoy Tyner",                  birthYear: 1938, deathYear: 2020, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personElvinJones               = new Person(id: NextId, name: "Elvin Jones",                  birthYear: 1927, deathYear: 2004, roles: ["Performer", "Composer", "Bandleader"], instruments: ["dr"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personJimmyGarrison            = new Person(id: NextId, name: "Jimmy Garrison",               birthYear: 1934, deathYear: 1976, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personDukeEllington            = new Person(id: NextId, name: "Duke Ellington",               birthYear: 1899, deathYear: 1974, roles: ["Performer", "Composer", "Bandleader", "Arranger"], instruments: ["p"], genres: ["Jazz"],       createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personPaulGonsalves            = new Person(id: NextId, name: "Paul Gonsalves",               birthYear: 1920, deathYear: 1974, roles: ["Performer", "Composer"],               instruments: ["ts"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personJohnnyHodges             = new Person(id: NextId, name: "Johnny Hodges",                birthYear: 1907, deathYear: 1970, roles: ["Performer", "Composer", "Bandleader"], instruments: ["as"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personSamWoodyard              = new Person(id: NextId, name: "Sam Woodyard",                 birthYear: 1925, deathYear: 1988, roles: ["Performer"],                           instruments: ["dr"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personJimmyWoode               = new Person(id: NextId, name: "Jimmy Woode",                  birthYear: 1926, deathYear: 2005, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personEllaFitzgerald           = new Person(id: NextId, name: "Ella Fitzgerald",              birthYear: 1917, deathYear: 1996, roles: ["Performer"],                           instruments: ["voc"],    genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personLouisArmstrong           = new Person(id: NextId, name: "Louis Armstrong",              birthYear: 1901, deathYear: 1971, roles: ["Performer", "Composer", "Bandleader"], instruments: ["tp", "voc"], genres: ["Jazz"],           createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personOscarPeterson            = new Person(id: NextId, name: "Oscar Peterson",               birthYear: 1925, deathYear: 2007, roles: ["Performer", "Composer", "Bandleader"], instruments: ["p"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personHerbEllis                = new Person(id: NextId, name: "Herb Ellis",                   birthYear: 1921, deathYear: 2010, roles: ["Performer", "Composer", "Bandleader"], instruments: ["g"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personRayBrown                 = new Person(id: NextId, name: "Ray Brown",                    birthYear: 1926, deathYear: 2002, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personBuddyRich                = new Person(id: NextId, name: "Buddy Rich",                   birthYear: 1917, deathYear: 1987, roles: ["Performer"],                           instruments: ["dr"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personLudwigVanBeethoven       = new Person(id: NextId, name: "Ludwig van Beethoven",         birthYear: 1770, deathYear: 1827, roles: ["Composer"],                            instruments: [],         genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personWolfgangAmadeusMozart    = new Person(id: NextId, name: "Wolfgang Amadeus Mozart",      birthYear: 1756, deathYear: 1791, roles: ["Composer"],                            instruments: [],         genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personJohannSebastianBach      = new Person(id: NextId, name: "Johann Sebastian Bach",        birthYear: 1685, deathYear: 1750, roles: ["Composer"],                            instruments: [],         genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personGlennGould               = new Person(id: NextId, name: "Glenn Gould",                  birthYear: 1932, deathYear: 1982, roles: ["Performer"],                           instruments: ["p"],      genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personHilaryHahn               = new Person(id: NextId, name: "Hilary Hahn",                  birthYear: 1979, deathYear: null, roles: ["Performer"],                           instruments: ["v"],      genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personHenrykSzeryng            = new Person(id: NextId, name: "Henryk Szeryng",               birthYear: 1918, deathYear: 1988, roles: ["Performer"],                           instruments: ["v"],      genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personMstislavRostropovich     = new Person(id: NextId, name: "Mstislav Rostropovich",        birthYear: 1927, deathYear: 2007, roles: ["Performer"],                           instruments: ["vc"],     genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personBerlinerPhilharmoniker   = new Person(id: NextId, name: "Berliner Philharmoniker",      birthYear: 1882, deathYear: null, roles: ["Orchestra"],                           instruments: [],         genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personWienerPhilharmoniker     = new Person(id: NextId, name: "Wiener Philharmoniker",        birthYear: 1843, deathYear: null, roles: ["Orchestra"],                           instruments: [],         genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personLondonSymphonyOrchestra  = new Person(id: NextId, name: "London Symphony Orchestra",    birthYear: 1904, deathYear: null, roles: ["Orchestra"],                           instruments: [],         genres: ["Classical"],         createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personScottLaFaro              = new Person(id: NextId, name: "Scott LaFaro",                 birthYear: 1936, deathYear: 1961, roles: ["Performer"],                           instruments: ["b"],      genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personPaulMotian               = new Person(id: NextId, name: "Paul Motian",                  birthYear: 1931, deathYear: 2011, roles: ["Performer"],                           instruments: ["dr"],     genres: ["Jazz"],              createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            // Producers and Arrangers
+            _personIrvingTownsend           = new Person(id: NextId, name: "Irving Townsend",               birthYear: 1920, deathYear: 1981, roles: ["Producer"], instruments: [], genres: ["Jazz"], createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personGeorgeAvakian            = new Person(id: NextId, name: "George Avakian",                birthYear: 1919, deathYear: 2017, roles: ["Producer"], instruments: [], genres: ["Jazz"], createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
+            _personOrrinKeepnews            = new Person(id: NextId, name: "Orrin Keepnews",                birthYear: 1923, deathYear: 2015, roles: ["Producer"], instruments: [], genres: ["Jazz"], createdAt: NextDt, createdBy: Creator, updatedAt: CurrentDt, updatedBy: Creator),
         };
 
     public static IEnumerable<Person> PersonsSequence => _allPersons.Any() ? _allPersons : NewPersons();
 
-    public static Person Person01 => _person01 ?? (NewPersons(), _person01!).Item2;
-    public static Person Person02 => _person02 ?? (NewPersons(), _person02!).Item2;
-    public static Person Person03 => _person03 ?? (NewPersons(), _person03!).Item2;
-    public static Person Person04 => _person04 ?? (NewPersons(), _person04!).Item2;
-    public static Person Person05 => _person05 ?? (NewPersons(), _person05!).Item2;
-    public static Person Person06 => _person06 ?? (NewPersons(), _person06!).Item2;
-    public static Person Person07 => _person07 ?? (NewPersons(), _person07!).Item2;
-    public static Person Person08 => _person08 ?? (NewPersons(), _person08!).Item2;
-    public static Person Person09 => _person09 ?? (NewPersons(), _person09!).Item2;
-    public static Person Person10 => _person10 ?? (NewPersons(), _person10!).Item2;
-    public static Person Person11 => _person11 ?? (NewPersons(), _person11!).Item2;
-    public static Person Person12 => _person12 ?? (NewPersons(), _person12!).Item2;
-    public static Person Person13 => _person13 ?? (NewPersons(), _person13!).Item2;
-    public static Person Person14 => _person14 ?? (NewPersons(), _person14!).Item2;
-    public static Person Person15 => _person15 ?? (NewPersons(), _person15!).Item2;
-    public static Person Person16 => _person16 ?? (NewPersons(), _person16!).Item2;
-    public static Person Person17 => _person17 ?? (NewPersons(), _person17!).Item2;
-    public static Person Person18 => _person18 ?? (NewPersons(), _person18!).Item2;
-    public static Person Person19 => _person19 ?? (NewPersons(), _person19!).Item2;
-    public static Person Person20 => _person20 ?? (NewPersons(), _person20!).Item2;
-    public static Person Person21 => _person21 ?? (NewPersons(), _person21!).Item2;
-    public static Person Person22 => _person22 ?? (NewPersons(), _person22!).Item2;
-    public static Person Person23 => _person23 ?? (NewPersons(), _person23!).Item2;
-    public static Person Person24 => _person24 ?? (NewPersons(), _person24!).Item2;
-    public static Person Person25 => _person25 ?? (NewPersons(), _person25!).Item2;
-    public static Person Person26 => _person26 ?? (NewPersons(), _person26!).Item2;
-    public static Person Person27 => _person27 ?? (NewPersons(), _person27!).Item2;
-    public static Person Person28 => _person28 ?? (NewPersons(), _person28!).Item2;
-    public static Person Person29 => _person29 ?? (NewPersons(), _person29!).Item2;
-    public static Person Person30 => _person30 ?? (NewPersons(), _person30!).Item2;
-    public static Person Person31 => _person31 ?? (NewPersons(), _person31!).Item2;
-    public static Person Person32 => _person32 ?? (NewPersons(), _person32!).Item2;
-    public static Person Person33 => _person33 ?? (NewPersons(), _person33!).Item2;
-    public static Person Person34 => _person34 ?? (NewPersons(), _person34!).Item2;
-    public static Person Person35 => _person35 ?? (NewPersons(), _person35!).Item2;
-    public static Person Person36 => _person36 ?? (NewPersons(), _person36!).Item2;
-    public static Person Person37 => _person37 ?? (NewPersons(), _person37!).Item2;
-    public static Person Person38 => _person38 ?? (NewPersons(), _person38!).Item2;
-    public static Person Person39 => _person39 ?? (NewPersons(), _person39!).Item2;
-    public static Person Person40 => _person40 ?? (NewPersons(), _person40!).Item2;
-    public static Person Person41 => _person41 ?? (NewPersons(), _person41!).Item2;
-    public static Person Person42 => _person42 ?? (NewPersons(), _person42!).Item2;
+    public static Person PersonMilesDavis => _personMilesDavis ?? (NewPersons(), _personMilesDavis!).Item2;
+    public static Person PersonJohnColtrane => _personJohnColtrane ?? (NewPersons(), _personJohnColtrane!).Item2;
+    public static Person PersonBillEvans => _personBillEvans ?? (NewPersons(), _personBillEvans!).Item2;
+    public static Person PersonWyntonKelly => _personWyntonKelly ?? (NewPersons(), _personWyntonKelly!).Item2;
+    public static Person PersonJulianCannonballAdderley => _personJulianCannonballAdderley ?? (NewPersons(), _personJulianCannonballAdderley!).Item2;
+    public static Person PersonPaulChambers => _personPaulChambers ?? (NewPersons(), _personPaulChambers!).Item2;
+    public static Person PersonJimmyCobb => _personJimmyCobb ?? (NewPersons(), _personJimmyCobb!).Item2;
+    public static Person PersonLeeMorgan => _personLeeMorgan ?? (NewPersons(), _personLeeMorgan!).Item2;
+    public static Person PersonCurtisFuller => _personCurtisFuller ?? (NewPersons(), _personCurtisFuller!).Item2;
+    public static Person PersonKennyDrew => _personKennyDrew ?? (NewPersons(), _personKennyDrew!).Item2;
+    public static Person PersonPhillyJoeJones => _personPhillyJoeJones ?? (NewPersons(), _personPhillyJoeJones!).Item2;
+    public static Person PersonHerbieHancock => _personHerbieHancock ?? (NewPersons(), _personHerbieHancock!).Item2;
+    public static Person PersonFreddieHubbard => _personFreddieHubbard ?? (NewPersons(), _personFreddieHubbard!).Item2;
+    public static Person PersonRonCarter => _personRonCarter ?? (NewPersons(), _personRonCarter!).Item2;
+    public static Person PersonTonyWilliams => _personTonyWilliams ?? (NewPersons(), _personTonyWilliams!).Item2;
+    public static Person PersonGeorgeColeman => _personGeorgeColeman ?? (NewPersons(), _personGeorgeColeman!).Item2;
+    public static Person PersonMcCoyTyner => _personMcCoyTyner ?? (NewPersons(), _personMcCoyTyner!).Item2;
+    public static Person PersonElvinJones => _personElvinJones ?? (NewPersons(), _personElvinJones!).Item2;
+    public static Person PersonJimmyGarrison => _personJimmyGarrison ?? (NewPersons(), _personJimmyGarrison!).Item2;
+    public static Person PersonDukeEllington => _personDukeEllington ?? (NewPersons(), _personDukeEllington!).Item2;
+    public static Person PersonPaulGonsalves => _personPaulGonsalves ?? (NewPersons(), _personPaulGonsalves!).Item2;
+    public static Person PersonJohnnyHodges => _personJohnnyHodges ?? (NewPersons(), _personJohnnyHodges!).Item2;
+    public static Person PersonSamWoodyard => _personSamWoodyard ?? (NewPersons(), _personSamWoodyard!).Item2;
+    public static Person PersonJimmyWoode => _personJimmyWoode ?? (NewPersons(), _personJimmyWoode!).Item2;
+    public static Person PersonEllaFitzgerald => _personEllaFitzgerald ?? (NewPersons(), _personEllaFitzgerald!).Item2;
+    public static Person PersonLouisArmstrong => _personLouisArmstrong ?? (NewPersons(), _personLouisArmstrong!).Item2;
+    public static Person PersonOscarPeterson => _personOscarPeterson ?? (NewPersons(), _personOscarPeterson!).Item2;
+    public static Person PersonHerbEllis => _personHerbEllis ?? (NewPersons(), _personHerbEllis!).Item2;
+    public static Person PersonRayBrown => _personRayBrown ?? (NewPersons(), _personRayBrown!).Item2;
+    public static Person PersonBuddyRich => _personBuddyRich ?? (NewPersons(), _personBuddyRich!).Item2;
+    public static Person PersonLudwigVanBeethoven => _personLudwigVanBeethoven ?? (NewPersons(), _personLudwigVanBeethoven!).Item2;
+    public static Person PersonWolfgangAmadeusMozart => _personWolfgangAmadeusMozart ?? (NewPersons(), _personWolfgangAmadeusMozart!).Item2;
+    public static Person PersonJohannSebastianBach => _personJohannSebastianBach ?? (NewPersons(), _personJohannSebastianBach!).Item2;
+    public static Person PersonGlennGould => _personGlennGould ?? (NewPersons(), _personGlennGould!).Item2;
+    public static Person PersonHilaryHahn => _personHilaryHahn ?? (NewPersons(), _personHilaryHahn!).Item2;
+    public static Person PersonHenrykSzeryng => _personHenrykSzeryng ?? (NewPersons(), _personHenrykSzeryng!).Item2;
+    public static Person PersonMstislavRostropovich => _personMstislavRostropovich ?? (NewPersons(), _personMstislavRostropovich!).Item2;
+    public static Person PersonBerlinerPhilharmoniker => _personBerlinerPhilharmoniker ?? (NewPersons(), _personBerlinerPhilharmoniker!).Item2;
+    public static Person PersonWienerPhilharmoniker => _personWienerPhilharmoniker ?? (NewPersons(), _personWienerPhilharmoniker!).Item2;
+    public static Person PersonLondonSymphonyOrchestra => _personLondonSymphonyOrchestra ?? (NewPersons(), _personLondonSymphonyOrchestra!).Item2;
+    public static Person PersonScottLaFaro => _personScottLaFaro ?? (NewPersons(), _personScottLaFaro!).Item2;
+    public static Person PersonPaulMotian => _personPaulMotian ?? (NewPersons(), _personPaulMotian!).Item2;
+    // Producers and Arrangers
+    public static Person PersonIrvingTownsend => _personIrvingTownsend ?? (NewPersons(), _personIrvingTownsend!).Item2;
+    public static Person PersonGeorgeAvakian => _personGeorgeAvakian ?? (NewPersons(), _personGeorgeAvakian!).Item2;
+    public static Person PersonOrrinKeepnews => _personOrrinKeepnews ?? (NewPersons(), _personOrrinKeepnews!).Item2;
 }
 

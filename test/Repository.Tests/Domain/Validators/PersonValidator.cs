@@ -2,7 +2,7 @@
 
 class PersonInvariantValidator : AbstractValidator<Person>
 {
-    public PersonInvariantValidator()
+    public PersonInvariantValidator(bool lazyLoading = false)
     {
         RuleFor(p => p.Name)
             .NotEmpty()
@@ -25,6 +25,13 @@ class PersonInvariantValidator : AbstractValidator<Person>
             .WithMessage("If Roles is not empty, no role can be null or empty.")
             ;
 
+        RuleFor(p => p.Instruments)
+            .NotNull()
+            .WithMessage("The Instruments collection must not be null.")
+            .Must(instruments => instruments.All(t => !string.IsNullOrEmpty(t)))
+            .WithMessage("If Instruments is not empty, no instrument can be null or empty.")
+            ;
+
         RuleFor(p => p.Genres)
             .NotNull()
             .WithMessage("The Genres collection must not be null.")
@@ -32,11 +39,21 @@ class PersonInvariantValidator : AbstractValidator<Person>
             .WithMessage("If Genres is not empty, no genre can be null or empty.")
             ;
 
-        RuleFor(p => p.Instruments)
+        if (lazyLoading)
+            return;
+
+        RuleFor(p => p.PersonsAlbums)
             .NotNull()
-            .WithMessage("The Instruments collection must not be null.")
-            .Must(instruments => instruments.All(t => !string.IsNullOrEmpty(t)))
-            .WithMessage("If Instruments is not empty, no instrument can be null or empty.")
+            .WithMessage("The PersonsAlbums collection must not be null.")
+            .Must(personsAlbums => personsAlbums.All(a => a is not null))
+            .WithMessage("PersonsAlbums cannot contain null items.")
+            ;
+
+        RuleFor(p => p.Albums)
+            .NotNull()
+            .WithMessage("The Albums collection must not be null.")
+            .Must(albums => albums.All(a => a is not null))
+            .WithMessage("Albums cannot contain null items.")
             ;
     }
 }
@@ -54,20 +71,23 @@ class PersonFindableValidator : AbstractValidator<Person>
 
 class PersonValidator : AbstractValidator<Person>
 {
-    public PersonValidator(IRepository? repository)
+    public PersonValidator(IRepository? repository = null)
     {
-        Include(new PersonInvariantValidator());
+        Include(new PersonInvariantValidator(repository?.IsLazyLoadingEnabled<Person>() is true));
         Include(new PersonFindableValidator());
         Include(new AuditableValidator());
 
-        if (repository is null)
-            return;
+        RuleForEach(p => p.PersonsAlbums)
+            .SetValidator(new AlbumPersonValidator(repository))
+            .WithMessage("Invalid AlbumPerson in the PersonsAlbums collection.")
+            ;
 
         // Do we want this extra trip to the database, if we have unique DB constraints on the PK Id?
-        RuleFor(p => p.Id)
-            .MustAsync(async (p, id, ct) => await IsValid(repository, p, id, ct).ConfigureAwait(false))
-            .WithMessage("The Person Id must be unique.")
-            ;
+        if (repository is not null)
+            RuleFor(p => p.Id)
+                .MustAsync(async (p, id, ct) => await IsValid(repository, p, id, ct).ConfigureAwait(false))
+                .WithMessage("The Person Id must be unique.")
+                ;
     }
 
     static async ValueTask<bool> IsValid(
@@ -76,6 +96,7 @@ class PersonValidator : AbstractValidator<Person>
         int id,
         CancellationToken cancellationToken)
         => repository.StateOf(person) switch {
+
             // if Added, make sure the id is unique in the database.
             EntityState.Added => Instrument.HasValues(person.Instruments)
                                  && Role.HasValues(person.Roles)
@@ -83,8 +104,8 @@ class PersonValidator : AbstractValidator<Person>
                                  && !await repository
                                                 .Set<Person>()
                                                 .AnyAsync(a => a.Id == id, cancellationToken)
-                                                .ConfigureAwait(false)
-                                 ,
+                                                .ConfigureAwait(false),
+
             // if Modified, make sure there is a Person with this id in the database.
             EntityState.Modified => Instrument.HasValues(person.Instruments)
                                     && Role.HasValues(person.Roles)
@@ -92,8 +113,8 @@ class PersonValidator : AbstractValidator<Person>
                                     && await repository
                                                 .Set<Person>()
                                                 .AnyAsync(a => a.Id == id, cancellationToken)
-                                                .ConfigureAwait(false)
-                                    ,
+                                                .ConfigureAwait(false),
+
             _ => true
         };
 }

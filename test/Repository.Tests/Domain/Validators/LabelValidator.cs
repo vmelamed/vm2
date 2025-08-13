@@ -5,7 +5,7 @@
 /// </summary>
 class LabelInvariantValidator : AbstractValidator<Label>
 {
-    public LabelInvariantValidator()
+    public LabelInvariantValidator(bool lazyLoading = false)
     {
         RuleFor(label => label.Name)
             .NotEmpty()
@@ -17,6 +17,21 @@ class LabelInvariantValidator : AbstractValidator<Label>
         RuleFor(label => label.CountryCode)
             .Matches(Regexes.CountryCode())
             .WithMessage("Country code must not be null or empty and it must be a valid ISO 3166 country code.")
+            ;
+
+        if (lazyLoading)
+            return;
+
+        RuleFor(label => label.Albums)
+            .NotNull()
+            .WithMessage("The Albums collection must not be null.")
+            .Must(albums => albums.All(a => a is not null))
+            .WithMessage("Albums cannot contain null items.")
+            ;
+
+        RuleForEach(label => label.Albums)
+            .SetValidator(new AlbumValidator())
+            .WithMessage("Invalid Album in the Albums collection.")
             ;
     }
 }
@@ -36,7 +51,7 @@ class LabelValidator : AbstractValidator<Label>
 {
     public LabelValidator(IRepository? repository = null)
     {
-        Include(new LabelInvariantValidator());
+        Include(new LabelInvariantValidator(repository?.IsLazyLoadingEnabled<Label>() is true));
         Include(new LabelFindableValidator());
         Include(new AuditableValidator());
 

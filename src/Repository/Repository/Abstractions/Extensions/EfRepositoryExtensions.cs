@@ -35,20 +35,42 @@ public static class EfRepositoryExtensions
     /// <summary>
     /// Gets the <see cref="EntityEntry"/> envelope for the specified entity within the repository's context/change-tracker.
     /// </summary>
-    /// <typeparam name="T">The type of the entity.</typeparam>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <param name="repository">The repository containing the entity.</param>
     /// <param name="entity">The entity whose entry is requested.</param>
     /// <returns>The <see cref="EntityEntry"/> that wraps the entity in the context's change-tracker.</returns>
-    public static EntityEntry Entry<T>(this IRepository repository, T entity) where T : class
+    public static EntityEntry Entry<TEntity>(this IRepository repository, TEntity entity) where TEntity : class
         => repository.DbContext().Entry(entity);
 
     /// <summary>
     /// Determines the current state of the specified entity within the repository's context.
     /// </summary>
-    /// <typeparam name="T">The type of the entity.</typeparam>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <param name="repository">The repository containing the entity.</param>
     /// <param name="entity">The entity whose state is to be determined. Cannot be null.</param>
     /// <returns>The <see cref="StateOf"/> representing the current state of the entity in the context.</returns>
-    public static EntityState StateOf<T>(this IRepository repository, T entity) where T : class
+    public static EntityState StateOf<TEntity>(this IRepository repository, TEntity entity) where TEntity : class
         => repository.Entry(entity).State;
+
+    /// <summary>
+    /// Determines if lazy loading is enabled for the specified entity type within the repository's context.
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <param name="repository"></param>
+    /// <returns>
+    /// <see langword="true"/> if lazy loading is enabled for the entity type, <see langword="false"/> otherwise.
+    /// </returns>
+    public static bool IsLazyLoadingEnabled<TEntity>(this IRepository repository) where TEntity : class
+    {
+        if (!repository.ChangeTracker().LazyLoadingEnabled)
+            return false;
+
+        var entityType = repository.DbContext().Model.FindEntityType(typeof(TEntity));
+
+        return entityType?
+                .GetNavigations()?
+                .Any(n => !n.IsEagerLoaded &&
+                          n.PropertyInfo?.GetMethod?.IsVirtual is true) == true
+                ;
+    }
 }

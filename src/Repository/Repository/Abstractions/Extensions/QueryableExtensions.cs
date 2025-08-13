@@ -177,5 +177,5 @@ public static class QueryableExtensions
 
     static T NotSupported<T>(string methodName = "") where T : class
         => throw new NotSupportedException(
-                $"The method {methodName} is not supported if IQueryable<T>() is not implemented by Microsoft.EntityFrameworkCore.DbSet<T>.");
+                $"The method {methodName} is not supported if IQueryable<TEntity>() is not implemented by Microsoft.EntityFrameworkCore.DbSet<TEntity>.");
 }

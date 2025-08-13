@@ -1,8 +1,8 @@
 ﻿namespace vm2.Repository.Tests.Domain.Validators;
 
-class TrackPersonValidator : AbstractValidator<TrackPerson>
+class TrackPersonInvariantValidator : AbstractValidator<TrackPerson>
 {
-    public TrackPersonValidator(IRepository? repository = null)
+    public TrackPersonInvariantValidator(bool lazyLoading = false)
     {
         RuleFor(tp => tp.Person)
             .NotNull()
@@ -28,6 +28,23 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
             .WithMessage("Instruments must not be null. If not empty, the individual instruments must not be null or empty.")
             ;
 
+        if (lazyLoading)
+            return;
+
+        RuleFor(tp => tp.Person)
+            .NotNull()
+            .WithMessage("AlbumTrack must have a valid track.")
+            ;
+    }
+}
+
+
+class TrackPersonValidator : AbstractValidator<TrackPerson>
+{
+    public TrackPersonValidator(IRepository? repository = null)
+    {
+        Include(new TrackPersonInvariantValidator(repository?.IsLazyLoadingEnabled<TrackPerson>() is true));
+
         if (repository is null)
             return;
 
@@ -40,13 +57,14 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
     static bool HasValidDimensions(
         IRepository repository,
         TrackPerson tp)
-        => tp.Person is null
-                ? true
-                : repository.StateOf(tp.Person) switch {
-                    EntityState.Added or
-                    EntityState.Modified => Role.HasValues(tp.Roles) &&
-                                            Instrument.HasValues(tp.Instruments)
-                                            ,
-                    _ => true,
-                };
+        => tp.Person is null ||
+           repository.StateOf(tp.Person) switch {
+
+               EntityState.Added or
+               EntityState.Modified => Role.HasValues(tp.Roles) &&
+                                       Instrument.HasValues(tp.Instruments)
+                                       ,
+
+               _ => true,
+           };
 }

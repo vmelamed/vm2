@@ -40,7 +40,7 @@ public interface IFindable
     /// <param name="cancellationToken">
     /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
     /// </param>
-    /// <exception cref="T:FluentValidation.ValidationException"/>
+    /// <exception cref="TEntity:FluentValidation.ValidationException"/>
     /// <remarks>
     /// Note that the method is asynchronous.
     /// </remarks>

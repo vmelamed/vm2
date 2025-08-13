@@ -1,12 +1,20 @@
 ﻿namespace vm2.Repository.Tests.Domain.Validators;
 
-class AlbumTrackValidator : AbstractValidator<AlbumTrack>
+class AlbumTrackInvariantValidator : AbstractValidator<AlbumTrack>
 {
-    public AlbumTrackValidator(IRepository? _ = null)
+    public AlbumTrackInvariantValidator(bool lazyLoading = false)
     {
+        if (lazyLoading)
+            return;
+
         RuleFor(at => at.Track)
             .NotNull()
-            .WithMessage("AlbumTrack must have a valid track.")
+            .WithMessage("AlbumTrack must not be null.")
             ;
     }
+}
+class AlbumTrackValidator : AbstractValidator<AlbumTrack>
+{
+    public AlbumTrackValidator(IRepository? repository = null)
+        => Include(new AlbumTrackInvariantValidator(repository?.IsLazyLoadingEnabled<AlbumTrack>() is true));
 }
