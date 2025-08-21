@@ -2,9 +2,7 @@ namespace vm2.Repository.Tests.TestData;
 
 public static class Albums
 {
-    static int id = 0;
-
-    public static int NextId => Interlocked.Increment(ref id);
+    public static AlbumId NextId => (AlbumId)Ulid.NewUlid();
 
     static Album? _albumKindOfBlue;
     static Album? _albumEllingtonAtNewport;

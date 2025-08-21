@@ -4,11 +4,15 @@ class TrackConfiguration : IEntityTypeConfiguration<Track>
 {
     public void Configure(EntityTypeBuilder<Track> builder)
     {
-        builder.ToTable(nameof(Track));
+        builder
+            .ToTable(nameof(Track))
+            ;
+
         new FindableConfiguration<Track>().Configure(builder);
 
         builder
             .Property(t => t.Id)
+            .HasValueGenerator<UlidValueGenerator>()
             .ValueGeneratedOnAdd()
             ;
 

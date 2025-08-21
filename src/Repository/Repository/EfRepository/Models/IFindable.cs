@@ -6,13 +6,13 @@
 public interface IFindable
 {
     /// <summary>
-    /// Returns an ordered set of physical store key values that can be used to easily find the entity in the change
-    /// tracker or the physical store of the instance. Note that usually these represent a database specific, physical
-    /// identity of the entity, e.g. "primary key", "primary, composite key", "partition key and id", etc. It is
-    /// possible that some of these keys are also the "business keys" of the entities which may not be recommended for
-    /// relational DB-s.
+    /// Returns an ordered set of physical store key values that can be used to easily find the entity in the change tracker or <br/>
+    /// in the physical store for the instance. Note that usually these represent a database specific, physical identity of the <br/>
+    /// entity, e.g. "primary key", "primary, composite key", "partition key and id", etc. It is possible that some of these <br/>
+    /// keys are also the "business keys" of the entities which may not be recommended for relational DB-s.
     /// </summary>
-    /// <example>
+    /// <remarks>
+    /// <code>
     /// <![CDATA[
     /// class MyEntity : IFindable
     /// {
@@ -25,10 +25,13 @@ public interface IFindable
     /// }
     /// ...
     /// MyEntity found = await _repository.Find(new MyEntity { Id = 42, SubId = 23 });
-    /// // or alternatively:
+    /// ]]>
+    /// </code>or alternatively: <code>
+    /// <![CDATA[
     /// MyEntity found = await _repository.Find<MyEntity>(MyEntity.ByIds(42L, 23))
     /// ]]>
-    /// </example>
+    /// </code>
+    /// </remarks>
     IEnumerable<object?>? KeyValues { get; }
 
     /// <summary>
@@ -40,7 +43,7 @@ public interface IFindable
     /// <param name="cancellationToken">
     /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
     /// </param>
-    /// <exception cref="TEntity:FluentValidation.ValidationException"/>
+    /// <exception cref="FluentValidation.ValidationException"/>
     /// <remarks>
     /// Note that the method is asynchronous.
     /// </remarks>

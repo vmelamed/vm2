@@ -15,7 +15,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public int Id { get; private set; }
+    public PersonId Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the names of the person.
@@ -108,7 +108,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     /// <param name="updatedAt">The date and time when the person entity was last updated.</param>
     /// <param name="updatedBy">The identifier of the user who last updated the person entity.</param>
     public Person(
-        int id,
+        PersonId id,
         string name,
         int? birthYear = null,
         int? deathYear = null,

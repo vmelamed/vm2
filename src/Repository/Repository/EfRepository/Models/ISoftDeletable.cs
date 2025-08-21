@@ -1,5 +1,4 @@
 ﻿namespace vm2.Repository.EfRepository.Models;
-using vm2.Repository.Abstractions;
 
 /// <summary>
 /// Represents an entity that supports soft deletion functionality.

@@ -1,8 +1,5 @@
 ﻿namespace vm2.Repository.EfRepository.Models;
 
-using System.Threading;
-using System.Threading.Tasks;
-
 /// <summary>
 /// Represents a structure that holds a collection of identifiers, which can be used to locate or identify an entity.
 /// </summary>
@@ -42,7 +39,7 @@ public record struct Findable(IEnumerable<object?>? KeyValues) : IFindable
         : this(ids.AsEnumerable())
     {
         if (ids is null || ids.Length == 0)
-            throw new ArgumentException("At least one identifier must be provided.", nameof(ids));
+            throw new ArgumentException("At least one identifier value must be provided.", nameof(ids));
     }
 
     /// <inheritdoc />

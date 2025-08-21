@@ -40,7 +40,7 @@ class TrackFindableValidator : AbstractValidator<Track>
     public TrackFindableValidator()
     {
         RuleFor(track => track.Id)
-            .Must(id => id > 0)
+            .NotEmpty()
             .WithMessage("Track ID must be greater than 0.")
             ;
     }
@@ -77,23 +77,23 @@ class TrackValidator : AbstractValidator<Track>
     static async Task<bool> IsValid(
         IRepository repository,
         Track track,
-        int id,
+        TrackId id,
         CancellationToken cancellationToken)
         => repository.StateOf(track) switch {
             // If the track is being added, the ID must not exist in the database.
-            EntityState.Added => Genre.HasValues(track.Genres)
+            EntityState.Added => Genre.Has(track.Genres)
                                  && !await repository
                                                 .Set<Track>()
                                                 .AnyAsync(t => t.Id == id, cancellationToken)
-                                                .ConfigureAwait(false)
-                                 ,
+                                                .ConfigureAwait(false),
+
             // If the track is being modified, the ID must exist in the database.
-            EntityState.Modified => Genre.HasValues(track.Genres)
+            EntityState.Modified => Genre.Has(track.Genres)
                                     && await repository
                                                 .Set<Track>()
                                                 .AnyAsync(t => t.Id == id, cancellationToken)
-                                                .ConfigureAwait(false)
-                                    ,
+                                                .ConfigureAwait(false),
+
             _ => true,
         };
 }

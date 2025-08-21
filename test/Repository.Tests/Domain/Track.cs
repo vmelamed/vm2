@@ -14,7 +14,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
-    public int Id { get; private set; }
+    public TrackId Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the title of the track (song).
@@ -99,7 +99,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     /// <param name="updatedAt">The date and time when the track was last updated.</param>
     /// <param name="updatedBy">The user or system that last updated the track.</param>
     public Track(
-        int id,
+        TrackId id,
         string title,
         TimeSpan duration,
         IEnumerable<string>? genres = null,

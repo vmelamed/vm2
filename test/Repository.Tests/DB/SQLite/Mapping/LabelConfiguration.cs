@@ -7,11 +7,13 @@ class LabelConfiguration : IEntityTypeConfiguration<Label>
         builder
             .ToTable(nameof(Label))
             ;
+
         new FindableConfiguration<Label>().Configure(builder);
 
         builder
             .Property(c => c.Id)
-            .ValueGeneratedOnAdd()  // SQLite does not support HiLo, so we use ValueGeneratedOnAdd
+            .HasValueGenerator<UlidValueGenerator>()
+            .ValueGeneratedOnAdd()
             ;
 
         builder

@@ -1,4 +1,5 @@
 ﻿namespace vm2.Repository.EfRepository.Models;
+
 /// <summary>
 /// Domain objects that implement <c>IAuditable</c> store auditing information that can be populated automatically by the
 /// repository and can be used to track the lifecycle of the entity. The entities that implement this interface can also be

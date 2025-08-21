@@ -17,8 +17,6 @@ public class AuditableValidator : AbstractValidator<IAuditable>
             .WithMessage("CreatedAt must not be default value.")
             .Must(createdAt => createdAt.Kind == DateTimeKind.Utc)
             .WithMessage("CreatedAt must be in UTC.")
-            //.LessThanOrEqualTo(DateTime.UtcNow)
-            //.WithMessage("CreatedAt cannot be in the future.")
             ;
 
         // TODO: Uncomment when CreatedBy is implemented
@@ -32,8 +30,6 @@ public class AuditableValidator : AbstractValidator<IAuditable>
             .WithMessage("CreatedAt must not be default value.")
             .Must(createdAt => createdAt.Kind == DateTimeKind.Utc)
             .WithMessage("CreatedAt must be in UTC.")
-            //.LessThanOrEqualTo(DateTime.UtcNow)
-            //.WithMessage("UpdatedAt cannot be in the future.")
             ;
 
         // TODO: Uncomment when UpdatedBy is implemented

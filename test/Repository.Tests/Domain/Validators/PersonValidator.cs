@@ -62,8 +62,8 @@ class PersonFindableValidator : AbstractValidator<Person>
 {
     public PersonFindableValidator()
     {
-        RuleFor(p => p.Id)
-            .Must(id => id > 0)
+        RuleFor(p => p.Id.Id)
+            .NotEmpty()
             .WithMessage("Person ID must be greater than 0.")
             ;
     }
@@ -93,23 +93,23 @@ class PersonValidator : AbstractValidator<Person>
     static async ValueTask<bool> IsValid(
         IRepository repository,
         Person person,
-        int id,
+        PersonId id,
         CancellationToken cancellationToken)
         => repository.StateOf(person) switch {
 
             // if Added, make sure the id is unique in the database.
-            EntityState.Added => Instrument.HasValues(person.Instruments)
-                                 && Role.HasValues(person.Roles)
-                                 && Genre.HasValues(person.Genres)
+            EntityState.Added => Instrument.Has(person.Instruments)
+                                 && Role.Has(person.Roles)
+                                 && Genre.Has(person.Genres)
                                  && !await repository
                                                 .Set<Person>()
-                                                .AnyAsync(a => a.Id == id, cancellationToken)
+                                                .AnyAsync(p => p.Id == id, cancellationToken)
                                                 .ConfigureAwait(false),
 
             // if Modified, make sure there is a Person with this id in the database.
-            EntityState.Modified => Instrument.HasValues(person.Instruments)
-                                    && Role.HasValues(person.Roles)
-                                    && Genre.HasValues(person.Genres)
+            EntityState.Modified => Instrument.Has(person.Instruments)
+                                    && Role.Has(person.Roles)
+                                    && Genre.Has(person.Genres)
                                     && await repository
                                                 .Set<Person>()
                                                 .AnyAsync(a => a.Id == id, cancellationToken)

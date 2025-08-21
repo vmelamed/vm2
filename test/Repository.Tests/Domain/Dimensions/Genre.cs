@@ -20,12 +20,23 @@ public record Genre(string Name) : IValidatable, IDimensionValidator<Genre, stri
                         .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
-    public static Expression<Func<Genre, string>> ValueExpression
-        => genre => genre.Name;
+    public static Expression<Func<Genre, string>> ValueExpression => genre => genre.Name;
 
-    public static bool HasValue(string value)
-        => IDimensionValidator<Genre, string>.Has(value);
+    /// <summary>
+    /// Determines whether all specified values are present in the genres' set of values (are in the cache) in other words,
+    /// determines if all specified values are known genres.
+    /// </summary>
+    /// <returns><see langword="true"/> if the collection contains at least one valid value; otherwise, <see langword="false"/>.</returns>
+    /// <returns></returns>
+    public static bool Has(params string[] values) => IDimensionValidator<Genre, string>.Has(values);
 
-    public static bool HasValues(IEnumerable<string> values)
-        => IDimensionValidator<Genre, string>.Has(values);
+    /// <summary>
+    /// Determines whether all specified values are present in the genre' set of values (are in the cache) in other words,
+    /// determines if all specified values are known genres.
+    /// </summary>
+    /// <param name="values">The collection of strings to validate. Cannot be null.</param>
+    /// <returns>
+    /// <see langword="true"/> if all strings in the collection are present in the cache (are known instruments); otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool Has(IEnumerable<string> values) => IDimensionValidator<Genre, string>.Has(values);
 }

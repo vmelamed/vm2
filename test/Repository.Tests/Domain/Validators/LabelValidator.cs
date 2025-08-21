@@ -40,8 +40,8 @@ class LabelFindableValidator : AbstractValidator<Label>
 {
     public LabelFindableValidator()
     {
-        RuleFor(label => label.Id)
-            .Must(id => id > 0)
+        RuleFor(label => label.Id.Id)
+            .NotEmpty()
             .WithMessage("Label ID must be greater than 0.")
             ;
     }
@@ -60,19 +60,28 @@ class LabelValidator : AbstractValidator<Label>
 
         // Do we want this extra trip to the database, if we have unique DB constraints on the PK and on Name?
         // Label is almost like a dimension data: does not get added or modified all that often, so it may be worth it.
-        RuleFor(l => l.CountryCode)
-            .Must((l, c) => IsValid(repository, l, c))
+        RuleFor(l => l)
+            .MustAsync(async (l, ct) => await IsValid(repository, l, ct))
             .WithMessage("The Label must have a valid country code.")
             ;
     }
 
-    static bool IsValid(
+    static async ValueTask<bool> IsValid(
         IRepository repository,
         Label label,
-        string countryCode)
+        CancellationToken ct)
         => repository.StateOf(label) switch {
-            EntityState.Added or
-            EntityState.Modified => Country.HasValue(countryCode),
+            EntityState.Added => Country.Has(label.CountryCode)
+                                 && !await repository
+                                                .Set<Label>()
+                                                .AnyAsync(l => l.Id == label.Id, ct)
+                                                .ConfigureAwait(false),
+
+            EntityState.Modified => Country.Has(label.CountryCode)
+                                    && await repository
+                                                .Set<Label>()
+                                                .AnyAsync(l => l.Id == label.Id, ct)
+                                                .ConfigureAwait(false),
 
             _ => true
         };
