@@ -49,12 +49,23 @@ public sealed record Country(string Code, string Name) : IFindable<Country>, IVa
                         .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
-    public static Expression<Func<Country, string>> ValueExpression
-        => country => country.Code;
+    public static Expression<Func<Country, string>> ValueExpression => country => country.Code;
 
-    public static bool HasValue(string value)
-        => IDimensionValidator<Country, string>.Has(value);
+    /// <summary>
+    /// Determines whether all specified values are present in the countries' set of values (are in the cache) in other words,
+    /// determines if all specified values are known countries.
+    /// </summary>
+    /// <returns><see langword="true"/> if the collection contains at least one valid value; otherwise, <see langword="false"/>.</returns>
+    /// <returns></returns>
+    public static bool Has(params string[] values) => IDimensionValidator<Country, string>.Has(values);
 
-    public static bool HasValues(IEnumerable<string> values)
-        => IDimensionValidator<Country, string>.Has(values);
+    /// <summary>
+    /// Determines whether all specified values are present in the countries' set of values (are in the cache) in other words,
+    /// determines if all specified values are known countries.
+    /// </summary>
+    /// <param name="values">The collection of strings to validate. Cannot be null.</param>
+    /// <returns>
+    /// <see langword="true"/> if all strings in the collection are present in the cache (are known instruments); otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool Has(IEnumerable<string> values) => IDimensionValidator<Country, string>.Has(values);
 }

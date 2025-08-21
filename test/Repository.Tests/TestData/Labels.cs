@@ -2,9 +2,7 @@
 
 public static class Labels
 {
-    static int id = 0;
-
-    public static int NextId => Interlocked.Increment(ref id);
+    public static LabelId NextId => (LabelId)Ulid.NewUlid();
 
     static Label? _label1;
     static Label? _label2;

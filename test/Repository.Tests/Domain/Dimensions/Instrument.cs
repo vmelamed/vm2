@@ -38,12 +38,24 @@ public record Instrument(string Code, string Name) : IFindable<Instrument>, IVal
                         .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
     #endregion
 
-    public static Expression<Func<Instrument, string>> ValueExpression
-        => instrument => instrument.Code;
+    /// <inheritdoc />
+    public static Expression<Func<Instrument, string>> ValueExpression => instrument => instrument.Code;
 
-    public static bool HasValue(string value)
-        => IDimensionValidator<Instrument, string>.Has(value);
+    /// <summary>
+    /// Determines whether all specified values are present in the instruments' set of values (are in the cache) in other words,
+    /// determines if all specified values are known instruments.
+    /// </summary>
+    /// <returns><see langword="true"/> if the collection contains at least one valid value; otherwise, <see langword="false"/>.</returns>
+    /// <returns></returns>
+    public static bool Has(params string[] values) => IDimensionValidator<Instrument, string>.Has(values);
 
-    public static bool HasValues(IEnumerable<string> values)
-        => IDimensionValidator<Instrument, string>.Has(values);
+    /// <summary>
+    /// Determines whether all specified values are present in the instruments' set of values (are in the cache) in other words,
+    /// determines if all specified values are known instruments.
+    /// </summary>
+    /// <param name="values">The collection of strings to validate. Cannot be null.</param>
+    /// <returns>
+    /// <see langword="true"/> if all strings in the collection are present in the cache (are known instruments); otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool Has(IEnumerable<string> values) => IDimensionValidator<Instrument, string>.Has(values);
 }

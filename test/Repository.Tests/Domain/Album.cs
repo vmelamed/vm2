@@ -13,7 +13,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <summary>
     /// Gets or sets the unique identifier for the album entity.
     /// </summary>
-    public int Id { get; private set; }
+    public AlbumId Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the title of the album.
@@ -39,7 +39,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     ///// Gets the unique identifier for the label.
     ///// </summary>
     // Shadow foreign key by convention:
-    //public int? LabelId { get; private set; } = null;
+    //public Ulid? LabelId { get; private set; } = null;
 
     /// <summary>
     /// Gets the collection of albumsPersons associated with the album, such as artists, producers, and contributors.
@@ -117,7 +117,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <param name="deletedAt">The dater and time when the album was soft-deleted.</param>
     /// <param name="deletedBy">The name of the actor who soft-deleted the album.</param>
     public Album(
-        int id,
+        AlbumId id,
         string title,
         int? releaseYear,
         Label? label = null,

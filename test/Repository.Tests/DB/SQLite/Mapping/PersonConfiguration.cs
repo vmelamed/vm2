@@ -4,11 +4,15 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
 {
     public void Configure(EntityTypeBuilder<Person> builder)
     {
-        builder.ToTable(nameof(Person));
+        builder
+            .ToTable(nameof(Person))
+            ;
+
         new FindableConfiguration<Person>().Configure(builder);
 
         builder
             .Property(p => p.Id)
+            .HasValueGenerator<UlidValueGenerator>()
             .ValueGeneratedOnAdd()  // SQLite does not support HiLo, so we use ValueGeneratedOnAdd
             ;
 

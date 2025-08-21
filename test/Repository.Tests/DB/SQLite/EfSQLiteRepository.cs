@@ -51,5 +51,10 @@ public class EfSQLiteRepository : SQLiteDbContextRepository
             .Properties<Enum>()
             .HaveConversion<string>()
             ;
+
+        configurationBuilder
+            .Properties<AlbumId>()
+            .HaveConversion<PersonIdConverter>()
+            ;
     }
 }

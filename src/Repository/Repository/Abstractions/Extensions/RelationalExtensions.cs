@@ -5,7 +5,7 @@
 /// </summary>
 public static class RelationalExtensions
 {
-    const string notSupportedMessageFormat = "The method {0} is not supported. IRepository must be implemented by Microsoft.EntityFrameworkCore.DbSet<TEntity>";
+    const string notSupportedMessageFormat = "The method {0} is not supported. IRepository must be implemented by Microsoft.EntityFrameworkCore.DbSet<TId>";
 
     private static NotSupportedException NotSupported(string methodName = "")
         => new(string.Format(notSupportedMessageFormat, methodName));

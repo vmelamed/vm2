@@ -1,14 +1,11 @@
 ﻿namespace vm2.Repository.EfRepository;
 
-using vm2.Repository.EfRepository.Models;
+#pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
 
 /// <summary>
 /// <see cref="DbContext"/> implementation of the interface <see cref="IRepository"/> - the repository pattern, providing methods
 /// to add, remove, attach, update, and query with LINQ entities.
 /// </summary>
-/// <param name="options">
-/// The options to be used by the <see cref="DbContext"/>. The options can be created with the <see cref="DbContextOptionsBuilder"/>.
-/// </param>
 /// <remarks>
 /// Note that the <see cref="IRepository"/> is implemented explicitly by the <see cref="DbContextRepository"/> class. Therefore, in
 /// order to access the interface methods, your <see cref="DbContext"/> that inherits from <see cref="DbContextRepository"/>, can be
@@ -18,9 +15,21 @@ using vm2.Repository.EfRepository.Models;
 /// <see cref="IRepository"/> does not claim, nor tries to cover the full functionality of <see cref="DbContext"/>. To access
 /// the full functionality of <see cref="DbContext"/>, you can use the extension method <see cref="EfRepositoryExtensions.DbContext"/>.
 /// </remarks>
-public class DbContextRepository(DbContextOptions options) : DbContext(options), IRepository
+public partial class DbContextRepository(DbContextOptions options) : DbContext(options), IRepository
 {
     IRepository ThisRepo => this;
+
+    DddBoundaryChecks? _checks = null;
+
+    DddBoundaryChecks DddBoundaryChecks
+    {
+        get
+        {
+            _checks ??= (options.GetExtension<DddAggregateBoundaryChecking>()?.Info as DddBoundaryCheckingOptionsExtensionInfo)?
+                            .Checks ?? DddBoundaryChecks.None;
+            return _checks.Value;
+        }
+    }
 
     /// <summary>
     /// Represents an abstract collection of domain objects (entities) of type <typeparamref name="T"/>. Since the entity set is
@@ -100,28 +109,13 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
     /// tracker, the method will add it as is in "Deleted" state. The only important thing for the entity is that it contains<br/>
     /// valid keys in the proper order. This warrants the following pattern:
     /// <code><![CDATA[
-    /// async Task Delete(Id entityId)
-    /// {
-    ///     ...
     ///     Entity entity = new() { Id = entityId };
-    ///
-    ///     // NO trip to the DB:
-    ///     _repository.Remove(entity);
-    ///     ...
-    ///     // SINGLE trip to the DB:
-    ///     await _repository.Commit();
-    /// }
+    ///     _repository.Remove(entity);                         // NO trip to the DB
+    ///     await _repository.Commit();                         // TRIP to the DB
     /// ]]></code>instead of:<code><![CDATA[
-    /// async Task Delete(Id entityId)
-    /// {
-    ///     ...
-    ///     // FIRST trip to the DB!
-    ///     Entity entity = await _repository.Find(entityId);
+    ///     Entity entity = await _repository.Find(entityId);   // FIRST trip to the DB!
     ///     _repository.Remove(entity);
-    ///     ...
-    ///     // SECOND trip to the DB
-    ///     await _repository.Commit();
-    /// }
+    ///     await _repository.Commit();                         // SECOND trip to the DB
     /// ]]></code>
     /// </remarks>
     T IRepository.Remove<T>(T entity)
@@ -158,137 +152,5 @@ public class DbContextRepository(DbContextOptions options) : DbContext(options),
     {
         await CompleteAndValidate(cancellationToken).ConfigureAwait(false);
         return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Completes and validates all tracked entities based on their state.
-    /// </summary>
-    /// <remarks>This method processes entities in the change tracker, performing completion and validation actions depending on
-    /// whether the entity is added, modified, or deleted. It is designed to be overridden in derived classes to customize the
-    /// completion and validation logic.
-    /// </remarks>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation.</returns>
-    protected virtual async ValueTask CompleteAndValidate(CancellationToken cancellationToken = default)
-    {
-        ChangeTracker.DetectChanges();
-
-        string actor = "";    // TODO: replace with actual actor, e.g. from some call context or user token
-        var now = DateTime.UtcNow;
-
-        // Complete all entities that implement ICompletable
-        foreach (var entry in ChangeTracker.Entries())
-            await (entry.State switch {
-                EntityState.Added => CompleteAndValidateAddedEntity(entry, now, actor, cancellationToken),
-                EntityState.Modified => CompleteAndValidateUpdatedEntity(entry, now, actor, cancellationToken),
-                EntityState.Deleted => CompleteAndValidateDeletedEntity(entry, now, actor, cancellationToken),
-                _ => ValueTask.CompletedTask, // Do nothing for Unchanged or Detached
-            });
-    }
-
-    /// <summary>
-    /// Completes and validates an entity that has been added to the context. The method can be overridden in derived contexts
-    /// to customize the actions performed on the entity after it has been added with <see cref="IRepository.Add"/>.
-    /// </summary>
-    /// <remarks>This method performs several operations on the entity if it implements specific interfaces:
-    /// <list type="bullet">
-    /// <item>If the entity implements <see cref="IAuditable"/>, it applies auditing information using the provided
-    /// <paramref name="now"/> and <paramref name="actor"/>.
-    /// </item><item>
-    /// If the entity implements <see cref="ICompletable"/>, it completes the entity.
-    /// </item><item>
-    /// If the entity implements <see cref="IValidatable"/>, it validates the entity.
-    /// </item>
-    /// </list></remarks>
-    /// <param name="entry">The <see cref="EntityEntry"/> representing the entity to be processed.</param>
-    /// <param name="now">The current date and time, used for auditing purposes.</param>
-    /// <param name="actor">The identifier of the actor performing the operation, used for auditing purposes.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-    protected virtual async ValueTask CompleteAndValidateAddedEntity(
-        EntityEntry entry,
-        DateTime now,
-        string actor,
-        CancellationToken cancellationToken)
-    {
-        var entity = entry.Entity;
-
-        if (entity is IAuditable auditableAdded)
-            auditableAdded.AuditOnAdd(now, actor);
-
-        if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
-
-        if (entity is IValidatable validatable)
-            await validatable.Validate(this, cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Completes and validates the updated entity by applying auditing, completion, and validation processes. The method can
-    /// be overridden in derived contexts to customize the actions performed on the entity after it has been modified.
-    /// </summary>
-    /// <remarks>This method performs several operations on the entity if it implements specific interfaces:
-    /// <list type="bullet">
-    /// <item>If the entity implements <see cref="IAuditable"/>, it applies auditing information using the provided
-    /// <paramref name="now"/> and <paramref name="actor"/>.
-    /// </item><item>
-    /// If the entity implements <see cref="ICompletable"/>, it completes the entity asynchronously.
-    /// </item><item>
-    /// If the entity implements <see cref="IValidatable"/>, it validates the entity asynchronously.
-    /// </item></list></remarks>
-    /// <param name="entry">The <see cref="EntityEntry"/> representing the entity to be processed.</param>
-    /// <param name="now">The current date and time used for auditing purposes.</param>
-    /// <param name="actor">The identifier of the actor performing the update, used for auditing.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-    protected virtual async ValueTask CompleteAndValidateUpdatedEntity(
-        EntityEntry entry,
-        DateTime now,
-        string actor,
-        CancellationToken cancellationToken)
-    {
-        var entity = entry.Entity;
-
-        if (entity is IAuditable auditable)
-            auditable.AuditOnUpdate(now, actor);
-
-        if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
-
-        if (entity is IValidatable validatableUpdated)
-            await validatableUpdated.Validate(this, cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Completes the soft deletion process for an entity and validates its state.
-    /// </summary>
-    /// <remarks>This method marks the entity as soft deleted by updating its state to <see
-    /// cref="EntityState.Deleted"/>. It can be overridden in derived classes to customize the soft deletion behavior.
-    /// </remarks>
-    /// <param name="entry">The <see cref="EntityEntry"/> representing the entity to be soft deleted.</param>
-    /// <param name="now">The current date and time, used to timestamp the deletion.</param>
-    /// <param name="actor">The identifier of the user or process performing the deletion.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
-    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-    protected virtual async ValueTask CompleteAndValidateDeletedEntity(
-        EntityEntry entry,
-        DateTime now,
-        string actor,
-        CancellationToken cancellationToken)
-    {
-        var entity = entry.Entity;
-
-        // Delete other, logically related entities as well?
-        if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
-
-        if (entity is ISoftDeletable deletable)
-        {
-            deletable.SoftDelete(now, actor);
-            // Change state to Modified to avoid actual deletion:
-            entry.State = EntityState.Modified;
-        }
-
-        return;
     }
 }

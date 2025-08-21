@@ -19,7 +19,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
     /// <summary>
     /// Gets or sets the unique identifier for the recording label entities.
     /// </summary>
-    public int Id { get; private set; }
+    public LabelId Id { get; private set; }
 
     /// <summary>
     /// Gets or sets the name of the recording label.
@@ -84,7 +84,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
     /// <param name="updatedAt">The date and time when the label was last updated.</param>
     /// <param name="updatedBy">The identifier of the actor who last updated the label.</param>
     public Label(
-        int id,
+        LabelId id,
         string name,
         string countryCode,
         DateTime createdAt = default,

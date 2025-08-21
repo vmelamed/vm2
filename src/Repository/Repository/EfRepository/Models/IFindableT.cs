@@ -8,7 +8,7 @@
 /// <see cref="IRepository.Find{T}(IEnumerable{object}, CancellationToken)"/> to find the entity by its primary key(s) in the
 /// change tracker or in the physical store.
 /// </summary>
-/// <example><![CDATA[
+/// <remarks><code><![CDATA[
 /// class MyEntity : IFindable<MyEntity>
 /// {
 ///     public long Id { get; set; }
@@ -17,9 +17,9 @@
 ///     // the one and only definition of the key:
 ///     public static readonly Expression<Func<MyEntity, object?>> KeyExpression = e => new { e.Id, e.Index };
 /// }
-///
-/// ...
-/// // In the Entity Framework Core mapping configuration of the entity, you can reuse the KeyExpression to configure the primary key:
+/// ]]></code>
+/// In the Entity Framework Core mapping configuration of the entity, you can reuse the KeyExpression to configure the primary key:
+/// <code><![CDATA[
 /// class MyEntityConfiguration : IEntityTypeConfiguration<MyEntity>
 /// {
 ///     ...
@@ -35,7 +35,7 @@
 /// var findableEntity = (IFindable)entity;             // explicitly cast to IFindable to use KeyValues in the Find method
 /// ...
 /// MyEntity found = await _repository.Find<MyEntity>(findableEntity.KeyValues, ct);
-/// ]]></example>
+/// ]]></code></remarks>
 public interface IFindable<TEntity> : IFindable where TEntity : class, IFindable<TEntity>
 {
     /// <summary>

@@ -53,8 +53,8 @@ class AlbumFindableValidator : AbstractValidator<Album>
 {
     public AlbumFindableValidator()
     {
-        RuleFor(a => a.Id)
-            .Must(id => id > 0)
+        RuleFor(a => a.Id.Id)
+            .NotEmpty()
             .WithMessage("Album ID must be greater than 0.")
             ;
     }
@@ -87,8 +87,8 @@ class AlbumValidator : AbstractValidator<Album>
 
         // TODO: we probably do not want this extra trip to the database, if we have unique DB constraints on the PK Id?
         if (repository is not null)
-            RuleFor(l => l.Id)
-                .MustAsync(async (l, id, ct) => await IsValid(repository, l, id, ct).ConfigureAwait(false))
+            RuleFor(a => a.Id)
+                .MustAsync(async (a, id, ct) => await IsValid(repository, a, a.Id, ct).ConfigureAwait(false))
                 .WithMessage("The Album Id must be unique.")
                 ;
     }
@@ -96,19 +96,19 @@ class AlbumValidator : AbstractValidator<Album>
     static async ValueTask<bool> IsValid(
         IRepository repository,
         Album album,
-        int id,
+        AlbumId id,
         CancellationToken cancellationToken)
         => repository.StateOf(album) switch {
 
             // if Added, make sure the id is unique in the database.
-            EntityState.Added => Genre.HasValues(album.Genres)
+            EntityState.Added => Genre.Has(album.Genres)
                                  && !await repository
                                                 .Set<Album>()
                                                 .AnyAsync(a => a.Id == id, cancellationToken)
                                                 .ConfigureAwait(false)
                                  ,
             // if Modified, make sure there is an album with this id in the database.
-            EntityState.Modified => Genre.HasValues(album.Genres)
+            EntityState.Modified => Genre.Has(album.Genres)
                                     && await repository
                                                 .Set<Album>()
                                                 .AnyAsync(a => a.Id == id, cancellationToken)

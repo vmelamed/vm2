@@ -2,9 +2,7 @@
 
 public static class Persons
 {
-    static int id = 0;
-
-    public static int NextId => Interlocked.Increment(ref id);
+    public static PersonId NextId => (PersonId)Ulid.NewUlid();
 
     static Person? _personMilesDavis;
     static Person? _personJohnColtrane;

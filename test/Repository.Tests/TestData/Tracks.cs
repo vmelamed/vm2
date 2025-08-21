@@ -2,18 +2,31 @@ namespace vm2.Repository.Tests.TestData;
 
 public static class Tracks
 {
-    static int id = 0;
-
-    public static int NextId => Interlocked.Increment(ref id);
+    public static TrackId NextId => (TrackId)Ulid.NewUlid();
 
     // Track fields (one per track, named for clarity)
-    static Track? _soWhat, _freddieFreeloader, _blueInGreen;
+    static Track? _soWhat;
+    static Track? _freddieFreeloader;
+    static Track? _blueInGreen;
     static Track? _diminuendoCrescendoInBlue;
-    static Track? _violinConcertoAllegro, _violinConcertoLarghetto;
-    static Track? _celloSonata1Adagio, _celloSonata1Allegro, _celloSonata1Andante, _celloSonata1AllegroModerato;
-    static Track? _celloSonata2Allegro, _celloSonata2Adagio, _celloSonata2Allegro2;
-    static Track? _celloSonata3Vivace, _celloSonata3Adagio, _celloSonata3Allegro;
-    static Track? _gloriasStep, _myMansGoneNow, _solar, _aliceInWonderland, _allOfYou, _jadeVisions;
+    static Track? _violinConcertoAllegro;
+    static Track? _violinConcertoLarghetto;
+    static Track? _celloSonata1Adagio;
+    static Track? _celloSonata1Allegro;
+    static Track? _celloSonata1Andante;
+    static Track? _celloSonata1AllegroModerato;
+    static Track? _celloSonata2Allegro;
+    static Track? _celloSonata2Adagio;
+    static Track? _celloSonata2Allegro2;
+    static Track? _celloSonata3Vivace;
+    static Track? _celloSonata3Adagio;
+    static Track? _celloSonata3Allegro;
+    static Track? _gloriasStep;
+    static Track? _myMansGoneNow;
+    static Track? _solar;
+    static Track? _aliceInWonderland;
+    static Track? _allOfYou;
+    static Track? _jadeVisions;
 
     static IEnumerable<Track> _allTracks = [];
 
@@ -190,13 +203,28 @@ public static class Tracks
 
         _allTracks = new[]
         {
-            _soWhat, _freddieFreeloader, _blueInGreen,
+            _soWhat,
+            _freddieFreeloader,
+            _blueInGreen,
             _diminuendoCrescendoInBlue,
-            _violinConcertoAllegro, _violinConcertoLarghetto,
-            _celloSonata1Adagio, _celloSonata1Allegro, _celloSonata1Andante, _celloSonata1AllegroModerato,
-            _celloSonata2Allegro, _celloSonata2Adagio, _celloSonata2Allegro2,
-            _celloSonata3Vivace, _celloSonata3Adagio, _celloSonata3Allegro,
-            _gloriasStep, _myMansGoneNow, _solar, _aliceInWonderland, _allOfYou, _jadeVisions
+            _violinConcertoAllegro,
+            _violinConcertoLarghetto,
+            _celloSonata1Adagio,
+            _celloSonata1Allegro,
+            _celloSonata1Andante,
+            _celloSonata1AllegroModerato,
+            _celloSonata2Allegro,
+            _celloSonata2Adagio,
+            _celloSonata2Allegro2,
+            _celloSonata3Vivace,
+            _celloSonata3Adagio,
+            _celloSonata3Allegro,
+            _gloriasStep,
+            _myMansGoneNow,
+            _solar,
+            _aliceInWonderland,
+            _allOfYou,
+            _jadeVisions
         }.Where(t => t is not null)!;
 
         return _allTracks;

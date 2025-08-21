@@ -61,9 +61,8 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
            repository.StateOf(tp.Person) switch {
 
                EntityState.Added or
-               EntityState.Modified => Role.HasValues(tp.Roles) &&
-                                       Instrument.HasValues(tp.Instruments)
-                                       ,
+               EntityState.Modified => Role.Has(tp.Roles) &&
+                                       Instrument.Has(tp.Instruments),
 
                _ => true,
            };

@@ -30,13 +30,13 @@ public class AlbumPerson : IValidatable, IOptimisticConcurrency
     ///// Gets the unique identifier of the album.
     ///// </summary>
     // Shadow foreign key by convention:
-    //public int AlbumId { get; private set; }
+    //public AlbumId AlbumId { get; private set; }
 
     ///// <summary>
     ///// Gets the unique identifier of the person.
     ///// </summary>
     // Shadow foreign key by convention:
-    //public int PersonId { get; private set; }
+    //public PersonId PersonId { get; private set; }
 
     /// <summary>
     /// Gets the collection of roles performed by the person on the album.

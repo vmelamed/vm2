@@ -14,10 +14,8 @@ public class SoftDeletableValidator : AbstractValidator<ISoftDeletable>
     {
         When(deletable => deletable.DeletedAt.HasValue, () =>
             RuleFor(deletable => deletable.DeletedAt)
-                .Must(deletedAt => deletedAt!.Value.Kind == DateTimeKind.Utc)
+                .Must(deletedAt => deletedAt is null || deletedAt.Value.Kind == DateTimeKind.Utc)
                 .WithMessage("DeletedAt must be in UTC.")
-            //.Must(deletedAt => deletedAt <= DateTime.UtcNow)
-            //.WithMessage("DeletedAt cannot be in the future.")
             );
         // TODO: Uncomment when DeletedBy is implemented
         //RuleFor(deletable => deletable.DeletedBy)

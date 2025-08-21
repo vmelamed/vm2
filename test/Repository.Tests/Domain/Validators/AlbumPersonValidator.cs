@@ -36,9 +36,8 @@ class AlbumPersonValidator : AbstractValidator<AlbumPerson>
         => repository.StateOf(ap) switch {
 
             EntityState.Added or
-            EntityState.Modified => Role.HasValues(ap.Roles) &&
-                                    Instrument.HasValues(ap.Instruments)
-                                    ,
+            EntityState.Modified => Role.Has(ap.Roles) &&
+                                    Instrument.Has(ap.Instruments),
 
             _ => true,
         };
