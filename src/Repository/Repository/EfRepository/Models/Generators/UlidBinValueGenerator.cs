@@ -20,6 +20,5 @@ public sealed class UlidBinValueGenerator : ValueGenerator<byte[]>
     /// <summary>
     /// Generates a new <see cref="Guid"/> value using ULID.
     /// </summary>
-    public override byte[] Next(EntityEntry entry)
-        => Ulid.NewUlid().ToByteArray();
+    public override byte[] Next(EntityEntry entry) => Ulid.NewUlid().ToByteArray();
 }

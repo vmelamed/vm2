@@ -15,6 +15,5 @@ public sealed class UlidGuidValueGenerator : ValueGenerator<Guid>
     /// <summary>
     /// Generates a new <see cref="Guid"/> value using ULID.
     /// </summary>
-    public override Guid Next(EntityEntry entry)
-        => Ulid.NewUlid().ToGuid();
+    public override Guid Next(EntityEntry entry) => Ulid.NewUlid().ToGuid();
 }

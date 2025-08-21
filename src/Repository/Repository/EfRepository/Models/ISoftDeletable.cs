@@ -14,7 +14,7 @@
 public interface ISoftDeletable
 {
     /// <summary>
-    /// Represents the maximum allowed length for an actor's name - deleter.
+    /// Represents the maximum allowed length for an actor's name.
     /// </summary>
     public const int MaxActorNameLength = IAuditable.MaxActorNameLength;
 

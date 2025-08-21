@@ -20,6 +20,5 @@ public sealed class UlidStringValueGenerator : ValueGenerator<string>
     /// <summary>
     /// Generates a new <see cref="Guid"/> value using ULID.
     /// </summary>
-    public override string Next(EntityEntry entry)
-        => Ulid.NewUlid().ToBase64();
+    public override string Next(EntityEntry entry) => Ulid.NewUlid().ToBase64();
 }
