@@ -122,7 +122,7 @@ public class FakeDbSetTests(
     }
 
     [Fact]
-    public async Task AsQuiryable_TestAsync()
+    public async Task AsQueryable_TestAsync()
     {
         var num = new string[] { "one", "two", "three" };
         var tes = new TestEntity[] { new(num[0], id: Guid.NewGuid()), new(num[1], id: Guid.NewGuid()), new(num[2], id: Guid.NewGuid()) };
@@ -131,7 +131,7 @@ public class FakeDbSetTests(
 
         te.Name.Should().Be("two");
 
-        te = await sut.AsQueryable().FirstAsync(t => t.Name == "three");
+        te = await sut.AsQueryable().FirstAsync(t => t.Name == "three", TestContext.Current.CancellationToken);
 
         te.Name.Should().Be("three");
     }
@@ -185,7 +185,7 @@ public class FakeDbSetTests(
         var tes = new TestEntity[] { new(num[0], id: Guid.NewGuid()), new(num[1], id: Guid.NewGuid()), new(num[2], id: Guid.NewGuid()) };
         var sut = new FakeDbSet<TestEntity>([tes[0]]);
 
-        await sut.AddRangeAsync(new List<TestEntity> { tes[0], tes[1], tes[2] });
+        await sut.AddRangeAsync(new List<TestEntity> { tes[0], tes[1], tes[2] }, TestContext.Current.CancellationToken);
 
         sut.Count().Should().Be(3);
         sut.First(t => t.Name == "two").Name.Should().Be("two");
@@ -297,6 +297,7 @@ public class FakeDbSetTests(
         sut.Find(missingId).Should().BeNull();
     }
 
+#pragma warning disable xUnit1051 // Calls to methods which accept CancellationToken should use TestContext.Current.CancellationToken
     [Fact]
     public async Task FindAsync_MissingEntity_ReturnsNull()
     {
@@ -306,6 +307,7 @@ public class FakeDbSetTests(
         var result = await sut.FindAsync(missingId);
         result.Should().BeNull();
     }
+#pragma warning restore xUnit1051 // Calls to methods which accept CancellationToken should use TestContext.Current.CancellationToken
 
     [Fact]
     public void Update_NonexistentEntity_AddsEntity()
@@ -535,7 +537,7 @@ public class FakeDbSetTests(
         var te = new TestEntity("addasync", id: Guid.NewGuid());
         var sut = new FakeDbSet<TestEntity>();
 
-        var entry = await sut.AddAsync(te);
+        var entry = await sut.AddAsync(te, TestContext.Current.CancellationToken);
 
         entry.Should().NotBeNull();
         entry.Entity.Should().Be(te);

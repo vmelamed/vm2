@@ -1,12 +1,9 @@
 global using System.Text.RegularExpressions;
 global using System.Web;
 
-global using FluentAssertions;
-
 global using vm2.RegexLib;
 global using vm2.TestUtilities;
 
-global using Xunit;
-global using Xunit.Abstractions;
+global using Xunit.Sdk;
 
 global using static TestUtilities.Utilities;

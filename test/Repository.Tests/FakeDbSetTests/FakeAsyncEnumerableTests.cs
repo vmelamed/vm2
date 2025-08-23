@@ -75,7 +75,7 @@ public class FakeAsyncEnumerableTests(
         var l2 = await l
             .AsQueryable()
             .Where(i => i >= 2)
-            .ToListAsync()
+            .ToListAsync(TestContext.Current.CancellationToken)
             ;
 
         foreach (var i in l2)

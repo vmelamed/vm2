@@ -2,12 +2,14 @@
 
   <PropertyGroup>
     <RootNamespace>vm2.Repository.Tests.Domain</RootNamespace>
-    <IsTestProject>true</IsTestProject>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" />
+    </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="FluentValidation" />
+    <Using Include="FluentValidation" />
   </ItemGroup>
 
   <ItemGroup>

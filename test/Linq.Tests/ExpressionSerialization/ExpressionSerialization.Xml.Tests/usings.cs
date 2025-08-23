@@ -15,6 +15,4 @@ global using vm2.Linq.ExpressionSerialization.Shared.Exceptions;
 global using vm2.Linq.ExpressionSerialization.Shared.Tests;
 global using vm2.TestUtilities;
 
-global using Xunit.Abstractions;
-
 global using static TestUtilities.Utilities;

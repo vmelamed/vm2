@@ -1,5 +1,7 @@
 ﻿namespace vm2.RegexLibTests;
 
+using System.Runtime.Serialization;
+
 public class Captures : Dictionary<string, string>, IXunitSerializable
 {
     const string countId = "countId";
@@ -11,8 +13,9 @@ public class Captures : Dictionary<string, string>, IXunitSerializable
         var count = info.GetValue<int>(countId);
         for (var i = 0; i < count; i++)
         {
-            var name = info.GetValue<string>($"name{i}");
-            var value = info.GetValue<string>($"value{i}");
+            var name  = info.GetValue<string>($"name{i}")  ?? throw new SerializationException($"Error deserializing name{i}");
+            var value = info.GetValue<string>($"value{i}") ?? throw new SerializationException($"Error deserializing value{i}");
+
             Add(name, value);
         }
     }

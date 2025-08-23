@@ -7,8 +7,6 @@ global using System.Text.Json;
 global using System.Text.Json.Nodes;
 global using System.Threading;
 
-global using FluentAssertions;
-
 global using LibGit2Sharp;
 
 global using vm2.ExpressionDeepEquals;
@@ -16,7 +14,5 @@ global using vm2.Linq.ExpressionSerialization.Shared.Abstractions;
 global using vm2.Linq.ExpressionSerialization.Shared.Exceptions;
 global using vm2.Linq.ExpressionSerialization.Shared.Tests;
 global using vm2.TestUtilities;
-
-global using Xunit.Abstractions;
 
 global using static TestUtilities.Utilities;

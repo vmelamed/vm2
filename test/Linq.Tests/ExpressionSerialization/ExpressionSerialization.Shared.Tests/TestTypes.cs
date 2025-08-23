@@ -84,7 +84,7 @@ public class Object1 : IEquatable<Object1>
     [DataMember]
     public DateTimeOffset DateTimeOffsetProperty { get; set; } = new DateTimeOffset(2024, 4, 14, 22, 48, 34, new TimeSpan(0, 5, 0));
 
-    public string _stringField = "Hi there!";
+    public string StringField = "Hi there!";
 
     #region Identity rules implementation.
     #region IEquatable<Object1> Members

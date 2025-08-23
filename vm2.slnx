@@ -61,6 +61,7 @@
     <Project Path="test/Repository.Tests/FakeDbSetTests/FakeDbSetTests.csproj" />
     <Project Path="test/Repository.Tests/IntegrationTests/IntegrationTests.csproj" Id="08790151-aed0-4411-a14d-b811a1be8668" />
     <Project Path="test/Repository.Tests/TestData/TestData.csproj" Id="55bd1290-eb6b-47f7-80be-ae6b4f7aa97e" />
+    <Project Path="test/Repository.Tests/UnitTests/UnitTests.csproj" />
   </Folder>
   <Folder Name="/test/Repository.Tests/DB/">
     <Project Path="test/Repository.Tests/DB/SQLite/SQLite.csproj" Id="e13f69eb-e77f-40e5-8179-04a7ebc0db6b" />

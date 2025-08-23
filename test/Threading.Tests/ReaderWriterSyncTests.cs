@@ -96,7 +96,8 @@ public class ReaderWriterSyncTests
                     rwLock.EnterWriteLock();
                     Thread.Sleep(100); // Simulate work
                     rwLock.ExitWriteLock();
-                }),
+                },
+                TestContext.Current.CancellationToken),
 
             Task.Run(
                 () =>
@@ -108,7 +109,8 @@ public class ReaderWriterSyncTests
 
                     // Assert
                     sync.IsLockHeld.Should().BeFalse();
-                })
+                },
+                TestContext.Current.CancellationToken)
         ]);
 
         rwLock.IsReadLockHeld.Should().BeFalse();

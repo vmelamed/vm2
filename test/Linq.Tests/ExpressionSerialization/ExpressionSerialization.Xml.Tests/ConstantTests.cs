@@ -22,7 +22,7 @@ public partial class ConstantTests(XmlTestsFixture fixture, ITestOutputHelper ou
     {
         var pathName = Path.Combine(XmlTestFilesPath, "ClassSerializable1.xml");
         var expression = Expression.Constant(new ClassNonSerializable(1, "One"));
-        var (expectedDoc, expectedStr) = await _fixture.GetXmlDocumentAsync(TestLine(), pathName, "EXPECTED", Out);
+        var (expectedDoc, expectedStr) = await _fixture.GetXmlDocumentAsync(TestLine(), pathName, "EXPECTED", Out, cancellationToken: TestContext.Current.CancellationToken);
 
         var testCall = () => _fixture.TestExpressionToXml(TestLine(), expression, expectedDoc, expectedStr, pathName, Out);
 

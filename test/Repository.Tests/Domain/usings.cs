@@ -5,8 +5,6 @@ global using System.Text.RegularExpressions;
 global using System.Threading;
 global using System.Threading.Tasks;
 
-global using FluentValidation;
-
 global using Microsoft.EntityFrameworkCore;
 
 global using vm2.Repository.Abstractions;

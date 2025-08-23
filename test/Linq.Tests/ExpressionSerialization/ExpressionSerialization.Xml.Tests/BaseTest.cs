@@ -25,17 +25,20 @@ public abstract class BaseTests(
 
         var expression = Substitute(expressionString);
         var pathName = Path.Combine(XmlTestFilesPath, fileName+".xml");
-        var (expectedDoc, expectedStr) = await _fixture.GetXmlDocumentAsync(testFileLine, pathName, "EXPECTED", Out);
+        var (expectedDoc, expectedStr) = await _fixture.GetXmlDocumentAsync(testFileLine, pathName, "EXPECTED", Out,
+                                                            cancellationToken: TestContext.Current.CancellationToken);
 
         _fixture.TestExpressionToXml(testFileLine, expression, expectedDoc, expectedStr, pathName, Out);
-        await _fixture.TestExpressionToXmlAsync(testFileLine, expression, expectedDoc, expectedStr, pathName, Out, CancellationToken.None);
+        await _fixture.TestExpressionToXmlAsync(testFileLine, expression, expectedDoc, expectedStr, pathName, Out,
+                                                            cancellationToken: TestContext.Current.CancellationToken);
     }
 
     public virtual async Task FromXmlTestAsync(string testFileLine, string expressionString, string fileName)
     {
         var expectedExpression = Substitute(expressionString);
         var pathName = Path.Combine(XmlTestFilesPath, fileName+".xml");
-        var (inputDoc, _) = await _fixture.GetXmlDocumentAsync(testFileLine, pathName, "INPUT", Out, true);
+        var (inputDoc, _) = await _fixture.GetXmlDocumentAsync(testFileLine, pathName, "INPUT", Out, true,
+                                                            cancellationToken: TestContext.Current.CancellationToken);
 
         inputDoc.Should().NotBeNull($"the input XDocument from {testFileLine} should not be null");
 
