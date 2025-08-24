@@ -55,10 +55,12 @@ public static class TaskCombinators
                 // execute the method and if successful, return the completed task
                 return await method().ConfigureAwait(false);
             }
+#pragma warning disable CA1031 // Do not catch general exception types - it's OK: we'll be throwing an aggregate exception later
             catch (Exception x)
             {
                 exceptions.Add(x);
             }
+#pragma warning restore CA1031
 
             // Should we retry? If not, throw an aggregate exception with a history of all exceptions caught so far.
             if (!await shouldRetry(exceptions.Last()).ConfigureAwait(false))

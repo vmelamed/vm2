@@ -3,7 +3,7 @@
 /// <summary>
 /// Class Transform.
 /// </summary>
-static partial class Transform
+public static partial class Transform
 {
     static readonly UnicodeCategory[] _beginIdentifierArr_ =
     [
@@ -58,7 +58,7 @@ static partial class Transform
     /// <param name="convention">The convention.</param>
     /// <returns>string.</returns>
     /// <exception cref="InternalTransformErrorException">Invalid identifier.</exception>
-    internal static string Identifier(string identifier, IdentifierConventions convention)
+    public static string Identifier(string identifier, IdentifierConventions convention)
     {
         if (!CSharpIdentifier().IsMatch(identifier))
             throw new InternalTransformErrorException("Invalid identifier.");

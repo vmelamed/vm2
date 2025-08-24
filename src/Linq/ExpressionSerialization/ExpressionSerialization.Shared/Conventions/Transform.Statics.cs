@@ -1,6 +1,6 @@
 ﻿namespace vm2.Linq.ExpressionSerialization.Shared.Conventions;
 
-static partial class Transform
+public static partial class Transform
 {
     static IEnumerable<Type> EnumNonPrimitiveBasicTypes()
     {

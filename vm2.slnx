@@ -33,9 +33,7 @@
   <Folder Name="/src/Functional/">
     <Project Path="src/Functional/Primitives/Primitives.csproj" />
   </Folder>
-  <Folder Name="/src/Repository/DB/">
-    <Project Path="src/Repository/Repository/DB/SQLiteEfRepository/SQLiteEfRepository.csproj" Id="a4beb2f4-74a0-4084-bef5-b5ae0c79d173" />
-  </Folder>
+  <Folder Name="/src/Repository/DB/" />
   <Folder Name="/src/Repository/DBSpecific/">
     <Project Path="src/Repository/DB/SQLiteEfRepository/SQLiteEfRepository.csproj" />
   </Folder>

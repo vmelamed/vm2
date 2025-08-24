@@ -225,12 +225,12 @@ public static class RegexLibReflector
                     errors.Add(error);
                 }
             }
+#pragma warning disable CA1031 // Do not catch general exception types - it's okay here for reporting purposes
             catch (Exception ex)
             {
-                var error = $"❌ {method.DeclaringType?.Name}.{method.Name}() - {ex.GetType().Name}: {ex.Message}";
-                Console.WriteLine(error);
-                errors.Add(error);
+                errors.Add($"❌ {method.DeclaringType?.Name}.{method.Name}() - {ex.GetType().Name}: {ex.Message}");
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
         Console.WriteLine($"\nValidation Summary:");
         Console.WriteLine($"✅ Success: {success}");
@@ -305,6 +305,7 @@ public static class RegexLibReflector
                 PrintGeneratedRegexAttribute(attr);
 
                 // Show a sample test
+#pragma warning disable CA1031 // Do not catch general exception types
                 try
                 {
                     var regex = (Regex?)method.Invoke(null, null);
@@ -316,6 +317,7 @@ public static class RegexLibReflector
                 {
                     Console.WriteLine($"  ⚠️  Error compiling regex: {ex.Message}");
                 }
+#pragma warning restore CA1031 // Do not catch general exception types
             }
 
             Console.WriteLine();

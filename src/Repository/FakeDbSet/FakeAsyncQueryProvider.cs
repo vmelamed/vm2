@@ -1,6 +1,10 @@
 ﻿namespace vm2.Repository.FakeDbSet;
 
-class FakeAsyncQueryProvider<T> : IAsyncQueryProvider
+/// <summary>
+/// A fake asynchronous query provider that wraps a synchronous <see cref="IQueryProvider"/> to support asynchronous query execution.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public class FakeAsyncQueryProvider<T> : IAsyncQueryProvider
 {
     readonly IQueryProvider _inner;
 

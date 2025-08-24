@@ -395,6 +395,13 @@ dotnet_style_prefer_simplified_interpolation = true:suggestion
 dotnet_style_namespace_match_folder = true:suggestion
 dotnet_diagnostic.CA1859.severity = none
 
+dotnet_diagnostic.CA1031.severity = warning    # Don’t catch System.Exception
+dotnet_diagnostic.CA2200.severity = warning    # Use 'throw;' to preserve stack
+dotnet_diagnostic.CA2219.severity = warning    # Don’t throw in finally/filter
+dotnet_diagnostic.CA1065.severity = warning    # Avoid throwing from unexpected members
+dotnet_diagnostic.CA2201.severity = warning    # Don’t throw reserved/general exception types
+dotnet_diagnostic.CA1510.severity = suggestion # Prefer ThrowIfNull
+
 [*.{xml,csproj,json}]
 tab_width = 4
 indent_size = 4

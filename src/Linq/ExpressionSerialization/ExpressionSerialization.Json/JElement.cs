@@ -30,17 +30,17 @@ public partial struct JElement(string key = "", JsonNode? value = null)
     /// <summary>
     /// Gets the value of the element as JsonObject or throws exception..
     /// </summary>
-    public readonly JsonObject JsObject => Node?.AsObject() ?? throw new SerializationException($"The value of the element {Name} is not JsonObject.");
+    public readonly JsonObject JsObject => Node?.AsObject() ?? throw new ExpressionJsonSerializationException($"The value of the element {Name} is not JsonObject.");
 
     /// <summary>
     /// Gets the value of the element as JsonArray or throws exception..
     /// </summary>
-    public readonly JsonArray JsArray => Node?.AsArray() ?? throw new SerializationException($"The value of the element {Name} is not JsonArray.");
+    public readonly JsonArray JsArray => Node?.AsArray() ?? throw new ExpressionJsonSerializationException($"The value of the element {Name} is not JsonArray.");
 
     /// <summary>
     /// Gets the value of the element as JsonValue or throws exception..
     /// </summary>
-    public readonly JsonValue JsValue => Node?.AsValue() ?? throw new SerializationException($"The value of the element {Name} is not JsonValue.");
+    public readonly JsonValue JsValue => Node?.AsValue() ?? throw new ExpressionJsonSerializationException($"The value of the element {Name} is not JsonValue.");
 
     /// <summary>
     /// Gets the kind of the json value.

@@ -8,7 +8,7 @@
 /// It is useful for scenarios where asynchronous iteration is required but only a synchronous enumerator is available.
 /// </remarks>
 /// <typeparam name="T">The type of elements in the collection.</typeparam>
-class FakeAsyncEnumerator<T> : IAsyncEnumerator<T>
+public class FakeAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
     readonly IEnumerator<T> _enumerator;
     bool _currentDetermined;

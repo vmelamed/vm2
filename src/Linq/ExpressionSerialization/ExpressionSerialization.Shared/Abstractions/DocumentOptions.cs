@@ -142,7 +142,7 @@ public abstract class DocumentOptions
     /// </summary>
     /// <param name="type">The type to be transformed to a readable string.</param>
     /// <returns>The human readable transformation of the parameter <paramref name="type"/>.</returns>
-    internal string TransformTypeName(Type type)
+    public string TransformTypeName(Type type)
         => Transform.TypeName(type, TypeNames);
 
     /// <summary>
@@ -150,7 +150,7 @@ public abstract class DocumentOptions
     /// </summary>
     /// <param name="identifier">The identifier to be transformed.</param>
     /// <returns>The transformed <paramref name="identifier"/>.</returns>
-    internal string TransformIdentifier(string identifier)
+    public string TransformIdentifier(string identifier)
         => Transform.Identifier(identifier, Identifiers);
 
     /// <summary>
@@ -162,7 +162,7 @@ public abstract class DocumentOptions
     /// <exception cref="InvalidOperationException">
     /// The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().
     /// </exception>
-    internal bool MustValidate
+    public bool MustValidate
         => ValidateInputDocuments == ValidateExpressionDocuments.Always
                 ? HasExpressionSchema ? true : throw new InvalidOperationException("The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().")
                 : ValidateInputDocuments == ValidateExpressionDocuments.IfSchemaPresent && HasExpressionSchema;

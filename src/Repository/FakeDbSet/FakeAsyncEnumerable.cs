@@ -9,7 +9,7 @@
 /// an <see cref="Expression"/> to support LINQ query capabilities.
 /// </remarks>
 /// <typeparam name="T">The type of elements in the collection.</typeparam>
-class FakeAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
+public class FakeAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FakeAsyncEnumerable{T}"/> class.

@@ -5,15 +5,29 @@
 /// </summary>
 public static class DebugExtensions
 {
-    internal class DebugScope : IDisposable
+    /// <summary>
+    /// Provides a mechanism for creating a scoped debug context that automatically adjusts indentation in debug output.
+    /// </summary>
+    public class DebugScope : IDisposable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DebugScope"/> class, writing the specified scope name to the
+        /// debug output and increasing the indentation level.
+        /// </summary>
         public DebugScope(string scopeName)
         {
             Debug.WriteLine($"==== {scopeName}");
             Debug.Indent();
         }
 
-        public void Dispose() => Debug.Unindent();
+        /// <summary>
+        /// Releases all resources used by the <see cref="DebugScope"/> instance, decreasing the indentation level.
+        /// </summary>
+        public void Dispose()
+        {
+            Debug.Unindent();
+            GC.SuppressFinalize(this);
+        }
     }
 
     /// <summary>
@@ -21,5 +35,5 @@ public static class DebugExtensions
     /// </summary>
     /// <param name="scopeName">GetName of the scope.</param>
     /// <returns>DebugScope.</returns>
-    internal static DebugScope OutputDebugScope(string scopeName) => new(scopeName);
+    public static DebugScope OutputDebugScope(string scopeName) => new(scopeName);
 }

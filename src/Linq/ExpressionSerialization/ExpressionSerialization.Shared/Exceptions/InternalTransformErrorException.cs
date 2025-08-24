@@ -5,7 +5,8 @@
 /// </summary>
 /// <param name="message">The exception message.</param>
 /// <param name="inner">The inner exception.</param>
-public class InternalTransformErrorException(string? message = null, Exception? inner = null) : Exception(message ?? defaultMessage, inner)
+public class InternalTransformErrorException(string? message = null, Exception? inner = null)
+                : InvalidOperationException(message ?? defaultMessage, inner)
 {
     const string defaultMessage = "Unexpected transform error.";
 }
