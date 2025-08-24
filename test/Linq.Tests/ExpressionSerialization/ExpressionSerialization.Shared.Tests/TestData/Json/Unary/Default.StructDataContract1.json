@@ -3,7 +3,7 @@
   "$comment": " default(StructDataContract1) ",
   "expression": {
     "default": {
-      "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.StructDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.StructDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "$comment": " vm2.Linq.ExpressionSerialization.Shared.Tests.StructDataContract1 "
     }
   }

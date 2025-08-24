@@ -6,11 +6,11 @@
     <constant>
         <!--  vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1[]  -->
         <sequence
-            type="vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1[], Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
-            elementType="vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+            type="vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1[], Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+            elementType="vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
             <!--  vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1  -->
             <object
-                type="vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                type="vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
                 <StructSerializable1
                     xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
                     xmlns="http://schemas.datacontract.org/2004/07/vm2.Linq.ExpressionSerialization.Shared.Tests">
@@ -19,7 +19,7 @@
                 </StructSerializable1>
             </object>
             <object
-                type="vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f">
+                type="vm2.Linq.ExpressionSerialization.Shared.Tests.StructSerializable1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
                 <StructSerializable1
                     xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
                     xmlns="http://schemas.datacontract.org/2004/07/vm2.Linq.ExpressionSerialization.Shared.Tests">

@@ -133,13 +133,13 @@ public partial class TransformOptionsTests
     class TestTypeNameConvention { }
 
     public static TheoryData<string, Type, string, TypeNameConventions, bool> TransformTypeNamesData => new() {
-        { TestLine(), typeof(TestTypeNameConvention), "vm2.Linq.ExpressionSerialization.Xml.Tests.TransformOptionsTests+TestTypeNameConvention, Xml.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), typeof(TestTypeNameConvention), "vm2.Linq.ExpressionSerialization.Xml.Tests.TransformOptionsTests+TestTypeNameConvention, Xml.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", TypeNameConventions.AssemblyQualifiedName, false},
         { TestLine(), typeof(TestTypeNameConvention), "vm2.Linq.ExpressionSerialization.Xml.Tests.TransformOptionsTests+TestTypeNameConvention", TypeNameConventions.FullName, false},
         { TestLine(), typeof(TestTypeNameConvention), "TestTypeNameConvention", TypeNameConventions.Name, false},
     };
 
     public static TheoryData<string, string, TypeNameConventions, bool> TransformAnonymousTypeNamesLocalData => new() {
-        { TestLine(), "<>f__AnonymousType0`2[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], Xml.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f", TypeNameConventions.AssemblyQualifiedName, false},
+        { TestLine(), "<>f__AnonymousType0`2[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], Xml.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", TypeNameConventions.AssemblyQualifiedName, false},
         { TestLine(), "<>f__AnonymousType0<int, string>", TypeNameConventions.FullName, false},
         { TestLine(), "<>f__AnonymousType0<int, string>", TypeNameConventions.Name, false},
     };

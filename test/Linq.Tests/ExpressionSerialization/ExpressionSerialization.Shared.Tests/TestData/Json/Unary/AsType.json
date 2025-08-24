@@ -3,20 +3,20 @@
   "$comment": " c =\u003E (c As A) ",
   "expression": {
     "lambda": {
-      "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+      "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "parameters": [
         {
-          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.C, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.C, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
           "name": "c",
           "id": "P1"
         }
       ],
       "body": {
         "typeAs": {
-          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.A, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
           "operand": {
             "parameter": {
-              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.C, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.C, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
               "name": "c",
               "id": "P1"
             }

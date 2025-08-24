@@ -6,7 +6,7 @@
       "type": "int",
       "parameters": [
         {
-          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+          "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
           "name": "m",
           "id": "P1"
         }
@@ -26,14 +26,14 @@
                         "type": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
                         "object": {
                           "parameter": {
-                            "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                            "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
                             "name": "m",
                             "id": "P1"
                           }
                         },
                         "member": {
                           "property": {
-                            "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                            "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
                             "type": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
                             "name": "ArrayProperty"
                           }
@@ -59,14 +59,14 @@
                     "type": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
                     "object": {
                       "parameter": {
-                        "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
                         "name": "m",
                         "id": "P1"
                       }
                     },
                     "member": {
                       "property": {
-                        "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                        "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
                         "type": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
                         "name": "ArrayProperty"
                       }
@@ -85,14 +85,14 @@
                               "type": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
                               "object": {
                                 "parameter": {
-                                  "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                                  "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
                                   "name": "m",
                                   "id": "P1"
                                 }
                               },
                               "member": {
                                 "property": {
-                                  "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+                                  "declaringType": "vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
                                   "type": "System.Int32[], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
                                   "name": "ArrayProperty"
                                 }

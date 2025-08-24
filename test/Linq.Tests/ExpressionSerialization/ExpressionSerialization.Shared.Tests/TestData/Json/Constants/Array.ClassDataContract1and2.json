@@ -5,12 +5,12 @@
     "constant": {
       "$comment": " vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1[] ",
       "sequence": {
-        "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1[], Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+        "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1[], Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
         "$comment": " vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1 ",
         "value": [
           {
             "object": {
-              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
               "value": {
                 "$id": "1",
                 "IntProperty": 7,
@@ -20,8 +20,8 @@
           },
           {
             "object": {
-              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
-              "concreteType": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract2, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "concreteType": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract2, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
               "value": {
                 "$id": "1",
                 "DecimalProperty": 17,
@@ -32,7 +32,7 @@
           },
           {
             "object": {
-              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f",
+              "type": "vm2.Linq.ExpressionSerialization.Shared.Tests.ClassDataContract1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
               "value": null
             }
           }

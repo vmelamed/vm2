@@ -6,7 +6,7 @@
     <constant>
         <!--  vm2.Linq.ExpressionSerialization.Shared.Tests.EnumFlagsTest  -->
         <enum
-            type="vm2.Linq.ExpressionSerialization.Shared.Tests.EnumFlagsTest, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+            type="vm2.Linq.ExpressionSerialization.Shared.Tests.EnumFlagsTest, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
             baseValue="5">One, Three</enum>
     </constant>
 </expression>

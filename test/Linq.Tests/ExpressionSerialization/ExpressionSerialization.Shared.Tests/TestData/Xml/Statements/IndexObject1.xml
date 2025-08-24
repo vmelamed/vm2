@@ -7,7 +7,7 @@
         type="int">
         <parameters>
             <parameter
-                type="vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                type="vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
                 id="P1"
                 name="m" />
         </parameters>
@@ -16,12 +16,12 @@
                 type="int">
                 <object>
                     <parameter
-                        type="vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                        type="vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
                         id="P1"
                         name="m" />
                 </object>
                 <method
-                    declaringType="vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=87ae32a726c4b28f"
+                    declaringType="vm2.Linq.ExpressionSerialization.Shared.Tests.TestMembersInitialized1, Shared.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
                     type="int"
                     name="get_Item">
                     <parameterSpecs>

@@ -16,5 +16,4 @@ public partial class BinaryTests(JsonTestsFixture fixture, ITestOutputHelper out
         => await base.FromJsonTestAsync(testFileLine, expressionString, fileName);
 
     protected override Expression Substitute(string id) => BinaryTestData.GetExpression(id);
-
 }
