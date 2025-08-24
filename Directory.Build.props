@@ -11,8 +11,6 @@
         <NoWarn>$(NoWarn);IDE0058;IDE0290;IDE0130;NU1109;NU1507</NoWarn>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-<!--        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)vm2signKey.snk</AssemblyOriginatorKeyFile>-->
     </PropertyGroup>
 
     <PropertyGroup Label="NuGetGlobal">
@@ -22,7 +20,7 @@
         <ProductName>Val Melamed's packages</ProductName>
         <Authors>Val Melamed</Authors>
         <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
-        <Copyright>Copyright © 2023-2024 vm</Copyright>
+        <Copyright>Copyright © 2023-2025 vm</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <RepositoryType>git</RepositoryType>
@@ -30,18 +28,16 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <PropertyGroup
-        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]test[/\\]'))">
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]test[/\\]'))">
+        <!-- Test projects settings -->
         <IsTestProject>true</IsTestProject>
         <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
         <NoWarn>
             $(NoWarn);CA1031;CA1701;CA1702;CA1707;CA1806;CA2211;CS0618;CS1572;CS1573;CS1574;CS1591;CS1711;IDE0021;IDE0022;IDE0065;IDE1006;IDE2000;IDE2002;IDE0058;IDE0290
         </NoWarn>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
     </PropertyGroup>
-
-    <ItemGroup
-        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]test[/\\]'))">
-    </ItemGroup>
 
 </Project>

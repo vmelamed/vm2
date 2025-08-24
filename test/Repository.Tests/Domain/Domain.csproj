@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <RootNamespace>vm2.Repository.Tests.Domain</RootNamespace>
-  </PropertyGroup>
-
+    <PropertyGroup>
+        <RootNamespace>vm2.Repository.Tests.Domain</RootNamespace>
+    </PropertyGroup>
+    
     <ItemGroup>
         <PackageReference Include="FluentValidation" />
     </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="FluentValidation" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Repository\Repository\Repository.csproj" />
-  </ItemGroup>
+    
+    <ItemGroup>
+        <Using Include="FluentValidation" />
+        <PackageReference Include="xunit.v3.extensibility.core"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\src\Repository\Repository\Repository.csproj" />
+    </ItemGroup>
 
 </Project>
