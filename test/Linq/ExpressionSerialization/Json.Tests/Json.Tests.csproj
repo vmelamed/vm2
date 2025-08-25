@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>vm2.Linq.ExpressionSerialization.Json.Tests</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+      <Content Include="xunit.runner.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="LibGit2Sharp" />
+    </ItemGroup>
+
+    <!--
+    By default JSON validation is done with Newtonsoft with the following caveats:
+    1. it is limited to 1000 validations per hour, or you must pay for it
+    2. this is yet another JSON parser (we use System.Text.Json)
+
+    If JSON_SCHEMA is defined, it switches the JSON validation to Json.Schema from https://docs.json-everything.net/.
+    1. it has some problems with floating point numbers
+    2. it has problems with large recursive schemas like ours
+    3. but it uses System.Text.Json like this project
+
+    ATTENTION: The definition of JSON_SCHEMA switch must be equivalent in all projects that use schema validation, e.g. 
+        ExpressionSerialization.Json.csproj, 
+        ExpressionSerialization.Json.Tests.csproj and 
+    -->
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU' Or '$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\Shared\Shared.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\Json\Json.csproj" />
+        <ProjectReference Include="..\..\..\TestUtilities\TestUtilities.csproj" />
+        <ProjectReference Include="..\TestsShared\TestsShared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+        <Using Include="FluentAssertions" />
+    </ItemGroup>
+  
+    <ItemGroup>
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>

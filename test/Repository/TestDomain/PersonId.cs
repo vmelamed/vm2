@@ -1,0 +1,37 @@
+﻿namespace vm2.Repository.TestDomain;
+
+/// <summary>
+/// Represents a strongly-typed identifier for a <see cref="Person"/>, encapsulating a ULID value.
+/// </summary>
+/// <remarks>
+/// This type is designed to provide type safety and clarity when working with entity identifiers. It supports implicit
+/// conversions to the ULID type and explicit conversion from ULID for ease of use.
+/// </remarks>
+public readonly record struct PersonId(Ulid Id) : IFindable
+{
+    #region IFindable
+    /// <inheritdoc/>
+    public IEnumerable<object?>? KeyValues
+    {
+        get { yield return Id; }
+    }
+
+    /// <inheritdoc/>
+    public ValueTask ValidateFindable(object? _ = null, CancellationToken __ = default)
+        => Id != default ? ValueTask.CompletedTask : throw new ValidationException("The Id must not be an empty ULID.");
+    #endregion
+
+    #region Implicit type conversions
+    /// <summary>
+    /// Implicitly converts an <see cref="EntityId{TValue}"/> to its underlying value type <typeparamref name="TValue"/>.
+    /// </summary>
+    /// <param name="id"></param>
+    public static implicit operator Ulid(PersonId id) => id.Id;
+
+    /// <summary>
+    /// Implicitly converts a value of type <typeparamref name="TValue"/> to an <see cref="EntityId{TValue}"/>.
+    /// </summary>
+    /// <param name="value"></param>
+    public static implicit operator PersonId(Ulid value) => new(value);
+    #endregion
+}

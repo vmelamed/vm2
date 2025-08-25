@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>vm2.Linq.ExpressionSerialization.Json</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Label="NuGet">
+        <Title>vm2 JSON serializer for LINQ expressions.</Title>
+        <Description>Serialization and deserialization of LINQ Expressions to and from documents in JSON format.</Description>
+        <PackageReleaseNotes>Initial version of the vm2.ExpressionSerializer.Json.</PackageReleaseNotes>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/Linq/ExpressionSerialization/ExpressionSerialization.Json/Json.csproj</PackageProjectUrl>
+        <PackageTags>C# LINQ expression serialize deserialize JSON vm vm2</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Collections" />
+        <PackageReference Include="System.Memory" />
+        <PackageReference Include="System.Security.AccessControl" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" />
+        <PackageReference Include="System.ServiceModel.Primitives" />
+        <PackageReference Include="System.Text.Json" />
+    </ItemGroup>
+
+    <!--
+    Defining JSON_SCHEMA switches JSON validation to be done with Json.Schema from https://docs.json-everything.net/.
+    It has some problems with floating point numbers and with the huge recursive schema in some more complex cases.
+    It uses System.Text.Json like this project.
+
+    Otherwise JSON validation is done with Newtonsoft but it is
+    1. paid if you want more than 1000 validations per hour and
+    2. yet another JSON parser.
+
+    ATTENTION: The definition of JSON_SCHEMA switch must be equivalent in all the projects that use schema validation, e.g. 
+                       ExpressionSerialization.Json.csproj, 
+                       ExpressionSerialization.Json.Tests.csproj and 
+    -->
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DefineConstants>$(DefineConstants);JSON_SCHEMA</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JsonSchema.Net" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*JSON_SCHEMA(;.*)*$'))" />
+        <PackageReference Include="Newtonsoft.Json.Schema" Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*JSON_SCHEMA(;.*)*$'))" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Threading\Threading.csproj" />
+        <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
+
+</Project>

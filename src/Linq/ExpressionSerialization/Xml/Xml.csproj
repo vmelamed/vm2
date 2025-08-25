@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>vm2.Linq.ExpressionSerialization.Xml</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Label="NuGet">
+        <Title>vm2 XML serializer for LINQ expressions.</Title>
+        <Description>Serialization and deserialization of LINQ Expressions to and from documents in XML format.</Description>
+        <PackageReleaseNotes>Initial version of the vm2.Linq.ExpressionSerializer.Xml.</PackageReleaseNotes>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/Linq/ExpressionSerialization/ExpressionSerialization.Xml/Xml.csproj</PackageProjectUrl>
+        <PackageTags>C# LINQ expression serialize deserialize XML vm vm2</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Collections" />
+        <PackageReference Include="System.Memory" />
+        <PackageReference Include="System.Security.AccessControl" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" />
+        <PackageReference Include="System.ServiceModel.Primitives" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Threading\Threading.csproj" />
+        <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
+
+</Project>

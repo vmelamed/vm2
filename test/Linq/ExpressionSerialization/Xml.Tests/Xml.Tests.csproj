@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>vm2.Linq.ExpressionSerialization.Xml.Tests</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="xunit.runner.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="LibGit2Sharp" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionDeepEquals\ExpressionDeepEquals.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\Shared\Shared.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Linq\ExpressionSerialization\Xml\Xml.csproj" />
+        <ProjectReference Include="..\..\..\TestUtilities\TestUtilities.csproj" />
+        <ProjectReference Include="..\TestsShared\TestsShared.csproj" />
+    </ItemGroup>
+
+  <ItemGroup>
+        <Using Include="Xunit" />
+        <Using Include="FluentAssertions" />
+  </ItemGroup>
+  
+    <ItemGroup>
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>

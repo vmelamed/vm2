@@ -1,4 +1,4 @@
-namespace vm2.RegexLibTests;
+namespace vm2.RegexLib.Tests;
 
 public class UrnTheoryData : TheoryData<string, bool, string, Captures?>
 {

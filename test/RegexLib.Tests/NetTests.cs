@@ -1,4 +1,4 @@
-﻿namespace vm2.RegexLibTests;
+﻿namespace vm2.RegexLib.Tests;
 
 public partial class NetTests(
     RegexLibTestsFixture fixture,

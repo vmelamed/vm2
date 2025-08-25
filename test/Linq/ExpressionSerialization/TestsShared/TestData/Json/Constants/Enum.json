@@ -1,0 +1,14 @@
+{
+  "$schema": "urn:schemas-vm-com:Linq-Expressions-Serialization-Json",
+  "$comment": " Three ",
+  "expression": {
+    "constant": {
+      "$comment": " vm2.Linq.ExpressionSerialization.TestsShared.EnumTest ",
+      "enum": {
+        "type": "vm2.Linq.ExpressionSerialization.TestsShared.EnumTest, TestsShared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "value": "Three",
+        "baseValue": 2
+      }
+    }
+  }
+}

@@ -21,9 +21,9 @@
     <Project Path="src/Linq/ExpressionDeepEquals/ExpressionDeepEquals.csproj" />
   </Folder>
   <Folder Name="/src/Linq/ExpressionSerialization/">
-    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Json/Json.csproj" />
-    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Shared/Shared.csproj" />
-    <Project Path="src/Linq/ExpressionSerialization/ExpressionSerialization.Xml/Xml.csproj" />
+    <Project Path="src/Linq/ExpressionSerialization/Json/Json.csproj" />
+    <Project Path="src/Linq/ExpressionSerialization/Shared/Shared.csproj" />
+    <Project Path="src/Linq/ExpressionSerialization/Xml/Xml.csproj" />
   </Folder>
   <Folder Name="/src/Repository/">
     <Project Path="src/Repository/FakeDbSet/FakeDbSet.csproj" />
@@ -32,8 +32,7 @@
   <Folder Name="/src/Functional/">
     <Project Path="src/Functional/Primitives/Primitives.csproj" />
   </Folder>
-  <Folder Name="/src/Repository/DB/" />
-  <Folder Name="/src/Repository/DBSpecific/">
+  <Folder Name="/src/Repository/DB/">
     <Project Path="src/Repository/DB/SQLiteEfRepository/SQLiteEfRepository.csproj" />
   </Folder>
 
@@ -42,25 +41,25 @@
     <Project Path="test/TestUtilities/TestUtilities.csproj" />
     <Project Path="test/Threading.Tests/Threading.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Functional.Tests/">
-    <Project Path="test/Functional.Tests/Primitives.Tests/Primitives.Tests.csproj" />
+  <Folder Name="/test/Functional/">
+    <Project Path="test/Functional/Primitives.Tests/Primitives.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Linq.Test/">
-    <Project Path="test/Linq.Tests/ExpressionDeepEquals.Tests/ExpressionDeepEquals.Tests.csproj" />
+  <Folder Name="/test/Linq/">
+    <Project Path="test/Linq/ExpressionDeepEquals.Tests/ExpressionDeepEquals.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Linq.Test/ExpressionSerialization/">
-    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Json.Tests/Json.Tests.csproj" />
-    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Shared.Tests/Shared.Tests.csproj" />
-    <Project Path="test/Linq.Tests/ExpressionSerialization/ExpressionSerialization.Xml.Tests/Xml.Tests.csproj" />
+  <Folder Name="/test/Linq/ExpressionSerialization/">
+    <Project Path="test/Linq/ExpressionSerialization/Json.Tests/Json.Tests.csproj" />
+    <Project Path="test/Linq/ExpressionSerialization/TestsShared/TestsShared.csproj" />
+    <Project Path="test/Linq/ExpressionSerialization/Xml.Tests/Xml.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Repository.Tests/">
-    <Project Path="test/Repository.Tests/Domain/Domain.csproj" Id="ef225de8-8a94-4835-8bd8-3d6607673d2e" />
-    <Project Path="test/Repository.Tests/FakeDbSetTests/FakeDbSetTests.csproj" />
-    <Project Path="test/Repository.Tests/IntegrationTests/IntegrationTests.csproj" Id="08790151-aed0-4411-a14d-b811a1be8668" />
-    <Project Path="test/Repository.Tests/TestData/TestData.csproj" Id="55bd1290-eb6b-47f7-80be-ae6b4f7aa97e" />
-    <Project Path="test/Repository.Tests/UnitTests/UnitTests.csproj" />
+  <Folder Name="/test/Repository/">
+    <Project Path="test/Repository/FakeDbSet.Tests/FakeDbSet.Tests.csproj" />
+    <Project Path="test/Repository/Integration.Tests/Integration.Tests.csproj" Id="08790151-aed0-4411-a14d-b811a1be8668" />
+    <Project Path="test/Repository/TestData/TestData.csproj" Id="55bd1290-eb6b-47f7-80be-ae6b4f7aa97e" />
+    <Project Path="test/Repository/TestDomain/TestDomain.csproj" />
+    <Project Path="test/Repository/Unit.Tests/Unit.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/Repository.Tests/DB/">
-    <Project Path="test/Repository.Tests/DB/SQLite/SQLite.csproj" Id="e13f69eb-e77f-40e5-8179-04a7ebc0db6b" />
+  <Folder Name="/test/Repository/DB/">
+    <Project Path="test/Repository/DB/TestSQLite/TestSQLite.csproj" />
   </Folder>
 </Solution>

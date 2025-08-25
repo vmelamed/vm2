@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>vm2.Repository.TestDomain</RootNamespace>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Using Include="FluentValidation" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\src\Repository\Repository\Repository.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,4 +1,4 @@
-﻿namespace vm2.ThreadingTests;
+﻿namespace vm2.Threading.Tests;
 
 #pragma warning disable xUnit1026, xUnit1031, xUnit1044
 
