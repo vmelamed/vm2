@@ -2,9 +2,9 @@
 
 using vm2.Repository.EfRepository;
 
-class PersonInvariantValidator : AbstractValidator<Person>
+class PersonMinimalValidator : AbstractValidator<Person>
 {
-    public PersonInvariantValidator(bool lazyLoading = false)
+    public PersonMinimalValidator(bool lazyLoading = false)
     {
         RuleFor(p => p.Name)
             .NotEmpty()
@@ -75,7 +75,7 @@ class PersonValidator : AbstractValidator<Person>
 {
     public PersonValidator(IRepository? repository = null)
     {
-        Include(new PersonInvariantValidator(repository?.IsLazyLoadingEnabled<Person>() is true));
+        Include(new PersonMinimalValidator(repository?.IsLazyLoadingEnabled<Person>() is true));
         Include(new PersonFindableValidator());
         Include(new AuditableValidator());
 

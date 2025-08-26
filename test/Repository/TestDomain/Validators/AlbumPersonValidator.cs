@@ -2,9 +2,9 @@
 
 using vm2.Repository.EfRepository;
 
-class AlbumPersonInvariantValidator : AbstractValidator<AlbumPerson>
+class AlbumPersonMinimalValidator : AbstractValidator<AlbumPerson>
 {
-    public AlbumPersonInvariantValidator(bool lazyLoading = false)
+    public AlbumPersonMinimalValidator(bool lazyLoading = false)
     {
         if (lazyLoading)
             return;
@@ -23,7 +23,7 @@ class AlbumPersonValidator : AbstractValidator<AlbumPerson>
 {
     public AlbumPersonValidator(IRepository? repository = null)
     {
-        Include(new AlbumPersonInvariantValidator(repository?.IsLazyLoadingEnabled<AlbumPerson>() is true));
+        Include(new AlbumPersonMinimalValidator(repository?.IsLazyLoadingEnabled<AlbumPerson>() is true));
 
         if (repository is not null)
             RuleFor(ap => ap)

@@ -4,7 +4,7 @@ using vm2.Repository.Abstractions;
 /// <summary>
 /// Provides extension methods to <see cref="IRepository"/> that are typical for <see cref="DbContext"/>.
 /// </summary>
-public static class EfRepositoryExtensions
+public static class DbContextRepositoryExtensions
 {
     const string notSupportedMessage = $"The repository is not an instance of {nameof(DbContext)}. Please use an {nameof(DbContextRepository)} descendant.";
 

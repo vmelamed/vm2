@@ -1,9 +1,9 @@
 ﻿namespace vm2.Repository.EfRepository;
+
 #pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
 
 /// <summary>
-/// <see cref="DbContext"/> implementation of the interface <see cref="IRepository"/> - the repository pattern, providing methods
-/// to add, remove, attach, update, and query with LINQ entities.
+/// The class <see cref="DbContextRepository"/> is <see cref="DbContext"/> that implements explicitly <see cref="IRepository"/>.
 /// </summary>
 /// <param name="options">The <see cref="DbContextOptions"/> used to configure the context.</param>
 /// <remarks>
@@ -13,32 +13,34 @@
 /// to <see cref="IRepository"/>. The best approach would be to use dependency injection that resolves <see cref="IRepository"/>
 /// to the concrete <see cref="DbContextRepository"/> descendant.<para/>
 /// <see cref="IRepository"/> does not claim, nor tries to cover the full functionality of <see cref="DbContext"/>. To access
-/// the full functionality of <see cref="DbContext"/>, you can use the extension method <see cref="EfRepositoryExtensions.DbContext"/>.
+/// the full functionality of <see cref="DbContext"/>, you can use the extension method <see cref="DbContextRepositoryExtensions.DbContext"/>.
 /// </remarks>
 public partial class DbContextRepository(DbContextOptions options) : DbContext(options), IRepository
 {
-    IRepository ThisRepo => this;
-
     DddBoundaryChecks? _checks = null;
 
     /// <summary>
-    /// Gets or sets the type of DDD (Domain-Driven Design) aggregate boundary checks to perform on
-    /// <see cref="SaveChangesAsync(CancellationToken)"/>. The getter retrieves the checks from the options extension if not
-    /// set yet. The setter allows for changing the checks at runtime, if needed.
+    /// Gets or sets the type of DDD (Domain-Driven Design) aggregate boundary checks to perform on the entities that are about
+    /// to be committed to the DB (added, updated, or deleted). The getter retrieves the checks from the options extension if
+    /// not set yet. The setter allows for changing the checks at runtime, if needed.
     /// </summary>
     public DddBoundaryChecks DddBoundaryChecks
     {
         get
         {
-            _checks ??= (options
-                            .GetExtension<DddAggregateBoundaryChecking>()?
-                            .Info as DddBoundaryCheckingOptionsExtensionInfo)?.Checks
-                                ?? DddBoundaryChecks.None;
+            if (_checks is null)
+            {
+                var info = (options.GetExtension<DddAggregateBoundaryChecking>()?.Info as DddBoundaryCheckingOptionsExtensionInfo);
+                _checks = info?.Checks ?? DddBoundaryChecks.None;
+            }
+
             return _checks.Value;
         }
 
         set => _checks = value;
     }
+
+    IRepository ThisRepo => this;
 
     /// <summary>
     /// Represents an abstract collection of domain objects (entities) of type <typeparamref name="T"/>. Since the entity set is
@@ -119,12 +121,12 @@ public partial class DbContextRepository(DbContextOptions options) : DbContext(o
     /// valid keys in the proper order. This warrants the following pattern:
     /// <code><![CDATA[
     ///     Entity entity = new() { Id = entityId };
-    ///     _repository.Remove(entity);                         // NO trip to the DB
-    ///     await _repository.CommitAsync();                         // TRIP to the DB
+    ///     _repository.Remove(entity);                             // NO trip to the DB
+    ///     await _repository.CommitAsync();                        // TRIP to the DB
     /// ]]></code>instead of:<code><![CDATA[
-    ///     Entity entity = await _repository.FindAsync(entityId);   // FIRST trip to the DB!
+    ///     Entity entity = await _repository.FindAsync(entityId);  // FIRST trip to the DB!
     ///     _repository.Remove(entity);
-    ///     await _repository.CommitAsync();                         // SECOND trip to the DB
+    ///     await _repository.CommitAsync();                        // SECOND trip to the DB
     /// ]]></code>
     /// </remarks>
     T IRepository.Remove<T>(T entity)

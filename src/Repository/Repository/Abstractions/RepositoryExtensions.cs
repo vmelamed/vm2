@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Abstractions.Extensions;
+﻿namespace vm2.Repository.Abstractions;
 
 /// <summary>
 /// Provides extension methods to <see cref="IRepository"/>.
@@ -19,10 +19,11 @@ public static class RepositoryExtensions
     /// </param>
     /// <returns><see cref="Task{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
     /// <remarks>Note that the method is asynchronous.</remarks>
-    public static ValueTask<T?> FindAsync<T>(
-        this IRepository repository,
-        params object?[]? keyValues) where T : class
+    public static ValueTask<T?> FindAsync<T>(this IRepository repository, params object?[] keyValues)
+        where T : class
     {
+        ArgumentNullException.ThrowIfNullOrEmpty(nameof(keyValues));
+
         var ct = default(CancellationToken);
 
         if (keyValues?[^1] is CancellationToken kvct)
@@ -46,10 +47,8 @@ public static class RepositoryExtensions
     /// <param name="ct">A token to monitor for cancellation requests.</param>
     /// <returns><see cref="ValueTask{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
     /// <remarks>Note that the method is asynchronous.</remarks>
-    public static async ValueTask<T?> FindAsync<T>(
-        this IRepository repository,
-        IFindable findable,
-        CancellationToken ct = default) where T : class
+    public static async ValueTask<T?> FindAsync<T>(this IRepository repository, IFindable findable, CancellationToken ct = default)
+        where T : class
     {
         await findable.ValidateFindableAsync(repository, ct).ConfigureAwait(false);
         return await repository.FindAsync<T>(findable.KeyValues, ct).ConfigureAwait(false);

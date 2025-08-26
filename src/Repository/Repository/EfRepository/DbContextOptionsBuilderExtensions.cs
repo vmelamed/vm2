@@ -8,7 +8,7 @@
 /// Framework <see cref="DbContext"/> instances. These methods are typically used during the setup of a database context in an
 /// application's dependency injection or configuration pipeline.
 /// </remarks>
-public static class DbContextRepositoryOptionsExtensions
+public static class DbContextOptionsBuilderExtensions
 {
     /// <summary>
     /// Configures the <see cref="DbContextOptionsBuilder"/> to enable boundary checking for DDD aggregates.

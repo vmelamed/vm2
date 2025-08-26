@@ -1,7 +1,7 @@
 ﻿namespace vm2.Repository.EfRepository.Models;
 
 /// <summary>
-/// Provides a contract for objects that can be validated.
+/// Provides a contract for validating entities' invariants.
 /// </summary>
 public interface IValidatable
 {

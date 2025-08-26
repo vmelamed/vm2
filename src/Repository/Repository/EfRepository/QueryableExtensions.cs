@@ -1,17 +1,25 @@
-﻿namespace vm2.Repository.Abstractions.Extensions;
-
-using vm2.Repository.EfRepository.Models;
+﻿namespace vm2.Repository.EfRepository;
 
 /// <summary>
 /// Provides extension methods to <see cref="IQueryable{T}"/> that represents a &quot;domain object collection&quot;. It is
-/// assumed and enforced that the <see cref="IQueryable{T}"/> is backed by Entity Framework Core <see cref="DbSet{T}"/>,
+/// assumed and enforced that the <see cref="IQueryable{T}"/> is backed by Entity Framework Core <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>,
 /// otherwise the methods throw <see cref="NotSupportedException"/>.
 /// </summary>
 public static class QueryableExtensions
 {
-    static T NotSupported<T>(string methodName = "") where T : class
-        => throw new NotSupportedException(
-                $"The method {methodName} is not supported if IQueryable<TId>() is not implemented by Microsoft.EntityFrameworkCore.DbSet<TId>.");
+    /// <summary>
+    /// Casts an <see cref="IQueryable{T}"/> to EF's <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="queryable"></param>
+    /// <returns></returns>
+    /// <exception cref="NotSupportedException">
+    /// Thrown if the <paramref name="queryable"/> is not implemented by <see cref="Microsoft.EntityFrameworkCore.DbSet{TEntity}"/>.
+    /// </exception>
+    public static DbSet<T> DbSet<T>(this IQueryable<T> queryable)
+        where T : class
+        => queryable as DbSet<T>
+                ?? throw new NotSupportedException("The method is not supported if IQueryable<TId>() is not implemented by Microsoft.EntityFrameworkCore.DbSet<T>.");
 
     /// <summary>
     /// Adds the specified entity to the underlying object collection represented by the given queryable.<br/>
@@ -26,14 +34,10 @@ public static class QueryableExtensions
     /// <param name="entity">The entity to add to the object collection.</param>
     /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A <see cref="ValueTask{T}"/> that represents the asynchronous operation. The result contains the added entity.</returns>
-    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static async ValueTask<T> AddAsync<T>(
-        this IQueryable<T> queryable,
-        T entity,
-        CancellationToken ct = default) where T : class
-        => queryable is DbSet<T> dbSet
-                ? (await dbSet.AddAsync(entity, ct).ConfigureAwait(false)).Entity
-                : NotSupported<T>(nameof(AddAsync));
+    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</exception>
+    public static async ValueTask<T> AddAsync<T>(this IQueryable<T> queryable, T entity, CancellationToken ct = default)
+        where T : class
+        => (await queryable.DbSet().AddAsync(entity, ct).ConfigureAwait(false)).Entity;
 
     /// <summary>
     /// Adds the specified entity to the underlying object collection represented by the given queryable.<br/>
@@ -45,13 +49,9 @@ public static class QueryableExtensions
     /// <param name="queryable">The queryable source to which the entity will be added.</param>
     /// <param name="entity">The entity to attach to the context.</param>
     /// <returns>The attached entity.</returns>
-    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static T Attach<T>(
-        this IQueryable<T> queryable,
-        T entity) where T : class
-        => queryable is DbSet<T> dbSet
-                ? dbSet.Attach(entity).Entity
-                : NotSupported<T>(nameof(Attach));
+    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</exception>
+    public static T Attach<T>(this IQueryable<T> queryable, T entity) where T : class
+        => queryable.DbSet().Attach(entity).Entity;
 
     /// <summary>
     /// Finds an entity by the value of its unique, possibly composite, primary store key(s). The method searches first in the<br/>
@@ -65,14 +65,10 @@ public static class QueryableExtensions
     /// </param>
     /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="ValueTask{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
-    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static async ValueTask<T?> FindAsync<T>(
-        this IQueryable<T> queryable,
-        IEnumerable<object?>? keyValues,
-        CancellationToken ct = default) where T : class
-        => queryable is DbSet<T> dbSet
-                ? await dbSet.FindAsync(keyValues?.ToArray(), ct).ConfigureAwait(false)
-                : NotSupported<T>(nameof(FindAsync));
+    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</exception>
+    public static ValueTask<T?> FindAsync<T>(this IQueryable<T> queryable, IEnumerable<object?>? keyValues, CancellationToken ct = default)
+        where T : class
+        => queryable.DbSet().FindAsync(keyValues?.ToArray(), ct);
 
     /// <summary>
     /// Finds an entity by the value of its unique, possibly composite, primary store key(s). The method searches first in the<br/>
@@ -87,15 +83,12 @@ public static class QueryableExtensions
     /// After the last key value you can also pass a <see cref="CancellationToken"/> to allow for cancellation of the operation.
     /// </param>
     /// <returns><see cref="ValueTask{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
-    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static async ValueTask<T?> FindAsync<T>(
-        this IQueryable<T> queryable,
-        params object?[]? keyValues) where T : class
-        => queryable is DbSet<T> dbSet
-                ? keyValues?[^1] is CancellationToken ct
-                    ? await dbSet.FindAsync(keyValues[..^1], ct).ConfigureAwait(false)
-                    : await dbSet.FindAsync(keyValues).ConfigureAwait(false)
-                : NotSupported<T>(nameof(FindAsync));
+    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</exception>
+    public static ValueTask<T?> FindAsync<T>(this IQueryable<T> queryable, params object?[]? keyValues)
+        where T : class
+        => keyValues?[^1] is CancellationToken ct
+            ? queryable.DbSet().FindAsync(keyValues[..^1], ct)
+            : queryable.DbSet().FindAsync(keyValues);
 
     /// <summary>
     /// Finds an entity with the same primary key property value(s) as the keys in the <see cref="IFindable.KeyValues"/> from the
@@ -104,21 +97,17 @@ public static class QueryableExtensions
     /// Since the search is done by the primary key(s), the operation is usually faster and cheaper than other queries.
     /// </summary>
     /// <typeparam name="T">The type of the entity to find.</typeparam>
-    /// <param name="queryable">The queryable source to which the entity will be added. Must be a <see cref="DbSet{T}"/>.</param>
+    /// <param name="queryable">The queryable source to which the entity will be added. Must be a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</param>
     /// <param name="findable">An object containing the key values used to locate the entity.</param>
     /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="ValueTask{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
-    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static async ValueTask<T?> FindAsync<T>(
-        this IQueryable<T> queryable,
-        IFindable findable,
-        CancellationToken ct = default) where T : class, IFindable
+    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</exception>
+    public static async ValueTask<T?> FindAsync<T>(this IQueryable<T> queryable, IFindable findable, CancellationToken ct = default)
+        where T : class, IFindable
     {
-        if (queryable is not DbSet<T> dbSet)
-            return NotSupported<T>(nameof(FindAsync));
-
         await findable.ValidateFindableAsync(null, ct).ConfigureAwait(false);
-        return await dbSet.FindAsync(findable.KeyValues?.ToArray(), ct).ConfigureAwait(false);
+        ct.ThrowIfCancellationRequested();
+        return await queryable.DbSet().FindAsync(findable.KeyValues?.ToArray(), ct).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -154,28 +143,49 @@ public static class QueryableExtensions
     /// ]]></code>
     /// </remarks>
     /// <typeparam name="T">The type of the entity to be removed.</typeparam>
-    /// <param name="queryable">The queryable source to which the entity will be added. Must be a <see cref="DbSet{T}"/>.</param>
+    /// <param name="queryable">The queryable source to which the entity will be added. Must be a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</param>
     /// <param name="entity">The entity to remove from the data store.</param>
     /// <returns>The entity that was removed.</returns>
-    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static T Remove<T>(
-        this IQueryable<T> queryable,
-        T entity) where T : class
-        => queryable is DbSet<T> dbSet
-                ? dbSet.Remove(entity).Entity
-                : NotSupported<T>(nameof(Remove));
+    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</exception>
+    public static T Remove<T>(this IQueryable<T> queryable, T entity)
+        where T : class
+        => queryable.DbSet().Remove(entity).Entity;
 
     /// <summary>
     /// Adds the specified entity to the object collection underlying the given queryable in <see cref="EntityState.Modified"/> state<br/>
     /// or if it is already being tracked in the change-tracker - changes the state of the entity to <see cref="EntityState.Modified"/>.
     /// </summary>
     /// <typeparam name="T">The type of the entity to be updated.</typeparam>
-    /// <param name="queryable">The queryable source to which the entity will be added. Must be a <see cref="DbSet{T}"/>.</param>
+    /// <param name="queryable">The queryable source to which the entity will be added. Must be a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</param>
     /// <param name="entity">The entity that was modified.</param>
     /// <returns>The entity that was modified.</returns>
-    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static T Update<T>(this IQueryable<T> queryable, T entity) where T : class
-        => queryable is DbSet<T> dbSet
-                ? dbSet.Update(entity).Entity
-                : NotSupported<T>(nameof(Update));
+    /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="Microsoft.EntityFrameworkCore.DbSet{T}"/>.</exception>
+    public static T Update<T>(this IQueryable<T> queryable, T entity)
+        where T : class
+        => queryable.DbSet().Update(entity).Entity;
+
+    /// <summary>
+    /// Executes a string representing a parameterized native SQL query against the physical store.
+    /// Any interpolated parameter values you supply in the <paramref name="query"/> parameter will
+    /// automatically be converted to a DbParameter.
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <param name="queryable">The queryable. It must be <see cref="Microsoft.EntityFrameworkCore.DbSet{TEntity}"/>.</param>
+    /// <param name="query">The query - preferable interpolated string.</param>
+    /// <returns><see cref="IQueryable{TEntity}"/></returns>
+    public static IQueryable<TEntity> FromRawSql<TEntity>(this IQueryable<TEntity> queryable, FormattableString query)
+        where TEntity : class
+        => queryable.DbSet().FromSql(query);
+
+    /// <summary>
+    /// Executes a string representing a raw, native SQL query against the queryable.
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <param name="queryable">The queryable. It must be <see cref="Microsoft.EntityFrameworkCore.DbSet{TEntity}" />.</param>
+    /// <param name="query">The query.</param>
+    /// <param name="parameters">The parameters. Any parameter values you supply will automatically be converted to a DbParameter.</param>
+    /// <returns><see cref="IQueryable{TEntity}"/></returns>
+    public static IQueryable<TEntity> FromRawSql<TEntity>(this IQueryable<TEntity> queryable, string query, params object[] parameters)
+        where TEntity : class
+        => queryable.DbSet().FromSqlRaw(query, parameters);
 }

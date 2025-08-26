@@ -2,9 +2,9 @@
 
 using vm2.Repository.EfRepository;
 
-class TrackInvariantValidator : AbstractValidator<Track>
+class TrackMinimalValidator : AbstractValidator<Track>
 {
-    public TrackInvariantValidator(bool lazyLoading = false)
+    public TrackMinimalValidator(bool lazyLoading = false)
     {
         RuleFor(track => track.Title)
             .NotEmpty()
@@ -52,7 +52,7 @@ class TrackValidator : AbstractValidator<Track>
 {
     public TrackValidator(IRepository? repository = null)
     {
-        Include(new TrackInvariantValidator(repository?.IsLazyLoadingEnabled<Track>() is true));
+        Include(new TrackMinimalValidator(repository?.IsLazyLoadingEnabled<Track>() is true));
         Include(new TrackFindableValidator());
         Include(new AuditableValidator());
 

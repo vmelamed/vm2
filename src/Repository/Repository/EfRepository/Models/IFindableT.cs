@@ -3,10 +3,10 @@
 /// <summary>
 /// Extends <see cref="IFindable"/> with a new <c>static abstract</c> property <see cref="KeyExpression"/> - a lambda expression
 /// that extracts the primary key(s) from the entity <typeparamref name="TEntity"/>.<br/>
-/// Leverages default interface implementation to provide implementation of the <see cref="IFindable.KeyValues"/> property that
-/// is used by the repository's method <br/>
-/// <see cref="IRepository.FindAsync{T}(IEnumerable{object}, CancellationToken)"/> to find the entity by its primary key(s) in the
-/// change tracker or in the physical store.
+/// Uses default interface implementation to provide an implementation of the <see cref="IFindable.KeyValues"/> property used by
+/// the repository's method <br/>
+/// <see cref="IRepository.FindAsync{T}(IEnumerable{object}, CancellationToken)"/> to find the entity by its primary key(s) in
+/// the change tracker or in the physical store.
 /// </summary>
 /// <remarks><code><![CDATA[
 /// class MyEntity : IFindable<MyEntity>
@@ -16,9 +16,14 @@
 ///
 ///     // the one and only definition of the key:
 ///     public static readonly Expression<Func<MyEntity, object?>> KeyExpression = e => new { e.Id, e.Index };
+///
+///     // IEnumerable<object?>? KeyValues { get; } => new[] { Id, Index } is already implemented.
+///
+///     // static factory method to create an instance of Findable with the keys in of the proper type and in the right order:
+///     public static IFindable ByIds(long key, int subId) => new Findable(key, tenant);
 /// }
 /// ]]></code>
-/// In the Entity Framework Core mapping configuration of the entity, you can reuse the KeyExpression to configure the primary key:
+/// You can reuse the KeyExpression to configure the primary key in the EF mapping configuration of the entity:
 /// <code><![CDATA[
 /// class MyEntityConfiguration : IEntityTypeConfiguration<MyEntity>
 /// {
@@ -32,9 +37,13 @@
 /// IRepository _repository;
 ///
 /// var entity = new MyEntity { Id = 42L, Index = 7 };  // initialize *only* the primary key properties
-/// var findableEntity = (IFindable)entity;             // explicitly cast to IFindable to use KeyValues in the FindAsync method
+/// var findableEntity = (IFindable)entity;             // explicitly cast to IFindable to access KeyValues in the FindAsync method
 /// ...
 /// MyEntity found = await _repository.FindAsync<MyEntity>(findableEntity.KeyValues, ct);
+/// ]]></code>
+/// or better yet:
+/// <code><![CDATA[
+/// MyEntity found = await _repository.FindAsync<MyEntity>(MyEntity.ByIds(42L, 23))
 /// ]]></code></remarks>
 public interface IFindable<TEntity> : IFindable where TEntity : class, IFindable<TEntity>
 {

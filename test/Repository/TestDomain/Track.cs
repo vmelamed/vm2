@@ -1,6 +1,8 @@
 ﻿namespace vm2.Repository.TestDomain;
 using System;
 
+using vm2.Repository.EfRepository;
+
 [DebuggerDisplay("Track {Id}: {Title}")]
 public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConcurrency
 {
@@ -121,7 +123,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
         UpdatedBy       = updatedBy;
         ETag            = etag;
 
-        new TrackInvariantValidator().ValidateAndThrow(this);
+        new TrackMinimalValidator().ValidateAndThrow(this);
     }
 
     /// <summary>

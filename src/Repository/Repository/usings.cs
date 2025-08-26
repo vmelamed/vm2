@@ -21,6 +21,4 @@ global using OpenTelemetry.Instrumentation.EntityFrameworkCore;
 global using OpenTelemetry.Trace;
 
 global using vm2.Repository.Abstractions;
-global using vm2.Repository.Abstractions.Extensions;
-global using vm2.Repository.EfRepository;
 global using vm2.Repository.EfRepository.Models;

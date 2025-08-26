@@ -2,9 +2,9 @@
 
 using vm2.Repository.EfRepository;
 
-class TrackPersonInvariantValidator : AbstractValidator<TrackPerson>
+class TrackPersonMinimalValidator : AbstractValidator<TrackPerson>
 {
-    public TrackPersonInvariantValidator(bool lazyLoading = false)
+    public TrackPersonMinimalValidator(bool lazyLoading = false)
     {
         RuleFor(tp => tp.Person)
             .NotNull()
@@ -45,7 +45,7 @@ class TrackPersonValidator : AbstractValidator<TrackPerson>
 {
     public TrackPersonValidator(IRepository? repository = null)
     {
-        Include(new TrackPersonInvariantValidator(repository?.IsLazyLoadingEnabled<TrackPerson>() is true));
+        Include(new TrackPersonMinimalValidator(repository?.IsLazyLoadingEnabled<TrackPerson>() is true));
 
         if (repository is null)
             return;

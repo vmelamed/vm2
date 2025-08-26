@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain;
 
+using vm2.Repository.EfRepository;
+
 [DebuggerDisplay("Album {Id}: {Title}")]
 public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable, IOptimisticConcurrency
 {
@@ -152,7 +154,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
             _personnel     = new(albumsPersons.Select(ap => ap.Person), ReferenceEqualityComparer.Instance);
         }
 
-        new AlbumInvariantValidator().ValidateAndThrow(this);
+        new AlbumMinimalValidator().ValidateAndThrow(this);
     }
 
     /// <summary>

@@ -5,9 +5,9 @@ using vm2.Repository.EfRepository;
 /// <summary>
 /// Validates the minimal set of rules that make an <see cref="Instrument"/> object valid regardless of the state of the object.
 /// </summary>
-class InstrumentInvariantValidator : AbstractValidator<Instrument>
+class InstrumentMinimalValidator : AbstractValidator<Instrument>
 {
-    public InstrumentInvariantValidator()
+    public InstrumentMinimalValidator()
     {
         Include(new InstrumentFindableValidator());
         RuleFor(instrument => instrument.Name)
@@ -36,7 +36,7 @@ class InstrumentValidator : AbstractValidator<Instrument>
 {
     public InstrumentValidator(IRepository? repository = null)
     {
-        Include(new InstrumentInvariantValidator());
+        Include(new InstrumentMinimalValidator());
 
         if (repository is null)
             return;

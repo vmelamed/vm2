@@ -5,9 +5,9 @@ using vm2.Repository.EfRepository;
 /// <summary>
 /// Validates the minimal set of rules that make a <see cref="Label"/> object valid regardless of the state of the object.
 /// </summary>
-class LabelInvariantValidator : AbstractValidator<Label>
+class LabelMinimalValidator : AbstractValidator<Label>
 {
-    public LabelInvariantValidator(bool lazyLoading = false)
+    public LabelMinimalValidator(bool lazyLoading = false)
     {
         RuleFor(label => label.Name)
             .NotEmpty()
@@ -53,7 +53,7 @@ class LabelValidator : AbstractValidator<Label>
 {
     public LabelValidator(IRepository? repository = null)
     {
-        Include(new LabelInvariantValidator(repository?.IsLazyLoadingEnabled<Label>() is true));
+        Include(new LabelMinimalValidator(repository?.IsLazyLoadingEnabled<Label>() is true));
         Include(new LabelFindableValidator());
         Include(new AuditableValidator());
 

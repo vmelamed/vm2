@@ -18,4 +18,8 @@
     <!--<PackageReference Include="Ulid.SystemTextJson" />-->
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstractions\Extensions\" />
+  </ItemGroup>
+
 </Project>

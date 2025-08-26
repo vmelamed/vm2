@@ -135,7 +135,7 @@ internal sealed class DddBoundaryCheckingOptionsExtensionInfo(
     public override int GetServiceProviderHashCode() => 0;
 
     public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)
-        => debugInfo["DddAggregateBoundaryChecking"] = Checks.ToString();
+        => debugInfo[nameof(DddAggregateBoundaryChecking)] = Checks.ToString();
 
     /// <summary>
     /// Determines whether the same service provider should be used for the specified

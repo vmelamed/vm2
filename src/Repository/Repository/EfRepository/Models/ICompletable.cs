@@ -1,7 +1,8 @@
 ﻿namespace vm2.Repository.EfRepository.Models;
 
 /// <summary>
-/// Represents an entity that can be completed in some custom-defined way by the repository before committing changes.
+/// Represents an entity that can be completed in some custom-defined way by the repository before committing changes, similar <br/>
+/// to the way the repository handles entities that implement <see cref="IAuditable"/>.
 /// </summary>
 /// <remarks>
 /// See also: <list type="bullet">

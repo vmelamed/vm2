@@ -2,9 +2,9 @@
 
 using vm2.Repository.EfRepository;
 
-class AlbumTrackInvariantValidator : AbstractValidator<AlbumTrack>
+class AlbumTrackMinimalValidator : AbstractValidator<AlbumTrack>
 {
-    public AlbumTrackInvariantValidator(bool lazyLoading = false)
+    public AlbumTrackMinimalValidator(bool lazyLoading = false)
     {
         if (lazyLoading)
             return;
@@ -18,5 +18,5 @@ class AlbumTrackInvariantValidator : AbstractValidator<AlbumTrack>
 class AlbumTrackValidator : AbstractValidator<AlbumTrack>
 {
     public AlbumTrackValidator(IRepository? repository = null)
-        => Include(new AlbumTrackInvariantValidator(repository?.IsLazyLoadingEnabled<AlbumTrack>() is true));
+        => Include(new AlbumTrackMinimalValidator(repository?.IsLazyLoadingEnabled<AlbumTrack>() is true));
 }

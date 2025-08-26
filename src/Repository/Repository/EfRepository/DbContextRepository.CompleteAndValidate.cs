@@ -15,14 +15,14 @@ public partial class DbContextRepository : DbContext, IRepository
     {
         ChangeTracker.DetectChanges();
 
-        string actor = "";    // TODO: replace with actual actor, e.g. from some call context or user token
-        var now = DateTime.UtcNow;
-
         if (DddBoundaryChecks.HasFlag(DddBoundaryChecks.AggregateBoundary))
             DddAggregateBoundaryChecking.CheckAggregateBoundary(ChangeTracker);
 
         if (DddBoundaryChecks.HasFlag(DddBoundaryChecks.Validation))
             await DddAggregateBoundaryChecking.CheckAggregateInvariantsAsync(ChangeTracker, ct).ConfigureAwait(false);
+
+        string actor = "";    // TODO: replace with actual actor, e.g. from some call context or user token
+        var now = DateTime.UtcNow;
 
         // ValidateAsync that all modified entities belong to the same aggregate and then complete the entities that implement ICompletable
         foreach (var entry in ChangeTracker

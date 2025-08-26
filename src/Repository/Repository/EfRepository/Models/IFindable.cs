@@ -6,10 +6,9 @@
 public interface IFindable
 {
     /// <summary>
-    /// Returns an ordered set of physical store key values that can be used to easily find the entity in the change tracker or <br/>
-    /// in the physical store for the instance. Note that usually these represent a database specific, physical identity of the <br/>
-    /// entity, e.g. "primary key", "primary, composite key", "partition key and id", etc. It is possible that some of these <br/>
-    /// keys are also the "business keys" of the entities which may not be recommended for relational DB-s.
+    /// Returns an ordered set of physical store key values that can be used to find an entity in the change tracker or <br/>
+    /// in the physical store. Note that usually these represent a database specific, physical identity of the entity, e.g. <br/>
+    /// primary key, primary composite key, partition key and id, etc.
     /// </summary>
     /// <remarks>
     /// <code>
@@ -21,6 +20,7 @@ public interface IFindable
     ///     ...
     ///     IEnumerable<object?>? KeyValues { get; } => new[] { Id, SubId }
     ///
+    ///     // static factory method to create an instance of Findable with the keys in of the proper type and in the right order:
     ///     public static IFindable ByIds(long key, int subId) => new Findable(key, tenant);
     /// }
     /// ...
@@ -37,13 +37,13 @@ public interface IFindable
     /// <summary>
     /// Validates the keys (the property values) of the current instance that are returned by <see cref="KeyValues"/>. The
     /// method can be used to validate the keys before they are used to find the entity in the repository. If the underlying DB
-    /// provider already implements such a constraint, this method should be empty.<para/>
+    /// provider already implements such a constraint, this method could be empty.<para/>
     /// </summary>
-    /// <param name="context">The context to validate in.</param>
+    /// <param name="context">The optional context to validate the keys in.</param>
     /// <param name="ct">
     /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
     /// </param>
-    /// <exception cref="FluentValidation.ValidationException"/>
+    /// <exception cref="ValidationException"/>
     /// <remarks>
     /// Note that the method is asynchronous.
     /// </remarks>

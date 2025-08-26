@@ -5,9 +5,9 @@ using vm2.Repository.EfRepository;
 /// <summary>
 /// Validates the minimal set of rules that make a <see cref="Country"/> object valid regardless of the state of the object.
 /// </summary>
-class CountryInvariantValidator : AbstractValidator<Country>
+class CountryMinimalValidator : AbstractValidator<Country>
 {
-    public CountryInvariantValidator()
+    public CountryMinimalValidator()
     {
         Include(new CountryFindableValidator());
         RuleFor(country => country.Name)
@@ -34,7 +34,7 @@ class CountryValidator : AbstractValidator<Country>
 {
     public CountryValidator(IRepository? repository = null)
     {
-        Include(new CountryInvariantValidator());
+        Include(new CountryMinimalValidator());
 
         if (repository is null)
             return;

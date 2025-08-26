@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain;
 
+using vm2.Repository.EfRepository;
+
 [DebuggerDisplay("Label {Id}: {Name} ({CountryCode})")]
 public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConcurrency
 {
@@ -101,7 +103,7 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
         UpdatedBy   = updatedBy;
         ETag        = etag;
 
-        new LabelInvariantValidator().ValidateAndThrow(this);
+        new LabelMinimalValidator().ValidateAndThrow(this);
     }
 
     /// <summary>

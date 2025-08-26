@@ -1,6 +1,8 @@
 ﻿namespace vm2.Repository.TestDomain;
 using System;
 
+using vm2.Repository.EfRepository;
+
 [DebuggerDisplay("Person {Id}: {Name}")]
 public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticConcurrency
 {
@@ -142,7 +144,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
         foreach (var _ in personsAlbums?.Select(AddAlbum) ?? [])
             ;
 
-        new PersonInvariantValidator().ValidateAndThrow(this);
+        new PersonMinimalValidator().ValidateAndThrow(this);
     }
 
     /// <summary>
