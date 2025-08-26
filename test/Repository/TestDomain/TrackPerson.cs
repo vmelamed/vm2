@@ -21,7 +21,7 @@ public record TrackPerson(Person Person, string Name) : IValidatable
     ///// Gets the unique identifier of the person.
     ///// </summary>
     // Shadow foreign key by convention:
-    //public int PersonId { get; private set; }
+    //public PersonId PersonId { get; private set; }
 
     /// <summary>
     /// Gets the set of roles that the person has on the track.
@@ -87,11 +87,11 @@ public record TrackPerson(Person Person, string Name) : IValidatable
     {
     }
 
-    public async ValueTask Validate(
+    public async ValueTask ValidateAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         => await new TrackPersonValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+                        .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
 
     public TrackPerson AddRole(string role)
     {

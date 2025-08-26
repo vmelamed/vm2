@@ -24,13 +24,10 @@ class TestEntity : IFindable<TestEntity>
 
     public static Expression<Func<TestEntity, object?>> KeyExpression => te => new { te.Id, te.Zone };
 
-    public ValueTask ValidateFindable(
+    public async ValueTask ValidateFindableAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
-    {
-        new TestEntityFindableValidator().ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
+        CancellationToken ct = default)
+        => await new TestEntityFindableValidator().ValidateAndThrowAsync(this, ct);
 
     class TestEntityFindableValidator : AbstractValidator<TestEntity>
     {

@@ -22,7 +22,7 @@
 /// ]]></code>
 /// Now finding an entity by its composite key can be done using:
 /// <code><![CDATA[
-/// var found = await _repository.Set<MyEntity>().Find(MyEntity.ByIds(42, tenantId), cancellationToken);
+/// var found = await _repository.Set<MyEntity>().FindAsync(MyEntity.ByIds(42, tenantId), ct);
 /// ]]></code>
 /// Reads almost like plain English, making it easy to understand and use in code, doesn't it? But more importantly, <br/>
 /// it is much harder to accidentally pass wrong parameters or forget to pass required one(s), as the method enforces <br/>
@@ -43,8 +43,8 @@ public record struct Findable(IEnumerable<object?>? KeyValues) : IFindable
     }
 
     /// <inheritdoc />
-    public readonly ValueTask ValidateFindable(
+    public readonly ValueTask ValidateFindableAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         => ValueTask.CompletedTask;
 }

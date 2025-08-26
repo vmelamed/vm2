@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators.Dimensions;
 
+using vm2.Repository.EfRepository;
+
 public class GenreValidator : AbstractValidator<Genre>
 {
     public GenreValidator(IRepository? repository = null)
@@ -26,17 +28,17 @@ public class GenreValidator : AbstractValidator<Genre>
         IRepository repository,
         Genre genre,
         string name,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
         => repository.StateOf(genre) switch {
             EntityState.Added => !await repository
                                             .Set<Genre>()
-                                            .AnyAsync(g => g.Name == name, cancellationToken)
+                                            .AnyAsync(g => g.Name == name, ct)
                                             .ConfigureAwait(false)
                                             ,
 
             EntityState.Modified => await repository
                                             .Set<Genre>()
-                                            .AnyAsync(g => g.Name == name, cancellationToken)
+                                            .AnyAsync(g => g.Name == name, ct)
                                             .ConfigureAwait(false)
                                             ,
 

@@ -28,7 +28,7 @@ public interface IRepository : IAsyncDisposable
     /// <summary>
     /// Represents an abstract collection of domain objects (entities) of type <typeparamref name="T"/>. Since the entity set is
     /// represented as <see cref="IQueryable{T}"/>, the <c>IRepository</c>'s clients can declaratively construct LINQ queries.
-    /// Entities can be added to the set (<see cref="Add"/>), and removed from the set (<see cref="Remove"/>).
+    /// Entities can be added to the set (<see cref="AddAsync"/>), and removed from the set (<see cref="Remove"/>).
     /// </summary>
     /// <typeparam name="T">The type of the entity in the set.</typeparam>
     /// <returns><see cref="IQueryable{T}"/>.</returns>
@@ -54,27 +54,27 @@ public interface IRepository : IAsyncDisposable
     /// The primary key(s). Note that the order of the key values in a composite key is important.<br/>
     /// Note that the order of the key values in a composite key is important.
     /// </param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="Task{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
     /// <remarks>Note that the method is asynchronous.</remarks>
-    ValueTask<T?> Find<T>(IEnumerable<object?>? keyValues, CancellationToken cancellationToken = default) where T : class;
+    ValueTask<T?> FindAsync<T>(IEnumerable<object?>? keyValues, CancellationToken ct = default) where T : class;
 
     /// <summary>
     /// Adds the <paramref name="entity"/> to the change-tracker (in memory) in "Added" state. The method usually finishes
     /// synchronously. However, if a whole graph of entities is added and some of the primary keys are generated at the store,
     /// the ORM may need to add some of the entities to the store now, to obtain the primary keys and fix-up the values of some
-    /// of the foreign keys of the dependent entities.  The entity is added to the data store on <see cref="IRepository.Commit"/>.
+    /// of the foreign keys of the dependent entities.  The entity is added to the data store on <see cref="IRepository.CommitAsync"/>.
     /// </summary>
     /// <typeparam name="T">The type of the entity.</typeparam>
     /// <param name="entity">The entity to add.</param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="ValueTask{T}"/> which contains the added instance.</returns>
     /// <remarks>Note that the method is asynchronous.</remarks>
-    ValueTask<T> Add<T>(T entity, CancellationToken cancellationToken = default) where T : class;
+    ValueTask<T> AddAsync<T>(T entity, CancellationToken ct = default) where T : class;
 
     /// <summary>
     /// Attaches the specified entity to the internal object change-tracker in a "Modified" state. At the next
-    /// <see cref="IRepository.Commit"/> the ORM will update the entities in "Modified" state in the DB.
+    /// <see cref="IRepository.CommitAsync"/> the ORM will update the entities in "Modified" state in the DB.
     /// <para>
     /// Use with caution! The use of this method implies that the code "knows" what is the current state of the entity better
     /// than the DB. In effect the DB stops being the ultimate source of truth. This is a strategy sometimes known as
@@ -88,7 +88,7 @@ public interface IRepository : IAsyncDisposable
 
     /// <summary>
     /// Attaches the specified entity to the change-tracker in a "Unmodified" state. If any changes are done to the entity, its<br/>
-    /// state will transition to "Modified". At the next <see cref="IRepository.Commit"/> the ORM will update the entities in<br/>
+    /// state will transition to "Modified". At the next <see cref="IRepository.CommitAsync"/> the ORM will update the entities in<br/>
     /// "Modified" state in the DB and will ignore the "Unmodified" entities.<br/>
     /// <para>
     /// Use with caution! The use of this method implies that the code "knows" what is the current state of the entity better<br/>
@@ -104,7 +104,7 @@ public interface IRepository : IAsyncDisposable
     /// <summary>
     /// If the <paramref name="entity"/> is not in the tracker yet, the method will add it in "Deleted" state.<br/>
     /// If it is already there, the tracker will make sure that the entity's state is "Deleted".<br/>
-    /// At the next <see cref="IRepository.Commit"/> the entity will be deleted from the DB as well.
+    /// At the next <see cref="IRepository.CommitAsync"/> the entity will be deleted from the DB as well.
     /// </summary>
     /// <typeparam name="T">The type of the entity.</typeparam>
     /// <param name="entity">The entity to be deleted.</param>
@@ -122,18 +122,18 @@ public interface IRepository : IAsyncDisposable
     ///     _repository.Remove(entity);
     ///     ...
     ///     // trip to the DB:
-    ///     await _repository.Commit();
+    ///     await _repository.CommitAsync();
     /// }
     /// ]]></code>instead of:<code><![CDATA[
     /// async Task Delete(Id entityId)
     /// {
     ///     ...
     ///     // trip to the DB!
-    ///     Entity entity = await _repository.Find(entityId);
+    ///     Entity entity = await _repository.FindAsync(entityId);
     ///     _repository.Remove(entity);
     ///     ...
     ///     // second trip to the DB
-    ///     await _repository.Commit();
+    ///     await _repository.CommitAsync();
     /// }
     /// ]]></code>
     /// </remarks>
@@ -143,8 +143,8 @@ public interface IRepository : IAsyncDisposable
     /// Commits the added, modified and deleted entities in the change-tracker to the physical store invoking the respective <br/>
     /// back-end actions. For some DB-s  the action is a single transaction, for others it is a sequence of transactions.
     /// </summary>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="Task{Int32}"/> which contains the number of entities that were affected by the commit.</returns>
     /// <remarks>Note that the method is asynchronous.</remarks>
-    Task<int> Commit(CancellationToken cancellationToken = default);
+    Task<int> CommitAsync(CancellationToken ct = default);
 }

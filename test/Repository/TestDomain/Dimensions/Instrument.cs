@@ -19,23 +19,19 @@ public record Instrument(string Code, string Name) : IFindable<Instrument>, IVal
     public static Expression<Func<Instrument, object?>> KeyExpression => i => i.Code;
 
     /// <inheritdoc />
-    public ValueTask ValidateFindable(
+    public async ValueTask ValidateFindableAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
-    {
-        new InstrumentFindableValidator()
-                        .ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
+        CancellationToken ct = default)
+        => await new InstrumentFindableValidator().ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     #region IValidatable
     /// <inheritdoc />
-    public async ValueTask Validate(
+    public async ValueTask ValidateAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         => await new InstrumentValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+                        .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     /// <inheritdoc />

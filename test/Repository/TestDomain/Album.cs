@@ -78,23 +78,22 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     public string DeletedBy { get; set; } = "";
     #endregion
 
+    /// <inheritdoc />
+    public Ulid ETag { get; set; } = default;
+
     #region IFindable<Album>
     /// <inheritdoc />
     public static Expression<Func<Album, object?>> KeyExpression => a => new { a.Id };
 
     /// <inheritdoc />
-    public ValueTask ValidateFindable(object? _, CancellationToken __)
-    {
-        new AlbumFindableValidator()
-                .ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
+    public async ValueTask ValidateFindableAsync(object? _, CancellationToken ct)
+        => await new AlbumFindableValidator().ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
 
     /// <summary>
     /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Album"/> by its unique
     /// identifier. Can be used in <see cref="IRepository.Find{Album}(IFindable, CancellationToken)"/> and
     /// <see cref="QueryableExtensions.Find{Album}(IFindable, CancellationToken)"/>. E.g.<br/>
-    /// <c><![CDATA[var album = await _repository.Find(Album.ById(42), ct);]]></c>
+    /// <c><![CDATA[var album = await _repository.FindAsync(Album.ById(42), ct);]]></c>
     /// </summary>
     /// <param name="id">The unique identifier for the album.</param>
     public static IFindable ById(int Id) => new Findable(Id);
@@ -116,8 +115,9 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <param name="updatedBy">The name of the actor who last updated the album record.</param>
     /// <param name="deletedAt">The dater and time when the album was soft-deleted.</param>
     /// <param name="deletedBy">The name of the actor who soft-deleted the album.</param>
+    /// <param name="etag">The entity tag (ETag) for optimistic concurrency control.</param>
     public Album(
-        AlbumId id,
+        in AlbumId id,
         string title,
         int? releaseYear,
         Label? label = null,
@@ -129,7 +129,8 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         DateTime updatedAt = default,
         string updatedBy = "",
         DateTime? deletedAt = null,
-        string deletedBy = "")
+        string deletedBy = "",
+        in Ulid etag = default)
     {
         Id             = id;
         Title          = title;
@@ -143,6 +144,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         UpdatedBy      = updatedBy;
         DeletedAt      = deletedAt;
         DeletedBy      = deletedBy;
+        ETag           = etag;
 
         if (albumsPersons is not null)
         {
@@ -150,8 +152,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
             _personnel     = new(albumsPersons.Select(ap => ap.Person), ReferenceEqualityComparer.Instance);
         }
 
-        new AlbumInvariantValidator()
-                .ValidateAndThrow(this);
+        new AlbumInvariantValidator().ValidateAndThrow(this);
     }
 
     /// <summary>
@@ -167,7 +168,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
 
     #region IValidatable
     /// <inheritdoc />
-    public ValueTask Validate(object? context = null, CancellationToken cancellationToken = default)
+    public ValueTask ValidateAsync(object? context = null, CancellationToken ct = default)
         => throw new NotImplementedException();
     #endregion
 

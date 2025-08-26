@@ -61,22 +61,21 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     public string UpdatedBy { get; set; } = "";
     #endregion
 
+    /// <inheritdoc />
+    public Ulid ETag { get; set; } = default;
+
     #region IFindable<Track>
     public static Expression<Func<Track, object?>> KeyExpression => t => new { t.Id };
 
     /// <inheritdoc />
-    public ValueTask ValidateFindable(object? _, CancellationToken __)
-    {
-        new TrackFindableValidator()
-                .ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
+    public async ValueTask ValidateFindableAsync(object? _, CancellationToken ct)
+        => await new TrackFindableValidator().ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
 
     /// <summary>
     /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Track"/> by its unique
     /// identifier. Can be used in <see cref="IRepository.Find{Track}(IFindable, CancellationToken)"/> and
     /// <see cref="QueryableExtensions.Find{Track}(IFindable, CancellationToken)"/>. E.g.<br/>
-    /// <code><![CDATA[var track = await _repository.Find(Track.ById(42), ct);]]></code>
+    /// <code><![CDATA[var track = await _repository.FindAsync(Track.ById(42), ct);]]></code>
     /// </summary>
     /// <param name="id">The unique identifier for the track.</param>
     public static IFindable ById(int Id) => new Findable(Id);
@@ -98,6 +97,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     /// <param name="createdBy">The user or system that created the track.</param>
     /// <param name="updatedAt">The date and time when the track was last updated.</param>
     /// <param name="updatedBy">The user or system that last updated the track.</param>
+    /// <param name="etag">The entity tag (ETag) for optimistic concurrency control.</param>
     public Track(
         TrackId id,
         string title,
@@ -107,7 +107,8 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
         DateTime createdAt = default,
         string createdBy = "",
         DateTime updatedAt = default,
-        string updatedBy = "")
+        string updatedBy = "",
+        Ulid etag = default)
     {
         Id              = id;
         Title           = title;
@@ -118,6 +119,9 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
         CreatedBy       = createdBy;
         UpdatedAt       = updatedAt;
         UpdatedBy       = updatedBy;
+        ETag            = etag;
+
+        new TrackInvariantValidator().ValidateAndThrow(this);
     }
 
     /// <summary>
@@ -133,8 +137,8 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
 
     #region IValidatable
     /// <inheritdoc />
-    public async ValueTask Validate(object? context = null, CancellationToken cancellationToken = default)
-        => await new TrackValidator().ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+    public async ValueTask ValidateAsync(object? context = null, CancellationToken ct = default)
+        => await new TrackValidator().ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     /// <summary>

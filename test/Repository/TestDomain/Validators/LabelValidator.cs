@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators;
 
+using vm2.Repository.EfRepository;
+
 /// <summary>
 /// Validates the minimal set of rules that make a <see cref="Label"/> object valid regardless of the state of the object.
 /// </summary>

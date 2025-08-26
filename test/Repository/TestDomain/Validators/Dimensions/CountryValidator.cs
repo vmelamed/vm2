@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators.Dimensions;
 
+using vm2.Repository.EfRepository;
+
 /// <summary>
 /// Validates the minimal set of rules that make a <see cref="Country"/> object valid regardless of the state of the object.
 /// </summary>
@@ -49,18 +51,18 @@ class CountryValidator : AbstractValidator<Country>
         IRepository repository,
         Country country,
         string code,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
         => repository.StateOf(country) switch {
             // The code of an added country must not exist in the database.
             EntityState.Added => !await repository
                                             .Set<Country>()
-                                            .AnyAsync(i => i.Code == code, cancellationToken)
+                                            .AnyAsync(i => i.Code == code, ct)
                                             .ConfigureAwait(false)
                                             ,
             // The code of a modified country must exist in the database: we can edit only the name of the country, not its code.
             EntityState.Modified => await repository
                                             .Set<Country>()
-                                            .AnyAsync(i => i.Code == code, cancellationToken)
+                                            .AnyAsync(i => i.Code == code, ct)
                                             .ConfigureAwait(false)
                                             ,
             _ => true,

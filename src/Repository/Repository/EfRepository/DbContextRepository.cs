@@ -1,11 +1,11 @@
 ﻿namespace vm2.Repository.EfRepository;
-
 #pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
 
 /// <summary>
 /// <see cref="DbContext"/> implementation of the interface <see cref="IRepository"/> - the repository pattern, providing methods
 /// to add, remove, attach, update, and query with LINQ entities.
 /// </summary>
+/// <param name="options">The <see cref="DbContextOptions"/> used to configure the context.</param>
 /// <remarks>
 /// Note that the <see cref="IRepository"/> is implemented explicitly by the <see cref="DbContextRepository"/> class. Therefore, in
 /// order to access the interface methods, your <see cref="DbContext"/> that inherits from <see cref="DbContextRepository"/>, can be
@@ -21,20 +21,29 @@ public partial class DbContextRepository(DbContextOptions options) : DbContext(o
 
     DddBoundaryChecks? _checks = null;
 
-    DddBoundaryChecks DddBoundaryChecks
+    /// <summary>
+    /// Gets or sets the type of DDD (Domain-Driven Design) aggregate boundary checks to perform on
+    /// <see cref="SaveChangesAsync(CancellationToken)"/>. The getter retrieves the checks from the options extension if not
+    /// set yet. The setter allows for changing the checks at runtime, if needed.
+    /// </summary>
+    public DddBoundaryChecks DddBoundaryChecks
     {
         get
         {
-            _checks ??= (options.GetExtension<DddAggregateBoundaryChecking>()?.Info as DddBoundaryCheckingOptionsExtensionInfo)?
-                            .Checks ?? DddBoundaryChecks.None;
+            _checks ??= (options
+                            .GetExtension<DddAggregateBoundaryChecking>()?
+                            .Info as DddBoundaryCheckingOptionsExtensionInfo)?.Checks
+                                ?? DddBoundaryChecks.None;
             return _checks.Value;
         }
+
+        set => _checks = value;
     }
 
     /// <summary>
     /// Represents an abstract collection of domain objects (entities) of type <typeparamref name="T"/>. Since the entity set is
     /// represented as <see cref="IQueryable{T}"/>, the <c>IRepository</c>'s clients can declaratively construct LINQ queries.
-    /// Entities can be added to the set (<see cref="IRepository.Add"/>), and removed from the set (<see cref="IRepository.Remove"/>).
+    /// Entities can be added to the set (<see cref="IRepository.AddAsync"/>), and removed from the set (<see cref="IRepository.Remove"/>).
     /// </summary>
     /// <typeparam name="T">The type of the entity in the set.</typeparam>
     /// <returns><see cref="IQueryable{T}"/>.</returns>
@@ -55,34 +64,34 @@ public partial class DbContextRepository(DbContextOptions options) : DbContext(o
     /// The primary key(s). Note that the order of the key values in a composite key is important.<br/>
     /// Note that the order of the key values in a composite key is important.
     /// </param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="Task{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
     /// <remarks>Note that the method is asynchronous.</remarks>
-    public ValueTask<T?> Find<T>(
+    public ValueTask<T?> FindAsync<T>(
         IEnumerable<object?>? keyValues,
-        CancellationToken cancellationToken = default) where T : class
-        => ThisRepo.Set<T>().Find(keyValues, cancellationToken);
+        CancellationToken ct = default) where T : class
+        => ThisRepo.Set<T>().FindAsync(keyValues, ct);
 
     /// <summary>
     /// Adds the <paramref name="entity"/> to the change-tracker (in memory) in <see cref="EntityState.Added"/> state.
     /// The method usually finishes synchronously. However, if a whole graph of entities is added and some of the primary keys
     /// are generated at the store, EF may need to add some of the entities to the store now, to obtain the primary keys and
     /// fix-up the values of some of the foreign keys of the dependent entities.  The entity is added to the data store on
-    /// <see cref="IRepository.Commit"/> (<see cref="DbContext.SaveChangesAsync(CancellationToken)"/>).
+    /// <see cref="IRepository.CommitAsync"/> (<see cref="DbContext.SaveChangesAsync(CancellationToken)"/>).
     /// </summary>
     /// <typeparam name="T">The type of the entity.</typeparam>
     /// <param name="entity">The entity instance to add.</param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="ValueTask{T}"/> which contains the added instance.</returns>
     /// <remarks>Note that the method is asynchronous.</remarks>
-    async ValueTask<T> IRepository.Add<T>(
+    async ValueTask<T> IRepository.AddAsync<T>(
         T entity,
-        CancellationToken cancellationToken) where T : class
-        => await ThisRepo.Set<T>().Add(entity, cancellationToken).ConfigureAwait(false);
+        CancellationToken ct) where T : class
+        => await ThisRepo.Set<T>().AddAsync(entity, ct).ConfigureAwait(false);
 
     /// <summary>
     /// Attaches the specified entity to the internal object change-tracker in a <see cref="EntityState.Modified"/> state.
-    /// At the next <see cref="IRepository.Commit"/> EF will update the entities in <see cref="EntityState.Modified"/> state in
+    /// At the next <see cref="IRepository.CommitAsync"/> EF will update the entities in <see cref="EntityState.Modified"/> state in
     /// the DB.
     /// <para>
     /// Use with caution! The use of this method implies that the code "knows" what is the current state of the entity better
@@ -99,7 +108,7 @@ public partial class DbContextRepository(DbContextOptions options) : DbContext(o
     /// <summary>
     /// If the <paramref name="entity"/> is not in the tracker yet, the method will add it in <see cref="EntityState.Deleted"/> state.<br/>
     /// If it is already there, the tracker will make sure that the entity's state is <see cref="EntityState.Deleted"/>.<br/>
-    /// At the next <see cref="IRepository.Commit"/> the entity will be deleted from the DB as well.
+    /// At the next <see cref="IRepository.CommitAsync"/> the entity will be deleted from the DB as well.
     /// </summary>
     /// <typeparam name="T">The type of the entity.</typeparam>
     /// <param name="entity">The entity to be deleted.</param>
@@ -111,11 +120,11 @@ public partial class DbContextRepository(DbContextOptions options) : DbContext(o
     /// <code><![CDATA[
     ///     Entity entity = new() { Id = entityId };
     ///     _repository.Remove(entity);                         // NO trip to the DB
-    ///     await _repository.Commit();                         // TRIP to the DB
+    ///     await _repository.CommitAsync();                         // TRIP to the DB
     /// ]]></code>instead of:<code><![CDATA[
-    ///     Entity entity = await _repository.Find(entityId);   // FIRST trip to the DB!
+    ///     Entity entity = await _repository.FindAsync(entityId);   // FIRST trip to the DB!
     ///     _repository.Remove(entity);
-    ///     await _repository.Commit();                         // SECOND trip to the DB
+    ///     await _repository.CommitAsync();                         // SECOND trip to the DB
     /// ]]></code>
     /// </remarks>
     T IRepository.Remove<T>(T entity)
@@ -123,7 +132,7 @@ public partial class DbContextRepository(DbContextOptions options) : DbContext(o
 
     /// <summary>
     /// Attaches the specified entity to the change-tracker in a <see cref="EntityState.Unchanged"/> state. If any changes are done to the entity, its<br/>
-    /// state will transition to <see cref="EntityState.Modified"/>. At the next <see cref="IRepository.Commit"/> EF will update the entities in<br/>
+    /// state will transition to <see cref="EntityState.Modified"/>. At the next <see cref="IRepository.CommitAsync"/> EF will update the entities in<br/>
     /// <see cref="EntityState.Modified"/> state in the DB and will ignore the <see cref="EntityState.Unchanged"/> entities.<br/>
     /// <para>
     /// Use with caution! The use of this method implies that the code "knows" what is the current state of the entity better<br/>
@@ -141,16 +150,16 @@ public partial class DbContextRepository(DbContextOptions options) : DbContext(o
     /// Commits the added, modified and deleted entities in the change-tracker to the physical store invoking the respective <br/>
     /// back-end actions. For some DB-s  the action is a single transaction, for others it might be a sequence of transactions.
     /// </summary>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="Task"/></returns>
     /// <remarks>Note that the method is asynchronous.</remarks>
-    public Task<int> Commit(CancellationToken cancellationToken = default)
-        => SaveChangesAsync(cancellationToken);
+    public async Task<int> CommitAsync(CancellationToken ct = default)
+        => await SaveChangesAsync(ct).ConfigureAwait(false);
 
     /// <inheritdoc />
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken ct = default)
     {
-        await CompleteAndValidate(cancellationToken).ConfigureAwait(false);
-        return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await CompleteAndValidateAsync(ct).ConfigureAwait(false);
+        return await base.SaveChangesAsync(ct).ConfigureAwait(false);
     }
 }

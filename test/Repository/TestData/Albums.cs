@@ -2,7 +2,7 @@ namespace vm2.Repository.TestData;
 
 public static class Albums
 {
-    public static AlbumId NextId => (AlbumId)Ulid.NewUlid();
+    public static AlbumId NextId => new(Ulid.NewUlid());
 
     static Album? _albumKindOfBlue;
     static Album? _albumEllingtonAtNewport;

@@ -32,21 +32,17 @@ public sealed record Country(string Code, string Name) : IFindable<Country>, IVa
     public static Expression<Func<Country, object?>> KeyExpression => c => c.Code;
 
     /// <inheritdoc />
-    public ValueTask ValidateFindable(object? _, CancellationToken __)
-    {
-        new CountryFindableValidator()
-                        .ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
+    public async ValueTask ValidateFindableAsync(object? _, CancellationToken ct)
+        => await new CountryFindableValidator().ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     #region IValidatable
     /// <inheritdoc />
-    public async ValueTask Validate(
+    public async ValueTask ValidateAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         => await new CountryValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+                        .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     public static Expression<Func<Country, string>> ValueExpression => country => country.Code;

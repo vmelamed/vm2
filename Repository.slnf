@@ -2,16 +2,16 @@
   "solution": {
     "path": "vm2.slnx",
     "projects": [
-      "src\\Repository\\DB\\SQLiteEfRepository\\SQLiteEfRepository.csproj",
+      "src\\Repository\\DB\\SQLite\\SQLite.csproj",
       "src\\Repository\\FakeDbSet\\FakeDbSet.csproj",
       "src\\Repository\\Repository\\Repository.csproj",
       "src\\Threading\\Threading.csproj",
       "test\\Repository\\DB\\TestSQLite\\TestSQLite.csproj",
-      "test\\Repository\\TestDomain\\TestDomain.csproj",
       "test\\Repository\\FakeDbSet.Tests\\FakeDbSet.Tests.csproj",
       "test\\Repository\\Integration.Tests\\Integration.Tests.csproj",
-      "test\\Repository\\Unit.Tests\\Unit.Tests.csproj",
       "test\\Repository\\TestData\\TestData.csproj",
+      "test\\Repository\\TestDomain\\TestDomain.csproj",
+      "test\\Repository\\Unit.Tests\\Unit.Tests.csproj",
       "test\\TestUtilities\\TestUtilities.csproj"
     ]
   }

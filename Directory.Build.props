@@ -53,6 +53,7 @@
 
     <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]test[/\\]')) and !$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^*.Tests$'))">
         <PackageReference Include="xunit.v3.extensibility.core"/>
+        <!-- xunit.v3.assert.source -->
     </ItemGroup>
 
 </Project>

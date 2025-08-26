@@ -24,11 +24,11 @@ public interface IFindable
     ///     public static IFindable ByIds(long key, int subId) => new Findable(key, tenant);
     /// }
     /// ...
-    /// MyEntity found = await _repository.Find(new MyEntity { Id = 42, SubId = 23 });
+    /// MyEntity found = await _repository.FindAsync(new MyEntity { Id = 42, SubId = 23 });
     /// ]]>
     /// </code>or alternatively: <code>
     /// <![CDATA[
-    /// MyEntity found = await _repository.Find<MyEntity>(MyEntity.ByIds(42L, 23))
+    /// MyEntity found = await _repository.FindAsync<MyEntity>(MyEntity.ByIds(42L, 23))
     /// ]]>
     /// </code>
     /// </remarks>
@@ -40,12 +40,12 @@ public interface IFindable
     /// provider already implements such a constraint, this method should be empty.<para/>
     /// </summary>
     /// <param name="context">The context to validate in.</param>
-    /// <param name="cancellationToken">
+    /// <param name="ct">
     /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
     /// </param>
     /// <exception cref="FluentValidation.ValidationException"/>
     /// <remarks>
     /// Note that the method is asynchronous.
     /// </remarks>
-    ValueTask ValidateFindable(object? context = default, CancellationToken cancellationToken = default);
+    ValueTask ValidateFindableAsync(object? context = default, CancellationToken ct = default);
 }

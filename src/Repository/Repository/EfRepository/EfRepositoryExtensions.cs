@@ -1,4 +1,5 @@
-﻿namespace vm2.Repository.Abstractions.Extensions;
+﻿namespace vm2.Repository.EfRepository;
+using vm2.Repository.Abstractions;
 
 /// <summary>
 /// Provides extension methods to <see cref="IRepository"/> that are typical for <see cref="DbContext"/>.

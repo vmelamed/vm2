@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators.Dimensions;
 
+using vm2.Repository.EfRepository;
+
 /// <summary>
 /// Validates the minimal set of rules that make an <see cref="Instrument"/> object valid regardless of the state of the object.
 /// </summary>
@@ -51,12 +53,12 @@ class InstrumentValidator : AbstractValidator<Instrument>
         IRepository repository,
         Instrument instrument,
         string code,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
         => repository.StateOf(instrument) switch {
             // The code of an added instrument must not exist in the database.
             EntityState.Added => !await repository
                                             .Set<Instrument>()
-                                            .AnyAsync(i => i.Code == code, cancellationToken)
+                                            .AnyAsync(i => i.Code == code, ct)
                                             .ConfigureAwait(false)
                                             ,
 
@@ -64,7 +66,7 @@ class InstrumentValidator : AbstractValidator<Instrument>
             // If we wanted to allow changing the code, we must delete the existing instrument and add a new one with the new code.
             EntityState.Modified => await repository
                                             .Set<Instrument>()
-                                            .AnyAsync(i => i.Code == code, cancellationToken)
+                                            .AnyAsync(i => i.Code == code, ct)
                                             .ConfigureAwait(false)
                                             ,
 

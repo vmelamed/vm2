@@ -33,7 +33,7 @@
     <Project Path="src/Functional/Primitives/Primitives.csproj" />
   </Folder>
   <Folder Name="/src/Repository/DB/">
-    <Project Path="src/Repository/DB/SQLiteEfRepository/SQLiteEfRepository.csproj" />
+    <Project Path="src/Repository/DB/SQLite/SQLite.csproj" />
   </Folder>
 
   <Folder Name="/test/">

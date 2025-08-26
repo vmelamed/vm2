@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators;
 
+using vm2.Repository.EfRepository;
+
 class AlbumPersonInvariantValidator : AbstractValidator<AlbumPerson>
 {
     public AlbumPersonInvariantValidator(bool lazyLoading = false)

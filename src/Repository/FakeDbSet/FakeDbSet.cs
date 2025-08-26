@@ -258,7 +258,7 @@ public partial class FakeDbSet<TEntity> : DbSet<TEntity>,
     /// <inheritdoc/>
     public override ValueTask<TEntity?> FindAsync(
         object?[]? keyValues,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
         => ValueTask.FromResult(Find(keyValues));
 
 #pragma warning disable IDE0079
@@ -391,8 +391,8 @@ public partial class FakeDbSet<TEntity> : DbSet<TEntity>,
         => _source.GetEnumerator();
 
     /// <inheritdoc/>
-    public override IAsyncEnumerator<TEntity> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-        => _asyncSource.GetAsyncEnumerator(cancellationToken);
+    public override IAsyncEnumerator<TEntity> GetAsyncEnumerator(CancellationToken ct = default)
+        => _asyncSource.GetAsyncEnumerator(ct);
 
     Type IQueryable.ElementType => _asyncSource.AsQueryable().ElementType;
 

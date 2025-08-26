@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators.Dimensions;
 
+using vm2.Repository.EfRepository;
+
 class RoleValidator : AbstractValidator<Role>
 {
     public RoleValidator(IRepository? repository = null)
@@ -26,17 +28,17 @@ class RoleValidator : AbstractValidator<Role>
         IRepository repository,
         Role role,
         string name,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
         => repository.StateOf(role) switch {
             EntityState.Added => !await repository
                                             .Set<Role>()
-                                            .AnyAsync(r => r.Name == name, cancellationToken)
+                                            .AnyAsync(r => r.Name == name, ct)
                                             .ConfigureAwait(false)
                                             ,
 
             EntityState.Modified => !await repository
                                             .Set<Role>()
-                                            .AnyAsync(r => r.Name == name, cancellationToken)
+                                            .AnyAsync(r => r.Name == name, ct)
                                             .ConfigureAwait(false)
                                             ,
 

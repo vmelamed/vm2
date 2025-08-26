@@ -10,7 +10,7 @@
 /// <param name="Album">Gets the album associated with a person.</param>
 /// <param name="Person">Gets the person associated with an album.</param>
 [DebuggerDisplay("AlbumPerson {AlbumId-PersonId}")]
-public class AlbumPerson : IValidatable, IOptimisticConcurrency
+public class AlbumPerson : IValidatable
 {
     HashSet<string> _roles = [];
     HashSet<string> _instruments = [];
@@ -88,7 +88,7 @@ public class AlbumPerson : IValidatable, IOptimisticConcurrency
 
     #region IValidatable
     /// <inheritdoc />
-    public async ValueTask Validate(object? context, CancellationToken ct)
+    public async ValueTask ValidateAsync(object? context, CancellationToken ct)
         => await new AlbumPersonValidator(context as IRepository)
             .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion

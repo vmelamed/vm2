@@ -76,10 +76,10 @@ public partial class FakeDbSet<TEntity>
         public void OnTracking(InternalEntityEntry internalEntityEntry, EntityState state, bool fromQuery) => throw new NotImplementedException();
         public void RecordReferencedUntrackedEntity(object referencedEntity, INavigationBase navigation, InternalEntityEntry referencedFromEntry) => throw new NotImplementedException();
         public void ResetState() => throw new NotImplementedException();
-        public Task ResetStateAsync(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task ResetStateAsync(CancellationToken ct = default) => throw new NotImplementedException();
         public bool ResolveToExistingEntry(InternalEntityEntry newEntry, INavigationBase? navigation, InternalEntityEntry? referencedFromEntry) => throw new NotImplementedException();
         public int SaveChanges(bool acceptAllChangesOnSuccess) => throw new NotImplementedException();
-        public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken ct = default) => throw new NotImplementedException();
         public void SetEvents(EventHandler<EntityTrackingEventArgs>? tracking, EventHandler<EntityTrackedEventArgs>? tracked, EventHandler<EntityStateChangingEventArgs>? stateChanging, EventHandler<EntityStateChangedEventArgs>? stateChanged) => throw new NotImplementedException();
         public InternalEntityEntry StartTracking(InternalEntityEntry entry) => throw new NotImplementedException();
         public InternalEntityEntry StartTrackingFromQuery(IEntityType baseEntityType, object entity, in ValueBuffer valueBuffer) => throw new NotImplementedException();

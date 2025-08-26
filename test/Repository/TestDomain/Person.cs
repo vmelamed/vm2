@@ -12,6 +12,9 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     HashSet<Album> _albums = new(ReferenceEqualityComparer.Instance);
     HashSet<AlbumPerson> _personsAlbums = new(ReferenceEqualityComparer.Instance);
 
+    /// <inheritdoc />
+    public static Ulid GetToken() => Ulid.NewUlid();
+
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
@@ -71,22 +74,22 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     public string UpdatedBy { get; set; } = "";
     #endregion
 
+    /// <inheritdoc />
+    public Ulid ETag { get; set; } = default;
+
     #region IFindable<Person>
     /// <inheritdoc />
     public static Expression<Func<Person, object?>> KeyExpression => p => new { p.Id };
 
     /// <inheritdoc />
-    public ValueTask ValidateFindable(object? _, CancellationToken __)
-    {
-        new PersonFindableValidator().ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
+    public async ValueTask ValidateFindableAsync(object? _, CancellationToken ct)
+        => await new PersonFindableValidator().ValidateAndThrowAsync(this, ct);
 
     /// <summary>
     /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Person"/> by its unique
     /// identifier. Can be used in <see cref="IRepository.Find{Person}(IFindable, CancellationToken)"/> and
     /// <see cref="QueryableExtensions.Find{Person}(IFindable, CancellationToken)"/>. E.g.<br/>
-    /// <c><![CDATA[var person = await _repository.Find(Person.ById(42), ct);]]></c>
+    /// <c><![CDATA[var person = await _repository.FindAsync(Person.ById(42), ct);]]></c>
     /// </summary>
     /// <param name="id">The unique identifier for the person.</param>
     public static IFindable ById(int Id) => new Findable(Id);
@@ -107,6 +110,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     /// <param name="createdBy">The identifier of the actor who created the person entity.</param>
     /// <param name="updatedAt">The date and time when the person entity was last updated.</param>
     /// <param name="updatedBy">The identifier of the user who last updated the person entity.</param>
+    /// <param name="etag">The entity tag (ETag) for optimistic concurrency control.</param>
     public Person(
         PersonId id,
         string name,
@@ -119,7 +123,8 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
         DateTime createdAt = default,
         string createdBy = "",
         DateTime updatedAt = default,
-        string updatedBy = "")
+        string updatedBy = "",
+        Ulid etag = default)
     {
         Id           = id;
         Name         = name;
@@ -132,12 +137,12 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
         CreatedBy    = createdBy;
         UpdatedAt    = updatedAt;
         UpdatedBy    = updatedBy;
+        ETag         = etag;
 
         foreach (var _ in personsAlbums?.Select(AddAlbum) ?? [])
             ;
 
-        new PersonInvariantValidator()
-                .ValidateAndThrow(this);
+        new PersonInvariantValidator().ValidateAndThrow(this);
     }
 
     /// <summary>
@@ -153,10 +158,10 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
 
     #region IValidatable
     /// <inheritdoc />
-    public async ValueTask Validate(
+    public async ValueTask ValidateAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
-        => await new PersonValidator(context as IRepository).ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+        CancellationToken ct = default)
+        => await new PersonValidator(context as IRepository).ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     /// <summary>
@@ -206,7 +211,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
         _personsAlbums.Add(albumPerson);
         _albums.Add(albumPerson.Album);
 
-        // Add roles, instruments, and genres from the albumPerson to the person
+        // AddAsync roles, instruments, and genres from the albumPerson to the person
         AddRoles(albumPerson.Roles);
         AddInstruments(albumPerson.Instruments);
         AddGenres(albumPerson.Genres);

@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators;
 
+using vm2.Repository.EfRepository;
+
 class AlbumTrackInvariantValidator : AbstractValidator<AlbumTrack>
 {
     public AlbumTrackInvariantValidator(bool lazyLoading = false)

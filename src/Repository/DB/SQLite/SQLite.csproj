@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>vm2.Repository.DB.SQLite</RootNamespace>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+        <PackageReference Include="Microsoft.Data.Sqlite.Core" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" />
+        <!-- DO NOT REMOVE - ENABLES SQLite DB ENCRYPTION: -->
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlcipher" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\..\Repository\Repository.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Folder Include="Models\Mapping\" />
+    </ItemGroup>
+
+</Project>

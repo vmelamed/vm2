@@ -9,7 +9,7 @@
 /// See also: <list type="bullet">
 /// <item><seealso cref="IAuditable"/> for entities that are audited on adding and updating.</item>
 /// <item><seealso cref="ICompletable"/> for entities that can be completed by the repository before committing changes.</item>
-/// <item><seealso cref="IRepository.Commit"/> for the context in which these interfaces are used.</item>
+/// <item><seealso cref="IRepository.CommitAsync"/> for the context in which these interfaces are used.</item>
 /// </list></remarks>
 public interface ISoftDeletable
 {

@@ -9,33 +9,37 @@ using vm2.Repository.EfRepository.Models;
 /// </summary>
 public static class QueryableExtensions
 {
+    static T NotSupported<T>(string methodName = "") where T : class
+        => throw new NotSupportedException(
+                $"The method {methodName} is not supported if IQueryable<TId>() is not implemented by Microsoft.EntityFrameworkCore.DbSet<TId>.");
+
     /// <summary>
     /// Adds the specified entity to the underlying object collection represented by the given queryable.<br/>
     /// For Entity Framework Core, this means that the entity is added to the change-tracker and marked as <see cref="EntityState.Added"/>.<br/>
     /// The method usually finishes synchronously. However, if a whole graph of entities is added and some of the primary keys<br/>
     /// are generated at the store, the ORM may need to add some of the entities to the store now, to obtain the primary<br/>
     /// keys and fix-up the values of some of the foreign keys of the dependent entities.<br/>
-    /// The entity is added to the physical store on <see cref="IRepository.Commit"/>.
+    /// The entity is added to the physical store on <see cref="IRepository.CommitAsync"/>.
     /// </summary>
     /// <typeparam name="T">The type of the entity to add.</typeparam>
     /// <param name="queryable">The queryable source to which the entity will be added.</param>
     /// <param name="entity">The entity to add to the object collection.</param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A <see cref="ValueTask{T}"/> that represents the asynchronous operation. The result contains the added entity.</returns>
     /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static async ValueTask<T> Add<T>(
+    public static async ValueTask<T> AddAsync<T>(
         this IQueryable<T> queryable,
         T entity,
-        CancellationToken cancellationToken = default) where T : class
+        CancellationToken ct = default) where T : class
         => queryable is DbSet<T> dbSet
-                ? (await dbSet.AddAsync(entity, cancellationToken).ConfigureAwait(false)).Entity
-                : NotSupported<T>(nameof(Add));
+                ? (await dbSet.AddAsync(entity, ct).ConfigureAwait(false)).Entity
+                : NotSupported<T>(nameof(AddAsync));
 
     /// <summary>
     /// Adds the specified entity to the underlying object collection represented by the given queryable.<br/>
     /// For Entity Framework Core, this means the entity is marked as <see cref="EntityState.Unchanged"/>.<br/>
     /// If subsequently the entity is modified, its state will change to <see cref="EntityState.Modified"/> and the new<br/>
-    /// state of the entity will be stored in the data store on <see cref="IRepository.Commit"/>.
+    /// state of the entity will be stored in the data store on <see cref="IRepository.CommitAsync"/>.
     /// </summary>
     /// <typeparam name="T">The type of the entity to attach.</typeparam>
     /// <param name="queryable">The queryable source to which the entity will be added.</param>
@@ -59,16 +63,16 @@ public static class QueryableExtensions
     /// <param name="keyValues">
     /// An <see cref="IEnumerable{Object}"/> containing the values of the primary key for the entity to be found.
     /// </param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="ValueTask{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
     /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static async ValueTask<T?> Find<T>(
+    public static async ValueTask<T?> FindAsync<T>(
         this IQueryable<T> queryable,
         IEnumerable<object?>? keyValues,
-        CancellationToken cancellationToken = default) where T : class
+        CancellationToken ct = default) where T : class
         => queryable is DbSet<T> dbSet
-                ? await dbSet.FindAsync(keyValues?.ToArray(), cancellationToken).ConfigureAwait(false)
-                : NotSupported<T>(nameof(Find));
+                ? await dbSet.FindAsync(keyValues?.ToArray(), ct).ConfigureAwait(false)
+                : NotSupported<T>(nameof(FindAsync));
 
     /// <summary>
     /// Finds an entity by the value of its unique, possibly composite, primary store key(s). The method searches first in the<br/>
@@ -84,14 +88,14 @@ public static class QueryableExtensions
     /// </param>
     /// <returns><see cref="ValueTask{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
     /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static async ValueTask<T?> Find<T>(
+    public static async ValueTask<T?> FindAsync<T>(
         this IQueryable<T> queryable,
         params object?[]? keyValues) where T : class
         => queryable is DbSet<T> dbSet
                 ? keyValues?[^1] is CancellationToken ct
                     ? await dbSet.FindAsync(keyValues[..^1], ct).ConfigureAwait(false)
                     : await dbSet.FindAsync(keyValues).ConfigureAwait(false)
-                : NotSupported<T>(nameof(Find));
+                : NotSupported<T>(nameof(FindAsync));
 
     /// <summary>
     /// Finds an entity with the same primary key property value(s) as the keys in the <see cref="IFindable.KeyValues"/> from the
@@ -102,19 +106,19 @@ public static class QueryableExtensions
     /// <typeparam name="T">The type of the entity to find.</typeparam>
     /// <param name="queryable">The queryable source to which the entity will be added. Must be a <see cref="DbSet{T}"/>.</param>
     /// <param name="findable">An object containing the key values used to locate the entity.</param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><see cref="ValueTask{T}"/> which contains the found instance or <see langword="null"/> if not found.</returns>
     /// <exception cref="NotSupportedException">Thrown when the queryable source is not a <see cref="DbSet{T}"/>.</exception>
-    public static async ValueTask<T?> Find<T>(
+    public static async ValueTask<T?> FindAsync<T>(
         this IQueryable<T> queryable,
         IFindable findable,
-        CancellationToken cancellationToken = default) where T : class, IFindable
+        CancellationToken ct = default) where T : class, IFindable
     {
         if (queryable is not DbSet<T> dbSet)
-            return NotSupported<T>(nameof(Find));
+            return NotSupported<T>(nameof(FindAsync));
 
-        await findable.ValidateFindable(null, cancellationToken).ConfigureAwait(false);
-        return await dbSet.FindAsync(findable.KeyValues?.ToArray(), cancellationToken).ConfigureAwait(false);
+        await findable.ValidateFindableAsync(null, ct).ConfigureAwait(false);
+        return await dbSet.FindAsync(findable.KeyValues?.ToArray(), ct).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -134,18 +138,18 @@ public static class QueryableExtensions
     ///     _repository.Set<Entity>().Remove(entity);
     ///     ...
     ///     // the ONLY trip to the DB:
-    ///     await _repository.Commit();
+    ///     await _repository.CommitAsync();
     /// }
     /// ]]></code>instead of:<code><![CDATA[
     /// async Task Delete(Id entityId)
     /// {
     ///     ...
     ///     // FIRST trip to the DB!
-    ///     Entity entity = await _repository.Set<Entity>().Find(entityId);
+    ///     Entity entity = await _repository.Set<Entity>().FindAsync(entityId);
     ///     _repository.Set<Entity>().Remove(entity);
     ///     ...
     ///     // SECOND trip to the DB
-    ///     await _repository.Commit();
+    ///     await _repository.CommitAsync();
     /// }
     /// ]]></code>
     /// </remarks>
@@ -174,8 +178,4 @@ public static class QueryableExtensions
         => queryable is DbSet<T> dbSet
                 ? dbSet.Update(entity).Entity
                 : NotSupported<T>(nameof(Update));
-
-    static T NotSupported<T>(string methodName = "") where T : class
-        => throw new NotSupportedException(
-                $"The method {methodName} is not supported if IQueryable<TId>() is not implemented by Microsoft.EntityFrameworkCore.DbSet<TId>.");
 }

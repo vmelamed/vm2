@@ -5,7 +5,7 @@
 /// that extracts the primary key(s) from the entity <typeparamref name="TEntity"/>.<br/>
 /// Leverages default interface implementation to provide implementation of the <see cref="IFindable.KeyValues"/> property that
 /// is used by the repository's method <br/>
-/// <see cref="IRepository.Find{T}(IEnumerable{object}, CancellationToken)"/> to find the entity by its primary key(s) in the
+/// <see cref="IRepository.FindAsync{T}(IEnumerable{object}, CancellationToken)"/> to find the entity by its primary key(s) in the
 /// change tracker or in the physical store.
 /// </summary>
 /// <remarks><code><![CDATA[
@@ -32,9 +32,9 @@
 /// IRepository _repository;
 ///
 /// var entity = new MyEntity { Id = 42L, Index = 7 };  // initialize *only* the primary key properties
-/// var findableEntity = (IFindable)entity;             // explicitly cast to IFindable to use KeyValues in the Find method
+/// var findableEntity = (IFindable)entity;             // explicitly cast to IFindable to use KeyValues in the FindAsync method
 /// ...
-/// MyEntity found = await _repository.Find<MyEntity>(findableEntity.KeyValues, ct);
+/// MyEntity found = await _repository.FindAsync<MyEntity>(findableEntity.KeyValues, ct);
 /// ]]></code></remarks>
 public interface IFindable<TEntity> : IFindable where TEntity : class, IFindable<TEntity>
 {

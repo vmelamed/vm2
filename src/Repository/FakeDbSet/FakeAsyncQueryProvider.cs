@@ -49,14 +49,14 @@ public class FakeAsyncQueryProvider<T> : IAsyncQueryProvider
     /// </summary>
     /// <typeparam name="TResult">The type of the t result.</typeparam>
     /// <param name="expression">The expression.</param>
-    /// <param name="cancellationToken">Can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>TResult.</returns>
     /// <exception cref="OperationCanceledException">Operation canceled.</exception>
     /// <exception cref="InvalidOperationException">Unexpected \"null\" value of the expression. (extend!)</exception>
     /// <exception cref="InvalidOperationException">Expected {typeof(TResult).Name} expression result but got {resultValue?.GetType()?.Name ?? "null"} (TODO!)</exception>
-    public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+    public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken ct)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        ct.ThrowIfCancellationRequested();
 
         var resultValue = Execute(expression);
 

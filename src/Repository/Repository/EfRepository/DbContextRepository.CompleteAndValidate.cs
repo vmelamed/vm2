@@ -9,58 +9,38 @@ public partial class DbContextRepository : DbContext, IRepository
     /// whether the entity is added, modified, or deleted. It is designed to be overridden in derived classes to customize the
     /// completion and validation logic.
     /// </remarks>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <param name="ct">A token to monitor for cancellation requests.</param>
     /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation.</returns>
-    protected virtual async ValueTask CompleteAndValidate(CancellationToken cancellationToken = default)
+    protected virtual async ValueTask CompleteAndValidateAsync(CancellationToken ct = default)
     {
         ChangeTracker.DetectChanges();
 
         string actor = "";    // TODO: replace with actual actor, e.g. from some call context or user token
         var now = DateTime.UtcNow;
-        Type? typeOfRoot = null;
 
-        // Validate that all modified entities belong to the same aggregate and then complete the entities that implement ICompletable
+        if (DddBoundaryChecks.HasFlag(DddBoundaryChecks.AggregateBoundary))
+            DddAggregateBoundaryChecking.CheckAggregateBoundary(ChangeTracker);
+
+        if (DddBoundaryChecks.HasFlag(DddBoundaryChecks.Validation))
+            await DddAggregateBoundaryChecking.CheckAggregateInvariantsAsync(ChangeTracker, ct).ConfigureAwait(false);
+
+        // ValidateAsync that all modified entities belong to the same aggregate and then complete the entities that implement ICompletable
         foreach (var entry in ChangeTracker
                                 .Entries()
-                                .Where(e => e.State is not EntityState.Unchanged or EntityState.Detached))
-        {
-            if (DddBoundaryChecks.HasFlag(DddBoundaryChecks.AggregateBoundary))
-            {
-                var genInterfaces = entry.Entity
-                                    .GetType()
-                                    .GetInterfaces()
-                                    .Where(i => i.IsGenericType
-                                                && i.GetGenericTypeDefinition() == typeof(IAggregate<>))
-                                    .ToList()
-                                        ;
-
-                if (genInterfaces.Count > 1)
-                    throw new InvalidOperationException($"DDD error: Entity {entry.Entity.GetType().Name} is marked with multiple IAggregate<TRoot> interfaces. An entity cannot be part of more than one aggregate.");
-                if (genInterfaces.Count() <= 0)
-                    throw new InvalidOperationException($"DDD error: Entity {entry.Entity.GetType().Name} is not marked with IAggregate<TRoot>.");
-
-                var currentEntityRoot = genInterfaces[0].GenericTypeArguments[0];
-
-                if (typeOfRoot is null)
-                    typeOfRoot = currentEntityRoot;
-                else
-                if (typeOfRoot != currentEntityRoot)
-                    throw new InvalidOperationException(
-                        $"DDD error: Violation of aggregate consistency and transaction boundaries: encountered entities of IAggregate<{typeOfRoot.Name}> and IAggregate<{currentEntityRoot.Name}>.");
-            }
-
-            await (entry.State switch {
-                EntityState.Added => CompleteAndValidateAddedEntity(entry, now, actor, cancellationToken),
-                EntityState.Modified => CompleteAndValidateUpdatedEntity(entry, now, actor, cancellationToken),
-                EntityState.Deleted => CompleteAndValidateDeletedEntity(entry, now, actor, cancellationToken),
-                _ => ValueTask.CompletedTask, // Do nothing for Unchanged or Detached
-            });
-        }
+                                .Where(e => e.State is not (EntityState.Unchanged or EntityState.Detached)))
+            await (
+                entry.State switch {
+                    EntityState.Added => CompleteAndValidateAddedEntityAsync(entry, now, actor, ct),
+                    EntityState.Modified => CompleteAndValidateUpdatedEntityAsync(entry, now, actor, ct),
+                    EntityState.Deleted => CompleteAndValidateDeletedEntityAsync(entry, now, actor, ct),
+                    _ => ValueTask.CompletedTask, // Do nothing for Unchanged or Detached
+                }
+            ).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Completes and validates an entity that has been added to the context. The method can be overridden in derived contexts
-    /// to customize the actions performed on the entity after it has been added with <see cref="IRepository.Add"/>.
+    /// to customize the actions performed on the entity after it has been added with <see cref="IRepository.AddAsync"/>.
     /// </summary>
     /// <remarks>This method performs several operations on the entity if it implements specific interfaces:
     /// <list type="bullet">
@@ -75,13 +55,13 @@ public partial class DbContextRepository : DbContext, IRepository
     /// <param name="entry">The <see cref="EntityEntry"/> representing the entity to be processed.</param>
     /// <param name="now">The current date and time, used for auditing purposes.</param>
     /// <param name="actor">The identifier of the actor performing the operation, used for auditing purposes.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <param name="ct">A token to monitor for cancellation requests.</param>
     /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-    protected virtual async ValueTask CompleteAndValidateAddedEntity(
+    protected virtual async ValueTask CompleteAndValidateAddedEntityAsync(
         EntityEntry entry,
         DateTime now,
         string actor,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var entity = entry.Entity;
 
@@ -89,11 +69,7 @@ public partial class DbContextRepository : DbContext, IRepository
             auditableAdded.AuditOnAdd(now, actor);
 
         if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
-
-        if (DddBoundaryChecks.HasFlag(DddBoundaryChecks.Validation)
-            && entity is IValidatable validatable)
-            await validatable.Validate(this, cancellationToken).ConfigureAwait(false);
+            await completable.CompleteAsync(this, entry, ct);
     }
 
     /// <summary>
@@ -112,13 +88,13 @@ public partial class DbContextRepository : DbContext, IRepository
     /// <param name="entry">The <see cref="EntityEntry"/> representing the entity to be processed.</param>
     /// <param name="now">The current date and time used for auditing purposes.</param>
     /// <param name="actor">The identifier of the actor performing the update, used for auditing.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <param name="ct">A token to monitor for cancellation requests.</param>
     /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-    protected virtual async ValueTask CompleteAndValidateUpdatedEntity(
+    protected virtual async ValueTask CompleteAndValidateUpdatedEntityAsync(
         EntityEntry entry,
         DateTime now,
         string actor,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var entity = entry.Entity;
 
@@ -126,11 +102,7 @@ public partial class DbContextRepository : DbContext, IRepository
             auditable.AuditOnUpdate(now, actor);
 
         if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
-
-        if (DddBoundaryChecks.HasFlag(DddBoundaryChecks.Validation)
-            && entity is IValidatable validatableUpdated)
-            await validatableUpdated.Validate(this, cancellationToken).ConfigureAwait(false);
+            await completable.CompleteAsync(this, entry, ct);
     }
 
     /// <summary>
@@ -142,19 +114,19 @@ public partial class DbContextRepository : DbContext, IRepository
     /// <param name="entry">The <see cref="EntityEntry"/> representing the entity to be soft deleted.</param>
     /// <param name="now">The current date and time, used to timestamp the deletion.</param>
     /// <param name="actor">The identifier of the user or process performing the deletion.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
     /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-    protected virtual async ValueTask CompleteAndValidateDeletedEntity(
+    protected virtual async ValueTask CompleteAndValidateDeletedEntityAsync(
         EntityEntry entry,
         DateTime now,
         string actor,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var entity = entry.Entity;
 
         // Delete other, logically related entities as well?
         if (entity is ICompletable completable)
-            await completable.Complete(this, entry, cancellationToken).ConfigureAwait(false);
+            await completable.CompleteAsync(this, entry, ct);
 
         if (entity is ISoftDeletable deletable)
         {

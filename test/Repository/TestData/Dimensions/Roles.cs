@@ -12,7 +12,7 @@ public static class Roles
     public static readonly string Piano      = "Piano";
     public static readonly string Bass       = "Bass";
     public static readonly string Drums      = "Drums";
-    // Add more roles as needed
+    // AddAsync more roles as needed
 
     public static readonly string[] All =
     [
@@ -26,6 +26,6 @@ public static class Roles
         Piano,
         Bass,
         Drums
-        // Add more here as you expand
+        // AddAsync more here as you expand
     ];
 }

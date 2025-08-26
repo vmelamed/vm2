@@ -26,9 +26,9 @@ public record AlbumTrack(Track Track) : IValidatable
     }
 
     /// <inheritdoc />
-    public async ValueTask Validate(
+    public async ValueTask ValidateAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         => await new AlbumTrackValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+                        .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
 }

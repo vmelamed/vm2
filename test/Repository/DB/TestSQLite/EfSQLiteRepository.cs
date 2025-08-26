@@ -3,7 +3,7 @@
 /// <summary>
 /// <see cref="IRepository"/> based on Entity Framework and SQLite.
 /// </summary>
-public class EfSQLiteRepository : SQLiteDbContextRepository
+public class EfSQLiteRepository : SQLiteEfRepository
 {
     public string Actor { get; init; }
 
@@ -19,11 +19,39 @@ public class EfSQLiteRepository : SQLiteDbContextRepository
     /// <param name="options">The options to configure the database context for the repository. Cannot be null.</param>
     /// <param name="getActor">A function that retrieves the name or identifier of the current actor performing operations.</param>
     public EfSQLiteRepository(
-        DbContextOptions<EfSQLiteRepository> options,
+        DbContextOptions options,
         Func<string> getActor)
         : base(options)
     {
         Actor = getActor();
+    }
+
+    /// <inheritdoc/>
+    protected override ValueTask CompleteAndValidateAddedEntityAsync(
+        EntityEntry entry,
+        DateTime now,
+        string actor,
+        CancellationToken ct)
+    {
+        UpdateOptimisticConcurrencyTag(entry.Entity);
+        return base.CompleteAndValidateAddedEntityAsync(entry, now, actor, ct);
+    }
+
+    /// <inheritdoc/>
+    protected override ValueTask CompleteAndValidateUpdatedEntityAsync(
+        EntityEntry entry,
+        DateTime now,
+        string actor,
+        CancellationToken ct)
+    {
+        UpdateOptimisticConcurrencyTag(entry.Entity);
+        return base.CompleteAndValidateUpdatedEntityAsync(entry, now, actor, ct);
+    }
+
+    static void UpdateOptimisticConcurrencyTag(object entity)
+    {
+        if (entity is IOptimisticConcurrency oc)
+            oc.ETag = Ulid.NewUlid();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

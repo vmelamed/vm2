@@ -16,9 +16,9 @@ public interface IValidatable
     /// The context in which to validate the entity in. E.g. the repository. This way the entity can use the context to implement
     /// various validation rules that may require access to the repository or other services, i.e. contexts.
     /// </param>
-    /// <param name="cancellationToken">
+    /// <param name="ct">
     /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
     /// </param>
     /// <returns>ValueTask.</returns>
-    ValueTask Validate(object? context = default, CancellationToken cancellationToken = default);
+    ValueTask ValidateAsync(object? context = default, CancellationToken ct = default);
 }

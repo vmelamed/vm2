@@ -49,23 +49,22 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
     public string UpdatedBy { get; set; } = "";
     #endregion
 
+    /// <inheritdoc />
+    public Ulid ETag { get; set; } = default;
+
     #region IFindable<Label>
     /// <inheritdoc />
     public static Expression<Func<Label, object?>> KeyExpression => l => new { l.Id };
 
     /// <inheritdoc />
-    public ValueTask ValidateFindable(object? _, CancellationToken __)
-    {
-        new LabelFindableValidator()
-                .ValidateAndThrow(this);
-        return ValueTask.CompletedTask;
-    }
+    public async ValueTask ValidateFindableAsync(object? _, CancellationToken ct)
+        => await new LabelFindableValidator().ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
 
     /// <summary>
     /// Returns a struct implementing <see cref="IFindable"/> that can be used to find a <see cref="Label"/> by its unique
     /// identifier. Can be used in <see cref="IRepository.Find{Label}(IFindable, CancellationToken)"/> and
     /// <see cref="QueryableExtensions.Find{Label}(IFindable, CancellationToken)"/>. E.g.<br/>
-    /// <c><![CDATA[var label = await _repository.Find(Label.ById(42), ct);]]></c>
+    /// <c><![CDATA[var label = await _repository.FindAsync(Label.ById(42), ct);]]></c>
     /// </summary>
     /// <param name="id">The unique identifier for the label.</param>
     public static IFindable ById(int Id) => new Findable(Id);
@@ -82,14 +81,16 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
     /// <param name="createdBy">The identifier of the actor who created the label.</param>
     /// <param name="updatedAt">The date and time when the label was last updated.</param>
     /// <param name="updatedBy">The identifier of the actor who last updated the label.</param>
+    /// <param name="etag">The entity tag (ETag) for optimistic concurrency control.</param>
     public Label(
-        LabelId id,
+        in LabelId id,
         string name,
         string countryCode,
         DateTime createdAt = default,
         string createdBy = "",
         DateTime updatedAt = default,
-        string updatedBy = "")
+        string updatedBy = "",
+        Ulid etag = default)
     {
         Id          = id;
         Name        = name;
@@ -98,9 +99,9 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
         CreatedBy   = createdBy;
         UpdatedAt   = updatedAt;
         UpdatedBy   = updatedBy;
+        ETag        = etag;
 
-        new LabelInvariantValidator()
-                .ValidateAndThrow(this);
+        new LabelInvariantValidator().ValidateAndThrow(this);
     }
 
     /// <summary>
@@ -116,11 +117,11 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
 
     #region IValidatable
     /// <inheritdoc />
-    public async ValueTask Validate(
+    public async ValueTask ValidateAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         => await new LabelValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+                        .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     /// <summary>

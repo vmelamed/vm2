@@ -7,7 +7,7 @@
 /// This type is designed to provide type safety and clarity when working with entity identifiers. It supports implicit
 /// conversions to the ULID type and explicit conversion from ULID for ease of use.
 /// </remarks>
-public readonly record struct TrackId(Ulid Id) : IFindable
+public readonly record struct TrackId(in Ulid Id) : IFindable
 {
     #region IFindable
     /// <inheritdoc/>
@@ -17,7 +17,7 @@ public readonly record struct TrackId(Ulid Id) : IFindable
     }
 
     /// <inheritdoc/>
-    public ValueTask ValidateFindable(object? _ = null, CancellationToken __ = default)
+    public ValueTask ValidateFindableAsync(object? _ = null, CancellationToken __ = default)
         => Id != default ? ValueTask.CompletedTask : throw new ValidationException("The Id must not be an empty ULID.");
     #endregion
 
@@ -26,12 +26,12 @@ public readonly record struct TrackId(Ulid Id) : IFindable
     /// Implicitly converts an <see cref="TrackId"/> to its underlying value type <see cref="Ulid"/>.
     /// </summary>
     /// <param name="id"></param>
-    public static implicit operator Ulid(TrackId id) => id.Id;
+    public static implicit operator Ulid(in TrackId id) => id.Id;
 
     /// <summary>
     /// Explicitly converts a value of type <see cref="Ulid"/> to an <see cref="TrackId"/>.
     /// </summary>
     /// <param name="value"></param>
-    public static explicit operator TrackId(Ulid value) => new(value);
+    public static explicit operator TrackId(in Ulid value) => new(value);
     #endregion
 }

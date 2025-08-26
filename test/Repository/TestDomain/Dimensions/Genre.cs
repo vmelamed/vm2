@@ -13,11 +13,11 @@ public record Genre(string Name) : IValidatable, IDimensionValidator<Genre, stri
 
     #region IValidatable
     /// <inheritdoc />
-    public async ValueTask Validate(
+    public async ValueTask ValidateAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         => await new GenreValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+                        .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     public static Expression<Func<Genre, string>> ValueExpression => genre => genre.Name;

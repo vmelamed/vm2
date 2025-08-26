@@ -11,11 +11,11 @@ public record Role(string Name) : IValidatable, IDimensionValidator<Role, string
 
     #region IValidatable
     /// <inheritdoc />
-    public async ValueTask Validate(
+    public async ValueTask ValidateAsync(
         object? context = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         => await new RoleValidator(context as IRepository)
-                        .ValidateAndThrowAsync(this, cancellationToken).ConfigureAwait(false);
+                        .ValidateAndThrowAsync(this, ct).ConfigureAwait(false);
     #endregion
 
     public static Expression<Func<Role, string>> ValueExpression => role => role.Name;

@@ -17,7 +17,5 @@ class AlbumPersonConfiguration : IEntityTypeConfiguration<AlbumPerson>
             .HasOne(ap => ap.Person)
             .WithMany(p => p.PersonsAlbums)
             ;
-
-        new OptimisticConcurrencyConfiguration<AlbumPerson>().Configure(builder);
     }
 }

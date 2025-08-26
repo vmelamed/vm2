@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.DB.SQLiteRepository.Models.Mapping;
+﻿namespace vm2.Repository.DB.TestSQLite.Mapping;
 
 /// <summary>
 /// Configures the entity of type <typeparamref name="TEntity" /> to support optimistic concurrency.
@@ -15,7 +15,7 @@ public class OptimisticConcurrencyConfiguration<TEntity> : IEntityTypeConfigurat
     {
         // Configure the concurrency token
         builder
-            .Property<Guid>(SQLiteDbContextRepository.OptimisticConcurrencyFieldName)
+            .Property(o => o.ETag)
             .IsConcurrencyToken()
             ;
     }

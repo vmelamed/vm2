@@ -25,11 +25,11 @@ public interface IDimensionValidator<TDimension, TValue> where TDimension : clas
     /// The source object, which should implement <see cref="IRepository"/> to provide the data. If the source does not
     /// implement <see cref="IRepository"/>, the method does nothing.
     /// </param>
-    /// <param name="cancellationToken">
+    /// <param name="ct">
     /// A token to monitor for cancellation requests. The operation will be canceled if the token is triggered.
     /// </param>
     /// <returns></returns>
-    static async ValueTask RefreshValues(object source, CancellationToken cancellationToken)
+    static async ValueTask RefreshValues(object source, CancellationToken ct)
     {
         if (source is not IRepository repository)
             return;
@@ -37,7 +37,7 @@ public interface IDimensionValidator<TDimension, TValue> where TDimension : clas
         TDimension.Values = await repository
                                     .Set<TDimension>()
                                     .Select(TDimension.ValueExpression)
-                                    .ToHashSetAsync(cancellationToken)
+                                    .ToHashSetAsync(ct)
                                     .ConfigureAwait(false)
                                     ;
     }

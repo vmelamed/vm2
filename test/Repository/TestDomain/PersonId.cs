@@ -7,7 +7,7 @@
 /// This type is designed to provide type safety and clarity when working with entity identifiers. It supports implicit
 /// conversions to the ULID type and explicit conversion from ULID for ease of use.
 /// </remarks>
-public readonly record struct PersonId(Ulid Id) : IFindable
+public readonly record struct PersonId(in Ulid Id) : IFindable
 {
     #region IFindable
     /// <inheritdoc/>
@@ -17,7 +17,7 @@ public readonly record struct PersonId(Ulid Id) : IFindable
     }
 
     /// <inheritdoc/>
-    public ValueTask ValidateFindable(object? _ = null, CancellationToken __ = default)
+    public ValueTask ValidateFindableAsync(object? _ = null, CancellationToken __ = default)
         => Id != default ? ValueTask.CompletedTask : throw new ValidationException("The Id must not be an empty ULID.");
     #endregion
 
@@ -26,12 +26,12 @@ public readonly record struct PersonId(Ulid Id) : IFindable
     /// Implicitly converts an <see cref="EntityId{TValue}"/> to its underlying value type <typeparamref name="TValue"/>.
     /// </summary>
     /// <param name="id"></param>
-    public static implicit operator Ulid(PersonId id) => id.Id;
+    public static implicit operator Ulid(in PersonId id) => id.Id;
 
     /// <summary>
     /// Implicitly converts a value of type <typeparamref name="TValue"/> to an <see cref="EntityId{TValue}"/>.
     /// </summary>
     /// <param name="value"></param>
-    public static implicit operator PersonId(Ulid value) => new(value);
+    public static implicit operator PersonId(in Ulid value) => new(value);
     #endregion
 }

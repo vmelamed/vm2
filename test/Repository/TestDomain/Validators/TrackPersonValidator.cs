@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators;
 
+using vm2.Repository.EfRepository;
+
 class TrackPersonInvariantValidator : AbstractValidator<TrackPerson>
 {
     public TrackPersonInvariantValidator(bool lazyLoading = false)

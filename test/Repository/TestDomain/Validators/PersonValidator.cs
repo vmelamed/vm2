@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators;
 
+using vm2.Repository.EfRepository;
+
 class PersonInvariantValidator : AbstractValidator<Person>
 {
     public PersonInvariantValidator(bool lazyLoading = false)
@@ -94,7 +96,7 @@ class PersonValidator : AbstractValidator<Person>
         IRepository repository,
         Person person,
         PersonId id,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
         => repository.StateOf(person) switch {
 
             // if Added, make sure the id is unique in the database.
@@ -103,7 +105,7 @@ class PersonValidator : AbstractValidator<Person>
                                  && Genre.Has(person.Genres)
                                  && !await repository
                                                 .Set<Person>()
-                                                .AnyAsync(p => p.Id == id, cancellationToken)
+                                                .AnyAsync(p => p.Id == id, ct)
                                                 .ConfigureAwait(false),
 
             // if Modified, make sure there is a Person with this id in the database.
@@ -112,7 +114,7 @@ class PersonValidator : AbstractValidator<Person>
                                     && Genre.Has(person.Genres)
                                     && await repository
                                                 .Set<Person>()
-                                                .AnyAsync(a => a.Id == id, cancellationToken)
+                                                .AnyAsync(a => a.Id == id, ct)
                                                 .ConfigureAwait(false),
 
             _ => true

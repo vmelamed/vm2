@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators;
 
+using vm2.Repository.EfRepository;
+
 class AlbumInvariantValidator : AbstractValidator<Album>
 {
     public AlbumInvariantValidator(bool lazyLoading = false)
@@ -97,21 +99,21 @@ class AlbumValidator : AbstractValidator<Album>
         IRepository repository,
         Album album,
         AlbumId id,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
         => repository.StateOf(album) switch {
 
             // if Added, make sure the id is unique in the database.
             EntityState.Added => Genre.Has(album.Genres)
                                  && !await repository
                                                 .Set<Album>()
-                                                .AnyAsync(a => a.Id == id, cancellationToken)
+                                                .AnyAsync(a => a.Id == id, ct)
                                                 .ConfigureAwait(false)
                                  ,
             // if Modified, make sure there is an album with this id in the database.
             EntityState.Modified => Genre.Has(album.Genres)
                                     && await repository
                                                 .Set<Album>()
-                                                .AnyAsync(a => a.Id == id, cancellationToken)
+                                                .AnyAsync(a => a.Id == id, ct)
                                                 .ConfigureAwait(false)
                                     ,
             _ => true

@@ -16,7 +16,7 @@ public enum DddBoundaryChecks
     None = 0,
 
     /// <summary>
-    /// The method <see cref="IValidatable.Validate(object?, CancellationToken)"/> of all <see cref="IValidatable"/> entities
+    /// The method <see cref="IValidatable.ValidateAsync(object?, CancellationToken)"/> of all <see cref="IValidatable"/> entities
     /// are invoked to verify the invariants.
     /// </summary>
     Validation = 1,
@@ -43,6 +43,13 @@ public enum DddBoundaryChecks
 /// </remarks>
 public sealed class DddAggregateBoundaryChecking : IDbContextOptionsExtension
 {
+    const string dddErrorMessageHasMoreThan1Aggregate        = "DDD error: Entity type {0} is marked with multiple IAggregate<TRoot> interfaces. "+
+                                                               "An entity cannot be part of more than one aggregate.";
+    const string dddErrorMessageHasNoAggregate               = "DDD error: Entity type {0} is not marked with IAggregate<TRoot>.";
+    const string dddErrorMessageViolationOfAggregateBoundary = "DDD error: Violation of aggregate consistency and transaction boundaries: "+
+                                                               "encountered entities of IAggregate<{0}> and IAggregate<{1}>. "+
+                                                               "Only entities and values from the same aggregate can participate in a transaction.";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DddAggregateBoundaryChecking"/> class.
     /// </summary>
@@ -60,6 +67,59 @@ public sealed class DddAggregateBoundaryChecking : IDbContextOptionsExtension
     /// Gets the information about the current database context options extension.
     /// </summary>
     public DbContextOptionsExtensionInfo Info { get; init; }
+
+    /// <summary>
+    /// Checks the aggregate boundary for the entities of the current transaction held in the <see cref="ChangeTracker"/>.
+    /// </summary>
+    /// <param name="changeTracker"></param>
+    public static void CheckAggregateBoundary(ChangeTracker changeTracker)
+    {
+        Type? typeOfRoot = null;
+
+        foreach (var entry in changeTracker
+                                .Entries()
+                                .Where(e => e.State is not EntityState.Unchanged or EntityState.Detached))
+        {
+            var genInterfaces = entry.Entity
+                                        .GetType()
+                                        .GetInterfaces()
+                                        .Where(i => i.IsGenericType
+                                                    && i.GetGenericTypeDefinition() == typeof(IAggregate<>))
+                                        .ToList()
+                                        ;
+
+            if (genInterfaces.Count > 1)
+                throw new InvalidOperationException(string.Format(dddErrorMessageHasMoreThan1Aggregate, entry.Entity.GetType().Name));
+            if (genInterfaces.Count <= 0)
+                throw new InvalidOperationException(string.Format(dddErrorMessageHasNoAggregate, entry.Entity.GetType().Name));
+
+            var currentEntityRoot = genInterfaces[0].GenericTypeArguments[0];
+
+            if (typeOfRoot is null)
+                typeOfRoot = currentEntityRoot;
+            else
+            if (typeOfRoot != currentEntityRoot)
+                throw new InvalidOperationException(string.Format(dddErrorMessageViolationOfAggregateBoundary, typeOfRoot.Name, currentEntityRoot.Name));
+        }
+    }
+
+    /// <summary>
+    /// Checks the invariants of all <see cref="IValidatable"/> entities in the <see cref="ChangeTracker"/> that are marked as
+    /// Added or Modified.
+    /// </summary>
+    /// <param name="changeTracker"></param>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    public static async ValueTask CheckAggregateInvariantsAsync(
+        ChangeTracker changeTracker,
+        CancellationToken ct = default)
+    {
+        foreach (var entry in changeTracker
+                                .Entries()
+                                .Where(e => e.State is (EntityState.Added or EntityState.Modified)))
+            if (entry.Entity is IValidatable validatable)
+                await validatable.ValidateAsync(changeTracker.Context, ct);
+    }
 }
 
 internal sealed class DddBoundaryCheckingOptionsExtensionInfo(

@@ -34,9 +34,9 @@ public static class DbContextRepositoryOptionsExtensions
     /// <returns>
     /// The same <see cref="DbContextOptionsBuilder"/> instance so that additional configuration calls can be chained.
     /// </returns>
-    public static DbContextOptionsBuilder WithDddAggregateBoundaryChecking(
-        this DbContextOptionsBuilder builder,
-        DddBoundaryChecks checks = DddBoundaryChecks.Full)
+    public static DbContextOptionsBuilder<DbContextRepository> WithDddAggregateBoundaryChecking<DbContextRepository>(
+        this DbContextOptionsBuilder<DbContextRepository> builder,
+        DddBoundaryChecks checks = DddBoundaryChecks.Full) where DbContextRepository : DbContext, IRepository
     {
         var extension = builder
                             .Options

@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain.Validators;
 
+using vm2.Repository.EfRepository;
+
 class TrackInvariantValidator : AbstractValidator<Track>
 {
     public TrackInvariantValidator(bool lazyLoading = false)
@@ -78,20 +80,20 @@ class TrackValidator : AbstractValidator<Track>
         IRepository repository,
         Track track,
         TrackId id,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
         => repository.StateOf(track) switch {
             // If the track is being added, the ID must not exist in the database.
             EntityState.Added => Genre.Has(track.Genres)
                                  && !await repository
                                                 .Set<Track>()
-                                                .AnyAsync(t => t.Id == id, cancellationToken)
+                                                .AnyAsync(t => t.Id == id, ct)
                                                 .ConfigureAwait(false),
 
             // If the track is being modified, the ID must exist in the database.
             EntityState.Modified => Genre.Has(track.Genres)
                                     && await repository
                                                 .Set<Track>()
-                                                .AnyAsync(t => t.Id == id, cancellationToken)
+                                                .AnyAsync(t => t.Id == id, ct)
                                                 .ConfigureAwait(false),
 
             _ => true,
