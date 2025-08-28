@@ -30,11 +30,10 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
                                 ?? throw new InvalidOperationException("The context in eventData is null or is not EfRepository.");
         var changeTracker = efRepository.ChangeTracker;
 
-        efRepository.ChangeTracker.DetectChanges();
+        changeTracker.DetectChanges();
 
         if (efRepository.AggregateActions == AggregateActions.None ||
-            efRepository
-                .ChangeTracker
+            changeTracker
                 .Entries()
                 .All(e => e.State is EntityState.Unchanged or EntityState.Detached))
             return await base.SavingChangesAsync(eventData, result, ct);
@@ -51,8 +50,7 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
                                         Actor:         "",  // TODO: replace with actual actor, e.g. from some call context or user token
                                         CancellationToken: ct);
 
-        foreach (var entry in efRepository
-                                    .ChangeTracker
+        foreach (var entry in changeTracker
                                     .Entries()
                                     .Where(e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted))
         {
