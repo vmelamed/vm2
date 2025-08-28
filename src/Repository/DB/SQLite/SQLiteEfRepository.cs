@@ -3,7 +3,7 @@
 /// <summary>
 /// A repository implementation using Entity Framework Core with SQLite as the database provider.
 /// </summary>
-public class SQLiteEfRepository(DbContextOptions options) : DbContextRepository(options)
+public class SQLiteEfRepository(DbContextOptions options) : EfRepository(options)
 {
     static SqliteConnection? _inMemConnection;
 

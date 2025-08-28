@@ -6,4 +6,4 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Logging;
 
-global using vm2.Repository.EfRepository;
+global using vm2.Repository.EntityFramework;

@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.DB.SQLite.DI;
 
+using vm2.Repository.EfRepository.Ddd;
+
 /// <summary>
 /// Provides extension methods for configuring <see cref="DbContextOptionsBuilder{TContext}"/> instances for repositories based
 /// on <see cref="SQLiteEfRepository"/>.
@@ -71,7 +73,7 @@ public static class ContextOptionsBuilderExtensions
                         .EnableDetailedErrors(getEnableDetailedErrors())
                         .EnableSensitiveDataLogging(getEnableSensitiveDataLogging())
                         .LogTo(logMethod, getLogToMinLogLevel())
-                        .WithDddAggregateBoundaryChecking(DddBoundaryChecks.Full)
+                        .WithDddAggregateBoundaryChecking(AggregateActions.All)
                         .Options
                         ;
 

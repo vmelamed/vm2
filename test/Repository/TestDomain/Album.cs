@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.TestDomain;
 
-using vm2.Repository.EfRepository;
+using vm2.Repository.EntityFramework;
 
 [DebuggerDisplay("Album {Id}: {Title}")]
 public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable, IOptimisticConcurrency

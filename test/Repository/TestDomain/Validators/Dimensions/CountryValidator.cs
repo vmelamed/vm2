@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.TestDomain.Validators.Dimensions;
 
-using vm2.Repository.EfRepository;
+using vm2.Repository.EntityFramework;
 
 /// <summary>
 /// Validates the minimal set of rules that make a <see cref="Country"/> object valid regardless of the state of the object.

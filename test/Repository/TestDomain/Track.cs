@@ -1,7 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain;
 using System;
 
-using vm2.Repository.EfRepository;
+using vm2.Repository.EntityFramework;
 
 [DebuggerDisplay("Track {Id}: {Title}")]
 public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConcurrency

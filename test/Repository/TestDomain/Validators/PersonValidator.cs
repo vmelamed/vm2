@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.TestDomain.Validators;
 
-using vm2.Repository.EfRepository;
+using vm2.Repository.EntityFramework;
 
 class PersonMinimalValidator : AbstractValidator<Person>
 {
