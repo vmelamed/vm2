@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.TestDomain;
 
-using vm2.Repository.EfRepository;
+using vm2.Repository.EntityFramework;
 
 [DebuggerDisplay("Label {Id}: {Name} ({CountryCode})")]
 public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConcurrency

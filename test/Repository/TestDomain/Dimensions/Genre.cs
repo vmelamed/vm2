@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.TestDomain.Dimensions;
 
-using vm2.Repository.EfRepository.Models;
+using vm2.Repository.EntityFramework.Models;
 
 /// <summary>
 /// Represents a category or type of music.

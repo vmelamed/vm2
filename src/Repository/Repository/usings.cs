@@ -11,7 +11,9 @@ global using FluentValidation;
 
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.ChangeTracking;
+global using Microsoft.EntityFrameworkCore.Diagnostics;
 global using Microsoft.EntityFrameworkCore.Infrastructure;
+global using Microsoft.EntityFrameworkCore.Internal;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.EntityFrameworkCore.Query;
 global using Microsoft.EntityFrameworkCore.ValueGeneration;
@@ -21,4 +23,6 @@ global using OpenTelemetry.Instrumentation.EntityFrameworkCore;
 global using OpenTelemetry.Trace;
 
 global using vm2.Repository.Abstractions;
-global using vm2.Repository.EfRepository.Models;
+global using vm2.Repository.EntityFramework.Ddd;
+global using vm2.Repository.EntityFramework.Models;
+global using vm2.Threading.Latch;

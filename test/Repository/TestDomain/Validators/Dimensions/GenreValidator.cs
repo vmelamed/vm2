@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.TestDomain.Validators.Dimensions;
 
-using vm2.Repository.EfRepository;
+using vm2.Repository.EntityFramework;
 
 public class GenreValidator : AbstractValidator<Genre>
 {

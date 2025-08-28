@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.DB.TestSQLite.DI;
 
-using vm2.Repository.EfRepository;
+using vm2.Repository.EfRepository.Ddd;
 
 public static class ServiceCollectionExtensions
 {
@@ -37,7 +37,7 @@ public static class ServiceCollectionExtensions
                                                              logMethod,
                                                              getLogToMinLogLevel);
 
-                var options = builder.Options.WithExtension(new DddAggregateBoundaryChecking(DddBoundaryChecks.Full));
+                var options = builder.Options.WithExtension(new AggregateActionsExtension(AggregateActions.All));
 
                 return new EfSQLiteRepository(options, getActor);
             });

@@ -1,7 +1,7 @@
 ﻿namespace vm2.Repository.TestDomain;
 using System;
 
-using vm2.Repository.EfRepository;
+using vm2.Repository.EntityFramework;
 
 [DebuggerDisplay("Person {Id}: {Name}")]
 public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticConcurrency

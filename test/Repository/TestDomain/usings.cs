@@ -9,9 +9,8 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 global using vm2.Repository.Abstractions;
-global using vm2.Repository.Abstractions.Extensions;
-global using vm2.Repository.EfRepository.Models;
-global using vm2.Repository.EfRepository.Models.Validators;
+global using vm2.Repository.EntityFramework.Models;
+global using vm2.Repository.EntityFramework.Models.Validators;
 global using vm2.Repository.TestDomain.Dimensions;
 global using vm2.Repository.TestDomain.Validators;
 global using vm2.Repository.TestDomain.Validators.Dimensions;
