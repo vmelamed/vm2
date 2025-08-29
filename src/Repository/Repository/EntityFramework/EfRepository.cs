@@ -15,10 +15,6 @@
 /// </remarks>
 public partial class EfRepository : DbContext, IRepository
 {
-    static readonly Latch _latchInterceptor = new();
-    static EfRepositorySaveChangesInterceptor? _interceptor;
-    static AggregateActions? _aggregateActions = null;
-
     IRepository ThisRepo => this;
 
     /// <summary>
@@ -28,7 +24,7 @@ public partial class EfRepository : DbContext, IRepository
     /// Hint: if you find yourself modifying <see cref="AggregateActions"/> or <see cref="AllowedRoots"/> often, maybe it is
     /// time to allow for eventual consistency and/or to rethink the boundaries of your aggregates.
     /// </remarks>
-    public AggregateActions AggregateActions { get; set; }
+    public DddAggregateActions AggregateActions { get; set; }
 
     /// <summary>
     /// Allows more than one aggregate to participate in the transaction of the UoW. <see cref="EfRepository"/> always
@@ -49,27 +45,7 @@ public partial class EfRepository : DbContext, IRepository
     public EfRepository(DbContextOptions options)
         : base(options)
     {
-    }
-
-    /// <inheritdoc/>
-    protected override void OnConfiguring(
-        DbContextOptionsBuilder optionsBuilder)
-    {
-        if (_latchInterceptor.Lock())
-        {
-            _interceptor = new EfRepositorySaveChangesInterceptor();
-
-            var extension = optionsBuilder.Options.GetExtension<AggregateActionsExtension>();
-            var info = (extension?.Info as AggregateActionsExtensionInfo);
-
-            _aggregateActions ??= info?.Actions ?? AggregateActions.None;
-        }
-
-        Debug.Assert(_interceptor is not null);
-        Debug.Assert(_aggregateActions.HasValue);
-
-        optionsBuilder.AddInterceptors(_interceptor);
-        AggregateActions = _aggregateActions.Value;
+        AggregateActions = options.FindExtension<DddAggregateActionsExtension>()?.Actions ?? DddAggregateActions.None;
     }
 
     /// <summary>

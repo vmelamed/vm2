@@ -8,7 +8,7 @@
 /// be combined to enable multiple modes of boundary checking simultaneously.
 /// </remarks>
 [Flags]
-public enum AggregateActions
+public enum DddAggregateActions
 {
     /// <summary>
     /// No aggregate actions are performed.

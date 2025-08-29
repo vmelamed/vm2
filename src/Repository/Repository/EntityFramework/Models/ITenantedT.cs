@@ -3,15 +3,15 @@
 /// <summary>
 /// Represents objects (entities, repositories, etc.) that are bound to a tenant and the tenant identifier.
 /// </summary>
-/// <typeparam name="TId"></typeparam>
-public interface ITenanted<TId> : ITenanted where TId : notnull, IEquatable<TId>
+/// <typeparam name="TTenantId"></typeparam>
+public interface ITenanted<TTenantId> : ITenanted where TTenantId : notnull, IEquatable<TTenantId>
 {
     /// <summary>
     /// The identifier of the current tenant.
     /// </summary>
-    TId TenantId { get; }
+    TTenantId TenantId { get; }
 
     /// <inheritdoc/>
     bool ITenanted.SameAs(ITenanted tenant)
-        => tenant is ITenanted<TId> t && TenantId.Equals(t.TenantId);
+        => tenant is ITenanted<TTenantId> t && TenantId.Equals(t.TenantId);
 }

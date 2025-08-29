@@ -10,13 +10,32 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
 {
     record struct ActionParameters(
         EntityEntry Entry,
-        AggregateActions Actions,
+        DddAggregateActions Actions,
         ITenanted? Tenanted,
         Type? AggregateRoot,
         HashSet<Type> AllowedRoots,
         DateTime Now,
         string Actor,
         CancellationToken CancellationToken);
+
+    // Global (optional) hooks – can be set at app start; remain DI-neutral.
+    /// <summary>
+    /// Gets or sets a global function that provides the name of the current actor.
+    /// </summary>
+    /// <remarks>
+    /// This property can be used to globally configure an actor identification mechanism, such as retrieving the current user
+    /// or system identity. It is intended to be set at application startup  and remains dependency injection-neutral.
+    /// </remarks>
+    public static Func<string> CurrentActorProvider { get; set; } = static () => "";
+
+    /// <summary>
+    /// Gets or sets the delegate used to provide the current UTC date and time.
+    /// </summary>
+    /// <remarks>
+    /// This property allows customization of the source of the current UTC date and time, which can be useful for testing or
+    /// overriding the default behavior.
+    /// </remarks>
+    public static Func<DateTime> UtcDateTimeProvider { get; set; } = static () => DateTime.UtcNow;
 
     /// <inheritdoc />
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -26,17 +45,19 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
     {
         ct.ThrowIfCancellationRequested();
 
-        var efRepository = eventData.Context as EfRepository
+        var efRepository  = eventData.Context as EfRepository
                                 ?? throw new InvalidOperationException("The context in eventData is null or is not EfRepository.");
+
+        if (efRepository.AggregateActions == DddAggregateActions.None)
+            return result;
+
         var changeTracker = efRepository.ChangeTracker;
 
         changeTracker.DetectChanges();
 
-        if (efRepository.AggregateActions == AggregateActions.None ||
-            changeTracker
-                .Entries()
-                .All(e => e.State is EntityState.Unchanged or EntityState.Detached))
-            return await base.SavingChangesAsync(eventData, result, ct);
+        if (changeTracker.Entries().All(e => e.State is EntityState.Unchanged
+                                                     or EntityState.Detached))
+            return result;
 
         ITenanted? tenanted = efRepository as ITenanted;
         Type? aggregateRootType = null;
@@ -46,15 +67,20 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
                                         Tenanted:      tenanted,
                                         AggregateRoot: aggregateRootType,
                                         AllowedRoots:  efRepository.AllowedRoots,
-                                        Now:           DateTime.UtcNow,
-                                        Actor:         "",  // TODO: replace with actual actor, e.g. from some call context or user token
+                                        Now:           UtcDateTimeProvider(),
+                                        Actor:         CurrentActorProvider(),
                                         CancellationToken: ct);
 
-        foreach (var entry in changeTracker
-                                    .Entries()
-                                    .Where(e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted))
+        foreach (var entry in changeTracker.Entries().Where(e => e.State is EntityState.Added
+                                                                         or EntityState.Modified
+                                                                         or EntityState.Deleted))
         {
-            var parameters = actionParameters with { Entry = entry, Tenanted = tenanted, AggregateRoot = aggregateRootType };
+            var parameters = actionParameters with
+            {
+                Entry         = entry,
+                Tenanted      = tenanted,
+                AggregateRoot = aggregateRootType
+            };
 
             Func<ValueTask> actionFunctions = entry.State switch {
                 EntityState.Added => async () =>
@@ -106,6 +132,9 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
 
     static ITenanted? CheckTenantBoundary(in ActionParameters p)
     {
+        if (!p.Actions.HasFlag(DddAggregateActions.TenantBoundary))
+            return p.Tenanted;
+
         if (p.Entry.Entity is not ITenanted tenantEntity)
             return p.Tenanted;
 
@@ -120,7 +149,7 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
 
     static Type CheckAggregateBoundary(in ActionParameters p)
     {
-        if (!p.Actions.HasFlag(AggregateActions.AggregateBoundary))
+        if (!p.Actions.HasFlag(DddAggregateActions.AggregateBoundary))
             return typeof(Unknown);
 
         var rootTypes = p.Entry
@@ -135,7 +164,8 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
 
         var rootType = rootTypes.Count is <= 1
                             ? rootTypes.SingleOrDefault(typeof(Unknown))
-                            : throw new InvalidOperationException(string.Format(dddErrorMessageHasMoreThanOneAggregate, p.Entry.Entity.GetType().Name));
+                            : throw new InvalidOperationException(
+                                            string.Format(dddErrorMessageHasMoreThanOneAggregate, p.Entry.Entity.GetType().Name));
 
         if (p.AggregateRoot is null)
             return rootType;
@@ -144,28 +174,29 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
             return p.AggregateRoot;
 
         if (!p.AllowedRoots.Contains(rootType))
-            throw new InvalidOperationException(string.Format(dddErrorMessageViolationOfAggregateBoundary, p.AggregateRoot.Name, rootType.Name));
+            throw new InvalidOperationException(
+                            string.Format(dddErrorMessageViolationOfAggregateBoundary, p.AggregateRoot.Name, rootType.Name));
 
         return p.AggregateRoot;
     }
 
     static void AuditAdded(in ActionParameters p)
     {
-        if (p.Actions.HasFlag(AggregateActions.Audit)
+        if (p.Actions.HasFlag(DddAggregateActions.Audit)
             && p.Entry.Entity is IAuditable auditable)
             auditable.AuditOnAdd(p.Now, p.Actor);
     }
 
     static void AuditUpdated(in ActionParameters p)
     {
-        if (p.Actions.HasFlag(AggregateActions.Audit)
+        if (p.Actions.HasFlag(DddAggregateActions.Audit)
             && p.Entry.Entity is IAuditable auditable)
             auditable.AuditOnUpdate(p.Now, p.Actor);
     }
 
     static void AuditDeleted(in ActionParameters p)
     {
-        if (p.Actions.HasFlag(AggregateActions.Audit)
+        if (p.Actions.HasFlag(DddAggregateActions.Audit)
             && p.Entry.Entity is ISoftDeletable deletable)
         {
             deletable.SoftDelete(p.Now, p.Actor);
@@ -175,14 +206,14 @@ public class EfRepositorySaveChangesInterceptor : SaveChangesInterceptor
     }
 
     static ValueTask CompleteAsync(in ActionParameters p)
-        => p.Actions.HasFlag(AggregateActions.CustomComplete)
+        => p.Actions.HasFlag(DddAggregateActions.CustomComplete)
            && p.Entry.Entity is ICompletable completable
            && p.Entry.Context is IRepository repository
                 ? completable.CompleteAsync(repository, p.Entry, p.CancellationToken)
                 : ValueTask.CompletedTask;
 
     static ValueTask ValidateInvariantsAsync(in ActionParameters p)
-        => p.Actions.HasFlag(AggregateActions.Invariants)
+        => p.Actions.HasFlag(DddAggregateActions.Invariants)
            && p.Entry.Entity is IValidatable validatable
            && p.Entry.Context is IRepository repository
                 ? validatable.ValidateAsync(repository, p.CancellationToken)
