@@ -1,7 +1,5 @@
 ﻿namespace vm2.Repository.EntityFramework.Models.Validators;
 
-using vm2.Repository.EntityFramework.Models;
-
 /// <summary>
 /// Provides validation rules for objects implementing the <see cref="IAuditable"/> interface.
 /// </summary>

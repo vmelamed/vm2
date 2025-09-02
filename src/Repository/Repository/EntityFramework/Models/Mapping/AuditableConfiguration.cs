@@ -10,7 +10,7 @@
 /// class MyEntityConfiguration : IEntityTypeConfiguration<MyEntity>
 /// {
 ///     ...
-///     public void Configure(EntityTypeBuilder<Engine> builder)
+///     public void Configure(EntityTypeBuilder<MyEntity> builder)
 ///     {
 ///         ...
 ///         new AuditableConfiguration<MyEntity>().Configure(builder);
@@ -28,17 +28,21 @@ public class AuditableConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
     {
         builder.Property(e => e.CreatedAt)
             .IsRequired()
-            ;
-        builder.Property(e => e.UpdatedAt)
-            .IsRequired()
+            .HasColumnOrder(10000)
             ;
         builder.Property(e => e.CreatedBy)
             .HasMaxLength(IAuditable.MaxActorNameLength)
             .IsRequired()
+            .HasColumnOrder(10001)
+            ;
+        builder.Property(e => e.UpdatedAt)
+            .IsRequired()
+            .HasColumnOrder(10002)
             ;
         builder.Property(e => e.UpdatedBy)
             .HasMaxLength(IAuditable.MaxActorNameLength)
             .IsRequired()
+            .HasColumnOrder(10003)
             ;
     }
 }

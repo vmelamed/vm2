@@ -13,6 +13,7 @@ class InstrumentConfiguration : IEntityTypeConfiguration<Instrument>
             .IsRequired()
             .HasMaxLength(Instrument.MaxCodeLength)
             .IsFixedLength(false)
+            .HasColumnOrder(0)
             ;
 
         builder
@@ -21,6 +22,7 @@ class InstrumentConfiguration : IEntityTypeConfiguration<Instrument>
             .HasMaxLength(Instrument.MaxNameLength)
             .UseCollation("NOCASE")
             .UseCollation("RTRIM")
+            .HasColumnOrder(1)
             ;
     }
 }

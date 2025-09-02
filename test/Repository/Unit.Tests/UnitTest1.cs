@@ -1,4 +1,4 @@
-namespace vm2.Repository.Unit.Tests;
+namespace vm2.Repository.UnitTests;
 
 public class UnitTest1
 {

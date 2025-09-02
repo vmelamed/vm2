@@ -10,7 +10,7 @@
 /// class MyEntityConfiguration : IEntityTypeConfiguration<MyEntity>
 /// {
 ///     ...
-///     public void Configure(EntityTypeBuilder<Engine> builder)
+///     public void Configure(EntityTypeBuilder<MyEntity> builder)
 ///     {
 ///         ...
 ///         new DeletableConfiguration<MyEntity>().Configure(builder);
@@ -28,10 +28,12 @@ public class SoftDeletableConfiguration<TEntity> : IEntityTypeConfiguration<TEnt
     {
         builder.Property(e => e.DeletedAt)
             .IsRequired(false)
+            .HasColumnOrder(10010)
             ;
         builder.Property(e => e.DeletedBy)
             .HasMaxLength(128)
             .IsRequired()
+            .HasColumnOrder(10011)
             ;
     }
 }

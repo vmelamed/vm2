@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <RootNamespace>vm2.Repository.Integration.Tests</RootNamespace>
+        <RootNamespace>vm2.Repository.IntegrationTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

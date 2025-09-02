@@ -14,9 +14,17 @@ public interface ICompletable
     /// <summary>
     /// Entities that implement this interface can be completed by the repository just before <see cref="IRepository.CommitAsync"/>.<br/>
     /// </summary>
-    /// <param name="repository">The repository.</param>
-    /// <param name="entry">The <see cref="EntityEntry"/> of the entity to complete: contains information about the state of the
-    /// entity, its collections, navigations, original values, etc.</param>
+    /// <param name="repository">
+    /// The repository.
+    /// </param>
+    /// <param name="entry">
+    /// The <see cref="EntityEntry"/> of the entity to complete: contains information about the state of the entity, its collections, navigations, original values, etc.</param>
+    /// <param name="now">
+    /// The current date ands time according to some external (app. global?) clock provider.
+    /// </param>
+    /// <param name="userLogFragment">
+    /// String representation of the actor who initiated the current UoW.
+    /// </param>
     /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
-    ValueTask CompleteAsync(IRepository repository, EntityEntry entry, CancellationToken ct = default);
+    ValueTask CompleteAsync(IRepository? repository, EntityEntry entry, DateTime now, string userLogFragment, CancellationToken ct = default);
 }

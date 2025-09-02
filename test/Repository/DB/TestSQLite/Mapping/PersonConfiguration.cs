@@ -14,6 +14,7 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
             .Property(p => p.Id)
             .HasValueGenerator<UlidValueGenerator>()
             .ValueGeneratedOnAdd()  // SQLite does not support HiLo, so we use ValueGeneratedOnAdd
+            .HasColumnOrder(-100)
             ;
 
         builder
@@ -31,7 +32,8 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
             .UsingEntity<AlbumPerson>()
             ;
 
+        new TenantedConfiguration<Person, Guid>().Configure(builder);
         new AuditableConfiguration<Person>().Configure(builder);
-        new OptimisticConcurrencyConfiguration<Person>().Configure(builder);
+        new OptimisticConcurrencyConfiguration<Person, byte[]>().Configure(builder);
     }
 }

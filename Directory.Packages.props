@@ -5,8 +5,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="FluentValidation" Version="12.0.0" />
-    <PackageVersion Include="JsonSchema.Net" Version="7.3.4" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*JSON_SCHEMA(;.*)*$'))" />
+    <PackageVersion Include="JsonSchema.Net" Version="7.4.0" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*JSON_SCHEMA(;.*)*$'))" />
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.8" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="9.0.8" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.12.0-beta.2" />
@@ -28,9 +29,9 @@
     <PackageVersion Include="System.Collections" Version="4.3.0" />
     <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageVersion Include="System.Configuration.ConfigurationManager" Version="9.0.8" />
-    <PackageVersion Include="System.Memory" Version="4.6.2" />
+    <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Security.AccessControl" Version="6.0.1" />
-    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="9.0.3" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="9.0.8" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="8.1.2" />
     <PackageVersion Include="System.Text.Json" Version="9.0.8" />
     <PackageVersion Include="Ulid" Version="1.4.1" />

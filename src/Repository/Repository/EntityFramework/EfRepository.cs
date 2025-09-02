@@ -18,35 +18,12 @@ public partial class EfRepository : DbContext, IRepository
     IRepository ThisRepo => this;
 
     /// <summary>
-    /// Gets or modifies the configured aggregate boundary actions for this repository.
-    /// </summary>
-    /// <remarks>
-    /// Hint: if you find yourself modifying <see cref="AggregateActions"/> or <see cref="AllowedRoots"/> often, maybe it is
-    /// time to allow for eventual consistency and/or to rethink the boundaries of your aggregates.
-    /// </remarks>
-    public DddAggregateActions AggregateActions { get; set; }
-
-    /// <summary>
-    /// Allows more than one aggregate to participate in the transaction of the UoW. <see cref="EfRepository"/> always
-    /// allows entities from one aggregate to participate in the current transaction (UoW). If you want to allow other aggregate
-    /// roots' types - add them to this collection. You do not need to add the type of the main aggregate root.
-    /// </summary>
-    /// <remarks>
-    /// Hint: before modifying <see cref="AggregateActions"/> or <see cref="AllowedRoots"/>, please, consider employing eventual
-    /// consistency (e.g. sending messages for updating the affected entities in the other aggregates) and/or to rethink the
-    /// boundaries of your aggregates.
-    /// </remarks>
-    public HashSet<Type> AllowedRoots { get; } = [];
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="EfRepository"/> class using the specified options.
     /// </summary>
     /// <param name="options">The <see cref="DbContextOptions"/> used to configure the context.</param>
     public EfRepository(DbContextOptions options)
         : base(options)
-    {
-        AggregateActions = options.FindExtension<DddAggregateActionsExtension>()?.Actions ?? DddAggregateActions.None;
-    }
+    { }
 
     /// <summary>
     /// Represents an abstract collection of domain objects (entities) of type <typeparamref name="T"/>. Since the entity set is

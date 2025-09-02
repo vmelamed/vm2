@@ -14,6 +14,7 @@ class TrackConfiguration : IEntityTypeConfiguration<Track>
             .Property(t => t.Id)
             .HasValueGenerator<UlidValueGenerator>()
             .ValueGeneratedOnAdd()
+            .HasColumnOrder(-100)
             ;
 
         builder.Property(t => t.Title)
@@ -22,16 +23,18 @@ class TrackConfiguration : IEntityTypeConfiguration<Track>
             ;
 
         builder
-            .HasMany(t => t.Albums)
-            ;
-
-        builder
             .OwnsMany(
                 t => t.Personnel,
                 onb => onb.ToJson())    // ???
             ;
 
-        new OptimisticConcurrencyConfiguration<Track>().Configure(builder);
+        builder
+            .HasMany(t => t.Albums)
+            ;
+
+        new TenantedConfiguration<Track, Guid>().Configure(builder);
+        new AuditableConfiguration<Track>().Configure(builder);
+        new OptimisticConcurrencyConfiguration<Track, byte[]>().Configure(builder);
     }
 }
 

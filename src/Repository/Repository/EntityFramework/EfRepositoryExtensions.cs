@@ -55,8 +55,8 @@ public static class EfRepositoryExtensions
     /// <summary>
     /// Determines if lazy loading is enabled for the specified entity type within the repository's context.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <param name="repository"></param>
+    /// <typeparam name="TEntity">The type of entity.</typeparam>
+    /// <param name="repository">The repository containing the entity.</param>
     /// <returns>
     /// <see langword="true"/> if lazy loading is enabled for the entity type, <see langword="false"/> otherwise.
     /// </returns>
@@ -72,5 +72,46 @@ public static class EfRepositoryExtensions
                 .Any(n => !n.IsEagerLoaded &&
                           n.PropertyInfo?.GetMethod?.IsVirtual is true) == true
                 ;
+    }
+
+    /// <summary>
+    /// Overrides the DDD aggregate actions to be applied to the entities of the aggregate associated with the current unit of
+    /// work.
+    /// </summary>
+    /// <param name="repository">The repository instance for which the actions are to be modified.</param>
+    /// <param name="actions">The new set of actions' flags.</param>
+    /// <returns>The <paramref name="repository"/> to allow for method chaining.</returns>
+    public static IRepository AggregateActions(
+        this IRepository repository,
+        DddAggregateActions actions)
+    {
+        if (repository is not EfRepository efRepository)
+            return repository;
+
+        efRepository.AggregateActions = actions;
+        return efRepository;
+    }
+
+    /// <summary>
+    /// Sets the types that are allowed to participate in the current transaction. Normally only one aggregate root is allowed to
+    /// be added, modified, or deleted in a transaction. This method allows you to override that behavior.
+    /// </summary>
+    /// <param name="repository">The repository instance for which the the set of roots are to be modified.</param>
+    /// <param name="rootTypes">
+    /// The set of root types to allow. If no parameters are given, the repository reverts to its default behavior of 1 root type.
+    /// </param>
+    /// <returns>The <paramref name="repository"/> to allow for method chaining.</returns>
+    public static IRepository AllowAggregateRoots(
+        this IRepository repository,
+        params Type[] rootTypes)
+    {
+        if (repository is not EfRepository efRepository)
+            return repository;
+
+        efRepository.AllowedAggregateRoots.Clear();
+        foreach (var rootType in rootTypes)
+            efRepository.AllowedAggregateRoots.Add(rootType);
+
+        return efRepository;
     }
 }

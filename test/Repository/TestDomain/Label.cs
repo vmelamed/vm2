@@ -3,7 +3,13 @@
 using vm2.Repository.EntityFramework;
 
 [DebuggerDisplay("Label {Id}: {Name} ({CountryCode})")]
-public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConcurrency
+public class Label :
+    ITenanted<Guid>,
+    IAggregate<Label>,
+    IAuditable,
+    IOptimisticConcurrency<byte[]>,
+    IValidatable,
+    IFindable<Label>
 {
     /// <summary>
     /// Represents the maximum allowed length for Label's name.
@@ -21,6 +27,11 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
     /// Gets or sets the unique identifier for the recording label entities.
     /// </summary>
     public LabelId Id { get; private set; }
+
+    /// <summary>
+    /// Gets the unique identifier of the tenant who owns the current entity.
+    /// </summary>
+    public Guid TenantId { get; }
 
     /// <summary>
     /// Gets or sets the name of the recording label.
@@ -51,8 +62,10 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
     public string UpdatedBy { get; set; } = "";
     #endregion
 
+    #region IOptimisticConcurrency<byte[]>
     /// <inheritdoc />
-    public Ulid ETag { get; set; } = default;
+    public byte[] ETag { get; set; } = [];
+    #endregion
 
     #region IFindable<Label>
     /// <inheritdoc />
@@ -86,22 +99,24 @@ public class Label : IFindable<Label>, IAuditable, IValidatable, IOptimisticConc
     /// <param name="etag">The entity tag (ETag) for optimistic concurrency control.</param>
     public Label(
         in LabelId id,
+        Guid tenantId,
         string name,
         string countryCode,
         DateTime createdAt = default,
         string createdBy = "",
         DateTime updatedAt = default,
         string updatedBy = "",
-        Ulid etag = default)
+        byte[]? etag = default)
     {
         Id          = id;
+        TenantId    = tenantId;
         Name        = name;
         CountryCode = countryCode;
         CreatedAt   = createdAt;
         CreatedBy   = createdBy;
         UpdatedAt   = updatedAt;
         UpdatedBy   = updatedBy;
-        ETag        = etag;
+        ETag        = etag ?? [];
 
         new LabelMinimalValidator().ValidateAndThrow(this);
     }

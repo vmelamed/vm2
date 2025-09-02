@@ -13,6 +13,7 @@ class CountryConfiguration : IEntityTypeConfiguration<Country>
             .HasMaxLength(Country.CodeLength)
             .IsFixedLength()
             .IsUnicode(false)
+            .HasColumnOrder(0)
             ;
 
         builder
@@ -20,6 +21,7 @@ class CountryConfiguration : IEntityTypeConfiguration<Country>
             .HasMaxLength(Country.MaxNameLength)
             .UseCollation("NOCASE")
             .UseCollation("RTRIM")
+            .HasColumnOrder(1)
             ;
     }
 }

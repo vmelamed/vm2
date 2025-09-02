@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/docs/">
+    <File Path="docs/RecentQandAKeys.md" />
+  </Folder>
   <Folder Name="/examples/" />
   <Folder Name="/examples/RegexLib/">
     <Project Path="examples/RegexLib/Reflector/Reflector.csproj" />
@@ -8,6 +11,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
+    <File Path="COPILOT_INSTRUCTIONS.md" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="README.md" />
@@ -54,10 +58,10 @@
   </Folder>
   <Folder Name="/test/Repository/">
     <Project Path="test/Repository/FakeDbSet.Tests/FakeDbSet.Tests.csproj" />
-    <Project Path="test/Repository/Integration.Tests/Integration.Tests.csproj" Id="08790151-aed0-4411-a14d-b811a1be8668" />
+    <Project Path="test/Repository/Integration.Tests/IntegrationTests.csproj" Id="08790151-aed0-4411-a14d-b811a1be8668" />
     <Project Path="test/Repository/TestData/TestData.csproj" Id="55bd1290-eb6b-47f7-80be-ae6b4f7aa97e" />
     <Project Path="test/Repository/TestDomain/TestDomain.csproj" />
-    <Project Path="test/Repository/Unit.Tests/Unit.Tests.csproj" />
+    <Project Path="test/Repository/Unit.Tests/UnitTests.csproj" />
   </Folder>
   <Folder Name="/test/Repository/DB/">
     <Project Path="test/Repository/DB/TestSQLite/TestSQLite.csproj" />

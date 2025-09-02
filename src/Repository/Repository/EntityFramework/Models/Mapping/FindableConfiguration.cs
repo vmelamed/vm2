@@ -1,7 +1,5 @@
 ﻿namespace vm2.Repository.EntityFramework.Models.Mapping;
 
-using vm2.Repository.EntityFramework.Models;
-
 /// <summary>
 /// Configures the key(s) of entities implementing <see cref="IFindable{TEntity}"/>.
 /// </summary>
@@ -12,7 +10,7 @@ using vm2.Repository.EntityFramework.Models;
 /// class MyEntityConfiguration : IEntityTypeConfiguration<MyEntity>
 /// {
 ///     ...
-///     public void Configure(EntityTypeBuilder<Engine> builder)
+///     public void Configure(EntityTypeBuilder<MyEntity> builder)
 ///     {
 ///         ...
 ///         new FindableConfiguration<MyEntity>().Configure(builder);

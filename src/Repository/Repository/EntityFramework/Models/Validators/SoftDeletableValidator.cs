@@ -1,7 +1,5 @@
 ﻿namespace vm2.Repository.EntityFramework.Models.Validators;
 
-using vm2.Repository.EntityFramework.Models;
-
 /// <summary>
 /// Validator for entities that implement the <see cref="ISoftDeletable"/> interface.
 /// </summary>

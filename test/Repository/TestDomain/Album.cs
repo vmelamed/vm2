@@ -3,7 +3,14 @@
 using vm2.Repository.EntityFramework;
 
 [DebuggerDisplay("Album {Id}: {Title}")]
-public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable, IOptimisticConcurrency
+public class Album :
+    ITenanted<Guid>,
+    IAggregate<Album>,
+    IAuditable,
+    ISoftDeletable,
+    IOptimisticConcurrency<byte[]>,
+    IValidatable,
+    IFindable<Album>
 {
     public const int MaxTitleLength = 250;
 
@@ -16,6 +23,11 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// Gets or sets the unique identifier for the album entity.
     /// </summary>
     public AlbumId Id { get; private set; }
+
+    /// <summary>
+    /// Gets the unique identifier of the tenant who owns the current entity.
+    /// </summary>
+    public Guid TenantId { get; }
 
     /// <summary>
     /// Gets or sets the title of the album.
@@ -80,12 +92,14 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     public string DeletedBy { get; set; } = "";
     #endregion
 
+    #region IOptimisticConcurrency<byte[]>
     /// <inheritdoc />
-    public Ulid ETag { get; set; } = default;
+    public byte[] ETag { get; set; } = [];
+    #endregion
 
     #region IFindable<Album>
     /// <inheritdoc />
-    public static Expression<Func<Album, object?>> KeyExpression => a => new { a.Id };
+    public static Expression<Func<Album, object?>> KeyExpression => a => new { a.Id, a.TenantId };
 
     /// <inheritdoc />
     public async ValueTask ValidateFindableAsync(object? _, CancellationToken ct)
@@ -106,10 +120,12 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <see cref="Album"/> instances from the DB.
     /// </summary>
     /// <param name="id">The unique identifier for the album.</param>
+    /// <param name="tenantId">The unique identifier for the tenant who owns the current entity.</param>
     /// <param name="title">The title of the album.</param>
     /// <param name="releaseYear">The year when the album was released.</param>
     /// <param name="label">The label under which the album was released.</param>
     /// <param name="genres">The collection of genres that the album can be categorized under, e.g. "jazz", "fusion".</param>
+    /// <param name="albumsPersons">The collection of albumsPersons associated with the album, such as artists, producers.</param>
     /// <param name="tracks">The collection of tracks on this album.</param>
     /// <param name="createdAt">The date and time when the album instance was created.</param>
     /// <param name="createdBy">The name of the actor who created the album instance.</param>
@@ -120,6 +136,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
     /// <param name="etag">The entity tag (ETag) for optimistic concurrency control.</param>
     public Album(
         in AlbumId id,
+        Guid tenantId,
         string title,
         int? releaseYear,
         Label? label = null,
@@ -132,9 +149,10 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         string updatedBy = "",
         DateTime? deletedAt = null,
         string deletedBy = "",
-        in Ulid etag = default)
+        in byte[]? etag = default)
     {
         Id             = id;
+        TenantId       = tenantId;
         Title          = title;
         ReleaseYear    = releaseYear;
         Label          = label;
@@ -146,7 +164,7 @@ public class Album : IFindable<Album>, IAuditable, ISoftDeletable, IValidatable,
         UpdatedBy      = updatedBy;
         DeletedAt      = deletedAt;
         DeletedBy      = deletedBy;
-        ETag           = etag;
+        ETag           = etag ?? [];
 
         if (albumsPersons is not null)
         {

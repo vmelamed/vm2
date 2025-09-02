@@ -3,8 +3,14 @@ using System;
 
 using vm2.Repository.EntityFramework;
 
-[DebuggerDisplay("Person {Id}: {Name}")]
-public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticConcurrency
+[DebuggerDisplay("Person {id}: {Name}")]
+public class Person :
+    ITenanted<Guid>,
+    IAggregate<Album>,
+    IAuditable,
+    IOptimisticConcurrency<byte[]>,
+    IValidatable,
+    IFindable<Person>
 {
     public const int MaxNameLength = 100;
 
@@ -21,6 +27,11 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
     public PersonId Id { get; private set; }
+
+    /// <summary>
+    /// Gets or sets the unique identifier for the tenant.
+    /// </summary>
+    public Guid TenantId { get; set; }
 
     /// <summary>
     /// Gets or sets the names of the person.
@@ -76,12 +87,14 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     public string UpdatedBy { get; set; } = "";
     #endregion
 
+    #region IOptimisticConcurrency<byte[]>
     /// <inheritdoc />
-    public Ulid ETag { get; set; } = default;
+    public byte[] ETag { get; set; } = [];
+    #endregion
 
     #region IFindable<Person>
     /// <inheritdoc />
-    public static Expression<Func<Person, object?>> KeyExpression => p => new { p.Id };
+    public static Expression<Func<Person, object?>> KeyExpression => p => new { p.Id, p.TenantId };
 
     /// <inheritdoc />
     public async ValueTask ValidateFindableAsync(object? _, CancellationToken ct)
@@ -94,13 +107,14 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     /// <c><![CDATA[var person = await _repository.FindAsync(Person.ById(42), ct);]]></c>
     /// </summary>
     /// <param name="id">The unique identifier for the person.</param>
-    public static IFindable ById(int Id) => new Findable(Id);
+    public static IFindable ById(int id, Guid tenantId) => new Findable(id, tenantId);
     #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Person"/> class with specified details.
     /// </summary>
     /// <param name="id">The unique identifier for the person.</param>
+    /// <param name="tenantId">The unique identifier for the tenant who owns the current entity.</param>
     /// <param name="name">The name of the person. Cannot be null or empty.</param>
     /// <param name="birthYear">The birth year of the person.</param>
     /// <param name="deathYear">The death year of the person.</param>
@@ -115,6 +129,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
     /// <param name="etag">The entity tag (ETag) for optimistic concurrency control.</param>
     public Person(
         PersonId id,
+        Guid tenantId,
         string name,
         int? birthYear = null,
         int? deathYear = null,
@@ -126,9 +141,10 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
         string createdBy = "",
         DateTime updatedAt = default,
         string updatedBy = "",
-        Ulid etag = default)
+        byte[]? etag = default)
     {
         Id           = id;
+        TenantId     = tenantId;
         Name         = name;
         BirthYear    = birthYear;
         DeathYear    = deathYear;
@@ -139,7 +155,7 @@ public class Person : IFindable<Person>, IAuditable, IValidatable, IOptimisticCo
         CreatedBy    = createdBy;
         UpdatedAt    = updatedAt;
         UpdatedBy    = updatedBy;
-        ETag         = etag;
+        ETag         = etag ?? [];
 
         foreach (var _ in personsAlbums?.Select(AddAlbum) ?? [])
             ;

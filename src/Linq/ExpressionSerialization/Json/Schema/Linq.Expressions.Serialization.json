@@ -1479,9 +1479,6 @@
             "type": "object",
             "oneOf": [
                 {
-                    "type": "null"
-                },
-                {
                     "$ref": "#/$defs/boolean"
                 },
                 {
@@ -1573,6 +1570,9 @@
                 },
                 {
                     "$ref": "#/$defs/nullable"
+                },
+                {
+                    "type": "null"
                 }
             ]
         },

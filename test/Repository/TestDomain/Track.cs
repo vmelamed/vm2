@@ -4,7 +4,14 @@ using System;
 using vm2.Repository.EntityFramework;
 
 [DebuggerDisplay("Track {Id}: {Title}")]
-public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConcurrency
+public class Track :
+    ITenanted<Guid>,
+    IAggregate<Track>,
+    IAuditable,
+    IOptimisticConcurrency<byte[]>,
+    IValidatable,
+    IFindable<Track>
+
 {
     public const int MaxTitleLength = 256;
 
@@ -17,6 +24,11 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     /// Gets or sets the unique identifier for the entity.
     /// </summary>
     public TrackId Id { get; private set; }
+
+    /// <summary>
+    /// Gets the unique identifier of the tenant associated with the current context.
+    /// </summary>
+    public Guid TenantId { get; private set; }
 
     /// <summary>
     /// Gets or sets the title of the track (song).
@@ -63,11 +75,13 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     public string UpdatedBy { get; set; } = "";
     #endregion
 
+    #region IOptimisticConcurrency<byte[]>
     /// <inheritdoc />
-    public Ulid ETag { get; set; } = default;
+    public byte[] ETag { get; set; } = [];
+    #endregion
 
     #region IFindable<Track>
-    public static Expression<Func<Track, object?>> KeyExpression => t => new { t.Id };
+    public static Expression<Func<Track, object?>> KeyExpression => t => new { t.Id, t.TenantId };
 
     /// <inheritdoc />
     public async ValueTask ValidateFindableAsync(object? _, CancellationToken ct)
@@ -80,7 +94,8 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     /// <code><![CDATA[var track = await _repository.FindAsync(Track.ById(42), ct);]]></code>
     /// </summary>
     /// <param name="id">The unique identifier for the track.</param>
-    public static IFindable ById(int Id) => new Findable(Id);
+    /// <param name="tenantId">The unique identifier of the tenant who owns the current entity.</param>
+    public static IFindable ById(int id, Guid tenantId) => new Findable(id, tenantId);
     #endregion
 
     /// <summary>
@@ -91,6 +106,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     /// and audit information. Used by EF when materializing <see cref="Track"/> instances.
     /// </remarks>
     /// <param name="id">The unique identifier for the track.</param>
+    /// <param name="tenantId">The unique identifier for the tenant who owns the current entity.</param>
     /// <param name="title">The title of the track. Cannot be null or empty.</param>
     /// <param name="duration">The duration of the track. Cannot be <c>default(TimeSpan)</c>.</param>
     /// <param name="genres">The genres that the track can be categorized under, e.g. "jazz", "fusion".</param>
@@ -102,6 +118,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
     /// <param name="etag">The entity tag (ETag) for optimistic concurrency control.</param>
     public Track(
         TrackId id,
+        Guid tenantId,
         string title,
         TimeSpan duration,
         IEnumerable<string>? genres = null,
@@ -110,9 +127,10 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
         string createdBy = "",
         DateTime updatedAt = default,
         string updatedBy = "",
-        Ulid etag = default)
+        byte[]? etag = default)
     {
         Id              = id;
+        TenantId        = tenantId;
         Title           = title;
         Duration        = duration;
         _genres         = genres is not null ? [.. genres] : [];
@@ -121,7 +139,7 @@ public class Track : IFindable<Track>, IAuditable, IValidatable, IOptimisticConc
         CreatedBy       = createdBy;
         UpdatedAt       = updatedAt;
         UpdatedBy       = updatedBy;
-        ETag            = etag;
+        ETag            = etag ?? [];
 
         new TrackMinimalValidator().ValidateAndThrow(this);
     }

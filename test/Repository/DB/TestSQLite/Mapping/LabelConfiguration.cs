@@ -14,6 +14,7 @@ class LabelConfiguration : IEntityTypeConfiguration<Label>
             .Property(c => c.Id)
             .HasValueGenerator<UlidValueGenerator>()
             .ValueGeneratedOnAdd()
+            .HasColumnOrder(-100)
             ;
 
         builder
@@ -30,7 +31,8 @@ class LabelConfiguration : IEntityTypeConfiguration<Label>
             .UseCollation("NOCASE")
             ;
 
+        new TenantedConfiguration<Label, Guid>().Configure(builder);
         new AuditableConfiguration<Label>().Configure(builder);
-        new OptimisticConcurrencyConfiguration<Label>().Configure(builder);
+        new OptimisticConcurrencyConfiguration<Label, byte[]>().Configure(builder);
     }
 }

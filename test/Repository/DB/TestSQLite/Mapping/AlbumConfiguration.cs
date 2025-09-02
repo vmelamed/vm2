@@ -15,6 +15,7 @@ class AlbumConfiguration : IEntityTypeConfiguration<Album>
             .Property(a => a.Id)
             .ValueGeneratedOnAdd()
             .HasValueGenerator<UlidValueGenerator>()
+            .HasColumnOrder(-100)
             ;
 
         builder
@@ -41,8 +42,9 @@ class AlbumConfiguration : IEntityTypeConfiguration<Album>
                 onb => onb.ToJson())    // ???
             ;
 
+        new TenantedConfiguration<Album, Guid>().Configure(builder);
         new AuditableConfiguration<Album>().Configure(builder);
         new SoftDeletableConfiguration<Album>().Configure(builder);
-        new OptimisticConcurrencyConfiguration<Album>().Configure(builder);
+        new OptimisticConcurrencyConfiguration<Album, byte[]>().Configure(builder);
     }
 }

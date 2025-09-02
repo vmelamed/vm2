@@ -16,14 +16,10 @@ public enum DddAggregateActions
     None = 0,
 
     /// <summary>
-    /// Audit added, updated and deleted entities if they implement <see cref="IAuditable"/> and <see cref="ISoftDeletable"/>.
+    /// Check if all tenanted added, modified and deleted objects are bound to the same tenant. If the repository is tenanted,
+    /// these objects must be bound to the same tenant as the repository.
     /// </summary>
-    Audit = 1,
-
-    /// <summary>
-    /// Validates the invariants of all added or modified entities that implement <see cref="IValidatable"/>.
-    /// </summary>
-    Invariants = 2,
+    TenantBoundary = 1,
 
     /// <summary>
     /// Check aggregate's boundary by making sure that all added, modified or deleted entities belong to the same aggregate.<br/>
@@ -31,21 +27,25 @@ public enum DddAggregateActions
     /// it is considered to belong to <see cref="IAggregate{Unknown}"/>. A unit of work (transaction) must not contain added, modified,<br/>
     /// or deleted entities from different aggregates.
     /// </summary>
-    AggregateBoundary = 4,
+    AggregateBoundary = 2,
 
     /// <summary>
-    /// Check if all tenanted added, modified and deleted objects are bound to the same tenant. If the repository is tenanted,
-    /// these objects must be bound to the same tenant as the repository.
+    /// Audit added, updated and deleted entities if they implement <see cref="IAuditable"/> and <see cref="ISoftDeletable"/>.
     /// </summary>
-    TenantBoundary = 8,
+    Audit = 4,
 
     /// <summary>
-    /// Custom completion of entities implementing <see cref="ICompletable"/>.
+    /// Completion of entities implementing <see cref="ICompletable"/>.
     /// </summary>
-    CustomComplete = 16,
+    Complete = 8,
+
+    /// <summary>
+    /// Validates the invariants of all added or modified entities that implement <see cref="IValidatable"/>.
+    /// </summary>
+    Invariants = 16,
 
     /// <summary>
     /// All checks and actions are performed.
     /// </summary>
-    All = Audit | Invariants | AggregateBoundary | TenantBoundary | CustomComplete,
+    All = TenantBoundary | AggregateBoundary | Audit | Complete | Invariants,
 }

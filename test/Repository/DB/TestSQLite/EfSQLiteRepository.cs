@@ -26,34 +26,6 @@ public class EfSQLiteRepository : SQLiteEfRepository
         Actor = getActor();
     }
 
-    /// <inheritdoc/>
-    protected override ValueTask CompleteAndValidateAddedEntityAsync(
-        EntityEntry entry,
-        DateTime now,
-        string actor,
-        CancellationToken ct)
-    {
-        UpdateOptimisticConcurrencyTag(entry.Entity);
-        return base.CompleteAndValidateAddedEntityAsync(entry, now, actor, ct);
-    }
-
-    /// <inheritdoc/>
-    protected override ValueTask CompleteAndValidateUpdatedEntityAsync(
-        EntityEntry entry,
-        DateTime now,
-        string actor,
-        CancellationToken ct)
-    {
-        UpdateOptimisticConcurrencyTag(entry.Entity);
-        return base.CompleteAndValidateUpdatedEntityAsync(entry, now, actor, ct);
-    }
-
-    static void UpdateOptimisticConcurrencyTag(object entity)
-    {
-        if (entity is IOptimisticConcurrency oc)
-            oc.ETag = Ulid.NewUlid();
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // TODO: try this approach to apply all configurations from the assembly:
@@ -81,8 +53,23 @@ public class EfSQLiteRepository : SQLiteEfRepository
             ;
 
         configurationBuilder
+            .Properties<LabelId>()
+            .HaveConversion<LabelIdConverter>()
+            ;
+
+        configurationBuilder
             .Properties<AlbumId>()
+            .HaveConversion<AlbumIdConverter>()
+            ;
+
+        configurationBuilder
+            .Properties<PersonId>()
             .HaveConversion<PersonIdConverter>()
+            ;
+
+        configurationBuilder
+            .Properties<TrackId>()
+            .HaveConversion<TrackIdConverter>()
             ;
     }
 }

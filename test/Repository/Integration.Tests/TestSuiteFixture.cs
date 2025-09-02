@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.Integration.Tests;
+﻿namespace vm2.Repository.IntegrationTests;
 
 public class TestSuiteFixture : BaseTestsFixture<TestSuiteFixture>
 {
