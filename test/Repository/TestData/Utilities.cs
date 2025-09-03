@@ -3,9 +3,9 @@
 public static class Utilities
 {
     public const string Caller  = "TestCaller";
-    public const string Creator = "TestDataCreator";
-    public const string Updater = "TestDataUpdater";
-    public const string Deleter = "TestDataDeleter";
+    public const string Creator = "TestCreator";
+    public const string Updater = "TestUpdater";
+    public const string Deleter = "TestDeleter";
 
     /// <summary>
     /// Starting time window for the test data.

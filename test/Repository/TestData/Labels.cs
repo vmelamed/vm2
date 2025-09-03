@@ -16,12 +16,12 @@ public static class Labels
     internal static IEnumerable<Label> NewLabels()
         => _allLabels = new[]
         {
-            _label1 = new Label(id: NextId, name: "Columbia Records",    countryCode: "US"),
-            _label2 = new Label(id: NextId, name: "Blue Note",           countryCode: "US"),
-            _label3 = new Label(id: NextId, name: "Verve Records",       countryCode: "US"),
-            _label4 = new Label(id: NextId, name: "Deutsche Grammophon", countryCode: "DE"),
-            _label5 = new Label(id: NextId, name: "Philips",             countryCode: "NL"),
-            _label6 = new Label(id: NextId, name: "Sony Classical",      countryCode: "US"),
+            _label1 = new Label(id: NextId, tenantId: TestTenant.Current(), name: "Columbia Records",    countryCode: "US"),
+            _label2 = new Label(id: NextId, tenantId: TestTenant.Current(), name: "Blue Note",           countryCode: "US"),
+            _label3 = new Label(id: NextId, tenantId: TestTenant.Current(), name: "Verve Records",       countryCode: "US"),
+            _label4 = new Label(id: NextId, tenantId: TestTenant.Current(), name: "Deutsche Grammophon", countryCode: "DE"),
+            _label5 = new Label(id: NextId, tenantId: TestTenant.Current(), name: "Philips",             countryCode: "NL"),
+            _label6 = new Label(id: NextId, tenantId: TestTenant.Current(), name: "Sony Classical",      countryCode: "US"),
         };
 
     public static IEnumerable<Label> LabelsSequence => _allLabels.Any() ? _allLabels : NewLabels();

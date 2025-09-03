@@ -34,7 +34,7 @@ public static class Tracks
     {
         #region The tracks
         // Album 1: Kind of Blue
-        _soWhat = new(NextId, "So What", TimeSpan.FromSeconds(545), ["Jazz"], [
+        _soWhat = new(NextId, tenantId: TestTenant.Current(), "So What", TimeSpan.FromSeconds(545), ["Jazz"], [
                 new(PersonMilesDavis, "Miles Davis", ["Performer"], ["tp"]),
                 new(PersonJohnColtrane, "John Coltrane", ["Performer"], ["ts"]),
                 new(PersonJulianCannonballAdderley, "Julian 'Cannonball' Adderley", ["Performer"], ["as"]),
@@ -45,7 +45,7 @@ public static class Tracks
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _freddieFreeloader = new(NextId, "Freddie Freeloader", TimeSpan.FromSeconds(589), ["Jazz"], [
+        _freddieFreeloader = new(NextId, tenantId: TestTenant.Current(), "Freddie Freeloader", TimeSpan.FromSeconds(589), ["Jazz"], [
                 new(PersonMilesDavis, "Miles Davis", ["Performer"], ["tp"]),
                 new(PersonJohnColtrane, "John Coltrane", ["Performer"], ["ts"]),
                 new(PersonWyntonKelly, "Wynton Kelly", ["Performer"], ["p"]),
@@ -55,7 +55,7 @@ public static class Tracks
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _blueInGreen = new(NextId, "Blue in Green", TimeSpan.FromSeconds(327), ["Jazz"], [
+        _blueInGreen = new(NextId, tenantId: TestTenant.Current(), "Blue in Green", TimeSpan.FromSeconds(327), ["Jazz"], [
                 new(PersonMilesDavis, "Miles Davis", ["Performer"], ["tp"]),
                 new(PersonBillEvans, "Bill Evans", ["Performer"], ["p"]),
                 new(PersonPaulChambers, "Paul Chambers", ["Performer"], ["b"]),
@@ -65,7 +65,7 @@ public static class Tracks
             NextDt, Creator, CurrentDt, Creator);
 
         // Album 2: Ellington at Newport
-        _diminuendoCrescendoInBlue = new(NextId, "Diminuendo and Crescendo in Blue", TimeSpan.FromSeconds(700), ["Jazz"], [
+        _diminuendoCrescendoInBlue = new(NextId, tenantId: TestTenant.Current(), "Diminuendo and Crescendo in Blue", TimeSpan.FromSeconds(700), ["Jazz"], [
                 new(PersonDukeEllington, "Duke Ellington", ["Performer", "Arranger"], ["p"]),
                 new(PersonPaulGonsalves, "Paul Gonsalves", ["Performer"], ["ts"]),
                 new(PersonJohnnyHodges, "Johnny Hodges", ["Performer"], ["as"]),
@@ -76,14 +76,14 @@ public static class Tracks
             NextDt, Creator, CurrentDt, Creator);
 
         // Album 3: Beethoven: Violin Concerto
-        _violinConcertoAllegro = new(NextId, "Violin Concerto in D major, Op. 61: I. Allegro ma non troppo", TimeSpan.FromSeconds(1420), ["Classical"], [
+        _violinConcertoAllegro = new(NextId, tenantId: TestTenant.Current(), "Violin Concerto in D major, Op. 61: I. Allegro ma non troppo", TimeSpan.FromSeconds(1420), ["Classical"], [
                 new(PersonLudwigVanBeethoven, "Ludwig van Beethoven", ["Composer"], []),
                 new(PersonHenrykSzeryng, "Henryk Szeryng", ["Soloist"], ["v"]),
                 new(PersonBerlinerPhilharmoniker, "Berliner Philharmoniker", ["Orchestra"], [])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _violinConcertoLarghetto = new(NextId, "Violin Concerto in D major, Op. 61: II. Larghetto", TimeSpan.FromSeconds(630), ["Classical"], [
+        _violinConcertoLarghetto = new(NextId, tenantId: TestTenant.Current(), "Violin Concerto in D major, Op. 61: II. Larghetto", TimeSpan.FromSeconds(630), ["Classical"], [
                 new(PersonLudwigVanBeethoven, "Ludwig van Beethoven", ["Composer"], []),
                 new(PersonHenrykSzeryng, "Henryk Szeryng", ["Soloist"], ["v"]),
                 new(PersonBerlinerPhilharmoniker, "Berliner Philharmoniker", ["Orchestra"], [])
@@ -91,68 +91,68 @@ public static class Tracks
             NextDt, Creator, CurrentDt, Creator);
 
         // Album 5: Bach: Cello Sonatas
-        _celloSonata1Adagio = new(NextId, "Cello Sonata No. 1 in G major, BWV 1027: I. Adagio", TimeSpan.FromSeconds(310), ["Classical"], [
+        _celloSonata1Adagio = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 1 in G major, BWV 1027: I. Adagio", TimeSpan.FromSeconds(310), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata1Allegro = new(NextId, "Cello Sonata No. 1 in G major, BWV 1027: II. Allegro ma non tanto", TimeSpan.FromSeconds(250), ["Classical"], [
+        _celloSonata1Allegro = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 1 in G major, BWV 1027: II. Allegro ma non tanto", TimeSpan.FromSeconds(250), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata1Andante = new(NextId, "Cello Sonata No. 1 in G major, BWV 1027: III. Andante", TimeSpan.FromSeconds(210), ["Classical"], [
+        _celloSonata1Andante = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 1 in G major, BWV 1027: III. Andante", TimeSpan.FromSeconds(210), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata1AllegroModerato = new(NextId, "Cello Sonata No. 1 in G major, BWV 1027: IV. Allegro moderato", TimeSpan.FromSeconds(205), ["Classical"], [
+        _celloSonata1AllegroModerato = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 1 in G major, BWV 1027: IV. Allegro moderato", TimeSpan.FromSeconds(205), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata2Allegro = new(NextId, "Cello Sonata No. 2 in D major, BWV 1028: I. Allegro", TimeSpan.FromSeconds(274), ["Classical"], [
+        _celloSonata2Allegro = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 2 in D major, BWV 1028: I. Allegro", TimeSpan.FromSeconds(274), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata2Adagio = new(NextId, "Cello Sonata No. 2 in D major, BWV 1028: II. Adagio", TimeSpan.FromSeconds(235), ["Classical"], [
+        _celloSonata2Adagio = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 2 in D major, BWV 1028: II. Adagio", TimeSpan.FromSeconds(235), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata2Allegro2 = new(NextId, "Cello Sonata No. 2 in D major, BWV 1028: III. Allegro", TimeSpan.FromSeconds(240), ["Classical"], [
+        _celloSonata2Allegro2 = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 2 in D major, BWV 1028: III. Allegro", TimeSpan.FromSeconds(240), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata3Vivace = new(NextId, "Cello Sonata No. 3 in G minor, BWV 1029: I. Vivace", TimeSpan.FromSeconds(255), ["Classical"], [
+        _celloSonata3Vivace = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 3 in G minor, BWV 1029: I. Vivace", TimeSpan.FromSeconds(255), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata3Adagio = new(NextId, "Cello Sonata No. 3 in G minor, BWV 1029: II. Adagio", TimeSpan.FromSeconds(215), ["Classical"], [
+        _celloSonata3Adagio = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 3 in G minor, BWV 1029: II. Adagio", TimeSpan.FromSeconds(215), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _celloSonata3Allegro = new(NextId, "Cello Sonata No. 3 in G minor, BWV 1029: III. Allegro", TimeSpan.FromSeconds(262), ["Classical"], [
+        _celloSonata3Allegro = new(NextId, tenantId: TestTenant.Current(), "Cello Sonata No. 3 in G minor, BWV 1029: III. Allegro", TimeSpan.FromSeconds(262), ["Classical"], [
                 new(PersonJohannSebastianBach, "Johann Sebastian Bach", ["Composer"], []),
                 new(PersonMstislavRostropovich, "Mstislav Rostropovich", ["Soloist"], ["vc"])
             ],
             NextDt, Creator, CurrentDt, Creator);
 
         // Album 7: Bill Evans Trio at the Village Vanguard
-        _gloriasStep = new(NextId, "Gloria's Step", TimeSpan.FromSeconds(334), ["Jazz"], [
+        _gloriasStep = new(NextId, tenantId: TestTenant.Current(), "Gloria's Step", TimeSpan.FromSeconds(334), ["Jazz"], [
                 new(PersonBillEvans, "Bill Evans", ["Piano", "Bandleader"], ["p"]),
                 new(PersonScottLaFaro, "Scott LaFaro", ["Bass"], ["b"]),
                 new(PersonPaulMotian, "Paul Motian", ["Drums"], ["dr"]),
@@ -160,7 +160,7 @@ public static class Tracks
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _myMansGoneNow = new(NextId, "My Man's Gone Now", TimeSpan.FromSeconds(373), ["Jazz"], [
+        _myMansGoneNow = new(NextId, tenantId: TestTenant.Current(), "My Man's Gone Now", TimeSpan.FromSeconds(373), ["Jazz"], [
                 new(PersonBillEvans, "Bill Evans", ["Piano", "Bandleader"], ["p"]),
                 new(PersonScottLaFaro, "Scott LaFaro", ["Bass"], ["b"]),
                 new(PersonPaulMotian, "Paul Motian", ["Drums"], ["dr"]),
@@ -168,7 +168,7 @@ public static class Tracks
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _solar = new(NextId, "Solar", TimeSpan.FromSeconds(348), ["Jazz"], [
+        _solar = new(NextId, tenantId: TestTenant.Current(), "Solar", TimeSpan.FromSeconds(348), ["Jazz"], [
                 new(PersonBillEvans, "Bill Evans", ["Piano", "Bandleader"], ["p"]),
                 new(PersonScottLaFaro, "Scott LaFaro", ["Bass"], ["b"]),
                 new(PersonPaulMotian, "Paul Motian", ["Drums"], ["dr"]),
@@ -176,7 +176,7 @@ public static class Tracks
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _aliceInWonderland = new(NextId, "Alice in Wonderland", TimeSpan.FromSeconds(419), ["Jazz"], [
+        _aliceInWonderland = new(NextId, tenantId: TestTenant.Current(), "Alice in Wonderland", TimeSpan.FromSeconds(419), ["Jazz"], [
                 new(PersonBillEvans, "Bill Evans", ["Piano", "Bandleader"], ["p"]),
                 new(PersonScottLaFaro, "Scott LaFaro", ["Bass"], ["b"]),
                 new(PersonPaulMotian, "Paul Motian", ["Drums"], ["dr"]),
@@ -184,7 +184,7 @@ public static class Tracks
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _allOfYou = new(NextId, "All of You", TimeSpan.FromSeconds(491), ["Jazz"], [
+        _allOfYou = new(NextId, tenantId: TestTenant.Current(), "All of You", TimeSpan.FromSeconds(491), ["Jazz"], [
                 new(PersonBillEvans, "Bill Evans", ["Piano", "Bandleader"], ["p"]),
                 new(PersonScottLaFaro, "Scott LaFaro", ["Bass"], ["b"]),
                 new(PersonPaulMotian, "Paul Motian", ["Drums"], ["dr"]),
@@ -192,7 +192,7 @@ public static class Tracks
             ],
             NextDt, Creator, CurrentDt, Creator);
 
-        _jadeVisions = new(NextId, "Jade Visions", TimeSpan.FromSeconds(232), ["Jazz"], [
+        _jadeVisions = new(NextId, tenantId: TestTenant.Current(), "Jade Visions", TimeSpan.FromSeconds(232), ["Jazz"], [
                 new(PersonBillEvans, "Bill Evans", ["Piano", "Bandleader"], ["p"]),
                 new(PersonScottLaFaro, "Scott LaFaro", ["Bass"], ["b"]),
                 new(PersonPaulMotian, "Paul Motian", ["Drums"], ["dr"]),

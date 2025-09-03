@@ -1,10 +1,22 @@
 ﻿namespace vm2.Repository.UnitTests.EntityFramework.Ddd;
 
+// Use two entities – conceptually different roots (same CLR type but root interface marker distinct via test design).
+// Since both are IAggregate<RootA> due to single class, simulate by first save, then second root expects different
+// aggregate detection not triggered here. To truly test violation, we create a second fake type implementing
+// IAggregate<RootB>.
+
 // Aggregate root marker types
 sealed class RootA : IAggregate<RootA> { }
 
 sealed class RootB : IAggregate<RootB> { }
 
+class TestEntityA : TestEntity, IAggregate<RootA>
+{
+}
+
+class TestEntityB : TestEntity, IAggregate<RootB>
+{
+}
 
 // Tracking entity implementing requested interfaces + tenancy
 abstract class TestEntity :
@@ -15,10 +27,10 @@ abstract class TestEntity :
     IValidatable,
     IOptimisticConcurrency<byte[]>
 {
-    public Guid Id { get; set; } = default;
+    public Guid Id { get; set; } = TestEntityId.Next();
 
-    // Tenant
-    public Guid TenantId { get; set; }
+    // TestTenant
+    public Guid TenantId { get; set; } = TestTenant.Current();
 
     public string Name { get; set; } = "initial";
 
@@ -47,6 +59,38 @@ abstract class TestEntity :
         return ValueTask.CompletedTask;
     }
 
+    public void AuditOnAdd(
+        DateTime? now = default,
+        string actor = "")
+    {
+        Calls.Add("AuditAdd");
+        CreatedAt = now ?? DateTime.UtcNow;
+        CreatedBy = actor;
+        UpdatedAt = CreatedAt;
+        UpdatedBy = CreatedBy;
+    }
+
+    /// <summary>
+    /// Sets all properties of an updated <see cref="IAuditable"/> with current values.
+    /// </summary>
+    /// <param name="now">
+    /// </param>
+    /// <param name="actor">
+    /// The identifier of the actor performing the update. Can be an empty string if not specified.
+    /// </param>
+    public void AuditOnUpdate(
+        DateTime? now = default,
+        string actor = "")
+    {
+        Calls.Add("AuditUpdate");
+        UpdatedAt = now ?? DateTime.UtcNow;
+        UpdatedBy = actor;
+    }
+    /// <summary>
+    /// Gets a value indicating whether the entity is marked as deleted.
+    /// </summary>
+    public bool IsDeleted => DeletedAt.HasValue;
+
     public void SoftDelete(
         DateTime? now = default,
         string actor = "")
@@ -62,19 +106,10 @@ abstract class TestEntity :
     {
         Calls.Add("Undelete");
         DeletedAt = null;
-        DeletedBy = string.Empty;
-
-        if (this is IAuditable a)
-            a.AuditOnUpdate(now ?? DateTime.UtcNow, actor);
+        DeletedBy = "";
+        UpdatedAt = now ?? DateTime.UtcNow;
+        UpdatedBy = actor;
     }
 
     public byte[] ETag { get; set; } = [];
-}
-
-class TestEntityA : TestEntity, IAggregate<RootA>
-{
-}
-
-class TestEntityB : TestEntity, IAggregate<RootB>
-{
 }

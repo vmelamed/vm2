@@ -44,7 +44,7 @@ public interface IAuditable
     /// <param name="actor">
     /// The identifier of the actor performing the addition. Can be an empty string if not specified.
     /// </param>
-    void AuditOnAdd(
+    public void AuditOnAdd(
         DateTime? now = default,
         string actor = "")
     {
@@ -61,7 +61,7 @@ public interface IAuditable
     /// <param name="actor">
     /// The identifier of the actor performing the update. Can be an empty string if not specified.
     /// </param>
-    void AuditOnUpdate(
+    public void AuditOnUpdate(
         DateTime? now = default,
         string actor = "")
     {

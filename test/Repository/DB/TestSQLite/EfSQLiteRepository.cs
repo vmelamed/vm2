@@ -5,25 +5,15 @@
 /// </summary>
 public class EfSQLiteRepository : SQLiteEfRepository
 {
-    public string Actor { get; init; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="EfSQLiteRepository"/> class using the specified database context
     /// options and actor retrieval function.
     /// </summary>
-    /// <remarks>
-    /// The <paramref name="getActor"/> function is typically used to associate operations with a specific user or system actor.
-    /// Ensure that both <paramref name="options"/> and <paramref name="getActor"/> are valid and non-null before calling this
-    /// constructor.
-    /// </remarks>
     /// <param name="options">The options to configure the database context for the repository. Cannot be null.</param>
-    /// <param name="getActor">A function that retrieves the name or identifier of the current actor performing operations.</param>
     public EfSQLiteRepository(
-        DbContextOptions options,
-        Func<string> getActor)
+        DbContextOptions options)
         : base(options)
     {
-        Actor = getActor();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

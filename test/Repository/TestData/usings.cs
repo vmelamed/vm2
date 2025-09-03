@@ -1,5 +1,6 @@
 ﻿global using vm2.Repository.TestDomain;
 global using vm2.Repository.TestDomain.Dimensions;
+global using vm2.TestUtilities;
 
 global using static vm2.Repository.TestData.Dimensions.Instruments;
 global using static vm2.Repository.TestData.Labels;

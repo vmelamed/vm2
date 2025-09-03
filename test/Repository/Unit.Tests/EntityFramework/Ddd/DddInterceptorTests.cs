@@ -1,6 +1,6 @@
 ﻿namespace vm2.Repository.UnitTests.EntityFramework.Ddd;
 
-using NSubstitute.ExceptionExtensions;
+using vm2.TestUtilities;
 
 public class DddInterceptorTests
 {
@@ -12,8 +12,39 @@ public class DddInterceptorTests
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .UseDddInterceptor(
                     actions,
-                    actorAuditProvider: actorProvider ?? Actor.Log,
-                    dateTimeAuditProvider: timeProvider ?? Clock.Now);
+                    actorAuditProvider: actorProvider ?? TestActor.Current,
+                    dateTimeAuditProvider: timeProvider ?? TestClock.Now);
+
+    static void ResetAll(string? firstActor = null)
+    {
+        TestClock.Reset();
+        TestTenant.Reset();
+        TestEntityId.Reset();
+        TestActor.Reset(firstActor);
+    }
+
+    static bool AuditShouldBe(
+        IAuditable a,
+        DateTime createdAt,
+        string createdBy,
+        DateTime updatedAt,
+        string updatedBy,
+        DateTime? deletedAt = null,
+        string deletedBy = "")
+    {
+        a.CreatedAt.Should().Be(createdAt);
+        a.UpdatedAt.Should().Be(updatedAt);
+
+        a.CreatedBy.Should().Be(createdBy);
+        a.UpdatedBy.Should().Be(updatedBy);
+
+        if (a is not ISoftDeletable d)
+            return true;
+
+        d.DeletedAt.Should().Be(deletedAt);
+        d.DeletedBy.Should().Be(deletedBy);
+        return true;
+    }
 
     [Fact]
     public async Task SavingChanges_NoModifiedEntries_NoAction()
@@ -27,86 +58,116 @@ public class DddInterceptorTests
     [Fact]
     public async Task AddedEntity_Performs_Audit_Complete_Validate_InOrder()
     {
-        Clock.Reset();
-        Actor.Reset("adder");
+        ResetAll("adder");
+
         await using var ctx = new TestEfContext(NewOptions().Options);
 
         var e = new TestEntityA();
         ctx.TestEntitiesA.Add(e);
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        e.Calls.Should().BeEquivalentTo(["Complete", "Validate"]);
+        e.Calls.Should().BeEquivalentTo(["AuditAdd", "Complete", "Validate"]);
 
-        e.CreatedAt.Should().Be(Clock.Initial);
-        e.CreatedBy.Should().Be(Actor.Actors.First());
-
-        e.UpdatedAt.Should().Be(Clock.Initial);
-        e.UpdatedBy.Should().Be(Actor.Actors.First());
+        AuditShouldBe(
+            e,
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            null, "");
     }
 
     [Fact]
     public async Task ModifiedEntity_Performs_AuditUpdate_Complete_Validate_InOrder()
     {
-        Clock.Reset();
-        Actor.Reset("adder");
+        ResetAll("adder");
+
         await using var ctx = new TestEfContext(NewOptions().Options);
 
         var e = new TestEntityA();
         ctx.TestEntitiesA.Add(e);
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        Actor.Current = "modifier";
+        AuditShouldBe(e,
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            null, "");
+
+        TestActor.Next("modifier");
 
         e.Calls.Clear();
         e.Name = "changed";
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        e.Calls.Should().BeEquivalentTo(["Complete", "Validate"]);
+        e.Calls.Should().BeEquivalentTo(["AuditUpdate", "Complete", "Validate"]);
 
-        var time = Clock.Initial;
-        var actor = Actor.Actors.ElementAt(0);
-        e.CreatedAt.Should().Be(time);
-        e.CreatedBy.Should().Be(actor);
-
-        time += Clock.Step;
-        Actor.Actors.ElementAt(1);
-        e.UpdatedAt.Should().Be(time);
-        e.UpdatedBy.Should().Be(actor);
+        AuditShouldBe(e,
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            TestClock.Times.ElementAt(1),
+            TestActor.Actors.ElementAt(1),
+            null, "");
     }
 
     [Fact]
-    public async Task DeletedEntity_SoftDelete_SetsModifiedDuringInterception()
+    public async Task DeletedEntity_SoftDelete_SetsDeletedDuringInterception()
     {
-        Clock.Reset();
-        Actor.Reset("adder");
+        ResetAll("adder");
+
         await using var ctx = new TestEfContext(NewOptions().Options);
 
         var e = new TestEntityA();
         ctx.TestEntitiesA.Add(e);
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        Actor.Current = "deleter";
+        AuditShouldBe(e,
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            null, "");
+
+        TestActor.Next("deleter");
+
         e.Calls.Clear();
         ctx.TestEntitiesA.Remove(e);
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        Assert.Contains("SoftDelete", e.Calls);
-        var time = Clock.Initial;
-        var actor = Actor.Actors.ElementAt(0);
-        e.CreatedAt.Should().Be(time);
-        e.CreatedBy.Should().Be(actor);
+        e.Calls.Should().BeEquivalentTo(["SoftDelete"]);
+        e.IsDeleted.Should().BeTrue();
 
-        time += Clock.Step;
-        Actor.Actors.ElementAt(1);
-        e.UpdatedAt.Should().Be(time);
-        e.UpdatedBy.Should().Be(actor);
+        AuditShouldBe(e,
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            TestClock.Times.ElementAt(1),
+            TestActor.Actors.ElementAt(1));
+
+        TestActor.Next("un-deleter");
+
+        e.Calls.Clear();
+        e.Undelete();
+        await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        e.Calls.Should().BeEquivalentTo(["Undelete", "AuditUpdate", "Complete", "Validate"]);
+        e.IsDeleted.Should().BeFalse();
+
+        AuditShouldBe(e,
+            TestClock.Times.ElementAt(0),
+            TestActor.Actors.ElementAt(0),
+            TestClock.Times.ElementAt(2),
+            TestActor.Actors.ElementAt(2),
+            null, "");
     }
 
     [Fact]
     public async Task Delete_WhenAuditDisabled_DoesNotSoftDelete()
     {
-        Clock.Reset();
-        Actor.Reset("actor");
+        ResetAll();
+
         await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Audit).Options);
 
         var e = new TestEntityA();
@@ -116,15 +177,17 @@ public class DddInterceptorTests
         ctx.TestEntitiesA.Remove(e);
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        ((ISoftDeletable)e).IsDeleted.Should().BeFalse();
+        e.IsDeleted.Should().BeFalse();
+
+        ctx.Find<TestEntityA>(e.Id).Should().BeNull();
     }
 
     [Fact]
-    public async Task ActionsNone_ShortCircuits_AllLogic()
+    public async Task TempActionsNone_ShortCircuits_AllLogic()
     {
-        Clock.Reset();
-        Actor.Reset("actor");
-        await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Audit).Options);
+        ResetAll();
+
+        await using var ctx = new TestEfContext(NewOptions().Options);
 
         ctx.AggregateActions = DddAggregateActions.None;
 
@@ -138,8 +201,8 @@ public class DddInterceptorTests
     [Fact]
     public async Task ExcludingCustomComplete_SkipsCompletion()
     {
-        Clock.Reset();
-        Actor.Reset("actor");
+        ResetAll();
+
         await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Complete).Options);
 
         var e = new TestEntityA();
@@ -152,22 +215,22 @@ public class DddInterceptorTests
     [Fact]
     public async Task ExcludingInvariants_SkipsValidate()
     {
-        Clock.Reset();
-        Actor.Reset("actor");
+        ResetAll();
+
         await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Invariants).Options);
 
         var e = new TestEntityA();
         ctx.TestEntitiesA.Add(e);
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        e.Calls.Should().BeEquivalentTo(new[] { "AuditAdd", "Complete" });
+        e.Calls.Should().BeEquivalentTo(["AuditAdd", "Complete"]);
     }
 
     [Fact]
     public async Task ExcludingAudit_RetainsOtherActions()
     {
-        Clock.Reset();
-        Actor.Reset("actor");
+        ResetAll();
+
         await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Audit).Options);
 
         var e = new TestEntityA();
@@ -180,28 +243,25 @@ public class DddInterceptorTests
     [Fact]
     public async Task AggregateBoundary_Violation_Throws()
     {
-        // Use two entities – conceptually different roots (same CLR type but root interface marker distinct via test design).
-        // Since both are IAggregate<RootA> due to single class, simulate by first save, then second root expects different aggregate detection not triggered here.
-        // To truly test violation, we create a second fake type implementing IAggregate<RootB>.
-        Clock.Reset();
-        Actor.Reset("actor");
+        ResetAll();
+
         await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Audit).Options);
 
-        var e1 = new TestEntityA(); // acts as RootA
-        var e2 = new TestEntityB(); // acts as RootB
-        ctx.TestEntitiesA.Add(e1);
-        ctx.Add(e2);
+        var a = new TestEntityA(); // acts as RootA
+        var b = new TestEntityB(); // acts as RootB
+        ctx.TestEntitiesA.Add(a);
+        ctx.TestEntitiesB.Add(b);
 
-        var commit = async (CancellationToken ct) => await ctx.CommitAsync(ct);
+        var commit = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        commit(TestContext.Current.CancellationToken).ThrowsAsync<InvalidOperationException>();
+        await commit.Should().ThrowAsync<InvalidOperationException>(string.Format(Interceptor.DddErrorMessageViolationOfAggregateBoundary1, nameof(RootA), nameof(RootB)));
     }
 
     [Fact]
     public async Task AggregateBoundary_AllowedRoots_PermitsMultiple()
     {
-        Clock.Reset();
-        Actor.Reset("actor");
+        ResetAll();
+
         await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Audit).Options);
 
         ctx.AllowAggregateRoots(typeof(RootA), typeof(RootB));
@@ -216,45 +276,59 @@ public class DddInterceptorTests
     [Fact]
     public async Task TenantBoundary_Disabled_AllowsDifferentTenants()
     {
-        var actions = DddAggregateActions.All & ~DddAggregateActions.TenantBoundary;
-        var options = NewOptions(actions).Options;
-        await using var ctx = new TestEfContext(options, () => Guid.NewGuid(), () => "actor");
+        ResetAll();
+
+        await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.TenantBoundary).Options);
 
         // Because entity tenancy is entity instance itself, two entities appear as two tenants,
         // but tenant boundary disabled means success.
-        ctx.TestEntitiesA.Add(new TestEntityA());
-        ctx.TestEntitiesA.Add(new TestEntityA());
-        await ctx.CommitAsync(TestContext.Current.CancellationToken);
+        var a = new TestEntityA();
+        TestTenant.Next();
+        var b = new TestEntityA();
+
+        ctx.TestEntitiesA.Add(a);
+        ctx.TestEntitiesA.Add(b);
+
+        var commit = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await commit.Should().NotThrowAsync();
     }
 
     [Fact]
     public async Task TenantBoundary_Enabled_DifferentEntityTenants_Throws()
     {
-        var options = NewOptions().Options;
-        await using var ctx = new TestEfContext(options, () => Guid.NewGuid(), () => "actor");
+        ResetAll();
 
-        ctx.TestEntitiesA.Add(new TestEntityA());
-        ctx.TestEntitiesA.Add(new TestEntityA());
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        var a = new TestEntityA();
+        TestTenant.Next();
+        var b = new TestEntityA();
+
+        ctx.TestEntitiesA.Add(a);
+        ctx.TestEntitiesA.Add(b);
 
         // Both have different TenantId references (self), so should violate boundary (depending on context SameTenantAs logic).
-        var ex = await Assert.ThrowsAnyAsync<Exception>(() => ctx.SaveChangesAsync(TestContext.Current.CancellationToken));
-        Assert.Contains("tenant", ex.Message, StringComparison.OrdinalIgnoreCase);
+        var commit = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await commit.Should().ThrowAsync<Exception>("Enabled_DifferentEntityTenants").WithMessage(Interceptor.DifferentTenants);
     }
 
     [Fact]
     public async Task AddedThenModified_ProducesExpectedSequences()
     {
-        var options = NewOptions().Options;
-        await using var ctx = new TestEfContext(options, () => Guid.NewGuid(), () => "actor");
+        ResetAll();
+
+        await using var ctx = new TestEfContext(NewOptions().Options);
 
         var e = new TestEntityA();
         ctx.TestEntitiesA.Add(e);
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
-        .Should().Be(new[] { "AuditAdd", "Complete", "Validate" }, e.Calls);
+        e.Calls.Should().BeEquivalentTo(["AuditAdd", "Complete", "Validate"]);
 
         e.Calls.Clear();
         e.Name = "change";
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
-        .Should().Be(new[] { "AuditUpdate", "Complete", "Validate" }, e.Calls);
+        e.Calls.Should().BeEquivalentTo(["AuditUpdate", "Complete", "Validate"]);
     }
 }

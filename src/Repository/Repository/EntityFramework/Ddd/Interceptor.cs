@@ -4,7 +4,7 @@
 /// A custom Entity Framework Core save changes interceptor that checks for domain-driven design (DDD) aggregate invariants and
 /// boundaries, tenant boundaries, and performs auditing and completion actions on entities being added, modified, or deleted.
 /// </summary>
-class Interceptor : SaveChangesInterceptor
+public class Interceptor : SaveChangesInterceptor
 {
     /// <summary>
     /// Represents the default set of actions available for a Domain-Driven Design (DDD) aggregate.
@@ -134,16 +134,28 @@ class Interceptor : SaveChangesInterceptor
         return result;
     }
 
-    const string differentTenants
+    /// <summary>
+    /// The exception message used when entities from different tenants are detected in a single unit of work (transaction).
+    /// </summary>
+    public const string DifferentTenants
         = "Found entities from different tenants, or from a tenant different from the repository's tenant.";
 
-    const string dddErrorMessageHasMoreThanOneAggregate
+    /// <summary>
+    /// The exception message used when an entity implements more than one IAggregate&lt;TRoot&gt; interface.
+    /// </summary>
+    public const string DddErrorMessageHasMoreThanOneAggregate
         = "DDD error: Type \"{0}\" is marked with multiple IAggregate<TRoot> interfaces. An entity or value cannot be part of more than one aggregate.";
 
-    const string dddErrorMessageViolationOfAggregateBoundary1
+    /// <summary>
+    /// The exception message used when a violation of aggregate boundaries is detected in a single unit of work (transaction).
+    /// </summary>
+    public const string DddErrorMessageViolationOfAggregateBoundary1
         = "DDD error: Violation of aggregate boundaries: encountered entities of more than one aggregate: IAggregate<{0}> and IAggregate<{1}>.";
 
-    const string dddErrorMessageViolationOfAggregateBoundary2
+    /// <summary>
+    /// The exception message used when a violation of aggregate boundaries is detected in a single unit of work (transaction),
+    /// </summary>
+    public const string DddErrorMessageViolationOfAggregateBoundary2
         = "DDD error: Violation of aggregate boundaries: entities of IAggregate<{0}> are not allowed.";
 
     static ITenanted? CheckTenantBoundary(in ActionsParameters p)
@@ -167,7 +179,7 @@ class Interceptor : SaveChangesInterceptor
 
         // if the entity's tenant is different from the context's tenant, throw exception.
         // All tenanted entities must belong to the same tenant.
-        throw new InvalidOperationException(differentTenants);
+        throw new InvalidOperationException(DifferentTenants);
     }
 
     static Type? CheckAggregateBoundary(in ActionsParameters p)
@@ -189,7 +201,7 @@ class Interceptor : SaveChangesInterceptor
         var rootType = rootTypes.Count is <= 1
                             ? rootTypes.SingleOrDefault()
                             : throw new InvalidOperationException(
-                                            string.Format(dddErrorMessageHasMoreThanOneAggregate, p.Entry.Entity.GetType().Name));
+                                            string.Format(DddErrorMessageHasMoreThanOneAggregate, p.Entry.Entity.GetType().Name));
 
         Debug.Assert(rootType is not null);
 
@@ -201,8 +213,8 @@ class Interceptor : SaveChangesInterceptor
 
         throw new InvalidOperationException(
                     p.AllowedRoots.Count == 0
-                        ? string.Format(dddErrorMessageViolationOfAggregateBoundary1, p.AggregateRoot?.Name, rootType.Name)
-                        : string.Format(dddErrorMessageViolationOfAggregateBoundary2, rootType.Name));
+                        ? string.Format(DddErrorMessageViolationOfAggregateBoundary1, p.AggregateRoot?.Name, rootType.Name)
+                        : string.Format(DddErrorMessageViolationOfAggregateBoundary2, rootType.Name));
     }
 
     static void AuditAdded(in ActionsParameters p)

@@ -1,5 +1,7 @@
 namespace vm2.Repository.TestData;
 
+using vm2.TestUtilities;
+
 public static class Albums
 {
     public static AlbumId NextId => new(Ulid.NewUlid());
@@ -17,6 +19,7 @@ public static class Albums
         => _allAlbums = [
             _albumKindOfBlue = new(
                 id: NextId,
+                tenantId: TestTenant.Current(),
                 title: "Kind of Blue",
                 releaseYear: 1959,
                 genres: ["Jazz"],
@@ -32,6 +35,7 @@ public static class Albums
             ),
             _albumEllingtonAtNewport = new(
                 id: NextId,
+                tenantId: TestTenant.Current(),
                 title: "Ellington at Newport",
                 releaseYear: 1956,
                 genres: ["Jazz"],
@@ -45,6 +49,7 @@ public static class Albums
             ),
             _albumBeethovenViolinConcerto = new(
                 id: NextId,
+                tenantId: TestTenant.Current(),
                 title: "Beethoven: Violin Concerto",
                 releaseYear: 1962,
                 genres: ["Classical"],
@@ -59,6 +64,7 @@ public static class Albums
             ),
             _albumBachSonatasPartitasViolin = new(
                 id: NextId,
+                tenantId: TestTenant.Current(),
                 title: "Bach: Sonatas and Partitas for Solo Violin",
                 releaseYear: 1971,
                 genres: ["Classical"],
@@ -70,6 +76,7 @@ public static class Albums
             ),
             _albumBachCelloSonatas = new(
                 id: NextId,
+                tenantId: TestTenant.Current(),
                 title: "Bach: Cello Sonatas",
                 releaseYear: 1979,
                 genres: ["Classical"],
@@ -92,6 +99,7 @@ public static class Albums
             ),
             _albumBillEvansVillageVanguard = new(
                 id: NextId,
+                tenantId: TestTenant.Current(),
                 title: "Bill Evans Trio at the Village Vanguard",
                 releaseYear: 1961,
                 genres: ["Jazz"],

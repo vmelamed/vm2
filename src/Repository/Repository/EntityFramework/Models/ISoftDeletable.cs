@@ -29,22 +29,16 @@ public interface ISoftDeletable
     string DeletedBy { get; set; }
 
     /// <summary>
-    /// Gets an expression that determines whether an <see cref="ISoftDeletable"/> entity is marked as deleted. The expression
-    /// can be used in LINQ queries to filter out deleted entities from results.
-    /// </summary>
-    static virtual Expression<Func<ISoftDeletable, bool>> IsDeletedPredicate => entity => entity.DeletedAt.HasValue;
-
-    /// <summary>
     /// Gets a value indicating whether the entity is marked as deleted.
     /// </summary>
-    bool IsDeleted => DeletedAt.HasValue;
+    public bool IsDeleted => DeletedAt.HasValue;
 
     /// <summary>
     /// Marks the entity as deleted by setting the deletion timestamp and actor.
     /// </summary>
     /// <param name="now">The timestamp to record as the deletion time. If <see langword="null"/>, the current UTC time is used.</param>
     /// <param name="actor">The identifier of the actor performing the deletion. Can be an empty string if not specified.</param>
-    void SoftDelete(
+    public void SoftDelete(
         DateTime? now = default,
         string actor = "")
     {
@@ -57,12 +51,12 @@ public interface ISoftDeletable
     /// </summary>
     /// <param name="now">The current date and time, used for logging or auditing purposes. This parameter is optional.</param>
     /// <param name="actor">The identifier of the user or process performing the undelete operation. This parameter is optional.</param>
-    void Undelete(
+    public void Undelete(
         DateTime? now = default,
         string actor = "")
     {
         DeletedAt = null;
-        DeletedBy = string.Empty;
+        DeletedBy = "";
 
         if (this is IAuditable a)
             a.AuditOnUpdate(now ?? DateTime.UtcNow, actor);

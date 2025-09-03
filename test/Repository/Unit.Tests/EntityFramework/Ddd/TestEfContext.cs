@@ -7,7 +7,7 @@ sealed class TestEfContext : EfRepository, ITenanted<Guid>, IHasDddInterceptorCo
         Func<Guid>? currentTenantId = null)
         : base(options)
     {
-        TenantId = (currentTenantId ?? TestTenant.Tenant)();
+        TenantId = (currentTenantId ?? TestTenant.Current)();
     }
 
     public Guid TenantId { get; init; }
@@ -25,21 +25,21 @@ sealed class TestEfContext : EfRepository, ITenanted<Guid>, IHasDddInterceptorCo
     public DddAggregateActions? AggregateActions { get; set; }
 
     /// <inheritdoc/>
-    public HashSet<Type>? AllowedAggregateRoots { get; set; } = [];
+    public ISet<Type>? AllowedAggregateRoots { get; set; } = new HashSet<Type>();
 
     /// <inheritdoc/>
     public Func<DateTime>? DateTimeAuditProvider { get; set; }
 
     /// <inheritdoc/>
-    public Func<string>? CurrentActorAuditProvider { get; set; }
+    public Func<string>? CurrentActorAuditProvider { get; set; } = TestActor.Current;
 
     public InterceptorConfiguration ConfigureDddInterceptor(
         InterceptorConfiguration currentConfiguration)
         => currentConfiguration with {
-            AllowedAggregateRoots     = AllowedAggregateRoots ?? currentConfiguration.AllowedAggregateRoots,
-            Actions                   = AggregateActions ?? currentConfiguration.Actions,
-            ActorAuditProvider = Actor.Log,
-            DateTimeAuditProvider     = Clock.Now,
-            TenantProvider                  = this,
+            AllowedAggregateRoots = AllowedAggregateRoots ?? currentConfiguration.AllowedAggregateRoots,
+            Actions               = AggregateActions ?? currentConfiguration.Actions,
+            ActorAuditProvider    = TestActor.Current,
+            DateTimeAuditProvider = TestClock.Now,
+            TenantProvider        = () => this,
         };
 }

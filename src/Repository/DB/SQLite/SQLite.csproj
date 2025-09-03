@@ -22,6 +22,7 @@
     </ItemGroup>
     
     <ItemGroup>
+        <Folder Include="DI\" />
         <Folder Include="Models\Mapping\" />
     </ItemGroup>
 

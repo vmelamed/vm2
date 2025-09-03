@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     </ItemGroup>
 
 
@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\src\Repository\Repository\Repository.csproj" />
+      <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
     </ItemGroup>
 
 </Project>

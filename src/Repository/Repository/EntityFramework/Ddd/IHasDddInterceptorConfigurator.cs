@@ -59,8 +59,9 @@ public interface IHasDddInterceptorConfigurator
     /// to modify the default DDD behavior for the current transaction only.
     /// </summary>
     /// <remarks>
-    /// Please, use with caution. Allowing multiple aggregate roots in a unit of work (transaction) can lead to optimistic<br/>
-    /// concurrency exceptions. Before overriding this method, consider if your aggregates are properly designed.
+    /// <b>Use with caution.</b> Allowing the save of multiple aggregate roots in a unit of work (transaction) can lead to
+    /// optimistic concurrency exceptions. Before overriding this method, consider if your aggregates are properly designed and
+    /// if eventual consistency could be employed instead.
     /// </remarks>
     /// <param name="currentConfiguration">
     /// The current <see cref="InterceptorConfiguration"/> to be modified.

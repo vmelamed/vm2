@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\TestUtilities\TestUtilities.csproj" />
       <ProjectReference Include="..\TestDomain\TestDomain.csproj" />
     </ItemGroup>
 

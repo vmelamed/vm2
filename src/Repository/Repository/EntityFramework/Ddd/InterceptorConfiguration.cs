@@ -10,8 +10,9 @@
 /// (the default) or empty,<br/>
 /// only one aggregate root type is allowed - the type of the root of the first encountered entity in added, modified or deleted
 /// state.<para/>
-/// Please, use with caution. Allowing multiple aggregate roots in a unit of work (transaction) can lead to optimistic<br/>
-/// concurrency exceptions. Before using this option, consider if your aggregates are properly designed.
+/// <b>Use with caution.</b> Allowing the save of multiple aggregate roots in a unit of work (transaction) can lead to
+/// optimistic concurrency exceptions. Before overriding this method, consider if your aggregates are properly designed and
+/// if eventual consistency could be employed instead.
 /// </param>
 /// <param name="TenantProvider">
 /// An optional tenancy provider that specifies the tenant context for the interceptor. If <see langword="null"/>, no tenancy
