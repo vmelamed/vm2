@@ -16,6 +16,7 @@ sealed class TestEfContext : EfRepository, ITenanted<Guid>, IHasDddInterceptorCo
     public DbSet<TestEntityA> TestEntitiesA => Set<TestEntityA>();
 
     public DbSet<TestEntityB> TestEntitiesB => Set<TestEntityB>();
+    public DbSet<TestEntityC> TestEntitiesC => Set<TestEntityC>();
 
     // Simulate tenancy: override SameTenantAs via ITenanted (EfRepository already implements ITenanted? If not, adapt.)
     protected override void OnModelCreating(ModelBuilder modelBuilder)

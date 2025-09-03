@@ -164,6 +164,33 @@ public class DddInterceptorTests
     }
 
     [Fact]
+    public async Task AddedAndModifiedEntities_InSameCommit_GetRespectivePipelines()
+    {
+        ResetAll();
+
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        // Seed existing entity
+        var existing = new TestEntityA();
+        ctx.TestEntitiesA.Add(existing);
+        await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        existing.Calls.Clear();
+
+        // Modify existing
+        existing.Name = "changed";
+
+        // Add new one
+        var added = new TestEntityA();
+        ctx.TestEntitiesA.Add(added);
+
+        await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        existing.Calls.Should().BeEquivalentTo(["AuditUpdate", "Complete", "Validate"]);
+        added.Calls.Should().BeEquivalentTo(["AuditAdd", "Complete", "Validate"]);
+    }
+
+    [Fact]
     public async Task Delete_WhenAuditDisabled_DoesNotSoftDelete()
     {
         ResetAll();
@@ -183,6 +210,36 @@ public class DddInterceptorTests
     }
 
     [Fact]
+    public async Task Remove_SoftDelete_ChangesEntityState()
+    {
+        ResetAll();
+
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        var e = new TestEntityA();
+        ctx.TestEntitiesA.Add(e);
+        await ctx.CommitAsync(TestContext.Current.CancellationToken);
+        e.Calls.Clear();
+
+        // Track initial state change
+        var entry = ctx.Entry(e);
+        entry.State.Should().Be(EntityState.Unchanged);
+
+        ctx.TestEntitiesA.Remove(e);
+        entry.State.Should().Be(EntityState.Deleted); // pre-interceptor
+
+        await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        // After interceptor soft delete: EF performed an update instead
+        entry.State.Should().Be(EntityState.Unchanged);
+        e.IsDeleted.Should().BeTrue();
+        e.Calls.Should().BeEquivalentTo(["SoftDelete"]);
+
+        var e1 = ctx.TestEntitiesA.Find(e.Id);
+        e.IsDeleted.Should().BeTrue();
+    }
+
+    [Fact]
     public async Task TempActionsNone_ShortCircuits_AllLogic()
     {
         ResetAll();
@@ -193,6 +250,22 @@ public class DddInterceptorTests
 
         var e = new TestEntityA();
         ctx.TestEntitiesA.Add(e);
+        await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        e.Calls.Should().BeEmpty();
+    }
+
+
+    [Fact]
+    public async Task ConfiguredActionsNone_ShortCircuits()
+    {
+        ResetAll();
+
+        await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.None).Options);
+
+        var e = new TestEntityA();
+        ctx.TestEntitiesA.Add(e);
+
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
         e.Calls.Should().BeEmpty();
@@ -245,7 +318,7 @@ public class DddInterceptorTests
     {
         ResetAll();
 
-        await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Audit).Options);
+        await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All).Options);
 
         var a = new TestEntityA(); // acts as RootA
         var b = new TestEntityB(); // acts as RootB
@@ -262,7 +335,7 @@ public class DddInterceptorTests
     {
         ResetAll();
 
-        await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All & ~DddAggregateActions.Audit).Options);
+        await using var ctx = new TestEfContext(NewOptions(DddAggregateActions.All).Options);
 
         ctx.AllowAggregateRoots(typeof(RootA), typeof(RootB));
 
@@ -330,5 +403,41 @@ public class DddInterceptorTests
         e.Name = "change";
         await ctx.CommitAsync(TestContext.Current.CancellationToken);
         e.Calls.Should().BeEquivalentTo(["AuditUpdate", "Complete", "Validate"]);
+    }
+
+    [Fact]
+    public async Task MultipleAggregateInterfaces_Throws()
+    {
+        ResetAll();
+
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.Add(new TestEntityC());
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should()
+                 .ThrowAsync<InvalidOperationException>()
+                 .WithMessage(string.Format(Interceptor.DddErrorMessageHasMoreThanOneAggregate, nameof(TestEntityC)));
+    }
+
+    [Fact]
+    public async Task NotAllowedAggregateRoot_Throws()
+    {
+        ResetAll();
+
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        // Allow only RootA
+        ctx.AllowAggregateRoots(typeof(RootA));
+
+        // Add entity belonging to RootB only
+        ctx.Add(new TestEntityB());
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should()
+                 .ThrowAsync<InvalidOperationException>()
+                 .WithMessage(string.Format(Interceptor.DddErrorMessageViolationOfAggregateBoundary2, nameof(RootB)));
     }
 }

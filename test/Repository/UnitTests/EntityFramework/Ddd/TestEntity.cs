@@ -18,6 +18,10 @@ class TestEntityB : TestEntity, IAggregate<RootB>
 {
 }
 
+class TestEntityC : TestEntity, IAggregate<RootA>, IAggregate<RootB>
+{
+}
+
 // Tracking entity implementing requested interfaces + tenancy
 abstract class TestEntity :
     ITenanted<Guid>,
