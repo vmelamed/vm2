@@ -45,6 +45,7 @@ abstract class TestEntity :
     public string DeletedBy { get; set; } = "";
 
     // Call trace to assert ordering / inclusion
+    [NotMapped]
     public List<string> Calls { get; } = [];
 
     public ValueTask CompleteAsync(IRepository? repo, EntityEntry entry, DateTime now, string actor, CancellationToken ct)
