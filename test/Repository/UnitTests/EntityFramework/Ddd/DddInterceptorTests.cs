@@ -1,7 +1,5 @@
 ﻿namespace vm2.Repository.UnitTests.EntityFramework.Ddd;
 
-using vm2.TestUtilities;
-
 public class DddInterceptorTests
 {
     static DbContextOptionsBuilder<TestEfContext> NewOptions(
@@ -235,6 +233,9 @@ public class DddInterceptorTests
         e.IsDeleted.Should().BeTrue();
         e.Calls.Should().BeEquivalentTo(["SoftDelete"]);
 
+        // Verify still present in the DB
+        ctx.ChangeTracker.Clear();
+
         var e1 = ctx.TestEntitiesA.Find(e.Id);
         e.IsDeleted.Should().BeTrue();
     }
@@ -384,7 +385,7 @@ public class DddInterceptorTests
         // Both have different TenantId references (self), so should violate boundary (depending on context SameTenantAs logic).
         var commit = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
-        await commit.Should().ThrowAsync<Exception>("Enabled_DifferentEntityTenants").WithMessage(Interceptor.DifferentTenants);
+        await commit.Should().ThrowAsync<Exception>("Different Tenants").WithMessage(Interceptor.DifferentTenants);
     }
 
     [Fact]
@@ -412,13 +413,13 @@ public class DddInterceptorTests
 
         await using var ctx = new TestEfContext(NewOptions().Options);
 
-        ctx.Add(new TestEntityC());
+        ctx.Add(new TestEntityAB());
 
         var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
 
         await act.Should()
                  .ThrowAsync<InvalidOperationException>()
-                 .WithMessage(string.Format(Interceptor.DddErrorMessageHasMoreThanOneAggregate, nameof(TestEntityC)));
+                 .WithMessage(string.Format(Interceptor.DddErrorMessageHasMoreThanOneAggregate, nameof(TestEntityAB)));
     }
 
     [Fact]
@@ -439,5 +440,150 @@ public class DddInterceptorTests
         await act.Should()
                  .ThrowAsync<InvalidOperationException>()
                  .WithMessage(string.Format(Interceptor.DddErrorMessageViolationOfAggregateBoundary2, nameof(RootB)));
+    }
+
+    // ---- CheckAggregateBoundary focused tests (using rootless TestEntityBase) ----
+
+    [Fact]
+    public async Task RootlessEntity_NoAllowedRoots_ThrowsViolation3()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.Add(new TestEntity()); // no IAggregate<>
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should()
+                 .ThrowAsync<InvalidOperationException>()
+                 .WithMessage(string.Format(Interceptor.DddErrorMessageViolationOfAggregateBoundary2, nameof(NoRoot)));
+    }
+
+    [Fact]
+    public async Task RootlessEntity_AllowedNoRoot_Succeeds()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.AllowAggregateRoots(typeof(NoRoot));
+
+        ctx.Add(new TestEntity());
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task RootA_Then_Rootless_NoRootNotAllowed_ThrowsViolation3()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.Add(new TestEntityA());
+        ctx.Add(new TestEntity()); // rootless
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should()
+                 .ThrowAsync<InvalidOperationException>()
+                 .WithMessage(string.Format(Interceptor.DddErrorMessageViolationOfAggregateBoundary2, nameof(NoRoot)));
+    }
+
+    [Fact]
+    public async Task RootlessAllowed_Then_RootA_OnlyNoRootAllowed_ThrowsViolation2()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.AllowAggregateRoots(typeof(NoRoot), typeof(RootA));
+
+        ctx.Add(new TestEntity());      // allowed as NoRoot
+        ctx.Add(new TestEntityA());     // RootA also allowed
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task RootA_Then_RootB_BothAllowed_Succeeds()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.AllowAggregateRoots(typeof(RootA), typeof(RootB));
+
+        ctx.Add(new TestEntityA());
+        ctx.Add(new TestEntityB());
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task RootB_First_RootA_AllowedOnlyRootA_ThrowsViolation2()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.AllowAggregateRoots(typeof(RootA));
+
+        ctx.Add(new TestEntityB());
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should()
+                 .ThrowAsync<InvalidOperationException>()
+                 .WithMessage(string.Format(Interceptor.DddErrorMessageViolationOfAggregateBoundary2, nameof(RootB)));
+    }
+
+    [Fact]
+    public async Task RootB_First_RootA_BothAllowed_Succeeds()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.AllowAggregateRoots(typeof(RootA), typeof(RootB));
+
+        ctx.Add(new TestEntityB());
+        ctx.Add(new TestEntityA());
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task TwoRootlessEntities_NoRootAllowed_Succeeds()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.AllowAggregateRoots(typeof(NoRoot));
+
+        ctx.Add(new TestEntity());
+        ctx.Add(new TestEntity());
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task RootA_Then_Rootless_BothAllowed_Succeeds()
+    {
+        ResetAll();
+        await using var ctx = new TestEfContext(NewOptions().Options);
+
+        ctx.AllowAggregateRoots(typeof(NoRoot), typeof(RootA));
+
+        ctx.Add(new TestEntityA());
+        ctx.Add(new TestEntity()); // rootless
+
+        var act = async () => await ctx.CommitAsync(TestContext.Current.CancellationToken);
+
+        await act.Should().NotThrowAsync();
     }
 }

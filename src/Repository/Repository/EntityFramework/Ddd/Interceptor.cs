@@ -47,8 +47,6 @@ public class Interceptor : SaveChangesInterceptor
         InterceptionResult<int> result,
         CancellationToken ct = default)
     {
-        ct.ThrowIfCancellationRequested();
-
         var dbContext  = eventData.Context
                                 ?? throw new InvalidOperationException("The context in eventData is null or is not DbContext.");
         var changeTracker = dbContext.ChangeTracker;
@@ -66,18 +64,15 @@ public class Interceptor : SaveChangesInterceptor
             return result;
 
         // call all providers and build the initial actions parameters
+        var tenanted            = configuration.TenantProvider?.Invoke() ?? dbContext as ITenanted;
         var actionParameters    = new ActionsParameters(
                                             Entry:             null!,
-                                            AggregateRoot:     null,
                                             Actions:           configuration.Actions,
                                             AllowedRoots:      configuration.AllowedAggregateRoots           ?? new HashSet<Type>(),
-                                            Tenanted:          configuration.TenantProvider?.Invoke()        ?? dbContext as ITenanted,
+                                            Tenanted:          tenanted,
                                             Actor:             configuration.ActorAuditProvider?.Invoke()    ?? DefaultActorAuditProvider(),
                                             Now:               configuration.DateTimeAuditProvider?.Invoke() ?? DefaultDateTimeAuditProvider(),
                                             CancellationToken: ct);
-
-        var tenanted          = actionParameters.Tenanted;
-        var aggregateRootType = actionParameters.AllowedRoots.FirstOrDefault();
 
         foreach (var entry in changeTracker.Entries().Where(e => e.State is EntityState.Added
                                                                          or EntityState.Modified
@@ -89,16 +84,15 @@ public class Interceptor : SaveChangesInterceptor
             // types.
             var parameters = actionParameters with
             {
-                Entry         = entry,
-                AggregateRoot = aggregateRootType,
-                Tenanted      = actionParameters.Tenanted ?? tenanted,
+                Entry    = entry,
+                Tenanted = tenanted,
             };
 
             Func<ValueTask> actionFunctions = entry.State switch {
                 EntityState.Added => async () =>
                                         {
                                             tenanted = CheckTenantBoundary(parameters);
-                                            aggregateRootType = CheckAggregateBoundary(parameters);
+                                            CheckAggregateBoundary(parameters);
                                             AuditAdded(parameters);
                                             await CompleteAsync(parameters);
                                             await ValidateInvariantsAsync(parameters);
@@ -108,7 +102,7 @@ public class Interceptor : SaveChangesInterceptor
                 EntityState.Modified => async () =>
                                         {
                                             tenanted = CheckTenantBoundary(parameters);
-                                            aggregateRootType = CheckAggregateBoundary(parameters);
+                                            CheckAggregateBoundary(parameters);
                                             AuditUpdated(parameters);
                                             await CompleteAsync(parameters);
                                             await ValidateInvariantsAsync(parameters);
@@ -118,7 +112,7 @@ public class Interceptor : SaveChangesInterceptor
                 EntityState.Deleted => () =>
                                         {
                                             tenanted = CheckTenantBoundary(parameters);
-                                            aggregateRootType = CheckAggregateBoundary(parameters);
+                                            CheckAggregateBoundary(parameters);
                                             AuditDeleted(parameters);
                                             return ValueTask.CompletedTask;
                                         }
@@ -158,6 +152,14 @@ public class Interceptor : SaveChangesInterceptor
     public const string DddErrorMessageViolationOfAggregateBoundary2
         = "DDD error: Violation of aggregate boundaries: entities of IAggregate<{0}> are not allowed.";
 
+    /// <summary>
+    /// The exception message used when an entity is not part of any aggregate.
+    /// </summary>
+    public const string DddErrorMessageViolationOfAggregateBoundary3
+        = "DDD error: Violation of aggregate boundaries: entity \"{0}\" is not part of any aggregate. "+
+          "If you want to work with it in the bounded context, mark it with IAggregate<> interface or "+
+          "(not recommended!) add the type \"vm2.Repository.EntityFramework.Ddd.NoRoot\" to the AllowedRoots set for this unit of work.";
+
     static ITenanted? CheckTenantBoundary(in ActionsParameters p)
     {
         // if no tenant boundary check is required, return the current tenanted context
@@ -182,39 +184,43 @@ public class Interceptor : SaveChangesInterceptor
         throw new InvalidOperationException(DifferentTenants);
     }
 
-    static Type? CheckAggregateBoundary(in ActionsParameters p)
+    static void CheckAggregateBoundary(in ActionsParameters p)
     {
         // if no aggregate boundary check is required, return the current aggregate root type
         if (!p.Actions.HasFlag(DddAggregateActions.AggregateBoundary))
-            return p.AggregateRoot;
+            return;
 
         // determine the aggregate root type of the current entity
         var rootTypes = p.Entry
                             .Entity
                             .GetType()
                             .GetInterfaces()
-                            .Where(i => i.IsGenericType  &&  i.GetGenericTypeDefinition() == typeof(IAggregate<>))
+                            .Where(i => i.IsGenericType  &&
+                                        i.GetGenericTypeDefinition() == typeof(IAggregate<>))
                             .Select(i => i.GetGenericArguments()[0])
                             .ToList()
                             ;
 
         var rootType = rootTypes.Count is <= 1
-                            ? rootTypes.SingleOrDefault()
+                            ? rootTypes.SingleOrDefault(typeof(NoRoot))
                             : throw new InvalidOperationException(
                                             string.Format(DddErrorMessageHasMoreThanOneAggregate, p.Entry.Entity.GetType().Name));
 
         Debug.Assert(rootType is not null);
 
-        if (p.AggregateRoot == rootType  ||  p.AllowedRoots.Contains(rootType))
-            return rootType;
+        if (p.AllowedRoots.Contains(rootType))
+            // TODO: add OpenTelemetry metric for allowed root if p.AllowedRoots.Count > 1
+            return;
 
-        if (p.AggregateRoot is null  &&  p.AllowedRoots.Count == 0) // rootType will become the required root type for the other entities in the tracker
-            return rootType;
+        if (p.AllowedRoots.Count == 0 && rootType != typeof(NoRoot))
+        {
+            // rootType becomes the only required root type for the rest of the entities in the tracker
+            // NoRoot can never become required
+            p.AllowedRoots.Add(rootType);
+            return;
+        }
 
-        throw new InvalidOperationException(
-                    p.AllowedRoots.Count == 0
-                        ? string.Format(DddErrorMessageViolationOfAggregateBoundary1, p.AggregateRoot?.Name, rootType.Name)
-                        : string.Format(DddErrorMessageViolationOfAggregateBoundary2, rootType.Name));
+        throw new InvalidOperationException(string.Format(DddErrorMessageViolationOfAggregateBoundary2, rootType.Name));
     }
 
     static void AuditAdded(in ActionsParameters p)

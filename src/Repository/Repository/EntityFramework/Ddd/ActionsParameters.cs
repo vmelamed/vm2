@@ -14,9 +14,6 @@
 /// <param name="Actions">
 /// The <see cref="DddAggregateActions"/> specifying the actions that should be performed on the aggregate.
 /// </param>
-/// <param name="AggregateRoot">
-/// The type of the aggregate root, or <see langword="null"/> if the aggregate root is not determined yet.
-/// .</param>
 /// <param name="AllowedRoots">
 /// A set of aggregate root types that are allowed for the operation.
 /// </param>
@@ -34,7 +31,6 @@
 /// </param>
 readonly record struct ActionsParameters(
     EntityEntry Entry,
-    Type? AggregateRoot,
     DddAggregateActions Actions,
     ISet<Type> AllowedRoots,
     ITenanted? Tenanted,

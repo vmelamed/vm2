@@ -13,10 +13,13 @@ sealed class TestEfContext : EfRepository, ITenanted<Guid>, IHasDddInterceptorCo
     public Guid TenantId { get; init; }
 
     // Expose DbSets for two aggregates
+    public DbSet<TestEntity> TestEntities => Set<TestEntity>();
+
     public DbSet<TestEntityA> TestEntitiesA => Set<TestEntityA>();
 
     public DbSet<TestEntityB> TestEntitiesB => Set<TestEntityB>();
-    public DbSet<TestEntityC> TestEntitiesC => Set<TestEntityC>();
+
+    public DbSet<TestEntityAB> TestEntitiesAB => Set<TestEntityAB>();
 
     // Simulate tenancy: override SameTenantAs via ITenanted (EfRepository already implements ITenanted? If not, adapt.)
     protected override void OnModelCreating(ModelBuilder modelBuilder)

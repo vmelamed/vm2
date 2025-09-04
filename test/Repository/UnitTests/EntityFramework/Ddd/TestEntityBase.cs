@@ -10,20 +10,24 @@ sealed class RootA : IAggregate<RootA> { }
 
 sealed class RootB : IAggregate<RootB> { }
 
-class TestEntityA : TestEntity, IAggregate<RootA>
+class TestEntity : TestEntityBase
 {
 }
 
-class TestEntityB : TestEntity, IAggregate<RootB>
+class TestEntityA : TestEntityBase, IAggregate<RootA>
 {
 }
 
-class TestEntityC : TestEntity, IAggregate<RootA>, IAggregate<RootB>
+class TestEntityB : TestEntityBase, IAggregate<RootB>
+{
+}
+
+class TestEntityAB : TestEntityBase, IAggregate<RootA>, IAggregate<RootB>
 {
 }
 
 // Tracking entity implementing requested interfaces + tenancy
-abstract class TestEntity :
+abstract class TestEntityBase :
     ITenanted<Guid>,
     IAuditable,
     ISoftDeletable,
