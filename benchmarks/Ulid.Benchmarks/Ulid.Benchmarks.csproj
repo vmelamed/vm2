@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <RootNamespace>vm2.Ulid.Benchmark</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Ulid1\Ulid1.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Ulid" />
+    </ItemGroup>
+
+</Project>

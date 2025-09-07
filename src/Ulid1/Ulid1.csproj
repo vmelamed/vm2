@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>vm2.Ulid1</RootNamespace>
+  </PropertyGroup>
+
+</Project>

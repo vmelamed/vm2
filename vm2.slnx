@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/Ulid.Benchmarks/Ulid.Benchmarks.csproj" />
+  </Folder>
   <Folder Name="/docs/">
     <File Path="docs/RecentQandAKeys.md" />
   </Folder>
@@ -39,11 +42,15 @@
   <Folder Name="/src/Repository/DB/">
     <Project Path="src/Repository/DB/SQLite/SQLite.csproj" />
   </Folder>
+  <Folder Name="/src/Ulid1/">
+    <Project Path="src/Ulid1/Ulid1.csproj" />
+  </Folder>
 
   <Folder Name="/test/">
-    <Project Path="test/RegexLib.Tests/RegexLib.Tests.csproj" />
+    <Project Path="test/RegexLibTests/RegexLibTests.csproj" />
     <Project Path="test/TestUtilities/TestUtilities.csproj" />
     <Project Path="test/Threading.Tests/Threading.Tests.csproj" />
+    <Project Path="test/Ulid1Tests/Ulid1Tests.csproj" />
   </Folder>
   <Folder Name="/test/Functional/">
     <Project Path="test/Functional/Primitives.Tests/Primitives.Tests.csproj" />
