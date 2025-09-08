@@ -5,7 +5,7 @@ public class Ulid1Tests
     [Fact]
     public void NewUlid_Roundtrip_ToByteArray_ToGuid_ToBase64_ToString()
     {
-        var factory = new Ulid1Factory();
+        var factory = new VmUlidFactory();
         var ulid = factory.NewUlid();
 
         var bytes = ulid.ToByteArray();
@@ -22,7 +22,7 @@ public class Ulid1Tests
     [Fact]
     public void TryWrite_WithSmallDestination_ReturnsFalse_And_WithCorrectSize_WritesBytes()
     {
-        var ulid = new Ulid1Factory().NewUlid();
+        var ulid = new VmUlidFactory().NewUlid();
 
         var small = new byte[UlidBytesLength - 1];
         ulid.TryWrite(small.AsSpan()).Should().BeFalse();
@@ -35,7 +35,7 @@ public class Ulid1Tests
     [Fact]
     public void TryWriteStringify_SpanSizeBehavior_And_Matches_ToString()
     {
-        var ulid = new Ulid1Factory().NewUlid();
+        var ulid = new VmUlidFactory().NewUlid();
 
         var tooSmall = new char[UlidStringLength - 1];
         ulid.TryWriteStringify(tooSmall.AsSpan()).Should().BeFalse();
@@ -50,7 +50,7 @@ public class Ulid1Tests
     [Fact]
     public void Parse_And_TryParse_Roundtrip_And_CaseInsensitive()
     {
-        var ulid = new Ulid1Factory().NewUlid();
+        var ulid = new VmUlidFactory().NewUlid();
         var str = ulid.ToString();
 
         var parsed = VmUlid.Parse(str);
@@ -85,7 +85,7 @@ public class Ulid1Tests
     [Fact]
     public void Timestamp_And_Random_Are_Extractable_And_Within_Reasonable_Range()
     {
-        var factory = new Ulid1Factory();
+        var factory = new VmUlidFactory();
         var ulid = factory.NewUlid();
 
         var now = DateTimeOffset.UtcNow;
@@ -95,15 +95,15 @@ public class Ulid1Tests
         ts.Should().BeOnOrAfter(now.AddSeconds(-1));
 
         var bytes = ulid.ToByteArray();
-        var random = ulid.Random();
-        random.Should().HaveCount(RandomLength);
+        var random = new byte[RandomLength];
+        ulid.Random(random.AsSpan());
         bytes.Skip(RandomBegin).Take(RandomLength).Should().Equal(random);
     }
 
     [Fact]
     public void NewUlid_Generates_Unique_And_Monotonic_Ulids_When_Incrementing_Within_Same_Millisecond()
     {
-        var factory = new Ulid1Factory();
+        var factory = new VmUlidFactory();
 
         // Force the factory into the "same millisecond" increment path by setting private state:
         var lastTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -115,7 +115,7 @@ public class Ulid1Tests
             lastUlidBytes.AsSpan(TimestampBegin, TimestampLength).Reverse();
 
         // Inject _lastTimestamp and _lastUlid via reflection
-        var type = typeof(Ulid1Factory);
+        var type = typeof(VmUlidFactory);
         var tsField = type.GetField("_lastTimestamp", BindingFlags.Instance | BindingFlags.NonPublic);
         var ulidField = type.GetField("_lastUlid", BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -141,7 +141,7 @@ public class Ulid1Tests
     [Fact]
     public void Equals_CompareTo_And_Operators_Behave_As_Expected()
     {
-        var factory = new Ulid1Factory();
+        var factory = new VmUlidFactory();
         var a = factory.NewUlid();
 
         var b = factory.NewUlid();

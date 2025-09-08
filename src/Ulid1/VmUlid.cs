@@ -14,7 +14,7 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     readonly byte[] _ulidBytes;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VmUlid"/> struct using the specified byte ulidBytesSpan. Used only by the <see cref="Ulid1Factory"/>.
+    /// Initializes a new instance of the <see cref="VmUlid"/> struct using the specified byte ulidBytesSpan. Used only by the <see cref="VmUlidFactory"/>.
     /// </summary>
     /// <remarks>
     /// This constructor creates a ULID from the provided byte ulidBytesSpan. The caller must ensure that the ulidBytesSpan contains a valid ULID
@@ -62,6 +62,16 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     public readonly byte[] ToByteArray() => (byte[])_ulidBytes.Clone();
 
     /// <summary>
+    /// Gets the bytes of the current ULID instance into a new byte array.
+    /// </summary>
+    /// <remarks>
+    /// The returned byte array is a copy of the internal representation, ensuring that modifications to the array do not affect<br/>
+    /// the original ULID instance.
+    /// </remarks>
+    /// <returns>A new byte array containing the 16 bytes that represent the ULID.</returns>
+    public readonly ReadOnlySpan<byte> ToByteSpan() => _ulidBytes.AsSpan();
+
+    /// <summary>
     /// Converts the current ULID value to its equivalent Base64 string representation.
     /// </summary>
     /// <remarks>
@@ -69,7 +79,7 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// storage or transmission of the ULID value.
     /// </remarks>
     /// <returns>A Base64-encoded string that represents the ULID value.</returns>
-    public readonly string ToBase64() => Convert.ToBase64String(_ulidBytes);
+    public readonly string ToBase64() => Convert.ToBase64String(_ulidBytes.AsSpan());
 
     /// <summary>
     /// Converts the current ULID instance to its string representation.
@@ -112,7 +122,6 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
         Span<byte> ulidBytesSpan = stackalloc byte[UlidBytesLength];
 
         _ulidBytes.CopyTo(ulidBytesSpan);
-
         if (BitConverter.IsLittleEndian)
             ulidBytesSpan.Reverse();
 
@@ -180,13 +189,12 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// <returns>
     /// A byte array containing the random component of the ULID.
     /// </returns>
-    public readonly byte[] Random()
+    public readonly void Random(in Span<byte> bytes)
     {
-        var randomBytes = new byte[RandomLength];
+        if (bytes.Length < RandomLength)
+            throw new ArgumentException($"The parameter must be {RandomLength} long.", nameof(bytes));
 
-        _ulidBytes.AsSpan(RandomBegin, RandomLength).CopyTo(randomBytes);
-
-        return randomBytes;
+        _ulidBytes.AsSpan(RandomBegin, RandomLength).CopyTo(bytes);
     }
 
     /// <summary>
@@ -225,10 +233,9 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
         IFormatProvider? provider,
         out VmUlid result)
     {
-        ArgumentNullException.ThrowIfNull(source, nameof(source));
-
         result = new VmUlid();
-        if (!UlidString().IsMatch(source))
+
+        if (string.IsNullOrWhiteSpace(source) || source.Length < UlidStringLength)
             return false;
 
         Span<char> sourceSpan = stackalloc char[source.Length];
@@ -236,15 +243,14 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
         source.CopyTo(sourceSpan);
 
         // parse the string into a UInt128 value first
-        UInt128 ulidAsNumber = 0L;
+        UInt128 ulidAsNumber = 0;
         var alphabetSpan = CrockfordAlphabet.AsSpan();
 
         for (var i = 0; i < UlidStringLength; i++)
         {
             if (i > 0)
                 ulidAsNumber <<= 5;
-            var c = char.ToUpper(sourceSpan[i], CultureInfo.InvariantCulture);
-            ulidAsNumber |= (UInt128)alphabetSpan.BinarySearch(c);
+            ulidAsNumber |= (UInt128)alphabetSpan.BinarySearch(char.ToUpper(sourceSpan[i]));
         }
 
         // get the bytes of the UInt128 value

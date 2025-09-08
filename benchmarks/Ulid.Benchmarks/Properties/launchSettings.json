@@ -1,0 +1,28 @@
+{
+  "profiles": {
+    "List Flat": {
+      "commandName": "Project",
+      "commandLineArgs": "--list flat"
+    },
+    "List Tree": {
+      "commandName": "Project",
+      "commandLineArgs": "--list tree"
+    },
+    "NewUlid": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter vm2.Ulid.Benchmarks.NewUlid* --memory"
+    },
+    "ParseUlid": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter vm2.Ulid.Benchmarks.ParseUlid* --memory"
+    },
+    "UlidToString": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter vm2.Ulid.Benchmarks.UlidToString* --memory"
+    },
+    "All": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter * --memory"
+    }
+  }
+}

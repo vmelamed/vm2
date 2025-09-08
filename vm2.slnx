@@ -42,8 +42,8 @@
   <Folder Name="/src/Repository/DB/">
     <Project Path="src/Repository/DB/SQLite/SQLite.csproj" />
   </Folder>
-  <Folder Name="/src/Ulid1/">
-    <Project Path="src/Ulid1/Ulid1.csproj" />
+  <Folder Name="/src/VmUlid/">
+    <Project Path="src/Ulid1/VmUlid.csproj" />
   </Folder>
 
   <Folder Name="/test/">

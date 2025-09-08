@@ -66,11 +66,27 @@
     </PropertyGroup>
     <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]benchmarks[/\\]'))">
         <PackageReference Include="BenchmarkDotNet" />
+        <PackageReference Include="BenchmarkDotNet.Annotations" />
+        <PackageReference Include="Microsoft.VisualStudio.DiagnosticsHub.BenchmarkDotNetDiagnosers" />
+        <!--
+        <PackageReference Include="BenchmarkDotNet.Diagnostics.dotMemory" />
+        <PackageReference Include="BenchmarkDotNet.Diagnostics.dotTrace" />
+        -->
+        <!-- To Shows up in the test explorer (with some perf. penalty)
+        <PackageReference Include="BenchmarkDotNet.TestAdapter" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+         -->
     </ItemGroup>
     <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]benchmarks[/\\]'))">
+        <Using Include="Microsoft.VSDiagnostics"/>
+        <Using Include="BenchmarkDotNet" />
         <Using Include="BenchmarkDotNet.Attributes" />
-        <Using Include="BenchmarkDotNet.Running" />
+        <Using Include="BenchmarkDotNet.Configs" />
         <Using Include="BenchmarkDotNet.Jobs" />
+        <Using Include="BenchmarkDotNet.Order" />
+        <Using Include="BenchmarkDotNet.Running" />
+        <!--
+        -->
     </ItemGroup>
 
 </Project>

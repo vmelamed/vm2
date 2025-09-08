@@ -1,28 +1,106 @@
 namespace vm2.Ulid.Benchmarks;
 
+class PreGeneratedData<T>
+{
+    int _numberItems;
+    int _index;
+    T[] _data = null!;
+
+    public PreGeneratedData(int number, Func<int, T> factory)
+    {
+        _numberItems = number;
+        _index = 0;
+        _data = [.. Enumerable.Range(0, _numberItems).Select(factory)];
+    }
+
+    public T GetNext()
+    {
+        if (_index == _numberItems)
+            _index = 0;
+        return _data[_index];
+    }
+}
+
 [SimpleJob(RuntimeMoniker.HostProcess)]
 [MemoryDiagnoser]
 [HtmlExporter]
-public class UlidBenchmarks
+[CPUUsageDiagnoser]
+[Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
+public class NewUlid
 {
-    Ulid1Factory? _factory;
+    [Params("Cryptographic", "HKDF", "Pseudo", "System")]
+    public string RngAlgorithm { get; set; } = "";
+
+    VmUlidFactory _factory = null!;
+
+    Action _method = null!;
 
     [GlobalSetup]
     public void Setup()
     {
-        _factory = new Ulid1Factory();
+        _factory = RngAlgorithm switch {
+            "Cryptographic" => new VmUlidFactory(new CryptographicRng()),
+            "HKDF" => new VmUlidFactory(new HkdfRng()),
+            "Pseudo" => new VmUlidFactory(new PseudoRng()),
+            _ => new VmUlidFactory(new CryptographicRng()),
+        };
+
+        _method = RngAlgorithm switch {
+            "Cryptographic" => () => _factory.NewUlid(),
+            "HKDF" => () => _factory.NewUlid(),
+            "Pseudo" => () => _factory.NewUlid(),
+            _ => () => System.Ulid.NewUlid(),
+        };
     }
 
-    [Benchmark(Description = "vm2.VmUlid.NewUlid")]
-    public VmUlid Generate_MyUlid() => _factory!.NewUlid();
+    [Benchmark]
+    public void Generate_Ulid() => _method();
+}
 
-    [Benchmark(Description = "vm2.VmUlid.ToString")]
-    public string MyUlid_ToString() => _factory!.NewUlid().ToString();
+[SimpleJob(RuntimeMoniker.HostProcess)]
+[MemoryDiagnoser]
+[HtmlExporter]
+public class UlidToString
+{
+    const int MaxDataItems = 1000;
+    VmUlidFactory _factory = null!;
+    PreGeneratedData<VmUlid> _dataVm = null!;
+    PreGeneratedData<System.Ulid> _dataSys = null!;
 
-    [Benchmark(Description = "vm2.VmUlid.Parse")]
-    public VmUlid MyUlid_Parse()
+    [GlobalSetup]
+    public void Setup()
     {
-        var s = _factory!.NewUlid().ToString();
-        return VmUlid.Parse(s);
+        _factory = new();
+        _dataVm = new(MaxDataItems, _ => _factory.NewUlid());
+        _dataSys = new(MaxDataItems, _ => System.Ulid.NewUlid());
     }
+
+    [Benchmark(Description = "VmUlid.ToString")]
+    public string MyUlid_ToString() => _dataVm.GetNext().ToString();
+
+    [Benchmark(Description = "SysUlid.ToString", Baseline = true)]
+    public string SysUlid_ToString() => _dataSys.GetNext().ToString();
+}
+
+[SimpleJob(RuntimeMoniker.HostProcess)]
+[MemoryDiagnoser]
+[HtmlExporter]
+public class ParseUlid
+{
+    const int MaxDataItems = 1000;
+    PreGeneratedData<string> _data = null!;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        //VmUlidFactory _factory = new();
+        //_data = new(MaxDataItems, _ => _factory.NewUlid().ToString());
+        _data = new(MaxDataItems, _ => System.Ulid.NewUlid().ToString());
+    }
+
+    [Benchmark(Description = "VmUlid.ToString")]
+    public VmUlid MyUlid_Parse() => VmUlid.Parse(_data.GetNext());
+
+    [Benchmark(Description = "SysUlid.ToString", Baseline = true)]
+    public System.Ulid SysUlid_ToString() => System.Ulid.Parse(_data.GetNext());
 }

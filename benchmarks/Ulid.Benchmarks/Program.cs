@@ -1,14 +1,22 @@
 namespace vm2.Ulid.Benchmarks;
 
-using BenchmarkDotNet.Configs;
-
 public static class Program
 {
     public static void Main(string[] args)
     {
-        BenchmarkRunner.Run<UlidBenchmarks>(
-            DefaultConfig
-                .Instance
-                .WithOptions(ConfigOptions.DisableOptimizationsValidator)); // TODO: remove
+        var artifactsFolder = args.Length >= 1 ? args[0] : ".\\BenchmarkDotNet.Artifacts\\results";
+        BenchmarkSwitcher
+            .FromAssembly(typeof(Program).Assembly)
+            .Run(
+                args,
+                DefaultConfig
+                    .Instance
+                    .WithArtifactsPath(artifactsFolder)
+                    .WithOptions(ConfigOptions.StopOnFirstError)
+#if DEBUG
+                    .WithOptions(
+                        ConfigOptions.DisableOptimizationsValidator)
+#endif
+            );
     }
 }

@@ -11,10 +11,18 @@
 /// <b>Hint:</b> you may have more than one factory in your program representing separate sequences of ULID-s. E.g. a factory<br/>
 /// per DB table.
 /// </remarks>
-public class Ulid1Factory
+public class VmUlidFactory
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VmUlidFactory"/> class using the specified random number generator.
+    /// </summary>
+    /// <param name="random">The random number generator used to produce unique identifiers. Cannot be <see langword="null"/>.</param>
+    public VmUlidFactory(IRandom? random = null)
+        => _random = random ?? new CryptographicRng();
+
     long _lastTimestamp;
     byte[] _lastUlid = new byte[UlidBytesLength];
+    IRandom _random;
     Lock _lock = new();
 
     /// <summary>
@@ -63,7 +71,7 @@ public class Ulid1Factory
 
                 // fill the random bytes part from crypto-strong RNG, overwriting the last 2 bytes of the 8-bit modified timestamp:
                 // 0x01020304050600000000000000000000 => 0x010203040506rrrrrrrrrrrrrrrrrrrr
-                RandomNumberGenerator.Fill(ulidSpan[RandomBegin..RandomEnd]);
+                _random.Fill(ulidSpan[RandomBegin..RandomEnd]);
             }
         }
 
