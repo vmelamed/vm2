@@ -2,10 +2,13 @@
   "solution": {
     "path": "vm2.slnx",
     "projects": [
+      "benchmarks\\UlidType.Benchmarks\\UlidType.Benchmarks.csproj",
+      "examples\\GenerateUlids\\GenerateUlids.csproj",
       "src\\Repository\\DB\\SQLite\\SQLite.csproj",
       "src\\Repository\\FakeDbSet\\FakeDbSet.csproj",
       "src\\Repository\\Repository\\Repository.csproj",
       "src\\Threading\\Threading.csproj",
+      "src\\UlidType\\UlidType.csproj",
       "test\\Repository\\DB\\TestSQLite\\TestSQLite.csproj",
       "test\\Repository\\FakeDbSet.Tests\\FakeDbSet.Tests.csproj",
       "test\\Repository\\IntegrationTests\\IntegrationTests.csproj",

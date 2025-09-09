@@ -11,7 +11,7 @@
 [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public class AssumeIdentityAttribute(string roleName, string userName = "xUnit") : BeforeAfterTestAttribute
 {
-    IPrincipal? originalPrincipal;
+    IPrincipal? _originalPrincipal;
 
     public string RoleName { get; } = roleName;
 
@@ -19,13 +19,13 @@ public class AssumeIdentityAttribute(string roleName, string userName = "xUnit")
 
     public override void After(MethodInfo methodUnderTest, IXunitTest test)
     {
-        if (originalPrincipal is not null)
-            Thread.CurrentPrincipal = originalPrincipal;
+        if (_originalPrincipal is not null)
+            Thread.CurrentPrincipal = _originalPrincipal;
     }
 
     public override void Before(MethodInfo methodUnderTest, IXunitTest test)
     {
-        originalPrincipal = Thread.CurrentPrincipal;
+        _originalPrincipal = Thread.CurrentPrincipal;
         var identity = new GenericIdentity(UserName);
         var principal = new GenericPrincipal(identity, [RoleName]);
         Thread.CurrentPrincipal = principal;
