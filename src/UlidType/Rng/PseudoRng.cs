@@ -1,4 +1,4 @@
-﻿namespace vm2.VmUlid.Rng;
+﻿namespace vm2.UlidType.Rng;
 
 /// <summary>
 /// Provides a pseudo-random number generator that fills a span of bytes with random values.

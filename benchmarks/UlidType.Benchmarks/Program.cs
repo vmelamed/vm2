@@ -1,4 +1,4 @@
-namespace vm2.Ulid.Benchmarks;
+namespace vm2.UlidType.Benchmarks;
 
 public static class Program
 {

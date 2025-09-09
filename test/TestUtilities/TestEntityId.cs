@@ -1,13 +1,16 @@
 ﻿namespace vm2.TestUtilities;
 
+using vm2.UlidType;
+
 public static class TestEntityId
 {
-    static AsyncLocal<List<Guid>> _ids = new();
+    static UlidFactory _ulidFactory = new();
     static AsyncLocal<Guid> _current = new();
+    static AsyncLocal<List<Guid>> _ids = new();
 
     public static Guid Next()
     {
-        _current.Value = Ulid.NewUlid().ToGuid();
+        _current.Value = new Guid(_ulidFactory.NewUlid().ToByteArray());
         _ids.Value?.Add(_current.Value);
         return _current.Value;
     }

@@ -2,7 +2,7 @@
 
 public static class Persons
 {
-    public static PersonId NextId => (PersonId)Ulid.NewUlid();
+    public static PersonId NextId => (PersonId)UlidFactory.NewUlid();
 
     static Person? _personMilesDavis;
     static Person? _personJohnColtrane;

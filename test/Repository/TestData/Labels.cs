@@ -2,7 +2,7 @@
 
 public static class Labels
 {
-    public static LabelId NextId => new(Ulid.NewUlid());
+    public static LabelId NextId => new(UlidFactory.NewUlid());
 
     static Label? _label1;
     static Label? _label2;

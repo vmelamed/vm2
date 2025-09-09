@@ -20,9 +20,6 @@ public class Person :
     HashSet<Album> _albums = new(ReferenceEqualityComparer.Instance);
     HashSet<AlbumPerson> _personsAlbums = new(ReferenceEqualityComparer.Instance);
 
-    /// <inheritdoc />
-    public static Ulid GetToken() => Ulid.NewUlid();
-
     /// <summary>
     /// Gets or sets the unique identifier for the entity.
     /// </summary>

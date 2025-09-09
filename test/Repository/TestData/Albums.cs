@@ -4,7 +4,7 @@ using vm2.TestUtilities;
 
 public static class Albums
 {
-    public static AlbumId NextId => new(Ulid.NewUlid());
+    public static AlbumId NextId => new(UlidFactory.NewUlid());
 
     static Album? _albumKindOfBlue;
     static Album? _albumEllingtonAtNewport;

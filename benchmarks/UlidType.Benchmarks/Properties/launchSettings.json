@@ -10,15 +10,15 @@
     },
     "NewUlid": {
       "commandName": "Project",
-      "commandLineArgs": "--filter vm2.Ulid.Benchmarks.NewUlid* --memory"
+      "commandLineArgs": "--filter vm2.UlidType.Benchmarks.NewUlid* --memory"
     },
     "ParseUlid": {
       "commandName": "Project",
-      "commandLineArgs": "--filter vm2.Ulid.Benchmarks.ParseUlid* --memory"
+      "commandLineArgs": "--filter vm2.UlidType.Benchmarks.ParseUlid* --memory"
     },
     "UlidToString": {
       "commandName": "Project",
-      "commandLineArgs": "--filter vm2.Ulid.Benchmarks.UlidToString* --memory"
+      "commandLineArgs": "--filter vm2.UlidType.Benchmarks.UlidToString* --memory"
     },
     "All": {
       "commandName": "Project",

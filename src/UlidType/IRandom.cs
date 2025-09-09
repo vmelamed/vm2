@@ -1,4 +1,4 @@
-﻿namespace vm2.VmUlid;
+﻿namespace vm2.UlidType;
 
 /// <summary>
 /// Represents a source of random numbers.

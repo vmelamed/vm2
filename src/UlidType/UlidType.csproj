@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>vm2.VmUlid</RootNamespace>
+    <RootNamespace>vm2.UlidType</RootNamespace>
   </PropertyGroup>
 
 </Project>

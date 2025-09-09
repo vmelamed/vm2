@@ -14,7 +14,7 @@ class AlbumConfiguration : IEntityTypeConfiguration<Album>
         builder
             .Property(a => a.Id)
             .ValueGeneratedOnAdd()
-            .HasValueGenerator<UlidValueGenerator>()
+            .HasValueGenerator<AlbumIdGenerator>()
             .HasColumnOrder(-100)
             ;
 

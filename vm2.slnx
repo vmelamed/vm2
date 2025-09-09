@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/benchmarks/">
-    <Project Path="benchmarks/Ulid.Benchmarks/Ulid.Benchmarks.csproj" />
+    <Project Path="benchmarks/UlidType.Benchmarks/UlidType.Benchmarks.csproj" />
   </Folder>
   <Folder Name="/docs/">
     <File Path="docs/RecentQandAKeys.md" />
@@ -26,6 +26,7 @@
   <Folder Name="/src/">
     <Project Path="src/RegexLib/RegexLib.csproj" />
     <Project Path="src/Threading/Threading.csproj" />
+    <Project Path="src/UlidType/UlidType.csproj" />
   </Folder>
   <Folder Name="/src/Linq/">
     <Project Path="src/Linq/ExpressionDeepEquals/ExpressionDeepEquals.csproj" />
@@ -45,15 +46,12 @@
   <Folder Name="/src/Repository/DB/">
     <Project Path="src/Repository/DB/SQLite/SQLite.csproj" />
   </Folder>
-  <Folder Name="/src/VmUlid/">
-    <Project Path="src/VmUlid/VmUlid.csproj" />
-  </Folder>
 
   <Folder Name="/test/">
     <Project Path="test/RegexLibTests/RegexLibTests.csproj" />
     <Project Path="test/TestUtilities/TestUtilities.csproj" />
     <Project Path="test/Threading.Tests/Threading.Tests.csproj" />
-    <Project Path="test/VmUlidTests/VmUlidTests.csproj" />
+    <Project Path="test/UlidType.Tests/UlidType.Tests.csproj" />
   </Folder>
   <Folder Name="/test/Functional/">
     <Project Path="test/Functional/Primitives.Tests/Primitives.Tests.csproj" />

@@ -1,13 +1,13 @@
-﻿using vm2.VmUlid;
+﻿using vm2.UlidType;
 
-var ulidFactory = new VmUlidFactory();
+var ulidFactory = new UlidFactory();
 
 var vmUlid = ulidFactory.NewUlid();
 
 DateTimeOffset timestamp = vmUlid.Timestamp();
 byte[] random = vmUlid.Random();
 
-Console.WriteLine("VmUlid");
+Console.WriteLine("Ulid");
 Console.WriteLine($"As bytes:    {string.Join(":", vmUlid.ToByteArray().Select(b => b.ToString("X2")))}");
 Console.WriteLine($"As a string: {vmUlid}");
 Console.WriteLine($"{timestamp:o} : {string.Join(":", random.Select(b => b.ToString("X2")))}");
@@ -27,8 +27,11 @@ Console.WriteLine(ulidFactory.NewUlid().ToString());
 Console.WriteLine(ulidFactory.NewUlid().ToString());
 Console.WriteLine();
 
+/*
+using SyUlid = System.Ulid;
+
 Console.WriteLine("System.Ulid");
-var syUlid = Ulid.NewUlid();
+var syUlid = SyUlid.NewUlid();
 timestamp = syUlid.Time;
 random = syUlid.Random;
 
@@ -39,19 +42,18 @@ Console.WriteLine($"{timestamp:o} : {string.Join(":", random.Select(b => b.ToStr
 Console.WriteLine();
 
 
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
-Console.WriteLine(Ulid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
+Console.WriteLine(SyUlid.NewUlid().ToString());
 
-/*
 01K4P8T8PW:2NRPGWK4VC9H38PS
 01K4P8T8PX:SFM8VGRCFTSZ1STZ
 01K4P8T8PX:HWSQB413GQ18FQM8

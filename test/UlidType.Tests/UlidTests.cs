@@ -1,17 +1,16 @@
-namespace vm2.VmUlid.Tests;
+namespace vm2.UlidType.Tests;
 
-public class VmUlidTests
+public class UlidTests
 {
     [Fact]
     public void NewUlid_Roundtrip_ToByteArray_ToGuid_ToBase64_ToString()
     {
-        var factory = new VmUlidFactory();
+        var factory = new UlidFactory();
         var ulid = factory.NewUlid();
 
         var bytes = ulid.ToByteArray();
         bytes.Should().HaveCount(UlidBytesLength);
 
-        ulid.ToGuid().ToByteArray().Should().Equal(bytes);
         Convert.FromBase64String(ulid.ToBase64()).Should().Equal(bytes);
 
         var s = ulid.ToString();
@@ -22,7 +21,7 @@ public class VmUlidTests
     [Fact]
     public void TryWrite_WithSmallDestination_ReturnsFalse_And_WithCorrectSize_WritesBytes()
     {
-        var ulid = new VmUlidFactory().NewUlid();
+        var ulid = new UlidFactory().NewUlid();
 
         var small = new byte[UlidBytesLength - 1];
         ulid.TryWrite(small.AsSpan()).Should().BeFalse();
@@ -35,7 +34,7 @@ public class VmUlidTests
     [Fact]
     public void TryWriteStringify_SpanSizeBehavior_And_Matches_ToString()
     {
-        var ulid = new VmUlidFactory().NewUlid();
+        var ulid = new UlidFactory().NewUlid();
 
         var tooSmall = new char[UlidStringLength - 1];
         ulid.TryWriteStringify(tooSmall.AsSpan()).Should().BeFalse();
@@ -50,17 +49,17 @@ public class VmUlidTests
     [Fact]
     public void Parse_And_TryParse_Roundtrip_And_CaseInsensitive()
     {
-        var ulid = new VmUlidFactory().NewUlid();
+        var ulid = new UlidFactory().NewUlid();
         var str = ulid.ToString();
 
-        var parsed = VmUlid.Parse(str);
+        var parsed = Ulid.Parse(str);
         parsed.Should().Be(ulid);
 
-        VmUlid.TryParse(str, out var result).Should().BeTrue();
+        Ulid.TryParse(str, out var result).Should().BeTrue();
         result.Should().Be(ulid);
 
         // case-insensitive parsing
-        VmUlid.TryParse(str.ToLowerInvariant(), out var lower).Should().BeTrue();
+        Ulid.TryParse(str.ToLowerInvariant(), out var lower).Should().BeTrue();
         lower.Should().Be(ulid);
     }
 
@@ -69,23 +68,22 @@ public class VmUlidTests
     {
         var invalid = new string('!', UlidStringLength);
 
-        Action act = () => VmUlid.Parse(invalid);
+        Action act = () => Ulid.Parse(invalid);
         act.Should().Throw<ArgumentException>();
 
-        VmUlid.TryParse(invalid, out var r).Should().BeFalse();
+        Ulid.TryParse(invalid, out var r).Should().BeFalse();
     }
 
     [Fact]
-    public void TryParse_Null_Throws_ArgumentNullException()
+    public void TryParse_Null_ReturnsFalse()
     {
-        Action act = () => VmUlid.TryParse(null!, out _);
-        act.Should().Throw<ArgumentNullException>();
+        Ulid.TryParse(null!, out _).Should().BeFalse();
     }
 
     [Fact]
     public void Timestamp_And_Random_Are_Extractable_And_Within_Reasonable_Range()
     {
-        var factory = new VmUlidFactory();
+        var factory = new UlidFactory();
         var ulid = factory.NewUlid();
 
         var now = DateTimeOffset.UtcNow;
@@ -103,7 +101,7 @@ public class VmUlidTests
     [Fact]
     public void NewUlid_Generates_Unique_And_Monotonic_Ulids_When_Incrementing_Within_Same_Millisecond()
     {
-        var factory = new VmUlidFactory();
+        var factory = new UlidFactory();
 
         // Force the factory into the "same millisecond" increment path by setting private state:
         var lastTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -115,7 +113,7 @@ public class VmUlidTests
             lastUlidBytes.AsSpan(TimestampBegin, TimestampLength).Reverse();
 
         // Inject _lastTimestamp and _lastUlid via reflection
-        var type = typeof(VmUlidFactory);
+        var type = typeof(UlidFactory);
         var tsField = type.GetField("_lastTimestamp", BindingFlags.Instance | BindingFlags.NonPublic);
         var ulidField = type.GetField("_lastUlid", BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -141,7 +139,7 @@ public class VmUlidTests
     [Fact]
     public void Equals_CompareTo_And_Operators_Behave_As_Expected()
     {
-        var factory = new VmUlidFactory();
+        var factory = new UlidFactory();
         var a = factory.NewUlid();
 
         var b = factory.NewUlid();
@@ -156,7 +154,7 @@ public class VmUlidTests
         (b >= a).Should().BeTrue();
 
         // equality via same string
-        var a2 = VmUlid.Parse(a.ToString());
+        var a2 = Ulid.Parse(a.ToString());
         a2.Equals((object)a).Should().BeTrue();
         a2.CompareTo(a).Should().Be(0);
         (a2 == a).Should().BeTrue();

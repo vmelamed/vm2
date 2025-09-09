@@ -1,4 +1,4 @@
-﻿namespace vm2.VmUlid.Rng;
+﻿namespace vm2.UlidType.Rng;
 
 /// <summary>
 /// Provides cryptographically secure random number generation functionality.

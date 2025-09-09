@@ -9,11 +9,13 @@
 /// </remarks>
 public sealed class UlidGuidValueGenerator : ValueGenerator<Guid>
 {
+    static UlidFactory _ulidFactory = new();
+
     /// <inheritdoc />
     public override bool GeneratesTemporaryValues => false;
 
     /// <summary>
     /// Generates a new <see cref="Guid"/> value using ULID.
     /// </summary>
-    public override Guid Next(EntityEntry entry) => Ulid.NewUlid().ToGuid();
+    public override Guid Next(EntityEntry entry) => _ulidFactory.NewUlid().ToGuid();
 }

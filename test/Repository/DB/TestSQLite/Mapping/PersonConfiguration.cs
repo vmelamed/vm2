@@ -12,7 +12,7 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder
             .Property(p => p.Id)
-            .HasValueGenerator<UlidValueGenerator>()
+            .HasValueGenerator<PersonIdGenerator>()
             .ValueGeneratedOnAdd()  // SQLite does not support HiLo, so we use ValueGeneratedOnAdd
             .HasColumnOrder(-100)
             ;

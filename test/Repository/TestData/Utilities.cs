@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.TestData;
 
+using vm2.UlidType;
+
 public static class Utilities
 {
     public const string Caller  = "TestCaller";
@@ -32,6 +34,8 @@ public static class Utilities
     }
 
     public static DateTime Now => DateTime.UtcNow;
+
+    public static UlidFactory UlidFactory { get; } = new();
 
     public static string SeededString(string value) => value + DateTime.Now.Ticks;
 

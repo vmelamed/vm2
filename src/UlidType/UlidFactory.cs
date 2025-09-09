@@ -1,4 +1,4 @@
-﻿namespace vm2.VmUlid;
+﻿namespace vm2.UlidType;
 
 /// <summary>
 /// Provides functionality to generate unique lexicographically sortable identifiers (ULIDs).
@@ -11,13 +11,13 @@
 /// <b>Hint:</b> you may have more than one factory in your program representing separate sequences of ULID-s. E.g. a factory<br/>
 /// per DB table.
 /// </remarks>
-public class VmUlidFactory
+public class UlidFactory
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="VmUlidFactory"/> class using the specified random number generator.
+    /// Initializes a new instance of the <see cref="UlidFactory"/> class using the specified random number generator.
     /// </summary>
     /// <param name="random">The random number generator used to produce unique identifiers. Cannot be <see langword="null"/>.</param>
-    public VmUlidFactory(IRandom? random = null)
+    public UlidFactory(IRandom? random = null)
         => _random = random ?? new CryptographicRng();
 
     long _lastTimestamp;
@@ -32,11 +32,11 @@ public class VmUlidFactory
     /// This method creates a ULID based on the current UTC timestamp and a random component. If called multiple times within
     /// the same millisecond, the random component is incremented to ensure uniqueness. The method is thread-safe.
     /// </remarks>
-    /// <returns>A new <see cref="VmUlid"/> instance representing the generated ULID.</returns>
+    /// <returns>A new <see cref="Ulid"/> instance representing the generated ULID.</returns>
     /// <exception cref="OverflowException">
     /// Thrown if the random component overflows while incrementing within the same millisecond. This is an extremely rare scenario.
     /// </exception>
-    public VmUlid NewUlid()
+    public Ulid NewUlid()
     {
         var ulidSpan = _lastUlid.AsSpan();
         var unixDt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -76,6 +76,6 @@ public class VmUlidFactory
         }
 
         // create a new ULID from the bytes
-        return new VmUlid(ulidSpan);
+        return new Ulid(ulidSpan);
     }
 }

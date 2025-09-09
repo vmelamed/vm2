@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <RootNamespace>vm2.Ulid.Benchmark</RootNamespace>
+        <RootNamespace>vm2.UlidType.Benchmark</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ulid" />
+        <!--<PackageReference Include="Ulid" />-->
+
         <!-- To Shows up in the test explorer (with some perf. penalty)
         <PackageReference Include="BenchmarkDotNet.TestAdapter" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -15,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\VmUlid\VmUlid.csproj" />
+      <ProjectReference Include="..\..\src\UlidType\UlidType.csproj" />
     </ItemGroup>
 
 </Project>

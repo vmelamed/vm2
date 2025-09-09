@@ -9,6 +9,8 @@
 /// </remarks>
 public sealed class UlidBinValueGenerator : ValueGenerator<byte[]>
 {
+    static UlidFactory _ulidFactory = new();
+
     /// <summary>
     /// The length of the generated ULID in bytes.
     /// </summary>
@@ -20,5 +22,5 @@ public sealed class UlidBinValueGenerator : ValueGenerator<byte[]>
     /// <summary>
     /// Generates a new <see cref="Guid"/> value using ULID.
     /// </summary>
-    public override byte[] Next(EntityEntry entry) => Ulid.NewUlid().ToByteArray();
+    public override byte[] Next(EntityEntry entry) => _ulidFactory.NewUlid().ToByteArray();
 }

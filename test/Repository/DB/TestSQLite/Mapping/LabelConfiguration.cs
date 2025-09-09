@@ -12,7 +12,7 @@ class LabelConfiguration : IEntityTypeConfiguration<Label>
 
         builder
             .Property(c => c.Id)
-            .HasValueGenerator<UlidValueGenerator>()
+            .HasValueGenerator<LabelIdGenerator>()
             .ValueGeneratedOnAdd()
             .HasColumnOrder(-100)
             ;

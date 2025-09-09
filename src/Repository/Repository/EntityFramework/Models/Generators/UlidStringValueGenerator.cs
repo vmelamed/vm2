@@ -9,6 +9,8 @@
 /// </remarks>
 public sealed class UlidStringValueGenerator : ValueGenerator<string>
 {
+    static UlidFactory _ulidFactory = new();
+
     /// <summary>
     /// The length of the generated ULID string in Base64 format.
     /// </summary>
@@ -20,5 +22,5 @@ public sealed class UlidStringValueGenerator : ValueGenerator<string>
     /// <summary>
     /// Generates a new <see cref="Guid"/> value using ULID.
     /// </summary>
-    public override string Next(EntityEntry entry) => Ulid.NewUlid().ToBase64();
+    public override string Next(EntityEntry entry) => _ulidFactory.NewUlid().ToBase64();
 }

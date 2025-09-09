@@ -3,13 +3,13 @@
 /// <summary>
 /// Provides a mechanism to convert between <see cref="PersonId"/> and <see cref="Guid"/>.
 /// </summary>
-public sealed class PersonIdConverter : ValueConverter<PersonId, Guid>
+public sealed class PersonIdConverter : ValueConverter<PersonId, string>
 {
     /// <summary>
     /// Initializes a new instance of the class,  providing conversion logic between <see cref="PersonId"/> and <see cref="Guid"/>.
     /// </summary>
     public PersonIdConverter() : base(
-        v => v.Id.ToGuid(),
+        v => v.Id.ToString(),
         v => new PersonId(new Ulid(v)))
     {
     }

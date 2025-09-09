@@ -3,13 +3,13 @@
 /// <summary>
 /// Provides a mechanism to convert between <see cref="AlbumId"/> and <see cref="Guid"/>.
 /// </summary>
-public sealed class AlbumIdConverter : ValueConverter<AlbumId, Guid>
+public sealed class AlbumIdConverter : ValueConverter<AlbumId, string>
 {
     /// <summary>
     /// Initializes a new instance of the class,  providing conversion logic between <see cref="AlbumId"/> and <see cref="Guid"/>.
     /// </summary>
     public AlbumIdConverter() : base(
-        v => v.Id.ToGuid(),
+        v => v.Id.ToString(),
         v => new AlbumId(new Ulid(v)))
     {
     }

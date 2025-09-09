@@ -1,4 +1,4 @@
-﻿namespace vm2.VmUlid;
+﻿namespace vm2.UlidType;
 
 /// <summary>
 /// Represents a Universally Unique Lexicographically Sortable Identifier (ULID).
@@ -9,12 +9,12 @@
 /// to other formats such as strings or GUIDs. ULIDs are commonly used in distributed systems where unique, sortable identifiers<br/>
 /// are required.
 /// </remarks>
-public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsable<VmUlid>
+public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Ulid>
 {
     readonly byte[] _ulidBytes;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VmUlid"/> struct using the specified byte ulidBytesSpan. Used only by the <see cref="VmUlidFactory"/>.
+    /// Initializes a new instance of the <see cref="Ulid"/> struct using the specified byte ulidBytesSpan. Used only by the <see cref="UlidFactory"/>.
     /// </summary>
     /// <remarks>
     /// This constructor creates a ULID from the provided byte ulidBytesSpan. The caller must ensure that the ulidBytesSpan contains a valid ULID
@@ -24,7 +24,7 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// <param name="bytes">
     /// A read-only ulidBytesSpan of bytes representing the ULID. The ulidBytesSpan must be exactly  <see cref="UlidBytesLength"/> bytes long.
     /// </param>
-    internal VmUlid(in ReadOnlySpan<byte> bytes)
+    internal Ulid(in ReadOnlySpan<byte> bytes)
     {
         if (bytes.Length != UlidBytesLength)
             throw new ArgumentException($"The input ulidBytesSpan of bytes must be exactly {UlidBytesLength} bytes long.", nameof(bytes));
@@ -34,11 +34,20 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VmUlid"/> struct using the specified string representation.
+    /// Initializes a new instance of the <see cref="Ulid"/> struct using the specified string representation.
     /// </summary>
     /// <param name="source">The string representation of the ULID to parse. Must be a valid ULID string.</param>
-    public VmUlid(string source)
+    public Ulid(string source)
         => _ulidBytes = Parse(source)._ulidBytes;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Ulid"/> struct from the bytes of the specified <see cref="Guid"/>.
+    /// </summary>
+    /// <param name="source">The string representation of the ULID to parse. Must be a valid ULID string.</param>
+    public Ulid(Guid source)
+        : this(source.ToByteArray())
+    {
+    }
 
     /// <summary>
     /// Gets the bytes of the current ULID instance into a new byte array.
@@ -59,6 +68,12 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// </remarks>
     /// <returns>A new byte array containing the 16 bytes that represent the ULID.</returns>
     public readonly ReadOnlySpan<byte> ToByteSpan() => _ulidBytes.AsSpan();
+
+    /// <summary>
+    /// Converts the current ULID value to its equivalent Guid representation.
+    /// </summary>
+    /// <returns></returns>
+    public readonly Guid ToGuid() => new Guid(_ulidBytes);
 
     /// <summary>
     /// Converts the current ULID value to its equivalent Base64 string representation.
@@ -193,20 +208,20 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// </returns>
     public readonly byte[] Random()
     {
-        Span<byte> bytes = stackalloc byte[RandomLength];
+        byte[] bytes = new byte[RandomLength];
 
-        Random(bytes);
-        return bytes.ToArray();
+        Random(bytes.AsSpan());
+        return bytes;
     }
 
     /// <summary>
-    /// Parses the specified string representation of a ULID and returns the corresponding <see cref="VmUlid"/> instance.
+    /// Parses the specified string representation of a ULID and returns the corresponding <see cref="Ulid"/> instance.
     /// </summary>
     /// <param name="s">The string representation of the ULID to parse.</param>
     /// <param name="formatProvider">An optional format provider, which is ignored in this implementation.</param>
-    /// <returns>The <see cref="VmUlid"/> instance that corresponds to the parsed string.</returns>
+    /// <returns>The <see cref="Ulid"/> instance that corresponds to the parsed string.</returns>
     /// <exception cref="ArgumentException">Thrown if the input string <paramref name="s"/> cannot be parsed as a valid ULID.</exception>
-    public static VmUlid Parse(string s, IFormatProvider? formatProvider = null)
+    public static Ulid Parse(string s, IFormatProvider? formatProvider = null)
         => TryParse(s, formatProvider, out var u) ? u! : throw new ArgumentException("Unable to parse the input", nameof(s));
 
     /// <summary>
@@ -214,7 +229,7 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// and returns a value indicating whether the operation succeeded.
     /// </summary>
     /// <remarks>
-    /// The method validates the input string against the ULID format and attempts to parse it into a <see cref="VmUlid"/> instance.<br/>
+    /// The method validates the input string against the ULID format and attempts to parse it into a <see cref="Ulid"/> instance.<br/>
     /// If the input string does not conform to the ULID format, the method returns <see langword="false"/> and the <paramref name="result"/><br/>
     /// parameter is set to <see langword="null"/>.
     /// </remarks>
@@ -225,17 +240,17 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// Ignored in this implementation.
     /// </param>
     /// <param name="result">
-    /// When this method returns, contains the parsed <see cref="VmUlid"/> value if the parsing succeeded; otherwise, <see langword="null"/>.
+    /// When this method returns, contains the parsed <see cref="Ulid"/> value if the parsing succeeded; otherwise, <see langword="null"/>.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if the string was successfully parsed into a valid <see cref="VmUlid"/>; otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the string was successfully parsed into a valid <see cref="Ulid"/>; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool TryParse(
         [NotNullWhen(true)] string? source,
         IFormatProvider? provider,
-        out VmUlid result)
+        out Ulid result)
     {
-        result = new VmUlid();
+        result = new Ulid();
 
         if (string.IsNullOrWhiteSpace(source) || source.Length < UlidStringLength)
             return false;
@@ -252,7 +267,13 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
         {
             if (i > 0)
                 ulidAsNumber <<= 5;
-            ulidAsNumber |= (UInt128)alphabetSpan.BinarySearch(char.ToUpper(sourceSpan[i]));
+
+            var index = alphabetSpan.BinarySearch(char.ToUpper(sourceSpan[i]));
+
+            if (index < 0)
+                return false;
+
+            ulidAsNumber |= (UInt128)index;
         }
 
         // get the bytes of the UInt128 value
@@ -263,7 +284,7 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
             ulidSpan.Reverse();
 
         // this is our ULID
-        result = new VmUlid(ulidSpan);
+        result = new Ulid(ulidSpan);
         return true;
     }
 
@@ -278,33 +299,33 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// The string to parse as a ULID. This value can be <see langword="null"/>.
     /// </param>
     /// <param name="result">
-    /// When this method returns, contains the parsed <see cref="VmUlid"/> if the parsing succeeded; otherwise, <see langword="null"/>.
+    /// When this method returns, contains the parsed <see cref="Ulid"/> if the parsing succeeded; otherwise, <see langword="null"/>.
     /// </param>
     /// <returns>
     /// <see langword="true"/> if the string was successfully parsed as a ULID; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool TryParse(
         [NotNullWhen(true)] string? source,
-        out VmUlid result)
+        out Ulid result)
         => TryParse(source, null, out result);
 
     /// <summary>
-    /// Determines whether the current instance is equal to the specified <see cref="VmUlid"/> instance.
+    /// Determines whether the current instance is equal to the specified <see cref="Ulid"/> instance.
     /// </summary>
-    /// <param name="other">The <see cref="VmUlid"/> instance to compare with the current instance.</param>
+    /// <param name="other">The <see cref="Ulid"/> instance to compare with the current instance.</param>
     /// <returns>
-    /// <see langword="true"/> if the current instance is equal to the specified <see cref="VmUlid"/> instance; otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the current instance is equal to the specified <see cref="Ulid"/> instance; otherwise, <see langword="false"/>.
     /// </returns>
-    public bool Equals(VmUlid other) => _ulidBytes.AsSpan().SequenceCompareTo(other._ulidBytes.AsSpan()) == 0;
+    public bool Equals(Ulid other) => _ulidBytes.AsSpan().SequenceCompareTo(other._ulidBytes.AsSpan()) == 0;
 
     /// <summary>
     /// Determines whether the specified object is equal to the current instance.
     /// </summary>
     /// <param name="obj">The object to compare with the current instance. Can be <see langword="null"/>.</param>
     /// <returns>
-    /// <see langword="true"/> if the specified object is a <see cref="VmUlid"/> and is equal to the current instance; otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the specified object is a <see cref="Ulid"/> and is equal to the current instance; otherwise, <see langword="false"/>.
     /// </returns>
-    public override bool Equals([NotNullWhen(true)] object? obj) => obj is VmUlid u && Equals(u);
+    public override bool Equals([NotNullWhen(true)] object? obj) => obj is Ulid u && Equals(u);
 
     /// <summary>
     /// Returns the hash code for the current instance.
@@ -314,12 +335,12 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     public override int GetHashCode() => _ulidBytes.GetHashCode();
 
     /// <summary>
-    /// Compares the current instance with another <see cref="VmUlid"/> object and returns an integer that indicates their
+    /// Compares the current instance with another <see cref="Ulid"/> object and returns an integer that indicates their
     /// relative order.
     /// </summary>
     /// <remarks>The comparison is performed based on the byte sequence of the underlying ULID
     /// values.</remarks>
-    /// <param name="other">The <see cref="VmUlid"/> instance to compare to the current instance.</param>
+    /// <param name="other">The <see cref="Ulid"/> instance to compare to the current instance.</param>
     /// <returns>
     /// A signed integer that indicates the relative order of the objects being compared: <list type="bullet">
     /// <item><description>Less than zero if the current instance precedes <paramref name="other"/> in the sort
@@ -327,57 +348,57 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     /// <paramref name="other"/> in the sort order.</description></item> <item><description>Greater than zero if the
     /// current instance follows <paramref name="other"/> in the sort order.</description></item> </list>
     /// </returns>
-    public int CompareTo(VmUlid other) => _ulidBytes.AsSpan().SequenceCompareTo(other._ulidBytes.AsSpan());
+    public int CompareTo(Ulid other) => _ulidBytes.AsSpan().SequenceCompareTo(other._ulidBytes.AsSpan());
 
     /// <summary>
-    /// Determines whether two <see cref="VmUlid"/> instances are equal.
+    /// Determines whether two <see cref="Ulid"/> instances are equal.
     /// </summary>
-    /// <param name="left">The first <see cref="VmUlid"/> to compare.</param>
-    /// <param name="right">The second <see cref="VmUlid"/> to compare.</param>
-    /// <returns><see langword="true"/> if the two <see cref="VmUlid"/> instances are equal; otherwise, <see langword="false"/>.</returns>
-    public static bool operator ==(VmUlid left, VmUlid right) => left.Equals(right);
+    /// <param name="left">The first <see cref="Ulid"/> to compare.</param>
+    /// <param name="right">The second <see cref="Ulid"/> to compare.</param>
+    /// <returns><see langword="true"/> if the two <see cref="Ulid"/> instances are equal; otherwise, <see langword="false"/>.</returns>
+    public static bool operator ==(Ulid left, Ulid right) => left.Equals(right);
 
     /// <summary>
-    /// Determines whether two <see cref="VmUlid"/> instances are not equal.
+    /// Determines whether two <see cref="Ulid"/> instances are not equal.
     /// </summary>
-    /// <param name="left">The first <see cref="VmUlid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="VmUlid"/> instance to compare.</param>
-    /// <returns><see langword="true"/> if the two <see cref="VmUlid"/> instances are not equal; otherwise, <see langword="false"/>.</returns>
-    public static bool operator !=(VmUlid left, VmUlid right) => !(left==right);
+    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
+    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
+    /// <returns><see langword="true"/> if the two <see cref="Ulid"/> instances are not equal; otherwise, <see langword="false"/>.</returns>
+    public static bool operator !=(Ulid left, Ulid right) => !(left==right);
 
     /// <summary>
-    /// Determines whether the specified <see cref="VmUlid"/> instance is less than another <see cref="VmUlid"/> instance.
+    /// Determines whether the specified <see cref="Ulid"/> instance is less than another <see cref="Ulid"/> instance.
     /// </summary>
-    /// <param name="left">The first <see cref="VmUlid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="VmUlid"/> instance to compare.</param>
+    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
+    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
     /// <returns><see langword="true"/> if <paramref name="left"/> is less than <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
-    public static bool operator <(VmUlid left, VmUlid right) => left.CompareTo(right)<0;
+    public static bool operator <(Ulid left, Ulid right) => left.CompareTo(right)<0;
 
     /// <summary>
-    /// Determines whether one <see cref="VmUlid"/> instance is less than or equal to another.
+    /// Determines whether one <see cref="Ulid"/> instance is less than or equal to another.
     /// </summary>
-    /// <param name="left">The first <see cref="VmUlid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="VmUlid"/> instance to compare.</param>
+    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
+    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
     /// <returns>
     /// <see langword="true"/> if the value of <paramref name="left"/> is less than or equal to the value of <paramref name="right"/>;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <=(VmUlid left, VmUlid right) => left.CompareTo(right)<=0;
+    public static bool operator <=(Ulid left, Ulid right) => left.CompareTo(right)<=0;
 
     /// <summary>
-    /// Determines whether one <see cref="VmUlid"/> instance is greater than another.
+    /// Determines whether one <see cref="Ulid"/> instance is greater than another.
     /// </summary>
-    /// <param name="left">The first <see cref="VmUlid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="VmUlid"/> instance to compare.</param>
+    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
+    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
     /// <returns><see langword="true"/> if <paramref name="left"/> is greater than <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
-    public static bool operator >(VmUlid left, VmUlid right) => left.CompareTo(right)>0;
+    public static bool operator >(Ulid left, Ulid right) => left.CompareTo(right)>0;
 
     /// <summary>
-    /// Determines whether the first <see cref="VmUlid"/> instance is greater than or equal to the second <see
-    /// cref="VmUlid"/> instance.
+    /// Determines whether the first <see cref="Ulid"/> instance is greater than or equal to the second <see
+    /// cref="Ulid"/> instance.
     /// </summary>
-    /// <param name="left">The first <see cref="VmUlid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="VmUlid"/> instance to compare.</param>
+    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
+    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
     /// <returns><see langword="true"/> if <paramref name="left"/> is greater than or equal to <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
-    public static bool operator >=(VmUlid left, VmUlid right) => left.CompareTo(right)>=0;
+    public static bool operator >=(Ulid left, Ulid right) => left.CompareTo(right)>=0;
 }

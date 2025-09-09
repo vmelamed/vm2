@@ -12,7 +12,7 @@ class TrackConfiguration : IEntityTypeConfiguration<Track>
 
         builder
             .Property(t => t.Id)
-            .HasValueGenerator<UlidValueGenerator>()
+            .HasValueGenerator<TrackIdGenerator>()
             .ValueGeneratedOnAdd()
             .HasColumnOrder(-100)
             ;

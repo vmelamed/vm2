@@ -16,3 +16,4 @@ global using vm2.Repository.TestDomain.Converters;
 global using vm2.Repository.TestDomain.Dimensions;
 global using vm2.Repository.TestDomain.Validators;
 global using vm2.Repository.TestDomain.Validators.Dimensions;
+global using vm2.UlidType;

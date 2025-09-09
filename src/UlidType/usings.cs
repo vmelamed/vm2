@@ -4,7 +4,7 @@ global using System.Diagnostics.CodeAnalysis;
 global using System.Security.Cryptography;
 global using System.Text.RegularExpressions;
 
-global using vm2.VmUlid.Rng;
+global using vm2.UlidType.Rng;
 
 global using static System.Buffers.Binary.BinaryPrimitives;
-global using static vm2.VmUlid.VmUlidConstants;
+global using static vm2.UlidType.UlidConstants;
