@@ -33,7 +33,7 @@ class PreGeneratedData<T>
 [Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
 public class NewUlid
 {
-    [Params("Cryptographic", "Pseudo", "System")]
+    [Params("Cryptographic", "Pseudo")]
     public string RngAlgorithm { get; set; } = "";
 
     UlidFactory _factory = null!;
