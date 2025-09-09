@@ -1,4 +1,4 @@
-﻿namespace vm2.Ulid1.Rng;
+﻿namespace vm2.VmUlid.Rng;
 
 using System.Text;
 

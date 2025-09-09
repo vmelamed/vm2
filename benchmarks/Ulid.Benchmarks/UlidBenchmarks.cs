@@ -1,5 +1,8 @@
 namespace vm2.Ulid.Benchmarks;
 
+using vm2.VmUlid;
+using vm2.VmUlid.Rng;
+
 class PreGeneratedData<T>
 {
     int _numberItems;
@@ -60,6 +63,8 @@ public class NewUlid
 [SimpleJob(RuntimeMoniker.HostProcess)]
 [MemoryDiagnoser]
 [HtmlExporter]
+[CPUUsageDiagnoser]
+[Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
 public class UlidToString
 {
     const int MaxDataItems = 1000;
@@ -85,6 +90,8 @@ public class UlidToString
 [SimpleJob(RuntimeMoniker.HostProcess)]
 [MemoryDiagnoser]
 [HtmlExporter]
+[CPUUsageDiagnoser]
+[Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
 public class ParseUlid
 {
     const int MaxDataItems = 1000;

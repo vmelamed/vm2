@@ -4,11 +4,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Ulid1\VmUlid.csproj" />
+        <PackageReference Include="Ulid" />
+        <!-- To Shows up in the test explorer (with some perf. penalty)
+        <PackageReference Include="BenchmarkDotNet.TestAdapter" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        -->
+        <!-- for running with Visual Studio profiler: -->
+        <PackageReference Include="Microsoft.VisualStudio.DiagnosticsHub.BenchmarkDotNetDiagnosers" />
+        
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ulid" />
+      <ProjectReference Include="..\..\src\VmUlid\VmUlid.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace vm2.Ulid1;
+﻿namespace vm2.VmUlid;
 
 /// <summary>
 /// Provides functionality to generate unique lexicographically sortable identifiers (ULIDs).

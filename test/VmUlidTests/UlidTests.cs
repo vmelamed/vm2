@@ -1,6 +1,6 @@
-namespace vm2.Ulid1.Tests;
+namespace vm2.VmUlid.Tests;
 
-public class Ulid1Tests
+public class VmUlidTests
 {
     [Fact]
     public void NewUlid_Roundtrip_ToByteArray_ToGuid_ToBase64_ToString()

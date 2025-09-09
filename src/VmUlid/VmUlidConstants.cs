@@ -1,4 +1,4 @@
-﻿namespace vm2.Ulid1;
+﻿namespace vm2.VmUlid;
 
 /// <summary>
 /// Provides constants and utility methods related to the Universally Unique Lexicographically Sortable Identifier (ULID) format.

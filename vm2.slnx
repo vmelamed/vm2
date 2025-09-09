@@ -43,14 +43,14 @@
     <Project Path="src/Repository/DB/SQLite/SQLite.csproj" />
   </Folder>
   <Folder Name="/src/VmUlid/">
-    <Project Path="src/Ulid1/VmUlid.csproj" />
+    <Project Path="src/VmUlid/VmUlid.csproj" />
   </Folder>
 
   <Folder Name="/test/">
     <Project Path="test/RegexLibTests/RegexLibTests.csproj" />
     <Project Path="test/TestUtilities/TestUtilities.csproj" />
     <Project Path="test/Threading.Tests/Threading.Tests.csproj" />
-    <Project Path="test/Ulid1Tests/Ulid1Tests.csproj" />
+    <Project Path="test/VmUlidTests/VmUlidTests.csproj" />
   </Folder>
   <Folder Name="/test/Functional/">
     <Project Path="test/Functional/Primitives.Tests/Primitives.Tests.csproj" />

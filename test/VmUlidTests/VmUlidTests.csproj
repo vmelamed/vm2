@@ -2,11 +2,11 @@
 
   <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <RootNamespace>vm2.Ulid1.Tests</RootNamespace>
+        <RootNamespace>vm2.VmUlid.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Ulid1\VmUlid.csproj" />
+    <ProjectReference Include="..\..\src\VmUlid\VmUlid.csproj" />
   </ItemGroup>
 
   <ItemGroup>
