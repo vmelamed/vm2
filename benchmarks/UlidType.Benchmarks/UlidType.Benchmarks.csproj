@@ -12,7 +12,6 @@
         -->
         <!-- for running with Visual Studio profiler: -->
         <PackageReference Include="Microsoft.VisualStudio.DiagnosticsHub.BenchmarkDotNetDiagnosers" />
-        
     </ItemGroup>
 
     <ItemGroup>

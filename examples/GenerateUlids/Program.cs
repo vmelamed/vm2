@@ -8,9 +8,11 @@ DateTimeOffset timestamp = vmUlid.Timestamp();
 byte[] random = vmUlid.Random();
 
 Console.WriteLine("Ulid");
-Console.WriteLine($"As bytes:    {string.Join(":", vmUlid.ToByteArray().Select(b => b.ToString("X2")))}");
-Console.WriteLine($"As a string: {vmUlid}");
-Console.WriteLine($"{timestamp:o} : {string.Join(":", random.Select(b => b.ToString("X2")))}");
+Console.WriteLine($"As a string:   \"{vmUlid}\"");
+Console.WriteLine($"As byte array: {string.Join(".", vmUlid.ToByteArray().Select(b => b.ToString("X2")))}");
+Console.WriteLine($"As Guid:       {vmUlid.ToGuid()}");
+Console.WriteLine();
+Console.WriteLine($"Time:random:   {timestamp:o} : {string.Join(".", random.Select(b => b.ToString("X2")))}");
 
 Console.WriteLine();
 
