@@ -8,5 +8,4 @@ global using System.Linq.Expressions;
 global using System.Reflection;
 global using System.Runtime.Serialization;
 
-global using vm2.ExpressionDeepEquals;
 global using vm2.TestUtilities;

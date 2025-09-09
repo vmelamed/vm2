@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionDeepEquals;
+﻿namespace vm2.Linq.ExpressionDeepEquals;
 
 class DeepEqualsVisitor : ExpressionVisitor
 {

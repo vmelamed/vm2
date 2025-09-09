@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionDeepEquals;
+﻿namespace vm2.Linq.ExpressionDeepEquals;
 
 /// <summary>
 /// Traverses the expression tree and enqueues each node in the order of visit.

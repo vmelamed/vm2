@@ -1,4 +1,4 @@
-﻿namespace vm2.ExpressionDeepEquals;
+﻿namespace vm2.Linq.ExpressionDeepEquals;
 
 /// <summary>
 /// Class ExpressionExtensions.
@@ -25,6 +25,7 @@ public static class ExpressionExtensions
         var visitor = new DeepEqualsVisitor(right);
 
         visitor.Visit(left);
+
         return visitor.Equal;
     }
 
@@ -60,6 +61,30 @@ public static class ExpressionExtensions
 
         visitor.Visit(left);
         difference = visitor.Difference;
+
         return visitor.Equal;
+    }
+
+    /// <summary>
+    /// Computes a hash code for the specified <see cref="Expression"/> by traversing its structure.
+    /// </summary>
+    /// <remarks>
+    /// This method generates a hash code based on the structure of the expression tree, making it suitable for scenarios where
+    /// structural equality of expressions is important. The hash code is not guaranteed to be stable across different versions
+    /// of the framework or runtime environments.
+    /// </remarks>
+    /// <param name="expr">
+    /// The <see cref="Expression"/> for which to compute the hash code. Cannot be <see langword="null"/>.
+    /// </param>
+    /// <returns>
+    /// An integer representing the hash code of the expression's structure.
+    /// </returns>
+    public static int GetDeepHashCode(this Expression expr)
+    {
+        var visitor = new HashCodeVisitor();
+
+        visitor.Visit(expr);
+
+        return visitor.ToHashCode();
     }
 }

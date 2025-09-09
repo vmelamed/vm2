@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>vm2.ExpressionDeepEquals</RootNamespace>
+        <RootNamespace>vm2.Linq.ExpressionDeepEquals</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Label="NuGet">
@@ -10,7 +10,7 @@
         <PackageReleaseNotes>Moved to a self-containing project.</PackageReleaseNotes>
         <PackageProjectUrl>https://github.com/vmelamed/vm2/blob/main/src/Linq/ExpressionDeepEquals/ExpressionDeepEquals.csproj</PackageProjectUrl>
         <PackageTags>C# LINQ expression deep equals vm vm2</PackageTags>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReadmeFile></PackageReadmeFile>
     </PropertyGroup>
 
 </Project>
