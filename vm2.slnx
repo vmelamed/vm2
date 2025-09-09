@@ -10,6 +10,9 @@
     <Project Path="examples/RegexLib/Reflector/Reflector.csproj" />
     <Project Path="examples/RegexLib/RegexLibExample/RegexLibExample.csproj" Id="06fbee3a-6941-49f2-aa0e-6c317413e490" />
   </Folder>
+  <Folder Name="/examples/Ulid/">
+    <Project Path="examples/GenerateUlids/GenerateUlids.csproj" Id="d9f046b0-e2df-4fa3-aa64-7abd36339b50" />
+  </Folder>
 
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />

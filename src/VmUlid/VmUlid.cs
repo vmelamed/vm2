@@ -41,17 +41,6 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
         => _ulidBytes = Parse(source)._ulidBytes;
 
     /// <summary>
-    /// Converts the underlying ULID byte array to a <see cref="Guid"/>.
-    /// </summary>
-    /// <remarks>
-    /// The method creates a new <see cref="Guid"/> using the bytes stored in the ULID byte array.
-    /// </remarks>
-    /// <returns>
-    /// A <see cref="Guid"/> representation of the ULID.
-    /// </returns>
-    public readonly Guid ToGuid() => new(_ulidBytes.AsSpan());
-
-    /// <summary>
     /// Gets the bytes of the current ULID instance into a new byte array.
     /// </summary>
     /// <remarks>
@@ -82,7 +71,7 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     public readonly string ToBase64() => Convert.ToBase64String(_ulidBytes.AsSpan());
 
     /// <summary>
-    /// Converts the current ULID instance to its string representation.
+    /// Converts the current ULID instance to its equivalent Base32 (the default) string representation.
     /// </summary>
     /// <remarks>
     /// The string representation follows the standard ULID format, which is a 26-character case-sensitive alphanumeric string.<br/>
@@ -93,8 +82,9 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     {
         Span<char> span = stackalloc char[UlidStringLength];
 
-        TryWriteStringify(span);
+        var r = TryWriteStringify(span);
 
+        Debug.Assert(r is true);
         return new string(span);
     }
 
@@ -119,17 +109,12 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
         if (destination.Length < UlidStringLength)
             return false;
 
-        Span<byte> ulidBytesSpan = stackalloc byte[UlidBytesLength];
-
-        _ulidBytes.CopyTo(ulidBytesSpan);
-        if (BitConverter.IsLittleEndian)
-            ulidBytesSpan.Reverse();
-
-        var ulidAsNumber = BitConverter.ToUInt128(ulidBytesSpan);
+        var ulidAsNumber = ReadUInt128BigEndian(_ulidBytes.AsSpan());
 
         for (var i = 0; i < UlidStringLength; i++)
         {
-            destination[UlidStringLength-i-1] = CrockfordAlphabet[unchecked((int)ulidAsNumber) & UlidCharMask];
+            // get the least significant 5 bits from and convert it to character
+            destination[UlidStringLength-i-1] = CrockfordDigits[(byte)ulidAsNumber & UlidCharMask];
             ulidAsNumber >>>= UlidCharShift;
         }
 
@@ -198,6 +183,23 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
     }
 
     /// <summary>
+    /// Extracts the bytes of the random component from the current ULID instance.
+    /// </summary>
+    /// <remarks>
+    /// The returned byte array represents the random portion of the ULID, which is independent of the timestamp component.
+    /// </remarks>
+    /// <returns>
+    /// A byte array containing the random component of the ULID.
+    /// </returns>
+    public readonly byte[] Random()
+    {
+        Span<byte> bytes = stackalloc byte[RandomLength];
+
+        Random(bytes);
+        return bytes.ToArray();
+    }
+
+    /// <summary>
     /// Parses the specified string representation of a ULID and returns the corresponding <see cref="VmUlid"/> instance.
     /// </summary>
     /// <param name="s">The string representation of the ULID to parse.</param>
@@ -244,7 +246,7 @@ public readonly struct VmUlid : IEquatable<VmUlid>, IComparable<VmUlid>, IParsab
 
         // parse the string into a UInt128 value first
         UInt128 ulidAsNumber = 0;
-        var alphabetSpan = CrockfordAlphabet.AsSpan();
+        var alphabetSpan = CrockfordDigits.AsSpan();
 
         for (var i = 0; i < UlidStringLength; i++)
         {

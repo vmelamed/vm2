@@ -45,7 +45,7 @@ public class VmUlidFactory
         {
             if (unixDt == _lastTimestamp)
             {
-                // increment the random part with carry over
+                // increment the random part with carry over for monotonicity
                 var random = ulidSpan[RandomBegin..RandomEnd];
                 var i = random.Length-1;
                 for (; unchecked(++random[i]) == 0 && i >= 0; i--)

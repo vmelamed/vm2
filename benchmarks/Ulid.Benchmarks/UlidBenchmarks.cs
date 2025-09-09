@@ -3,6 +3,8 @@ namespace vm2.Ulid.Benchmarks;
 using vm2.VmUlid;
 using vm2.VmUlid.Rng;
 
+using SyUlid = System.Ulid;
+
 class PreGeneratedData<T>
 {
     int _numberItems;
@@ -43,7 +45,7 @@ public class NewUlid
     {
         _factory = RngAlgorithm switch {
             "Cryptographic" => new VmUlidFactory(new CryptographicRng()),
-            "HKDF" => new VmUlidFactory(new HkdfRng()),
+            "HKDF" => new VmUlidFactory(),
             "Pseudo" => new VmUlidFactory(new PseudoRng()),
             _ => new VmUlidFactory(new CryptographicRng()),
         };
@@ -52,7 +54,7 @@ public class NewUlid
             "Cryptographic" => () => _factory.NewUlid(),
             "HKDF" => () => _factory.NewUlid(),
             "Pseudo" => () => _factory.NewUlid(),
-            _ => () => System.Ulid.NewUlid(),
+            _ => () => SyUlid.NewUlid(),
         };
     }
 
@@ -70,14 +72,14 @@ public class UlidToString
     const int MaxDataItems = 1000;
     VmUlidFactory _factory = null!;
     PreGeneratedData<VmUlid> _dataVm = null!;
-    PreGeneratedData<System.Ulid> _dataSys = null!;
+    PreGeneratedData<SyUlid> _dataSys = null!;
 
     [GlobalSetup]
     public void Setup()
     {
         _factory = new();
         _dataVm = new(MaxDataItems, _ => _factory.NewUlid());
-        _dataSys = new(MaxDataItems, _ => System.Ulid.NewUlid());
+        _dataSys = new(MaxDataItems, _ => SyUlid.NewUlid());
     }
 
     [Benchmark(Description = "VmUlid.ToString")]
@@ -100,14 +102,12 @@ public class ParseUlid
     [GlobalSetup]
     public void Setup()
     {
-        //VmUlidFactory _factory = new();
-        //_data = new(MaxDataItems, _ => _factory.NewUlid().ToString());
-        _data = new(MaxDataItems, _ => System.Ulid.NewUlid().ToString());
+        _data = new(MaxDataItems, _ => SyUlid.NewUlid().ToString());
     }
 
     [Benchmark(Description = "VmUlid.ToString")]
     public VmUlid MyUlid_Parse() => VmUlid.Parse(_data.GetNext());
 
     [Benchmark(Description = "SysUlid.ToString", Baseline = true)]
-    public System.Ulid SysUlid_ToString() => System.Ulid.Parse(_data.GetNext());
+    public System.Ulid SysUlid_ToString() => SyUlid.Parse(_data.GetNext());
 }

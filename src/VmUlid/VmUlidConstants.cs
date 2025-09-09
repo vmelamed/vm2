@@ -56,7 +56,7 @@ public static partial class VmUlidConstants
     /// The Crockford Base32 alphabet excludes characters that are easily confused, such as 'I', 'L', 'O', and 'U'. This alphabet<br/>
     /// is commonly used in applications such as unique identifier generation and human-readable encoding.
     /// </remarks>
-    public const string CrockfordAlphabet       = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+    public const string CrockfordDigits         = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
     /// <summary>
     /// Represents the bit shift value used for ULID-related calculations.
@@ -65,7 +65,7 @@ public static partial class VmUlidConstants
     /// This constant defines the number of bits to shift in binary to string operations involving ULIDs. It is primarily used <br/>
     /// to adjust or manipulate ULID components during encoding or decoding processes.
     /// </remarks>
-    public static readonly int UlidCharShift    = Math.ILogB(CrockfordAlphabet.Length);
+    public static readonly int UlidCharShift    = 5; // 2 ^ 5 == CrockfordDigits.Length
 
     /// <summary>
     /// Represents the bitmask used to extract the least significant character ULID value.
@@ -74,7 +74,7 @@ public static partial class VmUlidConstants
     /// This constant is derived from the bit shift value defined by <see cref="UlidCharShift"/> and is used in operations <br/>
     /// involving ULID character manipulation.
     /// </remarks>
-    public static readonly int UlidCharMask     = CrockfordAlphabet.Length - 1;
+    public static readonly int UlidCharMask     = 0b_0001_1111; // the numeric value of the digit CrockfordDigits.Last()
 
     /// <summary>
     /// Represents the fixed length of a ULID (Universally Unique Lexicographically Sortable Identifier) string.
@@ -84,7 +84,7 @@ public static partial class VmUlidConstants
     /// <summary>
     /// The regular expression pattern for validating ULID strings.
     /// </summary>
-    public const string UlidStringRegex         = $"[{CrockfordAlphabet}]{{26}}";
+    public const string UlidStringRegex         = $"[{CrockfordDigits}]{{26}}";
 
     /// <summary>
     /// Creates a compiled, case-insensitive regular expression for validating ULID (Universally Unique Lexicographically<br/>
@@ -92,7 +92,7 @@ public static partial class VmUlidConstants
     /// </summary>
     /// <remarks>
     /// The generated regular expression matches strings that conform to the ULID format, which consists of 26 alphanumeric<br/>
-    /// characters from the <see cref="CrockfordAlphabet"/>. This method is optimized for performance by pre-compiling the regular expression.
+    /// characters from the <see cref="CrockfordDigits"/>. This method is optimized for performance by pre-compiling the regular expression.
     /// </remarks>
     /// <returns>A <see cref="Regex"/> instance configured to match valid ULID strings.</returns>
     [GeneratedRegex(UlidStringRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase, 500)]
