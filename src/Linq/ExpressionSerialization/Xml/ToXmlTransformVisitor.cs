@@ -98,6 +98,8 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitUnary,
             (n, x) => x.Add(
                         Pop(),    // pop the operand
+                        n.IsLifted ? new XAttribute(AttributeNames.IsLifted, true) : null,
+                        n.IsLiftedToNull ? new XAttribute(AttributeNames.IsLiftedToNull, true) : null,
                         VisitMethodInfo(n)));
 
     /// <inheritdoc/>

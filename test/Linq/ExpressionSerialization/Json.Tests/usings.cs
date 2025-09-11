@@ -9,8 +9,7 @@ global using System.Threading;
 
 global using LibGit2Sharp;
 
-global using vm2.ExpressionDeepEquals;
-global using vm2.Linq.ExpressionSerialization.Json;
+global using vm2.Linq.ExpressionDeepEquals;
 global using vm2.Linq.ExpressionSerialization.Shared.Abstractions;
 global using vm2.Linq.ExpressionSerialization.Shared.Exceptions;
 global using vm2.Linq.ExpressionSerialization.TestsShared;

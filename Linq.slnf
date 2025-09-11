@@ -10,8 +10,7 @@
       "test\\Linq\\ExpressionDeepEquals.Tests\\ExpressionDeepEquals.Tests.csproj",
       "test\\Linq\\ExpressionSerialization\\Json.Tests\\Json.Tests.csproj",
       "test\\Linq\\ExpressionSerialization\\TestsShared\\TestsShared.csproj",
-      "test\\Linq\\ExpressionSerialization\\Xml.Tests\\Xml.Tests.csproj",
-      "test\\TestUtilities\\TestUtilities.csproj"
+      "test\\Linq\\ExpressionSerialization\\Xml.Tests\\Xml.Tests.csproj"
     ]
   }
 }

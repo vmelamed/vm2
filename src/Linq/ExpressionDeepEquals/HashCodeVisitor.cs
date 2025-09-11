@@ -39,6 +39,8 @@ public class HashCodeVisitor : ExpressionVisitor
     protected override Expression VisitUnary(UnaryExpression node)
     {
         Visit(node.Operand);
+        _hc.Add(node.IsLifted);
+        _hc.Add(node.IsLiftedToNull);
         VisitMemberInfo(node.Method);
         return node;
     }
