@@ -97,7 +97,7 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     {
         Span<char> span = stackalloc char[UlidStringLength];
 
-        var r = TryWriteStringify(span);
+        var r = TryWriteChars(span);
 
         Debug.Assert(r is true);
         return new string(span);
@@ -119,7 +119,7 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     /// <see langword="true"/> if the ULID string representation was successfully written to the  <paramref name="destination"/> ulidBytesSpan; otherwise,<br/>
     /// <see langword="false"/> if the ulidBytesSpan is too small.
     /// </returns>
-    public readonly bool TryWriteStringify(Span<char> destination)
+    public readonly bool TryWriteChars(Span<char> destination)
     {
         if (destination.Length < UlidStringLength)
             return false;
@@ -130,7 +130,7 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
         {
             // get the least significant 5 bits from and convert it to character
             destination[UlidStringLength-i-1] = CrockfordDigits[(byte)ulidAsNumber & UlidCharMask];
-            ulidAsNumber >>>= UlidCharShift;
+            ulidAsNumber >>>= BitsPerUlidDigit;
         }
 
         Debug.Assert(ulidAsNumber == 0);
@@ -218,11 +218,11 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     /// Parses the specified string representation of a ULID and returns the corresponding <see cref="Ulid"/> instance.
     /// </summary>
     /// <param name="s">The string representation of the ULID to parse.</param>
-    /// <param name="formatProvider">An optional format provider, which is ignored in this implementation.</param>
+    /// <param name="formatProvider">An optional format _, which is ignored in this implementation.</param>
     /// <returns>The <see cref="Ulid"/> instance that corresponds to the parsed string.</returns>
     /// <exception cref="ArgumentException">Thrown if the input string <paramref name="s"/> cannot be parsed as a valid ULID.</exception>
     public static Ulid Parse(string s, IFormatProvider? formatProvider = null)
-        => TryParse(s, formatProvider, out var u) ? u! : throw new ArgumentException("Unable to parse the input", nameof(s));
+        => TryParse(s, formatProvider, out var u) ? u : throw new ArgumentException("Unable to parse the input", nameof(s));
 
     /// <summary>
     /// Attempts to parse the specified string representation of a ULID (Universally Unique Lexicographically Sortable Identifier)<br/>
@@ -236,8 +236,8 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     /// <param name="source">
     /// The string representation of the ULID to parse. The string must conform to the ULID format.
     /// </param>
-    /// <param name="provider">
-    /// Ignored in this implementation.
+    /// <param name="_">
+    /// The format provider is not used here.
     /// </param>
     /// <param name="result">
     /// When this method returns, contains the parsed <see cref="Ulid"/> value if the parsing succeeded; otherwise, <see langword="null"/>.
@@ -247,7 +247,7 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     /// </returns>
     public static bool TryParse(
         [NotNullWhen(true)] string? source,
-        IFormatProvider? provider,
+        IFormatProvider? _,
         out Ulid result)
     {
         result = new Ulid();
@@ -255,25 +255,28 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
         if (string.IsNullOrWhiteSpace(source) || source.Length < UlidStringLength)
             return false;
 
-        Span<char> sourceSpan = stackalloc char[source.Length];
-
-        source.CopyTo(sourceSpan);
+        var sourceSpan = source.AsSpan();
 
         // parse the string into a UInt128 value first
         UInt128 ulidAsNumber = 0;
-        var alphabetSpan = CrockfordDigits.AsSpan();
 
         for (var i = 0; i < UlidStringLength; i++)
         {
             if (i > 0)
-                ulidAsNumber <<= 5;
+                ulidAsNumber *= UlidRadix;
 
-            var index = alphabetSpan.BinarySearch(char.ToUpper(sourceSpan[i]));
+            var crockfordIndex = sourceSpan[i] - '0';
 
-            if (index < 0)
+            if (crockfordIndex < 0
+                || crockfordIndex >= CrockfordDigitValues.Length)
                 return false;
 
-            ulidAsNumber |= (UInt128)index;
+            var digitValue = CrockfordDigitValues[crockfordIndex];
+
+            if (digitValue >= 32)
+                return false;
+
+            ulidAsNumber += digitValue;
         }
 
         // get the bytes of the UInt128 value
@@ -307,7 +310,12 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     public static bool TryParse(
         [NotNullWhen(true)] string? source,
         out Ulid result)
-        => TryParse(source, null, out result);
+    {
+        result = new();
+        if (string.IsNullOrWhiteSpace(source))
+            return false;
+        return TryParse(source, null, out result);
+    }
 
     /// <summary>
     /// Determines whether the current instance is equal to the specified <see cref="Ulid"/> instance.

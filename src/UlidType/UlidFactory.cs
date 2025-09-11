@@ -20,8 +20,8 @@ public class UlidFactory
     public UlidFactory(IRandom? random = null)
         => _random = random ?? new CryptographicRng();
 
-    long _lastTimestamp;
     byte[] _lastUlid = new byte[UlidBytesLength];
+    long _lastTimestamp;
     IRandom _random;
     Lock _lock = new();
 
@@ -33,46 +33,42 @@ public class UlidFactory
     /// the same millisecond, the random component is incremented to ensure uniqueness. The method is thread-safe.
     /// </remarks>
     /// <returns>A new <see cref="Ulid"/> instance representing the generated ULID.</returns>
-    /// <exception cref="OverflowException">
-    /// Thrown if the random component overflows while incrementing within the same millisecond. This is an extremely rare scenario.
-    /// </exception>
     public Ulid NewUlid()
     {
         var ulidSpan = _lastUlid.AsSpan();
-        var unixDt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        var timestampNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
         lock (_lock)
         {
-            if (unixDt == _lastTimestamp)
+            if (timestampNow == _lastTimestamp)
             {
                 // increment the random part with carry over for monotonicity
                 var random = ulidSpan[RandomBegin..RandomEnd];
                 var i = random.Length-1;
-                for (; unchecked(++random[i]) == 0 && i >= 0; i--)
-                    ;
+                for (; i >= 0; i--)
+                    if (unchecked(++random[i]) >= 0)
+                        return new Ulid(ulidSpan);
 
-                if (i < 0)
-                    // extremely unlikely
-                    throw new OverflowException("Overflow while incrementing the ULID random part.");
+                // this is extremely unlikely case - we ran out of consecutive values for this millisecond.
+                // This is 1 in 2^80 chance of happening.
+                timestampNow++;
             }
-            else
-            {
-                // accept the new time stamp
-                var ts = _lastTimestamp = unixDt;
 
-                if (!BitConverter.IsLittleEndian)
-                    ts <<= 2*8; // 0x0000010203040506 << 16 == 0x0102030405060000
+            // accept the new time stamp
+            _lastTimestamp = timestampNow;
 
-                BitConverter.TryWriteBytes(ulidSpan, _lastTimestamp);
+            if (!BitConverter.IsLittleEndian)
+                timestampNow <<= 2*8; // 0x0000010203040506 << 16 == 0x0102030405060000
 
-                if (BitConverter.IsLittleEndian)
-                    // 0x0605040302010000.Reverse(0..6) => 0x0102030405060000
-                    ulidSpan[TimestampBegin..TimestampEnd].Reverse();
+            BitConverter.GetBytes(timestampNow)[0..TimestampLength].CopyTo(ulidSpan);
 
-                // fill the random bytes part from crypto-strong RNG, overwriting the last 2 bytes of the 8-bit modified timestamp:
-                // 0x01020304050600000000000000000000 => 0x010203040506rrrrrrrrrrrrrrrrrrrr
-                _random.Fill(ulidSpan[RandomBegin..RandomEnd]);
-            }
+            if (BitConverter.IsLittleEndian)
+                // 0x0605040302010000.Reverse(0..6) => 0x0102030405060000
+                ulidSpan[TimestampBegin..TimestampEnd].Reverse();
+
+            // fill the random bytes part from crypto-strong RNG, overwriting the last 2 bytes of the 8-bit modified timestamp:
+            // 0x01020304050600000000000000000000 => 0x010203040506rrrrrrrrrrrrrrrrrrrr
+            _random.Fill(ulidSpan[RandomBegin..RandomEnd]);
         }
 
         // create a new ULID from the bytes
