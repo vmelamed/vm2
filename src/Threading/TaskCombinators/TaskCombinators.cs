@@ -1,8 +1,8 @@
 ﻿namespace vm.Aspects.Threading.TaskCombinators;
 
 /// <summary>
-/// Class TaskCombinators. Contains several methods combining <see cref="T:System.Threading.Tasks.Task"/> objects.
-/// The methods were copied from the famous article "The Task-based Asynchronous Pattern" by Stephen Toub.
+/// Class TaskCombinators. Contains several methods combining <see cref="Task"/> objects. The methods were copied from the famous
+/// article "The Task-based Asynchronous Pattern" by Stephen Toub.
 /// http://www.microsoft.com/en-us/download/details.aspx?id=19957
 /// </summary>
 public static class TaskCombinators
