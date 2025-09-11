@@ -14,13 +14,14 @@ public static class Program
             .FromAssembly(typeof(Program).Assembly)
             .Run(
                 args,
-                DefaultConfig
-                    .Instance
-                    .WithArtifactsPath(artifactsFolder)
-                    .WithOptions(ConfigOptions.StopOnFirstError)
 #if DEBUG
-                    .WithOptions(
-                        ConfigOptions.DisableOptimizationsValidator)
+                        // for debugging the benchmarks only
+                        new DebugInProcessConfig()
+#else
+                        DefaultConfig
+                            .Instance
+                            .WithArtifactsPath(artifactsFolder)
+                            .WithOptions(ConfigOptions.StopOnFirstError)
 #endif
             );
     }

@@ -37,10 +37,10 @@ public class UlidTests
         var ulid = new UlidFactory().NewUlid();
 
         var tooSmall = new char[UlidStringLength - 1];
-        ulid.TryWriteStringify(tooSmall.AsSpan()).Should().BeFalse();
+        ulid.TryWriteChars(tooSmall.AsSpan()).Should().BeFalse();
 
         var buffer = new char[UlidStringLength];
-        ulid.TryWriteStringify(buffer).Should().BeTrue();
+        ulid.TryWriteChars(buffer).Should().BeTrue();
 
         var written = new string(buffer);
         written.Should().Be(ulid.ToString());
@@ -131,9 +131,7 @@ public class UlidTests
 
         // And they should be strictly increasing (monotonic)
         for (var i = 1; i < ulids.Count; i++)
-        {
-            ulids[i].CompareTo(ulids[i - 1]).Should().BeGreaterThan(0);
-        }
+            (ulids[i] > ulids[i - 1]).Should().BeTrue();
     }
 
     [Fact]

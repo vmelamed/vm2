@@ -15,7 +15,8 @@
       "test\\Repository\\TestData\\TestData.csproj",
       "test\\Repository\\TestDomain\\TestDomain.csproj",
       "test\\Repository\\UnitTests\\UnitTests.csproj",
-      "test\\TestUtilities\\TestUtilities.csproj"
+      "test\\TestUtilities\\TestUtilities.csproj",
+      "test\\UlidType.Tests\\UlidType.Tests.csproj"
     ]
   }
 }

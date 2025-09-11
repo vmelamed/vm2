@@ -33,7 +33,7 @@ class PreGeneratedData<T>
 [Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
 public class NewUlid
 {
-    [Params("Cryptographic", "Pseudo")]
+    [Params("Crypto RNG", "Pseudo RNG")]
     public string RngAlgorithm { get; set; } = "";
 
     UlidFactory _factory = null!;
@@ -44,8 +44,8 @@ public class NewUlid
     public void Setup()
     {
         _factory = RngAlgorithm switch {
-            "Cryptographic" => new UlidFactory(new CryptographicRng()),
-            "Pseudo" => new UlidFactory(new PseudoRng()),
+            "Crypto RNG" => new UlidFactory(new CryptographicRng()),
+            "Pseudo RNG" => new UlidFactory(new PseudoRng()),
             _ => new UlidFactory(new CryptographicRng()),
         };
 
@@ -55,7 +55,7 @@ public class NewUlid
         };
     }
 
-    [Benchmark]
+    [Benchmark(Description = "UlidFactory.NewUlid")]
     public void Generate_Ulid() => _method();
 }
 
@@ -80,7 +80,7 @@ public class UlidToString
     }
 
     [Benchmark(Description = "Ulid.ToString")]
-    public string MyUlid_ToString() => _dataVm.GetNext().ToString();
+    public string Ulid_ToString() => _dataVm.GetNext().ToString();
 
     //[Benchmark(Description = "SysUlid.ToString", Baseline = true)]
     //public string SysUlid_ToString() => _dataSys.GetNext().ToString();
@@ -105,8 +105,8 @@ public class ParseUlid
         //_data = new(MaxDataItems, _ => SyUlid.NewUlid().ToString());
     }
 
-    [Benchmark(Description = "Ulid.ToString")]
-    public Ulid MyUlid_Parse() => Ulid.Parse(_data.GetNext());
+    [Benchmark(Description = "Ulid.Parse")]
+    public Ulid Ulid_Parse() => Ulid.Parse(_data.GetNext());
 
     //[Benchmark(Description = "SysUlid.ToString", Baseline = true)]
     //public SyUlid SysUlid_ToString() => SyUlid.Parse(_data.GetNext());
