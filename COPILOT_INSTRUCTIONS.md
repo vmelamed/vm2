@@ -123,7 +123,10 @@ When asking Copilot for code:
 
 ## Documentation
 - Public surface: XML docs for all externally-consumed APIs.
+- limit to 128 characters per line.
 - Internal code: only document non-obvious intent or domain rationale (avoid “what” duplication).
+- Put the XML start and end element tags on their own lines, unless the internal text is short enough to fit the entire element
+  on one line.
 
 ## Future Enhancements (Track Separately)
 - Evaluate using `IClock` abstraction to remove direct time providers.

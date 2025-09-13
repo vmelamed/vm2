@@ -1,4 +1,7 @@
 ﻿namespace vm2.Repository.DB.TestSQLite.DI;
+
+using vm2.Repository.EntityFramework.CommitInterceptor;
+
 public static class ServiceCollectionExtensions
 {
     public const string EfSQLiteRepositoryKey = "SQLite";
@@ -30,8 +33,15 @@ public static class ServiceCollectionExtensions
                                         .EnableDetailedErrors(enableDetailedErrors)
                                         .EnableSensitiveDataLogging(enableSensitiveDataLogging)
                                         .LogTo(logMethod, minLogLevel)
-                                        .UseDddInterceptor()
+                                        .UseCommitInterceptor(services, configuration)
                                         ;
+                //var repoBuilder = new DbContextOptionsBuilder<EfSQLiteRepository>()
+                //                        .UseSqlite(connectionString)
+                //                        .EnableDetailedErrors(enableDetailedErrors)
+                //                        .EnableSensitiveDataLogging(enableSensitiveDataLogging)
+                //                        .LogTo(logMethod, minLogLevel)
+                //                        .UseDddInterceptor()
+                //                        ;
 
                 return repoBuilder;
             });

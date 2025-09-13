@@ -1,5 +1,6 @@
 ﻿global using System;
 global using System.Collections.Generic;
+global using System.Collections.ObjectModel;
 global using System.Diagnostics;
 global using System.Linq;
 global using System.Linq.Expressions;
@@ -16,6 +17,8 @@ global using Microsoft.EntityFrameworkCore.Infrastructure;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.EntityFrameworkCore.Query;
 global using Microsoft.EntityFrameworkCore.ValueGeneration;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
 
 global using OpenTelemetry.Instrumentation.EntityFrameworkCore;
 global using OpenTelemetry.Trace;

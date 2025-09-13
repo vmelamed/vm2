@@ -22,9 +22,14 @@ public interface ICompletable
     /// <param name="now">
     /// The current date ands time according to some external (app. global?) clock provider.
     /// </param>
-    /// <param name="userLogFragment">
+    /// <param name="actor">
     /// String representation of the actor who initiated the current UoW.
     /// </param>
     /// <param name="ct">Can be used by other objects or threads to receive notice of cancellation.</param>
-    ValueTask CompleteAsync(IRepository? repository, EntityEntry entry, DateTime now, string userLogFragment, CancellationToken ct = default);
+    ValueTask CompleteAsync(
+        IRepository? repository,
+        EntityEntry entry,
+        DateTime? now = null,
+        string actor = "",
+        CancellationToken ct = default);
 }

@@ -1,5 +1,7 @@
 ﻿namespace vm2.Repository.UnitTests.EntityFramework.Ddd;
 
+using vm2.Repository.EntityFramework.CommitInterceptor.PolicyRules;
+
 public class DddInterceptorTests
 {
     static DbContextOptionsBuilder<TestEfContext> NewOptions(
