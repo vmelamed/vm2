@@ -13,16 +13,8 @@
 /// </remarks>
 public class UlidFactory
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UlidFactory"/> class using the specified random number generator.
-    /// </summary>
-    /// <param name="random">The random number generator used to produce unique identifiers. Cannot be <see langword="null"/>.</param>
-    public UlidFactory(IRandom? random = null)
-        => _random = random ?? new CryptographicRng();
-
     byte[] _lastUlid = new byte[UlidBytesLength];
     long _lastTimestamp;
-    IRandom _random;
     Lock _lock = new();
 
     /// <summary>
@@ -68,7 +60,7 @@ public class UlidFactory
 
             // fill the random bytes part from crypto-strong RNG, overwriting the last 2 bytes of the 8-bit modified timestamp:
             // 0x01020304050600000000000000000000 => 0x010203040506rrrrrrrrrrrrrrrrrrrr
-            _random.Fill(ulidSpan[RandomBegin..RandomEnd]);
+            RandomNumberGenerator.Fill(ulidSpan[RandomBegin..RandomEnd]);
         }
 
         // create a new ULID from the bytes
