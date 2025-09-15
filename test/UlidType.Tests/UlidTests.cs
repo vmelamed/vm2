@@ -24,9 +24,11 @@ public class UlidTests
     public void NewUlid_RoundTrip_ToString_ToUlid()
     {
         var ulid = new UlidFactory().NewUlid();
+
         var str = ulid.ToString();
-        str.Should().MatchRegex("^[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{26}$");
+        str.Should().MatchRegex(Ulid.UlidStringRegex);
         var utfStr = Encoding.UTF8.GetBytes(str);
+
         var parsed = new Ulid(utfStr);
 
         parsed.Should().Be(ulid);
