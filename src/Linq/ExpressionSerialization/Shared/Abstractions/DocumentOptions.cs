@@ -5,136 +5,84 @@
 /// </summary>
 public abstract class DocumentOptions
 {
-    IdentifierConventions _identifiers = IdentifierConventions.Preserve;
-    TypeNameConventions _typeNames = TypeNameConventions.FullName;
-    ValidateExpressionDocuments _validateInputDocuments = ValidateExpressionDocuments.IfSchemaPresent;
-
-    bool _indent = true;
-    int _indentSize = 2;
-    bool _addComments = false;
-    bool _addLambdaTypes = false;
-    bool _changed = false;
+    ///// <summary>
+    ///// Marks the instance as changed if <paramref name="compare"/> (the comparison of old and new value of a property) is true.
+    ///// </summary>
+    //protected bool Change(bool compare) => Changed |= compare;
 
     /// <summary>
-    /// Marks the instance as changed if <paramref name="compare"/> (the comparison of old and new value of a property) is true.
+    /// Updates the specified field to a new value and indicates whether the document options has changed.
     /// </summary>
-    protected bool Change(bool compare) => _changed |= compare;
+    /// <typeparam name="T">The type of the field, which must be a value type that implements <see cref="IEquatable{T}"/>.</typeparam>
+    /// <param name="field">The current value of the field.</param>
+    /// <param name="value">The new value to assign to the field.</param>
+    /// <returns>The new value of the field.</returns>
+    protected T Change<T>(T @field, T @value) where T : notnull
+    {
+        Changed |= !@field.Equals(@value);
+        return @value;
+    }
 
     /// <summary>
     /// Determines whether this instance has changed since the last call to <see cref="Changed"/>.
     /// </summary>
-    /// <returns><c>true</c> if this instance has changed; otherwise, <c>false</c>.</returns>
+    /// <returns><changed>true</changed> if this instance has changed; otherwise, <changed>false</changed>.</returns>
     public bool Changed
     {
         get
         {
-            var c = _changed;
-            _changed = false;
-            return c;
+            var changed = field;
+            field = false;
+            return changed;
         }
+        protected set;
     }
 
     /// <summary>
     /// Gets the identifiers transformation convention.
     /// </summary>
     /// <value>The identifiers case convention.</value>
-    public IdentifierConventions Identifiers
-    {
-        get => _identifiers;
-        set
-        {
-            if (Change(_identifiers != value))
-                _identifiers = value;
-        }
-    }
+    public IdentifierConventions Identifiers { get; set => field = Change(field, value); } = IdentifierConventions.Preserve;
 
     /// <summary>
     /// Gets the type transform convention.
     /// </summary>
     /// <value>The type transform convention.</value>
-    public TypeNameConventions TypeNames
-    {
-        get => _typeNames;
-        set
-        {
-            if (Change(_typeNames != value))
-                _typeNames = value;
-        }
-    }
+    public TypeNameConventions TypeNames { get; set => field = Change(field, value); } = TypeNameConventions.FullName;
 
     /// <summary>
     /// Gets or sets a value indicating whether to indent the output document.
     /// </summary>
-    /// <value><c>true</c> if indent; otherwise, <c>false</c>.</value>
-    public bool Indent
-    {
-        get => _indent;
-        set
-        {
-            if (Change(_indent != value))
-                _indent = value;
-        }
-    }
+    /// <value><changed>true</changed> if indent; otherwise, <changed>false</changed>.</value>
+    public bool Indent { get; set => field = Change(field, value); } = true;
 
     /// <summary>
     /// Gets or sets the size of the document's tab indention.
     /// </summary>
     /// <value>The size of the indent.</value>
-    public int IndentSize
-    {
-        get => _indentSize;
-        set
-        {
-            if (Change(_indentSize != value))
-                _indentSize = value;
-        }
-    }
+    public int IndentSize { get; set => field = Change(field, value); } = 2;
 
     /// <summary>
     /// Gets or sets a value indicating whether to add comments to the resultant node.
     /// </summary>
-    /// <value><c>true</c> if comments are to be added; otherwise, <c>false</c>.</value>
-    public bool AddComments
-    {
-        get => _addComments;
-        set
-        {
-            if (Change(_addComments != value))
-                _addComments = value;
-        }
-    }
+    /// <value><changed>true</changed> if comments are to be added; otherwise, <changed>false</changed>.</value>
+    public bool AddComments { get; set => field = Change(field, value); }
 
     /// <summary>
     /// Gets or sets a value indicating whether the lambda types should be serialized to the output document. Typically,
     /// This is not needed but it may be useful for display purposes.
     /// </summary>
-    public bool AddLambdaTypes
-    {
-        get => _addLambdaTypes;
-        set
-        {
-            if (Change(_addLambdaTypes != value))
-                _addLambdaTypes = value;
-        }
-    }
+    public bool AddLambdaTypes { get; set => field = Change(field, value); }
 
     /// <summary>
     /// Gets or sets a value indicating whether to validate the input documents that are to be transformed to <see cref="Expression"/>-s.
     /// </summary>
-    public ValidateExpressionDocuments ValidateInputDocuments
-    {
-        get => _validateInputDocuments;
-        set
-        {
-            if (Change(_validateInputDocuments != value))
-                _validateInputDocuments = value;
-        }
-    }
+    public ValidateExpressionDocuments ValidateInputDocuments { get; set => field = Change(field, value); } = ValidateExpressionDocuments.IfSchemaPresent;
 
     /// <summary>
     /// Determines whether the expression schema was added.
     /// </summary>
-    /// <returns><c>true</c> if an expressions schema is present; otherwise, <c>false</c>.</returns>
+    /// <returns><changed>true</changed> if an expressions schema is present; otherwise, <changed>false</changed>.</returns>
     public abstract bool HasExpressionSchema { get; }
 
     /// <summary>
@@ -155,10 +103,10 @@ public abstract class DocumentOptions
 
     /// <summary>
     /// Determines whether to validate the input documents against has expressions schema.
-    /// If <see cref="DocumentOptions.ValidateInputDocuments"/> is <c>ValidateExpressionDocuments.Always</c> the method will verify
+    /// If <see cref="DocumentOptions.ValidateInputDocuments"/> is <changed>ValidateExpressionDocuments.Always</changed> the method will verify
     /// that the schema was actually added.
     /// </summary>
-    /// <returns><c>true</c> if the documents must be validated against the schema; otherwise, <c>false</c>.</returns>
+    /// <returns><changed>true</changed> if the documents must be validated against the schema; otherwise, <changed>false</changed>.</returns>
     /// <exception cref="InvalidOperationException">
     /// The expressions schema was not added to the XmlOptions.Schema - use XmlOptions.SetSchemaLocation().
     /// </exception>

@@ -31,7 +31,7 @@ abstract class TestEntityBase :
     ITenanted<Guid>,
     IAuditable,
     ISoftDeletable,
-    ICompletable,
+    //ICompletable,
     IValidatable,
     IOptimisticConcurrency<byte[]>
 {
@@ -56,7 +56,7 @@ abstract class TestEntityBase :
     [NotMapped]
     public List<string> Calls { get; } = [];
 
-    public ValueTask CompleteAsync(IRepository? repo, EntityEntry entry, DateTime now, string actor, CancellationToken ct)
+    public ValueTask CompleteAsync(IRepository? _, EntityEntry __, DateTime ___, string ____, CancellationToken _____)
     {
         Calls.Add("Complete");
         return ValueTask.CompletedTask;

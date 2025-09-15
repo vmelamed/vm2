@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup Label="Packages">
         <TargetFramework>net9.0</TargetFramework>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>preview<!--latest--></LangVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
@@ -19,6 +19,7 @@
         <Product>vm2</Product>
         <ProductName>Val Melamed's packages</ProductName>
         <Authors>Val Melamed</Authors>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryUrl>https://github.com/vmelamed/vm2</RepositoryUrl>
         <Copyright>Copyright © 2023-2025 vm</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

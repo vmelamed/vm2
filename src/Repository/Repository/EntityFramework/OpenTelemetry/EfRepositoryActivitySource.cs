@@ -1,28 +1,27 @@
 ﻿namespace vm2.Repository.EntityFramework.OpenTelemetry;
 
 /// <summary>
-/// Provides a centralized <see cref="ActivitySource"/> for tracing/logging/metrics operations related to
+/// Provides a centralized <see cref="System.Diagnostics.ActivitySource"/> for tracing/logging/metrics operations related to
 /// <see cref="IRepository"/> implementation based on Entity Framework.
 /// </summary>
 /// <remarks>
-/// Exposes a static <see cref="ActivitySource"/> instance that can be used to create and manage telemetry activities for
+/// Exposes a static <see cref="System.Diagnostics.ActivitySource"/> instance that can be used to create and manage telemetry activities for
 /// operations within the Entity Framework repository. The activity source is initialized with the assembly name and version of
 /// the current library.
 /// </remarks>
 public static class EfRepositoryActivitySource
 {
-    static readonly AssemblyName _assemblyName = typeof(EfRepositoryActivitySource).Assembly.GetName();
-    internal static AssemblyName AssemblyName => _assemblyName;
-    internal static string ActivitySourceName => _assemblyName.Name!;
+    internal static AssemblyName AssemblyName { get; } = typeof(EfRepositoryActivitySource).Assembly.GetName();
+
+    internal static string ActivitySourceName { get; } = AssemblyName.FullName;
 
     /// <summary>
     /// Gets the version
     /// </summary>
-    public static readonly Version Version = _assemblyName.Version!;
+    public static readonly Version Version = AssemblyName.Version ?? new(0, 0, 0, 0);
 
     /// <summary>
     /// Gets the activity source
     /// </summary>
-    //TODO: Rename to ActivitySource
-    public static readonly ActivitySource Source = new(ActivitySourceName, Version.ToString());
+    public static readonly ActivitySource ActivitySource = new(ActivitySourceName, Version.ToString());
 }

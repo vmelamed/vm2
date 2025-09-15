@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common.csproj" />
     <ProjectReference Include="..\..\Threading\Threading.csproj" />
     <ProjectReference Include="..\..\UlidType\UlidType.csproj" />
   </ItemGroup>

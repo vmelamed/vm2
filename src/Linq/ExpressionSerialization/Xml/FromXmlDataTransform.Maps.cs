@@ -4,30 +4,30 @@ static partial class FromXmlDataTransform
 {
     static IEnumerable<KeyValuePair<string, Transformation>> ConstantTransformations()
     {
-        yield return new(Vocabulary.Boolean, (XElement x, ref Type t) => XmlConvert.ToBoolean(x.Value));
-        yield return new(Vocabulary.Byte, (XElement x, ref Type t) => XmlConvert.ToByte(x.Value));
-        yield return new(Vocabulary.Char, (XElement x, ref Type t) => x.Value[0]);
-        yield return new(Vocabulary.Double, (XElement x, ref Type t) => XmlConvert.ToDouble(x.Value));
-        yield return new(Vocabulary.Float, (XElement x, ref Type t) => XmlConvert.ToSingle(x.Value));
-        yield return new(Vocabulary.Int, (XElement x, ref Type t) => XmlConvert.ToInt32(x.Value));
-        yield return new(Vocabulary.IntPtr, (XElement x, ref Type t) => XmlStringToPtr(x.Value));
-        yield return new(Vocabulary.Long, (XElement x, ref Type t) => XmlConvert.ToInt64(x.Value));
-        yield return new(Vocabulary.SignedByte, (XElement x, ref Type t) => XmlConvert.ToSByte(x.Value));
-        yield return new(Vocabulary.Short, (XElement x, ref Type t) => XmlConvert.ToInt16(x.Value));
-        yield return new(Vocabulary.UnsignedInt, (XElement x, ref Type t) => XmlConvert.ToUInt32(x.Value));
-        yield return new(Vocabulary.UnsignedIntPtr, (XElement x, ref Type t) => XmlStringToUPtr(x.Value));
-        yield return new(Vocabulary.UnsignedLong, (XElement x, ref Type t) => XmlConvert.ToUInt64(x.Value));
-        yield return new(Vocabulary.UnsignedShort, (XElement x, ref Type t) => XmlConvert.ToUInt16(x.Value));
+        yield return new(Vocabulary.Boolean, (x, ref t) => XmlConvert.ToBoolean(x.Value));
+        yield return new(Vocabulary.Byte, (x, ref t) => XmlConvert.ToByte(x.Value));
+        yield return new(Vocabulary.Char, (x, ref t) => x.Value[0]);
+        yield return new(Vocabulary.Double, (x, ref t) => XmlConvert.ToDouble(x.Value));
+        yield return new(Vocabulary.Float, (x, ref t) => XmlConvert.ToSingle(x.Value));
+        yield return new(Vocabulary.Int, (x, ref t) => XmlConvert.ToInt32(x.Value));
+        yield return new(Vocabulary.IntPtr, (x, ref t) => XmlStringToPtr(x.Value));
+        yield return new(Vocabulary.Long, (x, ref t) => XmlConvert.ToInt64(x.Value));
+        yield return new(Vocabulary.SignedByte, (x, ref t) => XmlConvert.ToSByte(x.Value));
+        yield return new(Vocabulary.Short, (x, ref t) => XmlConvert.ToInt16(x.Value));
+        yield return new(Vocabulary.UnsignedInt, (x, ref t) => XmlConvert.ToUInt32(x.Value));
+        yield return new(Vocabulary.UnsignedIntPtr, (x, ref t) => XmlStringToUPtr(x.Value));
+        yield return new(Vocabulary.UnsignedLong, (x, ref t) => XmlConvert.ToUInt64(x.Value));
+        yield return new(Vocabulary.UnsignedShort, (x, ref t) => XmlConvert.ToUInt16(x.Value));
 
-        yield return new(Vocabulary.DateTime, (XElement x, ref Type t) => XmlConvert.ToDateTime(x.Value, XmlDateTimeSerializationMode.RoundtripKind));
-        yield return new(Vocabulary.DateTimeOffset, (XElement x, ref Type t) => XmlConvert.ToDateTimeOffset(x.Value, "O"));
-        yield return new(Vocabulary.Duration, (XElement x, ref Type t) => XmlConvert.ToTimeSpan(x.Value));
-        yield return new(Vocabulary.DBNull, (XElement x, ref Type t) => DBNull.Value);
-        yield return new(Vocabulary.Decimal, (XElement x, ref Type t) => XmlConvert.ToDecimal(x.Value));
-        yield return new(Vocabulary.Guid, (XElement x, ref Type t) => XmlConvert.ToGuid(x.Value));
-        yield return new(Vocabulary.Half, (XElement x, ref Type t) => (Half)XmlConvert.ToDouble(x.Value));
-        yield return new(Vocabulary.String, (XElement x, ref Type t) => x.IsNil() ? null : x.Value);
-        yield return new(Vocabulary.Uri, (XElement x, ref Type t) => new Uri(x.Value));
+        yield return new(Vocabulary.DateTime, (x, ref t) => XmlConvert.ToDateTime(x.Value, XmlDateTimeSerializationMode.RoundtripKind));
+        yield return new(Vocabulary.DateTimeOffset, (x, ref t) => XmlConvert.ToDateTimeOffset(x.Value, "O"));
+        yield return new(Vocabulary.Duration, (x, ref t) => XmlConvert.ToTimeSpan(x.Value));
+        yield return new(Vocabulary.DBNull, (x, ref t) => DBNull.Value);
+        yield return new(Vocabulary.Decimal, (x, ref t) => XmlConvert.ToDecimal(x.Value));
+        yield return new(Vocabulary.Guid, (x, ref t) => XmlConvert.ToGuid(x.Value));
+        yield return new(Vocabulary.Half, (x, ref t) => (Half)XmlConvert.ToDouble(x.Value));
+        yield return new(Vocabulary.String, (x, ref t) => x.IsNil() ? null : x.Value);
+        yield return new(Vocabulary.Uri, (x, ref t) => new Uri(x.Value));
 
         yield return new(Vocabulary.Anonymous, TransformAnonymous);
         yield return new(Vocabulary.ByteSequence, TransformByteSequence);
@@ -45,12 +45,12 @@ static partial class FromXmlDataTransform
     static IntPtr XmlStringToPtr(string v)
         => (Environment.Is64BitProcess
                 ? checked((IntPtr)XmlConvert.ToInt64(v))
-                : checked((IntPtr)XmlConvert.ToInt32(v)));
+                : checked(XmlConvert.ToInt32(v)));
 
     static UIntPtr XmlStringToUPtr(string v)
         => (Environment.Is64BitProcess
                 ? checked((UIntPtr)XmlConvert.ToUInt64(v))
-                : checked((UIntPtr)XmlConvert.ToUInt32(v)));
+                : checked(XmlConvert.ToUInt32(v)));
 
     #region cache some method info-s used in deserialization
     static MethodInfo _toFrozenSet                  = typeof(FrozenSet).GetMethod("ToFrozenSet") ?? throw new InternalTransformErrorException($"Could not get reflection of the method FrozenSet.ToFrozenSet");

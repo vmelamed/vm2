@@ -24,4 +24,18 @@ public readonly record struct LabelId(in Ulid Id)
     /// <param name="value"></param>
     public static explicit operator LabelId(in Ulid value) => new(value);
     #endregion
+
+    public static bool TryParse(string? input, IFormatProvider? _, out LabelId labelId)
+    {
+        if (Ulid.TryParse(input, out Ulid ulid))
+        {
+            labelId = new LabelId(ulid);
+            return true;
+        }
+        labelId = default;
+        return false;
+    }
+
+    public static bool TryParse(string? input, out LabelId labelId)
+        => TryParse(input, null, out labelId);
 }

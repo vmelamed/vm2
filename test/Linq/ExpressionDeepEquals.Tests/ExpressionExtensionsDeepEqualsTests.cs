@@ -53,8 +53,8 @@ public class ExpressionExtensionsDeepEqualsTests
     public void DeepEquals_ParameterNameMismatch_ReturnsFalseAndReportsNames()
     {
         // two lambdas with same shape but different parameter names
-        Expression<Func<int, int>> e1 = (int a) => a + 1;
-        Expression<Func<int, int>> e2 = (int b) => b + 1;
+        Expression<Func<int, int>> e1 = a => a + 1;
+        Expression<Func<int, int>> e2 = b => b + 1;
 
         var eq = e1.DeepEquals(e2, out var difference);
 

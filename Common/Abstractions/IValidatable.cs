@@ -1,4 +1,4 @@
-﻿namespace vm2.Repository.EntityFramework.Models;
+﻿namespace vm2.Common.Abstractions;
 
 /// <summary>
 /// Provides a contract for validating entities' invariants.

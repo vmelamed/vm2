@@ -24,6 +24,7 @@
   </Folder>
 
   <Folder Name="/src/">
+    <Project Path="Common/Common.csproj" Id="f7a6f20b-12d6-4c53-9567-f4d6728cf4ec" />
     <Project Path="src/RegexLib/RegexLib.csproj" />
     <Project Path="src/Threading/Threading.csproj" />
     <Project Path="src/UlidType/UlidType.csproj" />

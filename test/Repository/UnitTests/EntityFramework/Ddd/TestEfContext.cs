@@ -1,6 +1,8 @@
 ﻿namespace vm2.Repository.UnitTests.EntityFramework.Ddd;
 
-sealed class TestEfContext : EfRepository, ITenanted<Guid>, IHasDddInterceptorConfigurator
+using vm2.Repository.EntityFramework.CommitInterceptor.PolicyRules;
+
+sealed class TestEfContext : EfRepository, ITenanted<Guid>, IHasAllowedAggregateRoots
 {
     public TestEfContext(
         DbContextOptions options,
@@ -26,24 +28,5 @@ sealed class TestEfContext : EfRepository, ITenanted<Guid>, IHasDddInterceptorCo
         => modelBuilder.Entity<TestEntityA>().HasKey(e => e.Id);
 
     /// <inheritdoc/>
-    public DddAggregateActions? AggregateActions { get; set; }
-
-    /// <inheritdoc/>
-    public ISet<Type>? AllowedAggregateRoots { get; set; } = new HashSet<Type>();
-
-    /// <inheritdoc/>
-    public Func<DateTime>? DateTimeAuditProvider { get; set; }
-
-    /// <inheritdoc/>
-    public Func<string>? CurrentActorAuditProvider { get; set; } = TestActor.Current;
-
-    public InterceptorConfiguration ConfigureDddInterceptor(
-        InterceptorConfiguration currentConfiguration)
-        => currentConfiguration with {
-            AllowedAggregateRoots = AllowedAggregateRoots ?? currentConfiguration.AllowedAggregateRoots,
-            Actions               = AggregateActions ?? currentConfiguration.Actions,
-            ActorAuditProvider    = TestActor.Current,
-            DateTimeAuditProvider = TestClock.Now,
-            TenantProvider        = () => this,
-        };
+    public IEnumerable<Type>? AllowedAggregateRootTypes { get; }
 }

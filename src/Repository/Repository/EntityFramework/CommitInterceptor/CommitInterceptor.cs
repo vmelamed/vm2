@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 /// Provides an implementation of <see cref="SaveChangesInterceptor"/> to intercept the behavior before
 /// <see cref="DbContext.SaveChangesAsync(CancellationToken)"/>.
 /// </summary>
-public class CommitInterceptor(in InterceptorConfiguration configuration) : SaveChangesInterceptor
+public class CommitInterceptor(in CommitInterceptorConfiguration configuration) : SaveChangesInterceptor
 {
     /// <summary>
     /// Gets the collection of commit actions to be performed.
@@ -40,7 +40,8 @@ public class CommitInterceptor(in InterceptorConfiguration configuration) : Save
         changeTracker.DetectChanges();
 
         // if nothing changed, do nothing
-        if (changeTracker.Entries().All(e => e.State is EntityState.Unchanged or EntityState.Detached))
+        if (changeTracker.Entries().All(e => e.State is EntityState.Unchanged
+                                                     or EntityState.Detached))
             return result;
 
         foreach (var entry in changeTracker.Entries().Where(e => e.State is EntityState.Added
@@ -48,8 +49,8 @@ public class CommitInterceptor(in InterceptorConfiguration configuration) : Save
                                                                          or EntityState.Deleted))
             foreach (var action in CommitActions)
             {
-                ct.ThrowIfCancellationRequested();
                 await action.EntityActionAsync(entry, ct);
+                ct.ThrowIfCancellationRequested();
             }
 
         return result;

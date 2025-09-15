@@ -109,12 +109,11 @@ public partial class ToXmlTransformVisitor(XmlOptions options) : ExpressionTrans
             base.VisitBinary,
             (n, x) =>
             {
-                var right = Pop();
+                var right   = Pop();
                 var convert = n.Conversion is not null ? Pop() : null;
-                var left = Pop();
+                var left    = Pop();
 
-                if (convert is not null)
-                    convert.Name = Vocabulary.ConvertLambda;
+                convert?.Name = Vocabulary.ConvertLambda;
 
                 x.Add(
                         left,

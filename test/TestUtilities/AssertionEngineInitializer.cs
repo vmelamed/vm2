@@ -1,8 +1,8 @@
-﻿using FluentAssertions.Extensibility;
+﻿[assembly: AssertionEngineInitializer(
+    typeof(vm2.TestUtilities.AssertionEngineInitializer),
+    nameof(vm2.TestUtilities.AssertionEngineInitializer.AcknowledgeSoftWarning))]
 
-[assembly: AssertionEngineInitializer(
-    typeof(AssertionEngineInitializer),
-    nameof(AssertionEngineInitializer.AcknowledgeSoftWarning))]
+namespace vm2.TestUtilities;
 
 /// <summary>
 /// Provides methods to initialize and configure the assertion engine.

@@ -33,7 +33,7 @@ namespace vm2.Threading.Tests
             var read = buf.TryRead(out var item);
 
             read.Should().BeFalse();
-            item.Should().Be(default(int));
+            item.Should().Be(default);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace vm2.Threading.Tests
             // now empty
             buf.IsEmpty.Should().BeTrue();
             buf.TryRead(out a).Should().BeFalse();
-            a.Should().Be(default(int));
+            a.Should().Be(default);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace vm2.Threading.Tests
             foreach (var v in buf)
                 collected.Add(v);
 
-            collected.Should().ContainInOrder(new[] { 1, 2, 3 });
+            collected.Should().ContainInOrder([1, 2, 3]);
 
             // enumeration consumes items -> buffer should be empty
             buf.IsEmpty.Should().BeTrue();

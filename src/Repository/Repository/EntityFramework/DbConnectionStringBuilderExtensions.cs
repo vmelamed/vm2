@@ -82,7 +82,7 @@ public static class DbConnectionStringBuilderExtensions
     public static string? GetDatabase(this DbConnectionStringBuilder connectionStringBuilder)
         => connectionStringBuilder.GetStringElement("Database")
             ?? connectionStringBuilder.GetStringElement("Initial Catalog")
-                ?? connectionStringBuilder.GetStringElement("Data Source");
+                ?? connectionStringBuilder.GetStringElement("Data ActivitySource");
 
     /// <summary>
     /// Gets the user ID from the connection string. DBs: SQL Server

@@ -24,8 +24,6 @@ public partial class JsonOptions : DocumentOptions
     static readonly JsonStringEnumConverter _jsonStringEnumConverter = new();
 
     readonly ReaderWriterLockSlim _syncSchema = new(LockRecursionPolicy.SupportsRecursion);
-    bool _allowTrailingCommas = true;
-    JsonSerializerOptions? _jsonSerializerOptions;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonOptions"/> class. The schema must be subsequently loaded with
@@ -60,24 +58,16 @@ public partial class JsonOptions : DocumentOptions
     /// array is allowed (and ignored) within the JSON payload being deserialized.
     /// </summary>
     /// <value>The allow trailing commas.</value>
-    public bool AllowTrailingCommas
-    {
-        get => _allowTrailingCommas;
-        set
-        {
-            if (Change(_allowTrailingCommas != value))
-                _allowTrailingCommas = value;
-        }
-    }
+    public bool AllowTrailingCommas { get; set => field = Change(field, value); }
 
     /// <summary>
     /// Creates the json serializer options object appropriate for the JsonTransform.
     /// </summary>
     /// <returns>System.Text.Json.JsonSerializerOptions.</returns>
     public JsonSerializerOptions JsonSerializerOptions
-        => _jsonSerializerOptions is not null && !Changed
-                ? _jsonSerializerOptions
-                : (_jsonSerializerOptions = new() {
+        => field is not null && !Changed
+                ? field
+                : (field = new() {
                     AllowTrailingCommas = AllowTrailingCommas,
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                     Converters = { _jsonStringEnumConverter },
@@ -95,9 +85,7 @@ public partial class JsonOptions : DocumentOptions
     /// <summary>
     /// Gets the json node options.
     /// </summary>
-    public static JsonNodeOptions JsonNodeOptions { get; } = new() {
-        PropertyNameCaseInsensitive = false,
-    };
+    public static JsonNodeOptions JsonNodeOptions { get; } = new() { PropertyNameCaseInsensitive = false };
 
     /// <summary>
     /// Gets the json writer options based on these options

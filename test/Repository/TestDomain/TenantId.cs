@@ -24,4 +24,18 @@ public readonly record struct TenantId(in Guid Id)
     /// <param name="value"></param>
     public static explicit operator TenantId(in Guid value) => new(value);
     #endregion
+
+    public static bool TryParse(string? input, IFormatProvider? _, out TenantId tenantId)
+    {
+        if (Guid.TryParse(input, out Guid guid))
+        {
+            tenantId = new TenantId(guid);
+            return true;
+        }
+        tenantId = default;
+        return false;
+    }
+
+    public static bool TryParse(string? input, out TenantId tenantId)
+        => TryParse(input, null, out tenantId);
 }

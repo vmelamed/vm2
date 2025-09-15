@@ -59,7 +59,9 @@ public static partial class UlidConstants
     public const string CrockfordDigits         = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
     /// <summary>
-    /// Represents the bitmask used to extract the least significant character ULID value.
+    /// Represents the weight of each Crockford digit in a ULID. Just like the weight of each digit in a decimal number is 10 (Radix 10)<br/>
+    /// power the position of the digit in the number starting with 0; the weight of each digit in a ULID is 32 (Radix 32) to the
+    /// power of the position of the Crockford digit in the Ulid starting with 0.
     /// </summary>
     /// <remarks>
     /// This constant is derived from the bit shift value defined by <see cref="BitsPerUlidDigit"/> and is used in operations <br/>
@@ -68,7 +70,7 @@ public static partial class UlidConstants
     public static readonly uint UlidRadix       = 32; // = CrockfordDigits.Length - the radix of a Crockford number
 
     /// <summary>
-    /// Represents the bit shift value used for ULID-related calculations.
+    /// The number of bits that represent a digit in a ULID.
     /// </summary>
     /// <remarks>
     /// This constant defines the number of bits to shift in binary to string operations involving ULIDs. It is primarily used <br/>
@@ -77,7 +79,8 @@ public static partial class UlidConstants
     public static readonly int BitsPerUlidDigit = 5; // 1 << BitsPerUlidDigit == CrockfordDigits.Length
 
     /// <summary>
-    /// Represents the bitmask used to extract the least significant character ULID value.
+    /// Represents the bitmask used to extract the least significant character ULID value. If you shift it left by <see cref="BitsPerUlidDigit"/>,
+    /// we get the mask of the second least significant number, etc.
     /// </summary>
     /// <remarks>
     /// This constant is derived from the bit shift value defined by <see cref="BitsPerUlidDigit"/> and is used in operations <br/>
@@ -86,7 +89,7 @@ public static partial class UlidConstants
     public static readonly int UlidCharMask     = 0b_0001_1111; // the numeric value of the digit CrockfordDigits.Last()
 
     /// <summary>
-    /// Represents the fixed length of a ULID (Universally Unique Lexicographically Sortable Identifier) string.
+    /// Represents the fixed length of a ULID (Universally Unique Lexicographically Sortable Identifier) string. It is 26 characters long.
     /// </summary>
     public static readonly int UlidStringLength = (UlidBitsLength / BitsPerUlidDigit) + (UlidBitsLength % BitsPerUlidDigit > 0 ? 1 : 0);
 

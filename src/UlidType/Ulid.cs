@@ -73,7 +73,7 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     /// Converts the current ULID value to its equivalent Guid representation.
     /// </summary>
     /// <returns></returns>
-    public readonly Guid ToGuid() => new Guid(_ulidBytes);
+    public readonly Guid ToGuid() => new(_ulidBytes);
 
     /// <summary>
     /// Converts the current ULID value to its equivalent Base64 string representation.

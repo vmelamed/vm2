@@ -25,7 +25,7 @@ public class FakeAsyncEnumerableTests(
     [Fact]
     public async Task Enumerate_EmptySource_YieldsNoResults()
     {
-        var enumerable = new FakeAsyncEnumerable<int>(Enumerable.Empty<int>());
+        var enumerable = new FakeAsyncEnumerable<int>([]);
         var results = new List<int>();
         await foreach (var i in enumerable)
             results.Add(i);

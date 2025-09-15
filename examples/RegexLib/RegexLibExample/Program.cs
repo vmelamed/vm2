@@ -80,34 +80,37 @@ var inputArgument = new Argument<string>(
 rootCommand.AddOption(patternOption);
 rootCommand.AddArgument(inputArgument);
 
-rootCommand.SetHandler((string pattern, string input) =>
-{
-    if (!regexes.TryGetValue(pattern, out var regex))
+rootCommand.SetHandler(
+    (pattern, input) =>
     {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"Pattern '{pattern}' not found. Available patterns: {string.Join(", ", patternNames)}");
-        Console.ResetColor();
-        return;
-    }
-
-    var match = regex().Match(input);
-    if (match.Success)
-    {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"✔ Match! Pattern '{pattern}' matched input.");
-        Console.ResetColor();
-        Console.WriteLine("Groups:");
-        foreach (var groupName in regex().GetGroupNames())
+        if (!regexes.TryGetValue(pattern, out var regex))
         {
-            Console.WriteLine($"  {groupName}: {match.Groups[groupName].Value}");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Pattern '{pattern}' not found. Available patterns: {string.Join(", ", patternNames)}");
+            Console.ResetColor();
+            return;
         }
-    }
-    else
-    {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"✘ No match. Pattern '{pattern}' did not match input.");
-        Console.ResetColor();
-    }
-}, patternOption, inputArgument);
+
+        var match = regex().Match(input);
+        if (match.Success)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"✔ Match! Pattern '{pattern}' matched input.");
+            Console.ResetColor();
+            Console.WriteLine("Groups:");
+            foreach (var groupName in regex().GetGroupNames())
+            {
+                Console.WriteLine($"  {groupName}: {match.Groups[groupName].Value}");
+            }
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"✘ No match. Pattern '{pattern}' did not match input.");
+            Console.ResetColor();
+        }
+    },
+    patternOption,
+    inputArgument);
 
 return await rootCommand.InvokeAsync(args);

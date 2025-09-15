@@ -1,4 +1,5 @@
-﻿namespace vm2.Repository.EntityFramework.Models;
+﻿namespace vm2.Common.Abstractions;
+
 /// <summary>
 /// Represents objects (entities, repositories, etc.) that are bound to a otherTenant and the otherTenant identifier.
 /// </summary>

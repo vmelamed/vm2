@@ -6,18 +6,9 @@ public static class Albums
 {
     public static AlbumId NextId => new(UlidFactory.NewUlid());
 
-    static Album? _albumKindOfBlue;
-    static Album? _albumEllingtonAtNewport;
-    static Album? _albumBeethovenViolinConcerto;
-    static Album? _albumBachSonatasPartitasViolin;
-    static Album? _albumBachCelloSonatas;
-    static Album? _albumBillEvansVillageVanguard;
-
-    static IEnumerable<Album> _allAlbums = [];
-
     internal static IEnumerable<Album> NewAlbums()
-        => _allAlbums = [
-            _albumKindOfBlue = new(
+        => AlbumsSequence = [
+            AlbumKindOfBlue = new(
                 id: NextId,
                 tenantId: TestTenant.Current(),
                 title: "Kind of Blue",
@@ -33,7 +24,7 @@ public static class Albums
                 updatedAt: CurrentDt,
                 updatedBy: Creator
             ),
-            _albumEllingtonAtNewport = new(
+            AlbumEllingtonAtNewport = new(
                 id: NextId,
                 tenantId: TestTenant.Current(),
                 title: "Ellington at Newport",
@@ -47,7 +38,7 @@ public static class Albums
                 updatedAt: CurrentDt,
                 updatedBy: Creator
             ),
-            _albumBeethovenViolinConcerto = new(
+            AlbumBeethovenViolinConcerto = new(
                 id: NextId,
                 tenantId: TestTenant.Current(),
                 title: "Beethoven: Violin Concerto",
@@ -62,7 +53,7 @@ public static class Albums
                 updatedAt: CurrentDt,
                 updatedBy: Creator
             ),
-            _albumBachSonatasPartitasViolin = new(
+            AlbumBachSonatasPartitasViolin = new(
                 id: NextId,
                 tenantId: TestTenant.Current(),
                 title: "Bach: Sonatas and Partitas for Solo Violin",
@@ -74,7 +65,7 @@ public static class Albums
                 updatedAt: CurrentDt,
                 updatedBy: Creator
             ),
-            _albumBachCelloSonatas = new(
+            AlbumBachCelloSonatas = new(
                 id: NextId,
                 tenantId: TestTenant.Current(),
                 title: "Bach: Cello Sonatas",
@@ -97,7 +88,7 @@ public static class Albums
                 updatedAt: CurrentDt,
                 updatedBy: Creator
             ),
-            _albumBillEvansVillageVanguard = new(
+            AlbumBillEvansVillageVanguard = new(
                 id: NextId,
                 tenantId: TestTenant.Current(),
                 title: "Bill Evans Trio at the Village Vanguard",
@@ -118,12 +109,12 @@ public static class Albums
             )
         ];
 
-    public static IEnumerable<Album> AlbumsSequence => _allAlbums.Any() ? _allAlbums : NewAlbums();
+    public static IEnumerable<Album> AlbumsSequence { get => field.Any() ? field : NewAlbums(); private set; } = [];
 
-    public static Album AlbumKindOfBlue => _albumKindOfBlue ?? (NewAlbums(), _albumKindOfBlue!).Item2;
-    public static Album AlbumEllingtonAtNewport => _albumEllingtonAtNewport ?? (NewAlbums(), _albumEllingtonAtNewport!).Item2;
-    public static Album AlbumBeethovenViolinConcerto => _albumBeethovenViolinConcerto ?? (NewAlbums(), _albumBeethovenViolinConcerto!).Item2;
-    public static Album AlbumBachSonatasPartitasViolin => _albumBachSonatasPartitasViolin ?? (NewAlbums(), _albumBachSonatasPartitasViolin!).Item2;
-    public static Album AlbumBachCelloSonatas => _albumBachCelloSonatas ?? (NewAlbums(), _albumBachCelloSonatas!).Item2;
-    public static Album AlbumBillEvansVillageVanguard => _albumBillEvansVillageVanguard ?? (NewAlbums(), _albumBillEvansVillageVanguard!).Item2;
+    public static Album AlbumKindOfBlue { get => field ?? (NewAlbums(), field!).Item2; private set; }
+    public static Album AlbumEllingtonAtNewport { get => field ?? (NewAlbums(), field!).Item2; private set; }
+    public static Album AlbumBeethovenViolinConcerto { get => field ?? (NewAlbums(), field!).Item2; private set; }
+    public static Album AlbumBachSonatasPartitasViolin { get => field ?? (NewAlbums(), field!).Item2; private set; }
+    public static Album AlbumBachCelloSonatas { get => field ?? (NewAlbums(), field!).Item2; private set; }
+    public static Album AlbumBillEvansVillageVanguard { get => field ?? (NewAlbums(), field!).Item2; private set; }
 }

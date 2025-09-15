@@ -268,10 +268,7 @@ public class FakeDbSetTests(
     {
         var id = Guid.NewGuid();
         var te = new TestEntity("dup", id: id);
-        var sut = new FakeDbSet<TestEntity>(e => e.Id);
-
-        sut.Add(te);
-        sut.Add(te);
+        var sut = new FakeDbSet<TestEntity>(e => e.Id) { te, te };
 
         sut.Count().Should().Be(1);
     }
@@ -334,10 +331,8 @@ public class FakeDbSetTests(
     {
         var te1 = new TestEntity("one", id: Guid.NewGuid());
         var te2 = new TestEntity("two", id: Guid.NewGuid());
-        var sut = new FakeDbSet<TestEntity>();
+        var sut = new FakeDbSet<TestEntity>() { te1, te2 };
 
-        sut.Add(te1);
-        sut.Add(te2);
         sut.Remove(te1);
 
         sut.Should().ContainSingle().Which.Should().Be(te2);

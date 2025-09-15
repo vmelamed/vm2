@@ -1,6 +1,7 @@
 ﻿namespace vm2.Repository.DB.TestSQLite.DI;
 
 using vm2.Repository.EntityFramework.CommitInterceptor;
+using vm2.Repository.EntityFramework.CommitInterceptor.PolicyRules;
 
 public static class ServiceCollectionExtensions
 {
@@ -16,6 +17,8 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);
+
+        services.AddSingleton<FullDddTenantedAuditedPolicy>();
 
         services.AddKeyedSingleton(
             EfSQLiteRepositoryKey,
@@ -33,15 +36,12 @@ public static class ServiceCollectionExtensions
                                         .EnableDetailedErrors(enableDetailedErrors)
                                         .EnableSensitiveDataLogging(enableSensitiveDataLogging)
                                         .LogTo(logMethod, minLogLevel)
-                                        .UseCommitInterceptor(services, configuration)
+                                        .AddInterceptors(
+                                            new CommitInterceptor(
+                                                new CommitInterceptorConfigurationBuilder(sp, configuration)
+                                                        .WithPolicy<FullDddTenantedAuditedPolicy>()
+                                                        .Build()))
                                         ;
-                //var repoBuilder = new DbContextOptionsBuilder<EfSQLiteRepository>()
-                //                        .UseSqlite(connectionString)
-                //                        .EnableDetailedErrors(enableDetailedErrors)
-                //                        .EnableSensitiveDataLogging(enableSensitiveDataLogging)
-                //                        .LogTo(logMethod, minLogLevel)
-                //                        .UseDddInterceptor()
-                //                        ;
 
                 return repoBuilder;
             });

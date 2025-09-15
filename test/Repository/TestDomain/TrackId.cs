@@ -24,4 +24,18 @@ public readonly record struct TrackId(in Ulid Id)
     /// <param name="value"></param>
     public static explicit operator TrackId(in Ulid value) => new(value);
     #endregion
+
+    public static bool TryParse(string? input, IFormatProvider? _, out TrackId trackId)
+    {
+        if (Ulid.TryParse(input, out Ulid ulid))
+        {
+            trackId = new TrackId(ulid);
+            return true;
+        }
+        trackId = default;
+        return false;
+    }
+
+    public static bool TryParse(string? input, out TrackId trackId)
+        => TryParse(input, null, out trackId);
 }

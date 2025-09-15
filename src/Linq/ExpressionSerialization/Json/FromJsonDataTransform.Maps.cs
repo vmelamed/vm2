@@ -6,30 +6,30 @@ static partial class FromJsonDataTransform
 {
     static IEnumerable<KeyValuePair<string, Transformation>> ConstantTransformations()
     {
-        yield return new(Vocabulary.Boolean, (JElement x, ref Type t) => x.GetValue<bool>());
-        yield return new(Vocabulary.Byte, (JElement x, ref Type t) => x.GetValue<byte>());
-        yield return new(Vocabulary.Char, (JElement x, ref Type t) => JsonToChar(x));
-        yield return new(Vocabulary.Double, (JElement x, ref Type t) => JsonToDouble(x));
-        yield return new(Vocabulary.Float, (JElement x, ref Type t) => JsonToFloat(x));
-        yield return new(Vocabulary.Int, (JElement x, ref Type t) => x.GetValue<int>());
-        yield return new(Vocabulary.IntPtr, (JElement x, ref Type t) => JsonToIntPtr(x));
-        yield return new(Vocabulary.Long, (JElement x, ref Type t) => JsonToLong(x));
-        yield return new(Vocabulary.SignedByte, (JElement x, ref Type t) => x.GetValue<sbyte>());
-        yield return new(Vocabulary.Short, (JElement x, ref Type t) => x.GetValue<short>());
-        yield return new(Vocabulary.UnsignedInt, (JElement x, ref Type t) => x.GetValue<uint>());
-        yield return new(Vocabulary.UnsignedIntPtr, (JElement x, ref Type t) => JsonToUIntPtr(x));
-        yield return new(Vocabulary.UnsignedLong, (JElement x, ref Type t) => JsonToULong(x));
-        yield return new(Vocabulary.UnsignedShort, (JElement x, ref Type t) => x.GetValue<ushort>());
+        yield return new(Vocabulary.Boolean, (x, ref t) => x.GetValue<bool>());
+        yield return new(Vocabulary.Byte, (x, ref t) => x.GetValue<byte>());
+        yield return new(Vocabulary.Char, (x, ref t) => JsonToChar(x));
+        yield return new(Vocabulary.Double, (x, ref t) => JsonToDouble(x));
+        yield return new(Vocabulary.Float, (x, ref t) => JsonToFloat(x));
+        yield return new(Vocabulary.Int, (x, ref t) => x.GetValue<int>());
+        yield return new(Vocabulary.IntPtr, (x, ref t) => JsonToIntPtr(x));
+        yield return new(Vocabulary.Long, (x, ref t) => JsonToLong(x));
+        yield return new(Vocabulary.SignedByte, (x, ref t) => x.GetValue<sbyte>());
+        yield return new(Vocabulary.Short, (x, ref t) => x.GetValue<short>());
+        yield return new(Vocabulary.UnsignedInt, (x, ref t) => x.GetValue<uint>());
+        yield return new(Vocabulary.UnsignedIntPtr, (x, ref t) => JsonToUIntPtr(x));
+        yield return new(Vocabulary.UnsignedLong, (x, ref t) => JsonToULong(x));
+        yield return new(Vocabulary.UnsignedShort, (x, ref t) => x.GetValue<ushort>());
 
-        yield return new(Vocabulary.DateTime, (JElement x, ref Type t) => JsonToDateTime(x));
-        yield return new(Vocabulary.DateTimeOffset, (JElement x, ref Type t) => JsonToDateTimeOffset(x));
-        yield return new(Vocabulary.Duration, (JElement x, ref Type t) => JsonToTimeSpan(x));
-        yield return new(Vocabulary.DBNull, (JElement x, ref Type t) => DBNull.Value);
-        yield return new(Vocabulary.Decimal, (JElement x, ref Type t) => JsonToDecimal(x));
-        yield return new(Vocabulary.Guid, (JElement x, ref Type t) => JsonToGuid(x));
-        yield return new(Vocabulary.Half, (JElement x, ref Type t) => JsonToHalf(x));
-        yield return new(Vocabulary.String, (JElement x, ref Type t) => x.GetValue<string>());
-        yield return new(Vocabulary.Uri, (JElement x, ref Type t) => JsonToUri(x));
+        yield return new(Vocabulary.DateTime, (x, ref t) => JsonToDateTime(x));
+        yield return new(Vocabulary.DateTimeOffset, (x, ref t) => JsonToDateTimeOffset(x));
+        yield return new(Vocabulary.Duration, (x, ref t) => JsonToTimeSpan(x));
+        yield return new(Vocabulary.DBNull, (x, ref t) => DBNull.Value);
+        yield return new(Vocabulary.Decimal, (x, ref t) => JsonToDecimal(x));
+        yield return new(Vocabulary.Guid, (x, ref t) => JsonToGuid(x));
+        yield return new(Vocabulary.Half, (x, ref t) => JsonToHalf(x));
+        yield return new(Vocabulary.String, (x, ref t) => x.GetValue<string>());
+        yield return new(Vocabulary.Uri, (x, ref t) => JsonToUri(x));
 
         yield return new(Vocabulary.Anonymous, TransformAnonymous);
         yield return new(Vocabulary.ByteSequence, TransformByteSequence);
@@ -111,13 +111,13 @@ static partial class FromJsonDataTransform
             return checked(
                 Environment.Is64BitProcess
                     ? (IntPtr)Int64.Parse(ptrStr)
-                    : (IntPtr)Int32.Parse(ptrStr));
+                    : Int32.Parse(ptrStr));
         }
 
         return checked(
             Environment.Is64BitProcess
                 ? (IntPtr)x.GetValue<Int64>()
-                : (IntPtr)x.GetValue<Int32>());
+                : x.GetValue<Int32>());
     }
 
     static UIntPtr JsonToUIntPtr(JElement x)
@@ -132,13 +132,13 @@ static partial class FromJsonDataTransform
             return checked(
                 Environment.Is64BitProcess
                     ? (UIntPtr)UInt64.Parse(ptrStr)
-                    : (UIntPtr)UInt32.Parse(ptrStr));
+                    : UInt32.Parse(ptrStr));
         }
 
         return checked(
             Environment.Is64BitProcess
                 ? (UIntPtr)x.GetValue<UInt64>()
-                : (UIntPtr)x.GetValue<UInt32>());
+                : x.GetValue<UInt32>());
     }
 
     static string GetJsonStringToParse(JElement x, string typeName)

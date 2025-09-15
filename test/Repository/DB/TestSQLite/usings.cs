@@ -16,8 +16,6 @@ global using vm2.Repository.DB.TestSQLite.Mapping;
 global using vm2.Repository.DB.TestSQLite.Mapping.Converters;
 global using vm2.Repository.DB.TestSQLite.Mapping.Dimensions;
 global using vm2.Repository.DB.TestSQLite.Mapping.Generators;
-global using vm2.Repository.EntityFramework.Ddd;
-global using vm2.Repository.EntityFramework.Models.Generators;
 global using vm2.Repository.EntityFramework.Models.Mapping;
 global using vm2.Repository.TestDomain;
 global using vm2.Repository.TestDomain.Dimensions;

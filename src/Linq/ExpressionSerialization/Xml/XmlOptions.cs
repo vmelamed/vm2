@@ -90,21 +90,13 @@ public partial class XmlOptions : DocumentOptions
         }
     }
 
-    string _characterEncoding     = "utf-8";
-    bool _byteOrderMark           = false;
-    bool _bigEndian               = false;
-    bool _addDocumentDeclaration  = true;
-    bool _omitDuplicateNamespaces = true;
-    bool _attributesOnNewLine     = false;
-    XmlWriterSettings? _xmlWriterSettings;
-
     /// <summary>
     /// Gets or sets the transformed document encoding.
     /// </summary>
     /// <value>The encoding.</value>
     public string CharacterEncoding
     {
-        get => _characterEncoding;
+        get;
         set
         {
             var encoding = value.ToUpperInvariant() switch {
@@ -113,79 +105,38 @@ public partial class XmlOptions : DocumentOptions
                 "UTF-16" => "utf-16",
                 "UTF-32" => "utf-32",
                 "ISO-8859-1" or "LATIN1" => "iso-8859-1",
-                _ => throw new NotSupportedException($@"The encoding ""{CharacterEncoding}"" is not supported." +
-                                                        @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
+                _ => throw new NotSupportedException($@"The encoding ""{CharacterEncoding}"" is not supported. " +
+                                                      @"The supported character encodings are: ""ascii"", ""utf-8"", ""utf-16"", ""utf-32"", and ""iso-8859-1"" (or ""Latin1"")."),
             };
 
-            if (Change(_characterEncoding != encoding))
-                _characterEncoding = encoding;
+            field = Change(field, encoding);
         }
-    }
+    } = "utf-8";
 
     /// <summary>
     /// Gets or sets a value indicating whether to put in the output stream a byte order mark (BOM). Not recommended for UTF-8.
     /// </summary>
-    public bool ByteOrderMark
-    {
-        get => _byteOrderMark;
-        set
-        {
-            if (Change(_byteOrderMark != value))
-                _byteOrderMark = value;
-        }
-    }
+    public bool ByteOrderMark { get; set => field = Change(field, value); }
 
     /// <summary>
     /// Gets or sets a value indicating the endian-ness of the transformed document.
     /// </summary>
-    public bool BigEndian
-    {
-        get => _bigEndian;
-        set
-        {
-            if (Change(_bigEndian != value))
-                _bigEndian = value;
-        }
-    }
+    public bool BigEndian { get; set => field = Change(field, value); }
 
     /// <summary>
     /// Gets or sets a value indicating whether to add an XML document declaration.
     /// </summary>
-    public bool AddDocumentDeclaration
-    {
-        get => _addDocumentDeclaration;
-        set
-        {
-            if (Change(_addDocumentDeclaration != value))
-                _addDocumentDeclaration = value;
-        }
-    }
+    public bool AddDocumentDeclaration { get; set => field = Change(field, value); } = true;
 
     /// <summary>
     /// Gets or sets a value indicating whether to eliminate duplicate namespaces.
     /// </summary>
-    public bool OmitDuplicateNamespaces
-    {
-        get => _omitDuplicateNamespaces;
-        set
-        {
-            if (Change(_omitDuplicateNamespaces != value))
-                _omitDuplicateNamespaces = value;
-        }
-    }
+    public bool OmitDuplicateNamespaces { get; set => field = Change(field, value); } = true;
 
     /// <summary>
     /// Outputs all XML attribute on a new line - below their XML element and indented.
     /// </summary>
-    public bool AttributesOnNewLine
-    {
-        get => _attributesOnNewLine;
-        set
-        {
-            if (Change(_attributesOnNewLine != value))
-                _attributesOnNewLine = value;
-        }
-    }
+    public bool AttributesOnNewLine { get; set => field = Change(field, value); }
 
     /// <summary>
     /// Determines whether the expressions schemaUri <see cref="Exs"/> was added.
@@ -325,9 +276,9 @@ public partial class XmlOptions : DocumentOptions
     /// Gets the XML writer settings.
     /// </summary>
     public XmlWriterSettings XmlWriterSettings
-        => _xmlWriterSettings is not null && !Changed
-                ? _xmlWriterSettings
-                : _xmlWriterSettings = new() {
+        => field is not null && !Changed
+                ? field
+                : field = new() {
                     Encoding = Encoding,
                     Indent = Indent,
                     IndentChars = new(' ', IndentSize),

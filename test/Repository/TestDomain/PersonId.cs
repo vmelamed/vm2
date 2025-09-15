@@ -24,4 +24,18 @@ public readonly record struct PersonId(in Ulid Id)
     /// <param name="value"></param>
     public static explicit operator PersonId(in Ulid value) => new(value);
     #endregion
+
+    public static bool TryParse(string? input, IFormatProvider? _, out PersonId personId)
+    {
+        if (Ulid.TryParse(input, out Ulid ulid))
+        {
+            personId = new PersonId(ulid);
+            return true;
+        }
+        personId = default;
+        return false;
+    }
+
+    public static bool TryParse(string? input, out PersonId personId)
+        => TryParse(input, null, out personId);
 }

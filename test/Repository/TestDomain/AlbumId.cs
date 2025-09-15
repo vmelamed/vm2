@@ -26,4 +26,18 @@ public readonly record struct AlbumId(in Ulid Id)
     /// <param name="value"></param>
     public static explicit operator AlbumId(in Ulid value) => new(value);
     #endregion
+
+    public static bool TryParse(string? input, IFormatProvider? _, out AlbumId albumId)
+    {
+        if (Ulid.TryParse(input, out Ulid ulid))
+        {
+            albumId = new AlbumId(ulid);
+            return true;
+        }
+        albumId = default;
+        return false;
+    }
+
+    public static bool TryParse(string? input, out AlbumId albumId)
+        => TryParse(input, null, out albumId);
 }

@@ -107,7 +107,7 @@ partial class ToJsonDataTransform(JsonOptions options)
                                 new JElement(Vocabulary.Type, Transform.TypeName(underlyingType)),
                                 new JElement(Vocabulary.Value));    // null value
 
-        var value = nodeType.GetProperty(nameof(Nullable<int>.Value))?.GetValue(nodeValue)
+        var value = nodeType.GetProperty(nameof(Nullable<>.Value))?.GetValue(nodeValue)
                         ?? throw new InternalTransformErrorException("'Nullable<T>.HasValue' is true but 'Nullable<T>.Node' is null.");
 
         return new JElement(
