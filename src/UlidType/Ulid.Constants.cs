@@ -7,7 +7,7 @@
 /// This class defines constants for the structure and validation of ULIDs, including offsets, lengths, and the Crockford Base32<br/>
 /// alphabet. It also provides a precompiled regular expression for validating ULID strings.
 /// </remarks>
-public static partial class UlidConstants
+public readonly partial struct Ulid
 {
     /// <summary>
     /// Represents the offset of the timestamp bytes in a ULID.

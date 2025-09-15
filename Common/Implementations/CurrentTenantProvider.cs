@@ -21,11 +21,15 @@ public class CurrentTenantProvider<TTenantId> : ITenantProvider<TTenantId> where
     /// <summary>
     /// Gets the identifier of the current tenant for the current asynchronous context/UoW.
     /// </summary>
-    public TTenantId TenantId => _tenantId.Value ?? throw new InvalidOperationException("The current tenant is not set.");
+    public TTenantId TenantId
+    {
+        get => _tenantId.Value ?? throw new InvalidOperationException("The current tenant is not set.");
+        private set => _tenantId.Value = value;
+    }
 
     /// <summary>
     /// Sets the current tenant identifier for the current asynchronous context/UoW.
     /// </summary>
     /// <param name="tenantId">The identifier of the tenant to set as the current tenant.</param>
-    public void SetCurrentTenant(TTenantId tenantId) => _tenantId.Value = tenantId;
+    public void SetCurrentTenant(TTenantId tenantId) => TenantId = tenantId;
 }

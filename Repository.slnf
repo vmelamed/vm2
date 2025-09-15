@@ -2,6 +2,7 @@
   "solution": {
     "path": "vm2.slnx",
     "projects": [
+      "Common\\Common.csproj",
       "benchmarks\\UlidType.Benchmarks\\UlidType.Benchmarks.csproj",
       "examples\\GenerateUlids\\GenerateUlids.csproj",
       "src\\Repository\\DB\\SQLite\\SQLite.csproj",

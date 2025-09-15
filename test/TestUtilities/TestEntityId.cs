@@ -10,7 +10,7 @@ public static class TestEntityId
 
     public static Guid Next()
     {
-        _current.Value = new Guid(_ulidFactory.NewUlid().ToByteArray());
+        _current.Value = new Guid(_ulidFactory.NewUlid().Bytes);
         _ids.Value?.Add(_current.Value);
         return _current.Value;
     }

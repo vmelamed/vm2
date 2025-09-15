@@ -1,5 +1,7 @@
 namespace vm2.UlidType.Tests;
 
+using System.Text;
+
 public class UlidTests
 {
     [Fact]
@@ -8,7 +10,7 @@ public class UlidTests
         var factory = new UlidFactory();
         var ulid = factory.NewUlid();
 
-        var bytes = ulid.ToByteArray();
+        var bytes = ulid.Bytes.ToArray();
         bytes.Should().HaveCount(UlidBytesLength);
 
         Convert.FromBase64String(ulid.ToBase64()).Should().Equal(bytes);
@@ -16,6 +18,18 @@ public class UlidTests
         var s = ulid.ToString();
         s.Should().NotBeNullOrWhiteSpace();
         s.Length.Should().Be(UlidStringLength);
+    }
+
+    [Fact]
+    public void NewUlid_RoundTrip_ToString_ToUlid()
+    {
+        var ulid = new UlidFactory().NewUlid();
+        var str = ulid.ToString();
+        str.Should().MatchRegex("^[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{26}$");
+        var utfStr = Encoding.UTF8.GetBytes(str);
+        var parsed = new Ulid(utfStr);
+
+        parsed.Should().Be(ulid);
     }
 
     [Fact]
@@ -28,7 +42,7 @@ public class UlidTests
 
         var dest = new byte[UlidBytesLength];
         ulid.TryWrite(dest.AsSpan()).Should().BeTrue();
-        dest.Should().Equal(ulid.ToByteArray());
+        dest.Should().Equal(ulid.Bytes.ToArray());
     }
 
     [Fact]
@@ -37,10 +51,10 @@ public class UlidTests
         var ulid = new UlidFactory().NewUlid();
 
         var tooSmall = new char[UlidStringLength - 1];
-        ulid.TryWriteChars(tooSmall.AsSpan()).Should().BeFalse();
+        ulid.TryWrite(tooSmall.AsSpan()).Should().BeFalse();
 
         var buffer = new char[UlidStringLength];
-        ulid.TryWriteChars(buffer).Should().BeTrue();
+        ulid.TryWrite(buffer).Should().BeTrue();
 
         var written = new string(buffer);
         written.Should().Be(ulid.ToString());
@@ -77,7 +91,7 @@ public class UlidTests
     [Fact]
     public void TryParse_Null_ReturnsFalse()
     {
-        Ulid.TryParse(null!, out _).Should().BeFalse();
+        Ulid.TryParse("", out _).Should().BeFalse();
     }
 
     [Fact]
@@ -88,13 +102,12 @@ public class UlidTests
 
         var now = DateTimeOffset.UtcNow;
 
-        var ts = ulid.Timestamp();
+        var ts = ulid.Timestamp;
         ts.Should().BeOnOrBefore(now);
         ts.Should().BeOnOrAfter(now.AddSeconds(-1));
 
-        var bytes = ulid.ToByteArray();
-        var random = new byte[RandomLength];
-        ulid.Random(random.AsSpan());
+        var bytes = ulid.Bytes.ToArray();
+        var random = ulid.RandomBytes.ToArray();
         bytes.Skip(RandomBegin).Take(RandomLength).Should().Equal(random);
     }
 

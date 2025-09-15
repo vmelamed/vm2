@@ -7,4 +7,4 @@ global using System.Text.RegularExpressions;
 global using vm2.UlidType.Rng;
 
 global using static System.Buffers.Binary.BinaryPrimitives;
-global using static vm2.UlidType.UlidConstants;
+global using static vm2.UlidType.Ulid;

@@ -1,5 +1,8 @@
 ﻿namespace vm2.UlidType;
 
+using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+
 /// <summary>
 /// Represents a Universally Unique Lexicographically Sortable Identifier (ULID).
 /// </summary>
@@ -9,28 +12,107 @@
 /// to other formats such as strings or GUIDs. ULIDs are commonly used in distributed systems where unique, sortable identifiers<br/>
 /// are required.
 /// </remarks>
-public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Ulid>
+public readonly partial struct Ulid :
+    IEquatable<Ulid>,
+    IComparable<Ulid>,
+    IParsable<Ulid>,
+    IEqualityComparer<Ulid>,
+    IEqualityOperators<Ulid, Ulid, bool>,
+    IComparisonOperators<Ulid, Ulid, bool>,
+    IIncrementOperators<Ulid>,
+    IMinMaxValue<Ulid>
 {
+    /// <summary>
+    /// The value where all bits of the Ulid value are set to zero. Also, represents the smallest possible value of the
+    /// <see cref="Ulid"/> type.
+    /// </summary>
+    public static readonly Ulid Empty = new();
+
+    /// <summary>
+    /// The value where all bits of the Ulid value are set to one. Also, represents the greatest possible value of the
+    /// <see cref="Ulid"/> type.
+    /// </summary>
+    public static readonly Ulid AllBitsSet = new([ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF ]);
+
     readonly byte[] _ulidBytes;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Ulid"/> struct using the specified byte ulidBytesSpan. Used only by the <see cref="UlidFactory"/>.
+    /// Gets a read-only span of bytes representing the underlying data of the ULID.
+    /// </summary>
+    public readonly ReadOnlySpan<byte> Bytes => _ulidBytes.AsSpan();
+
+    /// <summary>
+    /// Extracts and converts the ULID's timestamp component into a <see cref="DateTimeOffset"/> representation.
     /// </summary>
     /// <remarks>
-    /// This constructor creates a ULID from the provided byte ulidBytesSpan. The caller must ensure that the ulidBytesSpan contains a valid ULID
-    /// representation.<br/>
-    /// The data is copied into an internal buffer, so changes to the original ulidBytesSpan after construction do not affect the ULID instance.
+    /// The returned <see cref="DateTimeOffset"/> represents the timestamp encoded in the ULID, which is based on the ulidAsNumber of <br/>
+    /// milliseconds since the Unix epoch (January 1, 1970, 00:00:00 UTC).
+    /// </remarks>
+    public readonly DateTimeOffset Timestamp
+    {
+        get
+        {
+            Span<byte> timestampBytes = stackalloc byte[sizeof(long)];
+
+            _ulidBytes
+                    .AsSpan(TimestampBegin, TimestampLength)
+                    .CopyTo(timestampBytes.Slice((BitConverter.IsLittleEndian ? 2 : 0), TimestampLength));
+
+            return DateTimeOffset.FromUnixTimeMilliseconds(ReadInt64BigEndian(timestampBytes));
+        }
+    }
+
+    /// <summary>
+    /// Returns the bytes of the random component from the current ULID instance.
+    /// </summary>
+    /// <remarks>
+    /// The returned byte array represents the random portion of the ULID, which is independent of the timestamp component.
+    /// </remarks>
+    public readonly ReadOnlySpan<byte> RandomBytes => Bytes[RandomBegin..RandomEnd];
+
+    #region IMinMaxValues<Ulid>
+    /// <inheritdoc/>
+    public static Ulid MaxValue => AllBitsSet;
+
+    /// <inheritdoc/>
+    public static Ulid MinValue => Empty;
+    #endregion
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Ulid"/> struct using the passed in <paramref name="bytes"/>.<br/>
+    /// If the length of the input span is <see cref="UlidBytesLength"/> it accepts them as the underlying ULID bytes (used by the <see cref="UlidFactory"/>).<br/>
+    /// If the specified span of bytes is <see cref="UlidStringLength"/> long, it attempts to parse them as a span of UTF-8 characters.<br/>
+    /// Any other length throws an <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <remarks>
+    /// This constructor creates a ULID from the provided bytes. The caller must ensure that the span contains a valid ULID representation<br/>
+    /// either as raw bytes or as a UTF-8 encoded string.<br/>
+    /// The data is copied into an internal buffer, so changes to the source byte span after construction do not affect
+    /// the ULID instance.
     /// </remarks>
     /// <param name="bytes">
-    /// A read-only ulidBytesSpan of bytes representing the ULID. The ulidBytesSpan must be exactly  <see cref="UlidBytesLength"/> bytes long.
+    /// A read-only span of bytes representing the raw bytes or UTF-8 encoded string of a valid ULID. The span must be exactly
+    /// <see cref="UlidBytesLength"/> or <see cref="UlidStringLength"/> bytes long.
     /// </param>
-    internal Ulid(in ReadOnlySpan<byte> bytes)
+    public Ulid(in ReadOnlySpan<byte> bytes)
     {
-        if (bytes.Length != UlidBytesLength)
-            throw new ArgumentException($"The input ulidBytesSpan of bytes must be exactly {UlidBytesLength} bytes long.", nameof(bytes));
+        if (bytes.Length == UlidBytesLength)
+        {
+            _ulidBytes = new byte[UlidBytesLength];
+            bytes.CopyTo(_ulidBytes);
+            return;
+        }
 
-        _ulidBytes = new byte[UlidBytesLength];
-        bytes.CopyTo(_ulidBytes);
+        if (bytes.Length == UlidStringLength)
+        {
+            if (TryParse(bytes, out this))
+                return;
+            throw new ArgumentException("The byte span does not represent a valid ULID string.", nameof(bytes));
+        }
+
+        throw new ArgumentException(
+                    $"The byte span must contain exactly {nameof(Ulid)}.{nameof(UlidBytesLength)} or {nameof(Ulid)}.{nameof(UlidStringLength)} ({UlidBytesLength} or {UlidStringLength}) bytes.",
+                    nameof(bytes));
     }
 
     /// <summary>
@@ -50,24 +132,50 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     }
 
     /// <summary>
-    /// Gets the bytes of the current ULID instance into a new byte array.
+    /// Initializes a new instance of the <see cref="Ulid"/> struct using the specified timestamp and random bytes.
     /// </summary>
     /// <remarks>
-    /// The returned byte array is a copy of the internal representation, ensuring that modifications to the array do not affect<br/>
-    /// the original ULID instance.
+    /// <b>Hint:</b> use this constructor to generate predictable sequences of ULIDs, e.g. in unit tests.<br/>
     /// </remarks>
-    /// <returns>A new byte array containing the 16 bytes that represent the ULID.</returns>
-    public readonly byte[] ToByteArray() => (byte[])_ulidBytes.Clone();
+    /// <param name="dateTime">The timestamp representing the creation time of the ULID.</param>
+    /// <param name="randomBytes">A read-only span of 10 bytes representing the unique identifier portion of the ULID.</param>
+    public Ulid(DateTimeOffset dateTime, ReadOnlySpan<byte> randomBytes)
+    {
+        if (randomBytes.Length != RandomLength)
+            throw new ArgumentException(
+                        $"The random bytes argument must contain exactly {nameof(Ulid)}.{nameof(RandomLength)} ({RandomLength}) bytes.",
+                        nameof(randomBytes));
+
+        _ulidBytes = new byte[UlidBytesLength];
+
+        var ulidSpan = _ulidBytes.AsSpan();
+        var timestampNow = dateTime.ToUnixTimeMilliseconds();
+
+        if (!BitConverter.IsLittleEndian)
+            timestampNow <<= 2*8; // 0x0000010203040506 << 16 => 0x0102030405060000
+
+        BitConverter.GetBytes(timestampNow)[TimestampBegin..TimestampEnd].CopyTo(ulidSpan);
+
+        if (BitConverter.IsLittleEndian)
+            ulidSpan[TimestampBegin..TimestampEnd].Reverse();   // 0x0605040302010000.Reverse(0..6) => 0x0102030405060000
+
+        randomBytes.CopyTo(ulidSpan[RandomBegin..RandomEnd]);
+    }
 
     /// <summary>
-    /// Gets the bytes of the current ULID instance into a new byte array.
+    /// Initializes a new instance of the <see cref="Ulid"/> struct using the specified timestamp and identifier randomBytes.
     /// </summary>
     /// <remarks>
-    /// The returned byte array is a copy of the internal representation, ensuring that modifications to the array do not affect<br/>
-    /// the original ULID instance.
+    /// <b>Hint:</b> use this constructor to generate predictable sequences of ULIDs, e.g. in unit tests.<br/>
     /// </remarks>
-    /// <returns>A new byte array containing the 16 bytes that represent the ULID.</returns>
-    public readonly ReadOnlySpan<byte> ToByteSpan() => _ulidBytes.AsSpan();
+    /// <param name="dateTime">
+    /// The timestamp representing the creation time of the ULID. Should be in UTC, otherwise assumes local time.
+    /// </param>
+    /// <param name="randomBytes">A read-only span of 10 randomBytes representing the unique identifier portion of the ULID.</param>
+    public Ulid(DateTime dateTime, ReadOnlySpan<byte> randomBytes)
+        : this(new DateTimeOffset(dateTime), randomBytes)
+    {
+    }
 
     /// <summary>
     /// Converts the current ULID value to its equivalent Guid representation.
@@ -97,29 +205,29 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     {
         Span<char> span = stackalloc char[UlidStringLength];
 
-        var r = TryWriteChars(span);
+        var r = TryWrite(span);
 
         Debug.Assert(r is true);
         return new string(span);
     }
 
     /// <summary>
-    /// Attempts to write the string representation of the ULID to the specified character ulidBytesSpan using the Crockford Base32 encoding.
+    /// Attempts to write the string representation of the ULID to the specified character span using the Crockford Base32 encoding.
     /// </summary>
     /// <remarks>
     /// The method encodes the ULID as a 26-character string using the Crockford Base32 alphabetSpan. The caller must ensure that the<br/>
-    /// <paramref name="destination"/> ulidBytesSpan has sufficient capacity  to hold the resulting string. If the ulidBytesSpan is smaller than<br/>
-    /// <see cref="UlidStringLength"/>, the method returns <see langword="false"/>  and does not modify the ulidBytesSpan.
+    /// <paramref name="destination"/> span has sufficient capacity to hold the resulting string. If the span is smaller than<br/>
+    /// <see cref="UlidStringLength"/>, the method returns <see langword="false"/>  and does not modify the destination span.
     /// </remarks>
     /// <param name="destination">
-    /// The ulidBytesSpan of characters where the ULID string representation will be written. The ulidBytesSpan must have a length of<br/>
+    /// The span of characters where the ULID string representation will be written. The span must have a length of<br/>
     /// <see cref="UlidStringLength"/> or more.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if the ULID string representation was successfully written to the  <paramref name="destination"/> ulidBytesSpan; otherwise,<br/>
-    /// <see langword="false"/> if the ulidBytesSpan is too small.
+    /// <see langword="true"/> if the ULID string representation was successfully written to the  <paramref name="destination"/> span; otherwise,<br/>
+    /// <see langword="false"/> if the span is too small.
     /// </returns>
-    public readonly bool TryWriteChars(Span<char> destination)
+    public readonly bool TryWrite(Span<char> destination)
     {
         if (destination.Length < UlidStringLength)
             return false;
@@ -128,7 +236,7 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
 
         for (var i = 0; i < UlidStringLength; i++)
         {
-            // get the least significant 5 bits from and convert it to character
+            // get the least significant 5 bits from the number and convert it to character
             destination[UlidStringLength-i-1] = CrockfordDigits[(byte)ulidAsNumber & UlidCharMask];
             ulidAsNumber >>>= BitsPerUlidDigit;
         }
@@ -145,10 +253,10 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     /// to indicate failure.
     /// </remarks>
     /// <param name="destination">
-    /// The buffer to which the ULID bytes will be written. Must have a length of at least <see cref="UlidBytesLength"/>.
+    /// The buffer to which the ULID randomBytes will be written. Must have a length of at least <see cref="UlidBytesLength"/>.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if the ULID bytes were successfully written to the destination buffer; otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the ULID randomBytes were successfully written to the destination buffer; otherwise, <see langword="false"/>.
     /// </returns>
     public readonly bool TryWrite(Span<byte> destination)
     {
@@ -160,60 +268,124 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     }
 
     /// <summary>
-    /// Extracts and converts the ULID's timestamp component into a <see cref="DateTimeOffset"/> representation.
+    /// Attempts to parse the specified UTF-16 string representation of a ULID.
     /// </summary>
     /// <remarks>
-    /// The returned <see cref="DateTimeOffset"/> represents the timestamp encoded in the ULID, which is based on the ulidAsNumber of <br/>
-    /// milliseconds since the Unix epoch (January 1, 1970, 00:00:00 UTC).
+    /// This method does not throw an exception if the parsing fails. Instead, it returns <see langword="false"/> and sets <paramref name="result"/><br/>
+    /// to <see langword="null"/>.
     /// </remarks>
+    /// <param name="sourceSpan">
+    /// The string as a read-only char span to parse as a ULID. This value can be <see langword="null"/>.
+    /// </param>
+    /// <param name="result">
+    /// When this method returns, contains the parsed <see cref="Ulid"/> if the parsing succeeded; otherwise, <see langword="null"/>.
+    /// </param>
     /// <returns>
-    /// A <see cref="DateTimeOffset"/> representing the timestamp component of the ULID.
+    /// <see langword="true"/> if the string was successfully parsed as a ULID; otherwise, <see langword="false"/>.
     /// </returns>
-    public readonly DateTimeOffset Timestamp()
+    public static bool TryParse(
+        ReadOnlySpan<char> sourceSpan,
+        out Ulid result)
     {
-        Span<byte> tsBytes = stackalloc byte[sizeof(long)];
+        result = new Ulid();
 
-        _ulidBytes[TimestampBegin..TimestampEnd].CopyTo(tsBytes[2..8]);
+        if (sourceSpan.Length < UlidStringLength)
+            return false;
+
+        // parse the string into a UInt128 value first
+        UInt128 ulidAsNumber = 0;
+
+        for (var i = 0; i < UlidStringLength; i++)
+        {
+            if (i > 0)
+                ulidAsNumber *= UlidRadix;
+
+            var crockfordIndex = sourceSpan[i] - '0';
+
+            if (crockfordIndex < 0
+                || crockfordIndex >= CrockfordDigitValues.Length)
+                return false;
+
+            var digitValue = CrockfordDigitValues[crockfordIndex];
+
+            if (digitValue >= 32)
+                return false;
+
+            ulidAsNumber += digitValue;
+        }
+
+        // get the randomBytes of the UInt128 value
+        var ulidSpan = BitConverter.GetBytes(ulidAsNumber).AsSpan();
+
+        // make sure they are big-endian
         if (BitConverter.IsLittleEndian)
-            tsBytes.Reverse();
+            ulidSpan.Reverse();
 
-        return DateTimeOffset.FromUnixTimeMilliseconds(BitConverter.ToInt64(tsBytes));
+        // this is our ULID
+        result = new Ulid(ulidSpan);
+        return true;
     }
 
     /// <summary>
-    /// Extracts the bytes of the random component from the current ULID instance.
+    /// Attempts to parse the specified UTF-8 string representation of a ULID.
     /// </summary>
     /// <remarks>
-    /// The returned byte array represents the random portion of the ULID, which is independent of the timestamp component.
+    /// This method does not throw an exception if the parsing fails. Instead, it returns <see langword="false"/> and sets <paramref name="result"/><br/>
+    /// to <see langword="null"/>.
     /// </remarks>
+    /// <param name="sourceSpan">
+    /// The string as a read-only char span to parse as a ULID. This value can be <see langword="null"/>.
+    /// </param>
+    /// <param name="result">
+    /// When this method returns, contains the parsed <see cref="Ulid"/> if the parsing succeeded; otherwise, <see langword="null"/>.
+    /// </param>
     /// <returns>
-    /// A byte array containing the random component of the ULID.
+    /// <see langword="true"/> if the string was successfully parsed as a ULID; otherwise, <see langword="false"/>.
     /// </returns>
-    public readonly void Random(in Span<byte> bytes)
+    public static bool TryParse(
+        ReadOnlySpan<byte> sourceSpan,
+        out Ulid result)
     {
-        if (bytes.Length < RandomLength)
-            throw new ArgumentException($"The parameter must be {RandomLength} long.", nameof(bytes));
+        result = new Ulid();
 
-        _ulidBytes.AsSpan(RandomBegin, RandomLength).CopyTo(bytes);
+        if (sourceSpan.Length < UlidStringLength)
+            return false;
+
+        // parse the string into a UInt128 value first
+        UInt128 ulidAsNumber = 0;
+
+        for (var i = 0; i < UlidStringLength; i++)
+        {
+            if (i > 0)
+                ulidAsNumber *= UlidRadix;
+
+            var crockfordIndex = sourceSpan[i] - (byte)'0';
+
+            if (crockfordIndex < 0
+                || crockfordIndex >= CrockfordDigitValues.Length)
+                return false;
+
+            var digitValue = CrockfordDigitValues[crockfordIndex];
+
+            if (digitValue >= 32)
+                return false;
+
+            ulidAsNumber += digitValue;
+        }
+
+        // get the randomBytes of the UInt128 value
+        var ulidSpan = BitConverter.GetBytes(ulidAsNumber).AsSpan();
+
+        // make sure the number is written big-endian
+        if (BitConverter.IsLittleEndian)
+            ulidSpan.Reverse();
+
+        // this is our ULID
+        result = new Ulid(ulidSpan);
+        return true;
     }
 
-    /// <summary>
-    /// Extracts the bytes of the random component from the current ULID instance.
-    /// </summary>
-    /// <remarks>
-    /// The returned byte array represents the random portion of the ULID, which is independent of the timestamp component.
-    /// </remarks>
-    /// <returns>
-    /// A byte array containing the random component of the ULID.
-    /// </returns>
-    public readonly byte[] Random()
-    {
-        byte[] bytes = new byte[RandomLength];
-
-        Random(bytes.AsSpan());
-        return bytes;
-    }
-
+    #region IParseable
     /// <summary>
     /// Parses the specified string representation of a ULID and returns the corresponding <see cref="Ulid"/> instance.
     /// </summary>
@@ -222,7 +394,7 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     /// <returns>The <see cref="Ulid"/> instance that corresponds to the parsed string.</returns>
     /// <exception cref="ArgumentException">Thrown if the input string <paramref name="s"/> cannot be parsed as a valid ULID.</exception>
     public static Ulid Parse(string s, IFormatProvider? formatProvider = null)
-        => TryParse(s, formatProvider, out var u) ? u : throw new ArgumentException("Unable to parse the input", nameof(s));
+        => TryParse(s, formatProvider, out var u) ? u : throw new ArgumentException("The input source does not represent a valid ULID.", nameof(s));
 
     /// <summary>
     /// Attempts to parse the specified string representation of a ULID (Universally Unique Lexicographically Sortable Identifier)<br/>
@@ -250,73 +422,12 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
         IFormatProvider? _,
         out Ulid result)
     {
-        result = new Ulid();
-
-        if (string.IsNullOrWhiteSpace(source) || source.Length < UlidStringLength)
-            return false;
-
-        var sourceSpan = source.AsSpan();
-
-        // parse the string into a UInt128 value first
-        UInt128 ulidAsNumber = 0;
-
-        for (var i = 0; i < UlidStringLength; i++)
-        {
-            if (i > 0)
-                ulidAsNumber *= UlidRadix;
-
-            var crockfordIndex = sourceSpan[i] - '0';
-
-            if (crockfordIndex < 0
-                || crockfordIndex >= CrockfordDigitValues.Length)
-                return false;
-
-            var digitValue = CrockfordDigitValues[crockfordIndex];
-
-            if (digitValue >= 32)
-                return false;
-
-            ulidAsNumber += digitValue;
-        }
-
-        // get the bytes of the UInt128 value
-        var ulidSpan = BitConverter.GetBytes(ulidAsNumber).AsSpan();
-
-        // make sure they are big-endian
-        if (BitConverter.IsLittleEndian)
-            ulidSpan.Reverse();
-
-        // this is our ULID
-        result = new Ulid(ulidSpan);
-        return true;
-    }
-
-    /// <summary>
-    /// Attempts to parse the specified string representation of a ULID (Universally Unique Lexicographically Sortable Identifier).
-    /// </summary>
-    /// <remarks>
-    /// This method does not throw an exception if the parsing fails. Instead, it returns <see langword="false"/> and sets <paramref name="result"/><br/>
-    /// to <see langword="null"/>.
-    /// </remarks>
-    /// <param name="source">
-    /// The string to parse as a ULID. This value can be <see langword="null"/>.
-    /// </param>
-    /// <param name="result">
-    /// When this method returns, contains the parsed <see cref="Ulid"/> if the parsing succeeded; otherwise, <see langword="null"/>.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the string was successfully parsed as a ULID; otherwise, <see langword="false"/>.
-    /// </returns>
-    public static bool TryParse(
-        [NotNullWhen(true)] string? source,
-        out Ulid result)
-    {
         result = new();
         if (string.IsNullOrWhiteSpace(source))
             return false;
-        return TryParse(source, null, out result);
+        return TryParse(source, out result);
     }
-
+    #endregion
     /// <summary>
     /// Determines whether the current instance is equal to the specified <see cref="Ulid"/> instance.
     /// </summary>
@@ -358,55 +469,50 @@ public readonly struct Ulid : IEquatable<Ulid>, IComparable<Ulid>, IParsable<Uli
     /// </returns>
     public int CompareTo(Ulid other) => _ulidBytes.AsSpan().SequenceCompareTo(other._ulidBytes.AsSpan());
 
-    /// <summary>
-    /// Determines whether two <see cref="Ulid"/> instances are equal.
-    /// </summary>
-    /// <param name="left">The first <see cref="Ulid"/> to compare.</param>
-    /// <param name="right">The second <see cref="Ulid"/> to compare.</param>
-    /// <returns><see langword="true"/> if the two <see cref="Ulid"/> instances are equal; otherwise, <see langword="false"/>.</returns>
+    #region IEqualityOperators<Ulid, Ulid, bool>
+    /// <inheritdoc/>
     public static bool operator ==(Ulid left, Ulid right) => left.Equals(right);
 
-    /// <summary>
-    /// Determines whether two <see cref="Ulid"/> instances are not equal.
-    /// </summary>
-    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
-    /// <returns><see langword="true"/> if the two <see cref="Ulid"/> instances are not equal; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc/>
     public static bool operator !=(Ulid left, Ulid right) => !(left==right);
+    #endregion
 
-    /// <summary>
-    /// Determines whether the specified <see cref="Ulid"/> instance is less than another <see cref="Ulid"/> instance.
-    /// </summary>
-    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
-    /// <returns><see langword="true"/> if <paramref name="left"/> is less than <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    #region IComparisonOperators<Ulid, Ulid, bool>
+    /// <inheritdoc/>
     public static bool operator <(Ulid left, Ulid right) => left.CompareTo(right)<0;
 
-    /// <summary>
-    /// Determines whether one <see cref="Ulid"/> instance is less than or equal to another.
-    /// </summary>
-    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
-    /// <returns>
-    /// <see langword="true"/> if the value of <paramref name="left"/> is less than or equal to the value of <paramref name="right"/>;
-    /// otherwise, <see langword="false"/>.
-    /// </returns>
+    /// <inheritdoc/>
     public static bool operator <=(Ulid left, Ulid right) => left.CompareTo(right)<=0;
 
-    /// <summary>
-    /// Determines whether one <see cref="Ulid"/> instance is greater than another.
-    /// </summary>
-    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
-    /// <returns><see langword="true"/> if <paramref name="left"/> is greater than <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc/>
     public static bool operator >(Ulid left, Ulid right) => left.CompareTo(right)>0;
 
-    /// <summary>
-    /// Determines whether the first <see cref="Ulid"/> instance is greater than or equal to the second <see
-    /// cref="Ulid"/> instance.
-    /// </summary>
-    /// <param name="left">The first <see cref="Ulid"/> instance to compare.</param>
-    /// <param name="right">The second <see cref="Ulid"/> instance to compare.</param>
-    /// <returns><see langword="true"/> if <paramref name="left"/> is greater than or equal to <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc/>
     public static bool operator >=(Ulid left, Ulid right) => left.CompareTo(right)>=0;
+    #endregion
+
+    #region IEqualityComparer<Ulid>
+    /// <inheritdoc/>
+    public bool Equals(Ulid x, Ulid y) => x.Equals(y);
+
+    /// <inheritdoc/>
+    public int GetHashCode([DisallowNull] Ulid obj) => obj.GetHashCode();
+    #endregion
+
+    #region IIncrementOperators<Ulid>
+    /// <inheritdoc/>
+    public static Ulid operator ++(Ulid value)
+    {
+        var newUlidBytes = (byte[])value._ulidBytes.Clone();
+        var span = newUlidBytes.AsSpan();
+
+        var i = span.Length-1;
+        for (; i >= 0; i--)
+            if (unchecked(++span[i]) >= 0)
+                return new Ulid(span);
+
+        Debug.Assert(false, "We should never be here.");
+        throw new OverflowException("Ulid overflowed.");
+    }
+    #endregion
 }
