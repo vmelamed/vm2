@@ -15,14 +15,12 @@
     <PackageReference Include="OpenTelemetry.Exporter.Console" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
     <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
-    <!--<PackageReference Include="Ulid" />-->
-    <!--<PackageReference Include="Ulid.SystemTextJson" />-->
+    <PackageReference Include="vm2.Ulid" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Common.csproj" />
     <ProjectReference Include="..\..\Threading\Threading.csproj" />
-    <ProjectReference Include="..\..\UlidType\UlidType.csproj" />
   </ItemGroup>
 
 </Project>

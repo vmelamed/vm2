@@ -2,6 +2,8 @@
 
 public static class Labels
 {
+    static UlidFactory UlidFactory { get; } = new UlidFactory();
+
     public static LabelId NextId => new(UlidFactory.NewUlid());
 
     internal static IEnumerable<Label> NewLabels()

@@ -4,6 +4,8 @@ using vm2.TestUtilities;
 
 public static class Albums
 {
+    static UlidFactory UlidFactory { get; } = new UlidFactory();
+
     public static AlbumId NextId => new(UlidFactory.NewUlid());
 
     internal static IEnumerable<Album> NewAlbums()

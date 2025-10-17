@@ -1,7 +1,5 @@
 <Solution>
-  <Folder Name="/benchmarks/">
-    <Project Path="benchmarks/UlidType.Benchmarks/UlidType.Benchmarks.csproj" />
-  </Folder>
+  <Folder Name="/benchmarks/" />
   <Folder Name="/docs/">
     <File Path="docs/RecentQandAKeys.md" />
   </Folder>
@@ -10,14 +8,11 @@
     <Project Path="examples/RegexLib/Reflector/Reflector.csproj" />
     <Project Path="examples/RegexLib/RegexLibExample/RegexLibExample.csproj" Id="06fbee3a-6941-49f2-aa0e-6c317413e490" />
   </Folder>
-  <Folder Name="/examples/Ulid/">
-    <Project Path="examples/GenerateUlids/GenerateUlids.csproj" Id="d9f046b0-e2df-4fa3-aa64-7abd36339b50" />
-  </Folder>
 
   <Folder Name="/Solution Items/">
+    <File Path="../vm2.Ulid/CONTRIBUTING.md" />
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
-    <File Path="COPILOT_INSTRUCTIONS.md" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="README.md" />
@@ -27,7 +22,6 @@
     <Project Path="Common/Common.csproj" Id="f7a6f20b-12d6-4c53-9567-f4d6728cf4ec" />
     <Project Path="src/RegexLib/RegexLib.csproj" />
     <Project Path="src/Threading/Threading.csproj" />
-    <Project Path="src/UlidType/UlidType.csproj" />
   </Folder>
   <Folder Name="/src/Linq/">
     <Project Path="src/Linq/ExpressionDeepEquals/ExpressionDeepEquals.csproj" />
@@ -52,7 +46,6 @@
     <Project Path="test/RegexLibTests/RegexLibTests.csproj" />
     <Project Path="test/TestUtilities/TestUtilities.csproj" />
     <Project Path="test/Threading.Tests/Threading.Tests.csproj" />
-    <Project Path="test/UlidType.Tests/UlidType.Tests.csproj" />
   </Folder>
   <Folder Name="/test/Functional/">
     <Project Path="test/Functional/Primitives.Tests/Primitives.Tests.csproj" />

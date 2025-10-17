@@ -19,4 +19,3 @@ global using vm2.Repository.DB.TestSQLite.Mapping.Generators;
 global using vm2.Repository.EntityFramework.Models.Mapping;
 global using vm2.Repository.TestDomain;
 global using vm2.Repository.TestDomain.Dimensions;
-global using vm2.UlidType;

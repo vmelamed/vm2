@@ -1,7 +1,5 @@
 ﻿namespace vm2.Repository.TestData;
 
-using vm2.UlidType;
-
 public static class Utilities
 {
     public const string Caller  = "TestCaller";

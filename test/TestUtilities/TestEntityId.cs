@@ -1,6 +1,6 @@
 ﻿namespace vm2.TestUtilities;
 
-using vm2.UlidType;
+using vm2;
 
 public static class TestEntityId
 {

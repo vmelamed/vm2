@@ -2,6 +2,8 @@ namespace vm2.Repository.TestData;
 
 public static class Tracks
 {
+    static UlidFactory UlidFactory { get; } = new UlidFactory();
+
     public static TrackId NextId => (TrackId)UlidFactory.NewUlid();
 
     // Track fields (one per track, named for clarity)

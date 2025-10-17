@@ -2,6 +2,8 @@
 
 public static class Persons
 {
+    static UlidFactory UlidFactory { get; } = new UlidFactory();
+
     public static PersonId NextId => (PersonId)UlidFactory.NewUlid();
 
     internal static IEnumerable<Person> NewPersons()

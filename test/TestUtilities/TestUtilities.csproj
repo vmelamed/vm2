@@ -6,17 +6,20 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" />
-        <!--<PackageReference Include="Ulid" />-->
+        <PackageReference Include="vm2.Ulid" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Common\Common.csproj" />
-      <ProjectReference Include="..\..\src\UlidType\UlidType.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <Using Include="FluentAssertions" />
         <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Implementations\" />
     </ItemGroup>
 
 </Project>

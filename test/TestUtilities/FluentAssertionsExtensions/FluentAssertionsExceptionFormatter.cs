@@ -1,4 +1,4 @@
-﻿namespace vm2.TestUtilities;
+﻿namespace vm2.TestUtilities.FluentAssertionsExtensions;
 
 /// <summary>
 /// Class FluentAssertionsExceptionFormatter enables the display of inner exceptions
@@ -6,6 +6,7 @@
 /// Implements the <see cref="IValueFormatter" />
 /// </summary>
 /// <seealso cref="IValueFormatter" />
+[ExcludeFromCodeCoverage]
 public class FluentAssertionsExceptionFormatter : IValueFormatter
 {
     static readonly FluentAssertionsExceptionFormatter s_formatter = new();

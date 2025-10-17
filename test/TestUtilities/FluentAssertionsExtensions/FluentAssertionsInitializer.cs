@@ -1,15 +1,18 @@
-﻿[assembly: AssertionEngineInitializer(
-    typeof(vm2.TestUtilities.AssertionEngineInitializer),
-    nameof(vm2.TestUtilities.AssertionEngineInitializer.AcknowledgeSoftWarning))]
+﻿using vm2.TestUtilities.FluentAssertionsExtensions;
 
-namespace vm2.TestUtilities;
+[assembly: AssertionEngineInitializer(
+    typeof(FluentAssertionsInitializer),
+    nameof(FluentAssertionsInitializer.AcknowledgeSoftWarning))]
+
+namespace vm2.TestUtilities.FluentAssertionsExtensions;
 
 /// <summary>
 /// Provides methods to initialize and configure the assertion engine.
 /// </summary>
 /// <remarks>This class contains static methods for setting up the assertion engine, including handling
 /// license-related warnings. It is intended to be used during the initialization phase of the application.</remarks>
-public static class AssertionEngineInitializer
+[ExcludeFromCodeCoverage]
+public static class FluentAssertionsInitializer
 {
     /// <summary>
     /// Acknowledges and accepts the current soft warning related to the license.

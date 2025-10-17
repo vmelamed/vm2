@@ -1,7 +1,5 @@
 ﻿namespace vm2.Repository.TestDomain;
 
-using vm2.UlidType;
-
 /// <summary>
 /// Represents a strongly-typed identifier for a <see cref="Album"/>, encapsulating a ULID value.
 /// </summary>

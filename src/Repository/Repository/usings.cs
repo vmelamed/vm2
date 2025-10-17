@@ -26,4 +26,3 @@ global using OpenTelemetry.Trace;
 global using vm2.Common.Abstractions;
 global using vm2.Repository.Abstractions;
 global using vm2.Repository.EntityFramework.Models;
-global using vm2.UlidType;

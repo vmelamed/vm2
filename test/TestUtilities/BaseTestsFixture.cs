@@ -1,5 +1,7 @@
 ﻿namespace vm2.TestUtilities;
 
+using vm2.TestUtilities.FluentAssertionsExtensions;
+
 /// <summary>
 /// Class PrimitivesTestsFixture.
 /// Implements the <see cref="IDisposable" />
