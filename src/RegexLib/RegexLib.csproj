@@ -13,4 +13,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="usings.cs" />
+    <None Include="WindowsPathname.cs" />
+  </ItemGroup>
+
 </Project>
