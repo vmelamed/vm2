@@ -117,9 +117,10 @@ public static partial class WindowsPathname
     /// Requires "(?x)" or <see cref="RegexOptions.IgnorePatternWhitespace"/> and <see cref="RegexOptions.IgnoreCase"/>.
     /// </remarks>
     public const string PathRex = $"""
-        (?:
-            (?:(?<{PathGr}> {pathSeparator}? {pathRootless}) {pathSeparator})
-          | (?<{PathGr}> {pathSeparator}? )
+        (?<{PathGr}>
+            (?: {pathSeparator}? {pathRootless} {pathSeparator} )
+          | (?: {pathSeparator} )
+          | (?: \.|\.\. )
         )
         """;
 
